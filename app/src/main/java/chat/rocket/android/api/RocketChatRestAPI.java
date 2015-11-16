@@ -1,5 +1,7 @@
 package chat.rocket.android.api;
 
+import android.util.Log;
+
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.HttpUrl;
@@ -66,9 +68,9 @@ public class RocketChatRestAPI {
 
         return baseRequest(
                 new Request.Builder()
-                    .post(formBody)
-                    .url(baseURL().addPathSegment("login").build())
-                    .build(),
+                        .post(formBody)
+                        .url(baseURL().addPathSegment("login").build())
+                        .build(),
                 new ResponseParser<UserAuth>() {
                     @Override
                     public UserAuth parse(JSONObject data) throws JSONException {
@@ -78,5 +80,22 @@ public class RocketChatRestAPI {
                         return userAuth;
                     }
                 });
+    }
+
+    public Task<Boolean> logout(UserAuth userAuth) {
+        return baseRequest(
+                new Request.Builder()
+                        .url(baseURL().addPathSegment("logout").build())
+                        .header("X-User-Id", userAuth.userId)
+                        .header("X-Auth-Token", userAuth.authToken)
+                        .build(),
+                new ResponseParser<Boolean>() {
+                    @Override
+                    public Boolean parse(JSONObject data) throws JSONException {
+                        Log.d("hoge", data.getString("message"));
+                        return true;
+                    }
+                });
+
     }
 }

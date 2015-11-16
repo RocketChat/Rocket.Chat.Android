@@ -14,11 +14,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new RocketChatRestAPI().login("hoge@hoge.net","hogehoge").onSuccess(new Continuation<UserAuth, Object>() {
+        new RocketChatRestAPI().login("hoge@hoge.net","hogehoge").onSuccessTask(new Continuation<UserAuth, Task<Boolean>>() {
             @Override
-            public Object then(Task<UserAuth> task) throws Exception {
+            public Task<Boolean> then(Task<UserAuth> task) throws Exception {
                 UserAuth auth = task.getResult();
-                Log.d("hoge",auth.userId+" / "+auth.authToken);
+                Log.d("hoge", auth.userId + " / " + auth.authToken);
+
+                return new RocketChatRestAPI().logout(auth);
+            }
+        }).onSuccess(new Continuation<Boolean, Object>() {
+            @Override
+            public Object then(Task<Boolean> task) throws Exception {
+
                 return null;
             }
         });
