@@ -23,13 +23,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new RocketChatRestAPI().login("hoge@hoge.net", "hogehoge").onSuccessTask(new Continuation<UserAuth, Task<List<Room>>>() {
+        final RocketChatRestAPI rocket = new RocketChatRestAPI("demorocket.herokuapp.com");
+        rocket.login("hoge@hoge.net", "hogehoge").onSuccessTask(new Continuation<UserAuth, Task<List<Room>>>() {
             @Override
             public Task<List<Room>> then(Task<UserAuth> task) throws Exception {
                 mUserAuth = task.getResult();
                 Log.d(TAG, mUserAuth.userId + " / " + mUserAuth.authToken);
 
-                return new RocketChatRestAPI().getPublicRooms(mUserAuth);
+                return rocket.getPublicRooms(mUserAuth);
             }
         }).onSuccessTask(new Continuation<List<Room>, Task<List<Message>>>() {
             @Override
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 for (Room room : rooms) {
                     Log.d(TAG, room.id + "/" + room.name);
                 }
-                return new RocketChatRestAPI().listRecentMessages(mUserAuth, rooms.get(0));
+                return rocket.listRecentMessages(mUserAuth, rooms.get(0));
             }
         }).onSuccess(new Continuation<List<Message>, Object>() {
             @Override

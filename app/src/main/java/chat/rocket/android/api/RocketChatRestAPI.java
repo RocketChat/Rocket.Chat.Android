@@ -25,14 +25,19 @@ import chat.rocket.android.model.User;
 import chat.rocket.android.model.UserAuth;
 
 public class RocketChatRestAPI {
-    private static final String HOSTNAME = "demorocket.herokuapp.com"; //TODO: user-configurable!
+    private final String mHostName;
 
-    public RocketChatRestAPI(){}
+    private RocketChatRestAPI(){
+        this("demo.rocket.chat");
+    }
+    public RocketChatRestAPI(String hostname) {
+        mHostName = hostname;
+    }
 
-    private static HttpUrl.Builder baseURL(){
+    private HttpUrl.Builder baseURL(){
         return new HttpUrl.Builder()
                 .scheme("https")
-                .host(HOSTNAME)
+                .host(mHostName)
                 .addPathSegment("api");
     }
 
