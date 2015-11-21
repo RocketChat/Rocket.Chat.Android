@@ -14,9 +14,9 @@ public class RocketChatApplication extends Application {
         super.onCreate();
 
         Ollie.with(this)
-                .setName("rockets.db")
-                .setVersion(1)
-                .setLogLevel(Ollie.LogLevel.BASIC)
+                .setName(Constants.DB_NAME)
+                .setVersion(Constants.DB_VERSION)
+                .setLogLevel(Constants.DB_LOG_LEVEL)
                 .init();
 
         Stetho.initialize(

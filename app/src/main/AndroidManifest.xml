@@ -21,6 +21,10 @@
 
         <activity android:name=".activity.MainActivity"/>
 
+        <provider
+            android:authorities="chat.rocket.android"
+            android:name=".RocketChatProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>
