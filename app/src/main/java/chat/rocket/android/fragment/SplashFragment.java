@@ -60,7 +60,7 @@ public class SplashFragment extends Fragment {
                 .onSuccess(new Continuation<JSONArray, Object>() {
                     @Override
                     public Object then(Task<JSONArray> task) throws Exception {
-                        Delete.from(Room.class).where("?=?", 1, 1).execute();
+                        Delete.from(Room.class).where("?=?", 1, 1).execute(); // '.where("?=?", 1, 1)' is required because of Ollie's bug...
                         JSONArray rooms = task.getResult();
                         for(int i=0;i<rooms.length();i++){
                             JSONObject room = rooms.getJSONObject(i);
