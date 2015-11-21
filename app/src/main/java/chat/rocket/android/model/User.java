@@ -6,7 +6,7 @@ import ollie.annotation.Table;
 
 @Table("user")
 public class User extends Model {
-    @Column("id")
+    @Column("cid")
     public String _id;
 
     @Column("room_id")

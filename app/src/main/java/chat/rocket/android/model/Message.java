@@ -6,7 +6,7 @@ import ollie.annotation.Table;
 
 @Table("message")
 public class Message extends Model{
-    @Column("id")
+    @Column("cid")
     public String _id;
 
     @Column("user_id")

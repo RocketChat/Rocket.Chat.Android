@@ -25,8 +25,4 @@ abstract class AbstractActivity extends AppCompatActivity {
         }
         else super.onBackPressed();
     }
-
-    public interface OnBackPressListener{
-        boolean onBackPressed();
-    }
 }

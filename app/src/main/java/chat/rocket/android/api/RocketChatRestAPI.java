@@ -7,24 +7,26 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
-import chat.rocket.android.model.Auth;
-import chat.rocket.android.model.Message;
 import chat.rocket.android.model.Room;
-import chat.rocket.android.model.User;
 
 public class RocketChatRestAPI {
+    public static class AuthorizationRequired extends Exception {
+        public AuthorizationRequired(){
+            super();
+        }
+        public AuthorizationRequired(String message){
+            super(message);
+        }
+    }
+
     private final String mHostName;
 
     private RocketChatRestAPI(){
@@ -45,10 +47,10 @@ public class RocketChatRestAPI {
         T parse(JSONObject result) throws JSONException;
     }
 
-    private Request.Builder createAuthRequestBuilder(Auth userAuth){
+    private Request.Builder createAuthRequestBuilder(Auth auth){
         return new Request.Builder()
-                .header("X-User-Id", userAuth.account)
-                .header("X-Auth-Token", userAuth.authToken);
+                .header("X-User-Id", auth.account)
+                .header("X-Auth-Token", auth.authToken);
     }
 
     private <T> Task<T> baseRequest(final Request request, final ResponseParser<T> parser) {
@@ -67,6 +69,7 @@ public class RocketChatRestAPI {
                     if("success".equals(json.getString("status"))) {
                         task.setResult(parser.parse(json));
                     }
+                    else if(response.code()==401) task.setError(new AuthorizationRequired(json.getString("message")));
                     else task.setError(new Exception(json.getString("message")));
                 }
                 catch (JSONException e) {
@@ -92,17 +95,14 @@ public class RocketChatRestAPI {
                     @Override
                     public Auth parse(JSONObject result) throws JSONException {
                         JSONObject data = result.getJSONObject("data");
-                        Auth userAuth = new Auth();
-                        userAuth.account = data.getString("userId");
-                        userAuth.authToken = data.getString("authToken");
-                        return userAuth;
+                        return new Auth(data.getString("userId"), data.getString("authToken"));
                     }
                 });
     }
 
-    public Task<Boolean> logout(Auth userAuth) {
+    public Task<Boolean> logout(Auth auth) {
         return baseRequest(
-                createAuthRequestBuilder(userAuth)
+                createAuthRequestBuilder(auth)
                         .url(baseURL().addPathSegment("logout").build())
                         .build(),
                 new ResponseParser<Boolean>() {
@@ -114,77 +114,34 @@ public class RocketChatRestAPI {
 
     }
 
-    public Task<List<Room>> getPublicRooms(Auth userAuth) {
+    public Task<JSONArray> getPublicRooms(Auth auth) {
         return baseRequest(
-                createAuthRequestBuilder(userAuth)
+                createAuthRequestBuilder(auth)
                         .url(baseURL().addPathSegment("publicRooms").build())
                         .build(),
-                new ResponseParser<List<Room>>() {
-                    public List<Room> parse(JSONObject result) throws JSONException {
-                        JSONArray rooms = result.getJSONArray("rooms");
-
-                        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
-                        ArrayList<Room> roomList = new ArrayList<Room>();
-                        for (int i=0; i<rooms.length(); i++) {
-                            JSONObject room = rooms.getJSONObject(i);
-
-                            Room r = new Room();
-                            r._id = room.getString("_id");
-                            r.name = room.getString("name");
-                            r.timestamp = room.getString("ts");
-                            roomList.add(r);
-
-                            JSONArray usernames = room.getJSONArray("usernames");
-                            for (int j=0; j<usernames.length(); j++) {
-                                User u = new User();
-                                u._id = "?";
-                                u.roomId = r._id;
-                                u.name = usernames.getString(j);
-                            }
-                        }
-                        return roomList;
+                new ResponseParser<JSONArray>() {
+                    public JSONArray parse(JSONObject result) throws JSONException {
+                        return result.getJSONArray("rooms");
                     }
                 });
     }
 
-    public Task<List<Message>> listRecentMessages(Auth userAuth, Room room) {
+    public Task<JSONArray> listRecentMessages(Auth auth, Room room) {
         return baseRequest(
-                createAuthRequestBuilder(userAuth)
+                createAuthRequestBuilder(auth)
                         .url(baseURL().addPathSegment("rooms").addPathSegment(room._id).addPathSegment("messages").build())
                         .build(),
-                new ResponseParser<List<Message>>() {
-                    public List<Message> parse(JSONObject result) throws JSONException {
-                        JSONArray rooms = result.getJSONArray("messages");
-
-                        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
-                        ArrayList<Message> messageList = new ArrayList<>();
-                        for (int i = 0; i < rooms.length(); i++) {
-                            JSONObject message = rooms.getJSONObject(i);
-
-                            Message m = new Message();
-                            m._id = message.getString("_id");
-                            m.content = message.getString("msg");
-                            m.timestamp = message.getString("ts");
-
-                            JSONObject user = message.getJSONObject("u");
-                            User u = new User();
-                            u._id = user.getString("_id");
-                            u.name = user.getString("username");
-
-                            m.userId = u._id;
-                            messageList.add(m);
-                        }
-                        return messageList;
+                new ResponseParser<JSONArray>() {
+                    public JSONArray parse(JSONObject result) throws JSONException {
+                        return result.getJSONArray("messages");
                     }
                 });
 
     }
 
-    public Task<Boolean> joinToRoom(Auth userAuth, Room room) {
+    public Task<Boolean> joinToRoom(Auth auth, Room room) {
         return baseRequest(
-                createAuthRequestBuilder(userAuth)
+                createAuthRequestBuilder(auth)
                         .url(baseURL().addPathSegment("rooms").addPathSegment(room._id).addPathSegment("join").build())
                         .build(),
                 new ResponseParser<Boolean>() {
@@ -197,9 +154,9 @@ public class RocketChatRestAPI {
 
     }
 
-    public Task<Boolean> leaveFromRoom(Auth userAuth, Room room) {
+    public Task<Boolean> leaveFromRoom(Auth auth, Room room) {
         return baseRequest(
-                createAuthRequestBuilder(userAuth)
+                createAuthRequestBuilder(auth)
                         .url(baseURL().addPathSegment("rooms").addPathSegment(room._id).addPathSegment("leave").build())
                         .build(),
                 new ResponseParser<Boolean>() {
