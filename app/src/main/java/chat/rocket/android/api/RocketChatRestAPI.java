@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
-import chat.rocket.android.model.Room;
 
 public class RocketChatRestAPI {
     public static class AuthorizationRequired extends Exception {
@@ -49,7 +48,7 @@ public class RocketChatRestAPI {
 
     private Request.Builder createAuthRequestBuilder(Auth auth){
         return new Request.Builder()
-                .header("X-User-Id", auth.account)
+                .header("X-User-Id", auth.userId)
                 .header("X-Auth-Token", auth.authToken);
     }
 
@@ -126,10 +125,10 @@ public class RocketChatRestAPI {
                 });
     }
 
-    public Task<JSONArray> listRecentMessages(Auth auth, Room room) {
+    public Task<JSONArray> listRecentMessages(Auth auth, String roomId) {
         return baseRequest(
                 createAuthRequestBuilder(auth)
-                        .url(baseURL().addPathSegment("rooms").addPathSegment(room._id).addPathSegment("messages").build())
+                        .url(baseURL().addPathSegment("rooms").addPathSegment(roomId).addPathSegment("messages").build())
                         .build(),
                 new ResponseParser<JSONArray>() {
                     public JSONArray parse(JSONObject result) throws JSONException {
@@ -139,10 +138,10 @@ public class RocketChatRestAPI {
 
     }
 
-    public Task<Boolean> joinToRoom(Auth auth, Room room) {
+    public Task<Boolean> joinToRoom(Auth auth, String roomId) {
         return baseRequest(
                 createAuthRequestBuilder(auth)
-                        .url(baseURL().addPathSegment("rooms").addPathSegment(room._id).addPathSegment("join").build())
+                        .url(baseURL().addPathSegment("rooms").addPathSegment(roomId).addPathSegment("join").build())
                         .build(),
                 new ResponseParser<Boolean>() {
                     public Boolean parse(JSONObject result) throws JSONException {
@@ -154,10 +153,10 @@ public class RocketChatRestAPI {
 
     }
 
-    public Task<Boolean> leaveFromRoom(Auth auth, Room room) {
+    public Task<Boolean> leaveFromRoom(Auth auth, String roomId) {
         return baseRequest(
                 createAuthRequestBuilder(auth)
-                        .url(baseURL().addPathSegment("rooms").addPathSegment(room._id).addPathSegment("leave").build())
+                        .url(baseURL().addPathSegment("rooms").addPathSegment(roomId).addPathSegment("leave").build())
                         .build(),
                 new ResponseParser<Boolean>() {
                     public Boolean parse(JSONObject result) throws JSONException {

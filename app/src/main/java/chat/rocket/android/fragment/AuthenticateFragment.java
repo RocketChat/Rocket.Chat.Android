@@ -3,7 +3,6 @@ package chat.rocket.android.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +62,8 @@ public class AuthenticateFragment extends AbstractFragment {
 
                         mServerConfig = new ServerConfig();
                         mServerConfig.hostname = host;
-                        mServerConfig.account = auth.account;
+                        mServerConfig.account = account;
+                        mServerConfig.authUserId = auth.userId;
                         mServerConfig.authToken = auth.authToken;
                         mServerConfig.isPrimary = true;
                         mServerConfig.displayname = host;
@@ -75,8 +75,8 @@ public class AuthenticateFragment extends AbstractFragment {
                 .continueWith(new Continuation<Object, Object>() {
                     @Override
                     public Object then(Task<Object> task) throws Exception {
-                        if(task.isFaulted()){
-                            Log.d("hoge","error",task.getError());
+                        if (task.isFaulted()) {
+                            showErrorFragment(task.getError().getMessage());
                             finish();
                         }
                         return null;
@@ -88,6 +88,13 @@ public class AuthenticateFragment extends AbstractFragment {
         getFragmentManager().beginTransaction()
                 .remove(this)
                 .replace(R.id.simple_framelayout, new SplashFragment())
+                .commit();
+    }
+
+    private void showErrorFragment(String msg) {
+        getFragmentManager().beginTransaction()
+                .remove(this)
+                .replace(R.id.simple_framelayout, LoginErrorFragment.create(msg))
                 .commit();
     }
 

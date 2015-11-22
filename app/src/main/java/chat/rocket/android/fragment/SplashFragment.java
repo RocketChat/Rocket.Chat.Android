@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import org.json.JSONObject;
 
 import bolts.Continuation;
 import bolts.Task;
-import chat.rocket.android.Constants;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.api.Auth;
@@ -56,13 +54,13 @@ public class SplashFragment extends Fragment {
 
     private void tryGetRooms(final ServerConfig config){
         new RocketChatRestAPI(config.hostname)
-                .getPublicRooms(new Auth(config.account, config.authToken))
+                .getPublicRooms(new Auth(config.authUserId, config.authToken))
                 .onSuccess(new Continuation<JSONArray, Object>() {
                     @Override
                     public Object then(Task<JSONArray> task) throws Exception {
                         Delete.from(Room.class).where("?=?", 1, 1).execute(); // '.where("?=?", 1, 1)' is required because of Ollie's bug...
                         JSONArray rooms = task.getResult();
-                        for(int i=0;i<rooms.length();i++){
+                        for (int i = 0; i < rooms.length(); i++) {
                             JSONObject room = rooms.getJSONObject(i);
                             Room r = new Room();
                             r._id = room.getString("_id");
@@ -79,15 +77,23 @@ public class SplashFragment extends Fragment {
                     @Override
                     public Object then(Task<Object> task) throws Exception {
                         Exception e = task.getError();
-                        if(e instanceof RocketChatRestAPI.AuthorizationRequired) {
+                        if (e instanceof RocketChatRestAPI.AuthorizationRequired) {
                             config.delete();
                             showServerConfigFragment();
+                        } else {
+                            showErrorFragment(task.getError().getMessage());
                         }
-                        else Log.d(Constants.LOG_TAG, "error", task.getError());
                         return null;
                     }
                 });
 
+    }
+
+    private void showErrorFragment(String msg) {
+        getFragmentManager().beginTransaction()
+                .remove(this)
+                .replace(R.id.simple_framelayout, LoginErrorFragment.create(msg))
+                .commit();
     }
 
     @Nullable

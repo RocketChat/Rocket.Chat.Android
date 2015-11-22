@@ -20,8 +20,11 @@ public class ServerConfig extends Model {
     @NotNull
     public String hostname;
 
-    @Column("account")
+    @Column("userId")
     public String account;
+
+    @Column("auth_user_id")
+    public String authUserId;
 
     @Column("auth_token")
     public String authToken;

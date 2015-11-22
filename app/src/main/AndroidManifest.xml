@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activity.EntryActivity">
+        <activity android:name=".activity.EntryActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -19,7 +20,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MainActivity"/>
+        <activity android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
         <provider
             android:authorities="chat.rocket.android"

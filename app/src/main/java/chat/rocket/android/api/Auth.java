@@ -1,11 +1,11 @@
 package chat.rocket.android.api;
 
 public class Auth {
-    public String account;
+    public String userId;
     public String authToken;
 
-    public Auth(String account, String authToken) {
-        this.account = account;
+    public Auth(String userId, String authToken) {
+        this.userId = userId;
         this.authToken = authToken;
     }
 }
