@@ -37,6 +37,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.neovisionaries:nv-websocket-client:1.12'
+    compile 'com.squareup.okhttp:okhttp-ws:2.6.0'
     compile 'io.reactivex:rxjava:1.0.16'
 }

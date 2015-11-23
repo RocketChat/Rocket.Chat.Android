@@ -1,53 +1,75 @@
 package jp.co.crowdworks.android_meteor.rx;
 
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketFactory;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
+import com.squareup.okhttp.ws.WebSocket;
+import com.squareup.okhttp.ws.WebSocketCall;
+import com.squareup.okhttp.ws.WebSocketListener;
 
+import java.io.IOException;
+
+import okio.Buffer;
 import rx.Observable;
 import rx.Subscriber;
+import rx.observables.ConnectableObservable;
 
 public class RxWebSocket {
-    private static WebSocketFactory sSocketFactory = new WebSocketFactory().setConnectionTimeout(4000);
+    private OkHttpClient mHttpClient;
     private WebSocket mWebSocket;
 
-    public Observable<RxWebSocketCallback.Base> connect(final String url){
+    public RxWebSocket(OkHttpClient client) {
+        mHttpClient = client;
+    }
+    public ConnectableObservable<RxWebSocketCallback.Base> connect(String url){
+        final Request request = new Request.Builder().url(url).build();
+        WebSocketCall call = WebSocketCall.create(mHttpClient, request);
+
         return Observable.create(new Observable.OnSubscribe<RxWebSocketCallback.Base>() {
             @Override
             public void call(Subscriber<? super RxWebSocketCallback.Base> subscriber) {
-                new Thread(){
+                call.enqueue(new WebSocketListener() {
                     @Override
-                    public void run() {
-                        try {
-                            mWebSocket = sSocketFactory.createSocket(url);
-                            mWebSocket.addListener(new RxWebSocketListener(subscriber));
-                            mWebSocket.connectAsynchronously();
-                        } catch (Exception e) {
-                            subscriber.onError(e);
+                    public void onOpen(WebSocket webSocket, Response response) {
+                        mWebSocket = webSocket;
+                        subscriber.onNext(new RxWebSocketCallback.Open(mWebSocket, response));
+                    }
+
+                    @Override
+                    public void onFailure(IOException e, Response response) {
+                        subscriber.onNext(new RxWebSocketCallback.Failure(mWebSocket, e, response));
+                    }
+
+                    @Override
+                    public void onMessage(ResponseBody responseBody) throws IOException {
+                        subscriber.onNext(new RxWebSocketCallback.Message(mWebSocket, responseBody));
+
+                        //asssure responseBody is closed for avoiding IllegalStateException("Listener failed to call close on message payload.").
+                        try{
+                            responseBody.close();
+                        }
+                        catch (Exception e){
                         }
                     }
-                }.start();
+
+                    @Override
+                    public void onPong(Buffer payload) {
+                        subscriber.onNext(new RxWebSocketCallback.Pong(mWebSocket, payload));
+                    }
+
+                    @Override
+                    public void onClose(int code, String reason) {
+                        subscriber.onNext(new RxWebSocketCallback.Close(mWebSocket, code, reason));
+                    }
+                });
             }
-        });
+        }).publish();
     }
 
-    public RxWebSocket sendText(String message) {
-        mWebSocket.sendText(message);
-        return this;
-    }
 
-    public RxWebSocket sendTextAnd(String message) {
-        mWebSocket.sendText(message, false);
-        return this;
+    public void sendText(String message) throws IOException {
+        mWebSocket.sendMessage(RequestBody.create(WebSocket.TEXT, message));
     }
-
-    public RxWebSocket setPingInterval(long intervalMs){
-        mWebSocket.setPingInterval(intervalMs);
-        return this;
-    }
-
-    public RxWebSocket disconnect(){
-        mWebSocket.disconnect();
-        return this;
-    }
-
 }

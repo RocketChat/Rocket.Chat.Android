@@ -24,11 +24,12 @@ import bolts.Task;
 import chat.rocket.android.Constants;
 import chat.rocket.android.R;
 import chat.rocket.android.api.Auth;
+import chat.rocket.android.api.OkHttpHelper;
 import chat.rocket.android.api.RocketChatRestAPI;
 import chat.rocket.android.fragment.ChatRoomFragment;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
-import jp.co.crowdworks.android_meteor.DDPClientPre1;
+import jp.co.crowdworks.android_meteor.DDPClient;
 import ollie.query.Select;
 
 public class MainActivity extends AbstractActivity {
@@ -52,7 +53,7 @@ public class MainActivity extends AbstractActivity {
         loadRooms();
         openPaneIfNeededForInitialLayout();
 
-        DDPClientPre1 ddp = new DDPClientPre1();
+        DDPClient ddp = new DDPClient(OkHttpHelper.getClient());
         ddp.connect("ws://yi01rocket.herokuapp.com/websocket");
     }
 
