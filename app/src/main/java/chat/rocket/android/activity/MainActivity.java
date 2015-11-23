@@ -43,7 +43,7 @@ public class MainActivity extends AbstractActivity {
 
         setupUserInfo();
         setupUserActionToggle();
-        loadChannel();
+        loadRooms();
         openPaneIfNeededForInitialLayout();
     }
 
@@ -122,11 +122,11 @@ public class MainActivity extends AbstractActivity {
         });
     }
 
-    private void loadChannel(){
+    private void loadRooms(){
         mAdapter = new RoomAdapter(this, null);
-        final RecyclerView channelListView = (RecyclerView) findViewById(R.id.listview_channels);
-        channelListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        channelListView.setAdapter(mAdapter);
+        final RecyclerView roomListView = (RecyclerView) findViewById(R.id.listview_rooms);
+        roomListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        roomListView.setAdapter(mAdapter);
 
         getSupportLoaderManager().restartLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
@@ -180,11 +180,11 @@ public class MainActivity extends AbstractActivity {
     }
 
     private static class RoomViewHolder extends RecyclerView.ViewHolder {
-        TextView channelName;
+        TextView roomName;
 
         public RoomViewHolder(View itemView) {
             super(itemView);
-            channelName = (TextView) itemView.findViewById(R.id.list_item_channel_name);
+            roomName = (TextView) itemView.findViewById(R.id.list_item_room_name);
         }
     }
 
@@ -204,7 +204,7 @@ public class MainActivity extends AbstractActivity {
 
         @Override
         public RoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new RoomViewHolder(mInflater.inflate(R.layout.listitem_channel, parent, false));
+            return new RoomViewHolder(mInflater.inflate(R.layout.listitem_room, parent, false));
         }
 
         @Override
@@ -212,7 +212,7 @@ public class MainActivity extends AbstractActivity {
             final String roomName = cursor.getString(cursor.getColumnIndex("name"));
             final String roomId = cursor.getString(cursor.getColumnIndex("cid"));
 
-            viewHolder.channelName.setText(roomName);
+            viewHolder.roomName.setText(roomName);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

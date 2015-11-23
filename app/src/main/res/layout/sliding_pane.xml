@@ -67,7 +67,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/listview_channels"
+            android:id="@+id/listview_rooms"
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"/>
