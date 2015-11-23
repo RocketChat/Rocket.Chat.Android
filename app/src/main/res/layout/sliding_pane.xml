@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:padding="@dimen/margin_normal"
             android:background="@color/colorPrimaryDark">
 
             <LinearLayout
@@ -36,8 +36,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp">
+                    android:layout_marginLeft="@dimen/margin_half"
+                    android:layout_marginRight="@dimen/margin_half">
 
                     <TextView
                         android:id="@+id/txt_hostname_info"

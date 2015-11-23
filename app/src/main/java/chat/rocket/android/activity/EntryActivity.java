@@ -9,6 +9,11 @@ import chat.rocket.android.fragment.SplashFragment;
 public class EntryActivity extends AbstractActivity {
 
     @Override
+    protected int getContainerId() {
+        return R.id.simple_framelayout;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -20,7 +25,7 @@ public class EntryActivity extends AbstractActivity {
         super.onNewIntent(intent);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.simple_framelayout, new SplashFragment())
+                .replace(getContainerId(), new SplashFragment())
                 .commit();
     }
 }

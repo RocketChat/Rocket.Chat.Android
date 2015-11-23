@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:minWidth="240dp"
-        android:padding="16dp"
+        android:padding="@dimen/margin_normal"
         android:layout_gravity="center"
         android:gravity="center">
 

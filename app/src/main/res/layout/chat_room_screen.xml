@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_chatroom"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:title="Rocket.Chat"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="@color/colorPrimaryDark"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/listview_messages"
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider"/>
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:theme="@style/Theme.AppCompat.Light">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/chat_composer"
-            android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="3"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_chatroom"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:title="Rocket.Chat"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:background="@color/colorPrimaryDark"/>
 
-        <ImageView
-            android:id="@+id/btn_send_composed_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_send"
-            android:layout_gravity="center_vertical"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listview_messages"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"/>
+
     </LinearLayout>
 
-</LinearLayout>
+    <chat.rocket.android.view.MessageComposer
+        android:id="@+id/message_composer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.AppCompat.Light"
+        android:layout_gravity="bottom"
+        android:background="@color/background_white"
+        android:visibility="gone"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/chat_btn_compose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        android:background="@color/colorAccent"
+        app:rippleColor="@color/colorAccentLight"
+        android:src="@drawable/ic_action_compose"
+        app:elevation="4dp"
+        android:layout_margin="@dimen/margin_normal"
+        android:layout_gravity="right|bottom"/>
+</FrameLayout>

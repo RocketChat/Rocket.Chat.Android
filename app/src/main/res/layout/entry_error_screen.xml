@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="240dp"
-        android:padding="16dp"
+        android:padding="@dimen/margin_normal"
         android:orientation="vertical"
         android:layout_gravity="center">
         

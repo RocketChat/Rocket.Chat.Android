@@ -37,6 +37,11 @@ public class MainActivity extends AbstractActivity {
     private RoomAdapter mAdapter;
 
     @Override
+    protected int getContainerId() {
+        return R.id.activity_main_container;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sliding_pane);
@@ -225,7 +230,7 @@ public class MainActivity extends AbstractActivity {
 
     private void showChatRoomFragment(String roomId, String roomName) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.activity_main_container, ChatRoomFragment.create(roomId, roomName))
+                .replace(getContainerId(), ChatRoomFragment.create(roomId, roomName))
                 .commit();
     }
 }

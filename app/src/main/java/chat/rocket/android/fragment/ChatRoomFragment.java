@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -25,15 +26,17 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.Constants;
 import chat.rocket.android.R;
+import chat.rocket.android.activity.OnBackPressListener;
 import chat.rocket.android.api.Auth;
 import chat.rocket.android.api.RocketChatRestAPI;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
+import chat.rocket.android.view.MessageComposer;
 import ollie.query.Select;
 
-public class ChatRoomFragment extends AbstractFragment {
+public class ChatRoomFragment extends AbstractFragment implements OnBackPressListener{
     private static final int LOADER_ID = 0x12346;
 
     public ChatRoomFragment(){}
@@ -176,22 +179,54 @@ public class ChatRoomFragment extends AbstractFragment {
     }
 
     private class MessageAdapter extends CursorRecyclerViewAdapter<MessageViewHolder> {
+        private static final int DUMMY_HEADER = 100;
 
-        LayoutInflater mInflater;
+        private LayoutInflater mInflater;
+        private int mHeaderHeight;
+
 
         public MessageAdapter(Context context, Cursor cursor) {
             super(context, cursor);
             mInflater = LayoutInflater.from(context);
         }
 
+        public int getBasicItemCount() {
+            return mCursor == null ? 0 : mCursor.getCount();
+        }
+
+        @Override
+        public int getItemCount() {
+            return getBasicItemCount() + 1;
+        }
+
         @Override
         public int getItemViewType(int position) {
+            if (position == 0) {
+                return DUMMY_HEADER;
+            }
             return super.getItemViewType(position);
         }
 
         @Override
         public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if(viewType==DUMMY_HEADER) {
+                final View v = new View(parent.getContext());
+                v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mHeaderHeight));
+                return new MessageViewHolder(v);
+            }
             return new MessageViewHolder(mInflater.inflate(R.layout.listitem_message, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(MessageViewHolder viewHolder, int position) {
+            if (position == 0) {
+                if(viewHolder.itemView.getHeight()!=mHeaderHeight) {
+                    viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mHeaderHeight));
+                }
+                return;
+            }
+
+            super.onBindViewHolder(viewHolder, position-1);
         }
 
         @Override
@@ -203,54 +238,124 @@ public class ChatRoomFragment extends AbstractFragment {
             viewHolder.username.setText(u.name);
             viewHolder.timestamp.setText(Constants.DATETIME_FORMAT.parseDateTime(m.timestamp).toString());
         }
+
+        public void setHeaderHeight(int height){
+            mHeaderHeight = height;
+            notifyItemChanged(0);
+        }
     }
 
+    private MessageComposer getMessageComposer(){
+        return (MessageComposer) mRootView.findViewById(R.id.message_composer);
+    }
+
+    private FloatingActionButton getButtonCompose(){
+        return (FloatingActionButton) mRootView.findViewById(R.id.chat_btn_compose);
+    }
 
     private void setupMessageComposer(){
-        mRootView.findViewById(R.id.btn_send_composed_message).setOnClickListener(new View.OnClickListener() {
+        final MessageComposer composer = getMessageComposer();
+        final FloatingActionButton btnCompose = getButtonCompose();
+        final int margin = getActivity().getResources().getDimensionPixelSize(R.dimen.margin_normal);
+
+        btnCompose.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View v) {
-                final TextView textview = (TextView) mRootView.findViewById(R.id.chat_composer);
-                CharSequence text = textview.getText();
-                if(TextUtils.isEmpty(text)) return;
-
-                ServerConfig s = Select.from(ServerConfig.class).where("is_primary = 1").fetchSingle();
-                if (s == null) return;
-
-                v.setEnabled(false);
-                textview.setEnabled(false);
-                new RocketChatRestAPI(s.hostname)
-                        .sendMessage(new Auth(s.authUserId, s.authToken), mRoomId, text.toString())
-                        .continueWith(new Continuation<Boolean, Object>() {
-                            @Override
-                            public Object then(Task<Boolean> task) throws Exception {
-                                final boolean failed = task.isFaulted();
-                                mRootView.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        v.setEnabled(true);
-                                        textview.setEnabled(true);
-
-                                        if (!failed) {
-                                            fetchNewMessages();
-                                            textview.setText("");
-                                        }
-                                    }
-                                });
-                                return null;
-                            }
-                        })
-                        .continueWith(new Continuation<Object, Object>() {
-                            @Override
-                            public Object then(Task<Object> task) throws Exception {
-                                if(task.isFaulted()) {
-                                    Log.e(Constants.LOG_TAG, "error", task.getError());
-                                }
-                                return null;
-                            }
-                        });
-
+            public void onClick(View v) {
+                setMessageComposerVisibility(true);
             }
         });
+
+        btnCompose.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                mAdapter.setHeaderHeight(bottom - top + margin);
+                btnCompose.removeOnLayoutChangeListener(this);
+            }
+        });
+
+        composer.setOnActionListener(new MessageComposer.ActionListener() {
+            @Override
+            public void onSubmit(String message) {
+                sendMessage(message);
+            }
+
+            @Override
+            public void onCancel() {
+                setMessageComposerVisibility(false);
+            }
+        });
+    }
+
+    private void sendMessage(String message) {
+        final MessageComposer composer = getMessageComposer();
+        if(TextUtils.isEmpty(message)) return;
+
+        ServerConfig s = Select.from(ServerConfig.class).where("is_primary = 1").fetchSingle();
+        if (s == null) return;
+
+        composer.setEnabled(false);
+
+        new RocketChatRestAPI(s.hostname)
+                .sendMessage(new Auth(s.authUserId, s.authToken), mRoomId, message)
+                .continueWith(new Continuation<Boolean, Object>() {
+                    @Override
+                    public Object then(Task<Boolean> task) throws Exception {
+                        final boolean failed = task.isFaulted();
+                        mRootView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                composer.setEnabled(true);
+
+                                if (!failed) {
+                                    fetchNewMessages();
+                                    composer.setText("");
+                                }
+                            }
+                        });
+                        return null;
+                    }
+                })
+                .continueWith(new Continuation<Object, Object>() {
+                    @Override
+                    public Object then(Task<Object> task) throws Exception {
+                        if(task.isFaulted()) {
+                            Log.e(Constants.LOG_TAG, "error", task.getError());
+                        }
+                        return null;
+                    }
+                });
+    }
+
+    private void setMessageComposerVisibility(boolean visible) {
+        final FloatingActionButton btnCompose = getButtonCompose();
+        final MessageComposer composer = getMessageComposer();
+
+        if(visible) {
+            btnCompose.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                @Override
+                public void onHidden(FloatingActionButton fab) {
+                    composer.show(null);
+
+                }
+            });
+        }
+        else{
+            composer.hide(new Runnable() {
+                @Override
+                public void run() {
+                    btnCompose.show();
+                }
+            });
+        }
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        MessageComposer composer = getMessageComposer();
+        if(composer.isShown()) {
+            setMessageComposerVisibility(false);
+            return true;
+        }
+        return false;
     }
 }
