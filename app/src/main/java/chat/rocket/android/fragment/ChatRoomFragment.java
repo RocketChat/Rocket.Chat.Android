@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,6 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.Constants;
 import chat.rocket.android.R;
-import chat.rocket.android.ViewUtil;
 import chat.rocket.android.api.Auth;
 import chat.rocket.android.api.RocketChatRestAPI;
 import chat.rocket.android.model.Message;
@@ -75,6 +75,7 @@ public class ChatRoomFragment extends AbstractFragment {
         mRootView = inflater.inflate(R.layout.chat_room_screen, container, false);
 
         setupToolbar();
+        setupListView();
         loadMessages();
         fetchNewMessages();
         setupMessageComposer();
@@ -101,7 +102,7 @@ public class ChatRoomFragment extends AbstractFragment {
 
                         String messageId = message.getString("_id");
                         Message m = Select.from(Message.class).where("cid = ?", messageId).fetchSingle();
-                        if(m==null) {
+                        if (m == null) {
                             m = new Message();
                             m._id = messageId;
                         }
@@ -123,7 +124,7 @@ public class ChatRoomFragment extends AbstractFragment {
                         m.save();
 
                         //notify change to observers.
-                        Uri uri = Uri.parse("content://chat.rocket.android/message/"+m.id);
+                        Uri uri = Uri.parse("content://chat.rocket.android/message/" + m.id);
                         getContext().getContentResolver().notifyChange(uri, null);
                     }
 
@@ -132,18 +133,21 @@ public class ChatRoomFragment extends AbstractFragment {
             });
     }
 
-    private void loadMessages(){
+    private void setupListView() {
         final Context context = mRootView.getContext();
         mAdapter = new MessageAdapter(context, null);
         final RecyclerView messageListView = (RecyclerView) mRootView.findViewById(R.id.listview_messages);
         messageListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
         messageListView.setAdapter(mAdapter);
+    }
 
+    private void loadMessages(){
+        final Context context = mRootView.getContext();
         getLoaderManager().restartLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
                 Uri uri = Uri.parse("content://chat.rocket.android/message");
-                return new CursorLoader(context, uri, null, "room_id = ?", new String[]{mRoomId}, null);
+                return new CursorLoader(context, uri, null, "room_id = ?", new String[]{mRoomId}, "timestamp DESC");
             }
 
             @Override
@@ -205,14 +209,47 @@ public class ChatRoomFragment extends AbstractFragment {
     private void setupMessageComposer(){
         mRootView.findViewById(R.id.btn_send_composed_message).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                CharSequence text = ViewUtil.getText(mRootView, R.id.chat_composer);
+            public void onClick(final View v) {
+                final TextView textview = (TextView) mRootView.findViewById(R.id.chat_composer);
+                CharSequence text = textview.getText();
                 if(TextUtils.isEmpty(text)) return;
 
                 ServerConfig s = Select.from(ServerConfig.class).where("is_primary = 1").fetchSingle();
                 if (s == null) return;
-//                new RocketChatRestAPI(s.hostname)
-//                        .sendMessage...
+
+                v.setEnabled(false);
+                textview.setEnabled(false);
+                new RocketChatRestAPI(s.hostname)
+                        .sendMessage(new Auth(s.authUserId, s.authToken), mRoomId, text.toString())
+                        .continueWith(new Continuation<Boolean, Object>() {
+                            @Override
+                            public Object then(Task<Boolean> task) throws Exception {
+                                final boolean failed = task.isFaulted();
+                                mRootView.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        v.setEnabled(true);
+                                        textview.setEnabled(true);
+
+                                        if (!failed) {
+                                            fetchNewMessages();
+                                            textview.setText("");
+                                        }
+                                    }
+                                });
+                                return null;
+                            }
+                        })
+                        .continueWith(new Continuation<Object, Object>() {
+                            @Override
+                            public Object then(Task<Object> task) throws Exception {
+                                if(task.isFaulted()) {
+                                    Log.e(Constants.LOG_TAG, "error", task.getError());
+                                }
+                                return null;
+                            }
+                        });
+
             }
         });
     }

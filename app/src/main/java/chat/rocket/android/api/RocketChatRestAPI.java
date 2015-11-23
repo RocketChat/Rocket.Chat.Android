@@ -3,6 +3,7 @@ package chat.rocket.android.api;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
@@ -168,5 +169,28 @@ public class RocketChatRestAPI {
 
     }
 
+    public Task<Boolean> sendMessage(Auth auth, String roomId, String msg) {
+        JSONObject bodyJson = new JSONObject();
+        try {
+            bodyJson.put("msg", msg);
+        } catch (JSONException e) {
+            TaskCompletionSource<Boolean> task = new TaskCompletionSource<>();
+            task.setError(e);
+            return task.getTask();
+        }
 
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), bodyJson.toString());
+        return baseRequest(
+                createAuthRequestBuilder(auth)
+                        .url(baseURL().addPathSegment("rooms").addPathSegment(roomId).addPathSegment("send").build())
+                        .post(body)
+                        .build(),
+                new ResponseParser<Boolean>() {
+                    public Boolean parse(JSONObject result) throws JSONException {
+                        //
+                        return true;
+                    }
+                });
+
+    }
 }
