@@ -28,6 +28,7 @@ import chat.rocket.android.api.RocketChatRestAPI;
 import chat.rocket.android.fragment.ChatRoomFragment;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
+import jp.co.crowdworks.android_meteor.DDPClientPre1;
 import ollie.query.Select;
 
 public class MainActivity extends AbstractActivity {
@@ -50,6 +51,9 @@ public class MainActivity extends AbstractActivity {
         setupUserActionToggle();
         loadRooms();
         openPaneIfNeededForInitialLayout();
+
+        DDPClientPre1 ddp = new DDPClientPre1();
+        ddp.connect("ws://yi01rocket.herokuapp.com/websocket");
     }
 
     private void setupUserInfo(){
