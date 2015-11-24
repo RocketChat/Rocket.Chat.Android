@@ -30,8 +30,8 @@ import chat.rocket.android.api.RocketChatRestAPI;
 import chat.rocket.android.fragment.ChatRoomFragment;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
-import jp.co.crowdworks.android_meteor.DDPClient;
-import jp.co.crowdworks.android_meteor.DDPClientCallback;
+import jp.co.crowdworks.android_meteor.ddp.DDPClient;
+import jp.co.crowdworks.android_meteor.ddp.DDPClientCallback;
 import ollie.query.Select;
 
 public class MainActivity extends AbstractActivity {
