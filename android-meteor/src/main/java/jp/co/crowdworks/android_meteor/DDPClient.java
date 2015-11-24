@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.squareup.okhttp.OkHttpClient;
 
+import org.json.JSONObject;
+
 import bolts.Task;
 import bolts.TaskCompletionSource;
 
@@ -25,6 +27,24 @@ public class DDPClient {
     public Task<DDPClientCallback.Ping> ping(@Nullable String id) {
         TaskCompletionSource<DDPClientCallback.Ping> task = new TaskCompletionSource<>();
         mImpl.ping(task, id);
+        return task.getTask();
+    }
+
+    public Task<DDPClientCallback.RPC> rpc(String method, JSONObject params, String id) {
+        TaskCompletionSource<DDPClientCallback.RPC> task = new TaskCompletionSource<>();
+        mImpl.rpc(task, method, params, id);
+        return task.getTask();
+    }
+
+    public Task<DDPSubscription.Ready> sub(String id, String name, JSONObject params) {
+        TaskCompletionSource<DDPSubscription.Ready> task = new TaskCompletionSource<>();
+        mImpl.sub(task, name, params,id);
+        return task.getTask();
+    }
+
+    public Task<DDPSubscription.NoSub> unsub(String id) {
+        TaskCompletionSource<DDPSubscription.NoSub> task = new TaskCompletionSource<>();
+        mImpl.unsub(task, id);
         return task.getTask();
     }
 }

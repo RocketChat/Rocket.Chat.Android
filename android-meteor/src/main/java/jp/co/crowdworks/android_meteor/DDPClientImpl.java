@@ -17,10 +17,12 @@ import bolts.TaskCompletionSource;
 import jp.co.crowdworks.android_meteor.rx.RxWebSocket;
 import jp.co.crowdworks.android_meteor.rx.RxWebSocketCallback;
 import rx.Observable;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 public class DDPClientImpl {
     private final static String TAG = DDPClient.TAG;
+
     private final DDPClient mClient;
     private final RxWebSocket mWebSocket;
     private Observable<RxWebSocketCallback.Base> mObservable;
@@ -89,18 +91,108 @@ public class DDPClientImpl {
                     if ("pong".equals(msg)) {
                         if (response.isNull("id")) {
                             task.setResult(new DDPClientCallback.Ping(mClient, null));
+                            subscriptions.unsubscribe();
                         } else {
-                            task.setResult(new DDPClientCallback.Ping(mClient, response.optString("id")));
+                            String _id = response.optString("id");
+                            if (id.equals(_id)) {
+                                task.setResult(new DDPClientCallback.Ping(mClient, id));
+                                subscriptions.unsubscribe();
+                            }
                         }
                     }
-
-                    subscriptions.unsubscribe();
                 }, err -> {
                     task.setError(new DDPClientCallback.Ping.Timeout(mClient));
                 }));
 
         if(TextUtils.isEmpty(id)) sendMessage("ping", null);
         else sendMessage("ping", json -> json.put("id", id));
+    }
+
+    public void sub(final TaskCompletionSource<DDPSubscription.Ready> task, String name, JSONObject params, String id){
+        CompositeSubscription subscriptions = new CompositeSubscription();
+
+        subscriptions.add(mObservable
+                .filter(callback -> callback instanceof RxWebSocketCallback.Message)
+                .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+                .map(DDPClientImpl::toJson)
+                .subscribe(response -> {
+                    String msg = extractMsg(response);
+                    if ("ready".equals(msg) && !response.isNull("subs")) {
+                        JSONArray ids = response.optJSONArray("subs");
+                        for(int i=0;i<ids.length();i++) {
+                            String _id = ids.optString(i);
+                            if(id.equals(_id)) {
+                                task.setResult(new DDPSubscription.Ready(mClient, id));
+                                subscriptions.unsubscribe();
+                                break;
+                            }
+                        }
+                    }
+                    else if ("nosub".equals(msg) && !response.isNull("id") && !response.isNull("error")) {
+                        String _id = response.optString("id");
+                        if(id.equals(_id)) {
+                            task.setError(new DDPSubscription.NoSub.Error(mClient, id, response.optJSONObject("error")));
+                            subscriptions.unsubscribe();
+                        }
+                    }
+                }));
+
+        sendMessage("sub", json -> json
+                .put("id", id)
+                .put("name", name)
+                .put("params", params));
+    }
+
+    public void unsub(final TaskCompletionSource<DDPSubscription.NoSub> task, @Nullable final String id){
+        CompositeSubscription subscriptions = new CompositeSubscription();
+
+        subscriptions.add(mObservable
+                .filter(callback -> callback instanceof RxWebSocketCallback.Message)
+                .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+                .map(DDPClientImpl::toJson)
+                .subscribe(response -> {
+                    String msg = extractMsg(response);
+                    if ("nosub".equals(msg) && response.isNull("error") && !response.isNull("id")) {
+                        String _id = response.optString("id");
+                        if (id.equals(_id)) {
+                            task.setResult(new DDPSubscription.NoSub(mClient, id));
+                            subscriptions.unsubscribe();
+                        }
+                    }
+                }));
+
+        sendMessage("unsub", json -> json
+                .put("id", id));
+    }
+
+    public void rpc(final TaskCompletionSource<DDPClientCallback.RPC> task, String method, JSONObject params, String id){
+        CompositeSubscription subscriptions = new CompositeSubscription();
+
+        subscriptions.add(mObservable
+                .filter(callback -> callback instanceof RxWebSocketCallback.Message)
+                .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+                .map(DDPClientImpl::toJson)
+                .subscribe(response -> {
+                    String msg = extractMsg(response);
+                    if ("result".equals(msg)) {
+                        String _id = response.optString("id");
+                        if(id.equals(_id)) {
+                            if (!response.isNull("result")) {
+                                task.setResult(new DDPClientCallback.RPC(mClient, id, response.optJSONObject("result")));
+                                subscriptions.unsubscribe();
+                            }
+                            else if (!response.isNull("error")) {
+                                task.setError(new DDPClientCallback.RPC.Error(mClient, id, response.optJSONObject("error")));
+                                subscriptions.unsubscribe();
+                            }
+                        }
+                    }
+                }));
+
+        sendMessage("method", json -> json
+                        .put("method", method)
+                        .put("params", params)
+                        .put("id", id));
     }
 
     private void subscribeBaseListeners() {
@@ -129,6 +221,60 @@ public class DDPClientImpl {
         }));
 
     }
+
+    public Observable<DDPSubscription.Event> getDDPSubscription(String id) {
+        String[] targetMsgs = {"added", "changed", "removed", "addedBefore", "movedBefore"};
+        return mObservable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+                .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+                .map(DDPClientImpl::toJson)
+                .filter(response -> {
+                    String msg = extractMsg(response);
+                    for(String m: targetMsgs) {
+                        if (m.equals(msg)) return true;
+                    }
+                    return false;
+                }).map(
+                new Func1<JSONObject, DDPSubscription.Event>() { //lambda is difficult to debug with Breakpoint...
+                    @Override
+                    public DDPSubscription.Event call(JSONObject response) {
+                        String msg = extractMsg(response);
+                        if ("added".equals(msg)) {
+                            return new DDPSubscription.Added(mClient,
+                                    response.optString("collection"),
+                                    response.optString("id"),
+                                    response.isNull("fields")? null : response.optJSONObject("fields"));
+                        }
+                        else if ("addedBefore".equals(msg)) {
+                            return new DDPSubscription.Added.Before(mClient,
+                                    response.optString("collection"),
+                                    response.optString("id"),
+                                    response.isNull("fields")? null : response.optJSONObject("fields"),
+                                    response.isNull("before")? null : response.optString("before"));
+                        }
+                        else if ("changed".equals(msg)) {
+                            return new DDPSubscription.Changed(mClient,
+                                    response.optString("collection"),
+                                    response.optString("id"),
+                                    response.isNull("fields")? null : response.optJSONObject("fields"),
+                                    response.isNull("cleared")? new JSONArray() : response.optJSONArray("before"));
+                        }
+                        else if ("removed".equals(msg)) {
+                            return new DDPSubscription.Removed(mClient,
+                                    response.optString("collection"),
+                                    response.optString("id"));
+                        }
+                        else if ("movedBefore".equals(msg)) {
+                            return new DDPSubscription.MovedBefore(mClient,
+                                    response.optString("collection"),
+                                    response.optString("id"),
+                                    response.isNull("before")? null : response.optString("before"));
+                        }
+
+                        return null;
+                    }
+                }).asObservable();
+    }
+
 
     public void unscribeBaseListeners() {
         if(mBaseSubscriptions.hasSubscriptions() && !mBaseSubscriptions.isUnsubscribed()) {

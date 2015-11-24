@@ -2,6 +2,8 @@ package jp.co.crowdworks.android_meteor;
 
 import android.support.annotation.Nullable;
 
+import org.json.JSONObject;
+
 public class DDPClientCallback {
     public static abstract class Base {
         public DDPClient client;
@@ -45,4 +47,22 @@ public class DDPClientCallback {
         }
     }
 
+    public static class RPC extends Base {
+        public String id;
+        public JSONObject result;
+        public RPC(DDPClient client, String id, JSONObject result) {
+            super(client);
+            this.id = id;
+            this.result = result;
+        }
+        public static class Error extends BaseException {
+            public String id;
+            public JSONObject error;
+            public Error(DDPClient client, String id, JSONObject error) {
+                super(client);
+                this.id = id;
+                this.error = error;
+            }
+        }
+    }
 }
