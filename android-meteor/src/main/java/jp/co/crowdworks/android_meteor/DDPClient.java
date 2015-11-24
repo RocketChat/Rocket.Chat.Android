@@ -46,12 +46,7 @@ public class DDPClient {
         mObservable
                 .filter(callback -> callback instanceof RxWebSocketCallback.Message)
                 .map(callback -> {
-                    try {
-                        return ((RxWebSocketCallback.Message) callback).responseBody.string();
-                    } catch (Exception e) {
-                        Log.d(TAG,"error in getting response body",e);
-                    }
-                    return null;
+                    return ((RxWebSocketCallback.Message) callback).responseBodyString;
                 })
                 .map(s -> {
                     try {

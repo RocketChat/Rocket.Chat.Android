@@ -52,21 +52,20 @@ public class RxWebSocketCallback {
     }
 
     public static class Message extends Base {
-        public ResponseBody responseBody;
+        public String responseBodyString;
 
         public Message(WebSocket websocket, ResponseBody responseBody) {
             super("Message", websocket);
-            this.responseBody = responseBody;
+            try {
+                this.responseBodyString = responseBody.string();
+            } catch(Exception e){
+                Log.e(RxWebSocket.TAG, "error in reading response(Message)", e);
+            }
         }
 
         @Override
         public String toString() {
-            try {
-                return "["+type+"] "+responseBody.string();
-            } catch (IOException e) {
-                Log.e(RxWebSocket.TAG, "error", e);
-            }
-            return super.toString();
+            return "["+type+"] "+responseBodyString;
         }
     }
 

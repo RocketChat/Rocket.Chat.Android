@@ -47,13 +47,6 @@ public class RxWebSocket {
                     @Override
                     public void onMessage(ResponseBody responseBody) throws IOException {
                         subscriber.onNext(new RxWebSocketCallback.Message(mWebSocket, responseBody));
-
-                        //asssure responseBody is closed for avoiding IllegalStateException("Listener failed to call close on message payload.").
-                        try{
-                            responseBody.close();
-                        }
-                        catch (Exception e){
-                        }
                     }
 
                     @Override
