@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.okhttp.OkHttpClient;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import bolts.Task;
@@ -30,7 +31,7 @@ public class DDPClient {
         return task.getTask();
     }
 
-    public Task<DDPClientCallback.RPC> rpc(String method, JSONObject params, String id) {
+    public Task<DDPClientCallback.RPC> rpc(String method, JSONArray params, String id) {
         TaskCompletionSource<DDPClientCallback.RPC> task = new TaskCompletionSource<>();
         mImpl.rpc(task, method, params, id);
         return task.getTask();

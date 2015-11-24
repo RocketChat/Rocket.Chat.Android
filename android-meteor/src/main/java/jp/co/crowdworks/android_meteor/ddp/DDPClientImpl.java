@@ -46,9 +46,9 @@ public class DDPClientImpl {
                 .subscribe(callback -> {
                     sendMessage("connect", json ->
                             (TextUtils.isEmpty(session) ? json : json.put("session", session))
-                                    .put("version", "pre1")
+                                    .put("version", "pre2")
                                     .put("support", new JSONArray()
-                                            .put("pre1")//.put("pre2").put("1")
+                                                    .put("pre2").put("pre1")
                                     ));
                 }));
 
@@ -78,7 +78,6 @@ public class DDPClientImpl {
     }
 
     public void ping(final TaskCompletionSource<DDPClientCallback.Ping> task, @Nullable final String id){
-        Log.w(TAG, "ping is not supported in DDP-pre1 spec.");
         CompositeSubscription subscriptions = new CompositeSubscription();
 
         subscriptions.add(mObservable
@@ -165,7 +164,7 @@ public class DDPClientImpl {
                 .put("id", id));
     }
 
-    public void rpc(final TaskCompletionSource<DDPClientCallback.RPC> task, String method, JSONObject params, String id){
+    public void rpc(final TaskCompletionSource<DDPClientCallback.RPC> task, String method, JSONArray params, String id){
         CompositeSubscription subscriptions = new CompositeSubscription();
 
         subscriptions.add(mObservable
