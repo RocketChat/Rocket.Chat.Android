@@ -1,5 +1,7 @@
 package jp.co.crowdworks.android_meteor.rx;
 
+import android.util.Log;
+
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import com.squareup.okhttp.ws.WebSocket;
@@ -15,6 +17,11 @@ public class RxWebSocketCallback {
         public Base(String type, WebSocket ws){
             this.type = type;
             this.ws = ws;
+        }
+
+        @Override
+        public String toString() {
+            return "["+type+"]";
         }
     }
 
@@ -36,6 +43,12 @@ public class RxWebSocketCallback {
             this.e = e;
             this.response = response;
         }
+
+        @Override
+        public String toString() {
+            if (response!=null) return "["+type+"] "+response.message();
+            else return super.toString();
+        }
     }
 
     public static class Message extends Base {
@@ -44,6 +57,16 @@ public class RxWebSocketCallback {
         public Message(WebSocket websocket, ResponseBody responseBody) {
             super("Message", websocket);
             this.responseBody = responseBody;
+        }
+
+        @Override
+        public String toString() {
+            try {
+                return "["+type+"] "+responseBody.string();
+            } catch (IOException e) {
+                Log.e(RxWebSocket.TAG, "error", e);
+            }
+            return super.toString();
         }
     }
 
@@ -64,6 +87,11 @@ public class RxWebSocketCallback {
             super("Close", websocket);
             this.code = code;
             this.reason = reason;
+        }
+
+        @Override
+        public String toString() {
+            return "["+type+"] code="+code+", reason="+reason;
         }
     }
 

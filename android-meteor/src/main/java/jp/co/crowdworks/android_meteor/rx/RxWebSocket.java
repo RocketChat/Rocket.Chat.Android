@@ -17,6 +17,8 @@ import rx.Subscriber;
 import rx.observables.ConnectableObservable;
 
 public class RxWebSocket {
+    static final String TAG = "RxWebSocket";
+
     private OkHttpClient mHttpClient;
     private WebSocket mWebSocket;
 

@@ -18,10 +18,16 @@ public class DDPClient {
 
     private RxWebSocket mWebSocket;
     private Observable<RxWebSocketCallback.Base> mObservable;
+    private String mSession;
 
     public DDPClient(OkHttpClient client) {
         mWebSocket = new RxWebSocket(client);
     }
+
+    public void setSession(String session) {
+        mSession = session;
+    }
+
     public void connect(final String url){
         mObservable = mWebSocket.connect(url).autoConnect();
 
@@ -31,7 +37,9 @@ public class DDPClient {
                     sendJSON("connect", json -> json
                             .put("version", "pre1")
                             .put("support", new JSONArray()
-                                            .put("pre1")
+                                    .put("pre1")
+                                    //.put("pre2")
+                                    //.put("1")
                             ));
                 });
 
@@ -41,7 +49,7 @@ public class DDPClient {
                     try {
                         return ((RxWebSocketCallback.Message) callback).responseBody.string();
                     } catch (Exception e) {
-                        Log.d(TAG,"error",e);
+                        Log.d(TAG,"error in getting response body",e);
                     }
                     return null;
                 })
@@ -49,18 +57,26 @@ public class DDPClient {
                     try {
                         return s == null ? null : new JSONObject(s);
                     } catch (JSONException e) {
-                        Log.d(TAG, "error", e);
+                        Log.d(TAG, "error in converting json: "+s, e);
                     }
                     return null;
                 })
                 .subscribe(json -> {
                     try {
                         Log.d(TAG, json.toString(1));
+                        //handleMessageJSON(json);
                     } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 });
 
+        // just for debugging.
+        mObservable.subscribe(callback -> {
+            Log.d(TAG, "DEBUG> "+callback);
+        });
+    }
+
+    private void handleMessageJSON(JSONObject response) throws JSONException {
+        final String msg = response.getString("msg");
     }
 
     private interface JSONBuilder {
