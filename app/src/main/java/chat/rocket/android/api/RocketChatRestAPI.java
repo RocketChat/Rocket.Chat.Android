@@ -80,7 +80,7 @@ public class RocketChatRestAPI {
         return task.getTask();
     }
 
-    public Task<Auth> login(String username, String password){
+        public Task<Auth> login(String username, String password){
         RequestBody formBody = new FormEncodingBuilder()
                 .add("user", username)
                 .add("password", password)

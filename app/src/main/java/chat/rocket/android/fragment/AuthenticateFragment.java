@@ -11,6 +11,7 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.api.Auth;
+import chat.rocket.android.api.RocketChatAPI;
 import chat.rocket.android.api.RocketChatRestAPI;
 import chat.rocket.android.model.ServerConfig;
 
@@ -82,6 +83,10 @@ public class AuthenticateFragment extends AbstractFragment {
                         return null;
                     }
                 });
+
+        //just for trial!!
+        new RocketChatAPI(host).trial(account, password);
+
     }
 
     private void showSplashFragment(){
