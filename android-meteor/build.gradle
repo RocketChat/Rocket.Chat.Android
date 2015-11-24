@@ -39,4 +39,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.squareup.okhttp:okhttp-ws:2.6.0'
     compile 'io.reactivex:rxjava:1.0.16'
+    compile 'com.parse.bolts:bolts-tasks:1.3.0'
 }

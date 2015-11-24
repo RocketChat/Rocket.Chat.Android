@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import chat.rocket.android.fragment.ChatRoomFragment;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import jp.co.crowdworks.android_meteor.DDPClient;
+import jp.co.crowdworks.android_meteor.DDPClientCallback;
 import ollie.query.Select;
 
 public class MainActivity extends AbstractActivity {
@@ -53,8 +55,32 @@ public class MainActivity extends AbstractActivity {
         loadRooms();
         openPaneIfNeededForInitialLayout();
 
-        DDPClient ddp = new DDPClient(OkHttpHelper.getClient());
-        ddp.connect("ws://yi01rocket.herokuapp.com/websocket");
+        new DDPClient(OkHttpHelper.getClient()).connect("ws://yi01rocket.herokuapp.com/websocket")
+                .onSuccessTask(new Continuation<DDPClientCallback.Connect, Task<DDPClientCallback.Ping>>() {
+                    @Override
+                    public Task<DDPClientCallback.Ping> then(Task<DDPClientCallback.Connect> task) throws Exception {
+                        DDPClientCallback.Connect result = task.getResult();
+                        Log.d(TAG, "connected with session="+result.session);
+                        return result.client.ping("123456");
+                    }
+                })
+                .onSuccess(new Continuation<DDPClientCallback.Ping, Object>() {
+                    @Override
+                    public Object then(Task<DDPClientCallback.Ping> task) throws Exception {
+                        Log.d(TAG, "pong with id="+task.getResult().id);
+                        return null;
+                    }
+                })
+                .continueWith(new Continuation<Object, Object>() {
+                    @Override
+                    public Object then(Task<Object> task) throws Exception {
+                        if(task.isFaulted()) {
+                            Log.e(TAG, "error", task.getError());
+                        }
+                        return null;
+                    }
+                });
+
     }
 
     private void setupUserInfo(){
