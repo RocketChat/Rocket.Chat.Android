@@ -3,6 +3,7 @@ package chat.rocket.android.api;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -25,7 +26,7 @@ public class RocketChatAPI {
         mHostName = hostname;
     }
 
-    public static String sha256sum(String orig) {
+    private static String sha256sum(String orig) {
         MessageDigest d = null;
         try {
             d = MessageDigest.getInstance("SHA-256");
@@ -40,24 +41,47 @@ public class RocketChatAPI {
         return sb.toString();
     }
 
+    private static class Counter1000{
+        private int n=0;
+        public int next(){
+            n++;
+            n%=1000;
+            return n;
+        }
+    };
+    private static Counter1000 sCounter = new Counter1000();
+
+    private String generateId(String method) {
+        return method+Long.toString(System.currentTimeMillis())+sCounter.next();
+    }
+
+    public Task<DDPClientCallback.Connect> connect() {
+        return mDDPClient.connect("wss://"+mHostName+"/websocket");
+    }
+
+    public Task<DDPClientCallback.RPC> login(final String username, final String password) throws JSONException {
+        JSONObject param = new JSONObject();
+        param.put("user", new JSONObject().put("email", username));
+        param.put("password", new JSONObject().put("digest", sha256sum(password)).put("algorithm", "sha-256"));
+
+        return mDDPClient.rpc("login", new JSONArray().put(param) ,generateId("login"));
+    }
+
+    public Task<DDPClientCallback.RPC> logout(){
+        return mDDPClient.rpc("logout",null,generateId("logout"));
+    }
+
 
     public void trial(final String username, final String password){
-        mDDPClient.connect("wss://"+mHostName+"/websocket").onSuccessTask(new Continuation<DDPClientCallback.Connect, Task<DDPClientCallback.RPC>>() {
+        connect().onSuccessTask(new Continuation<DDPClientCallback.Connect, Task<DDPClientCallback.RPC>>() {
             @Override
             public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.Connect> task) throws Exception {
-                JSONObject param = new JSONObject();
-                param.put("user", new JSONObject().put("email", username));
-                param.put("password", new JSONObject().put("digest", sha256sum(password)).put("algorithm", "sha-256"));
-
-                return task.getResult().client.rpc("login", new JSONArray().put(param) ,"login-hoge");
+                return login(username, password);
             }
         }).onSuccessTask(new Continuation<DDPClientCallback.RPC, Task<DDPClientCallback.RPC>>() {
             @Override
             public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.RPC> task) throws Exception {
-                JSONObject result = task.getResult().result;
-                Log.d("hoge", "result=" + result.toString(1));
-
-                return task.getResult().client.rpc("logout",null,"logout-hoge");
+                return logout();
             }
         }).onSuccess(new Continuation<DDPClientCallback.RPC, Object>() {
             @Override
