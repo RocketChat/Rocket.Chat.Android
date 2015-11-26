@@ -71,12 +71,25 @@ public class RocketChatAPI {
         return mDDPClient.rpc("logout",null,generateId("logout"));
     }
 
+    public Task<DDPClientCallback.RPC> sendMessage(final String roomId, String msg) throws JSONException {
+        JSONObject param = new JSONObject()
+                .put("_id", generateId("message-doc"))
+                .put("rid", roomId)
+                .put("msg", msg);
+
+        return mDDPClient.rpc("sendMessage", new JSONArray().put(param) ,generateId("message"));
+    }
 
     public void trial(final String username, final String password){
         connect().onSuccessTask(new Continuation<DDPClientCallback.Connect, Task<DDPClientCallback.RPC>>() {
             @Override
             public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.Connect> task) throws Exception {
                 return login(username, password);
+            }
+        }).onSuccessTask(new Continuation<DDPClientCallback.RPC, Task<DDPClientCallback.RPC>>() {
+            @Override
+            public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.RPC> task) throws Exception {
+                return sendMessage("GENERAL", "Hello World! time="+System.currentTimeMillis());
             }
         }).onSuccessTask(new Continuation<DDPClientCallback.RPC, Task<DDPClientCallback.RPC>>() {
             @Override
