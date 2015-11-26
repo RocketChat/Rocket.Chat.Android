@@ -1,1 +1,1 @@
-include ':app', ':android-meteor'
+include ':app', ':android-ddp'
