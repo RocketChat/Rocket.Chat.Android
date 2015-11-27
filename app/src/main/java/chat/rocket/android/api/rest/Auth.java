@@ -1,4 +1,4 @@
-package chat.rocket.android.api;
+package chat.rocket.android.api.rest;
 
 public class Auth {
     public String userId;

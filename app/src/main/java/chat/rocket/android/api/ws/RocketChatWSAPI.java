@@ -1,4 +1,4 @@
-package chat.rocket.android.api;
+package chat.rocket.android.api.ws;
 
 import android.util.Log;
 
@@ -11,17 +11,18 @@ import java.security.NoSuchAlgorithmException;
 
 import bolts.Continuation;
 import bolts.Task;
+import chat.rocket.android.api.OkHttpHelper;
 import jp.co.crowdworks.android_meteor.ddp.DDPClient;
 import jp.co.crowdworks.android_meteor.ddp.DDPClientCallback;
 
-public class RocketChatAPI {
+public class RocketChatWSAPI {
     private final DDPClient mDDPClient;
     private final String mHostName;
 
-    private RocketChatAPI(){
+    private RocketChatWSAPI(){
         this("demo.rocket.chat");
     }
-    public RocketChatAPI(String hostname){
+    public RocketChatWSAPI(String hostname){
         mDDPClient = new DDPClient(OkHttpHelper.getClient());
         mHostName = hostname;
     }

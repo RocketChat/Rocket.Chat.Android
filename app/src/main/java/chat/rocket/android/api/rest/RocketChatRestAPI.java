@@ -1,4 +1,4 @@
-package chat.rocket.android.api;
+package chat.rocket.android.api.rest;
 
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import chat.rocket.android.api.OkHttpHelper;
 
 public class RocketChatRestAPI {
     public static class AuthorizationRequired extends Exception {
