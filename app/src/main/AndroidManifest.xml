@@ -25,7 +25,7 @@
 
         <provider
             android:authorities="chat.rocket.android"
-            android:name=".RocketChatProvider"
+            android:name=".content.RocketChatProvider"
             android:exported="true"/>
     </application>
 

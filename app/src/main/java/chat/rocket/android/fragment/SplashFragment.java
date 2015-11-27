@@ -1,15 +1,16 @@
 package chat.rocket.android.fragment;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import bolts.Continuation;
@@ -18,12 +19,11 @@ import chat.rocket.android.R;
 import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.api.Auth;
 import chat.rocket.android.api.RocketChatRestAPI;
+import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
-import ollie.query.Delete;
-import ollie.query.Select;
 
-public class SplashFragment extends Fragment {
+public class SplashFragment extends AbstractFragment {
 
     public SplashFragment() {}
 
@@ -40,7 +40,7 @@ public class SplashFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ServerConfig s = Select.from(ServerConfig.class).where("is_primary = 1").fetchSingle();
+        ServerConfig s = getPrimaryServerConfig();
 
         if (s == null || TextUtils.isEmpty(s.authToken)) showServerConfigFragment();
         else tryGetRooms(s);
@@ -58,16 +58,24 @@ public class SplashFragment extends Fragment {
                 .onSuccess(new Continuation<JSONArray, Object>() {
                     @Override
                     public Object then(Task<JSONArray> task) throws Exception {
-                        Delete.from(Room.class).where("?=?", 1, 1).execute(); // '.where("?=?", 1, 1)' is required because of Ollie's bug...
-                        JSONArray rooms = task.getResult();
-                        for (int i = 0; i < rooms.length(); i++) {
-                            JSONObject room = rooms.getJSONObject(i);
-                            Room r = new Room();
-                            r._id = room.getString("_id");
-                            r.name = room.getString("name");
-                            r.timestamp = room.getString("ts");
-                            r.save();
-                        }
+                        final JSONArray rooms = task.getResult();
+
+                        RocketChatDatabaseHelper.write(getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
+                            @Override
+                            public Object process(SQLiteDatabase db) throws JSONException {
+                                Room.delete(db, null,null);
+                                for (int i = 0; i < rooms.length(); i++) {
+                                    JSONObject room = rooms.getJSONObject(i);
+                                    Room r = new Room();
+                                    r.id = room.getString("_id");
+                                    r.name = room.getString("name");
+                                    r.timestamp = room.getString("ts");
+                                    r.put(db);
+                                }
+
+                                return null;
+                            }
+                        });
 
                         mShowMainActivityManager.setShouldAction(true);
                         return null;
@@ -78,7 +86,14 @@ public class SplashFragment extends Fragment {
                     public Object then(Task<Object> task) throws Exception {
                         Exception e = task.getError();
                         if (e instanceof RocketChatRestAPI.AuthorizationRequired) {
-                            config.delete();
+                            RocketChatDatabaseHelper.write(getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
+                                @Override
+                                public Object process(SQLiteDatabase db) throws JSONException {
+                                    config.delete(db);
+
+                                    return null;
+                                }
+                            });
                             showServerConfigFragment();
                         } else {
                             showErrorFragment(task.getError().getMessage());

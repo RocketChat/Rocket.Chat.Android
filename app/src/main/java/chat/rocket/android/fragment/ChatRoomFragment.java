@@ -2,6 +2,7 @@ package chat.rocket.android.fragment;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import bolts.Continuation;
@@ -29,12 +31,14 @@ import chat.rocket.android.R;
 import chat.rocket.android.activity.OnBackPressListener;
 import chat.rocket.android.api.Auth;
 import chat.rocket.android.api.RocketChatRestAPI;
+import chat.rocket.android.content.RocketChatDatabaseHelper;
+import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.SqliteUtil;
 import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.MessageComposer;
-import ollie.query.Select;
 
 public class ChatRoomFragment extends AbstractFragment implements OnBackPressListener{
     private static final int LOADER_ID = 0x12346;
@@ -91,7 +95,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     }
 
     private void fetchNewMessages() {
-        ServerConfig s = Select.from(ServerConfig.class).where("is_primary = 1").fetchSingle();
+        ServerConfig s = getPrimaryServerConfig();
         if (s == null) return;
 
         new RocketChatRestAPI(s.hostname)
@@ -99,38 +103,51 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             .onSuccess(new Continuation<JSONArray, Object>() {
                 @Override
                 public Object then(Task<JSONArray> task) throws Exception {
-                    JSONArray messages = task.getResult();
-                    for (int i = 0; i < messages.length(); i++) {
-                        JSONObject message = messages.getJSONObject(i);
+                    final JSONArray messages = task.getResult();
+                    RocketChatDatabaseHelper.write(getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
+                        @Override
+                        public Object process(SQLiteDatabase db) throws JSONException {
+                            for (int i = 0; i < messages.length(); i++) {
+                                db.beginTransaction();
 
-                        String messageId = message.getString("_id");
-                        Message m = Select.from(Message.class).where("cid = ?", messageId).fetchSingle();
-                        if (m == null) {
-                            m = new Message();
-                            m._id = messageId;
+                                JSONObject message = messages.getJSONObject(i);
+
+                                String messageId = message.getString("_id");
+                                Message m = Message.getById(db, messageId);
+                                if (m == null) {
+                                    m = new Message();
+                                    m.id = messageId;
+                                }
+                                m.roomId = message.getString("rid");
+                                m.content = message.getString("msg");
+                                m.timestamp = message.getString("ts");
+
+                                JSONObject user = message.getJSONObject("u");
+                                String userId = user.getString("_id");
+                                User u = User.getById(db, userId);
+                                if (u == null) {
+                                    u = new User();
+                                    u.id = userId;
+                                }
+                                u.name = user.getString("username");
+                                u.put(db);
+
+                                m.userId = userId;
+                                long rowID = m.put(db);
+
+                                db.setTransactionSuccessful();
+                                db.endTransaction();
+
+                                m._id = SqliteUtil.getIdWithRowId(db, Message.TABLE_NAME, rowID);
+
+                                //notify change to observers.
+                                Uri uri = RocketChatProvider.getUriForQuery(Message.TABLE_NAME, m._id);
+                                getContext().getContentResolver().notifyChange(uri, null);
+                            }
+
+                            return null;
                         }
-                        m.roomId = message.getString("rid");
-                        m.content = message.getString("msg");
-                        m.timestamp = message.getString("ts");
-
-                        JSONObject user = message.getJSONObject("u");
-                        String userId = user.getString("_id");
-                        User u = Select.from(User.class).where("cid = ?", userId).fetchSingle();
-                        if (u == null) {
-                            u = new User();
-                            u._id = userId;
-                        }
-                        u.name = user.getString("username");
-                        u.save();
-
-                        m.userId = userId;
-                        m.save();
-
-                        //notify change to observers.
-                        Uri uri = Uri.parse("content://chat.rocket.android/message/" + m.id);
-                        getContext().getContentResolver().notifyChange(uri, null);
-                    }
-
+                    });
                     return null;
                 }
             });
@@ -149,7 +166,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         getLoaderManager().restartLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                Uri uri = Uri.parse("content://chat.rocket.android/message");
+                Uri uri = RocketChatProvider.getUriForQuery(Message.TABLE_NAME);
                 return new CursorLoader(context, uri, null, "room_id = ?", new String[]{mRoomId}, "timestamp DESC");
             }
 
@@ -231,8 +248,13 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
         @Override
         public void bindView(MessageViewHolder viewHolder, Context context, Cursor cursor) {
-            Message m = Message.fromCursor(cursor);
-            User u = Select.from(User.class).where("cid=?", m.userId).fetchSingle();
+            final Message m = Message.createFromCursor(cursor);
+            User u = RocketChatDatabaseHelper.read(context, new RocketChatDatabaseHelper.DBCallback<User>() {
+                @Override
+                public User process(SQLiteDatabase db) throws JSONException {
+                    return User.getById(db, m.userId);
+                }
+            });
 
             viewHolder.content.setText(m.content);
             viewHolder.username.setText(u.name);
@@ -256,7 +278,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private void setupMessageComposer(){
         final MessageComposer composer = getMessageComposer();
         final FloatingActionButton btnCompose = getButtonCompose();
-        final int margin = getActivity().getResources().getDimensionPixelSize(R.dimen.margin_normal);
+        final int margin = getContext().getResources().getDimensionPixelSize(R.dimen.margin_normal);
 
         btnCompose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,7 +312,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         final MessageComposer composer = getMessageComposer();
         if(TextUtils.isEmpty(message)) return;
 
-        ServerConfig s = Select.from(ServerConfig.class).where("is_primary = 1").fetchSingle();
+        ServerConfig s = getPrimaryServerConfig();
         if (s == null) return;
 
         composer.setEnabled(false);

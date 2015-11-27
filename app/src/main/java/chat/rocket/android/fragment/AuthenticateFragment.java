@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.api.Auth;
 import chat.rocket.android.api.RocketChatAPI;
 import chat.rocket.android.api.RocketChatRestAPI;
+import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.ServerConfig;
 
 public class AuthenticateFragment extends AbstractFragment {
@@ -22,7 +24,13 @@ public class AuthenticateFragment extends AbstractFragment {
         @Override
         protected void action() {
             if(mServerConfig != null) {
-                mServerConfig.save();
+                RocketChatDatabaseHelper.write(getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
+                    @Override
+                    public Object process(SQLiteDatabase db) {
+                        mServerConfig.put(db);
+                        return null;
+                    }
+                });
                 showSplashFragment();
             }
         }
@@ -67,7 +75,7 @@ public class AuthenticateFragment extends AbstractFragment {
                         mServerConfig.authUserId = auth.userId;
                         mServerConfig.authToken = auth.authToken;
                         mServerConfig.isPrimary = true;
-                        mServerConfig.displayname = host;
+                        mServerConfig.id = host;
 
                         mSaveAuthManager.setShouldAction(true);
                         return null;

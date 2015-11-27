@@ -3,6 +3,7 @@ package chat.rocket.android.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -25,10 +26,12 @@ import chat.rocket.android.Constants;
 import chat.rocket.android.R;
 import chat.rocket.android.api.Auth;
 import chat.rocket.android.api.RocketChatRestAPI;
+import chat.rocket.android.content.RocketChatDatabaseHelper;
+import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.fragment.ChatRoomFragment;
+import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
-import ollie.query.Select;
 
 public class MainActivity extends AbstractActivity {
     private static final String TAG = Constants.LOG_TAG;
@@ -52,8 +55,17 @@ public class MainActivity extends AbstractActivity {
         openPaneIfNeededForInitialLayout();
     }
 
+    private ServerConfig getPrimaryServerConfig() {
+        return RocketChatDatabaseHelper.read(this, new RocketChatDatabaseHelper.DBCallback<ServerConfig>() {
+            @Override
+            public ServerConfig process(SQLiteDatabase db) {
+                return ServerConfig.get(db, "is_primary = 1", null);
+            }
+        });
+    }
+
     private void setupUserInfo(){
-        ServerConfig s = Select.from(ServerConfig.class).where("is_primary = 1").fetchSingle();
+        ServerConfig s = getPrimaryServerConfig();
         if(s!=null){
             ((TextView) findViewById(R.id.txt_hostname_info)).setText(s.hostname);
             ((TextView) findViewById(R.id.txt_account_info)).setText(s.account);
@@ -71,7 +83,7 @@ public class MainActivity extends AbstractActivity {
     private AdapterView.OnItemClickListener mUserActionItemCallbacks = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final ServerConfig s = Select.from(ServerConfig.class).where("is_primary = 1").fetchSingle();
+            final ServerConfig s = getPrimaryServerConfig();
             if(s!=null) {
                 new RocketChatRestAPI(s.hostname)
                         .logout(new Auth(s.authUserId, s.authToken))
@@ -82,7 +94,13 @@ public class MainActivity extends AbstractActivity {
                                 return null;
                             }
                         });
-                s.delete();// delete local data before server's callback.
+                RocketChatDatabaseHelper.write(parent.getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
+                    @Override
+                    public Object process(SQLiteDatabase db) {
+                        s.delete(db);// delete local data before server's callback.
+                        return null;
+                    }
+                });
                 showEntryActivity();
             }
         }
@@ -136,7 +154,7 @@ public class MainActivity extends AbstractActivity {
         getSupportLoaderManager().restartLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                Uri uri = Uri.parse("content://chat.rocket.android/room");
+                Uri uri = RocketChatProvider.getUriForQuery(Room.TABLE_NAME);
                 return new CursorLoader(MainActivity.this, uri, null, null, null, null);
             }
 
@@ -215,7 +233,7 @@ public class MainActivity extends AbstractActivity {
         @Override
         public void bindView(RoomViewHolder viewHolder, Context context, Cursor cursor) {
             final String roomName = cursor.getString(cursor.getColumnIndex("name"));
-            final String roomId = cursor.getString(cursor.getColumnIndex("cid"));
+            final String roomId = cursor.getString(cursor.getColumnIndex("id"));
 
             viewHolder.roomName.setText(roomName);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
