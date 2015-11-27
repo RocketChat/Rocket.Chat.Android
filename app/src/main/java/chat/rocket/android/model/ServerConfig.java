@@ -13,6 +13,7 @@ public class ServerConfig extends AbstractModel {
 
     public String hostname;
     public String account;
+    public String passwd;
     public String authUserId;
     public String authToken;
     public Boolean isPrimary;
@@ -29,6 +30,7 @@ public class ServerConfig extends AbstractModel {
             initID(config, c);
             config.hostname = c.getString(c.getColumnIndex("hostname"));
             config.account = c.getString(c.getColumnIndex("account"));
+            config.passwd = c.getString(c.getColumnIndex("passwd"));
             config.authUserId = c.getString(c.getColumnIndex("auth_user_id"));
             config.authToken = c.getString(c.getColumnIndex("auth_token"));
             config.isPrimary = (c.getInt(c.getColumnIndex("is_primary"))!=0);
@@ -40,6 +42,7 @@ public class ServerConfig extends AbstractModel {
             ContentValues values = createInitContentValue(instance);
             values.put("hostname", instance.hostname);
             values.put("account", instance.account);
+            values.put("passwd", instance.passwd);
             values.put("auth_user_id", instance.authUserId);
             values.put("auth_token", instance.authToken);
             values.put("is_primary", instance.isPrimary);
@@ -59,6 +62,7 @@ public class ServerConfig extends AbstractModel {
                             " id TEXT UNIQUE NOT NULL," +
                             " hostname TEXT UNIQUE NOT NULL," +
                             " account TEXT," +
+                            " passwd TEXT," +
                             " auth_user_id TEXT," +
                             " auth_token TEXT," +
                             " is_primary INTEGER);\n");
@@ -82,6 +86,9 @@ public class ServerConfig extends AbstractModel {
         new DBAccessor(db).dropTable();
     }
 
+    public static ServerConfig getPrimaryConfig(SQLiteDatabase db) {
+        return get(db, "is_primary = 1 AND syncstate = 2", null);
+    }
 
     public static ServerConfig get(SQLiteDatabase db, String selection, String[] selectionArgs) {
         return new DBAccessor(db).get(selection, selectionArgs,null);

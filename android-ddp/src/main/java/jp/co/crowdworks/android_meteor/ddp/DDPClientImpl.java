@@ -221,7 +221,7 @@ public class DDPClientImpl {
 
     }
 
-    public Observable<DDPSubscription.Event> getDDPSubscription(String id) {
+    public Observable<DDPSubscription.Event> getDDPSubscription() {
         String[] targetMsgs = {"added", "changed", "removed", "addedBefore", "movedBefore"};
         return mObservable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
                 .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import rx.Observable;
 
 public class DDPClient {
     static final String TAG = "DDP";
@@ -47,5 +48,9 @@ public class DDPClient {
         TaskCompletionSource<DDPSubscription.NoSub> task = new TaskCompletionSource<>();
         mImpl.unsub(task, id);
         return task.getTask();
+    }
+
+    public Observable<DDPSubscription.Event> getSubscriptionCallback() {
+        return mImpl.getDDPSubscription();
     }
 }

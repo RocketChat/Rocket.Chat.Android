@@ -59,7 +59,7 @@ public class MainActivity extends AbstractActivity {
         return RocketChatDatabaseHelper.read(this, new RocketChatDatabaseHelper.DBCallback<ServerConfig>() {
             @Override
             public ServerConfig process(SQLiteDatabase db) {
-                return ServerConfig.get(db, "is_primary = 1", null);
+                return ServerConfig.getPrimaryConfig(db);
             }
         });
     }
