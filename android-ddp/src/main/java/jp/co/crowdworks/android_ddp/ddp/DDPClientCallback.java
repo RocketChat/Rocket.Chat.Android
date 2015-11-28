@@ -1,4 +1,4 @@
-package jp.co.crowdworks.android_meteor.ddp;
+package jp.co.crowdworks.android_ddp.ddp;
 
 import android.support.annotation.Nullable;
 

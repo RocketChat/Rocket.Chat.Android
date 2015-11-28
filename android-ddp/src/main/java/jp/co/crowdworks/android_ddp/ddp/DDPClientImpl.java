@@ -1,4 +1,4 @@
-package jp.co.crowdworks.android_meteor.ddp;
+package jp.co.crowdworks.android_ddp.ddp;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,8 +14,8 @@ import org.json.JSONObject;
 import java.util.concurrent.TimeUnit;
 
 import bolts.TaskCompletionSource;
-import jp.co.crowdworks.android_meteor.rx.RxWebSocket;
-import jp.co.crowdworks.android_meteor.rx.RxWebSocketCallback;
+import jp.co.crowdworks.android_ddp.rx.RxWebSocket;
+import jp.co.crowdworks.android_ddp.rx.RxWebSocketCallback;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
@@ -67,6 +67,9 @@ public class DDPClientImpl {
                     String msg = extractMsg(response);
                     if ("connected".equals(msg) && !response.isNull("session")) {
                         task.setResult(new DDPClientCallback.Connect(mClient, response.optString("session")));
+                        subscriptions.unsubscribe();
+                    } else if ("error".equals(msg) && "Already connected".equals(response.optString("reason"))){
+                        task.setResult(new DDPClientCallback.Connect(mClient, null));
                         subscriptions.unsubscribe();
                     } else if ("failed".equals(msg)) {
                         task.setError(new DDPClientCallback.Connect.Failed(mClient, response.optString("version")));

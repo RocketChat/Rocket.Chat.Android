@@ -1,4 +1,4 @@
-package jp.co.crowdworks.android_meteor.rx;
+package jp.co.crowdworks.android_ddp.rx;
 
 import android.util.Log;
 
