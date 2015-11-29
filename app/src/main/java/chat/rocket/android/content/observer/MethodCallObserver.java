@@ -96,9 +96,6 @@ public class MethodCallObserver extends AbstractObserver {
         if("loadMessages".equals(id)) {
             return mAPI.loadMessages(params.getString("room_id"), params.optLong("end_ts",-1), params.optInt("num",50));
         }
-        else if("sendMessage".equals(id)) {
-            return mAPI.sendMessage(params.getString("room_id"), params.getString("msg"));
-        }
 
         throw new IllegalArgumentException("id("+id+") is not known.");
     }
