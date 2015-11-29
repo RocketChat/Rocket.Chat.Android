@@ -20,6 +20,7 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.observer.LoginHandler;
 import chat.rocket.android.content.observer.MethodCallObserver;
 import chat.rocket.android.content.observer.RocketChatRoom;
+import chat.rocket.android.content.observer.SendNewMessageHandler;
 import chat.rocket.android.content.subscriber.RocketChatSubscription;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
@@ -109,6 +110,7 @@ public class RocketChatWSService extends Service {
             , RocketChatSubscription.class
             , RocketChatRoom.class
             , MethodCallObserver.class
+            , SendNewMessageHandler.class
     };
     private final ArrayList<Registerable> mListeners = new ArrayList<>();
 

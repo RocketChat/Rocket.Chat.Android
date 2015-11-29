@@ -23,19 +23,16 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import bolts.Continuation;
-import bolts.Task;
 import chat.rocket.android.Constants;
 import chat.rocket.android.DateTime;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.OnBackPressListener;
-import chat.rocket.android.api.rest.Auth;
-import chat.rocket.android.api.rest.RocketChatRestAPI;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.MessageComposer;
@@ -271,35 +268,15 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
         composer.setEnabled(false);
 
-        new RocketChatRestAPI(s.hostname)
-                .sendMessage(new Auth(s.authUserId, s.authToken), mRoomId, message)
-                .continueWith(new Continuation<Boolean, Object>() {
-                    @Override
-                    public Object then(Task<Boolean> task) throws Exception {
-                        final boolean failed = task.isFaulted();
-                        mRootView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                composer.setEnabled(true);
+        Message m = new Message();
+        m.syncstate = SyncState.NOT_SYNCED;
+        m.content = message;
+        m.roomId = mRoomId;
+        m.putByContentProvider(getContext());
 
-                                if (!failed) {
-                                    fetchNewMessages();
-                                    composer.setText("");
-                                }
-                            }
-                        });
-                        return null;
-                    }
-                })
-                .continueWith(new Continuation<Object, Object>() {
-                    @Override
-                    public Object then(Task<Object> task) throws Exception {
-                        if(task.isFaulted()) {
-                            Log.e(Constants.LOG_TAG, "error", task.getError());
-                        }
-                        return null;
-                    }
-                });
+        composer.setText("");
+        composer.setEnabled(true);
+
     }
 
     private void setMessageComposerVisibility(boolean visible) {

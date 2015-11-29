@@ -38,7 +38,7 @@ public class Message extends AbstractModel{
                     dropTable();
                     mDb.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                             " (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            " id TEXT UNIQUE NOT NULL," +
+                            " id TEXT UNIQUE," +
                             " syncstate INTEGER NOT NULL," +
                             " room_id TEXT," +
                             " user_id TEXT," +
