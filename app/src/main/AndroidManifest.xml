@@ -23,6 +23,8 @@
         <activity android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustResize"/>
 
+        <service android:name=".api.ws.RocketChatWSService"/>
+
         <provider
             android:authorities="chat.rocket.android"
             android:name=".content.RocketChatProvider"

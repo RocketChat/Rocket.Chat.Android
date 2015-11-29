@@ -111,7 +111,7 @@ public class DDPClientImpl {
         else sendMessage("ping", json -> json.put("id", id));
     }
 
-    public void sub(final TaskCompletionSource<DDPSubscription.Ready> task, String name, JSONObject params, String id){
+    public void sub(final TaskCompletionSource<DDPSubscription.Ready> task, String name, JSONArray params, String id){
         CompositeSubscription subscriptions = new CompositeSubscription();
 
         subscriptions.add(mObservable

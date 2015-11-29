@@ -20,13 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.Constants;
+import chat.rocket.android.DateTime;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.OnBackPressListener;
 import chat.rocket.android.api.rest.Auth;
@@ -34,8 +34,8 @@ import chat.rocket.android.api.rest.RocketChatRestAPI;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
+import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.ServerConfig;
-import chat.rocket.android.model.SqliteUtil;
 import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.MessageComposer;
@@ -98,59 +98,13 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         ServerConfig s = getPrimaryServerConfig();
         if (s == null) return;
 
-        new RocketChatRestAPI(s.hostname)
-            .listRecentMessages(new Auth(s.authUserId, s.authToken), mRoomId)
-            .onSuccess(new Continuation<JSONArray, Object>() {
-                @Override
-                public Object then(Task<JSONArray> task) throws Exception {
-                    final JSONArray messages = task.getResult();
-                    RocketChatDatabaseHelper.write(getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
-                        @Override
-                        public Object process(SQLiteDatabase db) throws JSONException {
-                            for (int i = 0; i < messages.length(); i++) {
-                                db.beginTransaction();
-
-                                JSONObject message = messages.getJSONObject(i);
-
-                                String messageId = message.getString("_id");
-                                Message m = Message.getById(db, messageId);
-                                if (m == null) {
-                                    m = new Message();
-                                    m.id = messageId;
-                                }
-                                m.roomId = message.getString("rid");
-                                m.content = message.getString("msg");
-                                m.timestamp = message.getString("ts");
-
-                                JSONObject user = message.getJSONObject("u");
-                                String userId = user.getString("_id");
-                                User u = User.getById(db, userId);
-                                if (u == null) {
-                                    u = new User();
-                                    u.id = userId;
-                                }
-                                u.name = user.getString("username");
-                                u.put(db);
-
-                                m.userId = userId;
-                                long rowID = m.put(db);
-
-                                db.setTransactionSuccessful();
-                                db.endTransaction();
-
-                                m._id = SqliteUtil.getIdWithRowId(db, Message.TABLE_NAME, rowID);
-
-                                //notify change to observers.
-                                Uri uri = RocketChatProvider.getUriForQuery(Message.TABLE_NAME, m._id);
-                                getContext().getContentResolver().notifyChange(uri, null);
-                            }
-
-                            return null;
-                        }
-                    });
-                    return null;
-                }
-            });
+        try {
+            MethodCall
+                    .create("loadMessages", new JSONObject().put("room_id",mRoomId))
+                    .putByContentProvider(getContext());
+        } catch (JSONException e) {
+            Log.e(Constants.LOG_TAG, "error", e);
+        }
     }
 
     private void setupListView() {
@@ -258,7 +212,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
             viewHolder.content.setText(m.content);
             viewHolder.username.setText(u.name);
-            viewHolder.timestamp.setText(Constants.DATETIME_FORMAT.parseDateTime(m.timestamp).toString());
+            viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.AUTO_DAY_TIME));
         }
 
         public void setHeaderHeight(int height){

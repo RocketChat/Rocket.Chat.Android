@@ -4,26 +4,38 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class User extends AbstractModel {
-    public static final String TABLE_NAME = "user";
+import org.json.JSONObject;
 
-    public String roomId;
-    public String name;
+public class MethodCall extends AbstractModel {
+    public static final String TABLE_NAME = "method_call";
+
+    public String params;
+    public String returns;
+    public long timestamp;
+
+    public static MethodCall create(String id, JSONObject params) {
+        MethodCall m = new MethodCall();
+        m.id = id;
+        m.params = params.toString();
+        m.timestamp = System.currentTimeMillis();
+        m.syncstate = SyncState.NOT_SYNCED;
+        return m;
+    }
 
     @Override
-    public String getTableName() {
+    protected String getTableName() {
         return TABLE_NAME;
     }
 
-    private static class DBAccessor extends AbstractModelDBAccessor<User> {
+    private static class DBAccessor extends AbstractModelDBAccessor<MethodCall> {
 
         protected DBAccessor(SQLiteDatabase db) {
             super(db, TABLE_NAME);
         }
 
         @Override
-        protected User createModel(Cursor c) {
-            return createFromCursor(c);
+        protected MethodCall createModel(Cursor c) {
+            return MethodCall.createFromCursor(c);
         }
 
         @Override
@@ -36,10 +48,11 @@ public class User extends AbstractModel {
                     dropTable();
                     mDb.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                             " (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            " id TEXT UNIQUE NOT NULL," +
+                            " id TEXT NOT NULL," +
                             " syncstate INTEGER NOT NULL," +
-                            " room_id TEXT," +
-                            " name TEXT);\n");
+                            " params TEXT," +
+                            " returns TEXT," +
+                            " timestamp INTEGER);\n");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -52,19 +65,21 @@ public class User extends AbstractModel {
         }
     }
 
-    public static User createFromCursor(Cursor c) {
-        User u = new User();
-        initID(u, c);
-        u.roomId = c.getString(c.getColumnIndex("room_id"));
-        u.name = c.getString(c.getColumnIndex("name"));
-        return u;
+    public static MethodCall createFromCursor(Cursor c) {
+        MethodCall m = new MethodCall();
+        initID(m, c);
+        m.params = c.getString(c.getColumnIndex("params"));
+        m.returns = c.getString(c.getColumnIndex("returns"));
+        m.timestamp = c.getLong(c.getColumnIndex("timestamp"));
+        return m;
     }
 
     @Override
     protected ContentValues createContentValue() {
         ContentValues values = createInitContentValue();
-        values.put("room_id", roomId);
-        values.put("name", name);
+        values.put("params",params);
+        values.put("returns",returns);
+        values.put("timestamp",timestamp);
         return values;
     }
 
@@ -74,27 +89,6 @@ public class User extends AbstractModel {
 
     public static void dropTable(SQLiteDatabase db) {
         new DBAccessor(db).dropTable();
-    }
-
-
-    public static User get(SQLiteDatabase db, String selection, String[] selectionArgs) {
-        return new DBAccessor(db).get(selection, selectionArgs,null);
-    }
-
-    public static User get(SQLiteDatabase db, long _id) {
-        return new DBAccessor(db).get(_id);
-    }
-
-    public static User getById(SQLiteDatabase db, String id) {
-        return new DBAccessor(db).getByID(id);
-    }
-
-    public void put(SQLiteDatabase db) {
-        new DBAccessor(db).put(this);
-    }
-
-    public int delete(SQLiteDatabase db) {
-        return new DBAccessor(db).delete(this);
     }
 
 }

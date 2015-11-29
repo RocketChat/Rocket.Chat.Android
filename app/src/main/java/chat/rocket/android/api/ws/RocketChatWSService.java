@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -18,24 +15,35 @@ import java.util.Iterator;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.Constants;
+import chat.rocket.android.content.Registerable;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
-import chat.rocket.android.content.observer.AbstractObserver;
+import chat.rocket.android.content.observer.LoginHandler;
+import chat.rocket.android.content.observer.MethodCallObserver;
+import chat.rocket.android.content.observer.RocketChatRoom;
+import chat.rocket.android.content.subscriber.RocketChatSubscription;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
-import jp.co.crowdworks.android_meteor.ddp.DDPClientCallback;
-import jp.co.crowdworks.android_meteor.ddp.DDPSubscription;
-import rx.Observable;
+import hugo.weaving.DebugLog;
+import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
+import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import rx.functions.Action1;
 
 public class RocketChatWSService extends Service {
     private final static String TAG = Constants.LOG_TAG;
 
-    RocketChatWSAPI mAPI;
-    Observable<DDPSubscription.Event> mDDPCallback;
+    private RocketChatWSAPI mAPI;
 
-    public static void keepalive(Context context) {
-        context.startService(new Intent(context, RocketChatWSService.class));
+    /**
+     * Ensure RocketChatWSService alive.
+     *
+     * @param context
+     * @return true if Service is started just now. false if Service is already started.
+     */
+    public static boolean keepalive(Context context) {
+        return context.startService(new Intent(context, RocketChatWSService.class)) == null;
     }
 
+    @DebugLog
     @Override
     public void onCreate() {
         super.onCreate();
@@ -43,7 +51,7 @@ public class RocketChatWSService extends Service {
         final ServerConfig s = RocketChatDatabaseHelper.read(getBaseContext(), new RocketChatDatabaseHelper.DBCallback<ServerConfig>() {
             @Override
             public ServerConfig process(SQLiteDatabase db) throws Exception {
-                return ServerConfig.get(db, "is_primary = 1",null);
+                return ServerConfig.getPrimaryConfig(db);
             }
         });
 
@@ -52,104 +60,88 @@ public class RocketChatWSService extends Service {
             return;
         }
 
+        s.syncstate = SyncState.NOT_SYNCED;
+        s.putByContentProvider(getBaseContext());
+
         mAPI = new RocketChatWSAPI(s.hostname);
-        mAPI.connect().onSuccessTask(new Continuation<DDPClientCallback.Connect, Task<DDPClientCallback.RPC>>() {
+        mAPI.connect().onSuccess(new Continuation<DDPClientCallback.Connect, Object>() {
             @Override
-            public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.Connect> task) throws Exception {
-                if(TextUtils.isEmpty(s.authToken)) {
-                    return mAPI.login(s.account, s.passwd);
-                }
-                else {
-                    DDPClientCallback.Connect result = task.getResult();
-                    mDDPCallback = result.client.getSubscriptionCallback();
+            public Object then(Task<DDPClientCallback.Connect> task) throws Exception {
+                DDPClientCallback.Connect result = task.getResult();
 
-                    return mAPI.login(s.authToken);
-                }
+                // disconnect if 'Failure' event received.
+                result.client.getFailureObservable().subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        stopSelf();
+                    }
+                });
+
+                // just for debugging.
+                result.client.getSubscriptionCallback().subscribe(new Action1<DDPSubscription.Event>() {
+                    @Override
+                    public void call(DDPSubscription.Event event) {
+                        Log.d(TAG,"Callback [DEBUG] < "+ event);
+                    }
+                });
+
+                registerListeners();
+
+                return null;
             }
-        }).continueWith(new Continuation<DDPClientCallback.RPC, Object>() {
+        }).continueWith(new Continuation<Object, Object>() {
             @Override
-            public Object then(Task<DDPClientCallback.RPC> task) throws Exception {
+            public Object then(Task<Object> task) throws Exception {
                 if(task.isFaulted()){
-                    s.syncstate = SyncState.SYNCED;
-                    RocketChatDatabaseHelper.write(getBaseContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
-                        @Override
-                        public Object process(SQLiteDatabase db) throws Exception {
-                            s.put(db);
-                            return null;
-                        }
-                    });
-
                     Log.e(TAG, "websocket: failed to connect.", task.getError());
+                    s.syncstate = SyncState.FAILED;
+                    s.putByContentProvider(getBaseContext());
                     stopSelf();
                 }
-                else {
-                    JSONObject result = task.getResult().result;
-                    s.authUserId = result.getString("id");
-                    s.authToken = result.getString("token");
-                    s.syncstate = SyncState.SYNCED;
-                    s.passwd = "";
 
-                    RocketChatDatabaseHelper.write(getBaseContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
-                        @Override
-                        public Object process(SQLiteDatabase db) throws Exception {
-                            s.put(db);
-                            return null;
-                        }
-                    });
-
-                    registerListeners();
-                }
                 return null;
             }
         });
     }
 
     private static final Class[] HANDLER_CLASSES = {
-
+            LoginHandler.class
+            , RocketChatSubscription.class
+            , RocketChatRoom.class
+            , MethodCallObserver.class
     };
-    private final ArrayList<AbstractObserver> mObservers = new ArrayList<AbstractObserver>();
+    private final ArrayList<Registerable> mListeners = new ArrayList<>();
 
-    private void registerObservers() {
+    private void registerListeners(){
         final Context context = getApplicationContext();
         for(Class clazz: HANDLER_CLASSES){
             try {
-                Constructor ctor = clazz.getConstructor(Context.class);
-                Object obj = ctor.newInstance(context);
+                Constructor ctor = clazz.getConstructor(Context.class, RocketChatWSAPI.class);
+                Object obj = ctor.newInstance(context, mAPI);
 
-                AbstractObserver observer = (AbstractObserver) obj;
-                observer.register();
-                mObservers.add(observer);
+                if(obj instanceof Registerable) {
+                    Registerable l = (Registerable) obj;
+                    l.register();
+                    mListeners.add(l);
+                }
             } catch (Exception e) {
+                Log.e(TAG, "Error", e);
             }
         }
     }
 
-    private void unregisterObservers() {
-        Iterator<AbstractObserver> it = mObservers.iterator();
+    private void unregisterListeners(){
+        Iterator<Registerable> it = mListeners.iterator();
         while(it.hasNext()){
-            AbstractObserver observer = it.next();
-            observer.unregister();
+            Registerable l = it.next();
+            l.unregister();
             it.remove();
         }
     }
 
-    private void registerListeners(){
-        //DB observer
-        registerObservers();
-
-        //DDP callback observer
-//        mAPI.sub();
-//        mAPI.sub();
-//        mAPI.sub();
-//        mAPI.sub();
-//            :
-//            :
-//
-    }
-
     @Override
     public void onDestroy() {
-        unregisterObservers();;
+        unregisterListeners();
         super.onDestroy();
     }
 

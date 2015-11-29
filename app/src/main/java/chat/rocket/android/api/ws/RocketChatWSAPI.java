@@ -1,18 +1,17 @@
 package chat.rocket.android.api.ws;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.OkHttpHelper;
-import jp.co.crowdworks.android_meteor.ddp.DDPClient;
-import jp.co.crowdworks.android_meteor.ddp.DDPClientCallback;
+import jp.co.crowdworks.android_ddp.ddp.DDPClient;
+import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
+import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import rx.Observable;
 
-/*package*/ class RocketChatWSAPI {
+public class RocketChatWSAPI {
     private final DDPClient mDDPClient;
     private final String mHostName;
 
@@ -20,7 +19,7 @@ import jp.co.crowdworks.android_meteor.ddp.DDPClientCallback;
         this("demo.rocket.chat");
     }
     public RocketChatWSAPI(String hostname){
-        mDDPClient = new DDPClient(OkHttpHelper.getClient());
+        mDDPClient = new DDPClient(OkHttpHelper.getClientForWebSocket());
         mHostName = hostname;
     }
 
@@ -52,7 +51,7 @@ import jp.co.crowdworks.android_meteor.ddp.DDPClientCallback;
 
     public Task<DDPClientCallback.RPC> login(final String token) throws JSONException {
         JSONObject param = new JSONObject();
-        param.put("user", new JSONObject().put("resume", token));
+        param.put("resume", token);
 
         return mDDPClient.rpc("login", new JSONArray().put(param) ,generateId("login-token"));
     }
@@ -70,36 +69,30 @@ import jp.co.crowdworks.android_meteor.ddp.DDPClientCallback;
         return mDDPClient.rpc("sendMessage", new JSONArray().put(param) ,generateId("message"));
     }
 
-    public void trial(final String username, final String password){
-        connect().onSuccessTask(new Continuation<DDPClientCallback.Connect, Task<DDPClientCallback.RPC>>() {
-            @Override
-            public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.Connect> task) throws Exception {
-                return login(username, password);
-            }
-        }).onSuccessTask(new Continuation<DDPClientCallback.RPC, Task<DDPClientCallback.RPC>>() {
-            @Override
-            public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.RPC> task) throws Exception {
-                return sendMessage("GENERAL", "Hello World! time="+System.currentTimeMillis());
-            }
-        }).onSuccessTask(new Continuation<DDPClientCallback.RPC, Task<DDPClientCallback.RPC>>() {
-            @Override
-            public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.RPC> task) throws Exception {
-                return logout();
-            }
-        }).onSuccess(new Continuation<DDPClientCallback.RPC, Object>() {
-            @Override
-            public Object then(Task<DDPClientCallback.RPC> task) throws Exception {
+    public Task<DDPClientCallback.RPC> loadMessages(final String roomID, long endTs, int num) throws JSONException {
+        JSONArray params = new JSONArray()
+                .put(roomID)
+                .put(endTs > 0 ? new JSONObject().put("$date",endTs) : null)
+                .put(num)
+                .put(new JSONObject().put("$date",System.currentTimeMillis()));
 
-                return null;
-            }
-        }).continueWith(new Continuation<Object, Object>() {
-            @Override
-            public Object then(Task<Object> task) throws Exception {
-                if(task.isFaulted()){
-                    Log.e("hoge","error",task.getError());
-                }
-                return null;
-            }
-        });
+        return mDDPClient.rpc("loadHistory", params, generateId("load-message"));
     }
+
+    public Task<DDPSubscription.Ready> subscribe(final String name, JSONArray param) {
+        return mDDPClient.sub(generateId("sub"), name, param);
+    }
+
+    public Task<DDPSubscription.NoSub> unsubscribe(final String id) {
+        return mDDPClient.unsub(id);
+    }
+
+    public Observable<DDPSubscription.Event> getSubscriptionCallback(){
+        return mDDPClient.getSubscriptionCallback();
+    }
+
+    public Observable<Void> getFailureObservable(){
+        return mDDPClient.getFailureObservable();
+    }
+
 }

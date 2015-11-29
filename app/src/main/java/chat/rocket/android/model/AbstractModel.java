@@ -1,8 +1,11 @@
 package chat.rocket.android.model;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
-import android.provider.BaseColumns;
 import android.text.TextUtils;
+
+import chat.rocket.android.content.RocketChatProvider;
 
 abstract class AbstractModel {
     public long _id;
@@ -23,10 +26,21 @@ abstract class AbstractModel {
     }
 
     public static void initID(AbstractModel m, Cursor c) {
-        m._id = c.getLong(c.getColumnIndex(BaseColumns._ID));
+        m._id = c.getLong(c.getColumnIndex("_id"));
         m.id = c.getString(c.getColumnIndex("id"));
         m.syncstate = SyncState.valueOf(c.getInt(c.getColumnIndex("syncstate")));
     }
+
+    protected ContentValues createInitContentValue() {
+        final ContentValues values = new ContentValues();
+        if (hasBaseID()) values.put("_id", _id);
+        if (hasID()) values.put("id", id);
+        values.put("syncstate", syncstate.getValue());
+        return values;
+    }
+
+    abstract protected ContentValues createContentValue();
+    abstract protected String getTableName();
 
     public boolean hasBaseID() {
         return _id >= 0;
@@ -34,6 +48,24 @@ abstract class AbstractModel {
 
     public boolean hasID() {
         return !TextUtils.isEmpty(id);
+    }
+
+    public void putByContentProvider(Context context) {
+        if (hasBaseID()) {
+            context.getContentResolver().update(RocketChatProvider.getUriForQuery(getTableName(), _id)
+                    , createContentValue(), "_id=?", new String[]{Long.toString(_id)});
+        }
+        else {
+            context.getContentResolver().insert(RocketChatProvider.getUriForInsert(getTableName())
+                    , createContentValue());
+        }
+    }
+
+    public void deleteByContentProvider(Context context) {
+        if (hasBaseID()) {
+            context.getContentResolver().delete(RocketChatProvider.getUriForQuery(getTableName(), _id)
+                    , "_id=?", new String[]{Long.toString(_id)});
+        }
     }
 
 }

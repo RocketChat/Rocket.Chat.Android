@@ -1,27 +1,19 @@
 package chat.rocket.android.fragment;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.database.ContentObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import bolts.Continuation;
-import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.MainActivity;
-import chat.rocket.android.api.rest.Auth;
-import chat.rocket.android.api.rest.RocketChatRestAPI;
-import chat.rocket.android.content.RocketChatDatabaseHelper;
-import chat.rocket.android.model.Room;
+import chat.rocket.android.api.ws.RocketChatWSService;
+import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.SyncState;
 
 public class SplashFragment extends AbstractFragment {
 
@@ -42,8 +34,8 @@ public class SplashFragment extends AbstractFragment {
 
         ServerConfig s = getPrimaryServerConfig();
 
-        if (s == null || TextUtils.isEmpty(s.authToken)) showServerConfigFragment();
-        else tryGetRooms(s);
+        if (s == null) showServerConfigFragment();
+        else login(s);
     }
 
     private void showServerConfigFragment(){
@@ -52,56 +44,29 @@ public class SplashFragment extends AbstractFragment {
                 .commit();
     }
 
-    private void tryGetRooms(final ServerConfig config){
-        new RocketChatRestAPI(config.hostname)
-                .getPublicRooms(new Auth(config.authUserId, config.authToken))
-                .onSuccess(new Continuation<JSONArray, Object>() {
-                    @Override
-                    public Object then(Task<JSONArray> task) throws Exception {
-                        final JSONArray rooms = task.getResult();
-
-                        RocketChatDatabaseHelper.write(getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
-                            @Override
-                            public Object process(SQLiteDatabase db) throws JSONException {
-                                Room.delete(db, null,null);
-                                for (int i = 0; i < rooms.length(); i++) {
-                                    JSONObject room = rooms.getJSONObject(i);
-                                    Room r = new Room();
-                                    r.id = room.getString("_id");
-                                    r.name = room.getString("name");
-                                    r.timestamp = room.getString("ts");
-                                    r.put(db);
-                                }
-
-                                return null;
-                            }
-                        });
-
+    private void login(ServerConfig s){
+        if(RocketChatWSService.keepalive(getContext())) {
+            getContext().getContentResolver().registerContentObserver(RocketChatProvider.getUriForQuery(ServerConfig.TABLE_NAME, s._id), false, new ContentObserver(null) {
+                @Override
+                public void onChange(boolean selfChange) {
+                    if(getContext()==null) return;
+                    ServerConfig s = getPrimaryServerConfig();
+                    if(s==null) { //deleted.
+                        getContext().getContentResolver().unregisterContentObserver(this);
+                        showServerConfigFragment();
+                    } else if(s.syncstate==SyncState.SYNCED) {
+                        getContext().getContentResolver().unregisterContentObserver(this);
                         mShowMainActivityManager.setShouldAction(true);
-                        return null;
+                    } else if(s.syncstate==SyncState.FAILED) {
+                        getContext().getContentResolver().unregisterContentObserver(this);
+                        showErrorFragment("Failed to connect.");
                     }
-                })
-                .continueWith(new Continuation<Object, Object>() {
-                    @Override
-                    public Object then(Task<Object> task) throws Exception {
-                        Exception e = task.getError();
-                        if (e instanceof RocketChatRestAPI.AuthorizationRequired) {
-                            RocketChatDatabaseHelper.write(getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
-                                @Override
-                                public Object process(SQLiteDatabase db) throws JSONException {
-                                    config.delete(db);
-
-                                    return null;
-                                }
-                            });
-                            showServerConfigFragment();
-                        } else {
-                            showErrorFragment(task.getError().getMessage());
-                        }
-                        return null;
-                    }
-                });
-
+                }
+            });
+        }
+        else {
+            mShowMainActivityManager.setShouldAction(true);
+        }
     }
 
     private void showErrorFragment(String msg) {

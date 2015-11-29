@@ -10,11 +10,14 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Process;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import chat.rocket.android.Constants;
 import chat.rocket.android.model.Message;
+import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SqliteUtil;
@@ -25,10 +28,12 @@ public class RocketChatProvider extends ContentProvider {
     public static final String CONTENT_URI_BASE = "content://"+Constants.AUTHORITY;
 
     RocketChatDatabaseHelper mDBHelper;
+    RocketChatOnMemoryDatabaseHelper mOnMemDBHelper;
 
     @Override
     public boolean onCreate() {
         mDBHelper = new RocketChatDatabaseHelper(getContext());
+        mOnMemDBHelper = new RocketChatOnMemoryDatabaseHelper(getContext());
         return true;
     }
 
@@ -42,7 +47,9 @@ public class RocketChatProvider extends ContentProvider {
             , Room.TABLE_NAME
             , ServerConfig.TABLE_NAME
             , User.TABLE_NAME
+            , MethodCall.TABLE_NAME
     };
+    private static final ArrayList<String> MODELS_ONMEM = new ArrayList<>();
 
     static
     {
@@ -60,6 +67,7 @@ public class RocketChatProvider extends ContentProvider {
             URI_MAP.put(i + _NEW, model);
             sURIMatcher.addURI(Constants.AUTHORITY, model, i + _NEW);
         }
+        MODELS_ONMEM.add(MethodCall.TABLE_NAME);
     }
     public static String getQueryId(Uri uri){
         return uri.getPathSegments().get(1);
@@ -87,7 +95,8 @@ public class RocketChatProvider extends ContentProvider {
     }
 
     private SQLiteOpenHelper getDatabaseHelperFor(String table){
-        return mDBHelper;
+        if(MODELS_ONMEM.contains(table)) return mOnMemDBHelper;
+        else return mDBHelper;
     }
 
     @Override
@@ -100,8 +109,10 @@ public class RocketChatProvider extends ContentProvider {
 
             final SQLiteDatabase db = getDatabaseHelperFor(table).getReadableDatabase();
             if (match - idx == _ID) {
+                String idSelection = BaseColumns._ID+"="+getQueryId(uri);
+                if (!TextUtils.isEmpty(selection)) idSelection += " AND "+selection;
                 return setNotifier(
-                        db.query(table, projection, BaseColumns._ID+"=?", new String[]{getQueryId(uri)}, null, null, sortOrder),
+                        db.query(table, projection, idSelection, selectionArgs, null, null, sortOrder),
                         uri);
             } else if (match - idx == _LIST) {
                 return setNotifier(
@@ -132,13 +143,15 @@ public class RocketChatProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         final int match = sURIMatcher.match(uri);
+        final int idx = match % _LIST;
+        final String targetTable = MODELS[idx];
 
         final int i = match % _LIST;
         if(match - i == _ID || match - i == _NEW){
-            return "vnd.android.cursor.item/vnd.crowdworks.message";
+            return "vnd.android.cursor.item/vnd.chat.rocket.android."+targetTable;
         }
         else if(match - i == _LIST){
-            return "vnd.android.cursor.dir/vnd.crowdworks.message";
+            return "vnd.android.cursor.dir/vnd.chat.rocket.android."+targetTable;
         }
 
         throw new IllegalArgumentException("unsupported uri for getType:"+uri);

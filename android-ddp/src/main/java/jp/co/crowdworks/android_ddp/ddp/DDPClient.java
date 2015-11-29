@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
@@ -38,7 +37,7 @@ public class DDPClient {
         return task.getTask();
     }
 
-    public Task<DDPSubscription.Ready> sub(String id, String name, JSONObject params) {
+    public Task<DDPSubscription.Ready> sub(String id, String name, JSONArray params) {
         TaskCompletionSource<DDPSubscription.Ready> task = new TaskCompletionSource<>();
         mImpl.sub(task, name, params,id);
         return task.getTask();

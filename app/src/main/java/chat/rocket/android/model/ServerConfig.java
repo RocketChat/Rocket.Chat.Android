@@ -18,6 +18,11 @@ public class ServerConfig extends AbstractModel {
     public String authToken;
     public Boolean isPrimary;
 
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
     private static class DBAccessor extends AbstractModelDBAccessor<ServerConfig> {
 
         protected DBAccessor(SQLiteDatabase db) {
@@ -26,27 +31,7 @@ public class ServerConfig extends AbstractModel {
 
         @Override
         protected ServerConfig createModel(Cursor c) {
-            ServerConfig config = new ServerConfig();
-            initID(config, c);
-            config.hostname = c.getString(c.getColumnIndex("hostname"));
-            config.account = c.getString(c.getColumnIndex("account"));
-            config.passwd = c.getString(c.getColumnIndex("passwd"));
-            config.authUserId = c.getString(c.getColumnIndex("auth_user_id"));
-            config.authToken = c.getString(c.getColumnIndex("auth_token"));
-            config.isPrimary = (c.getInt(c.getColumnIndex("is_primary"))!=0);
-            return config;
-        }
-
-        @Override
-        protected ContentValues createContentValue(ServerConfig instance) {
-            ContentValues values = createInitContentValue(instance);
-            values.put("hostname", instance.hostname);
-            values.put("account", instance.account);
-            values.put("passwd", instance.passwd);
-            values.put("auth_user_id", instance.authUserId);
-            values.put("auth_token", instance.authToken);
-            values.put("is_primary", instance.isPrimary);
-            return values;
+            return createFromCursor(c);
         }
 
         @Override
@@ -60,6 +45,7 @@ public class ServerConfig extends AbstractModel {
                     mDb.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                             " (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             " id TEXT UNIQUE NOT NULL," +
+                            " syncstate INTEGER NOT NULL," +
                             " hostname TEXT UNIQUE NOT NULL," +
                             " account TEXT," +
                             " passwd TEXT," +
@@ -78,6 +64,30 @@ public class ServerConfig extends AbstractModel {
         }
     }
 
+    public static ServerConfig createFromCursor(Cursor c) {
+        ServerConfig config = new ServerConfig();
+        initID(config, c);
+        config.hostname = c.getString(c.getColumnIndex("hostname"));
+        config.account = c.getString(c.getColumnIndex("account"));
+        config.passwd = c.getString(c.getColumnIndex("passwd"));
+        config.authUserId = c.getString(c.getColumnIndex("auth_user_id"));
+        config.authToken = c.getString(c.getColumnIndex("auth_token"));
+        config.isPrimary = (c.getInt(c.getColumnIndex("is_primary"))!=0);
+        return config;
+    }
+
+    @Override
+    protected ContentValues createContentValue() {
+        ContentValues values = createInitContentValue();
+        values.put("hostname", hostname);
+        values.put("account", account);
+        values.put("passwd", passwd);
+        values.put("auth_user_id", authUserId);
+        values.put("auth_token", authToken);
+        values.put("is_primary", isPrimary);
+        return values;
+    }
+
     public static void updateTable(SQLiteDatabase db, int oldVersion, int newVersion) {
         new DBAccessor(db).updateTable(oldVersion, newVersion);
     }
@@ -87,7 +97,7 @@ public class ServerConfig extends AbstractModel {
     }
 
     public static ServerConfig getPrimaryConfig(SQLiteDatabase db) {
-        return get(db, "is_primary = 1 AND syncstate = 2", null);
+        return get(db, "is_primary = 1", null);
     }
 
     public static ServerConfig get(SQLiteDatabase db, String selection, String[] selectionArgs) {

@@ -10,7 +10,12 @@ public class Message extends AbstractModel{
     public String roomId;
     public String userId;
     public String content;
-    public String timestamp;
+    public Long timestamp;
+
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
 
     private static class DBAccessor extends AbstractModelDBAccessor<Message> {
 
@@ -24,16 +29,6 @@ public class Message extends AbstractModel{
         }
 
         @Override
-        protected ContentValues createContentValue(Message instance) {
-            ContentValues values = createInitContentValue(instance);
-            values.put("room_id", instance.roomId);
-            values.put("user_id", instance.userId);
-            values.put("content", instance.content);
-            values.put("timestamp", instance.timestamp);
-            return values;
-        }
-
-        @Override
         protected void updateTable(int oldVersion, int newVersion) {
             int updateVersion = oldVersion;
 
@@ -44,10 +39,11 @@ public class Message extends AbstractModel{
                     mDb.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                             " (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             " id TEXT UNIQUE NOT NULL," +
+                            " syncstate INTEGER NOT NULL," +
                             " room_id TEXT," +
                             " user_id TEXT," +
                             " content TEXT," +
-                            " timestamp TEXT);\n");
+                            " timestamp INTEGER);\n");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -66,8 +62,18 @@ public class Message extends AbstractModel{
         m.roomId = c.getString(c.getColumnIndex("room_id"));
         m.userId = c.getString(c.getColumnIndex("user_id"));
         m.content = c.getString(c.getColumnIndex("content"));
-        m.timestamp = c.getString(c.getColumnIndex("timestamp"));
+        m.timestamp = c.getLong(c.getColumnIndex("timestamp"));
         return m;
+    }
+
+    @Override
+    protected ContentValues createContentValue() {
+        ContentValues values = createInitContentValue();
+        values.put("room_id", roomId);
+        values.put("user_id", userId);
+        values.put("content", content);
+        values.put("timestamp", timestamp);
+        return values;
     }
 
     public static void updateTable(SQLiteDatabase db, int oldVersion, int newVersion) {

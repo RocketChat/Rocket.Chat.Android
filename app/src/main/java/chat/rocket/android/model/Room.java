@@ -8,7 +8,12 @@ public class Room extends AbstractModel {
     public static final String TABLE_NAME = "room";
 
     public String name;
-    public String timestamp;
+    public Long timestamp;
+
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
 
     private static class DBAccessor extends AbstractModelDBAccessor<Room> {
 
@@ -22,14 +27,6 @@ public class Room extends AbstractModel {
         }
 
         @Override
-        protected ContentValues createContentValue(Room instance) {
-            ContentValues values = createInitContentValue(instance);
-            values.put("name", instance.name);
-            values.put("timestamp", instance.timestamp);
-            return values;
-        }
-
-        @Override
         protected void updateTable(int oldVersion, int newVersion) {
             int updateVersion = oldVersion;
 
@@ -40,8 +37,9 @@ public class Room extends AbstractModel {
                     mDb.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                             " (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             " id TEXT UNIQUE NOT NULL," +
+                            " syncstate INTEGER NOT NULL," +
                             " name TEXT," +
-                            " timestamp TEXT);\n");
+                            " timestamp INTEGER);\n");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -58,8 +56,16 @@ public class Room extends AbstractModel {
         Room r = new Room();
         initID(r, c);
         r.name = c.getString(c.getColumnIndex("name"));
-        r.timestamp = c.getString(c.getColumnIndex("timestamp"));
+        r.timestamp = c.getLong(c.getColumnIndex("timestamp"));
         return r;
+    }
+
+    @Override
+    protected ContentValues createContentValue() {
+        ContentValues values = createInitContentValue();
+        values.put("name", name);
+        values.put("timestamp", timestamp);
+        return values;
     }
 
     public static void updateTable(SQLiteDatabase db, int oldVersion, int newVersion) {

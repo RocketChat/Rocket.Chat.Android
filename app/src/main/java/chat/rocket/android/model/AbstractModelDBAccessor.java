@@ -15,15 +15,7 @@ abstract class AbstractModelDBAccessor<T extends AbstractModel> {
     }
 
     protected abstract T createModel(Cursor c);
-    protected abstract ContentValues createContentValue(T instance);
     protected abstract void updateTable(int oldVersion, int newVersion);
-
-    protected ContentValues createInitContentValue(T instance) {
-        final ContentValues values = new ContentValues();
-        if (instance.hasBaseID()) values.put("_id", instance._id);
-        if (instance.hasID()) values.put("id", instance.id);
-        return values;
-    }
 
     public ArrayList<T> list(String selection, String[] selectionArgs, String orderBy){
         final ArrayList<T> ret = new ArrayList<T>();
@@ -68,7 +60,7 @@ abstract class AbstractModelDBAccessor<T extends AbstractModel> {
 
     public long put(T instance){
         setIdWithCid(instance);
-        ContentValues values = createContentValue(instance);
+        ContentValues values = instance.createContentValue();
         return mDb.replace(mTableName, null, values);
     }
 
