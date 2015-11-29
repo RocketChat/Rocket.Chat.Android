@@ -3,6 +3,7 @@ package chat.rocket.android.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import chat.rocket.android.content.RocketChatProvider;
@@ -50,13 +51,14 @@ abstract class AbstractModel {
         return !TextUtils.isEmpty(id);
     }
 
-    public void putByContentProvider(Context context) {
+    public Uri putByContentProvider(Context context) {
         if (hasBaseID()) {
             context.getContentResolver().update(RocketChatProvider.getUriForQuery(getTableName(), _id)
                     , createContentValue(), "_id=?", new String[]{Long.toString(_id)});
+            return null;
         }
         else {
-            context.getContentResolver().insert(RocketChatProvider.getUriForInsert(getTableName())
+            return context.getContentResolver().insert(RocketChatProvider.getUriForInsert(getTableName())
                     , createContentValue());
         }
     }

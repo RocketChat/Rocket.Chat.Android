@@ -19,6 +19,7 @@ import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
+import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
 
 public class MethodCallObserver extends AbstractObserver {
@@ -35,7 +36,7 @@ public class MethodCallObserver extends AbstractObserver {
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) handleMethod(c);
+        while(c!=null && c.moveToNext()) handleMethod(c);
     }
 
     @Override
@@ -71,20 +72,32 @@ public class MethodCallObserver extends AbstractObserver {
                 @Override
                 public Object then(Task<Object> task) throws Exception {
                     if(task.isFaulted()){
-                        Log.e(TAG,"error",task.getError());
-                        m.deleteByContentProvider(mContext);
+                        Exception e = task.getError();
+                        Log.e(TAG, "error", task.getError());
+                        if (e instanceof JSONException || e instanceof IllegalArgumentException) {
+                            m.deleteByContentProvider(mContext);
+                        }
+                        else {
+                            m.syncstate = SyncState.FAILED;
+                            m.putByContentProvider(mContext);
+                        }
                     }
                     return null;
                 }
             });
         } catch (Exception e) {
+            Log.e(TAG, "error",e);
             m.deleteByContentProvider(mContext);
         }
     }
 
+    @DebugLog
     private Task<DDPClientCallback.RPC> getMethod(String id, JSONObject params) throws JSONException {
         if("loadMessages".equals(id)) {
             return mAPI.loadMessages(params.getString("room_id"), params.optLong("end_ts",-1), params.optInt("num",50));
+        }
+        else if("sendMessage".equals(id)) {
+            return mAPI.sendMessage(params.getString("room_id"), params.getString("msg"));
         }
 
         throw new IllegalArgumentException("id("+id+") is not known.");
@@ -94,6 +107,7 @@ public class MethodCallObserver extends AbstractObserver {
         boolean handleResult(JSONObject result) throws Exception;
     }
 
+    @DebugLog
     private ResultHandler getResultHandler(String id) {
         if("loadMessages".equals(id)) {
             return new ResultHandler() {

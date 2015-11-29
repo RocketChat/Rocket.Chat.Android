@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment;
 
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -23,19 +24,16 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import bolts.Continuation;
-import bolts.Task;
 import chat.rocket.android.Constants;
 import chat.rocket.android.DateTime;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.OnBackPressListener;
-import chat.rocket.android.api.rest.Auth;
-import chat.rocket.android.api.rest.RocketChatRestAPI;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.MessageComposer;
@@ -271,35 +269,44 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
         composer.setEnabled(false);
 
-        new RocketChatRestAPI(s.hostname)
-                .sendMessage(new Auth(s.authUserId, s.authToken), mRoomId, message)
-                .continueWith(new Continuation<Boolean, Object>() {
-                    @Override
-                    public Object then(Task<Boolean> task) throws Exception {
-                        final boolean failed = task.isFaulted();
-                        mRootView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                composer.setEnabled(true);
+        try {
+            // TODO: should replace this implementation to insert new Message (not method call)!!
+            final Uri uri = MethodCall
+                    .create("sendMessage", new JSONObject().put("room_id",mRoomId).put("msg", message))
+                    .putByContentProvider(getContext());
 
-                                if (!failed) {
-                                    fetchNewMessages();
-                                    composer.setText("");
-                                }
-                            }
-                        });
-                        return null;
-                    }
-                })
-                .continueWith(new Continuation<Object, Object>() {
-                    @Override
-                    public Object then(Task<Object> task) throws Exception {
-                        if(task.isFaulted()) {
-                            Log.e(Constants.LOG_TAG, "error", task.getError());
+            getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+                @Override
+                public void onChange(boolean selfChange) {
+                    Cursor c = getContext().getContentResolver().query(uri, null,null,null,null);
+                    if(c==null || c.getCount()==0) {
+                        //deleted
+                        enableComposer(false);
+                        getContext().getContentResolver().unregisterContentObserver(this);
+                    } else if(c.moveToFirst()) {
+                        MethodCall m = MethodCall.createFromCursor(c);
+                        if(m.syncstate == SyncState.SYNCED || m.syncstate == SyncState.FAILED) {
+                            enableComposer(m.syncstate == SyncState.SYNCED);
+                            getContext().getContentResolver().unregisterContentObserver(this);
+                            fetchNewMessages();
+                            m.deleteByContentProvider(getContext());
                         }
-                        return null;
                     }
-                });
+                }
+
+                private void enableComposer(final boolean clear){
+                    composer.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(clear) composer.setText("");
+                            composer.setEnabled(true);
+                        }
+                    });
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(Constants.LOG_TAG, "error", e);
+        }
     }
 
     private void setMessageComposerVisibility(boolean visible) {
