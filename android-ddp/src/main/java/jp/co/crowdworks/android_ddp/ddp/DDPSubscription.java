@@ -39,6 +39,10 @@ public class DDPSubscription {
             }
         }
 
+        @Override
+        public String toString() {
+            return "NoSub[id="+id+"]";
+        }
     }
 
     public static class Ready extends Event {
@@ -48,17 +52,33 @@ public class DDPSubscription {
             super(client);
             this.id = id;
         }
+
+        @Override
+        public String toString() {
+            return "Ready[id="+id+"]";
+        }
     }
 
-    public static class Added extends Event {
+    public static class DocEvent extends Event {
         public String collection;
         public String docID;
-        public JSONObject fields;
-
-        public Added(DDPClient client, String collection, String docID, JSONObject fields) {
+        public DocEvent(DDPClient client, String collection, String docID){
             super(client);
             this.collection = collection;
             this.docID = docID;
+        }
+
+        @Override
+        public String toString() {
+            return "DocEvent[id="+docID+", collection="+collection+"]";
+        }
+    }
+
+    public static class Added extends DocEvent {
+        public JSONObject fields;
+
+        public Added(DDPClient client, String collection, String docID, JSONObject fields) {
+            super(client, collection, docID);
             this.fields = fields;
         }
 
@@ -72,41 +92,29 @@ public class DDPSubscription {
         }
     }
 
-    public static class Changed extends Event {
-        public String collection;
-        public String docID;
+    public static class Changed extends DocEvent {
         public JSONObject fields;
         public JSONArray cleared;
 
         public Changed(DDPClient client, String collection, String docID, JSONObject fields, @NonNull JSONArray cleared) {
-            super(client);
-            this.collection = collection;
-            this.docID = docID;
+            super(client, collection, docID);
             this.fields = fields;
             this.cleared = cleared;
         }
     }
 
-    public static class Removed extends Event {
-        public String collection;
-        public String docID;
+    public static class Removed extends DocEvent {
 
         public Removed(DDPClient client, String collection, String docID) {
-            super(client);
-            this.collection = collection;
-            this.docID = docID;
+            super(client, collection, docID);
         }
     }
 
-    public static class MovedBefore extends Event {
-        public String collection;
-        public String docID;
+    public static class MovedBefore extends DocEvent {
         public String before;
 
         public MovedBefore(DDPClient client, String collection, String docID, String before) {
-            super(client);
-            this.collection = collection;
-            this.docID = docID;
+            super(client, collection, docID);
             this.before = before;
         }
     }
