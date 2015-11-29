@@ -74,6 +74,7 @@ public class DDPClientImpl {
                     } else if ("failed".equals(msg)) {
                         task.setError(new DDPClientCallback.Connect.Failed(mClient, response.optString("version")));
                         subscriptions.unsubscribe();
+
                     }
                 }));
 
@@ -222,6 +223,12 @@ public class DDPClientImpl {
             Log.d(TAG, "DEBUG< " + callback);
         }));
 
+    }
+
+    public Observable<Void> getFailureObservable() {
+        return mObservable.filter(callback -> callback instanceof RxWebSocketCallback.Failure)
+                .map(event -> (Void)null)
+                .asObservable();
     }
 
     public Observable<DDPSubscription.Event> getDDPSubscription() {

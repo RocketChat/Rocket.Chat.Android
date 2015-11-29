@@ -50,6 +50,10 @@ public class DDPClient {
         return task.getTask();
     }
 
+    public Observable<Void> getFailureObservable() {
+        return mImpl.getFailureObservable();
+    }
+
     public Observable<DDPSubscription.Event> getSubscriptionCallback() {
         return mImpl.getDDPSubscription();
     }
