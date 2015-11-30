@@ -24,7 +24,6 @@ public class RocketChatApplication extends Application {
                 .networkInterceptors().add(new StethoInterceptor());
 
         Picasso picasso = new Picasso.Builder(this).downloader(new OkHttpDownloader(OkHttpHelper.getClient())).build();
-        picasso.setLoggingEnabled(true);
         Picasso.setSingletonInstance(picasso);
     }
 }
