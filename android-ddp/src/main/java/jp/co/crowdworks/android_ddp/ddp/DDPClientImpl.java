@@ -53,13 +53,6 @@ public class DDPClientImpl {
                 }));
 
         subscriptions.add(mObservable
-                .filter(callback -> callback instanceof RxWebSocketCallback.Failure)
-                .subscribe(callback -> {
-                    task.setError(new Exception(callback.toString()));
-                    subscriptions.unsubscribe();
-                }));
-
-        subscriptions.add(mObservable
                 .filter(callback -> callback instanceof RxWebSocketCallback.Message)
                 .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
                 .map(DDPClientImpl::toJson)
@@ -77,6 +70,8 @@ public class DDPClientImpl {
 
                     }
                 }));
+
+        addErrorCallback(subscriptions, task);
 
         subscribeBaseListeners();
     }
@@ -106,6 +101,8 @@ public class DDPClientImpl {
                 }, err -> {
                     task.setError(new DDPClientCallback.Ping.Timeout(mClient));
                 }));
+
+        addErrorCallback(subscriptions, task);
 
         if(TextUtils.isEmpty(id)) sendMessage("ping", null);
         else sendMessage("ping", json -> json.put("id", id));
@@ -140,6 +137,8 @@ public class DDPClientImpl {
                     }
                 }));
 
+        addErrorCallback(subscriptions, task);
+
         sendMessage("sub", json -> json
                 .put("id", id)
                 .put("name", name)
@@ -163,6 +162,8 @@ public class DDPClientImpl {
                         }
                     }
                 }));
+
+        addErrorCallback(subscriptions, task);
 
         sendMessage("unsub", json -> json
                 .put("id", id));
@@ -191,6 +192,8 @@ public class DDPClientImpl {
                         }
                     }
                 }));
+
+        addErrorCallback(subscriptions, task);
 
         sendMessage("method", json -> json
                         .put("method", method)
@@ -321,4 +324,14 @@ public class DDPClientImpl {
             Log.e(TAG, "error", e);
         }
     }
+
+    private void addErrorCallback(CompositeSubscription subscriptions, TaskCompletionSource<?> task) {
+        subscriptions.add(mObservable
+                .filter(callback -> callback instanceof RxWebSocketCallback.Failure)
+                .subscribe(callback -> {
+                    task.setError(new Exception(callback.toString()));
+                    subscriptions.unsubscribe();
+                }));
+    }
+
 }
