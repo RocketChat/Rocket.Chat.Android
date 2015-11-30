@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -34,6 +35,7 @@ import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
+import chat.rocket.android.view.Avatar;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.MessageComposer;
 
@@ -42,14 +44,16 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
     public ChatRoomFragment(){}
 
+    private String mHost;
     private String mRoomId;
     private String mRoomName;
     private View mRootView;
     private MessageAdapter mAdapter;
 
-    public static ChatRoomFragment create(String roomId, String roomName) {
+    public static ChatRoomFragment create(String host, String roomId, String roomName) {
         ChatRoomFragment f = new ChatRoomFragment();
         Bundle args = new Bundle();
+        args.putString("host", host);
         args.putString("roomId", roomId);
         args.putString("roomName", roomName);
         f.setArguments(args);
@@ -64,13 +68,14 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         if(!hasValidArgs(args)) {
             throw new IllegalArgumentException("Params 'roomId' and 'roomName' are required for creating ChatRoomFragment");
         }
+        mHost = args.getString("host");
         mRoomId = args.getString("roomId");
         mRoomName = args.getString("roomName");
     }
 
     private boolean hasValidArgs(Bundle args) {
         if(args == null) return false;
-        return args.containsKey("roomId") && args.containsKey("roomName");
+        return args.containsKey("host") && args.containsKey("roomId") && args.containsKey("roomName");
     }
 
     @Nullable
@@ -134,12 +139,14 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     }
 
     private static class MessageViewHolder extends RecyclerView.ViewHolder {
+        Avatar avatar;
         TextView username;
         TextView timestamp;
         TextView content;
 
-        public MessageViewHolder(View itemView) {
+        public MessageViewHolder(View itemView, String host) {
             super(itemView);
+            avatar = new Avatar(host, itemView.findViewById(R.id.avatar_color), (TextView)itemView.findViewById(R.id.avatar_initials), (ImageView)itemView.findViewById(R.id.avatar_img));
             username = (TextView) itemView.findViewById(R.id.list_item_message_username);
             timestamp = (TextView) itemView.findViewById(R.id.list_item_message_timestamp);
             content = (TextView) itemView.findViewById(R.id.list_item_message_content);
@@ -180,9 +187,9 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             if(viewType==DUMMY_HEADER) {
                 final View v = new View(parent.getContext());
                 v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mHeaderHeight));
-                return new MessageViewHolder(v);
+                return new MessageViewHolder(v, mHost);
             }
-            return new MessageViewHolder(mInflater.inflate(R.layout.listitem_message, parent, false));
+            return new MessageViewHolder(mInflater.inflate(R.layout.listitem_message, parent, false),mHost);
         }
 
         @Override
@@ -207,6 +214,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 }
             });
 
+            viewHolder.avatar.setForUser(u.name);
             viewHolder.content.setText(m.content);
             viewHolder.username.setText(u.name);
             viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.AUTO_DAY_TIME));

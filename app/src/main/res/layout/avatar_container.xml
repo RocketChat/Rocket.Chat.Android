@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="48dp" android:layout_height="48dp">
+
+    <FrameLayout
+        android:id="@+id/avatar_color"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/avatar_initials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8sp"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+    <ImageView
+        android:id="@+id/avatar_img"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="12dp"
+        android:src="@drawable/ic_default_avatar"/>
+
+</FrameLayout>

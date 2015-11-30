@@ -247,8 +247,11 @@ public class MainActivity extends AbstractActivity {
     }
 
     private void showChatRoomFragment(String roomId, String roomName) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(getContainerId(), ChatRoomFragment.create(roomId, roomName))
-                .commit();
+        ServerConfig s = getPrimaryServerConfig();
+        if(s!=null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(getContainerId(), ChatRoomFragment.create(s.hostname, roomId, roomName))
+                    .commit();
+        }
     }
 }
