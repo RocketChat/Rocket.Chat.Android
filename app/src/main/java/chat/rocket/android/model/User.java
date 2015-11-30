@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 public class User extends AbstractModel {
     public static final String TABLE_NAME = "user";
 
-    public String roomId;
-    public String name;
+    public String displayName;
+    public boolean isMe;
 
     @Override
     public String getTableName() {
@@ -38,8 +38,8 @@ public class User extends AbstractModel {
                             " (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             " id TEXT UNIQUE NOT NULL," +
                             " syncstate INTEGER NOT NULL," +
-                            " room_id TEXT," +
-                            " name TEXT);\n");
+                            " display_name TEXT," +
+                            " is_me INTEGER);\n");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -55,16 +55,16 @@ public class User extends AbstractModel {
     public static User createFromCursor(Cursor c) {
         User u = new User();
         initID(u, c);
-        u.roomId = c.getString(c.getColumnIndex("room_id"));
-        u.name = c.getString(c.getColumnIndex("name"));
+        u.displayName = c.getString(c.getColumnIndex("display_name"));
+        u.isMe = (c.getInt(c.getColumnIndex("is_me"))!=0);
         return u;
     }
 
     @Override
     protected ContentValues createContentValue() {
         ContentValues values = createInitContentValue();
-        values.put("room_id", roomId);
-        values.put("name", name);
+        values.put("display_name", displayName);
+        values.put("is_me", isMe ? 1 : 0);
         return values;
     }
 
@@ -87,6 +87,10 @@ public class User extends AbstractModel {
 
     public static User getById(SQLiteDatabase db, String id) {
         return new DBAccessor(db).getByID(id);
+    }
+
+    public static User getMe(SQLiteDatabase db){
+        return new DBAccessor(db).get("is_me = 1", null,null);
     }
 
     public void put(SQLiteDatabase db) {

@@ -35,7 +35,7 @@ public class Avatar {
     private int getColorForUser(String username){
         return COLORS[username.length()%COLORS.length];
     }
-    @DebugLog
+
     private String getInitialsForUser(String username){
         String name = username.replaceAll("[^A-Za-z0-9]", ".").replaceAll("\\.+", ".").replaceAll("(^\\.)|(\\.$)", "");
         String[] initials = name.split("\\.");

@@ -40,17 +40,20 @@ public class UsersObserver extends AbstractSubscriber {
                             } else if (docEvent instanceof DDPSubscription.Added) {
                                 final String username = ((DDPSubscription.Added) docEvent).fields.getString("username");
 
+                                boolean isMe = (!((DDPSubscription.Added) docEvent).fields.isNull("emails"));
+
                                 User u = RocketChatDatabaseHelper.read(mContext, new RocketChatDatabaseHelper.DBCallback<User>() {
                                     @Override
                                     public User process(SQLiteDatabase db) throws Exception {
-                                        return User.getByName(db, username);
+                                        return User.getById(db, username);
                                     }
                                 });
                                 if(u==null) {
                                     u = new User();
-                                    u.name = username;
-                                    u.putByContentProvider(mContext);
+                                    u.id = username;
                                 }
+                                u.isMe = isMe;
+                                u.putByContentProvider(mContext);
                             } else if (docEvent instanceof DDPSubscription.Removed) {
 
                             } else if (docEvent instanceof DDPSubscription.Changed) {

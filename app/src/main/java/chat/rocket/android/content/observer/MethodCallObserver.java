@@ -18,7 +18,6 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
-import chat.rocket.android.model.Room;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
 import hugo.weaving.DebugLog;
@@ -139,6 +138,7 @@ public class MethodCallObserver extends AbstractObserver {
 
                         final JSONObject user = message.getJSONObject("u");
                         final String userId = user.getString("_id");
+                        final String userName = user.getString("username");
                         User _u = RocketChatDatabaseHelper.read(mContext, new RocketChatDatabaseHelper.DBCallback<User>() {
                             @Override
                             public User process(SQLiteDatabase db) throws Exception {
@@ -147,8 +147,7 @@ public class MethodCallObserver extends AbstractObserver {
                         });
                         if (_u==null) {
                             final User u = new User();
-                            u.id = userId;
-                            u.name = user.getString("username");
+                            u.id = userName;
                             RocketChatDatabaseHelper.write(mContext, new RocketChatDatabaseHelper.DBCallback<Object>() {
                                 @Override
                                 public Object process(SQLiteDatabase db) throws Exception {
@@ -158,7 +157,7 @@ public class MethodCallObserver extends AbstractObserver {
                             });
                         }
 
-                        m.userId = userId;
+                        m.userId = userName;
                         m.putByContentProvider(mContext);
                     }
 

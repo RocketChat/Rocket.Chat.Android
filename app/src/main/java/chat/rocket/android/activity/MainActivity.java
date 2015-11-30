@@ -2,10 +2,12 @@ package chat.rocket.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -64,11 +66,41 @@ public class MainActivity extends AbstractActivity {
         });
     }
 
+    private User getMe() {
+        return RocketChatDatabaseHelper.read(this, new RocketChatDatabaseHelper.DBCallback<User>() {
+            @Override
+            public User process(SQLiteDatabase db) {
+                return User.getMe(db);
+            }
+        });
+    }
+
+    private Handler mHandler = new Handler();
     private void setupUserInfo(){
-        ServerConfig s = getPrimaryServerConfig();
+        final ServerConfig s = getPrimaryServerConfig();
+        setupUserInfoInner(s,getMe());
+        getContentResolver().registerContentObserver(RocketChatProvider.getUriForQuery(User.TABLE_NAME), false, new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange) {
+                final User u = getMe();
+                if(u!=null) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            setupUserInfoInner(s, u);
+                        }
+                    });
+                    getContentResolver().unregisterContentObserver(this);
+                }
+            }
+        });
+    }
+
+    private void setupUserInfoInner(ServerConfig s, User u){
         if(s!=null){
             ((TextView) findViewById(R.id.txt_hostname_info)).setText(s.hostname);
-            ((TextView) findViewById(R.id.txt_account_info)).setText(s.account);
+            if(u!=null) ((TextView) findViewById(R.id.txt_account_info)).setText(u.id);
+            else ((TextView) findViewById(R.id.txt_account_info)).setText(s.account);
         }
         else {
             ((TextView) findViewById(R.id.txt_hostname_info)).setText("--");
