@@ -181,14 +181,14 @@ public class DDPClientImpl {
                     if ("result".equals(msg)) {
                         String _id = response.optString("id");
                         if(id.equals(_id)) {
-                            if (!response.isNull("result")) {
-                                task.setResult(new DDPClientCallback.RPC(mClient, id, response.optJSONObject("result")));
-                                subscriptions.unsubscribe();
-                            }
-                            else if (!response.isNull("error")) {
+                            if (!response.isNull("error")) {
                                 task.setError(new DDPClientCallback.RPC.Error(mClient, id, response.optJSONObject("error")));
-                                subscriptions.unsubscribe();
                             }
+                            else {
+                                task.setResult(new DDPClientCallback.RPC(mClient, id,
+                                        response.isNull("result")? new JSONObject() : response.optJSONObject("result")));
+                            }
+                            subscriptions.unsubscribe();
                         }
                     }
                 }));

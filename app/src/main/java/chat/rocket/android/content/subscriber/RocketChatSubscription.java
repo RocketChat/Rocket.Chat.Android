@@ -87,7 +87,16 @@ public class RocketChatSubscription extends AbstractSubscriber {
                                 r.timestamp = roomTs;
                                 r.putByContentProvider(mContext);
                             } else if (docEvent instanceof DDPSubscription.Removed) {
-
+                                final RocketChatDocument doc = mDocumentStore.get(docEvent.docID);
+                                if (doc.docType == Room.class) {
+                                    Room r = RocketChatDatabaseHelper.read(mContext, new RocketChatDatabaseHelper.DBCallback<Room>() {
+                                        @Override
+                                        public Room process(SQLiteDatabase db) throws Exception {
+                                            return Room.getById(db, doc.docID);
+                                        }
+                                    });
+                                    if(r!=null) r.deleteByContentProvider(mContext);
+                                }
                             } else if (docEvent instanceof DDPSubscription.Changed) {
 
                             } else if (docEvent instanceof DDPSubscription.MovedBefore) {

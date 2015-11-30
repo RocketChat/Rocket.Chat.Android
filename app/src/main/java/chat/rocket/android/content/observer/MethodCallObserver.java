@@ -18,6 +18,7 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
+import chat.rocket.android.model.Room;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
 import hugo.weaving.DebugLog;
@@ -98,6 +99,9 @@ public class MethodCallObserver extends AbstractObserver {
         if("loadMessages".equals(id)) {
             return mAPI.loadMessages(params.getString("room_id"), params.optLong("end_ts",-1), params.optInt("num",50));
         }
+        else if("logout".equals(id)) {
+            return mAPI.logout();
+        }
 
         throw new IllegalArgumentException("id("+id+") is not known.");
     }
@@ -158,6 +162,14 @@ public class MethodCallObserver extends AbstractObserver {
                         m.putByContentProvider(mContext);
                     }
 
+                    return true;
+                }
+            };
+        }
+        else if ("logout".equals(id)) {
+            return new ResultHandler() {
+                @Override
+                public boolean handleResult(JSONObject result) throws Exception {
                     return true;
                 }
             };

@@ -16,7 +16,7 @@ public class MethodCall extends AbstractModel {
     public static MethodCall create(String id, JSONObject params) {
         MethodCall m = new MethodCall();
         m.id = id;
-        m.params = params.toString();
+        m.params = params!=null ? params.toString() : "{}";
         m.timestamp = System.currentTimeMillis();
         m.syncstate = SyncState.NOT_SYNCED;
         return m;

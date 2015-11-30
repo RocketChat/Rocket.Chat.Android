@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +21,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import bolts.Continuation;
-import bolts.Task;
 import chat.rocket.android.Constants;
 import chat.rocket.android.R;
-import chat.rocket.android.api.rest.Auth;
-import chat.rocket.android.api.rest.RocketChatRestAPI;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.fragment.ChatRoomFragment;
+import chat.rocket.android.model.Message;
+import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 
 public class MainActivity extends AbstractActivity {
@@ -83,22 +83,24 @@ public class MainActivity extends AbstractActivity {
     private AdapterView.OnItemClickListener mUserActionItemCallbacks = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Context context = parent.getContext();
             final ServerConfig s = getPrimaryServerConfig();
             if(s!=null) {
-                new RocketChatRestAPI(s.hostname)
-                        .logout(new Auth(s.authUserId, s.authToken))
-                        .onSuccess(new Continuation<Boolean, Object>() {
-                            @Override
-                            public Object then(Task<Boolean> task) throws Exception {
-                                //OkHttpHelper.getClient().cancel(null);
-                                return null;
-                            }
-                        });
-                RocketChatDatabaseHelper.write(parent.getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
+                MethodCall.create("logout",null).putByContentProvider(context);
+                RocketChatDatabaseHelper.writeWithTransaction(context, new RocketChatDatabaseHelper.DBCallbackEx<Object>() {
                     @Override
-                    public Object process(SQLiteDatabase db) {
-                        s.delete(db);// delete local data before server's callback.
+                    public Object process(SQLiteDatabase db) throws Exception {
+                        Room.delete(db, null,null);
+                        Message.delete(db, null,null);
+                        User.delete(db, null,null);
+                        s.delete(db);
+
                         return null;
+                    }
+
+                    @Override
+                    public void handleException(Exception e) {
+                        Log.e(TAG, "error", e);
                     }
                 });
                 showEntryActivity();

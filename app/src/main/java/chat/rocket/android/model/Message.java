@@ -104,4 +104,8 @@ public class Message extends AbstractModel{
         return new DBAccessor(db).delete(this);
     }
 
+    public static int delete(SQLiteDatabase db, String selection, String[] selectionArgs) {
+        return new DBAccessor(db).delete(selection, selectionArgs);
+    }
+
 }
