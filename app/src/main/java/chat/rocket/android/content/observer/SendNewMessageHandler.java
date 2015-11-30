@@ -3,6 +3,7 @@ package chat.rocket.android.content.observer;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Looper;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -17,8 +18,9 @@ import chat.rocket.android.model.SyncState;
 import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
 
 public class SendNewMessageHandler extends AbstractObserver {
-    public SendNewMessageHandler(Context context, RocketChatWSAPI api) {
-        super(context, api);
+
+    public SendNewMessageHandler(Context context, Looper looper, RocketChatWSAPI api) {
+        super(context, looper, api);
     }
 
     @Override

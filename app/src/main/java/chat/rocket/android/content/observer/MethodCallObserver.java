@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Looper;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -23,8 +24,9 @@ import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
 
 public class MethodCallObserver extends AbstractObserver {
-    public MethodCallObserver(Context context, RocketChatWSAPI api) {
-        super(context, api);
+
+    public MethodCallObserver(Context context, Looper looper, RocketChatWSAPI api) {
+        super(context, looper, api);
     }
 
     @Override

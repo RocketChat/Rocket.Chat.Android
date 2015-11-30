@@ -2,6 +2,7 @@ package chat.rocket.android.content.subscriber;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,8 +23,8 @@ public class RocketChatSubscription extends AbstractSubscriber {
     private HashMap<String, RocketChatDocument> mDocumentStore;
     private String mID;
 
-    public RocketChatSubscription(Context context, RocketChatWSAPI api) {
-        super(context, api);
+    public RocketChatSubscription(Context context, Looper looper, RocketChatWSAPI api) {
+        super(context, looper, api);
     }
 
     @Override

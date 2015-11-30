@@ -3,6 +3,7 @@ package chat.rocket.android.content.observer;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -26,8 +27,8 @@ public class RocketChatRoom extends AbstractObserver {
     private HashMap<String, RocketChatDocument> mDocumentStore;
     private String mID;
 
-    public RocketChatRoom(Context context, RocketChatWSAPI api) {
-        super(context, api);
+    public RocketChatRoom(Context context, Looper looper, RocketChatWSAPI api) {
+        super(context, looper, api);
     }
 
     @Override

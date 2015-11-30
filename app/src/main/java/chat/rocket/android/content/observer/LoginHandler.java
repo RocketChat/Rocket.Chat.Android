@@ -3,6 +3,7 @@ package chat.rocket.android.content.observer;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,9 +21,8 @@ import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
 
 public class LoginHandler extends AbstractObserver {
 
-
-    public LoginHandler(Context context, RocketChatWSAPI api) {
-        super(context, api);
+    public LoginHandler(Context context, Looper looper, RocketChatWSAPI api) {
+        super(context, looper, api);
     }
 
     @Override

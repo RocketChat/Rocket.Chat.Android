@@ -4,7 +4,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -33,6 +35,8 @@ public class RocketChatWSService extends Service {
     private final static String TAG = Constants.LOG_TAG;
 
     private RocketChatWSAPI mAPI;
+
+    private Looper mRegisterThreadLooper;
 
     /**
      * Ensure RocketChatWSService alive.
@@ -86,6 +90,10 @@ public class RocketChatWSService extends Service {
                     }
                 });
 
+                HandlerThread regThread = new HandlerThread("register");
+                regThread.start();
+                mRegisterThreadLooper = regThread.getLooper();
+
                 registerListeners();
 
                 return null;
@@ -118,8 +126,8 @@ public class RocketChatWSService extends Service {
         final Context context = getApplicationContext();
         for(Class clazz: HANDLER_CLASSES){
             try {
-                Constructor ctor = clazz.getConstructor(Context.class, RocketChatWSAPI.class);
-                Object obj = ctor.newInstance(context, mAPI);
+                Constructor ctor = clazz.getConstructor(Context.class, Looper.class, RocketChatWSAPI.class);
+                Object obj = ctor.newInstance(context, mRegisterThreadLooper, mAPI);
 
                 if(obj instanceof Registerable) {
                     Registerable l = (Registerable) obj;
