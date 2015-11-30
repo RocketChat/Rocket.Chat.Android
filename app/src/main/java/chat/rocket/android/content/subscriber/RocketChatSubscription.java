@@ -15,6 +15,7 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.RocketChatDocument;
 import chat.rocket.android.model.Room;
 import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -22,6 +23,7 @@ public class RocketChatSubscription extends AbstractSubscriber {
 
     private HashMap<String, RocketChatDocument> mDocumentStore;
     private String mID;
+    private Subscription mSubscription;
 
     public RocketChatSubscription(Context context, Looper looper, RocketChatWSAPI api) {
         super(context, looper, api);
@@ -51,7 +53,7 @@ public class RocketChatSubscription extends AbstractSubscriber {
     }
 
     private void registerSubscriptionCallback(){
-        mAPI.getSubscriptionCallback()
+        mSubscription = mAPI.getSubscriptionCallback()
                 .filter(new Func1<DDPSubscription.Event, Boolean>() {
                     @Override
                     public Boolean call(DDPSubscription.Event event) {
@@ -113,6 +115,7 @@ public class RocketChatSubscription extends AbstractSubscriber {
 
     @Override
     protected void onUnsubscribe() {
+        if(mSubscription!=null) mSubscription.unsubscribe();
         if(!TextUtils.isEmpty(mID)) {
             mAPI.unsubscribe(mID).continueWith(new Continuation<DDPSubscription.NoSub, Object>() {
                 @Override
