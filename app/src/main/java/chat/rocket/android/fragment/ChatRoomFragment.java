@@ -214,9 +214,9 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 }
             });
 
-            viewHolder.avatar.setForUser(u.id);
+            if(u!=null) viewHolder.avatar.setForUser(u.id);
             viewHolder.content.setText(m.content);
-            viewHolder.username.setText(TextUtils.isEmpty(u.displayName)? u.id : u.displayName);
+            if(u!=null) viewHolder.username.setText(TextUtils.isEmpty(u.displayName)? u.id : u.displayName);
             viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.AUTO_DAY_TIME));
         }
 
@@ -280,7 +280,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         m.syncstate = SyncState.NOT_SYNCED;
         m.content = message;
         m.roomId = mRoomId;
-        m.userId = getMe().id;
+        //TODO: m.userId = getMe().id;
         m.putByContentProvider(getContext());
 
         composer.setText("");
