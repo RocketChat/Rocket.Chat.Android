@@ -25,12 +25,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <ImageView
-                    android:id="@+id/user_avatar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_default_avatar"
-                    android:scaleType="centerInside" />
+                <include layout="@layout/avatar_container_large"/>
 
                 <LinearLayout
                     android:layout_width="0px"

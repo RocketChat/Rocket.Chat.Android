@@ -36,6 +36,7 @@ import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.User;
 import chat.rocket.android.preference.Cache;
+import chat.rocket.android.view.Avatar;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 
 public class MainActivity extends AbstractActivity {
@@ -85,7 +86,13 @@ public class MainActivity extends AbstractActivity {
     private void setupUserInfoInner(ServerConfig s, String username){
         if(s!=null){
             ((TextView) findViewById(R.id.txt_hostname_info)).setText(s.hostname);
-            if(!TextUtils.isEmpty(username)) ((TextView) findViewById(R.id.txt_account_info)).setText(username);
+            if(!TextUtils.isEmpty(username)) {
+                ((TextView) findViewById(R.id.txt_account_info)).setText(username);
+                new Avatar(s.hostname,
+                        findViewById(R.id.avatar_color),
+                        (TextView)findViewById(R.id.avatar_initials),
+                        (ImageView)findViewById(R.id.avatar_img)).setForUser(username);
+            }
             else ((TextView) findViewById(R.id.txt_account_info)).setText(s.account);
         }
         else {
