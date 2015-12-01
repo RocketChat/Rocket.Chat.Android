@@ -20,10 +20,12 @@
             android:background="@color/colorPrimaryDark">
 
             <LinearLayout
+                android:id="@+id/user_info_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackground">
 
                 <include layout="@layout/avatar_container_large"/>
 

@@ -148,26 +148,27 @@ public class MainActivity extends AbstractActivity {
         userActionList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mUserActionItems));
         userActionList.setOnItemClickListener(mUserActionItemCallbacks);
 
-        findViewById(R.id.img_user_action_toggle).setOnClickListener(new View.OnClickListener() {
+        final View toggle = findViewById(R.id.img_user_action_toggle);
+        findViewById(R.id.user_info_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(userActionList.getVisibility()==View.GONE) {
-                    v.animate()
+                    toggle.animate()
                         .rotation(180)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
-                                userActionList.setVisibility(View.VISIBLE);
+                            userActionList.setVisibility(View.VISIBLE);
                             }
                         }).start();
                 }
                 else {
-                    v.animate()
+                    toggle.animate()
                             .rotation(0)
                             .withEndAction(new Runnable() {
                                 @Override
                                 public void run() {
-                                    userActionList.setVisibility(View.GONE);
+                                userActionList.setVisibility(View.GONE);
                                 }
                             }).start();
                 }
