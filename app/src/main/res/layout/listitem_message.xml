@@ -3,7 +3,6 @@
     android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:theme="@style/Theme.AppCompat.Light">
 
     <include layout="@layout/avatar_container"/>
