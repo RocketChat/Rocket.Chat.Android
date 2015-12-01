@@ -3,6 +3,7 @@ package chat.rocket.android.fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -226,7 +227,16 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             });
 
             if(u!=null) viewHolder.avatar.setForUser(u.id);
-            viewHolder.content.setText(m.content);
+            if(TextUtils.isEmpty(m.content)){
+                viewHolder.content.setText("(message removed)");
+                viewHolder.content.setTypeface(null, Typeface.ITALIC);
+                viewHolder.content.setEnabled(false);
+            }
+            else {
+                viewHolder.content.setText(m.content);
+                viewHolder.content.setTypeface(null, Typeface.NORMAL);
+                viewHolder.content.setEnabled(true);
+            }
             if(u!=null) viewHolder.username.setText(TextUtils.isEmpty(u.displayName)? u.id : u.displayName);
             viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.AUTO_DAY_TIME));
         }

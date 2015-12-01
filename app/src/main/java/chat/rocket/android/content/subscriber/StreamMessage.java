@@ -33,7 +33,7 @@ public class StreamMessage extends AbstractRocketChatSubscription {
     @Override
     protected void onDocumentAdded(DDPSubscription.DocEvent docEvent) throws JSONException {
         final JSONArray args = ((DDPSubscription.Added) docEvent).fields.getJSONArray("args");
-        final String roomID = args.getString(0);
+        final String path = args.getString(0);
         final JSONObject message = args.getJSONObject(1);
         final String messageID = message.getString("_id");
 

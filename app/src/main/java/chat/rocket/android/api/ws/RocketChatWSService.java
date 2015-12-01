@@ -25,6 +25,7 @@ import chat.rocket.android.content.observer.RocketChatRoom;
 import chat.rocket.android.content.observer.SendNewMessageHandler;
 import chat.rocket.android.content.subscriber.RocketChatSubscription;
 import chat.rocket.android.content.subscriber.StreamMessage;
+import chat.rocket.android.content.subscriber.StreamNotifyRoom;
 import chat.rocket.android.content.subscriber.UsersObserver;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
@@ -35,6 +36,17 @@ import rx.functions.Action1;
 
 public class RocketChatWSService extends Service {
     private final static String TAG = Constants.LOG_TAG;
+
+    private static final Class[] HANDLER_CLASSES = {
+            LoginHandler.class
+            , RocketChatSubscription.class
+            , RocketChatRoom.class
+            , MethodCallObserver.class
+            , SendNewMessageHandler.class
+            , UsersObserver.class
+            , StreamMessage.class
+            , StreamNotifyRoom.class
+    };
 
     private RocketChatWSAPI mAPI;
 
@@ -119,15 +131,6 @@ public class RocketChatWSService extends Service {
         });
     }
 
-    private static final Class[] HANDLER_CLASSES = {
-            LoginHandler.class
-            , RocketChatSubscription.class
-            , RocketChatRoom.class
-            , MethodCallObserver.class
-            , SendNewMessageHandler.class
-            , UsersObserver.class
-            , StreamMessage.class
-    };
     private final ArrayList<Registerable> mListeners = new ArrayList<>();
 
     private void registerListeners(){
