@@ -60,7 +60,7 @@ public class SendNewMessageHandler extends AbstractObserver {
                         m.syncstate = SyncState.SYNCED;
                         m.id = result.getString("_id");
                         m.timestamp = result.getJSONObject("ts").getLong("$date");
-                        m.userId = result.getJSONObject("u").getString("_id");
+                        m.userId = result.getJSONObject("u").getString("username");
                     }
                     m.putByContentProvider(mContext);
                     return null;

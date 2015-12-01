@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -35,6 +36,7 @@ import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
+import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.Avatar;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.MessageComposer;
@@ -47,6 +49,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private String mHost;
     private String mRoomId;
     private String mRoomName;
+    private String mUsername;
     private View mRootView;
     private MessageAdapter mAdapter;
 
@@ -71,6 +74,21 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         mHost = args.getString("host");
         mRoomId = args.getString("roomId");
         mRoomName = args.getString("roomName");
+        mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID,"");
+        if(TextUtils.isEmpty(mUsername)) {
+            Cache.get(getContext()).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                    if(Cache.KEY_MY_USER_ID.equals(key)) {
+                        String username = sharedPreferences.getString(key,"");
+                        if(!TextUtils.isEmpty(username)){
+                            mUsername = username;
+                            sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private boolean hasValidArgs(Bundle args) {
@@ -280,7 +298,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         m.syncstate = SyncState.NOT_SYNCED;
         m.content = message;
         m.roomId = mRoomId;
-        //TODO: m.userId = getMe().id;
+        m.userId = mUsername;
         m.putByContentProvider(getContext());
 
         composer.setText("");

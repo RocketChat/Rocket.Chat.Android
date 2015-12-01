@@ -8,6 +8,7 @@ import android.util.Log;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.User;
+import chat.rocket.android.preference.Cache;
 import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -40,8 +41,6 @@ public class UsersObserver extends AbstractSubscriber {
                             } else if (docEvent instanceof DDPSubscription.Added) {
                                 final String username = ((DDPSubscription.Added) docEvent).fields.getString("username");
 
-                                boolean isMe = (!((DDPSubscription.Added) docEvent).fields.isNull("emails"));
-
                                 User u = RocketChatDatabaseHelper.read(mContext, new RocketChatDatabaseHelper.DBCallback<User>() {
                                     @Override
                                     public User process(SQLiteDatabase db) throws Exception {
@@ -51,9 +50,16 @@ public class UsersObserver extends AbstractSubscriber {
                                 if(u==null) {
                                     u = new User();
                                     u.id = username;
+                                    u.putByContentProvider(mContext);
                                 }
-                                u.isMe = isMe;
-                                u.putByContentProvider(mContext);
+
+                                final boolean isMe = (!((DDPSubscription.Added) docEvent).fields.isNull("emails"));
+                                if(isMe) {
+                                    Cache.get(mContext).edit()
+                                            .putString(Cache.KEY_MY_USER_ID, u.id)
+                                            .commit();
+                                }
+
                             } else if (docEvent instanceof DDPSubscription.Removed) {
 
                             } else if (docEvent instanceof DDPSubscription.Changed) {

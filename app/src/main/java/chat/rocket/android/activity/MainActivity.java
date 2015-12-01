@@ -2,7 +2,7 @@ package chat.rocket.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -14,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.User;
+import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 
 public class MainActivity extends AbstractActivity {
@@ -66,40 +68,28 @@ public class MainActivity extends AbstractActivity {
         });
     }
 
-    private User getMe() {
-        return RocketChatDatabaseHelper.read(this, new RocketChatDatabaseHelper.DBCallback<User>() {
-            @Override
-            public User process(SQLiteDatabase db) {
-                return User.getMe(db);
-            }
-        });
-    }
-
     private Handler mHandler = new Handler();
     private void setupUserInfo(){
         final ServerConfig s = getPrimaryServerConfig();
-        setupUserInfoInner(s,getMe());
-        getContentResolver().registerContentObserver(RocketChatProvider.getUriForQuery(User.TABLE_NAME), false, new ContentObserver(null) {
+        setupUserInfoInner(s, Cache.get(this).getString(Cache.KEY_MY_USER_ID,""));
+        Cache.get(this).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
-            public void onChange(boolean selfChange) {
-                final User u = getMe();
-                if(u!=null) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            setupUserInfoInner(s, u);
-                        }
-                    });
-                    getContentResolver().unregisterContentObserver(this);
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (Cache.KEY_MY_USER_ID.equals(key)) {
+                    String username = sharedPreferences.getString(key,"");
+                    if(!TextUtils.isEmpty(username)) {
+                        setupUserInfoInner(s, username);
+                        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+                    }
                 }
             }
         });
     }
 
-    private void setupUserInfoInner(ServerConfig s, User u){
+    private void setupUserInfoInner(ServerConfig s, String username){
         if(s!=null){
             ((TextView) findViewById(R.id.txt_hostname_info)).setText(s.hostname);
-            if(u!=null) ((TextView) findViewById(R.id.txt_account_info)).setText(u.id);
+            if(!TextUtils.isEmpty(username)) ((TextView) findViewById(R.id.txt_account_info)).setText(username);
             else ((TextView) findViewById(R.id.txt_account_info)).setText(s.account);
         }
         else {
