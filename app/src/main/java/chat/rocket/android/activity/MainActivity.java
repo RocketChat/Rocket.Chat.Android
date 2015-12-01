@@ -54,7 +54,7 @@ public class MainActivity extends AbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sliding_pane);
+        setContentView(R.layout.main_screen);
         showHomeRoomFragment();
 
         setupUserInfo();
@@ -205,7 +205,7 @@ public class MainActivity extends AbstractActivity {
         // pane.isOpen is not correct before OnLayout.
         // https://code.google.com/p/android/issues/detail?id=176340
         final SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-        pane.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        if(pane!=null) pane.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 pane.removeOnLayoutChangeListener(this);
@@ -221,14 +221,14 @@ public class MainActivity extends AbstractActivity {
 
     private void openPaneIfNeeded() {
         final SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-        if (pane.isSlideable() && !pane.isOpen()) {
+        if (pane!=null && pane.isSlideable() && !pane.isOpen()) {
             pane.openPane();
         }
     }
 
     private void closePaneIfNeeded(){
         final SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-        if (pane.isSlideable() && pane.isOpen()) {
+        if (pane!=null && pane.isSlideable() && pane.isOpen()) {
             pane.closePane();
         }
     }

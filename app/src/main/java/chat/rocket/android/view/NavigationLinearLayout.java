@@ -31,8 +31,6 @@ public class NavigationLinearLayout extends LinearLayout {
     protected void onMeasure(int widthSpec, int heightSpec) {
         switch (MeasureSpec.getMode(widthSpec)) {
             case MeasureSpec.EXACTLY:
-                // Nothing to do
-                break;
             case MeasureSpec.AT_MOST:
                 widthSpec = MeasureSpec.makeMeasureSpec(
                         Math.min(MeasureSpec.getSize(widthSpec), mMaxWidth), MeasureSpec.EXACTLY);
