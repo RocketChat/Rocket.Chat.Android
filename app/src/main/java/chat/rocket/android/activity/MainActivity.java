@@ -30,6 +30,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.fragment.ChatRoomFragment;
+import chat.rocket.android.fragment.HomeRoomFragment;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.Room;
@@ -54,6 +55,7 @@ public class MainActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sliding_pane);
+        showHomeRoomFragment();
 
         setupUserInfo();
         setupUserActionToggle();
@@ -292,6 +294,12 @@ public class MainActivity extends AbstractActivity {
             viewHolder.unreadContainer.setVisibility(r.unread>0 ? View.VISIBLE : View.GONE);
             viewHolder.unreadCount.setText(Integer.toString(r.unread));
         }
+    }
+
+    private void showHomeRoomFragment(){
+        getSupportFragmentManager().beginTransaction()
+                .replace(getContainerId(), new HomeRoomFragment())
+                .commit();
     }
 
     private void showChatRoomFragment(String roomId, String roomName, Room.Type roomType) {
