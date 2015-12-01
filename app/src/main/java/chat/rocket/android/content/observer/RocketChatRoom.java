@@ -93,7 +93,6 @@ public class RocketChatRoom extends AbstractObserver {
                                     Log.d(TAG, "[room:"+roomID+"] <- "+username);
                                 }
                             } else if (docEvent instanceof DDPSubscription.Removed) {
-
                             } else if (docEvent instanceof DDPSubscription.Changed) {
 
                             } else if (docEvent instanceof DDPSubscription.MovedBefore) {

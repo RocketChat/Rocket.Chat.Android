@@ -1,7 +1,6 @@
 package chat.rocket.android.content.subscriber;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,10 +14,8 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.JSONParseEngine;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
-import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.RocketChatDocument;
-import chat.rocket.android.model.Room;
 import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -86,16 +83,6 @@ public class StreamMessage extends AbstractSubscriber {
 
                                 mDocumentStore.put(docEvent.docID, new RocketChatDocument(docEvent.docID, Message.class, messageID));
                             } else if (docEvent instanceof DDPSubscription.Removed) {
-                                final RocketChatDocument doc = mDocumentStore.get(docEvent.docID);
-                                if (doc.docType == Room.class) {
-                                    Message m = RocketChatDatabaseHelper.read(mContext, new RocketChatDatabaseHelper.DBCallback<Message>() {
-                                        @Override
-                                        public Message process(SQLiteDatabase db) throws Exception {
-                                            return Message.getById(db, doc.docID);
-                                        }
-                                    });
-                                    if(m!=null) m.deleteByContentProvider(mContext);
-                                }
                             } else if (docEvent instanceof DDPSubscription.Changed) {
 
                             } else if (docEvent instanceof DDPSubscription.MovedBefore) {

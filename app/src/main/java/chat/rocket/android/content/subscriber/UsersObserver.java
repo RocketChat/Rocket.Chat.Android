@@ -61,7 +61,6 @@ public class UsersObserver extends AbstractSubscriber {
                                 }
 
                             } else if (docEvent instanceof DDPSubscription.Removed) {
-
                             } else if (docEvent instanceof DDPSubscription.Changed) {
 
                             } else if (docEvent instanceof DDPSubscription.MovedBefore) {
