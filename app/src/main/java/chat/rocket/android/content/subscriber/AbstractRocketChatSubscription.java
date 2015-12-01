@@ -26,7 +26,8 @@ abstract class AbstractRocketChatSubscription extends AbstractSubscriber {
 
     protected abstract String getSubscriptionName();
     protected abstract String getSubscriptionCallbackName();
-    protected abstract void onDocumentAdded(DDPSubscription.DocEvent docEvent) throws JSONException;
+    protected abstract void onDocumentAdded(DDPSubscription.Added docEvent) throws JSONException;
+    protected void onDocumentChanged(DDPSubscription.Changed docEvent) throws JSONException{}
 
     @Override
     protected void onSubscribe() {
@@ -67,10 +68,10 @@ abstract class AbstractRocketChatSubscription extends AbstractSubscriber {
                             if (docEvent instanceof DDPSubscription.Added.Before) {
 
                             } else if (docEvent instanceof DDPSubscription.Added) {
-                                onDocumentAdded(docEvent);
+                                onDocumentAdded((DDPSubscription.Added) docEvent);
                             } else if (docEvent instanceof DDPSubscription.Removed) {
                             } else if (docEvent instanceof DDPSubscription.Changed) {
-
+                                onDocumentChanged((DDPSubscription.Changed)docEvent);
                             } else if (docEvent instanceof DDPSubscription.MovedBefore) {
 
                             }

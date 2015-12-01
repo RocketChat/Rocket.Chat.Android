@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.Message;
+import chat.rocket.android.model.Room;
 import chat.rocket.android.model.User;
 
 public class JSONParseEngine {
@@ -56,5 +57,27 @@ public class JSONParseEngine {
 
         m.userId = userName;
         m.putByContentProvider(mContext);
+    }
+
+    public void parseRoom(JSONObject room) throws JSONException {
+        final String roomID = room.getString("rid");
+
+        Room r = RocketChatDatabaseHelper.read(mContext, new RocketChatDatabaseHelper.DBCallback<Room>() {
+            @Override
+            public Room process(SQLiteDatabase db) throws Exception {
+                return Room.getById(db, roomID);
+            }
+        });
+        if(r==null) {
+            r = new Room();
+            r.id = roomID;
+        }
+
+        if(!room.isNull("name")) r.name = room.getString("name");
+        if(!room.isNull("ts")) r.timestamp = room.getJSONObject("ts").getLong("$date");
+        if(!room.isNull("t")) r.type = Room.Type.getType(room.getString("t"));
+        if(!room.isNull("alert")) r.alert = room.getBoolean("alert");
+        if(!room.isNull("unread")) r.unread = room.getInt("unread");
+        r.putByContentProvider(mContext);
     }
 }

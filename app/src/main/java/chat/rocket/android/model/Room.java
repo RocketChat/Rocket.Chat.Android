@@ -7,8 +7,35 @@ import android.database.sqlite.SQLiteDatabase;
 public class Room extends AbstractModel {
     public static final String TABLE_NAME = "room";
 
+    public enum Type {
+        CHANNEL("c")
+        ,PRIVATE_GROUP("p")
+        ,DIRECT_MESSAGE("d")
+
+        ;//------------
+
+        private String value;
+        Type(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static Type getType(String value) {
+            for(Type t :Type.values()){
+                if(t.value.equals(value)) return t;
+            }
+            throw new IllegalArgumentException("Room.Type.getType: invalid parameter: value="+value);
+        }
+    }
+
     public String name;
     public Long timestamp;
+    public boolean alert;
+    public Type type;
+    public int unread;
 
     @Override
     public String getTableName() {
@@ -39,7 +66,10 @@ public class Room extends AbstractModel {
                             " id TEXT UNIQUE NOT NULL," +
                             " syncstate INTEGER NOT NULL," +
                             " name TEXT," +
-                            " timestamp INTEGER);\n");
+                            " timestamp INTEGER," +
+                            " alert INTEGER," +
+                            " type TEXT," +
+                            " unread INTEGER);");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -57,6 +87,9 @@ public class Room extends AbstractModel {
         initID(r, c);
         r.name = c.getString(c.getColumnIndex("name"));
         r.timestamp = c.getLong(c.getColumnIndex("timestamp"));
+        r.alert = (c.getInt(c.getColumnIndex("alert")) != 0);
+        r.type = Type.getType(c.getString(c.getColumnIndex("type")));
+        r.unread = c.getInt(c.getColumnIndex("unread"));
         return r;
     }
 
@@ -65,6 +98,9 @@ public class Room extends AbstractModel {
         ContentValues values = createInitContentValue();
         values.put("name", name);
         values.put("timestamp", timestamp);
+        values.put("alert",alert? 1 : 0);
+        values.put("type", type.getValue());
+        values.put("unread", unread);
         return values;
     }
 

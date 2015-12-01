@@ -9,13 +9,10 @@ import android.util.Log;
 
 import org.json.JSONArray;
 
-import java.util.HashMap;
-
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatProvider;
-import chat.rocket.android.model.RocketChatDocument;
 import chat.rocket.android.model.Room;
 import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
@@ -25,7 +22,6 @@ import rx.functions.Func1;
 
 public class RocketChatRoom extends AbstractObserver {
 
-    private HashMap<String, RocketChatDocument> mDocumentStore;
     private String mID;
     private Subscription mSubscription;
 

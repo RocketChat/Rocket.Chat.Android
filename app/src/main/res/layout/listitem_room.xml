@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:layout_width="match_parent"
+    android:layout_height="?attr/listPreferredItemHeightSmall"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_channel_item_public"/>
+        android:id="@+id/list_item_room_type"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_margin="@dimen/margin_half"
+        android:src="@drawable/ic_room_type_channel"/>
     <TextView
         android:id="@+id/list_item_room_name"
         android:layout_width="0px"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
+    <FrameLayout
+        android:id="@+id/list_item_room_unread_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FF1dce73"
+        android:padding="2dp"
+        android:layout_marginRight="@dimen/margin_normal">
+        <TextView
+            android:id="@+id/list_item_room_unread_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="16dp"
+            android:minHeight="16dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#FFFFFFFF"
+            android:textSize="11sp"/>
+    </FrameLayout>
 </LinearLayout>

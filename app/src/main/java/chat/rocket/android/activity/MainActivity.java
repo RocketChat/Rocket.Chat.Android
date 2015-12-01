@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -222,11 +224,17 @@ public class MainActivity extends AbstractActivity {
     }
 
     private static class RoomViewHolder extends RecyclerView.ViewHolder {
+        ImageView roomType;
         TextView roomName;
+        View unreadContainer;
+        TextView unreadCount;
 
         public RoomViewHolder(View itemView) {
             super(itemView);
+            roomType = (ImageView) itemView.findViewById(R.id.list_item_room_type);
             roomName = (TextView) itemView.findViewById(R.id.list_item_room_name);
+            unreadContainer = itemView.findViewById(R.id.list_item_room_unread_container);
+            unreadCount = (TextView) itemView.findViewById(R.id.list_item_room_unread_count);
         }
     }
 
@@ -251,17 +259,31 @@ public class MainActivity extends AbstractActivity {
 
         @Override
         public void bindView(RoomViewHolder viewHolder, Context context, Cursor cursor) {
-            final String roomName = cursor.getString(cursor.getColumnIndex("name"));
-            final String roomId = cursor.getString(cursor.getColumnIndex("id"));
+            final Room r = Room.createFromCursor(cursor);
 
-            viewHolder.roomName.setText(roomName);
+            switch (r.type){
+                case CHANNEL:
+                    viewHolder.roomType.setImageResource(R.drawable.ic_room_type_channel);
+                    break;
+                case PRIVATE_GROUP:
+                    viewHolder.roomType.setImageResource(R.drawable.ic_room_type_private);
+                    break;
+                case DIRECT_MESSAGE:
+                    viewHolder.roomType.setImageResource(R.drawable.ic_room_type_direct);
+                    break;
+            }
+
+            viewHolder.roomName.setText(r.name);
+            viewHolder.roomName.setTypeface(null, r.alert? Typeface.BOLD : Typeface.NORMAL);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     closePaneIfNeeded();
-                    showChatRoomFragment(roomId, roomName);
+                    showChatRoomFragment(r.id, r.name);
                 }
             });
+            viewHolder.unreadContainer.setVisibility(r.unread>0 ? View.VISIBLE : View.GONE);
+            viewHolder.unreadCount.setText(Integer.toString(r.unread));
         }
     }
 
