@@ -84,8 +84,8 @@ public class Message extends AbstractModel{
         new DBAccessor(db).dropTable();
     }
 
-    public static Message get(SQLiteDatabase db, String selection, String[] selectionArgs) {
-        return new DBAccessor(db).get(selection, selectionArgs,null);
+    public static Message get(SQLiteDatabase db, String selection, String[] selectionArgs, String orderBy) {
+        return new DBAccessor(db).get(selection, selectionArgs, orderBy);
     }
 
     public static Message get(SQLiteDatabase db, long _id) {

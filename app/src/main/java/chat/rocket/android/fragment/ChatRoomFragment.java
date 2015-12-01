@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment;
 
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -40,7 +41,9 @@ import chat.rocket.android.model.User;
 import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.Avatar;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
+import chat.rocket.android.view.LoadMoreScrollListener;
 import chat.rocket.android.view.MessageComposer;
+import hugo.weaving.DebugLog;
 
 public class ChatRoomFragment extends AbstractFragment implements OnBackPressListener{
     private static final int LOADER_ID = 0x12346;
@@ -54,6 +57,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private String mUsername;
     private View mRootView;
     private MessageAdapter mAdapter;
+    private LoadMoreScrollListener mLoadMoreListener;
 
     public static ChatRoomFragment create(String host, String roomId, String roomName, Room.Type roomType) {
         ChatRoomFragment f = new ChatRoomFragment();
@@ -138,12 +142,61 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         }
     }
 
+    private boolean mFetching = false;
+    private void fetchMoreMessages() {
+        mFetching = true;
+        Message m = RocketChatDatabaseHelper.read(getContext(), new RocketChatDatabaseHelper.DBCallback<Message>() {
+            @Override
+            public Message process(SQLiteDatabase db) throws Exception {
+                return Message.get(db, "room_id = ?",new String[]{mRoomId},"timestamp ASC");
+            }
+        });
+        if(m==null) {
+            mFetching = false;
+            return;
+        }
+
+        try {
+            final Uri uri = MethodCall
+                    .create("loadMessages", new JSONObject().put("room_id",mRoomId).put("end_ts",m.timestamp))
+                    .putByContentProvider(getContext());
+            getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+                @Override
+                public void onChange(boolean selfChange) {
+                    Cursor c = getContext().getContentResolver().query(uri,null,null,null,null);
+                    if(c==null){
+                        mFetching = false;
+                        getContext().getContentResolver().unregisterContentObserver(this);
+                    }
+                    if(c!=null && c.moveToFirst()){
+                        MethodCall m = MethodCall.createFromCursor(c);
+                        if(m.syncstate == SyncState.SYNCED || m.syncstate == SyncState.FAILED) mFetching = false;
+                        getContext().getContentResolver().unregisterContentObserver(this);
+                    }
+                }
+            });
+        } catch (JSONException e) {
+            mFetching = false;
+            Log.e(Constants.LOG_TAG, "error", e);
+        }
+    }
+
     private void setupListView() {
         final Context context = mRootView.getContext();
         mAdapter = new MessageAdapter(context, null);
         final RecyclerView messageListView = (RecyclerView) mRootView.findViewById(R.id.listview_messages);
-        messageListView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true);
+        messageListView.setLayoutManager(layoutManager);
         messageListView.setAdapter(mAdapter);
+
+        mLoadMoreListener = new LoadMoreScrollListener(layoutManager, 20) {
+            @DebugLog
+            @Override
+            public void requestMoreItem() {
+                fetchMoreMessages();
+            }
+        };
+        messageListView.addOnScrollListener(mLoadMoreListener);
     }
 
     private void loadMessages(){
