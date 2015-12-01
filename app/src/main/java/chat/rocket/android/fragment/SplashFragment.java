@@ -45,28 +45,32 @@ public class SplashFragment extends AbstractFragment {
     }
 
     private void login(ServerConfig s){
-        if(RocketChatWSService.keepalive(getContext())) {
-            getContext().getContentResolver().registerContentObserver(RocketChatProvider.getUriForQuery(ServerConfig.TABLE_NAME, s._id), false, new ContentObserver(null) {
-                @Override
-                public void onChange(boolean selfChange) {
-                    if(getContext()==null) return;
-                    ServerConfig s = getPrimaryServerConfig();
-                    if(s==null) { //deleted.
-                        getContext().getContentResolver().unregisterContentObserver(this);
-                        showServerConfigFragment();
-                    } else if(s.syncstate==SyncState.SYNCED) {
-                        getContext().getContentResolver().unregisterContentObserver(this);
-                        mShowMainActivityManager.setShouldAction(true);
-                    } else if(s.syncstate==SyncState.FAILED) {
-                        getContext().getContentResolver().unregisterContentObserver(this);
-                        showErrorFragment("Failed to connect.");
-                    }
+        RocketChatWSService.keepalive(getContext());
+        if(s.syncstate==SyncState.SYNCED) {
+            //force login!
+            s.syncstate = SyncState.NOT_SYNCED;
+            s.putByContentProvider(getContext());
+        }
+
+        getContext().getContentResolver().registerContentObserver(RocketChatProvider.getUriForQuery(ServerConfig.TABLE_NAME, s._id), false, new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange) {
+                if(getContext()==null) return;
+                ServerConfig s = getPrimaryServerConfig();
+                if(s==null) { //deleted.
+                    getContext().getContentResolver().unregisterContentObserver(this);
+                    RocketChatWSService.kill(getContext());
+                    showServerConfigFragment();
+                } else if(s.syncstate==SyncState.SYNCED) {
+                    getContext().getContentResolver().unregisterContentObserver(this);
+                    mShowMainActivityManager.setShouldAction(true);
+                } else if(s.syncstate==SyncState.FAILED) {
+                    getContext().getContentResolver().unregisterContentObserver(this);
+                    RocketChatWSService.kill(getContext());
+                    showErrorFragment("Failed to connect.");
                 }
-            });
-        }
-        else {
-            mShowMainActivityManager.setShouldAction(true);
-        }
+            }
+        });
     }
 
     private void showErrorFragment(String msg) {
