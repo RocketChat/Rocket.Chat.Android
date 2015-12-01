@@ -14,12 +14,14 @@ import org.json.JSONObject;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
+import chat.rocket.android.api.ws.RocketChatWSService;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
+import chat.rocket.android.preference.Cache;
 import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
 
@@ -169,6 +171,7 @@ public class MethodCallObserver extends AbstractObserver {
             return new ResultHandler() {
                 @Override
                 public boolean handleResult(JSONObject result) throws Exception {
+                    RocketChatWSService.kill(mContext);
                     return true;
                 }
             };

@@ -1,7 +1,6 @@
 package chat.rocket.android.fragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -76,16 +75,10 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         mRoomName = args.getString("roomName");
         mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID,"");
         if(TextUtils.isEmpty(mUsername)) {
-            Cache.get(getContext()).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            Cache.waitForValue(getContext(), Cache.KEY_MY_USER_ID, new Cache.ValueCallback<String>() {
                 @Override
-                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                    if(Cache.KEY_MY_USER_ID.equals(key)) {
-                        String username = sharedPreferences.getString(key,"");
-                        if(!TextUtils.isEmpty(username)){
-                            mUsername = username;
-                            sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-                        }
-                    }
+                public void onGetValue(String value) {
+                    mUsername = value;
                 }
             });
         }

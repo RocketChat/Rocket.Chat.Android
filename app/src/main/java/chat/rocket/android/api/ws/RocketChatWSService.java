@@ -49,6 +49,10 @@ public class RocketChatWSService extends Service {
         return context.startService(new Intent(context, RocketChatWSService.class)) == null;
     }
 
+    public static void kill(Context context) {
+        context.stopService(new Intent(context, RocketChatWSService.class));
+    }
+
     @DebugLog
     @Override
     public void onCreate() {

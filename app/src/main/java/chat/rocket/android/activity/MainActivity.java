@@ -2,7 +2,6 @@ package chat.rocket.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -71,17 +70,12 @@ public class MainActivity extends AbstractActivity {
     private Handler mHandler = new Handler();
     private void setupUserInfo(){
         final ServerConfig s = getPrimaryServerConfig();
-        setupUserInfoInner(s, Cache.get(this).getString(Cache.KEY_MY_USER_ID,""));
-        Cache.get(this).registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+        final String username = Cache.get(this).getString(Cache.KEY_MY_USER_ID,"");
+        setupUserInfoInner(s, username);
+        Cache.waitForValue(this, Cache.KEY_MY_USER_ID, new Cache.ValueCallback<String>() {
             @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if (Cache.KEY_MY_USER_ID.equals(key)) {
-                    String username = sharedPreferences.getString(key,"");
-                    if(!TextUtils.isEmpty(username)) {
-                        setupUserInfoInner(s, username);
-                        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-                    }
-                }
+            public void onGetValue(String value) {
+                setupUserInfoInner(s, value);
             }
         });
     }
@@ -125,6 +119,7 @@ public class MainActivity extends AbstractActivity {
                         Log.e(TAG, "error", e);
                     }
                 });
+                Cache.get(context).edit().remove(Cache.KEY_MY_USER_ID).commit();
                 showEntryActivity();
             }
         }
