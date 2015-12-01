@@ -286,7 +286,7 @@ public class MainActivity extends AbstractActivity {
                 @Override
                 public void onClick(View v) {
                     closePaneIfNeeded();
-                    showChatRoomFragment(r.id, r.name);
+                    showChatRoomFragment(r.id, r.name, r.type);
                 }
             });
             viewHolder.unreadContainer.setVisibility(r.unread>0 ? View.VISIBLE : View.GONE);
@@ -294,11 +294,11 @@ public class MainActivity extends AbstractActivity {
         }
     }
 
-    private void showChatRoomFragment(String roomId, String roomName) {
+    private void showChatRoomFragment(String roomId, String roomName, Room.Type roomType) {
         ServerConfig s = getPrimaryServerConfig();
         if(s!=null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(getContainerId(), ChatRoomFragment.create(s.hostname, roomId, roomName))
+                    .replace(getContainerId(), ChatRoomFragment.create(s.hostname, roomId, roomName, roomType))
                     .commit();
         }
     }

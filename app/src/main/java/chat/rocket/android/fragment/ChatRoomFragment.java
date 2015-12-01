@@ -33,6 +33,7 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
+import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
@@ -49,16 +50,18 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private String mHost;
     private String mRoomId;
     private String mRoomName;
+    private Room.Type mRoomType;
     private String mUsername;
     private View mRootView;
     private MessageAdapter mAdapter;
 
-    public static ChatRoomFragment create(String host, String roomId, String roomName) {
+    public static ChatRoomFragment create(String host, String roomId, String roomName, Room.Type roomType) {
         ChatRoomFragment f = new ChatRoomFragment();
         Bundle args = new Bundle();
         args.putString("host", host);
         args.putString("roomId", roomId);
         args.putString("roomName", roomName);
+        args.putString("roomType", roomType.getValue());
         f.setArguments(args);
         return f;
     }
@@ -74,6 +77,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         mHost = args.getString("host");
         mRoomId = args.getString("roomId");
         mRoomName = args.getString("roomName");
+        mRoomType = Room.Type.getType(args.getString("roomType"));
         mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID,"");
         if(TextUtils.isEmpty(mUsername)) {
             Cache.waitForValue(getContext(), Cache.KEY_MY_USER_ID, new Cache.ValueCallback<String>() {
@@ -87,7 +91,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
     private boolean hasValidArgs(Bundle args) {
         if(args == null) return false;
-        return args.containsKey("host") && args.containsKey("roomId") && args.containsKey("roomName");
+        return args.containsKey("host") && args.containsKey("roomId") && args.containsKey("roomName") && args.containsKey("roomType");
     }
 
     @Nullable
@@ -106,6 +110,19 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private void setupToolbar(){
         Toolbar bar = (Toolbar) mRootView.findViewById(R.id.toolbar_chatroom);
         bar.setTitle(mRoomName);
+        switch (mRoomType){
+            case CHANNEL:
+                bar.setNavigationIcon(R.drawable.ic_room_type_channel);
+                break;
+            case PRIVATE_GROUP:
+                bar.setNavigationIcon(R.drawable.ic_room_type_private);
+                break;
+            case DIRECT_MESSAGE:
+                bar.setNavigationIcon(R.drawable.ic_room_type_direct);
+                break;
+            default:
+                bar.setNavigationIcon(null);
+        }
     }
 
     private void fetchNewMessages() {
