@@ -14,7 +14,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import chat.rocket.android.Constants;
-import hugo.weaving.DebugLog;
 
 public class Avatar {
     private String mHost;
@@ -44,7 +43,7 @@ public class Avatar {
         }
         else{
             String name2 = name.replaceAll("[^A-Za-z0-9]","");
-            return (name2.length()<2)? name2 : name2.substring(0,2);
+            return (name2.length()<2)? name2 : name2.substring(0,2).toUpperCase();
         }
     }
     private String firstChar(String s) {
