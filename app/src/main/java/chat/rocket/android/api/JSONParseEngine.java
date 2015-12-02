@@ -57,6 +57,12 @@ public class JSONParseEngine {
         }
 
         m.userId = userId;
+
+        if(!message.isNull("urls")) {
+            m.urls = message.getJSONArray("urls").toString();
+        }
+        else m.urls = "[]";
+
         m.putByContentProvider(mContext);
     }
 

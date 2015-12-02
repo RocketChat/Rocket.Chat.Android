@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_item_inline_image_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/inline_attachment_background"
+    android:layout_margin="4dp"
+    android:padding="4dp">
+    <ImageView
+        android:id="@+id/list_item_inline_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxHeight="200dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart"/>
+</FrameLayout>

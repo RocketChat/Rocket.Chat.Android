@@ -7,4 +7,7 @@
 
     <color name="divider">#FFEEEEEE</color>
     <color name="background_white">#FFFFFFFF</color>
+
+    <color name="inline_attachment_box_outline">#FFF0F0F0</color>
+    <color name="inline_attachment_box_background">@color/background_white</color>
 </resources>

@@ -21,10 +21,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashSet;
 
 import chat.rocket.android.Constants;
 import chat.rocket.android.DateTime;
@@ -59,6 +65,15 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private View mRootView;
     private MessageAdapter mAdapter;
     private LoadMoreScrollListener mLoadMoreListener;
+
+    private static final HashSet<String> sInlineViewSupportedMime = new HashSet<String>(){
+        {
+            add("image/png");
+            add("image/jpg");
+            add("image/jpeg");
+            add("image/webp");
+        }
+    };
 
     public static ChatRoomFragment create(String host, String roomId, String roomName, Room.Type roomType) {
         ChatRoomFragment f = new ChatRoomFragment();
@@ -233,6 +248,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         TextView username;
         TextView timestamp;
         TextView content;
+        LinearLayout inlineContainer;
 
         public MessageViewHolder(View itemView, String host) {
             super(itemView);
@@ -240,6 +256,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             username = (TextView) itemView.findViewById(R.id.list_item_message_username);
             timestamp = (TextView) itemView.findViewById(R.id.list_item_message_timestamp);
             content = (TextView) itemView.findViewById(R.id.list_item_message_content);
+            inlineContainer = (LinearLayout) itemView.findViewById(R.id.list_item_inline_container);
         }
     }
 
@@ -317,6 +334,37 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             }
             if(u!=null) viewHolder.username.setText(TextUtils.isEmpty(u.displayName)? u.name : u.displayName);
             viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.AUTO_DAY_TIME));
+
+            viewHolder.inlineContainer.removeAllViews();
+            try {
+                JSONArray urls = new JSONArray(m.urls);
+                for(int i=0;i<urls.length();i++){
+                    insertUrl(viewHolder, urls.getJSONObject(i));
+                }
+            }
+            catch (Exception e) {
+                Log.e(Constants.LOG_TAG, "error", e);
+            }
+        }
+
+        private void insertUrl(MessageViewHolder viewHolder, JSONObject urlObj) throws JSONException {
+            final Context context = viewHolder.itemView.getContext();
+            JSONObject header = urlObj.getJSONObject("headers");
+
+            String url = urlObj.getString("url");
+            String contentType = header.getString("contentType");
+            long contentLength = Long.parseLong(header.getString("contentLength"));
+
+            if (contentType.startsWith("image/") && sInlineViewSupportedMime.contains(contentType)) {
+                View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_image,viewHolder.inlineContainer,false);
+                ImageView img = (ImageView) v.findViewById(R.id.list_item_inline_image);
+                Picasso.with(context)
+                        .load(url)
+                        .placeholder(R.drawable.image_dummy)
+                        .error(R.drawable.image_error)
+                        .into(img);
+                viewHolder.inlineContainer.addView(v);
+            }
         }
 
         public void setHeaderHeight(int height){

@@ -12,6 +12,49 @@ public class Message extends AbstractModel{
     public String content;
     public Long timestamp;
 
+    /**
+     * REMARK: JSON Array!
+     *
+     * [
+     *   {
+     *     "url": "https://yi01rocket.herokuapp.com/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
+     *     "meta": null,
+     *     "headers": {
+     *       "contentType": "image/png",
+     *       "contentLength": "16509"
+     *     },
+     *     "parsedUrl": {
+     *       "host": "yi01rocket.herokuapp.com",
+     *       "hash": null,
+     *       "pathname": "/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
+     *       "protocol": "https:",
+     *       "port": null,
+     *       "query": null,
+     *       "search": null
+     *     }
+     *   },
+     *   {
+     *     "url": "https://yi01rocket.herokuapp.com/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
+     *     "meta": null,
+     *     "headers": {
+     *       "contentType": "image/png",
+     *       "contentLength": "16509"
+     *     },
+     *     "parsedUrl": {
+     *       "host": "yi01rocket.herokuapp.com",
+     *       "hash": null,
+     *       "pathname": "/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
+     *       "protocol": "https:",
+     *       "port": null,
+     *       "query": null,
+     *       "search": null
+     *     }
+     *   }
+     * ]
+     *
+     */
+    public String urls;
+
     @Override
     public String getTableName() {
         return TABLE_NAME;
@@ -43,7 +86,8 @@ public class Message extends AbstractModel{
                             " room_id TEXT," +
                             " user_id TEXT," +
                             " content TEXT," +
-                            " timestamp INTEGER);\n");
+                            " timestamp INTEGER," +
+                            " urls TEXT);");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -63,6 +107,7 @@ public class Message extends AbstractModel{
         m.userId = c.getString(c.getColumnIndex("user_id"));
         m.content = c.getString(c.getColumnIndex("content"));
         m.timestamp = c.getLong(c.getColumnIndex("timestamp"));
+        m.urls = c.getString(c.getColumnIndex("urls"));
         return m;
     }
 
@@ -73,6 +118,7 @@ public class Message extends AbstractModel{
         values.put("user_id", userId);
         values.put("content", content);
         values.put("timestamp", timestamp);
+        values.put("urls", urls);
         return values;
     }
 
