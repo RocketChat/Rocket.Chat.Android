@@ -45,7 +45,8 @@ public class JSONParseEngine {
         });
         if (_u==null) {
             final User u = new User();
-            u.id = userName;
+            u.id = userId;
+            u.name = userName;
             RocketChatDatabaseHelper.write(mContext, new RocketChatDatabaseHelper.DBCallback<Object>() {
                 @Override
                 public Object process(SQLiteDatabase db) throws Exception {
@@ -55,7 +56,7 @@ public class JSONParseEngine {
             });
         }
 
-        m.userId = userName;
+        m.userId = userId;
         m.putByContentProvider(mContext);
     }
 

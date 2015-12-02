@@ -54,6 +54,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private String mRoomId;
     private String mRoomName;
     private Room.Type mRoomType;
+    private String mUserId;
     private String mUsername;
     private View mRootView;
     private MessageAdapter mAdapter;
@@ -82,9 +83,16 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         mRoomId = args.getString("roomId");
         mRoomName = args.getString("roomName");
         mRoomType = Room.Type.getType(args.getString("roomType"));
-        mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID,"");
+        mUserId = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID,"");
+        mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_NAME,"");
         if(TextUtils.isEmpty(mUsername)) {
             Cache.waitForValue(getContext(), Cache.KEY_MY_USER_ID, new Cache.ValueCallback<String>() {
+                @Override
+                public void onGetValue(String value) {
+                    mUserId = value;
+                }
+            });
+            Cache.waitForValue(getContext(), Cache.KEY_MY_USER_NAME, new Cache.ValueCallback<String>() {
                 @Override
                 public void onGetValue(String value) {
                     mUsername = value;
@@ -296,7 +304,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 }
             });
 
-            if(u!=null) viewHolder.avatar.setForUser(u.id);
+            if(u!=null) viewHolder.avatar.setForUser(u.name);
             if(TextUtils.isEmpty(m.content)){
                 viewHolder.content.setText("(message removed)");
                 viewHolder.content.setTypeface(null, Typeface.ITALIC);
@@ -307,7 +315,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 viewHolder.content.setTypeface(null, Typeface.NORMAL);
                 viewHolder.content.setEnabled(true);
             }
-            if(u!=null) viewHolder.username.setText(TextUtils.isEmpty(u.displayName)? u.id : u.displayName);
+            if(u!=null) viewHolder.username.setText(TextUtils.isEmpty(u.displayName)? u.name : u.displayName);
             viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.AUTO_DAY_TIME));
         }
 
@@ -371,7 +379,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         m.syncstate = SyncState.NOT_SYNCED;
         m.content = message;
         m.roomId = mRoomId;
-        m.userId = mUsername;
+        m.userId = mUserId;
         m.putByContentProvider(getContext());
 
         composer.setText("");

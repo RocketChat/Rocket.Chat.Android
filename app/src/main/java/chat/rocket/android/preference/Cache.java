@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 public class Cache {
     public static final String KEY_MY_USER_ID = "my_user_id";
+    public static final String KEY_MY_USER_NAME = "my_user_name";
     public static SharedPreferences get(Context context) {
         return context.getSharedPreferences("cache",Context.MODE_PRIVATE);
     }

@@ -75,9 +75,9 @@ public class MainActivity extends AbstractActivity {
     private Handler mHandler = new Handler();
     private void setupUserInfo(){
         final ServerConfig s = getPrimaryServerConfig();
-        final String username = Cache.get(this).getString(Cache.KEY_MY_USER_ID,"");
+        final String username = Cache.get(this).getString(Cache.KEY_MY_USER_NAME,"");
         setupUserInfoInner(s, username);
-        Cache.waitForValue(this, Cache.KEY_MY_USER_ID, new Cache.ValueCallback<String>() {
+        Cache.waitForValue(this, Cache.KEY_MY_USER_NAME, new Cache.ValueCallback<String>() {
             @Override
             public void onGetValue(String value) {
                 setupUserInfoInner(s, value);
@@ -130,7 +130,10 @@ public class MainActivity extends AbstractActivity {
                         Log.e(TAG, "error", e);
                     }
                 });
-                Cache.get(context).edit().remove(Cache.KEY_MY_USER_ID).commit();
+                Cache.get(context).edit()
+                        .remove(Cache.KEY_MY_USER_ID)
+                        .remove(Cache.KEY_MY_USER_NAME)
+                        .commit();
                 showEntryActivity();
             }
         }

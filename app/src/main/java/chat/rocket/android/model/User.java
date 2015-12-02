@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class User extends AbstractModel {
     public static final String TABLE_NAME = "user";
-
+    public String name;
     public String displayName;
 
     @Override
@@ -36,6 +36,7 @@ public class User extends AbstractModel {
                     mDb.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                             " (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             " id TEXT UNIQUE NOT NULL," +
+                            " name TEXT UNIQUE NOT NULL," +
                             " syncstate INTEGER NOT NULL," +
                             " display_name TEXT);\n");
 
@@ -53,6 +54,7 @@ public class User extends AbstractModel {
     public static User createFromCursor(Cursor c) {
         User u = new User();
         initID(u, c);
+        u.name = c.getString(c.getColumnIndex("name"));
         u.displayName = c.getString(c.getColumnIndex("display_name"));
         return u;
     }
@@ -60,6 +62,7 @@ public class User extends AbstractModel {
     @Override
     protected ContentValues createContentValue() {
         ContentValues values = createInitContentValue();
+        values.put("name", name);
         values.put("display_name", displayName);
         return values;
     }
@@ -83,6 +86,10 @@ public class User extends AbstractModel {
 
     public static User getById(SQLiteDatabase db, String id) {
         return new DBAccessor(db).getByID(id);
+    }
+
+    public static User getByName(SQLiteDatabase db, String name) {
+        return new DBAccessor(db).get("name = '?'",new String[]{name},null);
     }
 
     public void put(SQLiteDatabase db) {
