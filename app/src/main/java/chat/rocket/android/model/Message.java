@@ -7,8 +7,38 @@ import android.database.sqlite.SQLiteDatabase;
 public class Message extends AbstractModel{
     public static final String TABLE_NAME = "message";
 
+    public enum Type {
+        ROOM_NAME_CHANGED("r")
+        ,USER_ADDED("au")
+        ,USER_REMOVED("ru")
+        ,USER_JOINED("uj")
+        ,USER_LEFT("ul")
+        ,WELCOME("wm")
+        ,MESSAGE_REMOVED("rm")
+        ,UNSPECIFIED("")
+
+        ;//------------
+
+        private String value;
+        Type(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static Type getType(String value) {
+            for(Type t :Type.values()){
+                if(t.value.equals(value)) return t;
+            }
+            return UNSPECIFIED;
+        }
+    }
+
     public String roomId;
     public String userId;
+    public Type type;
     public String content;
     public Long timestamp;
 
@@ -85,6 +115,7 @@ public class Message extends AbstractModel{
                             " syncstate INTEGER NOT NULL," +
                             " room_id TEXT," +
                             " user_id TEXT," +
+                            " type TEXT," +
                             " content TEXT," +
                             " timestamp INTEGER," +
                             " urls TEXT);");
@@ -105,6 +136,7 @@ public class Message extends AbstractModel{
         initID(m, c);
         m.roomId = c.getString(c.getColumnIndex("room_id"));
         m.userId = c.getString(c.getColumnIndex("user_id"));
+        m.type = Type.getType(c.getString(c.getColumnIndex("type")));
         m.content = c.getString(c.getColumnIndex("content"));
         m.timestamp = c.getLong(c.getColumnIndex("timestamp"));
         m.urls = c.getString(c.getColumnIndex("urls"));
@@ -116,6 +148,7 @@ public class Message extends AbstractModel{
         ContentValues values = createInitContentValue();
         values.put("room_id", roomId);
         values.put("user_id", userId);
+        values.put("type", type.getValue());
         values.put("content", content);
         values.put("timestamp", timestamp);
         values.put("urls", urls);

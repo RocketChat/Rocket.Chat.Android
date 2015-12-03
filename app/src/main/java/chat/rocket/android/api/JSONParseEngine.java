@@ -33,6 +33,7 @@ public class JSONParseEngine {
         m.roomId = message.getString("rid");
         m.content = message.getString("msg");
         m.timestamp = message.getJSONObject("ts").getLong("$date");
+        m.type = Message.Type.getType(message.isNull("t")? "" : message.getString("t"));
 
         final JSONObject user = message.getJSONObject("u");
         final String userId = user.getString("_id");

@@ -91,4 +91,14 @@ public class Avatar {
         mContainer.setVisibility(View.VISIBLE);
         mImageView.setVisibility(View.GONE);
     }
+
+    public void hide(){
+        mContainer.setAlpha(0);
+        mImageView.setAlpha(0.0f);
+    }
+
+    public void show(){
+        mContainer.setAlpha(1);
+        mImageView.setAlpha(1.0f);
+    }
 }

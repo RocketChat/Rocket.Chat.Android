@@ -250,6 +250,9 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         TextView timestamp;
         TextView content;
         LinearLayout inlineContainer;
+        View newDayContainer;
+        TextView newDayText;
+        View usertimeContainer;
 
         public MessageViewHolder(View itemView, String host) {
             super(itemView);
@@ -258,6 +261,9 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             timestamp = (TextView) itemView.findViewById(R.id.list_item_message_timestamp);
             content = (TextView) itemView.findViewById(R.id.list_item_message_content);
             inlineContainer = (LinearLayout) itemView.findViewById(R.id.list_item_inline_container);
+            newDayContainer = itemView.findViewById(R.id.list_item_message_newday);
+            newDayText = (TextView) itemView.findViewById(R.id.list_item_message_newday_text);
+            usertimeContainer = itemView.findViewById(R.id.list_item_message_user_time_container);
         }
     }
 
@@ -313,8 +319,17 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         }
 
         @Override
-        public void bindView(MessageViewHolder viewHolder, Context context, Cursor cursor) {
+        public void bindView(MessageViewHolder viewHolder, Context context, int position, Cursor cursor) {
             final Message m = Message.createFromCursor(cursor);
+
+            Message nextM = null;
+            if(position < getBasicItemCount()-1) {
+                if(cursor.moveToPosition(position+1)){
+                    nextM = Message.createFromCursor(cursor);
+                }
+            }
+            setSequentialOrNewDateIfNeeded(viewHolder, context, nextM, m);
+
             User u = RocketChatDatabaseHelper.read(context, new RocketChatDatabaseHelper.DBCallback<User>() {
                 @Override
                 public User process(SQLiteDatabase db) throws JSONException {
@@ -323,18 +338,55 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             });
 
             if(u!=null) viewHolder.avatar.setForUser(u.name);
-            if(TextUtils.isEmpty(m.content)){
-                viewHolder.content.setText("(message removed)");
+
+            //see Rocket.Chat:packages/rocketchat-lib/client/MessageTypes.coffee
+            String username = (u!=null)? u.getDisplayName() : "unknown user";
+            boolean systemMsg = true;
+            switch (m.type) {
+                case USER_JOINED:
+                    viewHolder.content.setText("(has joined the channel)");
+                    break;
+                case USER_LEFT:
+                    viewHolder.content.setText("(has left the channel)");
+                    break;
+
+                case USER_ADDED:
+                    viewHolder.content.setText(String.format("(User %s added by %s)",m.content,username));
+                    break;
+
+                case USER_REMOVED:
+                    viewHolder.content.setText(String.format("(User %s removed by %s)",m.content,username));
+                    break;
+
+                case ROOM_NAME_CHANGED:
+                    viewHolder.content.setText(String.format("(Room name changed to: %s by %s)",m.content,username));
+                    break;
+
+                case MESSAGE_REMOVED:
+                    viewHolder.content.setText("(message removed)");
+                    break;
+
+                case WELCOME:
+                    viewHolder.content.setText(String.format("Welcome %s!",username));
+                    break;
+
+
+                case UNSPECIFIED:
+                default:
+                    viewHolder.content.setText(m.content);
+                    systemMsg = false;
+            }
+            if(systemMsg) {
                 viewHolder.content.setTypeface(null, Typeface.ITALIC);
                 viewHolder.content.setEnabled(false);
             }
             else {
-                viewHolder.content.setText(m.content);
                 viewHolder.content.setTypeface(null, Typeface.NORMAL);
                 viewHolder.content.setEnabled(true);
             }
-            if(u!=null) viewHolder.username.setText(TextUtils.isEmpty(u.displayName)? u.name : u.displayName);
-            viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.AUTO_DAY_TIME));
+
+            if(u!=null) viewHolder.username.setText(u.getDisplayName());
+            viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.TIME));
 
             viewHolder.inlineContainer.removeAllViews();
             try {
@@ -345,6 +397,44 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             }
             catch (Exception e) {
                 Log.e(Constants.LOG_TAG, "error", e);
+            }
+        }
+
+        private void setSequentialOrNewDateIfNeeded(MessageViewHolder viewHolder, Context context, @Nullable Message nextM, Message m) {
+            //see Rocket.Chat:packages/rocketchat-livechat/app/client/views/message.coffee
+            if(nextM==null || !DateTime.fromEpocMs(nextM.timestamp, DateTime.Format.DATE)
+                    .equals(DateTime.fromEpocMs(m.timestamp, DateTime.Format.DATE))) {
+                setNewDay(viewHolder, DateTime.fromEpocMs(m.timestamp, DateTime.Format.DATE));
+                setSequential(viewHolder, false);
+            }
+            else if(!nextM.userId.equals(m.userId)) {
+                setNewDay(viewHolder, null);
+                setSequential(viewHolder, false);
+            }
+            else{
+                setNewDay(viewHolder, null);
+                setSequential(viewHolder, true);
+            }
+
+
+        }
+
+        private void setSequential(MessageViewHolder viewHolder, boolean sequential) {
+            if(sequential){
+                viewHolder.avatar.hide();
+                viewHolder.usertimeContainer.setVisibility(View.GONE);
+            }
+            else{
+                viewHolder.avatar.show();
+                viewHolder.usertimeContainer.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private void setNewDay(MessageViewHolder viewHolder, @Nullable String newDayText) {
+            if(TextUtils.isEmpty(newDayText)) viewHolder.newDayContainer.setVisibility(View.GONE);
+            else {
+                viewHolder.newDayText.setText(newDayText);
+                viewHolder.newDayContainer.setVisibility(View.VISIBLE);
             }
         }
 

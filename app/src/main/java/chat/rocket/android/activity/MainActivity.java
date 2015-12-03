@@ -271,7 +271,7 @@ public class MainActivity extends AbstractActivity {
         }
 
         @Override
-        public void bindView(RoomViewHolder viewHolder, Context context, Cursor cursor) {
+        public void bindView(RoomViewHolder viewHolder, Context context, int position, Cursor cursor) {
             final Room r = Room.createFromCursor(cursor);
 
             switch (r.type){

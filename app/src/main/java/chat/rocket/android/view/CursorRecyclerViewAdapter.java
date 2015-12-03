@@ -56,7 +56,7 @@ public abstract class CursorRecyclerViewAdapter<T extends RecyclerView.ViewHolde
         if (!mCursor.moveToPosition(position)) {
             throw new IllegalStateException("couldn't move cursor to position " + position);
         }
-        bindView(viewHolder, mContext, mCursor);
+        bindView(viewHolder, mContext, position, mCursor);
     }
 
     @Override
@@ -119,7 +119,7 @@ public abstract class CursorRecyclerViewAdapter<T extends RecyclerView.ViewHolde
         }
     }
 
-    public abstract void bindView(T viewHolder, Context context, Cursor cursor);
+    public abstract void bindView(T viewHolder, Context context, int position, Cursor cursor);
 
     private class ChangeObserver extends ContentObserver {
         public ChangeObserver() {

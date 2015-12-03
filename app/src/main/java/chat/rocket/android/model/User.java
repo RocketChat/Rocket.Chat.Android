@@ -3,6 +3,7 @@ package chat.rocket.android.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 public class User extends AbstractModel {
     public static final String TABLE_NAME = "user";
@@ -12,6 +13,10 @@ public class User extends AbstractModel {
     @Override
     public String getTableName() {
         return TABLE_NAME;
+    }
+
+    public String getDisplayName() {
+        return TextUtils.isEmpty(displayName)? name : displayName;
     }
 
     private static class DBAccessor extends AbstractModelDBAccessor<User> {
