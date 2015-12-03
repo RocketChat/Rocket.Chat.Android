@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -348,13 +349,14 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         }
 
         private void insertUrl(MessageViewHolder viewHolder, JSONObject urlObj) throws JSONException {
-            final Context context = viewHolder.itemView.getContext();
+            if (urlObj.isNull("headers")) return;
             JSONObject header = urlObj.getJSONObject("headers");
+            final String url = urlObj.getString("url");
 
-            String url = urlObj.getString("url");
+            if (header.isNull("contentType")) return;
             String contentType = header.getString("contentType");
-            long contentLength = Long.parseLong(header.getString("contentLength"));
 
+            final Context context = viewHolder.itemView.getContext();
             if (contentType.startsWith("image/") && sInlineViewSupportedMime.contains(contentType)) {
                 View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_image,viewHolder.inlineContainer,false);
                 ImageView img = (ImageView) v.findViewById(R.id.list_item_inline_image);
@@ -363,6 +365,61 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                         .placeholder(R.drawable.image_dummy)
                         .error(R.drawable.image_error)
                         .into(img);
+                viewHolder.inlineContainer.addView(v);
+            }
+
+            // see Rocket.Chat:packages/rocketchat-oembed/client/oembedUrlWidget.coffee
+            if (!urlObj.isNull("meta")) {
+                JSONObject meta =urlObj.getJSONObject("meta");
+
+                String title = null;
+                if(!meta.isNull("ogTitle")) title = meta.getString("ogTitle");
+                else if(!meta.isNull("twitterTitle")) title = meta.getString("twitterTitle");
+                else if(!meta.isNull("pageTitle")) title = meta.getString("pageTitle");
+
+                String description = null;
+                if(!meta.isNull("ogDescription")) description = meta.getString("ogDescription");
+                else if(!meta.isNull("twitterDescription")) description = meta.getString("twitterDescription");
+                else if(!meta.isNull("description")) description = meta.getString("description");
+
+                if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description)) return;
+
+                if (description.startsWith("\"")) description = description.substring(1);
+                if (description.endsWith("\"")) description = description.substring(0, description.length()-1);
+
+                String imageURL = null;
+                if(!meta.isNull("ogImage")) imageURL = meta.getString("ogImage");
+                else if(!meta.isNull("twitterImage")) imageURL = meta.getString("twitterImage");
+
+                String host = urlObj.getJSONObject("parsedUrl").getString("host");
+
+                View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_embed_url,viewHolder.inlineContainer,false);
+
+                ((TextView) v.findViewById(R.id.inline_embed_url_host)).setText(host);
+                ((TextView) v.findViewById(R.id.inline_embed_url_title)).setText(title);
+                ((TextView) v.findViewById(R.id.inline_embed_url_description)).setText(description);
+
+
+                ImageView img = (ImageView) v.findViewById(R.id.inline_embed_url_image);
+                if(TextUtils.isEmpty(imageURL)) img.setVisibility(View.GONE);
+                else {
+                    Picasso.with(context)
+                            .load(imageURL)
+                            .placeholder(R.drawable.image_dummy)
+                            .error(R.drawable.image_error)
+                            .into(img);
+                    img.setVisibility(View.VISIBLE);
+                }
+
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                });
+
                 viewHolder.inlineContainer.addView(v);
             }
         }
