@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/inline_attachment_background"
     android:layout_margin="4dp"
-    android:padding="4dp">
+    android:padding="4dp"
+    android:theme="@style/Theme.AppCompat.Light">
     <ImageView
         android:id="@+id/list_item_inline_image"
         android:layout_width="wrap_content"

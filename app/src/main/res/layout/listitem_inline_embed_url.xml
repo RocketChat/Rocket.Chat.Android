@@ -6,7 +6,8 @@
     android:orientation="horizontal"
     android:background="?attr/selectableItemBackground"
     android:layout_margin="4dp"
-    android:padding="4dp">
+    android:padding="4dp"
+    android:theme="@style/Theme.AppCompat.Light">
     <View
         android:layout_width="3dp"
         android:layout_height="match_parent"
