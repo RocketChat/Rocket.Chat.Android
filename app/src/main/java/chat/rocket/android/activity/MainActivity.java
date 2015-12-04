@@ -292,7 +292,7 @@ public class MainActivity extends AbstractActivity {
                 @Override
                 public void onClick(View v) {
                     closePaneIfNeeded();
-                    showChatRoomFragment(r.id, r.name, r.type);
+                    showChatRoomFragment(r);
                 }
             });
             viewHolder.unreadContainer.setVisibility(r.unread>0 ? View.VISIBLE : View.GONE);
@@ -306,11 +306,11 @@ public class MainActivity extends AbstractActivity {
                 .commit();
     }
 
-    private void showChatRoomFragment(String roomId, String roomName, Room.Type roomType) {
+    private void showChatRoomFragment(Room r) {
         ServerConfig s = getPrimaryServerConfig();
         if(s!=null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(getContainerId(), ChatRoomFragment.create(s.hostname, roomId, roomName, roomType))
+                    .replace(getContainerId(), ChatRoomFragment.create(s.hostname, r))
                     .commit();
         }
     }

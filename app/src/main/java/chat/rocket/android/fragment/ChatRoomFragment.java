@@ -58,9 +58,11 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     public ChatRoomFragment(){}
 
     private String mHost;
+    private long mRoomBaseId;
     private String mRoomId;
     private String mRoomName;
     private Room.Type mRoomType;
+    private boolean mRoomHasMore;
     private String mUserId;
     private String mUsername;
     private View mRootView;
@@ -76,15 +78,36 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         }
     };
 
-    public static ChatRoomFragment create(String host, String roomId, String roomName, Room.Type roomType) {
+    public static ChatRoomFragment create(String host, Room r) {
         ChatRoomFragment f = new ChatRoomFragment();
         Bundle args = new Bundle();
         args.putString("host", host);
-        args.putString("roomId", roomId);
-        args.putString("roomName", roomName);
-        args.putString("roomType", roomType.getValue());
+        args.putLong("roomBaseId", r._id);
+        args.putString("roomId", r.id);
+        args.putString("roomName", r.name);
+        args.putString("roomType", r.type.getValue());
+        args.putBoolean("roomHasMore", r.hasMore);
         f.setArguments(args);
         return f;
+    }
+
+    private void initFromArgs(Bundle args) {
+        mHost = args.getString("host");
+        mRoomBaseId = args.getLong("roomBaseId");
+        mRoomId = args.getString("roomId");
+        mRoomName = args.getString("roomName");
+        mRoomType = Room.Type.getType(args.getString("roomType"));
+        mRoomHasMore = args.getBoolean("roomHasMore");
+    }
+
+    private boolean hasValidArgs(Bundle args) {
+        if(args == null) return false;
+        return args.containsKey("host")
+                && args.containsKey("roomBaseId")
+                && args.containsKey("roomId")
+                && args.containsKey("roomName")
+                && args.containsKey("roomType")
+                && args.containsKey("roomHasMore");
     }
 
     @Override
@@ -95,10 +118,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         if(!hasValidArgs(args)) {
             throw new IllegalArgumentException("Params 'roomId' and 'roomName' are required for creating ChatRoomFragment");
         }
-        mHost = args.getString("host");
-        mRoomId = args.getString("roomId");
-        mRoomName = args.getString("roomName");
-        mRoomType = Room.Type.getType(args.getString("roomType"));
+        initFromArgs(args);
         mUserId = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID,"");
         mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_NAME,"");
         if(TextUtils.isEmpty(mUsername)) {
@@ -115,11 +135,40 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 }
             });
         }
-    }
 
-    private boolean hasValidArgs(Bundle args) {
-        if(args == null) return false;
-        return args.containsKey("host") && args.containsKey("roomId") && args.containsKey("roomName") && args.containsKey("roomType");
+        final Uri uri = RocketChatProvider.getUriForQuery(Room.TABLE_NAME, mRoomBaseId);
+        getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange) {
+                if(getContext()==null) return;
+                Cursor c = getContext().getContentResolver().query(uri, null,null,null,null);
+                if(c!=null && c.moveToFirst()) {
+                    final Room r = Room.createFromCursor(c);
+                    if(r!=null){
+                        if(mRootView!=null) {
+                            mRootView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(mRoomName != r.name){
+                                        mRoomName = r.name;
+                                        setupToolbar();
+                                    }
+                                    if(mRoomType != r.type){
+                                        mRoomType = r.type;
+                                        setupToolbar();
+                                    }
+                                    if(mRoomHasMore != r.hasMore){
+                                        mRoomHasMore = r.hasMore;
+                                        setupListViewHasMore();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    c.close();
+                }
+            }
+        });
     }
 
     @Nullable
@@ -159,16 +208,14 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
         try {
             MethodCall
-                    .create("loadMessages", new JSONObject().put("room_id",mRoomId))
+                    .create("loadMessages", new JSONObject().put("room_id",mRoomId).put("clean",true))
                     .putByContentProvider(getContext());
         } catch (JSONException e) {
             Log.e(Constants.LOG_TAG, "error", e);
         }
     }
 
-    private boolean mFetching = false;
     private void fetchMoreMessages() {
-        mFetching = true;
         Message m = RocketChatDatabaseHelper.read(getContext(), new RocketChatDatabaseHelper.DBCallback<Message>() {
             @Override
             public Message process(SQLiteDatabase db) throws Exception {
@@ -176,7 +223,6 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             }
         });
         if(m==null) {
-            mFetching = false;
             return;
         }
 
@@ -189,18 +235,15 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 public void onChange(boolean selfChange) {
                     Cursor c = getContext().getContentResolver().query(uri,null,null,null,null);
                     if(c==null){
-                        mFetching = false;
                         getContext().getContentResolver().unregisterContentObserver(this);
                     }
                     if(c!=null && c.moveToFirst()){
                         MethodCall m = MethodCall.createFromCursor(c);
-                        if(m.syncstate == SyncState.SYNCED || m.syncstate == SyncState.FAILED) mFetching = false;
                         getContext().getContentResolver().unregisterContentObserver(this);
                     }
                 }
             });
         } catch (JSONException e) {
-            mFetching = false;
             Log.e(Constants.LOG_TAG, "error", e);
         }
     }
@@ -217,10 +260,23 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             @DebugLog
             @Override
             public void requestMoreItem() {
-                fetchMoreMessages();
+                if(mRoomHasMore) fetchMoreMessages();
             }
         };
         messageListView.addOnScrollListener(mLoadMoreListener);
+        messageListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if(top < bottom && left < right){
+                    setupListViewHasMore();
+                    v.removeOnLayoutChangeListener(this);
+                }
+            }
+        });
+    }
+
+    private void setupListViewHasMore(){
+        mAdapter.setHasMore(mRoomHasMore);
     }
 
     private void loadMessages(){
@@ -269,9 +325,11 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
     private class MessageAdapter extends CursorRecyclerViewAdapter<MessageViewHolder> {
         private static final int DUMMY_HEADER = 100;
+        private static final int DUMMY_FOOTER = 101;
 
         private LayoutInflater mInflater;
         private int mHeaderHeight;
+        private boolean mHasMore;
 
 
         public MessageAdapter(Context context, Cursor cursor) {
@@ -285,13 +343,16 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
         @Override
         public int getItemCount() {
-            return getBasicItemCount() + 1;
+            return getBasicItemCount() + 2;
         }
 
         @Override
         public int getItemViewType(int position) {
             if (position == 0) {
                 return DUMMY_HEADER;
+            }
+            else if (position == getItemCount()-1) {
+                return DUMMY_FOOTER;
             }
             return super.getItemViewType(position);
         }
@@ -303,21 +364,30 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mHeaderHeight));
                 return new MessageViewHolder(v, mHost);
             }
+            else if(viewType==DUMMY_FOOTER) {
+                return new MessageViewHolder(mInflater.inflate(R.layout.listitem_start_of_conversation, parent, false), mHost);
+            }
             return new MessageViewHolder(mInflater.inflate(R.layout.listitem_message, parent, false),mHost);
         }
 
         @Override
         public void onBindViewHolder(MessageViewHolder viewHolder, int position) {
-            if (position == 0) {
+            int type = getItemViewType(position);
+            if (type == DUMMY_HEADER) {
                 if(viewHolder.itemView.getHeight()!=mHeaderHeight) {
                     viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mHeaderHeight));
                 }
+                return;
+            }
+            else if(type == DUMMY_FOOTER) {
+                viewHolder.itemView.setVisibility(mHasMore? View.GONE : View.VISIBLE);
                 return;
             }
 
             super.onBindViewHolder(viewHolder, position-1);
         }
 
+        @DebugLog
         @Override
         public void bindView(MessageViewHolder viewHolder, Context context, int position, Cursor cursor) {
             final Message m = Message.createFromCursor(cursor);
@@ -517,6 +587,11 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         public void setHeaderHeight(int height){
             mHeaderHeight = height;
             notifyItemChanged(0);
+        }
+
+        public void setHasMore(boolean hasMore) {
+            mHasMore = hasMore;
+            notifyItemChanged(getItemCount()-1);
         }
     }
 

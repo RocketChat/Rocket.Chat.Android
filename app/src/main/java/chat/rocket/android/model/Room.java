@@ -36,6 +36,7 @@ public class Room extends AbstractModel {
     public boolean alert;
     public Type type;
     public int unread;
+    public boolean hasMore = true;
 
     @Override
     public String getTableName() {
@@ -69,7 +70,8 @@ public class Room extends AbstractModel {
                             " timestamp INTEGER," +
                             " alert INTEGER," +
                             " type TEXT," +
-                            " unread INTEGER);");
+                            " unread INTEGER," +
+                            " has_more INTEGER);");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -90,6 +92,7 @@ public class Room extends AbstractModel {
         r.alert = (c.getInt(c.getColumnIndex("alert")) != 0);
         r.type = Type.getType(c.getString(c.getColumnIndex("type")));
         r.unread = c.getInt(c.getColumnIndex("unread"));
+        r.hasMore = (c.getInt(c.getColumnIndex("has_more")) != 0);
         return r;
     }
 
@@ -101,6 +104,7 @@ public class Room extends AbstractModel {
         values.put("alert",alert? 1 : 0);
         values.put("type", type.getValue());
         values.put("unread", unread);
+        values.put("has_more", hasMore? 1 : 0);
         return values;
     }
 

@@ -23,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/message_newday_color"
-            android:text="2015/12/3"
             android:textSize="8sp"
             android:textStyle="bold"
             android:layout_marginLeft="@dimen/margin_normal"

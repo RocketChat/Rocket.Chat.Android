@@ -1,8 +1,11 @@
 package chat.rocket.android.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import chat.rocket.android.content.RocketChatProvider;
 
 public class Message extends AbstractModel{
     public static final String TABLE_NAME = "message";
@@ -187,4 +190,7 @@ public class Message extends AbstractModel{
         return new DBAccessor(db).delete(selection, selectionArgs);
     }
 
+    public static int deleteByContentProvider(Context context, String selection, String[] selectionArgs) {
+        return context.getContentResolver().delete(RocketChatProvider.getUriForQuery(TABLE_NAME), selection, selectionArgs);
+    }
 }

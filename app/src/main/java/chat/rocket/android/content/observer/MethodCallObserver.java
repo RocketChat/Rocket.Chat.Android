@@ -2,6 +2,7 @@ package chat.rocket.android.content.observer;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Looper;
 import android.util.Log;
@@ -15,8 +16,11 @@ import bolts.Task;
 import chat.rocket.android.api.JSONParseEngine;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.api.ws.RocketChatWSService;
+import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
+import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
+import chat.rocket.android.model.Room;
 import chat.rocket.android.model.SyncState;
 import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
@@ -52,11 +56,12 @@ public class MethodCallObserver extends AbstractObserver {
         m.putByContentProvider(mContext);
 
         try {
-            getMethod(m.id, new JSONObject(m.params)).onSuccess(new Continuation<DDPClientCallback.RPC, Object>() {
+            final JSONObject params = new JSONObject(m.params);
+            getMethod(m.id, params).onSuccess(new Continuation<DDPClientCallback.RPC, Object>() {
                 @Override
                 public Object then(Task<DDPClientCallback.RPC> task) throws Exception {
                     JSONObject result = task.getResult().result;
-                    ResultHandler handler = getResultHandler(m.id);
+                    ResultHandler handler = getResultHandler(m.id, params);
                     if(handler == null || !handler.handleResult(result)) {
                         m.returns = result.toString();
                         m.timestamp = System.currentTimeMillis();
@@ -108,16 +113,34 @@ public class MethodCallObserver extends AbstractObserver {
     }
 
     @DebugLog
-    private ResultHandler getResultHandler(String id) {
+    private ResultHandler getResultHandler(String id, JSONObject params) throws JSONException {
         if("loadMessages".equals(id)) {
+            final String roomId = params.getString("room_id");
+            final boolean clearAllMessage = params.optBoolean("clean", false);
+            final int num = params.optInt("num",50);
             return new ResultHandler() {
                 @Override
                 public boolean handleResult(JSONObject result) throws Exception {
                     Log.d(TAG,"unreadNotLoaded="+result.getInt("unreadNotLoaded"));
+                    if(clearAllMessage) Message.deleteByContentProvider(mContext, "room_id=?",new String[]{roomId});
                     JSONArray messages = result.getJSONArray("messages");
                     JSONParseEngine parser = new JSONParseEngine(mContext);
                     for(int i=0;i<messages.length();i++) {
                         parser.parseMessage(messages.getJSONObject(i));
+                    }
+
+                    Room r = RocketChatDatabaseHelper.read(mContext, new RocketChatDatabaseHelper.DBCallback<Room>() {
+                        @Override
+                        public Room process(SQLiteDatabase db) throws Exception {
+                            return Room.getById(db, roomId);
+                        }
+                    });
+                    if(r!=null) {
+                        boolean hasMore = (messages.length() >= num);
+                        if(r.hasMore!=hasMore){
+                            r.hasMore = hasMore;
+                            r.putByContentProvider(mContext);
+                        }
                     }
 
                     return true;
