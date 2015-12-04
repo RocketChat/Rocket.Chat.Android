@@ -591,7 +591,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
         public void setHasMore(boolean hasMore) {
             mHasMore = hasMore;
-            notifyItemChanged(getItemCount()-1);
+            //notifyItemChanged(getItemCount()-1);
         }
     }
 
