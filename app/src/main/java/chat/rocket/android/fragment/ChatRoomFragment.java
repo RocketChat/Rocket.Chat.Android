@@ -50,7 +50,6 @@ import chat.rocket.android.view.Avatar;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.LoadMoreScrollListener;
 import chat.rocket.android.view.MessageComposer;
-import hugo.weaving.DebugLog;
 
 public class ChatRoomFragment extends AbstractFragment implements OnBackPressListener{
     private static final int LOADER_ID = 0x12346;
@@ -257,7 +256,6 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         messageListView.setAdapter(mAdapter);
 
         mLoadMoreListener = new LoadMoreScrollListener(layoutManager, 20) {
-            @DebugLog
             @Override
             public void requestMoreItem() {
                 if(mRoomHasMore) fetchMoreMessages();
@@ -387,7 +385,6 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             super.onBindViewHolder(viewHolder, position-1);
         }
 
-        @DebugLog
         @Override
         public void bindView(MessageViewHolder viewHolder, Context context, int position, Cursor cursor) {
             final Message m = Message.createFromCursor(cursor);
