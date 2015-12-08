@@ -153,6 +153,11 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 if(c!=null && c.moveToFirst()) {
                     final Room r = Room.createFromCursor(c);
                     if(r!=null){
+                        if(r.alert) {
+                            r.alert = false;
+                            r.syncstate = SyncState.NOT_SYNCED;
+                            r.putByContentProvider(getContext());
+                        }
                         if(mRootView!=null) {
                             mRootView.post(new Runnable() {
                                 @Override

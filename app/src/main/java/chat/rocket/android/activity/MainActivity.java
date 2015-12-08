@@ -35,6 +35,7 @@ import chat.rocket.android.model.Message;
 import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
 import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.Avatar;
@@ -293,6 +294,11 @@ public class MainActivity extends AbstractActivity {
                 public void onClick(View v) {
                     closePaneIfNeeded();
                     showChatRoomFragment(r);
+                    if(r.alert) {
+                        r.alert = false;
+                        r.syncstate = SyncState.NOT_SYNCED;
+                        r.putByContentProvider(v.getContext());
+                    }
                 }
             });
             viewHolder.unreadContainer.setVisibility(r.unread>0 ? View.VISIBLE : View.GONE);

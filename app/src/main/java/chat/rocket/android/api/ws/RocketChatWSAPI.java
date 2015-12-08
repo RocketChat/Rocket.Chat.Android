@@ -187,6 +187,10 @@ public class RocketChatWSAPI {
         return mDDPClient.rpc("ufsComplete", params, generateId("upl-file-comlete"));
     }
 
+    public Task<DDPClientCallback.RPC> markAsRead(final String roomID) throws JSONException {
+        return mDDPClient.rpc("readMessages", new JSONArray().put(roomID), generateId("read-msg"));
+    }
+
     public Task<DDPSubscription.Ready> subscribe(final String name, JSONArray param) {
         return mDDPClient.sub(generateId("sub"), name, param);
     }
