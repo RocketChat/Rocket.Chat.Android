@@ -63,7 +63,7 @@ public class JSONParseEngine {
             m.urls = message.getJSONArray("urls").toString();
         }
         else m.urls = "[]";
-
+        m.extras = "{}";
         m.putByContentProvider(mContext);
     }
 

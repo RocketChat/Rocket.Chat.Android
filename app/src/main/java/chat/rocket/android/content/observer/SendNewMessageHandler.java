@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -49,7 +50,7 @@ public class SendNewMessageHandler extends AbstractObserver {
 
         try {
             JSONObject fileDoc = null;
-            JSONObject extras = new JSONObject(m.extras);
+            JSONObject extras = TextUtils.isEmpty(m.extras)? new JSONObject() : new JSONObject(m.extras);
             if(!extras.isNull("file")) fileDoc = extras.getJSONObject("file");
             mAPI.sendMessage(m.roomId, m.content, fileDoc).continueWith(new Continuation<DDPClientCallback.RPC, Object>() {
                 @Override
