@@ -1,9 +1,17 @@
 package chat.rocket.android.api.ws;
 
+import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.Nullable;
+import android.util.Base64;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+
+import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.OkHttpHelper;
 import jp.co.crowdworks.android_ddp.ddp.DDPClient;
@@ -60,11 +68,12 @@ public class RocketChatWSAPI {
         return mDDPClient.rpc("logout",null,generateId("logout"));
     }
 
-    public Task<DDPClientCallback.RPC> sendMessage(final String roomId, String msg) throws JSONException {
+    public Task<DDPClientCallback.RPC> sendMessage(final String roomId, String msg, @Nullable  JSONObject fileDoc) throws JSONException {
         JSONObject param = new JSONObject()
                 .put("_id", generateId("message-doc"))
                 .put("rid", roomId)
                 .put("msg", msg);
+        if(fileDoc!=null) param.put("file", fileDoc);
 
         return mDDPClient.rpc("sendMessage", new JSONArray().put(param) ,generateId("message"));
     }
@@ -77,6 +86,105 @@ public class RocketChatWSAPI {
                 .put(new JSONObject().put("$date",System.currentTimeMillis()));
 
         return mDDPClient.rpc("loadHistory", params, generateId("load-message"));
+    }
+
+    public interface UploadFileProgress{
+        void onProgress(long sent, long total);
+    }
+
+    private static class FSCounter{
+        private UploadFileProgress mListener;
+        private long mCnt;
+        private final long mTotal;
+        public FSCounter(long initCount, long totalSize) {
+            mCnt = initCount;
+            mTotal = totalSize;
+        }
+        public FSCounter setListener(UploadFileProgress listener) {
+            mListener = listener;
+            return this;
+        }
+        public void inc(long size){
+            mCnt += size;
+            if(mListener!=null) mListener.onProgress(mCnt, mTotal);
+        }
+        public void complete(){
+            mCnt = mTotal;
+            if(mListener!=null) mListener.onProgress(mCnt, mTotal);
+        }
+    }
+
+    public Task<DDPClientCallback.RPC> uploadFile(final Context context, final String roomID, final String userID, final String filename, final Uri fileUri, final String mimeType, final long fileSize, @Nullable final UploadFileProgress listener) throws JSONException {
+        final String fileID = generateId("upl-file");
+        final FSCounter cnt = new FSCounter(0, fileSize).setListener(listener);
+        return prepareForUploadingFile(roomID, userID, fileID, filename, mimeType, fileSize)
+                .onSuccessTask(new Continuation<DDPClientCallback.RPC, Task<DDPClientCallback.RPC>>() {
+                    @Override
+                    public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.RPC> task) throws Exception {
+                        InputStream s = context.getContentResolver().openInputStream(fileUri);
+                        byte[] buf = new byte[8192];
+
+                        Task<DDPClientCallback.RPC> t = Task.forResult(null);
+                        while(true) {
+                            final int size = s.read(buf);
+                            if(size<=0) break;
+
+                            final String chunk = Base64.encodeToString(buf,0,size,Base64.NO_WRAP);
+                            t = t.onSuccessTask(new Continuation<DDPClientCallback.RPC, Task<DDPClientCallback.RPC>>() {
+                                @Override
+                                public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.RPC> task) throws Exception {
+                                    if(task.getResult()!=null) {
+                                        cnt.inc(size);
+                                    }
+                                    return ufsWrite(fileID, chunk);
+                                }
+                            });
+                        }
+                        return t;
+                    }
+                }).onSuccessTask(new Continuation<DDPClientCallback.RPC, Task<DDPClientCallback.RPC>>() {
+                    @Override
+                    public Task<DDPClientCallback.RPC> then(Task<DDPClientCallback.RPC> task) throws Exception {
+                        cnt.complete();
+                        return ufsComplete(fileID);
+                    }
+                });
+    }
+
+    private Task<DDPClientCallback.RPC> prepareForUploadingFile(final String roomID, final String userID, final String fileID, final String filename, final String mimeType, final long fileSize) throws JSONException {
+        final String collectionName = "rocketchat_uploads";
+        JSONObject param = new JSONObject()
+                //provide document ID in advance to prevent generate random ID (that is not notified via DDP Callback...)
+                // refs: Meteor:packages/mongo/collection.js: Mongo.Collection.prototype.insert
+                .put("_id", fileID)
+
+                .put("rid", roomID)
+                .put("userID", userID)
+                .put("name", filename)
+                .put("type", mimeType)
+                .put("size", fileSize)
+                .put("complete", false)
+                .put("uploading", true)
+                .put("store", collectionName);
+
+        return mDDPClient.rpc("/"+collectionName+"/insert", new JSONArray().put(param), generateId("upl-file-prepare"));
+    }
+
+    private Task<DDPClientCallback.RPC> ufsWrite(final String fileID, String chunk) throws JSONException {
+        final String collectionName = "rocketchat_uploads";
+        JSONArray params = new JSONArray()
+                .put(new JSONObject().put("$binary", chunk))
+                .put(fileID)
+                .put(collectionName);
+        return mDDPClient.rpc("ufsWrite", params, generateId("upl-file-write"));
+    }
+
+    private Task<DDPClientCallback.RPC> ufsComplete(final String fileID) throws JSONException {
+        final String collectionName = "rocketchat_uploads";
+        JSONArray params = new JSONArray()
+                .put(fileID)
+                .put(collectionName);
+        return mDDPClient.rpc("ufsComplete", params, generateId("upl-file-comlete"));
     }
 
     public Task<DDPSubscription.Ready> subscribe(final String name, JSONArray param) {

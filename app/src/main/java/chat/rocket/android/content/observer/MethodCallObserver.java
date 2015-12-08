@@ -57,11 +57,11 @@ public class MethodCallObserver extends AbstractObserver {
 
         try {
             final JSONObject params = new JSONObject(m.params);
-            getMethod(m.id, params).onSuccess(new Continuation<DDPClientCallback.RPC, Object>() {
+            getMethod(m, params).onSuccess(new Continuation<DDPClientCallback.RPC, Object>() {
                 @Override
                 public Object then(Task<DDPClientCallback.RPC> task) throws Exception {
                     JSONObject result = task.getResult().result;
-                    ResultHandler handler = getResultHandler(m.id, params);
+                    ResultHandler handler = getResultHandler(m, params);
                     if(handler == null || !handler.handleResult(result)) {
                         m.returns = result.toString();
                         m.timestamp = System.currentTimeMillis();
@@ -97,12 +97,35 @@ public class MethodCallObserver extends AbstractObserver {
     }
 
     @DebugLog
-    private Task<DDPClientCallback.RPC> getMethod(String id, JSONObject params) throws JSONException {
+    private Task<DDPClientCallback.RPC> getMethod(final MethodCall m, JSONObject params) throws JSONException {
+        String id = m.id;
         if("loadMessages".equals(id)) {
             return mAPI.loadMessages(params.getString("room_id"), params.optLong("end_ts",-1), params.optInt("num",50));
         }
         else if("logout".equals(id)) {
             return mAPI.logout();
+        }
+        else if("uploadFile".equals(id)) {
+            final Uri localFile = Uri.parse(params.getString("file_uri"));
+            final String filename = params.getString("filename");
+            return mAPI.uploadFile(mContext,
+                    params.getString("room_id"),
+                    params.getString("user_id"),
+                    filename,
+                    localFile,
+                    params.getString("mime_type"),
+                    params.getLong("file_size"), new RocketChatWSAPI.UploadFileProgress() {
+                        @Override
+                        public void onProgress(long sent, long total) {
+                            try {
+                                m.returns = new JSONObject()
+                                        .put("sent", sent)
+                                        .put("total", total).toString();
+                                m.putByContentProvider(mContext);
+                            }
+                            catch (JSONException e){ }
+                        }
+                    });
         }
 
         throw new IllegalArgumentException("id("+id+") is not known.");
@@ -113,7 +136,8 @@ public class MethodCallObserver extends AbstractObserver {
     }
 
     @DebugLog
-    private ResultHandler getResultHandler(String id, JSONObject params) throws JSONException {
+    private ResultHandler getResultHandler(MethodCall m, JSONObject params) throws JSONException {
+        String id = m.id;
         if("loadMessages".equals(id)) {
             final String roomId = params.getString("room_id");
             final boolean clearAllMessage = params.optBoolean("clean", false);

@@ -48,7 +48,10 @@ public class SendNewMessageHandler extends AbstractObserver {
         m.putByContentProvider(mContext);
 
         try {
-            mAPI.sendMessage(m.roomId, m.content).continueWith(new Continuation<DDPClientCallback.RPC, Object>() {
+            JSONObject fileDoc = null;
+            JSONObject extras = new JSONObject(m.extras);
+            if(!extras.isNull("file")) fileDoc = extras.getJSONObject("file");
+            mAPI.sendMessage(m.roomId, m.content, fileDoc).continueWith(new Continuation<DDPClientCallback.RPC, Object>() {
                 @Override
                 public Object then(Task<DDPClientCallback.RPC> task) throws Exception {
                     JSONObject result = task.getResult().result;

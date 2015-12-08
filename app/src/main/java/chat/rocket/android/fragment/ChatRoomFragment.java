@@ -1,5 +1,8 @@
 package chat.rocket.android.fragment;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -8,6 +11,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -21,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,6 +37,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 
 import chat.rocket.android.Constants;
@@ -53,6 +61,7 @@ import chat.rocket.android.view.MessageComposer;
 
 public class ChatRoomFragment extends AbstractFragment implements OnBackPressListener{
     private static final int LOADER_ID = 0x12346;
+    private static final int PICK_IMAGE_ID = 0x11;
 
     public ChatRoomFragment(){}
 
@@ -180,6 +189,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         loadMessages();
         fetchNewMessages();
         setupMessageComposer();
+        setupUploader();
         return mRootView;
     }
 
@@ -456,15 +466,19 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.TIME));
 
             viewHolder.inlineContainer.removeAllViews();
-            try {
-                JSONArray urls = new JSONArray(m.urls);
-                for(int i=0;i<urls.length();i++){
-                    insertUrl(viewHolder, urls.getJSONObject(i));
+
+            if(!TextUtils.isEmpty(m.urls)) {
+                try {
+                    JSONArray urls = new JSONArray(m.urls);
+                    for (int i = 0; i < urls.length(); i++) {
+                        insertUrl(viewHolder, urls.getJSONObject(i));
+                    }
+                }
+                catch (Exception e) {
+                    Log.e(Constants.LOG_TAG, "error", e);
                 }
             }
-            catch (Exception e) {
-                Log.e(Constants.LOG_TAG, "error", e);
-            }
+
         }
 
         private void setSequentialOrNewDateIfNeeded(MessageViewHolder viewHolder, Context context, @Nullable Message nextM, Message m) {
@@ -656,9 +670,11 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
     private void setMessageComposerVisibility(boolean visible) {
         final FloatingActionButton btnCompose = getButtonCompose();
+        final FloatingActionButton btnUploadFile = getButtonUploadFile();
         final MessageComposer composer = getMessageComposer();
 
         if(visible) {
+            btnUploadFile.hide();
             btnCompose.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                 @Override
                 public void onHidden(FloatingActionButton fab) {
@@ -672,9 +688,26 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 @Override
                 public void run() {
                     btnCompose.show();
+                    btnUploadFile.show();
                 }
             });
         }
+    }
+
+    private FloatingActionButton getButtonUploadFile(){
+        return (FloatingActionButton) mRootView.findViewById(R.id.chat_btn_upload);
+    }
+
+    private void setupUploader(){
+        getButtonUploadFile().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture to Upload"), PICK_IMAGE_ID);
+            }
+        });
     }
 
     @Override
@@ -685,5 +718,121 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode!=PICK_IMAGE_ID) return;
+        if(resultCode != Activity.RESULT_OK || data==null) return;
+
+        Uri uriToObserve = null;
+        try {
+            Uri uri = data.getData();
+            Cursor c = getContext().getContentResolver().query(uri, null, null, null, null);
+            if(c!=null && c.moveToFirst()) {
+                String filename = c.getString(c.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                long filesize = c.getLong(c.getColumnIndex(OpenableColumns.SIZE));
+
+                JSONObject params = new JSONObject()
+                        .put("room_id", mRoomId)
+                        .put("user_id", mUserId)
+                        .put("file_uri", uri.toString())
+                        .put("file_size", filesize)
+                        .put("filename", filename)
+                        .put("mime_type", getContext().getContentResolver().getType(uri));
+                uriToObserve = MethodCall.create("uploadFile", params).putByContentProvider(getContext());
+                c.close();
+            }
+            else if(ContentResolver.SCHEME_FILE.equals(uri.getScheme())){
+                JSONObject params = new JSONObject()
+                        .put("room_id", mRoomId)
+                        .put("user_id", mUserId)
+                        .put("file_uri", uri.toString())
+                        .put("file_size", getFileSizeFor(uri))
+                        .put("filename", uri.getLastPathSegment())
+                        .put("mime_type", MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(uri.toString())));
+
+                uriToObserve = MethodCall.create("uploadFile", params).putByContentProvider(getContext());
+            }
+        }
+        catch(JSONException e){
+            Log.e(Constants.LOG_TAG,"error",e);
+        }
+
+        if(uriToObserve!=null) {
+            final Uri uri = uriToObserve;
+
+            final ProgressDialog dialog = new ProgressDialog(getContext(), R.style.AppDialog);
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dialog.setTitle("Uploading file...");
+            dialog.setMax(100);
+            dialog.show();
+
+            getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+                @Override
+                public void onChange(boolean selfChange) {
+                    if(getContext()==null) return;
+
+                    Cursor c = getContext().getContentResolver().query(uri,null,null,null,null);
+                    if(c!=null && c.moveToFirst()) {
+                        MethodCall m = MethodCall.createFromCursor(c);
+
+                        if(m.syncstate==SyncState.SYNCING){
+                            try {
+                                JSONObject ret = new JSONObject(m.returns);
+                                dialog.setProgress((int) (100.0 * ret.getLong("sent") / ret.getLong("total")));
+                            }
+                            catch (JSONException e){
+                                Log.e(Constants.LOG_TAG,"error",e);
+                            }
+                        }
+                        else if (m.syncstate==SyncState.SYNCED){
+                            try {
+                                JSONObject ret = new JSONObject(m.returns);
+                                dialog.setProgress(100);
+
+                                Message msg = new Message();
+                                msg.syncstate = SyncState.NOT_SYNCED;
+                                msg.content = "File Uploaded: *"+ret.getString("name")+"*\n"+ret.getString("url");
+                                msg.roomId = ret.getString("rid");
+                                msg.userId = ret.getString("userID");
+                                msg.extras = new JSONObject().put("file",new JSONObject().put("_id",ret.getString("_id"))).toString();
+                                msg.putByContentProvider(getContext());
+
+                            }
+                            catch (JSONException e){
+                                Log.e(Constants.LOG_TAG,"error",e);
+                            }
+                        }
+
+                        if(m.syncstate==SyncState.SYNCED || m.syncstate==SyncState.FAILED) {
+                            dialog.dismiss();
+                            m.deleteByContentProvider(getContext());
+                            getContext().getContentResolver().unregisterContentObserver(this);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private long getFileSizeFor(Uri uri){
+        ParcelFileDescriptor pfd = null;
+        try {
+            pfd = getContext().getContentResolver().openFileDescriptor(uri, "r");
+            return Math.max(pfd.getStatSize(), 0);
+        } catch (final FileNotFoundException e) {
+            Log.e(Constants.LOG_TAG,"error",e);
+        } finally {
+            if (pfd != null) {
+                try {
+                    pfd.close();
+                } catch (final IOException e) {
+                    // Do nothing.
+                }
+            }
+        }
+        return -1;
     }
 }

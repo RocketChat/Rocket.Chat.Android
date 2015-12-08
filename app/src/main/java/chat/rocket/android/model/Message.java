@@ -41,7 +41,7 @@ public class Message extends AbstractModel{
 
     public String roomId;
     public String userId;
-    public Type type;
+    public Type type = Type.UNSPECIFIED;
     public String content;
     public Long timestamp;
 
@@ -87,6 +87,7 @@ public class Message extends AbstractModel{
      *
      */
     public String urls;
+    public String extras;
 
     @Override
     public String getTableName() {
@@ -121,7 +122,8 @@ public class Message extends AbstractModel{
                             " type TEXT," +
                             " content TEXT," +
                             " timestamp INTEGER," +
-                            " urls TEXT);");
+                            " urls TEXT," +
+                            " extras TEXT);");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -143,6 +145,7 @@ public class Message extends AbstractModel{
         m.content = c.getString(c.getColumnIndex("content"));
         m.timestamp = c.getLong(c.getColumnIndex("timestamp"));
         m.urls = c.getString(c.getColumnIndex("urls"));
+        m.extras = c.getString(c.getColumnIndex("extras"));
         return m;
     }
 
@@ -155,6 +158,7 @@ public class Message extends AbstractModel{
         values.put("content", content);
         values.put("timestamp", timestamp);
         values.put("urls", urls);
+        values.put("extras", extras);
         return values;
     }
 
