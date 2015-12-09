@@ -43,7 +43,9 @@ public class SplashFragment extends AbstractFragment {
 
         RocketChatWSService.keepalive(getContext());
 
-        if((s.authType == ServerConfig.AuthType.EMAIL && !TextUtils.isEmpty(s.password)) || !TextUtils.isEmpty(s.authToken)) {
+        if(!TextUtils.isEmpty(s.authToken) ||
+                (s.authType == ServerConfig.AuthType.EMAIL && !TextUtils.isEmpty(s.password)) ||
+                (s.authType == ServerConfig.AuthType.GITHUB && !TextUtils.isEmpty(s.password)) ) {
             login(s);
         }
         else{
