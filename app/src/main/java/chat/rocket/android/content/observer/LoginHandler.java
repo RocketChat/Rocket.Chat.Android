@@ -33,14 +33,20 @@ public class LoginHandler extends AbstractObserver {
     @Override
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
-        Cursor c = mContext.getContentResolver().query(uri,null,"is_primary = 1 AND syncstate!=2",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) handleLogin(c);
+        Cursor c = mContext.getContentResolver().query(uri,null,"is_primary = 1 AND syncstate!=2 AND (auth_type IS NOT NULL)",null,null);
+        if (c!=null && c.getCount()>0 && c.moveToFirst()) {
+            handleLogin(c);
+            c.close();
+        }
     }
 
     @Override
     public void onChange(Uri uri) {
-        Cursor c = mContext.getContentResolver().query(uri,null,"is_primary = 1 AND syncstate=0",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) handleLogin(c);
+        Cursor c = mContext.getContentResolver().query(uri,null,"is_primary = 1 AND syncstate=0 AND (auth_type IS NOT NULL)",null,null);
+        if (c!=null && c.getCount()>0 && c.moveToFirst()) {
+            handleLogin(c);
+            c.close();
+        }
     }
 
     @DebugLog
@@ -58,7 +64,7 @@ public class LoginHandler extends AbstractObserver {
                     s.authUserId = result.getString("id");
                     s.authToken = result.getString("token");
                     s.syncstate = SyncState.SYNCED;
-                    s.passwd = "";
+                    s.password = "";
                     s.putByContentProvider(mContext);
 
                     return null;
@@ -87,8 +93,12 @@ public class LoginHandler extends AbstractObserver {
     private Task<DDPClientCallback.RPC> login(ServerConfig s) throws JSONException{
         if (!TextUtils.isEmpty(s.authToken)) {
             return mAPI.login(s.authToken);
-        } else {
-            return mAPI.login(s.account, s.passwd);
+        } else if (s.authType == ServerConfig.AuthType.EMAIL){
+            return mAPI.login(s.account, s.password);
+        } else if (s.authType == ServerConfig.AuthType.GITHUB){
+            JSONObject oauth = new JSONObject(s.password);
+            return mAPI.loginOauth(oauth);
         }
+        return Task.forError(new IllegalArgumentException("invalid serverconfig"));
     }
 }

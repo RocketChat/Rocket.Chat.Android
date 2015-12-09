@@ -57,6 +57,10 @@ public class RocketChatWSAPI {
         return mDDPClient.rpc("login", new JSONArray().put(param) ,generateId("login"));
     }
 
+    public Task<DDPClientCallback.RPC> loginOauth(JSONObject oauth) throws JSONException {
+        return mDDPClient.rpc("login", new JSONArray().put(new JSONObject().put("oauth",oauth)) ,generateId("login-oauth"));
+    }
+
     public Task<DDPClientCallback.RPC> login(final String token) throws JSONException {
         JSONObject param = new JSONObject();
         param.put("resume", token);

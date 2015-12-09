@@ -3,21 +3,60 @@ package chat.rocket.android.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
+import android.util.Log;
 
-/**
- * Now we can register only 1 server (because of Ollie's restriction)
- * However, in future multi-server (seemless switching) should be supported.
- */
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import chat.rocket.android.Constants;
+
 public class ServerConfig extends AbstractModel {
     public static final String TABLE_NAME = "server_config";
 
+    public enum AuthType {
+        EMAIL("email")
+        ,GITHUB("github")
+        ,TWITTER("twitter")
+
+        ,UNSPECIFIED("")
+        ;//------------
+
+        private String value;
+        AuthType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static AuthType getType(String value) {
+            for(AuthType t :AuthType.values()){
+                if(t.value.equals(value)) return t;
+            }
+            throw new IllegalArgumentException("AuthType.getType: invalid parameter: value="+value);
+        }
+    }
+
     public String hostname;
     public String account;
-    public String passwd;
+    public AuthType authType = AuthType.UNSPECIFIED;
+    public String password;
     public String authUserId;
     public String authToken;
     public Boolean isPrimary;
+    public String oauthProviders;
 
+    public JSONObject getOAuthProviders() {
+        if (TextUtils.isEmpty(oauthProviders)) return new JSONObject();
+        try {
+            return new JSONObject(oauthProviders);
+        } catch (JSONException e) {
+            Log.e(Constants.LOG_TAG, "error", e);
+            return new JSONObject();
+        }
+    }
     @Override
     public String getTableName() {
         return TABLE_NAME;
@@ -48,10 +87,12 @@ public class ServerConfig extends AbstractModel {
                             " syncstate INTEGER NOT NULL," +
                             " hostname TEXT UNIQUE NOT NULL," +
                             " account TEXT," +
-                            " passwd TEXT," +
+                            " auth_type TEXT," +
+                            " password TEXT," +
                             " auth_user_id TEXT," +
                             " auth_token TEXT," +
-                            " is_primary INTEGER);\n");
+                            " is_primary INTEGER," +
+                            " oauth_prividers TEXT);\n");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -65,15 +106,17 @@ public class ServerConfig extends AbstractModel {
     }
 
     public static ServerConfig createFromCursor(Cursor c) {
-        ServerConfig config = new ServerConfig();
-        initID(config, c);
-        config.hostname = c.getString(c.getColumnIndex("hostname"));
-        config.account = c.getString(c.getColumnIndex("account"));
-        config.passwd = c.getString(c.getColumnIndex("passwd"));
-        config.authUserId = c.getString(c.getColumnIndex("auth_user_id"));
-        config.authToken = c.getString(c.getColumnIndex("auth_token"));
-        config.isPrimary = (c.getInt(c.getColumnIndex("is_primary"))!=0);
-        return config;
+        ServerConfig conf = new ServerConfig();
+        initID(conf, c);
+        conf.hostname = c.getString(c.getColumnIndex("hostname"));
+        conf.account = c.getString(c.getColumnIndex("account"));
+        conf.authType = AuthType.getType(c.getString(c.getColumnIndex("auth_type")));
+        conf.password = c.getString(c.getColumnIndex("password"));
+        conf.authUserId = c.getString(c.getColumnIndex("auth_user_id"));
+        conf.authToken = c.getString(c.getColumnIndex("auth_token"));
+        conf.isPrimary = (c.getInt(c.getColumnIndex("is_primary"))!=0);
+        conf.oauthProviders = c.getString(c.getColumnIndex("oauth_prividers"));
+        return conf;
     }
 
     @Override
@@ -81,10 +124,12 @@ public class ServerConfig extends AbstractModel {
         ContentValues values = createInitContentValue();
         values.put("hostname", hostname);
         values.put("account", account);
-        values.put("passwd", passwd);
+        values.put("auth_type", authType.getValue());
+        values.put("password", password);
         values.put("auth_user_id", authUserId);
         values.put("auth_token", authToken);
         values.put("is_primary", isPrimary);
+        values.put("oauth_prividers", oauthProviders);
         return values;
     }
 
@@ -118,5 +163,9 @@ public class ServerConfig extends AbstractModel {
 
     public int delete(SQLiteDatabase db) {
         return new DBAccessor(db).delete(this);
+    }
+
+    public static int delete(SQLiteDatabase db, String selection, String[] selectionArgs) {
+        return new DBAccessor(db).delete(selection, selectionArgs);
     }
 }

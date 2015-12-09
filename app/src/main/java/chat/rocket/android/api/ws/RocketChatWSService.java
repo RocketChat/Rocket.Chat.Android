@@ -24,6 +24,7 @@ import chat.rocket.android.content.observer.MarkRoomAsReadHandler;
 import chat.rocket.android.content.observer.MethodCallObserver;
 import chat.rocket.android.content.observer.RocketChatRoom;
 import chat.rocket.android.content.observer.SendNewMessageHandler;
+import chat.rocket.android.content.subscriber.LoginServiceConfiguration;
 import chat.rocket.android.content.subscriber.RocketChatSubscription;
 import chat.rocket.android.content.subscriber.StreamMessage;
 import chat.rocket.android.content.subscriber.StreamNotifyRoom;
@@ -48,6 +49,7 @@ public class RocketChatWSService extends Service {
             , StreamMessage.class
             , StreamNotifyRoom.class
             , MarkRoomAsReadHandler.class
+            , LoginServiceConfiguration.class
     };
 
     private RocketChatWSAPI mAPI;
@@ -123,8 +125,13 @@ public class RocketChatWSService extends Service {
             public Object then(Task<Object> task) throws Exception {
                 if(task.isFaulted()){
                     Log.e(TAG, "websocket: failed to connect.", task.getError());
-                    s.syncstate = SyncState.FAILED;
-                    s.putByContentProvider(getBaseContext());
+                    if(s.authType == ServerConfig.AuthType.UNSPECIFIED) {
+                        s.deleteByContentProvider(getBaseContext());
+                    }
+                    else {
+                        s.syncstate = SyncState.FAILED;
+                        s.putByContentProvider(getBaseContext());
+                    }
                     stopSelf();
                 }
 

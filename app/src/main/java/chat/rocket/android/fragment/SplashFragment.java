@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,18 +35,35 @@ public class SplashFragment extends AbstractFragment {
 
         ServerConfig s = getPrimaryServerConfig();
 
-        if (s == null) showServerConfigFragment();
-        else login(s);
+        if (s == null || TextUtils.isEmpty(s.hostname)) {
+            RocketChatWSService.kill(getContext());
+            showServerHostConfigFragment();
+            return;
+        }
+
+        RocketChatWSService.keepalive(getContext());
+
+        if((s.authType == ServerConfig.AuthType.EMAIL && !TextUtils.isEmpty(s.password)) || !TextUtils.isEmpty(s.authToken)) {
+            login(s);
+        }
+        else{
+            showServerAuthConfigFragment();
+        }
     }
 
-    private void showServerConfigFragment(){
+    private void showServerHostConfigFragment(){
         getFragmentManager().beginTransaction()
-                .replace(R.id.simple_framelayout, new ServerConfigFragment())
+                .replace(R.id.simple_framelayout, new ServerHostConfigFragment())
+                .commit();
+    }
+
+    private void showServerAuthConfigFragment(){
+        getFragmentManager().beginTransaction()
+                .replace(R.id.simple_framelayout, new ServerAuthConfigFragment())
                 .commit();
     }
 
     private void login(ServerConfig s){
-        RocketChatWSService.keepalive(getContext());
         if(s.syncstate==SyncState.SYNCED) {
             //force login!
             s.syncstate = SyncState.NOT_SYNCED;
@@ -60,7 +78,7 @@ public class SplashFragment extends AbstractFragment {
                 if(s==null) { //deleted.
                     getContext().getContentResolver().unregisterContentObserver(this);
                     RocketChatWSService.kill(getContext());
-                    showServerConfigFragment();
+                    showServerHostConfigFragment();
                 } else if(s.syncstate==SyncState.SYNCED) {
                     getContext().getContentResolver().unregisterContentObserver(this);
                     mShowMainActivityManager.setShouldAction(true);

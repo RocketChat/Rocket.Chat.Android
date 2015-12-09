@@ -25,35 +25,11 @@
                 android:hint="server"/>
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/app_base_margins">
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/txt_login_account"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="account"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/app_base_margins">
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/txt_login_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="password"/>
-        </android.support.design.widget.TextInputLayout>
-
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="Connect"
             android:layout_gravity="center"
             style="@style/app_base_margins"/>
 
