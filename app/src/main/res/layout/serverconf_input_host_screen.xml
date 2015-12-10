@@ -11,7 +11,8 @@
         android:orientation="vertical"
         android:layout_gravity="center"
         android:background="@color/background_white"
-        android:theme="@style/Theme.AppCompat.Light">
+        android:theme="@style/Theme.AppCompat.Light"
+        android:elevation="2dp">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

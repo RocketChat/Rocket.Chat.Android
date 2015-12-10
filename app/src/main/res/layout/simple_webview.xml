@@ -10,7 +10,8 @@
         android:layout_height="?attr/actionBarSize"
         app:title="Rocket.Chat"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"/>
 
     <WebView
         android:id="@+id/simple_webview"

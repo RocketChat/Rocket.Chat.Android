@@ -15,7 +15,8 @@
             android:layout_height="?attr/actionBarSize"
             android:title="Rocket.Chat"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:background="@color/colorPrimaryDark"/>
+            android:background="@color/colorPrimaryDark"
+            android:elevation="4dp"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listview_messages"
@@ -42,7 +43,7 @@
         android:background="@color/colorAccent"
         app:rippleColor="@color/colorAccentLight"
         android:src="@drawable/ic_action_compose"
-        app:elevation="4dp"
+        app:elevation="6dp"
         android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="right|bottom"/>
 
@@ -54,7 +55,7 @@
         android:background="@color/colorAccent"
         app:rippleColor="@color/colorAccentLight"
         android:src="@drawable/ic_upload_file"
-        app:elevation="4dp"
+        app:elevation="6dp"
         android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="left|bottom"/>
 
