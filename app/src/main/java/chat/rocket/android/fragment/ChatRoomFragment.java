@@ -255,6 +255,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                         MethodCall m = MethodCall.createFromCursor(c);
                         getContext().getContentResolver().unregisterContentObserver(this);
                     }
+                    if(mLoadMoreListener!=null) mLoadMoreListener.setLoadingDone();
                 }
             });
         } catch (JSONException e) {
