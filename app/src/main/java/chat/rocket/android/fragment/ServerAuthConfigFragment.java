@@ -100,21 +100,20 @@ public class ServerAuthConfigFragment extends AbstractFragment {
 
         if(TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) return;
 
-        RocketChatDatabaseHelper.write(getContext(), new RocketChatDatabaseHelper.DBCallback<Object>() {
-            @Override
-            public Object process(SQLiteDatabase db) throws Exception {
-                ServerConfig s = ServerConfig.getPrimaryConfig(db);
-                s.syncstate = SyncState.NOT_SYNCED;
-                s.account = account;
-                s.authType = ServerConfig.AuthType.EMAIL;
-                s.password = sha256sum(password);
-                s.isPrimary = true;
-                s.authToken = "";
-                s.put(db);
 
-                return null;
+        ServerConfig s = RocketChatDatabaseHelper.read(getContext(), new RocketChatDatabaseHelper.DBCallback<ServerConfig>() {
+            @Override
+            public ServerConfig process(SQLiteDatabase db) throws Exception {
+                return ServerConfig.getPrimaryConfig(db);
             }
         });
+        s.syncstate = SyncState.NOT_SYNCED;
+        s.account = account;
+        s.authType = ServerConfig.AuthType.EMAIL;
+        s.password = sha256sum(password);
+        s.isPrimary = true;
+        s.authToken = "";
+        s.putByContentProvider(getContext());
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.simple_framelayout, new SplashFragment())
