@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Base64;
+import android.util.Patterns;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +52,12 @@ public class RocketChatWSAPI {
 
     public Task<DDPClientCallback.RPC> login(final String username, final String hashedPassword) throws JSONException {
         JSONObject param = new JSONObject();
-        param.put("user", new JSONObject().put("email", username));
+        if(Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
+            param.put("user", new JSONObject().put("email", username));
+        }
+        else {
+            param.put("user", new JSONObject().put("username", username));
+        }
         param.put("password", new JSONObject().put("digest", hashedPassword).put("algorithm", "sha-256"));
 
         return mDDPClient.rpc("login", new JSONArray().put(param) ,generateId("login"));
