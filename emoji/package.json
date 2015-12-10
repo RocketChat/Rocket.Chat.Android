@@ -1,0 +1,12 @@
+{
+  "name": "emojione-gen",
+  "version": "0.0.1",
+  "dependencies": {
+    "request":"*",
+    "underscore":"*"
+  },
+  "scripts": {
+    "gen_emoji": "node gen_emoji.js",
+    "apply": "mkdir -p ./app/src/main/java/com/emojione/ && cp Emojione.java ../app/src/main/java/com/emojione/Emojione.java"
+  }
+}

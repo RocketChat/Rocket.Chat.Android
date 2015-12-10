@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.emojione.Emojione;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -456,7 +457,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
                 case UNSPECIFIED:
                 default:
-                    viewHolder.content.setText(m.content);
+                    viewHolder.content.setText(Emojione.shortnameToUnicode(m.content,false));
                     systemMsg = false;
             }
             if(systemMsg) {
