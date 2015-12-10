@@ -57,11 +57,13 @@
                 <TextView
                     android:id="@+id/list_item_message_username"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"/>
                 <TextView
                     android:id="@+id/list_item_message_timestamp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="@dimen/margin_normal"/>
             </LinearLayout>
             <TextView
