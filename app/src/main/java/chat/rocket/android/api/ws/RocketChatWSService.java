@@ -24,11 +24,12 @@ import chat.rocket.android.content.observer.MarkRoomAsReadHandler;
 import chat.rocket.android.content.observer.MethodCallObserver;
 import chat.rocket.android.content.observer.RocketChatRoom;
 import chat.rocket.android.content.observer.SendNewMessageHandler;
+import chat.rocket.android.content.observer.UserStatusObserver;
 import chat.rocket.android.content.subscriber.LoginServiceConfiguration;
 import chat.rocket.android.content.subscriber.RocketChatSubscription;
 import chat.rocket.android.content.subscriber.StreamMessage;
 import chat.rocket.android.content.subscriber.StreamNotifyRoom;
-import chat.rocket.android.content.subscriber.UsersObserver;
+import chat.rocket.android.content.subscriber.UserData;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import hugo.weaving.DebugLog;
@@ -45,7 +46,8 @@ public class RocketChatWSService extends Service {
             , RocketChatRoom.class
             , MethodCallObserver.class
             , SendNewMessageHandler.class
-            , UsersObserver.class
+            , UserData.class
+            , UserStatusObserver.class
             , StreamMessage.class
             , StreamNotifyRoom.class
             , MarkRoomAsReadHandler.class

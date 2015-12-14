@@ -2,6 +2,7 @@ package chat.rocket.android.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -76,7 +77,9 @@ public class MainActivity extends AbstractActivity {
     private Handler mHandler = new Handler();
     private void setupUserInfo(){
         final ServerConfig s = getPrimaryServerConfig();
+        final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID,"");
         final String username = Cache.get(this).getString(Cache.KEY_MY_USER_NAME,"");
+        setupUserStatus(userId);
         setupUserInfoInner(s, username);
         Cache.waitForValue(this, Cache.KEY_MY_USER_NAME, new Cache.ValueCallback<String>() {
             @Override
@@ -84,9 +87,15 @@ public class MainActivity extends AbstractActivity {
                 setupUserInfoInner(s, value);
             }
         });
+        Cache.waitForValue(this, Cache.KEY_MY_USER_ID, new Cache.ValueCallback<String>() {
+            @Override
+            public void onGetValue(String value) {
+                setupUserStatus(value);
+            }
+        });
     }
 
-    private void setupUserInfoInner(ServerConfig s, String username){
+    private void setupUserInfoInner(ServerConfig s, final String username){
         if(s!=null){
             ((TextView) findViewById(R.id.txt_hostname_info)).setText(s.hostname);
             if(!TextUtils.isEmpty(username)) {
@@ -104,6 +113,84 @@ public class MainActivity extends AbstractActivity {
         }
     }
 
+    private void setupUserStatus(final String userId) {
+        if(TextUtils.isEmpty(userId)) return;
+
+        User u = RocketChatDatabaseHelper.read(this, new RocketChatDatabaseHelper.DBCallback<User>() {
+            @Override
+            public User process(SQLiteDatabase db) throws Exception {
+                return User.getById(db,userId);
+            }
+        });
+        getContentResolver().unregisterContentObserver(mUserObserver);
+        if(u!=null) {
+            setupUserStatusInner(userId);
+            getContentResolver().registerContentObserver(RocketChatProvider.getUriForQuery(User.TABLE_NAME,u._id), false, mUserObserver);
+        }
+    }
+    private ContentObserver mUserObserver = new ContentObserver(null) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID,"");
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    setupUserStatusInner(userId);
+                }
+            });
+        }
+    };
+
+    private void setupUserStatusInner(final String userId) {
+        if(TextUtils.isEmpty(userId)) return;
+
+        User u = RocketChatDatabaseHelper.read(MainActivity.this, new RocketChatDatabaseHelper.DBCallback<User>() {
+            @Override
+            public User process(SQLiteDatabase db) throws Exception {
+                return User.getById(db,userId);
+            }
+        });
+        if(u!=null) ((ImageView) findViewById(R.id.img_userstatus)).setImageResource(u.status.getDrawable());
+        else ((ImageView) findViewById(R.id.img_userstatus)).setImageResource(User.Status.OFFLINE.getDrawable());
+    }
+
+
+    // TODO: should use ArrayAdapter<User.Status>...
+    private String[] mUserStatusActionItems = new String[]{
+            "Online",
+            "Away",
+            "Busy",
+            "Invisible"
+    };
+    private AdapterView.OnItemClickListener mUserStatusActionItemCallbacks = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Context context = parent.getContext();
+            if(position<0 || position>=mUserStatusActionItems.length) return;
+
+            final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID,"");
+            User u = RocketChatDatabaseHelper.read(view.getContext(), new RocketChatDatabaseHelper.DBCallback<User>() {
+                @Override
+                public User process(SQLiteDatabase db) throws Exception {
+                    return User.getById(db, userId);
+                }
+            });
+
+            if(u==null) return;
+
+            String statusStr = mUserStatusActionItems[position];
+            if("Online".equals(statusStr)) u.status = User.Status.ONLINE;
+            else if("Away".equals(statusStr)) u.status = User.Status.AWAY;
+            else if("Busy".equals(statusStr)) u.status = User.Status.BUSY;
+            else if("Invisible".equals(statusStr)) u.status = User.Status.OFFLINE;
+            else return;
+
+            u.syncstate = SyncState.NOT_SYNCED;
+            u.putByContentProvider(view.getContext());
+            toggleUserActionView();
+        }
+    };
 
     private String[] mUserActionItems = new String[]{
             "Logout"
@@ -148,36 +235,48 @@ public class MainActivity extends AbstractActivity {
     }
 
     private void setupUserActionToggle(){
+        final ListView userStatusActionList = (ListView) findViewById(R.id.listview_user_status_actions);
+        userStatusActionList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mUserStatusActionItems));
+        userStatusActionList.setOnItemClickListener(mUserStatusActionItemCallbacks);
+
         final ListView userActionList = (ListView) findViewById(R.id.listview_user_actions);
         userActionList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mUserActionItems));
         userActionList.setOnItemClickListener(mUserActionItemCallbacks);
 
-        final View toggle = findViewById(R.id.img_user_action_toggle);
         findViewById(R.id.user_info_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userActionList.getVisibility()==View.GONE) {
-                    toggle.animate()
-                        .rotation(180)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                            userActionList.setVisibility(View.VISIBLE);
-                            }
-                        }).start();
-                }
-                else {
-                    toggle.animate()
-                            .rotation(0)
-                            .withEndAction(new Runnable() {
-                                @Override
-                                public void run() {
-                                userActionList.setVisibility(View.GONE);
-                                }
-                            }).start();
-                }
+                toggleUserActionView();
             }
         });
+    }
+
+    private void toggleUserActionView(){
+        final ListView userStatusActionList = (ListView) findViewById(R.id.listview_user_status_actions);
+        final ListView userActionList = (ListView) findViewById(R.id.listview_user_actions);
+        final View toggle = findViewById(R.id.img_user_action_toggle);
+        if(userActionList.getVisibility()==View.GONE) {
+            toggle.animate()
+                    .rotation(180)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            userStatusActionList.setVisibility(View.VISIBLE);
+                            userActionList.setVisibility(View.VISIBLE);
+                        }
+                    }).start();
+        }
+        else {
+            toggle.animate()
+                    .rotation(0)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            userStatusActionList.setVisibility(View.GONE);
+                            userActionList.setVisibility(View.GONE);
+                        }
+                    }).start();
+        }
     }
 
     private void loadRooms(){

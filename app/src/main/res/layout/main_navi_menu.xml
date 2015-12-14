@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/margin_normal"
+        android:padding="@dimen/margin_half"
         android:background="@color/colorPrimaryDark">
 
         <LinearLayout
@@ -20,7 +20,15 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:paddingTop="@dimen/margin_half"
+            android:paddingBottom="@dimen/margin_half"
             android:background="?attr/selectableItemBackground">
+            
+            <ImageView
+                android:id="@+id/img_userstatus"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginRight="8dp" />
 
             <include layout="@layout/avatar_container_large"/>
 
@@ -52,6 +60,11 @@
                 android:src="@drawable/ic_navigation_expand_more"/>
 
         </LinearLayout>
+        <ListView
+            android:id="@+id/listview_user_status_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
         <ListView
             android:id="@+id/listview_user_actions"
             android:layout_width="match_parent"

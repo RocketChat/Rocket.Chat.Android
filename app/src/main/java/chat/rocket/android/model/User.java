@@ -3,12 +3,51 @@ package chat.rocket.android.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
+
+import chat.rocket.android.R;
 
 public class User extends AbstractModel {
     public static final String TABLE_NAME = "user";
+
+    public enum Status {
+        ONLINE("online")
+        ,AWAY("away")
+        ,BUSY("busy")
+        ,OFFLINE("offline")
+
+        ;//------------
+
+        private String value;
+        Status(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public @DrawableRes int getDrawable() {
+            if(ONLINE.value.equals(value)) return R.drawable.userstatus_online;
+            if(AWAY.value.equals(value)) return R.drawable.userstatus_away;
+            if(BUSY.value.equals(value)) return R.drawable.userstatus_busy;
+            if(OFFLINE.value.equals(value)) return R.drawable.userstatus_offline;
+
+            return 0;
+        }
+
+        public static Status getType(String value) {
+            for(Status s :Status.values()){
+                if(s.value.equals(value)) return s;
+            }
+            throw new IllegalArgumentException("User.Status.getType: invalid parameter: value="+value);
+        }
+    }
+
     public String name;
     public String displayName;
+    public Status status = Status.OFFLINE;
 
     @Override
     public String getTableName() {
@@ -43,7 +82,8 @@ public class User extends AbstractModel {
                             " id TEXT UNIQUE NOT NULL," +
                             " name TEXT UNIQUE NOT NULL," +
                             " syncstate INTEGER NOT NULL," +
-                            " display_name TEXT);\n");
+                            " display_name TEXT," +
+                            " status TEXT);\n");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -61,6 +101,7 @@ public class User extends AbstractModel {
         initID(u, c);
         u.name = c.getString(c.getColumnIndex("name"));
         u.displayName = c.getString(c.getColumnIndex("display_name"));
+        u.status = Status.getType(c.getString(c.getColumnIndex("status")));
         return u;
     }
 
@@ -69,6 +110,7 @@ public class User extends AbstractModel {
         ContentValues values = createInitContentValue();
         values.put("name", name);
         values.put("display_name", displayName);
+        values.put("status", status.getValue());
         return values;
     }
 

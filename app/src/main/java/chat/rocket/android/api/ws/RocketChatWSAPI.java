@@ -15,6 +15,7 @@ import java.io.InputStream;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.OkHttpHelper;
+import chat.rocket.android.model.User;
 import jp.co.crowdworks.android_ddp.ddp.DDPClient;
 import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
 import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
@@ -96,6 +97,12 @@ public class RocketChatWSAPI {
                 .put(new JSONObject().put("$date",System.currentTimeMillis()));
 
         return mDDPClient.rpc("loadHistory", params, generateId("load-message"));
+    }
+
+    public Task<DDPClientCallback.RPC> setUserStatus(User.Status status) {
+        return mDDPClient.rpc("UserPresence:setDefaultStatus",
+                new JSONArray().put(status.getValue()),
+                generateId("user-status"));
     }
 
     public interface UploadFileProgress{
