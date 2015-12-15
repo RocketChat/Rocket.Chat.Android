@@ -156,18 +156,17 @@ public class MainActivity extends AbstractActivity {
     }
 
 
-    // TODO: should use ArrayAdapter<User.Status>...
-    private String[] mUserStatusActionItems = new String[]{
-            "Online",
-            "Away",
-            "Busy",
-            "Invisible"
+    private User.Status[] mUserStatusItems = new User.Status[]{
+            User.Status.ONLINE,
+            User.Status.AWAY,
+            User.Status.BUSY,
+            User.Status.OFFLINE
     };
-    private AdapterView.OnItemClickListener mUserStatusActionItemCallbacks = new AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemClickListener mUserStatusItemCallbacks = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Context context = parent.getContext();
-            if(position<0 || position>=mUserStatusActionItems.length) return;
+            if(position<0 || position>= mUserStatusItems.length) return;
 
             final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID,"");
             User u = RocketChatDatabaseHelper.read(view.getContext(), new RocketChatDatabaseHelper.DBCallback<User>() {
@@ -179,13 +178,9 @@ public class MainActivity extends AbstractActivity {
 
             if(u==null) return;
 
-            String statusStr = mUserStatusActionItems[position];
-            if("Online".equals(statusStr)) u.status = User.Status.ONLINE;
-            else if("Away".equals(statusStr)) u.status = User.Status.AWAY;
-            else if("Busy".equals(statusStr)) u.status = User.Status.BUSY;
-            else if("Invisible".equals(statusStr)) u.status = User.Status.OFFLINE;
-            else return;
+            User.Status status = mUserStatusItems[position];
 
+            u.status = status;
             u.syncstate = SyncState.NOT_SYNCED;
             u.putByContentProvider(view.getContext());
             toggleUserActionView();
@@ -236,8 +231,17 @@ public class MainActivity extends AbstractActivity {
 
     private void setupUserActionToggle(){
         final ListView userStatusActionList = (ListView) findViewById(R.id.listview_user_status_actions);
-        userStatusActionList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mUserStatusActionItems));
-        userStatusActionList.setOnItemClickListener(mUserStatusActionItemCallbacks);
+        userStatusActionList.setAdapter(new ArrayAdapter<User.Status>(this, R.layout.listitem_navi_menu, R.id.listitem_userstatus_text, mUserStatusItems){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View listitem = super.getView(position, convertView, parent);
+                if (position>=0 && position< mUserStatusItems.length) {
+                    ((ImageView) listitem.findViewById(R.id.listitem_userstatus_icon)).setImageResource(mUserStatusItems[position].getDrawable());
+                }
+                return listitem;
+            }
+        });
+        userStatusActionList.setOnItemClickListener(mUserStatusItemCallbacks);
 
         final ListView userActionList = (ListView) findViewById(R.id.listview_user_actions);
         userActionList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mUserActionItems));

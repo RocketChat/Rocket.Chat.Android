@@ -37,6 +37,15 @@ public class User extends AbstractModel {
             return 0;
         }
 
+        public String getCaptionForSetting() {
+            if(ONLINE.value.equals(value)) return "Online";
+            if(AWAY.value.equals(value)) return "Away";
+            if(BUSY.value.equals(value)) return "Busy";
+            if(OFFLINE.value.equals(value)) return "Invisible";
+
+            return null;
+        }
+
         public static Status getType(String value) {
             for(Status s :Status.values()){
                 if(s.value.equals(value)) return s;
