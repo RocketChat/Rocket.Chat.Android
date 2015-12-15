@@ -57,6 +57,7 @@ import chat.rocket.android.model.User;
 import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.Avatar;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
+import chat.rocket.android.view.Linkify;
 import chat.rocket.android.view.LoadMoreScrollListener;
 import chat.rocket.android.view.MessageComposer;
 
@@ -458,6 +459,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 case UNSPECIFIED:
                 default:
                     viewHolder.content.setText(Emojione.shortnameToUnicode(m.content,false));
+                    Linkify.markupSync(viewHolder.content);
                     systemMsg = false;
             }
             if(systemMsg) {

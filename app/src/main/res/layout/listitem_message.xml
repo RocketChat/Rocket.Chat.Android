@@ -69,7 +69,9 @@
             <TextView
                 android:id="@+id/list_item_message_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textColorLink="@color/textColorLink"
+                android:textIsSelectable="true"/>
 
             <LinearLayout
                 android:id="@+id/list_item_inline_container"

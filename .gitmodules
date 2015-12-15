@@ -1,0 +1,3 @@
+[submodule "autolink-java"]
+	path = autolink-java
+	url = https://github.com/YusukeIwaki/autolink-java.git
