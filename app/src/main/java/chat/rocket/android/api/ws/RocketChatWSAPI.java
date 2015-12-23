@@ -105,6 +105,26 @@ public class RocketChatWSAPI {
                 generateId("user-status"));
     }
 
+    public Task<DDPClientCallback.RPC> createChannel(String name, JSONArray usernames) {
+        JSONArray params = new JSONArray()
+                .put(name)
+                .put(usernames);
+        return mDDPClient.rpc("createChannel",params,generateId("create-ch"));
+    }
+
+    public Task<DDPClientCallback.RPC> createPrivateGroup(String name, JSONArray usernames) {
+        JSONArray params = new JSONArray()
+                .put(name)
+                .put(usernames);
+        return mDDPClient.rpc("createPrivateGroup",params,generateId("create-pg"));
+    }
+
+    public Task<DDPClientCallback.RPC> createDirectMessage(String username) {
+        return mDDPClient.rpc("createDirectMessage",
+                new JSONArray().put(username),
+                generateId("create-dm"));
+    }
+
     public interface UploadFileProgress{
         void onProgress(long sent, long total);
     }

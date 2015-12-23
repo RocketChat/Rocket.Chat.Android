@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:orientation="vertical"
@@ -35,27 +35,27 @@
         android:background="@color/background_white"
         android:visibility="gone"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/chat_btn_compose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fabSize="normal"
-        android:background="@color/colorAccent"
-        app:rippleColor="@color/colorAccentLight"
+        fab:fab_size="normal"
         android:src="@drawable/ic_action_compose"
-        app:elevation="6dp"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/colorAccentDark"
+        fab:fab_colorRipple="@color/colorAccentLight"
         android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="right|bottom"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/chat_btn_upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fabSize="mini"
-        android:background="@color/colorAccent"
-        app:rippleColor="@color/colorAccentLight"
+        fab:fab_size="mini"
         android:src="@drawable/ic_upload_file"
-        app:elevation="6dp"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/colorAccentDark"
+        fab:fab_colorRipple="@color/colorAccentLight"
         android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="left|bottom"/>
 

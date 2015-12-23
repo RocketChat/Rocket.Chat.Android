@@ -26,10 +26,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionMenu;
+
 import chat.rocket.android.Constants;
 import chat.rocket.android.R;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
+import chat.rocket.android.fragment.AddRoomDialogFragment;
 import chat.rocket.android.fragment.ChatRoomFragment;
 import chat.rocket.android.fragment.HomeRoomFragment;
 import chat.rocket.android.model.Message;
@@ -62,6 +65,7 @@ public class MainActivity extends AbstractActivity {
         setupUserInfo();
         setupUserActionToggle();
         loadRooms();
+        setupAddRoomButton();
         openPaneIfNeededForInitialLayout();
     }
 
@@ -293,7 +297,7 @@ public class MainActivity extends AbstractActivity {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
                 Uri uri = RocketChatProvider.getUriForQuery(Room.TABLE_NAME);
-                return new CursorLoader(MainActivity.this, uri, null, null, null, null);
+                return new CursorLoader(MainActivity.this, uri, null, "syncstate=2", null, null);
             }
 
             @Override
@@ -304,6 +308,32 @@ public class MainActivity extends AbstractActivity {
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
                 mAdapter.swapCursor(null);
+            }
+        });
+    }
+
+    private void setupAddRoomButton(){
+        final FloatingActionMenu fabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_add_room);
+
+        findViewById(R.id.btn_add_channel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fabMenu.close(true);
+                AddRoomDialogFragment.create(Room.Type.CHANNEL).show(getSupportFragmentManager(), "add-room");
+            }
+        });
+        findViewById(R.id.btn_add_direct_message).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fabMenu.close(true);
+                AddRoomDialogFragment.create(Room.Type.DIRECT_MESSAGE).show(getSupportFragmentManager(), "add-room");
+            }
+        });
+        findViewById(R.id.btn_add_private_group).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fabMenu.close(true);
+                AddRoomDialogFragment.create(Room.Type.PRIVATE_GROUP).show(getSupportFragmentManager(), "add-room");
             }
         });
     }

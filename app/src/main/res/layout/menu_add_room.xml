@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab_menu_add_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        android:layout_gravity="left|bottom"
+        fab:menu_icon="@drawable/ic_action_add"
+        fab:menu_fab_size="mini"
+        fab:menu_colorNormal="@color/colorAccent"
+        fab:menu_colorPressed="@color/colorAccentDark"
+        fab:menu_colorRipple="@color/colorAccentLight"
+        fab:menu_labels_position="right"
+        fab:menu_openDirection="up">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btn_add_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_room_type_channel"
+            fab:fab_size="mini"
+            fab:fab_label="Channel"
+            fab:fab_colorNormal="@color/colorAccentLight"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorAccentDark"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btn_add_private_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_room_type_private"
+            fab:fab_size="mini"
+            fab:fab_label="Private group"
+            fab:fab_colorNormal="@color/colorAccentLight"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorAccentDark"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btn_add_direct_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_room_type_direct"
+            fab:fab_size="mini"
+            fab:fab_label="Direct message"
+            fab:fab_colorNormal="@color/colorAccentLight"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorAccentDark"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+</merge>

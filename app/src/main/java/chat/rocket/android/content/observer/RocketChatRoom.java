@@ -14,7 +14,6 @@ import bolts.Task;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Room;
-import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -41,10 +40,9 @@ public class RocketChatRoom extends AbstractObserver {
         registerSubscriptionCallback();
     }
 
-    @DebugLog
     @Override
     protected void onChange(Uri uri) {
-        Cursor c = mContext.getContentResolver().query(uri, null, null, null, null);
+        Cursor c = mContext.getContentResolver().query(uri, null, "id!='DUMMY' AND syncstate=2", null, null);
         if(c==null || c.getCount()==0) {
             //removed
         }

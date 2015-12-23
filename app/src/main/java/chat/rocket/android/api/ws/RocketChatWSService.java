@@ -19,6 +19,7 @@ import bolts.Task;
 import chat.rocket.android.Constants;
 import chat.rocket.android.content.Registerable;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
+import chat.rocket.android.content.observer.AddRoomHandler;
 import chat.rocket.android.content.observer.LoginHandler;
 import chat.rocket.android.content.observer.MarkRoomAsReadHandler;
 import chat.rocket.android.content.observer.MethodCallObserver;
@@ -44,6 +45,7 @@ public class RocketChatWSService extends Service {
             LoginHandler.class
             , RocketChatSubscription.class
             , RocketChatRoom.class
+            , AddRoomHandler.class
             , MethodCallObserver.class
             , SendNewMessageHandler.class
             , UserData.class
