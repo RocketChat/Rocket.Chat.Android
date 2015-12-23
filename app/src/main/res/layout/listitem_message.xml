@@ -66,12 +66,11 @@
                     android:enabled="false"
                     android:layout_marginLeft="@dimen/margin_normal"/>
             </LinearLayout>
-            <TextView
+            <chat.rocket.android.view.SelectableTextView
                 android:id="@+id/list_item_message_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorLink="@color/textColorLink"
-                android:textIsSelectable="true"/>
+                android:textColorLink="@color/textColorLink"/>
 
             <LinearLayout
                 android:id="@+id/list_item_inline_container"
