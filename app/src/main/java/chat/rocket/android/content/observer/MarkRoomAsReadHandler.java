@@ -15,6 +15,7 @@ import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.SyncState;
+import hugo.weaving.DebugLog;
 import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
 
 public class MarkRoomAsReadHandler extends AbstractObserver {
@@ -31,16 +32,17 @@ public class MarkRoomAsReadHandler extends AbstractObserver {
     @Override
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
-        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2 AND alert=0",null,null);
+        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2 AND id!='DUMMY' AND alert=0",null,null);
         while(c!=null && c.moveToNext()) markRoomAsRead(c);
     }
 
     @Override
     protected void onChange(Uri uri) {
-        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0 AND alert=0",null,null);
+        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0 AND id!='DUMMY' AND alert=0",null,null);
         if (c!=null && c.getCount()>0 && c.moveToFirst()) markRoomAsRead(c);
     }
 
+    @DebugLog
     private void markRoomAsRead(Cursor c) {
         final Room r = Room.createFromCursor(c);
 

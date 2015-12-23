@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -32,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.emojione.Emojione;
+import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -683,21 +683,16 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         final MessageComposer composer = getMessageComposer();
 
         if(visible) {
-            btnUploadFile.hide();
-            btnCompose.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                @Override
-                public void onHidden(FloatingActionButton fab) {
-                    composer.show(null);
-
-                }
-            });
+            btnUploadFile.hide(true);
+            btnCompose.hide(true);
+            composer.show(null);
         }
         else{
             composer.hide(new Runnable() {
                 @Override
                 public void run() {
-                    btnCompose.show();
-                    btnUploadFile.show();
+                    btnCompose.show(true);
+                    btnUploadFile.show(true);
                 }
             });
         }
