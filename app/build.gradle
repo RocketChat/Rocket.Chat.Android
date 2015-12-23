@@ -3,6 +3,12 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'io.fabric'
 
+def getCurrentCommitMessage() {
+    def gitlog = 'git log origin/develop...HEAD --decorate'.execute().text
+    if (gitlog.trim().length()>0) return gitlog
+    return 'git log -n 1 --decorate'.execute().text
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -17,6 +23,8 @@ android {
         versionCode 1
         versionName "1.0"
         manifestPlaceholders = [fabric_api_key:properties.getProperty("FABRIC_API_KEY", System.getenv("FABRIC_API_KEY"))]
+        ext.betaDistributionNotifications=false
+        ext.betaDistributionReleaseNotes=getCurrentCommitMessage()
     }
     buildTypes {
         release {
