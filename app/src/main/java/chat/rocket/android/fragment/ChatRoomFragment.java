@@ -23,12 +23,16 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emojione.Emojione;
 import com.github.clans.fab.FloatingActionButton;
@@ -216,6 +220,28 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             default:
                 bar.setNavigationIcon(null);
         }
+        setHasOptionsMenu(true);
+        getAppCompatActivity().setSupportActionBar(bar);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.chat_room_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.chat_room_search:
+                Toast.makeText(getContext(),"search",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.chat_room_show_users:
+                Toast.makeText(getContext(),"users",Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void fetchNewMessages() {

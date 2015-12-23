@@ -2,6 +2,7 @@ package chat.rocket.android.fragment;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.ServerConfig;
@@ -14,6 +15,10 @@ public class AbstractFragment extends Fragment {
         else {
             getFragmentManager().popBackStack();
         }
+    }
+
+    protected AppCompatActivity getAppCompatActivity(){
+        return (AppCompatActivity) getActivity();
     }
 
     protected ServerConfig getPrimaryServerConfig() {
