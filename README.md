@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android.Lily/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android.Lily/tree/develop)
+
 # Rocket.Chat.Android.Lily
 Another implementation of Rocket.Chat Native Android Application.
 
