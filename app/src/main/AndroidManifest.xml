@@ -32,6 +32,10 @@
             android:authorities="chat.rocket.android"
             android:name=".content.RocketChatProvider"
             android:exported="true"/>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="${fabric_api_key}" />
     </application>
 
 </manifest>

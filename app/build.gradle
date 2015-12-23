@@ -1,10 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
+
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
     defaultConfig {
         applicationId "chat.rocket.android"
@@ -12,6 +16,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [fabric_api_key:properties.getProperty("FABRIC_API_KEY", System.getenv("FABRIC_API_KEY"))]
     }
     buildTypes {
         release {
@@ -41,4 +46,9 @@ dependencies {
 
     compile 'com.facebook.stetho:stetho:1.2.0'
     compile 'com.facebook.stetho:stetho-okhttp:1.2.0'
+
+    // Crashlytics Kit
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true
+    }
 }
