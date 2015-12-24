@@ -14,7 +14,7 @@ android {
     buildToolsVersion "23.0.1"
 
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    properties.load(project.rootProject.file('app/fabric.properties').newDataInputStream())
 
     defaultConfig {
         applicationId "chat.rocket.android"
@@ -22,7 +22,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        manifestPlaceholders = [fabric_api_key:properties.getProperty("FABRIC_API_KEY", System.getenv("FABRIC_API_KEY"))]
+        manifestPlaceholders = [fabric_api_key:properties.getProperty("apiKey", System.getenv("FABRIC_API_KEY"))]
         ext.betaDistributionNotifications=false
         ext.betaDistributionReleaseNotes=getCurrentCommitMessage()
     }
