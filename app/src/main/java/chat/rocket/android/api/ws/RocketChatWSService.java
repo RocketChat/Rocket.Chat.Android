@@ -26,6 +26,7 @@ import chat.rocket.android.content.observer.MethodCallObserver;
 import chat.rocket.android.content.observer.RocketChatRoom;
 import chat.rocket.android.content.observer.SendNewMessageHandler;
 import chat.rocket.android.content.observer.UserStatusObserver;
+import chat.rocket.android.content.subscriber.FilteredUsers;
 import chat.rocket.android.content.subscriber.LoginServiceConfiguration;
 import chat.rocket.android.content.subscriber.RocketChatSubscription;
 import chat.rocket.android.content.subscriber.StreamMessage;
@@ -54,6 +55,7 @@ public class RocketChatWSService extends Service {
             , StreamNotifyRoom.class
             , MarkRoomAsReadHandler.class
             , LoginServiceConfiguration.class
+            , FilteredUsers.class
     };
 
     private RocketChatWSAPI mAPI;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/listPreferredItemHeightSmall"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground"
+    android:theme="@style/Theme.AppCompat.Light">
+
+    <ImageView
+        android:id="@+id/listitem_userstatus_icon"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_margin="4dp" />
+
+    <include layout="@layout/avatar_container"/>
+
+    <TextView
+        android:id="@+id/listitem_username"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+</LinearLayout>

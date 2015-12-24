@@ -14,15 +14,21 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -45,6 +51,7 @@ import java.util.HashSet;
 import chat.rocket.android.Constants;
 import chat.rocket.android.DateTime;
 import chat.rocket.android.R;
+import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.activity.OnBackPressListener;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
@@ -61,7 +68,7 @@ import chat.rocket.android.view.Linkify;
 import chat.rocket.android.view.LoadMoreScrollListener;
 import chat.rocket.android.view.MessageComposer;
 
-public class ChatRoomFragment extends AbstractFragment implements OnBackPressListener{
+public class ChatRoomFragment extends AbstractFragment implements OnBackPressListener, FragmentManager.OnBackStackChangedListener{
     private static final int LOADER_ID = 0x12346;
     private static final int PICK_IMAGE_ID = 0x11;
 
@@ -191,13 +198,29 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.chat_room_screen, container, false);
 
-        setupToolbar();
+        initializeToolbar();
         setupListView();
         loadMessages();
         fetchNewMessages();
         setupMessageComposer();
         setupUploader();
         return mRootView;
+    }
+
+    private void initializeToolbar() {
+        Toolbar bar = (Toolbar) mRootView.findViewById(R.id.toolbar_chatroom);
+        setHasOptionsMenu(true);
+        getAppCompatActivity().setSupportActionBar(bar);
+
+        bar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocalBroadcastManager.getInstance(v.getContext())
+                        .sendBroadcast(new Intent(MainActivity.TOGGLE_NAV_ACTION));
+            }
+        });
+
+        setupToolbar();
     }
 
     private void setupToolbar(){
@@ -216,6 +239,26 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             default:
                 bar.setNavigationIcon(null);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.chat_room_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.chat_room_search:
+                showSearchFragment();
+                break;
+            case R.id.chat_room_show_members:
+                showMemberListFragment();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void fetchNewMessages() {
@@ -314,6 +357,13 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 mAdapter.swapCursor(null);
             }
         });
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        if(getActivity()!=null) {
+            initializeToolbar();
+        }
     }
 
     private static class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -838,5 +888,23 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             }
         }
         return -1;
+    }
+
+    private void showSearchFragment() {
+        Fragment f = new SearchMessageFragment();
+        f.setArguments(getArguments());
+        getFragmentManager().beginTransaction()
+                .add(R.id.activity_main_container, f)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showMemberListFragment() {
+        Fragment f = new MemberListFragment();
+        f.setArguments(getArguments());
+        getFragmentManager().beginTransaction()
+                .add(R.id.activity_main_container, f)
+                .addToBackStack(null)
+                .commit();
     }
 }

@@ -99,6 +99,12 @@ public class RocketChatWSAPI {
         return mDDPClient.rpc("loadHistory", params, generateId("load-message"));
     }
 
+    public Task<DDPClientCallback.RPC> searchMessage(final String roomId, final String query) {
+        return mDDPClient.rpc("messageSearch",
+                new JSONArray().put(query).put(roomId),
+                generateId("search-message"));
+    }
+
     public Task<DDPClientCallback.RPC> setUserStatus(User.Status status) {
         return mDDPClient.rpc("UserPresence:setDefaultStatus",
                 new JSONArray().put(status.getValue()),

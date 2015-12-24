@@ -88,4 +88,23 @@ public class JSONParseEngine {
         if(!room.isNull("unread")) r.unread = room.getInt("unread");
         r.putByContentProvider(mContext);
     }
+
+    public void parseUser(final String userID, JSONObject user) throws JSONException {
+        User u = RocketChatDatabaseHelper.read(mContext, new RocketChatDatabaseHelper.DBCallback<User>() {
+            @Override
+            public User process(SQLiteDatabase db) throws Exception {
+                return User.getById(db, userID);
+            }
+        });
+        if (u==null) {
+            u = new User();
+            u.id = userID;
+        }
+
+        if(!user.isNull("username")) u.name = user.getString("username");
+        if(!user.isNull("status")) u.status = User.Status.getType(user.getString("status"));
+        if(!user.isNull("name")) u.displayName = user.getString("name");
+
+        u.putByContentProvider(mContext);
+    }
 }
