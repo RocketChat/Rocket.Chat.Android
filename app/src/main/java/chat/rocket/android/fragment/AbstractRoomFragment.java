@@ -17,7 +17,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Room;
 
-abstract class AbstractRoomFragment extends AbstractFragment {
+public abstract class AbstractRoomFragment extends AbstractFragment {
     protected View mRootView;
     protected String mHost;
     protected long mRoomBaseId;

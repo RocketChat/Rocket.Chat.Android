@@ -35,6 +35,7 @@ import chat.rocket.android.Constants;
 import chat.rocket.android.R;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
+import chat.rocket.android.fragment.AbstractRoomFragment;
 import chat.rocket.android.fragment.AddRoomDialogFragment;
 import chat.rocket.android.fragment.ChatRoomFragment;
 import chat.rocket.android.fragment.HomeRoomFragment;
@@ -479,6 +480,10 @@ public class MainActivity extends AbstractActivity {
     private void showChatRoomFragment(Room r) {
         ServerConfig s = getPrimaryServerConfig();
         if(s!=null) {
+            if (getSupportFragmentManager().findFragmentById(getContainerId()) instanceof AbstractRoomFragment) {
+                getSupportFragmentManager().popBackStack();
+            }
+
             getSupportFragmentManager().beginTransaction()
                     .replace(getContainerId(), ChatRoomFragment.create(s.hostname, r))
                     .commit();
