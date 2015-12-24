@@ -7,18 +7,11 @@
     android:background="?attr/selectableItemBackground"
     android:theme="@style/Theme.AppCompat.Light">
 
-    <FrameLayout
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="4dp"
-        android:layout_gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/listitem_userstatus_icon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="center"/>
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/listitem_userstatus_icon"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_margin="4dp" />
 
     <include layout="@layout/avatar_container"/>
 
