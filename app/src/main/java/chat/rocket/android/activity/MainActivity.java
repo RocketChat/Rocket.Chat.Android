@@ -1,7 +1,9 @@
 package chat.rocket.android.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,6 +14,7 @@ import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +51,7 @@ import chat.rocket.android.view.CursorRecyclerViewAdapter;
 public class MainActivity extends AbstractActivity {
     private static final String TAG = Constants.LOG_TAG;
     private static final int LOADER_ID = 0x12345;
+    public static final String TOGGLE_NAV_ACTION = MainActivity.class.getName()+".intent.action.TOGGLE_NAV";
 
     private RoomAdapter mAdapter;
 
@@ -67,6 +71,13 @@ public class MainActivity extends AbstractActivity {
         loadRooms();
         setupAddRoomButton();
         openPaneIfNeededForInitialLayout();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mToggleNavReveiver, new IntentFilter(TOGGLE_NAV_ACTION));
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mToggleNavReveiver);
+        super.onDestroy();
     }
 
     private ServerConfig getPrimaryServerConfig() {
@@ -77,6 +88,15 @@ public class MainActivity extends AbstractActivity {
             }
         });
     }
+
+    private BroadcastReceiver mToggleNavReveiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(TOGGLE_NAV_ACTION.equals(intent.getAction())) {
+                togglePaneIfNeeded();
+            }
+        }
+    };
 
     private Handler mHandler = new Handler();
     private void setupUserInfo(){
@@ -369,6 +389,17 @@ public class MainActivity extends AbstractActivity {
             pane.closePane();
         }
     }
+
+    private void togglePaneIfNeeded(){
+        final SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
+        if (pane!=null && pane.isSlideable() && pane.isOpen()) {
+            pane.closePane();
+        }
+        else if (pane!=null && pane.isSlideable() && !pane.isOpen()) {
+            pane.openPane();
+        }
+    }
+
 
     private static class RoomViewHolder extends RecyclerView.ViewHolder {
         ImageView roomType;

@@ -10,11 +10,12 @@ import chat.rocket.android.model.Message;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.User;
+import chat.rocket.android.model.UserRoom;
 
 public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = Constants.LOG_TAG;
     private static final String DB_NAME="rockets.db";
-    static final int DB_VERSION=2;
+    static final int DB_VERSION=3;
 
     public RocketChatDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -92,6 +93,7 @@ public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
         Room.updateTable(db, oldVersion, newVersion);
         ServerConfig.updateTable(db, oldVersion, newVersion);
         User.updateTable(db, oldVersion, newVersion);
+        UserRoom.updateTable(db, oldVersion, newVersion);
     }
 
     @Override
@@ -100,6 +102,7 @@ public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
         Room.dropTable(db);
         ServerConfig.dropTable(db);
         User.dropTable(db);
+        UserRoom.dropTable(db);
         onUpgrade(db, 0, newVersion);
     }
 }

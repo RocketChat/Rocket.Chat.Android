@@ -22,6 +22,7 @@ import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SqliteUtil;
 import chat.rocket.android.model.User;
+import chat.rocket.android.model.UserRoom;
 
 public class RocketChatProvider extends ContentProvider {
     private static final String TAG = Constants.LOG_TAG;
@@ -48,6 +49,7 @@ public class RocketChatProvider extends ContentProvider {
             , ServerConfig.TABLE_NAME
             , User.TABLE_NAME
             , MethodCall.TABLE_NAME
+            , UserRoom.TABLE_NAME
     };
     private static final ArrayList<String> MODELS_ONMEM = new ArrayList<>();
 

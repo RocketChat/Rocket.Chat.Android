@@ -7,9 +7,9 @@
         android:title="Search"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/chat_room_show_users"
+        android:id="@+id/chat_room_show_members"
         android:icon="@drawable/ic_action_user"
-        android:title="Users"
+        android:title="Member list"
         app:showAsAction="ifRoom"/>
 
 </menu>

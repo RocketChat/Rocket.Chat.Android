@@ -145,7 +145,7 @@ public class User extends AbstractModel {
     }
 
     public static User getByName(SQLiteDatabase db, String name) {
-        return new DBAccessor(db).get("name = '?'",new String[]{name},null);
+        return new DBAccessor(db).get("name=?",new String[]{name},null);
     }
 
     public void put(SQLiteDatabase db) {

@@ -2,6 +2,7 @@ package chat.rocket.android.content.observer;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -12,8 +13,10 @@ import org.json.JSONArray;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
+import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Room;
+import chat.rocket.android.model.UserRoom;
 import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -80,12 +83,28 @@ public class RocketChatRoom extends AbstractObserver {
                             if (docEvent instanceof DDPSubscription.Added.Before) {
 
                             } else if (docEvent instanceof DDPSubscription.Added) {
-                                String roomID = docEvent.docID;
-                                JSONArray usernames = ((DDPSubscription.Added) docEvent).fields.getJSONArray("usernames");
-                                for(int i=0;i<usernames.length();i++){
-                                    String username = usernames.getString(i);
-                                    Log.d(TAG, "[room:"+roomID+"] <- "+username);
-                                }
+                                final String roomID = docEvent.docID;
+                                final JSONArray usernames = ((DDPSubscription.Added) docEvent).fields.getJSONArray("usernames");
+                                RocketChatDatabaseHelper.writeWithTransaction(mContext, new RocketChatDatabaseHelper.DBCallbackEx<Object>() {
+                                    @Override
+                                    public Object process(SQLiteDatabase db) throws Exception {
+                                        UserRoom.delete(db, "room_id=?",new String[]{roomID});
+                                        for(int i=0;i<usernames.length();i++){
+                                            String username = usernames.getString(i);
+                                            UserRoom userRoom = new UserRoom();
+                                            userRoom.username = username;
+                                            userRoom.roomID = roomID;
+                                            userRoom.put(db);
+                                        }
+
+                                        return null;
+                                    }
+
+                                    @Override
+                                    public void handleException(Exception e) {
+                                        Log.e(TAG,"error",e);
+                                    }
+                                });
                             } else if (docEvent instanceof DDPSubscription.Removed) {
                             } else if (docEvent instanceof DDPSubscription.Changed) {
 
