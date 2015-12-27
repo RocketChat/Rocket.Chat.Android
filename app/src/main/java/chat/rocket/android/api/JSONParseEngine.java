@@ -31,9 +31,14 @@ public class JSONParseEngine {
             m.id = messageId;
         }
         m.roomId = message.getString("rid");
-        m.content = message.getString("msg");
+        if (!message.isNull("msg")) m.content = message.getString("msg");
         m.timestamp = message.getJSONObject("ts").getLong("$date");
         m.type = Message.Type.getType(message.isNull("t")? "" : message.getString("t"));
+
+        if (!message.isNull("groupable")) {
+            if (message.getBoolean("groupable")) m.flags |= Message.FLAG_GROUPABLE;
+            else m.flags &= ~Message.FLAG_GROUPABLE;
+        }
 
         final JSONObject user = message.getJSONObject("u");
         final String userId = user.getString("_id");
@@ -63,6 +68,10 @@ public class JSONParseEngine {
             m.urls = message.getJSONArray("urls").toString();
         }
         else m.urls = "[]";
+        if(!message.isNull("attachments")) {
+            m.attachments = message.getJSONArray("attachments").toString();
+        }
+        else m.attachments = "[]";
         m.extras = "{}";
         m.putByContentProvider(mContext);
     }

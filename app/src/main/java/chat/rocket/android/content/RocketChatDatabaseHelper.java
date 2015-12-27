@@ -15,7 +15,7 @@ import chat.rocket.android.model.UserRoom;
 public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = Constants.LOG_TAG;
     private static final String DB_NAME="rockets.db";
-    static final int DB_VERSION=3;
+    static final int DB_VERSION=4;
 
     public RocketChatDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

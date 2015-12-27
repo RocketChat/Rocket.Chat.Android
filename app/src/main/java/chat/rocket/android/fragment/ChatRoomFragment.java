@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +39,11 @@ import android.widget.TextView;
 
 import com.emojione.Emojione;
 import com.github.clans.fab.FloatingActionButton;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -53,6 +59,7 @@ import chat.rocket.android.DateTime;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.activity.OnBackPressListener;
+import chat.rocket.android.api.OkHttpHelper;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
@@ -75,6 +82,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     public ChatRoomFragment(){}
 
     private String mHost;
+    private String mToken;
     private long mRoomBaseId;
     private String mRoomId;
     private String mRoomName;
@@ -86,6 +94,23 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private MessageAdapter mAdapter;
     private LoadMoreScrollListener mLoadMoreListener;
 
+    private Interceptor mInterceptor;
+    private Interceptor getInterceptor() {
+        if(mInterceptor==null) {
+            mInterceptor = new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+
+                    Request newRequest = chain.request().newBuilder()
+                            .header("Cookie", "rc_uid="+mUserId+";rc_token="+mToken)
+                            .build();
+                    return chain.proceed(newRequest);
+                }
+            };
+        }
+        return mInterceptor;
+    }
+
     private static final HashSet<String> sInlineViewSupportedMime = new HashSet<String>(){
         {
             add("image/png");
@@ -95,10 +120,11 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         }
     };
 
-    public static ChatRoomFragment create(String host, Room r) {
+    public static ChatRoomFragment create(String host, String token, Room r) {
         ChatRoomFragment f = new ChatRoomFragment();
         Bundle args = new Bundle();
         args.putString("host", host);
+        args.putString("token", token);
         args.putLong("roomBaseId", r._id);
         args.putString("roomId", r.id);
         args.putString("roomName", r.name);
@@ -110,6 +136,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
     private void initFromArgs(Bundle args) {
         mHost = args.getString("host");
+        mToken = args.getString("token");
         mRoomBaseId = args.getLong("roomBaseId");
         mRoomId = args.getString("roomId");
         mRoomName = args.getString("roomName");
@@ -120,6 +147,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     private boolean hasValidArgs(Bundle args) {
         if(args == null) return false;
         return args.containsKey("host")
+                && args.containsKey("token")
                 && args.containsKey("roomBaseId")
                 && args.containsKey("roomId")
                 && args.containsKey("roomName")
@@ -508,8 +536,14 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
                 case UNSPECIFIED:
                 default:
-                    viewHolder.content.setText(Emojione.shortnameToUnicode(m.content,false));
-                    Linkify.markupSync(viewHolder.content);
+                    if(TextUtils.isEmpty(m.content)) {
+                        viewHolder.content.setVisibility(View.GONE);
+                    }
+                    else {
+                        viewHolder.content.setVisibility(View.VISIBLE);
+                        viewHolder.content.setText(Emojione.shortnameToUnicode(m.content, false));
+                        Linkify.markupSync(viewHolder.content);
+                    }
                     systemMsg = false;
             }
             if(systemMsg) {
@@ -537,6 +571,17 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                     Log.e(Constants.LOG_TAG, "error", e);
                 }
             }
+            if(!TextUtils.isEmpty(m.attachments)) {
+                try {
+                    JSONArray urls = new JSONArray(m.attachments);
+                    for (int i = 0; i < urls.length(); i++) {
+                        insertAttachment(viewHolder, urls.getJSONObject(i));
+                    }
+                }
+                catch (Exception e) {
+                    Log.e(Constants.LOG_TAG, "error", e);
+                }
+            }
 
         }
 
@@ -547,7 +592,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 setNewDay(viewHolder, DateTime.fromEpocMs(m.timestamp, DateTime.Format.DATE));
                 setSequential(viewHolder, false);
             }
-            else if(!nextM.userId.equals(m.userId)) {
+            else if(!m.isGroupable() || !nextM.isGroupable() || !nextM.userId.equals(m.userId)) {
                 setNewDay(viewHolder, null);
                 setSequential(viewHolder, false);
             }
@@ -652,6 +697,73 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
                 viewHolder.inlineContainer.addView(v);
             }
+        }
+
+        private String absolutize(String url) {
+            if (url.startsWith("/")) {
+                return "https://"+mHost+url;
+            }
+            else return url;
+        }
+
+        private void insertAttachment(MessageViewHolder viewHolder, final JSONObject attachmentObj) throws JSONException {
+            final Context context = viewHolder.itemView.getContext();
+            //see: RocketChat:packages/rocketchat-message-attachments/client/messageAttachment.html
+
+            boolean add = false;
+            View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_attachment,viewHolder.inlineContainer,false);
+
+            TextView titleText = ((TextView) v.findViewById(R.id.inline_attachment_title));
+            if (!attachmentObj.isNull("title")) {
+                String title = attachmentObj.getString("title");
+                titleText.setText(title);
+                titleText.setVisibility(View.VISIBLE);
+
+                if (!attachmentObj.isNull("title_link")) {
+                    final String link = attachmentObj.getString("title_link");
+                    TypedValue outValue = new TypedValue();
+                    context.getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
+                    v.setBackgroundResource(outValue.resourceId);
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(absolutize(link)));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        }
+                    });
+                }
+            }
+            else titleText.setVisibility(View.GONE);
+
+            ImageView img = (ImageView) v.findViewById(R.id.inline_attachment_image);
+            if (!attachmentObj.isNull("image_url")) {
+                String imageURL = attachmentObj.getString("image_url");
+                String imageType = attachmentObj.getString("image_type");
+
+                if (imageType.startsWith("image/") && sInlineViewSupportedMime.contains(imageType)) {
+
+                    if (TextUtils.isEmpty(imageURL)) img.setVisibility(View.GONE);
+                    else {
+                        OkHttpClient client = OkHttpHelper.getClient();
+                        if(!client.interceptors().contains(getInterceptor())) {
+                            client.interceptors().add(getInterceptor());
+                        }
+                        new Picasso.Builder(context)
+                                .downloader(new OkHttpDownloader(client))
+                                .build()
+                                .load(absolutize(imageURL))
+                                .placeholder(R.drawable.image_dummy)
+                                .error(R.drawable.image_error)
+                                .into(img);
+                        img.setVisibility(View.VISIBLE);
+                        add = true;
+                    }
+                }
+            }
+            else img.setVisibility(View.GONE);
+
+            if (add) viewHolder.inlineContainer.addView(v);
         }
 
         public void setHeaderHeight(int height){
