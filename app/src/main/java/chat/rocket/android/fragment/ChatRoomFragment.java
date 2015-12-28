@@ -100,7 +100,8 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             mInterceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
-
+                    // uid/token is required to download attachment files.
+                    // see: RocketChat:lib/fileUpload.coffee
                     Request newRequest = chain.request().newBuilder()
                             .header("Cookie", "rc_uid="+mUserId+";rc_token="+mToken)
                             .build();
@@ -958,12 +959,21 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                                 JSONObject ret = new JSONObject(m.returns);
                                 dialog.setProgress(100);
 
+                                JSONObject attachment = new JSONObject()
+                                        .put("title","File Uploaded: "+ret.getString("name"))
+                                        .put("title_url",ret.getString("url"))
+                                        .put("image_url",ret.getString("url"))
+                                        .put("image_type",ret.getString("type"))
+                                        .put("image_size",ret.getLong("size"));
+
                                 Message msg = new Message();
                                 msg.syncstate = SyncState.NOT_SYNCED;
-                                msg.content = "File Uploaded: *"+ret.getString("name")+"*\n"+ret.getString("url");
+                                msg.content = "";
                                 msg.roomId = ret.getString("rid");
                                 msg.userId = ret.getString("userID");
                                 msg.extras = new JSONObject().put("file",new JSONObject().put("_id",ret.getString("_id"))).toString();
+                                msg.flags &= ~Message.FLAG_GROUPABLE;
+                                msg.attachments = new JSONArray().put(attachment).toString();
                                 msg.putByContentProvider(getContext());
 
                             }
