@@ -87,7 +87,31 @@ public class Message extends AbstractModel{
      *
      */
     public String urls;
+
+    /**
+     *  "attachments": [{
+     *      "title": "File Uploaded: twitterYI01.jpg",
+     *      "title_link": "/ufs/rocketchat_uploads/pi6pnxHqPQNG6kyPz/twitterYI01.jpg",
+     *      "image_url": "/ufs/rocketchat_uploads/pi6pnxHqPQNG6kyPz/twitterYI01.jpg",
+     *      "image_type": "image/jpeg",
+     *      "image_size": 6105
+     *  }]
+     */
+    public String attachments;
+
+    /**
+     * for storeing
+     *
+     * * fileID for uploading file.
+     */
     public String extras;
+
+    public int flags;
+    public static final int FLAG_GROUPABLE = 0x00000001;
+
+    public boolean isGroupable() {
+        return (flags & FLAG_GROUPABLE) == FLAG_GROUPABLE;
+    }
 
     @Override
     public String getTableName() {
@@ -109,7 +133,7 @@ public class Message extends AbstractModel{
         protected void updateTable(int oldVersion, int newVersion) {
             int updateVersion = oldVersion;
 
-            if (updateVersion < 2) {
+            if (updateVersion < 4) {
                 mDb.beginTransaction();
                 try {
                     dropTable();
@@ -123,7 +147,9 @@ public class Message extends AbstractModel{
                             " content TEXT," +
                             " timestamp INTEGER," +
                             " urls TEXT," +
-                            " extras TEXT);");
+                            " attachments TEXT," +
+                            " extras TEXT," +
+                            " flags INTEGER);");
 
                     mDb.setTransactionSuccessful();
                 }
@@ -131,7 +157,7 @@ public class Message extends AbstractModel{
                     mDb.endTransaction();
                 }
 
-                updateVersion = 2;
+                updateVersion = 4;
             }
         }
     }
@@ -145,7 +171,9 @@ public class Message extends AbstractModel{
         m.content = c.getString(c.getColumnIndex("content"));
         m.timestamp = c.getLong(c.getColumnIndex("timestamp"));
         m.urls = c.getString(c.getColumnIndex("urls"));
+        m.attachments = c.getString(c.getColumnIndex("attachments"));
         m.extras = c.getString(c.getColumnIndex("extras"));
+        m.flags = c.getInt(c.getColumnIndex("flags"));
         return m;
     }
 
@@ -158,7 +186,9 @@ public class Message extends AbstractModel{
         values.put("content", content);
         values.put("timestamp", timestamp);
         values.put("urls", urls);
+        values.put("attachments", attachments);
         values.put("extras", extras);
+        values.put("flags", flags);
         return values;
     }
 

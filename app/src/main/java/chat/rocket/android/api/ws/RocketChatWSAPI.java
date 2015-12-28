@@ -79,12 +79,16 @@ public class RocketChatWSAPI {
         return mDDPClient.rpc("logout",null,generateId("logout"));
     }
 
-    public Task<DDPClientCallback.RPC> sendMessage(final String roomId, String msg, @Nullable  JSONObject fileDoc) throws JSONException {
+    public Task<DDPClientCallback.RPC> sendMessage(final String roomId, String msg, @Nullable  JSONObject extraParams) throws JSONException {
         JSONObject param = new JSONObject()
                 .put("_id", generateId("message-doc"))
                 .put("rid", roomId)
                 .put("msg", msg);
-        if(fileDoc!=null) param.put("file", fileDoc);
+        if(extraParams!=null) {
+            if(!extraParams.isNull("file")) param.put("file", extraParams.getJSONObject("file"));
+            if(!extraParams.isNull("groupable")) param.put("groupable", extraParams.getBoolean("groupable"));
+            if(!extraParams.isNull("attachments")) param.put("attachments", extraParams.getJSONArray("attachments"));
+        }
 
         return mDDPClient.rpc("sendMessage", new JSONArray().put(param) ,generateId("message"));
     }

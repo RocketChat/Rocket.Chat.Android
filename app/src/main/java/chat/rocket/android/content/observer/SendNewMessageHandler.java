@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,10 +50,14 @@ public class SendNewMessageHandler extends AbstractObserver {
         m.putByContentProvider(mContext);
 
         try {
-            JSONObject fileDoc = null;
+            JSONObject params = new JSONObject();
             JSONObject extras = TextUtils.isEmpty(m.extras)? new JSONObject() : new JSONObject(m.extras);
-            if(!extras.isNull("file")) fileDoc = extras.getJSONObject("file");
-            mAPI.sendMessage(m.roomId, m.content, fileDoc).continueWith(new Continuation<DDPClientCallback.RPC, Object>() {
+
+            if(!extras.isNull("file")) params.put("file", extras.getJSONObject("file"));
+            if(!m.isGroupable()) params.put("groupable", false);
+            if(!TextUtils.isEmpty(m.attachments)) params.put("attachments", new JSONArray(m.attachments));
+
+            mAPI.sendMessage(m.roomId, m.content, params).continueWith(new Continuation<DDPClientCallback.RPC, Object>() {
                 @Override
                 public Object then(Task<DDPClientCallback.RPC> task) throws Exception {
                     JSONObject result = task.getResult().result;

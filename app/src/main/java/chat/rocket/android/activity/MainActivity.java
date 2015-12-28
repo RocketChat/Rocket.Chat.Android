@@ -485,7 +485,7 @@ public class MainActivity extends AbstractActivity {
             }
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(getContainerId(), ChatRoomFragment.create(s.hostname, r))
+                    .replace(getContainerId(), ChatRoomFragment.create(s.hostname, s.authToken, r))
                     .commit();
         }
     }
