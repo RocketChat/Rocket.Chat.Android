@@ -46,7 +46,8 @@ public class RocketChatRoom extends AbstractObserver {
     @Override
     protected void onChange(Uri uri) {
         Cursor c = mContext.getContentResolver().query(uri, null, "id!='DUMMY' AND syncstate=2", null, null);
-        if(c==null || c.getCount()==0) {
+        if(c==null) return;
+        if(c.getCount()==0) {
             //removed
         }
         else if(c.moveToFirst()){
@@ -64,6 +65,7 @@ public class RocketChatRoom extends AbstractObserver {
                 }
             });
         }
+        c.close();
     }
 
     private void registerSubscriptionCallback(){

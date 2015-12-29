@@ -40,13 +40,17 @@ public class MethodCallObserver extends AbstractObserver {
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2",null,null);
-        while(c!=null && c.moveToNext()) handleMethod(c);
+        if (c==null) return;
+        while(c.moveToNext()) handleMethod(c);
+        c.close();
     }
 
     @Override
     protected void onChange(Uri uri) {
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) handleMethod(c);
+        if (c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) handleMethod(c);
+        c.close();
     }
 
     private void handleMethod(Cursor c) {

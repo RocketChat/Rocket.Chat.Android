@@ -34,13 +34,17 @@ public class SendNewMessageHandler extends AbstractObserver {
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2 AND id IS NULL",null,null);
-        while(c!=null && c.moveToNext()) handleNewMessage(c);
+        if(c==null) return;
+        while(c.moveToNext()) handleNewMessage(c);
+        c.close();
     }
 
     @Override
     protected void onChange(Uri uri) {
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0 AND id IS NULL",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) handleNewMessage(c);
+        if(c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) handleNewMessage(c);
+        c.close();
     }
 
     private void handleNewMessage(Cursor c) {

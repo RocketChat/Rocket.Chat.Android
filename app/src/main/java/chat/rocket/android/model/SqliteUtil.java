@@ -9,9 +9,11 @@ public class SqliteUtil {
         long id = -1;
         if (rowId >= 0) {
             Cursor c = db.query(table, new String[]{BaseColumns._ID}, "ROWID=?", new String[]{Long.toString(rowId)}, null, null, null);
-            if (c != null && c.moveToNext()) {
+            if(c==null) return id;
+            if (c.moveToNext()) {
                 id = c.getLong(0);
             }
+            c.close();
         }
         return id;
     }

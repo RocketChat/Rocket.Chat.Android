@@ -34,19 +34,17 @@ public class LoginHandler extends AbstractObserver {
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
         Cursor c = mContext.getContentResolver().query(uri,null,"is_primary = 1 AND syncstate!=2 AND (auth_type IS NOT NULL)",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) {
-            handleLogin(c);
-            c.close();
-        }
+        if (c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) handleLogin(c);
+        c.close();
     }
 
     @Override
     public void onChange(Uri uri) {
         Cursor c = mContext.getContentResolver().query(uri,null,"is_primary = 1 AND syncstate=0 AND (auth_type IS NOT NULL)",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) {
-            handleLogin(c);
-            c.close();
-        }
+        if (c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) handleLogin(c);
+        c.close();
     }
 
     @DebugLog

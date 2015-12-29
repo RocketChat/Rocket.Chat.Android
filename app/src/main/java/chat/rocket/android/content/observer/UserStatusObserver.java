@@ -28,19 +28,17 @@ public class UserStatusObserver extends AbstractObserver {
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2 AND id IS NOT NULL",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) {
-            handleUserStatusChanged(c);
-            c.close();
-        }
+        if(c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) handleUserStatusChanged(c);
+        c.close();
     }
 
     @Override
     public void onChange(Uri uri) {
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0 AND id IS NOT NULL",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) {
-            handleUserStatusChanged(c);
-            c.close();
-        }
+        if(c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) handleUserStatusChanged(c);
+        c.close();
     }
 
     private void handleUserStatusChanged(Cursor c) {
