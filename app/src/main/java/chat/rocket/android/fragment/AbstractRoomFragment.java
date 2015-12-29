@@ -59,7 +59,8 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
             public void onChange(boolean selfChange) {
                 if(getContext()==null) return;
                 Cursor c = getContext().getContentResolver().query(uri, null,null,null,null);
-                if(c!=null && c.moveToFirst()) {
+                if(c==null) return;
+                if(c.moveToFirst()) {
                     final Room r = Room.createFromCursor(c);
                     if(r!=null){
                         if(mRootView!=null) {
@@ -78,8 +79,8 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
                             });
                         }
                     }
-                    c.close();
                 }
+                c.close();
             }
         });
     }

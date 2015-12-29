@@ -34,19 +34,17 @@ public class AddRoomHandler extends AbstractObserver {
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2 AND id='DUMMY' AND (name IS NOT NULL) AND (type IS NOT NULL)",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) {
-            handleAddRoom(c);
-            c.close();
-        }
+        if (c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) handleAddRoom(c);
+        c.close();
     }
 
     @Override
     public void onChange(Uri uri) {
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0 AND id='DUMMY' AND (name IS NOT NULL) AND (type IS NOT NULL)",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) {
-            handleAddRoom(c);
-            c.close();
-        }
+        if (c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) handleAddRoom(c);
+        c.close();
     }
 
     @DebugLog

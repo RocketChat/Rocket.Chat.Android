@@ -188,7 +188,8 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
             public void onChange(boolean selfChange) {
                 if(getContext()==null) return;
                 Cursor c = getContext().getContentResolver().query(uri, null,null,null,null);
-                if(c!=null && c.moveToFirst()) {
+                if(c==null) return;
+                if(c.moveToFirst()) {
                     final Room r = Room.createFromCursor(c);
                     if(r!=null){
                         if(r.alert) {
@@ -216,8 +217,8 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                             });
                         }
                     }
-                    c.close();
                 }
+                c.close();
             }
         });
     }
@@ -325,9 +326,12 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                     if(c==null){
                         getContext().getContentResolver().unregisterContentObserver(this);
                     }
-                    if(c!=null && c.moveToFirst()){
-                        MethodCall m = MethodCall.createFromCursor(c);
-                        getContext().getContentResolver().unregisterContentObserver(this);
+                    else{
+                        if(c.moveToFirst()) {
+                            //MethodCall m = MethodCall.createFromCursor(c);
+                            getContext().getContentResolver().unregisterContentObserver(this);
+                        }
+                        c.close();
                     }
                     if(mLoadMoreListener!=null) mLoadMoreListener.setLoadingDone();
                 }
@@ -909,7 +913,6 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                         .put("filename", filename)
                         .put("mime_type", getContext().getContentResolver().getType(uri));
                 uriToObserve = MethodCall.create("uploadFile", params).putByContentProvider(getContext());
-                c.close();
             }
             else if(ContentResolver.SCHEME_FILE.equals(uri.getScheme())){
                 JSONObject params = new JSONObject()
@@ -922,6 +925,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
                 uriToObserve = MethodCall.create("uploadFile", params).putByContentProvider(getContext());
             }
+            if (c!=null && !c.isClosed()) c.close();
         }
         catch(JSONException e){
             Log.e(Constants.LOG_TAG,"error",e);
@@ -942,7 +946,8 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                     if(getContext()==null) return;
 
                     Cursor c = getContext().getContentResolver().query(uri,null,null,null,null);
-                    if(c!=null && c.moveToFirst()) {
+                    if(c==null) return;
+                    if(c.moveToFirst()) {
                         MethodCall m = MethodCall.createFromCursor(c);
 
                         if(m.syncstate==SyncState.SYNCING){
@@ -988,6 +993,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                             getContext().getContentResolver().unregisterContentObserver(this);
                         }
                     }
+                    c.close();
                 }
             });
         }

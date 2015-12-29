@@ -33,13 +33,17 @@ public class MarkRoomAsReadHandler extends AbstractObserver {
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2 AND id!='DUMMY' AND alert=0",null,null);
-        while(c!=null && c.moveToNext()) markRoomAsRead(c);
+        if (c==null) return;
+        while(c.moveToNext()) markRoomAsRead(c);
+        c.close();
     }
 
     @Override
     protected void onChange(Uri uri) {
         Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0 AND id!='DUMMY' AND alert=0",null,null);
-        if (c!=null && c.getCount()>0 && c.moveToFirst()) markRoomAsRead(c);
+        if (c==null) return;
+        if (c.getCount()>0 && c.moveToFirst()) markRoomAsRead(c);
+        c.close();
     }
 
     @DebugLog
