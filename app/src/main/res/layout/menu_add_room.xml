@@ -6,13 +6,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_normal"
-        android:layout_gravity="left|bottom"
+        android:layout_gravity="right|bottom"
         fab:menu_icon="@drawable/ic_action_add"
         fab:menu_fab_size="mini"
         fab:menu_colorNormal="@color/colorAccent"
         fab:menu_colorPressed="@color/colorAccentDark"
         fab:menu_colorRipple="@color/colorAccentLight"
-        fab:menu_labels_position="right"
+        fab:menu_labels_position="left"
         fab:menu_openDirection="up">
 
         <com.github.clans.fab.FloatingActionButton
