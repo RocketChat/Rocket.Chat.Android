@@ -9,6 +9,11 @@ def getCurrentCommitMessage() {
     return 'git log -n 1 --decorate'.execute().text
 }
 
+def getKeyStore() {
+    def path = System.getenv("KEYSTORE_PATH")
+    return file((path==null) ? "../Rocket.jks" : path)
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -21,15 +26,24 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.0"
         manifestPlaceholders = [fabric_api_key:properties.getProperty("apiKey", System.getenv("FABRIC_API_KEY"))]
         ext.betaDistributionNotifications=false
         ext.betaDistributionReleaseNotes=getCurrentCommitMessage()
+    }
+    signingConfigs {
+        release {
+            storeFile getKeyStore()
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     packagingOptions {
