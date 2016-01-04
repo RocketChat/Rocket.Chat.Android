@@ -31,7 +31,7 @@ public class Linkify {
 
     public static Task<SpannableString> markupAsync(TextView textview){
         textview.setMovementMethod(LinkMovementMethodCompat.getInstance());
-        final CharSequence text = textview.getText().toString();
+        final CharSequence text = textview.getText();
 
         final TaskCompletionSource<SpannableString> task = new TaskCompletionSource<>();
         (new Thread(){

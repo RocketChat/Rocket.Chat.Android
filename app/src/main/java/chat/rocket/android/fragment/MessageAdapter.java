@@ -40,6 +40,7 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
+import chat.rocket.android.view.InlineHightlighter;
 import chat.rocket.android.view.Linkify;
 
 /*package*/ class MessageAdapter extends CursorRecyclerViewAdapter<MessageViewHolder> {
@@ -202,6 +203,7 @@ import chat.rocket.android.view.Linkify;
                     viewHolder.content.setVisibility(View.VISIBLE);
                     viewHolder.content.setText(Emojione.shortnameToUnicode(m.content, false));
                     Linkify.markupSync(viewHolder.content);
+                    InlineHightlighter.highlight(viewHolder.content);
                 }
                 systemMsg = false;
         }
