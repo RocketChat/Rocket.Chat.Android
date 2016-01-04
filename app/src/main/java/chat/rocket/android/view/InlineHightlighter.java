@@ -17,6 +17,10 @@ import chat.rocket.android.R;
 import hugo.weaving.DebugLog;
 
 public class InlineHightlighter {
+    //TODO: not completely implemented...
+    // original implementation is RocketChat:packages/rocketchat-markdown/markdown.coffee
+    // regex pattern with '/(^|&gt;|[ >_*~])\`([^`\r\n]+)\`([<_*~]|\B|\b|$)/gm'
+    
     public static void highlight(TextView textview) {
         final CharSequence text = textview.getText();
         textview.setText(highlightInner(textview.getContext(), text));
