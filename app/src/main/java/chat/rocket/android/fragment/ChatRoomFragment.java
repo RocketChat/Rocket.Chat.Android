@@ -56,22 +56,16 @@ import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.LoadMoreScrollListener;
 import chat.rocket.android.view.MessageComposer;
 
-public class ChatRoomFragment extends AbstractFragment implements OnBackPressListener, FragmentManager.OnBackStackChangedListener{
+public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPressListener, FragmentManager.OnBackStackChangedListener{
     private static final int LOADER_ID = 0x12346;
     private static final int PICK_IMAGE_ID = 0x11;
 
     public ChatRoomFragment(){}
 
-    private String mHost;
     private String mToken;
-    private long mRoomBaseId;
-    private String mRoomId;
-    private String mRoomName;
-    private Room.Type mRoomType;
     private boolean mRoomHasMore;
     private String mUserId;
     private String mUsername;
-    private View mRootView;
     private MessageAdapter mAdapter;
     private LoadMoreScrollListener mLoadMoreListener;
 
@@ -89,24 +83,17 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         return f;
     }
 
-    private void initFromArgs(Bundle args) {
-        mHost = args.getString("host");
+    @Override
+    protected void initFromArgs(Bundle args) {
+        super.initFromArgs(args);
         mToken = args.getString("token");
-        mRoomBaseId = args.getLong("roomBaseId");
-        mRoomId = args.getString("roomId");
-        mRoomName = args.getString("roomName");
-        mRoomType = Room.Type.getType(args.getString("roomType"));
         mRoomHasMore = args.getBoolean("roomHasMore");
     }
 
-    private boolean hasValidArgs(Bundle args) {
-        if(args == null) return false;
-        return args.containsKey("host")
+    @Override
+    protected boolean hasValidArgs(Bundle args) {
+        return super.hasValidArgs(args)
                 && args.containsKey("token")
-                && args.containsKey("roomBaseId")
-                && args.containsKey("roomId")
-                && args.containsKey("roomName")
-                && args.containsKey("roomType")
                 && args.containsKey("roomHasMore");
     }
 
@@ -114,11 +101,6 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle args = getArguments();
-        if(!hasValidArgs(args)) {
-            throw new IllegalArgumentException("Params 'roomId' and 'roomName' are required for creating ChatRoomFragment");
-        }
-        initFromArgs(args);
         mUserId = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID,"");
         mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_NAME,"");
         if(TextUtils.isEmpty(mUsername)) {
@@ -135,44 +117,17 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
                 }
             });
         }
+    }
 
-        final Uri uri = RocketChatProvider.getUriForQuery(Room.TABLE_NAME, mRoomBaseId);
-        getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+    @Override
+    protected void onRoomLoaded(final Room r) {
+        mRootView.post(new Runnable() {
             @Override
-            public void onChange(boolean selfChange) {
-                if(getContext()==null) return;
-                Cursor c = getContext().getContentResolver().query(uri, null,null,null,null);
-                if(c==null) return;
-                if(c.moveToFirst()) {
-                    final Room r = Room.createFromCursor(c);
-                    if(r!=null){
-                        if(r.alert) {
-                            r.alert = false;
-                            r.syncstate = SyncState.NOT_SYNCED;
-                            r.putByContentProvider(getContext());
-                        }
-                        if(mRootView!=null) {
-                            mRootView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(mRoomName != r.name){
-                                        mRoomName = r.name;
-                                        setupToolbar();
-                                    }
-                                    if(mRoomType != r.type){
-                                        mRoomType = r.type;
-                                        setupToolbar();
-                                    }
-                                    if(mRoomHasMore != r.hasMore){
-                                        mRoomHasMore = r.hasMore;
-                                        setupListViewHasMore();
-                                    }
-                                }
-                            });
-                        }
-                    }
+            public void run() {
+                if(mRoomHasMore != r.hasMore){
+                    mRoomHasMore = r.hasMore;
+                    setupListViewHasMore();
                 }
-                c.close();
             }
         });
     }
@@ -191,7 +146,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         return mRootView;
     }
 
-    private void initializeToolbar() {
+    protected void initializeToolbar() {
         Toolbar bar = (Toolbar) mRootView.findViewById(R.id.toolbar_chatroom);
         setHasOptionsMenu(true);
         getAppCompatActivity().setSupportActionBar(bar);
@@ -207,7 +162,7 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
         setupToolbar();
     }
 
-    private void setupToolbar(){
+    protected void setupToolbar(){
         Toolbar bar = (Toolbar) mRootView.findViewById(R.id.toolbar_chatroom);
         bar.setTitle(mRoomName);
         switch (mRoomType){
@@ -227,9 +182,8 @@ public class ChatRoomFragment extends AbstractFragment implements OnBackPressLis
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.chat_room_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.chat_room_menu, menu);
     }
 
     @Override
