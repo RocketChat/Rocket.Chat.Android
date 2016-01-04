@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="line_half">6sp</dimen>
     <dimen name="margin_half">8dp</dimen>
     <dimen name="margin_normal">16dp</dimen>
 </resources>

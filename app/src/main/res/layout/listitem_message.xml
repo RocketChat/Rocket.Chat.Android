@@ -48,7 +48,8 @@
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginRight="@dimen/margin_half">
             <LinearLayout
                 android:id="@+id/list_item_message_user_time_container"
                 android:layout_width="match_parent"
@@ -71,6 +72,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorLink="@color/textColorLink"/>
+
+            <LinearLayout
+                android:id="@+id/list_item_message_content_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/list_item_inline_container"
