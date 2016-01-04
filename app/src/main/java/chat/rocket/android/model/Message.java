@@ -106,7 +106,7 @@ public class Message extends AbstractModel{
      */
     public String extras;
 
-    public int flags;
+    public int flags = FLAG_GROUPABLE;
     public static final int FLAG_GROUPABLE = 0x00000001;
 
     public boolean isGroupable() {
