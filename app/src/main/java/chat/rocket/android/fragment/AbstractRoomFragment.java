@@ -25,7 +25,7 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
     protected String mRoomName;
     protected Room.Type mRoomType;
 
-    private void initFromArgs(Bundle args) {
+    protected void initFromArgs(Bundle args) {
         mHost = args.getString("host");
         mRoomBaseId = args.getLong("roomBaseId");
         mRoomId = args.getString("roomId");
@@ -33,7 +33,7 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
         mRoomType = Room.Type.getType(args.getString("roomType"));
     }
 
-    private boolean hasValidArgs(Bundle args) {
+    protected boolean hasValidArgs(Bundle args) {
         if(args == null) return false;
         return args.containsKey("host")
                 && args.containsKey("roomBaseId")
@@ -77,6 +77,7 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
                                     }
                                 }
                             });
+                            onRoomLoaded(r);
                         }
                     }
                 }
@@ -84,6 +85,8 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
             }
         });
     }
+
+    protected void onRoomLoaded(final Room r){}
 
     protected void initializeToolbar() {
         Toolbar bar = (Toolbar) mRootView.findViewById(R.id.toolbar_chatroom);
