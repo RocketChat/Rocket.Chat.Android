@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.emojione.Emojione;
@@ -42,6 +43,7 @@ import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.InlineHightlighter;
 import chat.rocket.android.view.Linkify;
+import chat.rocket.android.view.SelectableTextView;
 
 /*package*/ class MessageAdapter extends CursorRecyclerViewAdapter<MessageViewHolder> {
     private static final int DUMMY_HEADER = 100;
@@ -196,24 +198,60 @@ import chat.rocket.android.view.Linkify;
 
             case UNSPECIFIED:
             default:
-                if(TextUtils.isEmpty(m.content)) {
-                    viewHolder.content.setVisibility(View.GONE);
-                }
-                else {
-                    viewHolder.content.setVisibility(View.VISIBLE);
-                    viewHolder.content.setText(Emojione.shortnameToUnicode(m.content, false));
-                    Linkify.markupSync(viewHolder.content);
-                    InlineHightlighter.highlight(viewHolder.content);
-                }
                 systemMsg = false;
         }
         if(systemMsg) {
-            viewHolder.content.setTypeface(null, Typeface.ITALIC);
+            viewHolder.disableContentContainer();
             viewHolder.content.setEnabled(false);
         }
         else {
             viewHolder.content.setTypeface(null, Typeface.NORMAL);
-            viewHolder.content.setEnabled(true);
+            if(TextUtils.isEmpty(m.content)) {
+                viewHolder.disableContentContainer();
+                viewHolder.content.setVisibility(View.GONE);
+            }
+            else if(m.content.contains("```")) {
+                // TODO: not completely implemented.
+                // see: RocketChat:packages/rocketchat-highlight/highlight.coffee
+                
+                viewHolder.enableContentContainer();
+                boolean highlight = false;
+                int pad = context.getResources().getDimensionPixelSize(R.dimen.line_half);
+                for(String token: TextUtils.split(m.content, "```")){
+                    SelectableTextView txt = new SelectableTextView(context);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewHolder.content.getLayoutParams());
+                    if(highlight) {
+                        txt.setText(token.trim());
+                        Linkify.markupSync(txt);
+                        txt.setTextColor(context.getResources().getColor(R.color.highlight_text_color));
+                        txt.setBackgroundResource(R.drawable.highlight_background);
+                        txt.setPadding(pad,pad,pad,pad);
+                        params.setMargins(0,pad/2,pad,pad/2);
+                        txt.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+                    }
+                    else {
+                        if (TextUtils.isEmpty(token.trim())) {
+                            highlight = !highlight;
+                            continue;
+                        }
+                        txt.setText(Emojione.shortnameToUnicode(token.trim(), false));
+                        txt.setTextColor(viewHolder.content.getCurrentTextColor());
+                        Linkify.markupSync(txt);
+                        InlineHightlighter.highlight(txt);
+                    }
+                    txt.setLayoutParams(params);
+                    viewHolder.contentContainer.addView(txt);
+
+                    highlight = !highlight;
+                }
+            }
+            else {
+                viewHolder.disableContentContainer();
+                viewHolder.content.setText(Emojione.shortnameToUnicode(m.content, false));
+                Linkify.markupSync(viewHolder.content);
+                InlineHightlighter.highlight(viewHolder.content);
+                viewHolder.content.setEnabled(true);
+            }
         }
 
         if(u!=null) viewHolder.username.setText(u.getDisplayName());
