@@ -21,6 +21,9 @@ android {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('app/fabric.properties').newDataInputStream())
 
+    Properties localprop = new Properties()
+    localprop.load(project.rootProject.file('local.properties').newDataInputStream())
+
     defaultConfig {
         applicationId "chat.rocket.android"
         minSdkVersion 16
@@ -30,6 +33,8 @@ android {
         manifestPlaceholders = [fabric_api_key:properties.getProperty("apiKey", System.getenv("FABRIC_API_KEY"))]
         ext.betaDistributionNotifications=false
         ext.betaDistributionReleaseNotes=getCurrentCommitMessage()
+
+        buildConfigField "String", "REPRO_APP_TOKEN", localprop.getProperty("REPRO_APP_TOKEN", System.getenv("REPRO_APP_TOKEN"))
     }
     signingConfigs {
         release {
@@ -73,4 +78,6 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true
     }
+
+    compile 'io.repro:repro-android-sdk:0.12.0'
 }
