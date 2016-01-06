@@ -23,6 +23,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'http://cdn.repro.io/android' }
     }
 }
 

@@ -36,6 +36,11 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="${fabric_api_key}" />
+
+        <service android:name="io.repro.android.ReproService" />
+        <activity
+            android:name="io.repro.android.surveys.SurveyActivity"
+            android:theme="@style/io_repro_android_SurveyActivityTheme"/>
     </application>
 
 </manifest>
