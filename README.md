@@ -10,6 +10,7 @@ Another implementation of Rocket.Chat Native Android Application.
 
 ## How to build
 
+Retrolambda needs java8 to be installed on your system
 ```
 export ANDROID_HOME=/path/to/android/sdk
 
