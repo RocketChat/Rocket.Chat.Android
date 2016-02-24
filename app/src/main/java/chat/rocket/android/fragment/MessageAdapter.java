@@ -43,7 +43,6 @@ import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.InlineHightlighter;
 import chat.rocket.android.view.Linkify;
-import chat.rocket.android.view.SelectableTextView;
 
 /*package*/ class MessageAdapter extends CursorRecyclerViewAdapter<MessageViewHolder> {
     private static final int DUMMY_HEADER = 100;
@@ -218,7 +217,8 @@ import chat.rocket.android.view.SelectableTextView;
                 boolean highlight = false;
                 int pad = context.getResources().getDimensionPixelSize(R.dimen.line_half);
                 for(String token: TextUtils.split(m.content, "```")){
-                    SelectableTextView txt = new SelectableTextView(context);
+                    TextView txt = new TextView(context);
+                    txt.setTextIsSelectable(true);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewHolder.content.getLayoutParams());
                     if(highlight) {
                         txt.setText(token.trim());
