@@ -42,3 +42,5 @@ index d545c49..7687610 100644
      }
  }
  ```
+
+If problem occurs even after patching, please remove (or comment out) [this line](https://github.com/RocketChat/Rocket.Chat.Android.Lily/blob/f18e20b7bff71e6143838c8258a07e91b0a9f9a0/app/build.gradle#L37).
