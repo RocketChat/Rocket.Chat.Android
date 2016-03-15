@@ -16,9 +16,9 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.OkHttpHelper;
 import chat.rocket.android.model.User;
-import jp.co.crowdworks.android_ddp.ddp.DDPClient;
-import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
-import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import chat.rocket.android_ddp.DDPClient;
+import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.android_ddp.DDPSubscription;
 import rx.Observable;
 
 public class RocketChatWSAPI {

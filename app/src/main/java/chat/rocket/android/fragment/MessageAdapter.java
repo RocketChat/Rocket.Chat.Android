@@ -19,11 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.emojione.Emojione;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.picasso.OkHttpDownloader;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -43,6 +39,10 @@ import chat.rocket.android.model.User;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
 import chat.rocket.android.view.InlineHightlighter;
 import chat.rocket.android.view.Linkify;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /*package*/ class MessageAdapter extends CursorRecyclerViewAdapter<MessageViewHolder> {
     private static final int DUMMY_HEADER = 100;
@@ -449,7 +449,7 @@ import chat.rocket.android.view.Linkify;
                         client.interceptors().add(getInterceptor());
                     }
                     new Picasso.Builder(context)
-                            .downloader(new OkHttpDownloader(client))
+                            .downloader(new OkHttp3Downloader(client))
                             .build()
                             .load(absolutize(imageURL))
                             .placeholder(R.drawable.image_dummy)

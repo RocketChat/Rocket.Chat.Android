@@ -11,7 +11,7 @@ import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
-import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
+import chat.rocket.android_ddp.DDPClientCallback;
 
 public class UserStatusObserver extends AbstractObserver {
     public UserStatusObserver(Context context, Looper looper, RocketChatWSAPI api) {

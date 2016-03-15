@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.Message;
-import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import chat.rocket.android_ddp.DDPSubscription;
 
 public class StreamNotifyRoom extends AbstractRocketChatSubscription {
 

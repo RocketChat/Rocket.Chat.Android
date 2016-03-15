@@ -11,7 +11,7 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.User;
 import chat.rocket.android.preference.Cache;
-import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import chat.rocket.android_ddp.DDPSubscription;
 
 public class UserData extends AbstractRocketChatSubscription {
     public UserData(Context context, Looper looper, RocketChatWSAPI api) {

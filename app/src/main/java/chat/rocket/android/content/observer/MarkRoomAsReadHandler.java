@@ -15,8 +15,8 @@ import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.SyncState;
+import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
-import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
 
 public class MarkRoomAsReadHandler extends AbstractObserver {
 

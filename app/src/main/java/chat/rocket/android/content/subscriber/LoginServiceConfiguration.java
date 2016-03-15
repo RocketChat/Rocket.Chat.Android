@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.ServerConfig;
-import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import chat.rocket.android_ddp.DDPSubscription;
 
 public class LoginServiceConfiguration extends AbstractRocketChatSubscription {
     public LoginServiceConfiguration(Context context, Looper looper, RocketChatWSAPI api) {

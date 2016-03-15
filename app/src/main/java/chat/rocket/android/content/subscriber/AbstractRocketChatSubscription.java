@@ -10,7 +10,7 @@ import org.json.JSONException;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
-import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import chat.rocket.android_ddp.DDPSubscription;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;

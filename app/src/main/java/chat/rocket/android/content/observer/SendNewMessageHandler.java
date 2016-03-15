@@ -17,7 +17,7 @@ import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
 import chat.rocket.android.model.SyncState;
-import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
+import chat.rocket.android_ddp.DDPClientCallback;
 
 public class SendNewMessageHandler extends AbstractObserver {
 

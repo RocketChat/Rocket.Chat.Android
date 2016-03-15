@@ -24,6 +24,7 @@ allprojects {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'http://cdn.repro.io/android' }
+        maven { url 'http://rocketchat.github.io/Android-DDP/repository' } // for Android-DDP
     }
 }
 

@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import chat.rocket.android.api.JSONParseEngine;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
-import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import chat.rocket.android_ddp.DDPSubscription;
 
 public class StreamMessage extends AbstractRocketChatSubscription {
 

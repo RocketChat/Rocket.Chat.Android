@@ -17,7 +17,7 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.UserRoom;
-import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
+import chat.rocket.android_ddp.DDPSubscription;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;

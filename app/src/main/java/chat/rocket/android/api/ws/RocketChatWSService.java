@@ -34,9 +34,9 @@ import chat.rocket.android.content.subscriber.StreamNotifyRoom;
 import chat.rocket.android.content.subscriber.UserData;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
+import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.android_ddp.DDPSubscription;
 import hugo.weaving.DebugLog;
-import jp.co.crowdworks.android_ddp.ddp.DDPClientCallback;
-import jp.co.crowdworks.android_ddp.ddp.DDPSubscription;
 import rx.functions.Action1;
 
 public class RocketChatWSService extends Service {

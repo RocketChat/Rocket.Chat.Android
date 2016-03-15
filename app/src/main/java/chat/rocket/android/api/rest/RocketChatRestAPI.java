@@ -1,12 +1,5 @@
 package chat.rocket.android.api.rest;
 
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +10,14 @@ import java.io.IOException;
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.api.OkHttpHelper;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class RocketChatRestAPI {
     public static class AuthorizationRequired extends Exception {
@@ -59,12 +60,12 @@ public class RocketChatRestAPI {
 
         OkHttpHelper.getClient().newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 task.setError(e);
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 try{
                     JSONObject json = new JSONObject(response.body().string());
                     if("success".equals(json.getString("status"))) {
@@ -82,7 +83,7 @@ public class RocketChatRestAPI {
     }
 
         public Task<Auth> login(String username, String password){
-        RequestBody formBody = new FormEncodingBuilder()
+        RequestBody formBody = new FormBody.Builder()
                 .add("user", username)
                 .add("password", password)
                 .build();

@@ -5,8 +5,7 @@ import android.app.Application;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.stetho.Stetho;
-import com.facebook.stetho.okhttp.StethoInterceptor;
-import com.squareup.picasso.OkHttpDownloader;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import chat.rocket.android.api.OkHttpHelper;
@@ -24,10 +23,7 @@ public class RocketChatApplication extends Application {
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
-        OkHttpHelper.getClient()
-                .networkInterceptors().add(new StethoInterceptor());
-
-        Picasso picasso = new Picasso.Builder(this).downloader(new OkHttpDownloader(OkHttpHelper.getClient())).build();
+        Picasso picasso = new Picasso.Builder(this).downloader(new OkHttp3Downloader(OkHttpHelper.getClient())).build();
         Picasso.setSingletonInstance(picasso);
 
         CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();

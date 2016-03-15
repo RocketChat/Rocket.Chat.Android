@@ -10,8 +10,6 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
-import com.squareup.okhttp.HttpUrl;
-
 import org.json.JSONObject;
 
 import chat.rocket.android.Constants;
@@ -19,6 +17,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
+import okhttp3.HttpUrl;
 
 public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
 

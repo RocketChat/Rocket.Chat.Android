@@ -65,14 +65,15 @@ dependencies {
 
     compile 'com.github.clans:fab:1.6.2'
 
-    compile 'com.squareup.okhttp:okhttp:2.6.0'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.parse.bolts:bolts-tasks:1.3.0'
+    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
+    compile 'com.parse.bolts:bolts-tasks:1.4.0'
 
-    compile project(':android-ddp')
+    compile 'chat.rocket:android-ddp:0.0.1'
 
-    compile 'com.facebook.stetho:stetho:1.2.0'
-    compile 'com.facebook.stetho:stetho-okhttp:1.2.0'
+    compile 'com.facebook.stetho:stetho:1.3.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
 
     // Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
