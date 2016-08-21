@@ -31,6 +31,9 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionMenu;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import chat.rocket.android.Constants;
 import chat.rocket.android.R;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
@@ -40,7 +43,7 @@ import chat.rocket.android.fragment.AddRoomDialogFragment;
 import chat.rocket.android.fragment.ChatRoomFragment;
 import chat.rocket.android.fragment.HomeRoomFragment;
 import chat.rocket.android.model.Message;
-import chat.rocket.android.model.MethodCall;
+import chat.rocket.android.model2.MethodCall;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
@@ -48,6 +51,8 @@ import chat.rocket.android.model.User;
 import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.Avatar;
 import chat.rocket.android.view.CursorRecyclerViewAdapter;
+import io.realm.Realm;
+import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 
 public class MainActivity extends AbstractActivity {
     private static final String TAG = Constants.LOG_TAG;
@@ -65,6 +70,7 @@ public class MainActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen);
+        requestGetRooms();
         showHomeRoomFragment();
 
         setupUserInfo();
@@ -88,6 +94,13 @@ public class MainActivity extends AbstractActivity {
                 return ServerConfig.getPrimaryConfig(db);
             }
         });
+    }
+
+    private void requestGetRooms() {
+        try {
+            MethodCall.create("rooms/get", new JSONObject().put("timestamp", 0));
+        } catch (JSONException e) {
+        }
     }
 
     private BroadcastReceiver mToggleNavReveiver = new BroadcastReceiver() {
@@ -221,7 +234,7 @@ public class MainActivity extends AbstractActivity {
             Context context = parent.getContext();
             final ServerConfig s = getPrimaryServerConfig();
             if(s!=null) {
-                MethodCall.create("logout",null).putByContentProvider(context);
+                MethodCall.create("logout",null);
                 RocketChatDatabaseHelper.writeWithTransaction(context, new RocketChatDatabaseHelper.DBCallbackEx<Object>() {
                     @Override
                     public Object process(SQLiteDatabase db) throws Exception {
@@ -242,6 +255,13 @@ public class MainActivity extends AbstractActivity {
                         .remove(Cache.KEY_MY_USER_ID)
                         .remove(Cache.KEY_MY_USER_NAME)
                         .commit();
+                RealmHelperBolts.executeTransactionAsync(new RealmHelperBolts.Transaction() {
+                    @Override
+                    public Object execute(Realm realm) throws Exception {
+                        realm.deleteAll();
+                        return null;
+                    }
+                });
                 showEntryActivity();
             }
         }

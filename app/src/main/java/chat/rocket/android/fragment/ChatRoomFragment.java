@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -45,16 +44,20 @@ import chat.rocket.android.Constants;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.activity.OnBackPressListener;
+import chat.rocket.android.api.ws.RocketChatWSService;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
 import chat.rocket.android.model.Message;
-import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
-import chat.rocket.android.model.SyncState;
+import chat.rocket.android.model2.MethodCall;
+import chat.rocket.android.model2.SyncState;
 import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.LoadMoreScrollListener;
 import chat.rocket.android.view.MessageComposer;
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
 
 public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPressListener, FragmentManager.OnBackStackChangedListener{
     private static final int LOADER_ID = 0x12346;
@@ -137,6 +140,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.chat_room_screen, container, false);
 
+        RocketChatWSService.keepalive(getContext());
         initializeToolbar();
         setupListView();
         loadMessages();
@@ -204,9 +208,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         if (s == null) return;
 
         try {
-            MethodCall
-                    .create("loadMessages", new JSONObject().put("room_id",mRoomId).put("clean",true))
-                    .putByContentProvider(getContext());
+            MethodCall.create("loadMessages", new JSONObject().put("room_id",mRoomId).put("clean",true));
         } catch (JSONException e) {
             Log.e(Constants.LOG_TAG, "error", e);
         }
@@ -224,26 +226,20 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         }
 
         try {
-            final Uri uri = MethodCall
-                    .create("loadMessages", new JSONObject().put("room_id",mRoomId).put("end_ts",m.timestamp))
-                    .putByContentProvider(getContext());
-            getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+            final String id = MethodCall.create("loadMessages", new JSONObject().put("room_id",mRoomId).put("end_ts",m.timestamp));
+
+            new RealmObjectObserver<MethodCall>() {
                 @Override
-                public void onChange(boolean selfChange) {
-                    Cursor c = getContext().getContentResolver().query(uri,null,null,null,null);
-                    if(c==null){
-                        getContext().getContentResolver().unregisterContentObserver(this);
-                    }
-                    else{
-                        if(c.moveToFirst()) {
-                            //MethodCall m = MethodCall.createFromCursor(c);
-                            getContext().getContentResolver().unregisterContentObserver(this);
-                        }
-                        c.close();
-                    }
-                    if(mLoadMoreListener!=null) mLoadMoreListener.setLoadingDone();
+                protected RealmQuery<MethodCall> query(Realm realm) {
+                    return realm.where(MethodCall.class).equalTo("id", id);
                 }
-            });
+
+                @Override
+                protected void onChange(MethodCall methodCall) {
+                    if(mLoadMoreListener!=null) mLoadMoreListener.setLoadingDone();
+                    unsub();
+                }
+            }.sub();
         } catch (JSONException e) {
             Log.e(Constants.LOG_TAG, "error", e);
         }
@@ -358,7 +354,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         composer.setEnabled(false);
 
         Message m = new Message();
-        m.syncstate = SyncState.NOT_SYNCED;
+        m.syncstate = chat.rocket.android.model.SyncState.NOT_SYNCED;
         m.content = message;
         m.roomId = mRoomId;
         m.userId = mUserId;
@@ -422,7 +418,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         if(requestCode!=PICK_IMAGE_ID) return;
         if(resultCode != Activity.RESULT_OK || data==null) return;
 
-        Uri uriToObserve = null;
+        String id = null;
         try {
             Uri uri = data.getData();
             Cursor c = getContext().getContentResolver().query(uri, null, null, null, null);
@@ -437,7 +433,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
                         .put("file_size", filesize)
                         .put("filename", filename)
                         .put("mime_type", getContext().getContentResolver().getType(uri));
-                uriToObserve = MethodCall.create("uploadFile", params).putByContentProvider(getContext());
+                id = MethodCall.create("uploadFile", params);
             }
             else if(ContentResolver.SCHEME_FILE.equals(uri.getScheme())){
                 JSONObject params = new JSONObject()
@@ -448,7 +444,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
                         .put("filename", uri.getLastPathSegment())
                         .put("mime_type", MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(uri.toString())));
 
-                uriToObserve = MethodCall.create("uploadFile", params).putByContentProvider(getContext());
+                id = MethodCall.create("uploadFile", params);
             }
             if (c!=null && !c.isClosed()) c.close();
         }
@@ -456,71 +452,70 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
             Log.e(Constants.LOG_TAG,"error",e);
         }
 
-        if(uriToObserve!=null) {
-            final Uri uri = uriToObserve;
-
+        if(id!=null) {
             final ProgressDialog dialog = new ProgressDialog(getContext(), R.style.AppDialog);
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             dialog.setTitle("Uploading file...");
             dialog.setMax(100);
             dialog.show();
 
-            getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+            final String _id = id;
+
+            new RealmObjectObserver<MethodCall>() {
                 @Override
-                public void onChange(boolean selfChange) {
-                    if(getContext()==null) return;
+                protected RealmQuery<MethodCall> query(Realm realm) {
+                    return realm.where(MethodCall.class).equalTo("id", _id);
+                }
 
-                    Cursor c = getContext().getContentResolver().query(uri,null,null,null,null);
-                    if(c==null) return;
-                    if(c.moveToFirst()) {
-                        MethodCall m = MethodCall.createFromCursor(c);
+                @Override
+                protected void onChange(MethodCall methodCall) {
+                    int syncstate = methodCall.getSyncstate();
 
-                        if(m.syncstate==SyncState.SYNCING){
-                            try {
-                                JSONObject ret = new JSONObject(m.returns);
-                                dialog.setProgress((int) (100.0 * ret.getLong("sent") / ret.getLong("total")));
-                            }
-                            catch (JSONException e){
-                                Log.e(Constants.LOG_TAG,"error",e);
-                            }
+                    if(syncstate==SyncState.SYNCING){
+                        try {
+                            JSONObject ret = new JSONObject(methodCall.getReturns());
+                            dialog.setProgress((int) (100.0 * ret.getLong("sent") / ret.getLong("total")));
                         }
-                        else if (m.syncstate==SyncState.SYNCED){
-                            try {
-                                JSONObject ret = new JSONObject(m.returns);
-                                dialog.setProgress(100);
-
-                                JSONObject attachment = new JSONObject()
-                                        .put("title","File Uploaded: "+ret.getString("name"))
-                                        .put("title_url",ret.getString("url"))
-                                        .put("image_url",ret.getString("url"))
-                                        .put("image_type",ret.getString("type"))
-                                        .put("image_size",ret.getLong("size"));
-
-                                Message msg = new Message();
-                                msg.syncstate = SyncState.NOT_SYNCED;
-                                msg.content = "";
-                                msg.roomId = ret.getString("rid");
-                                msg.userId = ret.getString("userID");
-                                msg.extras = new JSONObject().put("file",new JSONObject().put("_id",ret.getString("_id"))).toString();
-                                msg.flags &= ~Message.FLAG_GROUPABLE;
-                                msg.attachments = new JSONArray().put(attachment).toString();
-                                msg.putByContentProvider(getContext());
-
-                            }
-                            catch (JSONException e){
-                                Log.e(Constants.LOG_TAG,"error",e);
-                            }
-                        }
-
-                        if(m.syncstate==SyncState.SYNCED || m.syncstate==SyncState.FAILED) {
-                            dialog.dismiss();
-                            m.deleteByContentProvider(getContext());
-                            getContext().getContentResolver().unregisterContentObserver(this);
+                        catch (JSONException e){
+                            Log.e(Constants.LOG_TAG,"error",e);
                         }
                     }
-                    c.close();
+                    else if (syncstate==SyncState.SYNCED){
+                        try {
+                            JSONObject ret = new JSONObject(methodCall.getReturns());
+                            dialog.setProgress(100);
+
+                            JSONObject attachment = new JSONObject()
+                                    .put("title","File Uploaded: "+ret.getString("name"))
+                                    .put("title_url",ret.getString("url"))
+                                    .put("image_url",ret.getString("url"))
+                                    .put("image_type",ret.getString("type"))
+                                    .put("image_size",ret.getLong("size"));
+
+                            Message msg = new Message();
+                            msg.syncstate = chat.rocket.android.model.SyncState.NOT_SYNCED;
+                            msg.content = "";
+                            msg.roomId = ret.getString("rid");
+                            msg.userId = ret.getString("userID");
+                            msg.extras = new JSONObject().put("file",new JSONObject().put("_id",ret.getString("_id"))).toString();
+                            msg.flags &= ~Message.FLAG_GROUPABLE;
+                            msg.attachments = new JSONArray().put(attachment).toString();
+                            msg.putByContentProvider(getContext());
+
+                        }
+                        catch (JSONException e){
+                            Log.e(Constants.LOG_TAG,"error",e);
+                        }
+                    }
+
+                    if(syncstate==SyncState.SYNCED || syncstate==SyncState.FAILED) {
+                        dialog.dismiss();
+                        unsub();
+
+                        MethodCall.delete(_id);
+                    }
                 }
-            });
+            }.sub();
         }
     }
 
