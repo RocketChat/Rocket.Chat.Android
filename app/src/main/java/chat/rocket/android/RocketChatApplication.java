@@ -10,7 +10,6 @@ import com.squareup.picasso.Picasso;
 
 import chat.rocket.android.api.OkHttpHelper;
 import io.fabric.sdk.android.Fabric;
-import io.repro.android.Repro;
 
 public class RocketChatApplication extends Application {
     @Override
@@ -28,6 +27,5 @@ public class RocketChatApplication extends Application {
 
         CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());
-        Repro.setup(BuildConfig.REPRO_APP_TOKEN);
     }
 }
