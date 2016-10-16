@@ -12,7 +12,8 @@ import chat.rocket.android.model.ServerConfig;
 
 public class AbstractFragment extends Fragment {
 
-    protected @IdRes int getContainerId() {
+    @IdRes
+    protected int getContainerId() {
         return R.id.activity_main_container;
     }
 
@@ -38,16 +39,15 @@ public class AbstractFragment extends Fragment {
         super.onPause();
     }
 
-    protected void finish(){
-        if(getFragmentManager().getBackStackEntryCount()==0){
+    protected void finish() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
             getActivity().finish();
-        }
-        else {
+        } else {
             getFragmentManager().popBackStack();
         }
     }
 
-    protected AppCompatActivity getAppCompatActivity(){
+    protected AppCompatActivity getAppCompatActivity() {
         return (AppCompatActivity) getActivity();
     }
 

@@ -7,22 +7,22 @@ import android.database.sqlite.SQLiteDatabase;
 
 import chat.rocket.android.content.RocketChatProvider;
 
-public class Message extends AbstractModel{
+public class Message extends AbstractModel {
     public static final String TABLE_NAME = "message";
 
     public enum Type {
-        ROOM_NAME_CHANGED("r")
-        ,USER_ADDED("au")
-        ,USER_REMOVED("ru")
-        ,USER_JOINED("uj")
-        ,USER_LEFT("ul")
-        ,WELCOME("wm")
-        ,MESSAGE_REMOVED("rm")
-        ,UNSPECIFIED("")
-
-        ;//------------
+        ROOM_NAME_CHANGED("r"),
+        USER_ADDED("au"),
+        USER_REMOVED("ru"),
+        USER_JOINED("uj"),
+        USER_LEFT("ul"),
+        WELCOME("wm"),
+        MESSAGE_REMOVED("rm"),
+        UNSPECIFIED("");
+        //------------
 
         private String value;
+
         Type(String value) {
             this.value = value;
         }
@@ -32,8 +32,8 @@ public class Message extends AbstractModel{
         }
 
         public static Type getType(String value) {
-            for(Type t :Type.values()){
-                if(t.value.equals(value)) return t;
+            for (Type t : Type.values()) {
+                if (t.value.equals(value)) return t;
             }
             return UNSPECIFIED;
         }
@@ -47,61 +47,60 @@ public class Message extends AbstractModel{
 
     /**
      * REMARK: JSON Array!
-     *
+     * <p>
      * [
-     *   {
-     *     "url": "https://yi01rocket.herokuapp.com/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
-     *     "meta": null,
-     *     "headers": {
-     *       "contentType": "image/png",
-     *       "contentLength": "16509"
-     *     },
-     *     "parsedUrl": {
-     *       "host": "yi01rocket.herokuapp.com",
-     *       "hash": null,
-     *       "pathname": "/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
-     *       "protocol": "https:",
-     *       "port": null,
-     *       "query": null,
-     *       "search": null
-     *     }
-     *   },
-     *   {
-     *     "url": "https://yi01rocket.herokuapp.com/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
-     *     "meta": null,
-     *     "headers": {
-     *       "contentType": "image/png",
-     *       "contentLength": "16509"
-     *     },
-     *     "parsedUrl": {
-     *       "host": "yi01rocket.herokuapp.com",
-     *       "hash": null,
-     *       "pathname": "/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
-     *       "protocol": "https:",
-     *       "port": null,
-     *       "query": null,
-     *       "search": null
-     *     }
-     *   }
+     * {
+     * "url": "https://yi01rocket.herokuapp.com/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
+     * "meta": null,
+     * "headers": {
+     * "contentType": "image/png",
+     * "contentLength": "16509"
+     * },
+     * "parsedUrl": {
+     * "host": "yi01rocket.herokuapp.com",
+     * "hash": null,
+     * "pathname": "/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
+     * "protocol": "https:",
+     * "port": null,
+     * "query": null,
+     * "search": null
+     * }
+     * },
+     * {
+     * "url": "https://yi01rocket.herokuapp.com/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
+     * "meta": null,
+     * "headers": {
+     * "contentType": "image/png",
+     * "contentLength": "16509"
+     * },
+     * "parsedUrl": {
+     * "host": "yi01rocket.herokuapp.com",
+     * "hash": null,
+     * "pathname": "/ufs/rocketchat_uploads/sTdxKn8onYR5nAWr9.png",
+     * "protocol": "https:",
+     * "port": null,
+     * "query": null,
+     * "search": null
+     * }
+     * }
      * ]
-     *
      */
     public String urls;
 
     /**
-     *  "attachments": [{
-     *      "title": "File Uploaded: twitterYI01.jpg",
-     *      "title_link": "/ufs/rocketchat_uploads/pi6pnxHqPQNG6kyPz/twitterYI01.jpg",
-     *      "image_url": "/ufs/rocketchat_uploads/pi6pnxHqPQNG6kyPz/twitterYI01.jpg",
-     *      "image_type": "image/jpeg",
-     *      "image_size": 6105
-     *  }]
+     * "attachments": [{
+     * "title": "File Uploaded: twitterYI01.jpg",
+     * "title_link": "/ufs/rocketchat_uploads/pi6pnxHqPQNG6kyPz/twitterYI01.jpg",
+     * "image_url": "/ufs/rocketchat_uploads/pi6pnxHqPQNG6kyPz/twitterYI01.jpg",
+     * "image_type": "image/jpeg",
+     * "image_size": 6105
+     * }]
      */
     public String attachments;
 
     /**
      * for storeing
-     *
+     * <p>
      * * fileID for uploading file.
      */
     public String extras;
@@ -152,8 +151,7 @@ public class Message extends AbstractModel{
                             " flags INTEGER);");
 
                     mDb.setTransactionSuccessful();
-                }
-                finally {
+                } finally {
                     mDb.endTransaction();
                 }
 

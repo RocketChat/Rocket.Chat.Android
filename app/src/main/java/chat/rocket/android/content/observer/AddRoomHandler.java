@@ -33,17 +33,17 @@ public class AddRoomHandler extends AbstractObserver {
     @Override
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
-        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2 AND id='DUMMY' AND (name IS NOT NULL) AND (type IS NOT NULL)",null,null);
-        if (c==null) return;
-        if (c.getCount()>0 && c.moveToFirst()) handleAddRoom(c);
+        Cursor c = mContext.getContentResolver().query(uri, null, "syncstate!=2 AND id='DUMMY' AND (name IS NOT NULL) AND (type IS NOT NULL)", null, null);
+        if (c == null) return;
+        if (c.getCount() > 0 && c.moveToFirst()) handleAddRoom(c);
         c.close();
     }
 
     @Override
     public void onChange(Uri uri) {
-        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0 AND id='DUMMY' AND (name IS NOT NULL) AND (type IS NOT NULL)",null,null);
-        if (c==null) return;
-        if (c.getCount()>0 && c.moveToFirst()) handleAddRoom(c);
+        Cursor c = mContext.getContentResolver().query(uri, null, "syncstate=0 AND id='DUMMY' AND (name IS NOT NULL) AND (type IS NOT NULL)", null, null);
+        if (c == null) return;
+        if (c.getCount() > 0 && c.moveToFirst()) handleAddRoom(c);
         c.close();
     }
 
@@ -70,11 +70,10 @@ public class AddRoomHandler extends AbstractObserver {
             }).continueWith(new Continuation<Object, Object>() {
                 @Override
                 public Object then(Task<Object> task) throws Exception {
-                    if(task.isFaulted()){
-                        if(task.getError() instanceof DDPClientCallback.RPC.Error){
+                    if (task.isFaulted()) {
+                        if (task.getError() instanceof DDPClientCallback.RPC.Error) {
                             r.deleteByContentProvider(mContext);
-                        }
-                        else {
+                        } else {
                             r.syncstate = SyncState.FAILED;
                             r.putByContentProvider(mContext);
                         }
@@ -88,11 +87,14 @@ public class AddRoomHandler extends AbstractObserver {
         }
     }
 
-    private Task<DDPClientCallback.RPC> createRoom(Room r) throws JSONException{
+    private Task<DDPClientCallback.RPC> createRoom(Room r) throws JSONException {
         switch (r.type) {
-            case CHANNEL: return mAPI.createChannel(r.name,new JSONArray());
-            case DIRECT_MESSAGE: return mAPI.createDirectMessage(r.name);
-            case PRIVATE_GROUP: return mAPI.createPrivateGroup(r.name, new JSONArray());
+            case CHANNEL:
+                return mAPI.createChannel(r.name, new JSONArray());
+            case DIRECT_MESSAGE:
+                return mAPI.createDirectMessage(r.name);
+            case PRIVATE_GROUP:
+                return mAPI.createPrivateGroup(r.name, new JSONArray());
         }
         return Task.forError(new IllegalArgumentException("invalid room type"));
     }

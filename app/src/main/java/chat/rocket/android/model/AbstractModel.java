@@ -41,6 +41,7 @@ abstract class AbstractModel {
     }
 
     abstract protected ContentValues createContentValue();
+
     abstract protected String getTableName();
 
     public boolean hasBaseID() {
@@ -56,8 +57,7 @@ abstract class AbstractModel {
             context.getContentResolver().update(RocketChatProvider.getUriForQuery(getTableName(), _id)
                     , createContentValue(), "_id=?", new String[]{Long.toString(_id)});
             return null;
-        }
-        else {
+        } else {
             return context.getContentResolver().insert(RocketChatProvider.getUriForInsert(getTableName())
                     , createContentValue());
         }

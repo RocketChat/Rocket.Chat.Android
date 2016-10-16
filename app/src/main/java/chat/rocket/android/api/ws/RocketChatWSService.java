@@ -43,19 +43,19 @@ public class RocketChatWSService extends Service {
     private final static String TAG = Constants.LOG_TAG;
 
     private static final Class[] HANDLER_CLASSES = {
-            LoginHandler.class
-            , RocketChatSubscription.class
-            , RocketChatRoom.class
-            , AddRoomHandler.class
-            , MethodCallObserver.class
-            , SendNewMessageHandler.class
-            , UserData.class
-            , UserStatusObserver.class
-            , StreamMessage.class
-            , StreamNotifyRoom.class
-            , MarkRoomAsReadHandler.class
-            , LoginServiceConfiguration.class
-            , FilteredUsers.class
+            LoginHandler.class,
+            RocketChatSubscription.class,
+            RocketChatRoom.class,
+            AddRoomHandler.class,
+            MethodCallObserver.class,
+            SendNewMessageHandler.class,
+            UserData.class,
+            UserStatusObserver.class,
+            StreamMessage.class,
+            StreamNotifyRoom.class,
+            MarkRoomAsReadHandler.class,
+            LoginServiceConfiguration.class,
+            FilteredUsers.class
     };
 
     private RocketChatWSAPI mAPI;
@@ -88,7 +88,7 @@ public class RocketChatWSService extends Service {
             }
         });
 
-        if (s==null) {
+        if (s == null) {
             stopSelf();
             return;
         }
@@ -114,7 +114,7 @@ public class RocketChatWSService extends Service {
                 result.client.getSubscriptionCallback().subscribe(new Action1<DDPSubscription.Event>() {
                     @Override
                     public void call(DDPSubscription.Event event) {
-                        Log.d(TAG,"Callback [DEBUG] < "+ event);
+                        Log.d(TAG, "Callback [DEBUG] < " + event);
                     }
                 });
 
@@ -129,12 +129,11 @@ public class RocketChatWSService extends Service {
         }).continueWith(new Continuation<Object, Object>() {
             @Override
             public Object then(Task<Object> task) throws Exception {
-                if(task.isFaulted()){
+                if (task.isFaulted()) {
                     Log.e(TAG, "websocket: failed to connect.", task.getError());
-                    if(s.authType == ServerConfig.AuthType.UNSPECIFIED) {
+                    if (s.authType == ServerConfig.AuthType.UNSPECIFIED) {
                         s.deleteByContentProvider(getBaseContext());
-                    }
-                    else {
+                    } else {
                         s.syncstate = SyncState.FAILED;
                         s.putByContentProvider(getBaseContext());
                     }
@@ -148,14 +147,14 @@ public class RocketChatWSService extends Service {
 
     private final ArrayList<Registerable> mListeners = new ArrayList<>();
 
-    private void registerListeners(){
+    private void registerListeners() {
         final Context context = getApplicationContext();
-        for(Class clazz: HANDLER_CLASSES){
+        for (Class clazz : HANDLER_CLASSES) {
             try {
                 Constructor ctor = clazz.getConstructor(Context.class, Looper.class, RocketChatWSAPI.class);
                 Object obj = ctor.newInstance(context, mRegisterThreadLooper, mAPI);
 
-                if(obj instanceof Registerable) {
+                if (obj instanceof Registerable) {
                     Registerable l = (Registerable) obj;
                     l.register();
                     mListeners.add(l);
@@ -166,9 +165,9 @@ public class RocketChatWSService extends Service {
         }
     }
 
-    private void unregisterListeners(){
+    private void unregisterListeners() {
         Iterator<Registerable> it = mListeners.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             Registerable l = it.next();
             l.unregister();
             it.remove();

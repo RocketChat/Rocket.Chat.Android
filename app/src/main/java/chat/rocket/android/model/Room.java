@@ -8,13 +8,13 @@ public class Room extends AbstractModel {
     public static final String TABLE_NAME = "room";
 
     public enum Type {
-        CHANNEL("c")
-        ,PRIVATE_GROUP("p")
-        ,DIRECT_MESSAGE("d")
-
-        ;//------------
+        CHANNEL("c"),
+        PRIVATE_GROUP("p"),
+        DIRECT_MESSAGE("d");
+        //------------
 
         private String value;
+
         Type(String value) {
             this.value = value;
         }
@@ -24,13 +24,14 @@ public class Room extends AbstractModel {
         }
 
         public static Type getType(String value) {
-            for(Type t :Type.values()){
-                if(t.value.equals(value)) return t;
+            for (Type t : Type.values()) {
+                if (t.value.equals(value)) return t;
             }
-            throw new IllegalArgumentException("Room.Type.getType: invalid parameter: value="+value);
+            throw new IllegalArgumentException("Room.Type.getType: invalid parameter: value=" + value);
         }
     }
 
+    public String rid;
     public String name;
     public Long timestamp;
     public boolean alert;
@@ -65,6 +66,7 @@ public class Room extends AbstractModel {
                     mDb.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                             " (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             " id TEXT UNIQUE NOT NULL," +
+                            " rid TEXT UNIQUE NOT NULL," +
                             " syncstate INTEGER NOT NULL," +
                             " name TEXT," +
                             " timestamp INTEGER," +
@@ -74,8 +76,7 @@ public class Room extends AbstractModel {
                             " has_more INTEGER);");
 
                     mDb.setTransactionSuccessful();
-                }
-                finally {
+                } finally {
                     mDb.endTransaction();
                 }
 
@@ -87,6 +88,7 @@ public class Room extends AbstractModel {
     public static Room createFromCursor(Cursor c) {
         Room r = new Room();
         initID(r, c);
+        r.rid = c.getString(c.getColumnIndex("rid"));
         r.name = c.getString(c.getColumnIndex("name"));
         r.timestamp = c.getLong(c.getColumnIndex("timestamp"));
         r.alert = (c.getInt(c.getColumnIndex("alert")) != 0);
@@ -99,12 +101,13 @@ public class Room extends AbstractModel {
     @Override
     protected ContentValues createContentValue() {
         ContentValues values = createInitContentValue();
+        values.put("rid", rid);
         values.put("name", name);
         values.put("timestamp", timestamp);
-        values.put("alert",alert? 1 : 0);
+        values.put("alert", alert ? 1 : 0);
         values.put("type", type.getValue());
         values.put("unread", unread);
-        values.put("has_more", hasMore? 1 : 0);
+        values.put("has_more", hasMore ? 1 : 0);
         return values;
     }
 
@@ -117,7 +120,7 @@ public class Room extends AbstractModel {
     }
 
     public static Room get(SQLiteDatabase db, String selection, String[] selectionArgs) {
-        return new DBAccessor(db).get(selection, selectionArgs,null);
+        return new DBAccessor(db).get(selection, selectionArgs, null);
     }
 
     public static Room get(SQLiteDatabase db, long _id) {

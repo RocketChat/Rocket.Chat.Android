@@ -32,7 +32,7 @@ public class StreamNotifyRoom extends AbstractRocketChatSubscription {
 
     @Override
     protected void onDocumentAdded(DDPSubscription.Added docEvent) throws JSONException {
-        if(!docEvent.fields.isNull("args")) {
+        if (!docEvent.fields.isNull("args")) {
             final JSONArray args = docEvent.fields.getJSONArray("args");
             final String path = args.getString(0);
             if (!TextUtils.isEmpty(path) && path.endsWith("/deleteMessage")) {

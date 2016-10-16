@@ -32,7 +32,7 @@ public class StreamMessage extends AbstractRocketChatSubscription {
 
     @Override
     protected void onDocumentAdded(DDPSubscription.Added docEvent) throws JSONException {
-        if(!docEvent.fields.isNull("args")) {
+        if (!docEvent.fields.isNull("args")) {
             final JSONArray args = docEvent.fields.getJSONArray("args");
             final String path = args.getString(0);
             final JSONObject message = args.getJSONObject(1);
@@ -40,5 +40,10 @@ public class StreamMessage extends AbstractRocketChatSubscription {
 
             mParser.parseMessage(message);
         }
+    }
+
+    @Override
+    protected void onDocumentChanged(DDPSubscription.Changed docEvent) throws JSONException {
+        super.onDocumentChanged(docEvent);
     }
 }

@@ -22,7 +22,7 @@ import chat.rocket.android.view.Avatar;
 
     public MessageViewHolder(View itemView, String host) {
         super(itemView);
-        avatar = new Avatar(host, itemView.findViewById(R.id.avatar_color), (TextView)itemView.findViewById(R.id.avatar_initials), (ImageView)itemView.findViewById(R.id.avatar_img));
+        avatar = new Avatar(host, itemView.findViewById(R.id.avatar_color), (TextView) itemView.findViewById(R.id.avatar_initials), (ImageView) itemView.findViewById(R.id.avatar_img));
         username = (TextView) itemView.findViewById(R.id.list_item_message_username);
         timestamp = (TextView) itemView.findViewById(R.id.list_item_message_timestamp);
         content = (TextView) itemView.findViewById(R.id.list_item_message_content);

@@ -26,7 +26,7 @@ abstract class AbstractObserver extends ContentObserver implements Registerable 
     }
 
     @Override
-    public void register(){
+    public void register() {
         mContext.getContentResolver().registerContentObserver(getTargetUri(), true, this);
         mHandler.post(new Runnable() {
             @Override
@@ -37,7 +37,7 @@ abstract class AbstractObserver extends ContentObserver implements Registerable 
     }
 
     @Override
-    public void unregister(){
+    public void unregister() {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -47,8 +47,6 @@ abstract class AbstractObserver extends ContentObserver implements Registerable 
         mContext.getContentResolver().unregisterContentObserver(this);
     }
 
-
-
     public abstract Uri getTargetUri();
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -57,7 +55,11 @@ abstract class AbstractObserver extends ContentObserver implements Registerable 
         onChange(uri);
     }
 
-    protected void onCreate(Uri uri){}
+    protected void onCreate(Uri uri) {
+    }
+
     protected abstract void onChange(Uri uri);
-    protected void onDestroy(){}
+
+    protected void onDestroy() {
+    }
 }
