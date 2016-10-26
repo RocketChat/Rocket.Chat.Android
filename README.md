@@ -1,6 +1,6 @@
-[![Circle CI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android.Lily/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android.Lily/tree/develop)
+[![Circle CI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop)
 
-# Rocket.Chat.Android.Lily
+# Rocket.Chat.Android
 Another implementation of Rocket.Chat Native Android Application.
 
 ![screenshots](https://cloud.githubusercontent.com/assets/11763113/11993320/ccdcf296-aa72-11e5-9950-e08f7a280516.png)
@@ -14,8 +14,8 @@ Retrolambda needs java8 to be installed on your system
 ```
 export ANDROID_HOME=/path/to/android/sdk
 
-git clone https://github.com/RocketChat/Rocket.Chat.Android.Lily.git
-cd Rocket.Chat.Android.Lily
+git clone https://github.com/RocketChat/Rocket.Chat.Android.git
+cd Rocket.Chat.Android
 git submodule init && git submodule update
 
 echo "sdk.dir="$ANDROID_HOME > local.properties
@@ -43,4 +43,4 @@ index d545c49..7687610 100644
  }
  ```
 
-If problem occurs even after patching, please remove (or comment out) [this line](https://github.com/RocketChat/Rocket.Chat.Android.Lily/blob/f18e20b7bff71e6143838c8258a07e91b0a9f9a0/app/build.gradle#L37).
+If problem occurs even after patching, please remove (or comment out) [this line](https://github.com/RocketChat/Rocket.Chat.Android/blob/f18e20b7bff71e6143838c8258a07e91b0a9f9a0/app/build.gradle#L37).
