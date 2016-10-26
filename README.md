@@ -1,7 +1,7 @@
 [![Circle CI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop)
 
 # Rocket.Chat.Android
-Another implementation of Rocket.Chat Native Android Application.
+Rocket.Chat Native Android Application.
 
 ![screenshots](https://cloud.githubusercontent.com/assets/11763113/11993320/ccdcf296-aa72-11e5-9950-e08f7a280516.png)
 
