@@ -22,15 +22,12 @@ import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.observer.AddRoomHandler;
 import chat.rocket.android.content.observer.LoginHandler;
 import chat.rocket.android.content.observer.MarkRoomAsReadHandler;
-import chat.rocket.android.content.observer.MethodCallObserver;
+import chat.rocket.android.content.observer.MethodCall2Observer;
 import chat.rocket.android.content.observer.RocketChatRoom;
 import chat.rocket.android.content.observer.SendNewMessageHandler;
 import chat.rocket.android.content.observer.UserStatusObserver;
 import chat.rocket.android.content.subscriber.FilteredUsers;
 import chat.rocket.android.content.subscriber.LoginServiceConfiguration;
-import chat.rocket.android.content.subscriber.RocketChatSubscription;
-import chat.rocket.android.content.subscriber.StreamMessage;
-import chat.rocket.android.content.subscriber.StreamNotifyRoom;
 import chat.rocket.android.content.subscriber.UserData;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
@@ -44,18 +41,16 @@ public class RocketChatWSService extends Service {
 
     private static final Class[] HANDLER_CLASSES = {
             LoginHandler.class
-            , RocketChatSubscription.class
             , RocketChatRoom.class
             , AddRoomHandler.class
-            , MethodCallObserver.class
             , SendNewMessageHandler.class
             , UserData.class
             , UserStatusObserver.class
-            , StreamMessage.class
-            , StreamNotifyRoom.class
             , MarkRoomAsReadHandler.class
             , LoginServiceConfiguration.class
             , FilteredUsers.class
+
+            , MethodCall2Observer.class
     };
 
     private RocketChatWSAPI mAPI;

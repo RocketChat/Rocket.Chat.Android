@@ -12,6 +12,7 @@ buildscript {
         // in the individual module build.gradle files
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+        classpath "io.realm:realm-gradle-plugin:1.2.0"
 
         // The Fabric Gradle plugin uses an open ended version to react
         // quickly to Android tooling updates
@@ -24,6 +25,7 @@ allprojects {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://github.com/RocketChat/Android-DDP/raw/master/repository' } // for Android-DDP
+        maven { url 'https://github.com/YusukeIwaki/realm-java-helpers/raw/master/repo' }
     }
 }
 

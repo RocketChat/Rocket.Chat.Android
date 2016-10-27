@@ -93,6 +93,13 @@ public class RocketChatWSAPI {
         return mDDPClient.rpc("sendMessage", new JSONArray().put(param) ,generateId("message"));
     }
 
+    public Task<DDPClientCallback.RPC> getRooms(long time) throws JSONException {
+        JSONArray params = new JSONArray()
+                .put(new JSONObject().put("$date",time));
+
+        return mDDPClient.rpc("rooms/get", params, generateId("rooms-get"));
+    }
+
     public Task<DDPClientCallback.RPC> loadMessages(final String roomID, long endTs, int num) throws JSONException {
         JSONArray params = new JSONArray()
                 .put(roomID)

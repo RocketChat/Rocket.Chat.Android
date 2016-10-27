@@ -12,12 +12,10 @@ import android.os.Process;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import chat.rocket.android.Constants;
 import chat.rocket.android.model.Message;
-import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SqliteUtil;
@@ -29,12 +27,10 @@ public class RocketChatProvider extends ContentProvider {
     public static final String CONTENT_URI_BASE = "content://"+Constants.AUTHORITY;
 
     RocketChatDatabaseHelper mDBHelper;
-    RocketChatOnMemoryDatabaseHelper mOnMemDBHelper;
 
     @Override
     public boolean onCreate() {
         mDBHelper = new RocketChatDatabaseHelper(getContext());
-        mOnMemDBHelper = new RocketChatOnMemoryDatabaseHelper(getContext());
         return true;
     }
 
@@ -48,11 +44,8 @@ public class RocketChatProvider extends ContentProvider {
             , Room.TABLE_NAME
             , ServerConfig.TABLE_NAME
             , User.TABLE_NAME
-            , MethodCall.TABLE_NAME
             , UserRoom.TABLE_NAME
     };
-    private static final ArrayList<String> MODELS_ONMEM = new ArrayList<>();
-
     static
     {
         for(int i=0;i<MODELS.length;i++){
@@ -69,7 +62,6 @@ public class RocketChatProvider extends ContentProvider {
             URI_MAP.put(i + _NEW, model);
             sURIMatcher.addURI(Constants.AUTHORITY, model, i + _NEW);
         }
-        MODELS_ONMEM.add(MethodCall.TABLE_NAME);
     }
     public static String getQueryId(Uri uri){
         return uri.getPathSegments().get(1);
@@ -97,8 +89,7 @@ public class RocketChatProvider extends ContentProvider {
     }
 
     private SQLiteOpenHelper getDatabaseHelperFor(String table){
-        if(MODELS_ONMEM.contains(table)) return mOnMemDBHelper;
-        else return mDBHelper;
+        return mDBHelper;
     }
 
     @Override
