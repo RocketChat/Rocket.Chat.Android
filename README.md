@@ -25,22 +25,3 @@ cp app/fabric.properties.sample app/fabric.properties
 
 ./gradlew assembleDebug
 ```
-
-Repro SDK Token can be dummy strings as above with the modification of RocketChatApplication.java as below.
-
-```
-diff --git a/app/src/main/java/chat/rocket/android/RocketChatApplication.java b/app/src/main/java/chat/rocket/android/RocketChatApplication.java
-index d545c49..7687610 100644
---- a/app/src/main/java/chat/rocket/android/RocketChatApplication.java
-+++ b/app/src/main/java/chat/rocket/android/RocketChatApplication.java
-@@ -32,6 +32,6 @@ public class RocketChatApplication extends Application {
-
-         CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
-         Fabric.with(this, new Crashlytics.Builder().core(core).build());
--        Repro.setup(BuildConfig.REPRO_APP_TOKEN);
-+        //Repro.setup(BuildConfig.REPRO_APP_TOKEN); //disable Repro!
-     }
- }
- ```
-
-If problem occurs even after patching, please remove (or comment out) [this line](https://github.com/RocketChat/Rocket.Chat.Android/blob/f18e20b7bff71e6143838c8258a07e91b0a9f9a0/app/build.gradle#L37).
