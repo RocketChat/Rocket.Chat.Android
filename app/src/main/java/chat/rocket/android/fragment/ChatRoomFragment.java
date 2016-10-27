@@ -56,11 +56,12 @@ import chat.rocket.android.preference.Cache;
 import chat.rocket.android.view.LoadMoreScrollListener;
 import chat.rocket.android.view.MessageComposer;
 
-public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPressListener, FragmentManager.OnBackStackChangedListener{
+public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPressListener, FragmentManager.OnBackStackChangedListener {
     private static final int LOADER_ID = 0x12346;
     private static final int PICK_IMAGE_ID = 0x11;
 
-    public ChatRoomFragment(){}
+    public ChatRoomFragment() {
+    }
 
     private String mToken;
     private boolean mRoomHasMore;
@@ -76,6 +77,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         args.putString("token", token);
         args.putLong("roomBaseId", r._id);
         args.putString("roomId", r.id);
+        args.putString("rid", r.rid);
         args.putString("roomName", r.name);
         args.putString("roomType", r.type.getValue());
         args.putBoolean("roomHasMore", r.hasMore);
@@ -101,9 +103,9 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUserId = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID,"");
-        mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_NAME,"");
-        if(TextUtils.isEmpty(mUsername)) {
+        mUserId = Cache.get(getContext()).getString(Cache.KEY_MY_USER_ID, "");
+        mUsername = Cache.get(getContext()).getString(Cache.KEY_MY_USER_NAME, "");
+        if (TextUtils.isEmpty(mUsername)) {
             Cache.waitForValue(getContext(), Cache.KEY_MY_USER_ID, new Cache.ValueCallback<String>() {
                 @Override
                 public void onGetValue(String value) {
@@ -124,7 +126,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         mRootView.post(new Runnable() {
             @Override
             public void run() {
-                if(mRoomHasMore != r.hasMore){
+                if (mRoomHasMore != r.hasMore) {
                     mRoomHasMore = r.hasMore;
                     setupListViewHasMore();
                 }
@@ -162,10 +164,10 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         setupToolbar();
     }
 
-    protected void setupToolbar(){
+    protected void setupToolbar() {
         Toolbar bar = (Toolbar) mRootView.findViewById(R.id.toolbar_chatroom);
         bar.setTitle(mRoomName);
-        switch (mRoomType){
+        switch (mRoomType) {
             case CHANNEL:
                 bar.setNavigationIcon(R.drawable.ic_room_type_channel);
                 break;
@@ -205,7 +207,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
 
         try {
             MethodCall
-                    .create("loadMessages", new JSONObject().put("room_id",mRoomId).put("clean",true))
+                    .create("loadMessages", new JSONObject().put("room_id", mRid).put("clean", true))
                     .putByContentProvider(getContext());
         } catch (JSONException e) {
             Log.e(Constants.LOG_TAG, "error", e);
@@ -216,32 +218,31 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         Message m = RocketChatDatabaseHelper.read(getContext(), new RocketChatDatabaseHelper.DBCallback<Message>() {
             @Override
             public Message process(SQLiteDatabase db) throws Exception {
-                return Message.get(db, "room_id = ?",new String[]{mRoomId},"timestamp ASC");
+                return Message.get(db, "room_id = ?", new String[]{mRid}, "timestamp ASC");
             }
         });
-        if(m==null) {
+        if (m == null) {
             return;
         }
 
         try {
             final Uri uri = MethodCall
-                    .create("loadMessages", new JSONObject().put("room_id",mRoomId).put("end_ts",m.timestamp))
+                    .create("loadMessages", new JSONObject().put("room_id", mRid).put("end_ts", m.timestamp))
                     .putByContentProvider(getContext());
             getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
                 @Override
                 public void onChange(boolean selfChange) {
-                    Cursor c = getContext().getContentResolver().query(uri,null,null,null,null);
-                    if(c==null){
+                    Cursor c = getContext().getContentResolver().query(uri, null, null, null, null);
+                    if (c == null) {
                         getContext().getContentResolver().unregisterContentObserver(this);
-                    }
-                    else{
-                        if(c.moveToFirst()) {
+                    } else {
+                        if (c.moveToFirst()) {
                             //MethodCall m = MethodCall.createFromCursor(c);
                             getContext().getContentResolver().unregisterContentObserver(this);
                         }
                         c.close();
                     }
-                    if(mLoadMoreListener!=null) mLoadMoreListener.setLoadingDone();
+                    if (mLoadMoreListener != null) mLoadMoreListener.setLoadingDone();
                 }
             });
         } catch (JSONException e) {
@@ -260,14 +261,14 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         mLoadMoreListener = new LoadMoreScrollListener(layoutManager, 20) {
             @Override
             public void requestMoreItem() {
-                if(mRoomHasMore) fetchMoreMessages();
+                if (mRoomHasMore) fetchMoreMessages();
             }
         };
         messageListView.addOnScrollListener(mLoadMoreListener);
         messageListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if(top < bottom && left < right){
+                if (top < bottom && left < right) {
                     setupListViewHasMore();
                     v.removeOnLayoutChangeListener(this);
                 }
@@ -275,17 +276,17 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         });
     }
 
-    private void setupListViewHasMore(){
+    private void setupListViewHasMore() {
         mAdapter.setHasMore(mRoomHasMore);
     }
 
-    private void loadMessages(){
+    private void loadMessages() {
         final Context context = mRootView.getContext();
         getLoaderManager().restartLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
                 Uri uri = RocketChatProvider.getUriForQuery(Message.TABLE_NAME);
-                return new CursorLoader(context, uri, null, "room_id = ?", new String[]{mRoomId}, "timestamp DESC");
+                return new CursorLoader(context, uri, null, "room_id = ?", new String[]{mRid}, "timestamp DESC");
             }
 
             @Override
@@ -302,20 +303,20 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
 
     @Override
     public void onBackStackChanged() {
-        if(getActivity()!=null) {
+        if (getActivity() != null) {
             initializeToolbar();
         }
     }
 
-    private MessageComposer getMessageComposer(){
+    private MessageComposer getMessageComposer() {
         return (MessageComposer) mRootView.findViewById(R.id.message_composer);
     }
 
-    private FloatingActionButton getButtonCompose(){
+    private FloatingActionButton getButtonCompose() {
         return (FloatingActionButton) mRootView.findViewById(R.id.chat_btn_compose);
     }
 
-    private void setupMessageComposer(){
+    private void setupMessageComposer() {
         final MessageComposer composer = getMessageComposer();
         final FloatingActionButton btnCompose = getButtonCompose();
         final int margin = getContext().getResources().getDimensionPixelSize(R.dimen.margin_normal);
@@ -350,7 +351,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
 
     private void sendMessage(String message) {
         final MessageComposer composer = getMessageComposer();
-        if(TextUtils.isEmpty(message)) return;
+        if (TextUtils.isEmpty(message)) return;
 
         ServerConfig s = getPrimaryServerConfig();
         if (s == null) return;
@@ -374,12 +375,11 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         final FloatingActionButton btnUploadFile = getButtonUploadFile();
         final MessageComposer composer = getMessageComposer();
 
-        if(visible) {
+        if (visible) {
             btnUploadFile.hide(true);
             btnCompose.hide(true);
             composer.show(null);
-        }
-        else{
+        } else {
             composer.hide(new Runnable() {
                 @Override
                 public void run() {
@@ -390,11 +390,11 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         }
     }
 
-    private FloatingActionButton getButtonUploadFile(){
+    private FloatingActionButton getButtonUploadFile() {
         return (FloatingActionButton) mRootView.findViewById(R.id.chat_btn_upload);
     }
 
-    private void setupUploader(){
+    private void setupUploader() {
         getButtonUploadFile().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -409,7 +409,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
     @Override
     public boolean onBackPressed() {
         MessageComposer composer = getMessageComposer();
-        if(composer.isShown()) {
+        if (composer.isShown()) {
             setMessageComposerVisibility(false);
             return true;
         }
@@ -419,14 +419,14 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode!=PICK_IMAGE_ID) return;
-        if(resultCode != Activity.RESULT_OK || data==null) return;
+        if (requestCode != PICK_IMAGE_ID) return;
+        if (resultCode != Activity.RESULT_OK || data == null) return;
 
         Uri uriToObserve = null;
         try {
             Uri uri = data.getData();
             Cursor c = getContext().getContentResolver().query(uri, null, null, null, null);
-            if(c!=null && c.moveToFirst()) {
+            if (c != null && c.moveToFirst()) {
                 String filename = c.getString(c.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 long filesize = c.getLong(c.getColumnIndex(OpenableColumns.SIZE));
 
@@ -438,8 +438,7 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
                         .put("filename", filename)
                         .put("mime_type", getContext().getContentResolver().getType(uri));
                 uriToObserve = MethodCall.create("uploadFile", params).putByContentProvider(getContext());
-            }
-            else if(ContentResolver.SCHEME_FILE.equals(uri.getScheme())){
+            } else if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
                 JSONObject params = new JSONObject()
                         .put("room_id", mRoomId)
                         .put("user_id", mUserId)
@@ -450,13 +449,12 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
 
                 uriToObserve = MethodCall.create("uploadFile", params).putByContentProvider(getContext());
             }
-            if (c!=null && !c.isClosed()) c.close();
-        }
-        catch(JSONException e){
-            Log.e(Constants.LOG_TAG,"error",e);
+            if (c != null && !c.isClosed()) c.close();
+        } catch (JSONException e) {
+            Log.e(Constants.LOG_TAG, "error", e);
         }
 
-        if(uriToObserve!=null) {
+        if (uriToObserve != null) {
             final Uri uri = uriToObserve;
 
             final ProgressDialog dialog = new ProgressDialog(getContext(), R.style.AppDialog);
@@ -468,51 +466,48 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
             getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
                 @Override
                 public void onChange(boolean selfChange) {
-                    if(getContext()==null) return;
+                    if (getContext() == null) return;
 
-                    Cursor c = getContext().getContentResolver().query(uri,null,null,null,null);
-                    if(c==null) return;
-                    if(c.moveToFirst()) {
+                    Cursor c = getContext().getContentResolver().query(uri, null, null, null, null);
+                    if (c == null) return;
+                    if (c.moveToFirst()) {
                         MethodCall m = MethodCall.createFromCursor(c);
 
-                        if(m.syncstate==SyncState.SYNCING){
+                        if (m.syncstate == SyncState.SYNCING) {
                             try {
                                 JSONObject ret = new JSONObject(m.returns);
                                 dialog.setProgress((int) (100.0 * ret.getLong("sent") / ret.getLong("total")));
+                            } catch (JSONException e) {
+                                Log.e(Constants.LOG_TAG, "error", e);
                             }
-                            catch (JSONException e){
-                                Log.e(Constants.LOG_TAG,"error",e);
-                            }
-                        }
-                        else if (m.syncstate==SyncState.SYNCED){
+                        } else if (m.syncstate == SyncState.SYNCED) {
                             try {
                                 JSONObject ret = new JSONObject(m.returns);
                                 dialog.setProgress(100);
 
                                 JSONObject attachment = new JSONObject()
-                                        .put("title","File Uploaded: "+ret.getString("name"))
-                                        .put("title_url",ret.getString("url"))
-                                        .put("image_url",ret.getString("url"))
-                                        .put("image_type",ret.getString("type"))
-                                        .put("image_size",ret.getLong("size"));
+                                        .put("title", "File Uploaded: " + ret.getString("name"))
+                                        .put("title_url", ret.getString("url"))
+                                        .put("image_url", ret.getString("url"))
+                                        .put("image_type", ret.getString("type"))
+                                        .put("image_size", ret.getLong("size"));
 
                                 Message msg = new Message();
                                 msg.syncstate = SyncState.NOT_SYNCED;
                                 msg.content = "";
                                 msg.roomId = ret.getString("rid");
                                 msg.userId = ret.getString("userID");
-                                msg.extras = new JSONObject().put("file",new JSONObject().put("_id",ret.getString("_id"))).toString();
+                                msg.extras = new JSONObject().put("file", new JSONObject().put("_id", ret.getString("_id"))).toString();
                                 msg.flags &= ~Message.FLAG_GROUPABLE;
                                 msg.attachments = new JSONArray().put(attachment).toString();
                                 msg.putByContentProvider(getContext());
 
-                            }
-                            catch (JSONException e){
-                                Log.e(Constants.LOG_TAG,"error",e);
+                            } catch (JSONException e) {
+                                Log.e(Constants.LOG_TAG, "error", e);
                             }
                         }
 
-                        if(m.syncstate==SyncState.SYNCED || m.syncstate==SyncState.FAILED) {
+                        if (m.syncstate == SyncState.SYNCED || m.syncstate == SyncState.FAILED) {
                             dialog.dismiss();
                             m.deleteByContentProvider(getContext());
                             getContext().getContentResolver().unregisterContentObserver(this);
@@ -524,13 +519,13 @@ public class ChatRoomFragment extends AbstractRoomFragment implements OnBackPres
         }
     }
 
-    private long getFileSizeFor(Uri uri){
+    private long getFileSizeFor(Uri uri) {
         ParcelFileDescriptor pfd = null;
         try {
             pfd = getContext().getContentResolver().openFileDescriptor(uri, "r");
             return Math.max(pfd.getStatSize(), 0);
         } catch (final FileNotFoundException e) {
-            Log.e(Constants.LOG_TAG,"error",e);
+            Log.e(Constants.LOG_TAG, "error", e);
         } finally {
             if (pfd != null) {
                 try {

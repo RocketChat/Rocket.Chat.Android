@@ -48,7 +48,7 @@ import okhttp3.Response;
     private static final int DUMMY_HEADER = 100;
     private static final int DUMMY_FOOTER = 101;
 
-    private static final HashSet<String> sInlineViewSupportedMime = new HashSet<String>(){
+    private static final HashSet<String> sInlineViewSupportedMime = new HashSet<String>() {
         {
             add("image/png");
             add("image/jpg");
@@ -56,7 +56,6 @@ import okhttp3.Response;
             add("image/webp");
         }
     };
-
 
     private final LayoutInflater mInflater;
     private final String mHost;
@@ -66,15 +65,16 @@ import okhttp3.Response;
     private boolean mHasMore;
 
     private Interceptor mInterceptor;
+
     private Interceptor getInterceptor() {
-        if(mInterceptor==null) {
+        if (mInterceptor == null) {
             mInterceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     // uid/token is required to download attachment files.
                     // see: RocketChat:lib/fileUpload.coffee
                     Request newRequest = chain.request().newBuilder()
-                            .header("Cookie", "rc_uid="+mUserId+";rc_token="+mToken)
+                            .header("Cookie", "rc_uid=" + mUserId + ";rc_token=" + mToken)
                             .build();
                     return chain.proceed(newRequest);
                 }
@@ -82,7 +82,6 @@ import okhttp3.Response;
         }
         return mInterceptor;
     }
-
 
     public MessageAdapter(Context context, Cursor cursor, String host, String userId, String token) {
         super(context, cursor);
@@ -105,8 +104,7 @@ import okhttp3.Response;
     public int getItemViewType(int position) {
         if (position == 0) {
             return DUMMY_HEADER;
-        }
-        else if (position == getItemCount()-1) {
+        } else if (position == getItemCount() - 1) {
             return DUMMY_FOOTER;
         }
         return super.getItemViewType(position);
@@ -114,32 +112,30 @@ import okhttp3.Response;
 
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType==DUMMY_HEADER) {
+        if (viewType == DUMMY_HEADER) {
             final View v = new View(parent.getContext());
-            v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mHeaderHeight));
+            v.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mHeaderHeight));
             return new MessageViewHolder(v, mHost);
-        }
-        else if(viewType==DUMMY_FOOTER) {
+        } else if (viewType == DUMMY_FOOTER) {
             return new MessageViewHolder(mInflater.inflate(R.layout.listitem_start_of_conversation, parent, false), mHost);
         }
-        return new MessageViewHolder(mInflater.inflate(R.layout.listitem_message, parent, false),mHost);
+        return new MessageViewHolder(mInflater.inflate(R.layout.listitem_message, parent, false), mHost);
     }
 
     @Override
     public void onBindViewHolder(MessageViewHolder viewHolder, int position) {
         int type = getItemViewType(position);
         if (type == DUMMY_HEADER) {
-            if(viewHolder.itemView.getHeight()!=mHeaderHeight) {
+            if (viewHolder.itemView.getHeight() != mHeaderHeight) {
                 viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mHeaderHeight));
             }
             return;
-        }
-        else if(type == DUMMY_FOOTER) {
-            viewHolder.itemView.setVisibility(mHasMore? View.GONE : View.VISIBLE);
+        } else if (type == DUMMY_FOOTER) {
+            viewHolder.itemView.setVisibility(mHasMore ? View.GONE : View.VISIBLE);
             return;
         }
 
-        super.onBindViewHolder(viewHolder, position-1);
+        super.onBindViewHolder(viewHolder, position - 1);
     }
 
     @Override
@@ -147,8 +143,8 @@ import okhttp3.Response;
         final Message m = Message.createFromCursor(cursor);
 
         Message nextM = null;
-        if(position < getBasicItemCount()-1) {
-            if(cursor.moveToPosition(position+1)){
+        if (position < getBasicItemCount() - 1) {
+            if (cursor.moveToPosition(position + 1)) {
                 nextM = Message.createFromCursor(cursor);
             }
         }
@@ -161,10 +157,10 @@ import okhttp3.Response;
             }
         });
 
-        if(u!=null) viewHolder.avatar.setForUser(u.name);
+        if (u != null) viewHolder.avatar.setForUser(u.name);
 
         //see Rocket.Chat:packages/rocketchat-lib/client/MessageTypes.coffee
-        String username = (u!=null)? u.getDisplayName() : "unknown user";
+        String username = (u != null) ? u.getDisplayName() : "unknown user";
         boolean systemMsg = true;
         switch (m.type) {
             case USER_JOINED:
@@ -175,15 +171,15 @@ import okhttp3.Response;
                 break;
 
             case USER_ADDED:
-                viewHolder.content.setText(String.format("(User %s added by %s)",m.content,username));
+                viewHolder.content.setText(String.format("(User %s added by %s)", m.content, username));
                 break;
 
             case USER_REMOVED:
-                viewHolder.content.setText(String.format("(User %s removed by %s)",m.content,username));
+                viewHolder.content.setText(String.format("(User %s removed by %s)", m.content, username));
                 break;
 
             case ROOM_NAME_CHANGED:
-                viewHolder.content.setText(String.format("(Room name changed to: %s by %s)",m.content,username));
+                viewHolder.content.setText(String.format("(Room name changed to: %s by %s)", m.content, username));
                 break;
 
             case MESSAGE_REMOVED:
@@ -191,7 +187,7 @@ import okhttp3.Response;
                 break;
 
             case WELCOME:
-                viewHolder.content.setText(String.format("Welcome %s!",username));
+                viewHolder.content.setText(String.format("Welcome %s!", username));
                 break;
 
 
@@ -199,37 +195,34 @@ import okhttp3.Response;
             default:
                 systemMsg = false;
         }
-        if(systemMsg) {
+        if (systemMsg) {
             viewHolder.disableContentContainer();
             viewHolder.content.setEnabled(false);
-        }
-        else {
+        } else {
             viewHolder.content.setTypeface(null, Typeface.NORMAL);
-            if(TextUtils.isEmpty(m.content)) {
+            if (TextUtils.isEmpty(m.content)) {
                 viewHolder.disableContentContainer();
                 viewHolder.content.setVisibility(View.GONE);
-            }
-            else if(m.content.contains("```")) {
+            } else if (m.content.contains("```")) {
                 // TODO: not completely implemented.
                 // see: RocketChat:packages/rocketchat-highlight/highlight.coffee
-                
+
                 viewHolder.enableContentContainer();
                 boolean highlight = false;
                 int pad = context.getResources().getDimensionPixelSize(R.dimen.line_half);
-                for(String token: TextUtils.split(m.content, "```")){
+                for (String token : TextUtils.split(m.content, "```")) {
                     TextView txt = new TextView(context);
                     txt.setTextIsSelectable(true);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewHolder.content.getLayoutParams());
-                    if(highlight) {
+                    if (highlight) {
                         txt.setText(token.trim());
                         Linkify.markupSync(txt);
                         txt.setTextColor(context.getResources().getColor(R.color.highlight_text_color));
                         txt.setBackgroundResource(R.drawable.highlight_background);
-                        txt.setPadding(pad,pad,pad,pad);
-                        params.setMargins(0,pad/2,pad,pad/2);
+                        txt.setPadding(pad, pad, pad, pad);
+                        params.setMargins(0, pad / 2, pad, pad / 2);
                         txt.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
-                    }
-                    else {
+                    } else {
                         if (TextUtils.isEmpty(token.trim())) {
                             highlight = !highlight;
                             continue;
@@ -244,8 +237,7 @@ import okhttp3.Response;
 
                     highlight = !highlight;
                 }
-            }
-            else {
+            } else {
                 viewHolder.disableContentContainer();
                 viewHolder.content.setText(Emojione.shortnameToUnicode(m.content, false));
                 Linkify.markupSync(viewHolder.content);
@@ -254,68 +246,60 @@ import okhttp3.Response;
             }
         }
 
-        if(u!=null) viewHolder.username.setText(u.getDisplayName());
+        if (u != null) viewHolder.username.setText(u.getDisplayName());
         viewHolder.timestamp.setText(DateTime.fromEpocMs(m.timestamp, DateTime.Format.TIME));
 
         viewHolder.inlineContainer.removeAllViews();
 
-        if(!TextUtils.isEmpty(m.urls)) {
+        if (!TextUtils.isEmpty(m.urls)) {
             try {
                 JSONArray urls = new JSONArray(m.urls);
                 for (int i = 0; i < urls.length(); i++) {
                     insertUrl(viewHolder, urls.getJSONObject(i));
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e(Constants.LOG_TAG, "error", e);
             }
         }
-        if(!TextUtils.isEmpty(m.attachments)) {
+        if (!TextUtils.isEmpty(m.attachments)) {
             try {
                 JSONArray urls = new JSONArray(m.attachments);
                 for (int i = 0; i < urls.length(); i++) {
                     insertAttachment(viewHolder, urls.getJSONObject(i));
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e(Constants.LOG_TAG, "error", e);
             }
         }
-
     }
 
     private void setSequentialOrNewDateIfNeeded(MessageViewHolder viewHolder, Context context, @Nullable Message nextM, Message m) {
         //see Rocket.Chat:packages/rocketchat-livechat/app/client/views/message.coffee
-        if(nextM==null || !DateTime.fromEpocMs(nextM.timestamp, DateTime.Format.DATE)
+        if (nextM == null || !DateTime.fromEpocMs(nextM.timestamp, DateTime.Format.DATE)
                 .equals(DateTime.fromEpocMs(m.timestamp, DateTime.Format.DATE))) {
             setNewDay(viewHolder, DateTime.fromEpocMs(m.timestamp, DateTime.Format.DATE));
             setSequential(viewHolder, false);
-        }
-        else if(!m.isGroupable() || !nextM.isGroupable() || !nextM.userId.equals(m.userId)) {
+        } else if (!m.isGroupable() || !nextM.isGroupable() || !nextM.userId.equals(m.userId)) {
             setNewDay(viewHolder, null);
             setSequential(viewHolder, false);
-        }
-        else{
+        } else {
             setNewDay(viewHolder, null);
             setSequential(viewHolder, true);
         }
-
-
     }
 
     private void setSequential(MessageViewHolder viewHolder, boolean sequential) {
-        if(sequential){
+        if (sequential) {
             viewHolder.avatar.hide();
             viewHolder.usertimeContainer.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             viewHolder.avatar.show();
             viewHolder.usertimeContainer.setVisibility(View.VISIBLE);
         }
     }
 
     private void setNewDay(MessageViewHolder viewHolder, @Nullable String newDayText) {
-        if(TextUtils.isEmpty(newDayText)) viewHolder.newDayContainer.setVisibility(View.GONE);
+        if (TextUtils.isEmpty(newDayText)) viewHolder.newDayContainer.setVisibility(View.GONE);
         else {
             viewHolder.newDayText.setText(newDayText);
             viewHolder.newDayContainer.setVisibility(View.VISIBLE);
@@ -332,7 +316,7 @@ import okhttp3.Response;
 
         final Context context = viewHolder.itemView.getContext();
         if (contentType.startsWith("image/") && sInlineViewSupportedMime.contains(contentType)) {
-            View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_image,viewHolder.inlineContainer,false);
+            View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_image, viewHolder.inlineContainer, false);
             ImageView img = (ImageView) v.findViewById(R.id.list_item_inline_image);
             Picasso.with(context)
                     .load(url)
@@ -344,30 +328,32 @@ import okhttp3.Response;
 
         // see Rocket.Chat:packages/rocketchat-oembed/client/oembedUrlWidget.coffee
         if (!urlObj.isNull("meta")) {
-            JSONObject meta =urlObj.getJSONObject("meta");
+            JSONObject meta = urlObj.getJSONObject("meta");
 
             String title = null;
-            if(!meta.isNull("ogTitle")) title = meta.getString("ogTitle");
-            else if(!meta.isNull("twitterTitle")) title = meta.getString("twitterTitle");
-            else if(!meta.isNull("pageTitle")) title = meta.getString("pageTitle");
+            if (!meta.isNull("ogTitle")) title = meta.getString("ogTitle");
+            else if (!meta.isNull("twitterTitle")) title = meta.getString("twitterTitle");
+            else if (!meta.isNull("pageTitle")) title = meta.getString("pageTitle");
 
             String description = null;
-            if(!meta.isNull("ogDescription")) description = meta.getString("ogDescription");
-            else if(!meta.isNull("twitterDescription")) description = meta.getString("twitterDescription");
-            else if(!meta.isNull("description")) description = meta.getString("description");
+            if (!meta.isNull("ogDescription")) description = meta.getString("ogDescription");
+            else if (!meta.isNull("twitterDescription"))
+                description = meta.getString("twitterDescription");
+            else if (!meta.isNull("description")) description = meta.getString("description");
 
             if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description)) return;
 
             if (description.startsWith("\"")) description = description.substring(1);
-            if (description.endsWith("\"")) description = description.substring(0, description.length()-1);
+            if (description.endsWith("\""))
+                description = description.substring(0, description.length() - 1);
 
             String imageURL = null;
-            if(!meta.isNull("ogImage")) imageURL = meta.getString("ogImage");
-            else if(!meta.isNull("twitterImage")) imageURL = meta.getString("twitterImage");
+            if (!meta.isNull("ogImage")) imageURL = meta.getString("ogImage");
+            else if (!meta.isNull("twitterImage")) imageURL = meta.getString("twitterImage");
 
             String host = urlObj.getJSONObject("parsedUrl").getString("host");
 
-            View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_embed_url,viewHolder.inlineContainer,false);
+            View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_embed_url, viewHolder.inlineContainer, false);
 
             ((TextView) v.findViewById(R.id.inline_embed_url_host)).setText(host);
             ((TextView) v.findViewById(R.id.inline_embed_url_title)).setText(title);
@@ -375,7 +361,7 @@ import okhttp3.Response;
 
 
             ImageView img = (ImageView) v.findViewById(R.id.inline_embed_url_image);
-            if(TextUtils.isEmpty(imageURL)) img.setVisibility(View.GONE);
+            if (TextUtils.isEmpty(imageURL)) img.setVisibility(View.GONE);
             else {
                 Picasso.with(context)
                         .load(imageURL)
@@ -400,9 +386,8 @@ import okhttp3.Response;
 
     private String absolutize(String url) {
         if (url.startsWith("/")) {
-            return "https://"+mHost+url;
-        }
-        else return url;
+            return "https://" + mHost + url;
+        } else return url;
     }
 
     private void insertAttachment(MessageViewHolder viewHolder, final JSONObject attachmentObj) throws JSONException {
@@ -410,7 +395,7 @@ import okhttp3.Response;
         //see: RocketChat:packages/rocketchat-message-attachments/client/messageAttachment.html
 
         boolean add = false;
-        View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_attachment,viewHolder.inlineContainer,false);
+        View v = LayoutInflater.from(context).inflate(R.layout.listitem_inline_attachment, viewHolder.inlineContainer, false);
 
         TextView titleText = ((TextView) v.findViewById(R.id.inline_attachment_title));
         if (!attachmentObj.isNull("title")) {
@@ -432,8 +417,7 @@ import okhttp3.Response;
                     }
                 });
             }
-        }
-        else titleText.setVisibility(View.GONE);
+        } else titleText.setVisibility(View.GONE);
 
         ImageView img = (ImageView) v.findViewById(R.id.inline_attachment_image);
         if (!attachmentObj.isNull("image_url")) {
@@ -445,7 +429,7 @@ import okhttp3.Response;
                 if (TextUtils.isEmpty(imageURL)) img.setVisibility(View.GONE);
                 else {
                     OkHttpClient client = OkHttpHelper.getClient();
-                    if(!client.interceptors().contains(getInterceptor())) {
+                    if (!client.interceptors().contains(getInterceptor())) {
                         client.interceptors().add(getInterceptor());
                     }
                     new Picasso.Builder(context)
@@ -459,13 +443,12 @@ import okhttp3.Response;
                     add = true;
                 }
             }
-        }
-        else img.setVisibility(View.GONE);
+        } else img.setVisibility(View.GONE);
 
         if (add) viewHolder.inlineContainer.addView(v);
     }
 
-    public void setHeaderHeight(int height){
+    public void setHeaderHeight(int height) {
         mHeaderHeight = height;
         notifyItemChanged(0);
     }

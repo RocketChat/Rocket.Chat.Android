@@ -9,9 +9,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import bolts.Continuation;
 import bolts.Task;
+import chat.rocket.android.api.JSONParseEngine;
 import chat.rocket.android.api.ws.RocketChatWSAPI;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
 import chat.rocket.android.content.RocketChatProvider;
@@ -27,8 +29,12 @@ public class RocketChatRoom extends AbstractObserver {
     private String mID;
     private Subscription mSubscription;
 
+    private JSONParseEngine parseEngine;
+
     public RocketChatRoom(Context context, Looper looper, RocketChatWSAPI api) {
         super(context, looper, api);
+
+        parseEngine = new JSONParseEngine(context);
     }
 
     @Override
@@ -45,18 +51,21 @@ public class RocketChatRoom extends AbstractObserver {
 
     @Override
     protected void onChange(Uri uri) {
-        Cursor c = mContext.getContentResolver().query(uri, null, "id!='DUMMY' AND syncstate=2", null, null);
-        if(c==null) return;
-        if(c.getCount()==0) {
-            //removed
+        if (mID != null) {
+            mAPI.unsubscribe(mID);
         }
-        else if(c.moveToFirst()){
+
+        Cursor c = mContext.getContentResolver().query(uri, null, "id!='DUMMY' AND syncstate=2", null, null);
+        if (c == null) return;
+        if (c.getCount() == 0) {
+            //removed
+        } else if (c.moveToFirst()) {
             //added or updated
             Room r = Room.createFromCursor(c);
 
-            JSONArray params = new JSONArray().put("c"+r.name);
+            JSONArray params = new JSONArray().put(r.rid);
 
-            mAPI.subscribe("room",params).onSuccess(new Continuation<DDPSubscription.Ready, Object>() {
+            mAPI.subscribe("stream-room-messages", params).onSuccess(new Continuation<DDPSubscription.Ready, Object>() {
                 @Override
                 public Object then(Task<DDPSubscription.Ready> task) throws Exception {
                     mID = task.getResult().id;
@@ -68,13 +77,13 @@ public class RocketChatRoom extends AbstractObserver {
         c.close();
     }
 
-    private void registerSubscriptionCallback(){
+    private void registerSubscriptionCallback() {
         mSubscription = mAPI.getSubscriptionCallback()
                 .filter(new Func1<DDPSubscription.Event, Boolean>() {
                     @Override
                     public Boolean call(DDPSubscription.Event event) {
                         return event instanceof DDPSubscription.DocEvent
-                                && "rocketchat_room".equals(((DDPSubscription.DocEvent) event).collection);
+                                && "stream-room-messages".equals(((DDPSubscription.DocEvent) event).collection);
                     }
                 })
                 .cast(DDPSubscription.DocEvent.class)
@@ -90,8 +99,8 @@ public class RocketChatRoom extends AbstractObserver {
                                 RocketChatDatabaseHelper.writeWithTransaction(mContext, new RocketChatDatabaseHelper.DBCallbackEx<Object>() {
                                     @Override
                                     public Object process(SQLiteDatabase db) throws Exception {
-                                        UserRoom.delete(db, "room_id=?",new String[]{roomID});
-                                        for(int i=0;i<usernames.length();i++){
+                                        UserRoom.delete(db, "room_id=?", new String[]{roomID});
+                                        for (int i = 0; i < usernames.length(); i++) {
                                             String username = usernames.getString(i);
                                             UserRoom userRoom = new UserRoom();
                                             userRoom.username = username;
@@ -104,11 +113,28 @@ public class RocketChatRoom extends AbstractObserver {
 
                                     @Override
                                     public void handleException(Exception e) {
-                                        Log.e(TAG,"error",e);
+                                        Log.e(TAG, "error", e);
                                     }
                                 });
                             } else if (docEvent instanceof DDPSubscription.Removed) {
                             } else if (docEvent instanceof DDPSubscription.Changed) {
+                                final JSONArray args = ((DDPSubscription.Changed) docEvent).fields.getJSONArray("args");
+
+                                RocketChatDatabaseHelper.writeWithTransaction(mContext, new RocketChatDatabaseHelper.DBCallbackEx<Object>() {
+                                    @Override
+                                    public Object process(SQLiteDatabase db) throws Exception {
+                                        for (int i = 0, size = args.length(); i < size; i++) {
+                                            parseEngine.parseMessage((JSONObject) args.get(i), db);
+                                        }
+
+                                        return null;
+                                    }
+
+                                    @Override
+                                    public void handleException(Exception e) {
+                                        Log.e(TAG, "error", e);
+                                    }
+                                });
 
                             } else if (docEvent instanceof DDPSubscription.MovedBefore) {
 
@@ -127,9 +153,9 @@ public class RocketChatRoom extends AbstractObserver {
     protected void onDestroy() {
         super.onDestroy();
 
-        if(mSubscription!=null) mSubscription.unsubscribe();
+        if (mSubscription != null) mSubscription.unsubscribe();
 
-        if(!TextUtils.isEmpty(mID)) {
+        if (!TextUtils.isEmpty(mID)) {
             mAPI.unsubscribe(mID).continueWith(new Continuation<DDPSubscription.NoSub, Object>() {
                 @Override
                 public Object then(Task<DDPSubscription.NoSub> task) throws Exception {

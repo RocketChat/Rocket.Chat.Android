@@ -43,7 +43,7 @@ public class RocketChatSubscription extends AbstractRocketChatSubscription {
     @Override
     protected void onDocumentChanged(DDPSubscription.Changed docEvent) throws JSONException {
         JSONObject room = docEvent.fields;
-        if(mDocumentStore.containsKey(docEvent.docID)){
+        if (mDocumentStore.containsKey(docEvent.docID)) {
             room.put("rid", mDocumentStore.get(docEvent.docID));
             mParser.parseRoom(room);
         }

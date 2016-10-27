@@ -33,17 +33,17 @@ public class SendNewMessageHandler extends AbstractObserver {
     @Override
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
-        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2 AND id IS NULL",null,null);
-        if(c==null) return;
-        while(c.moveToNext()) handleNewMessage(c);
+        Cursor c = mContext.getContentResolver().query(uri, null, "syncstate!=2 AND id IS NULL", null, null);
+        if (c == null) return;
+        while (c.moveToNext()) handleNewMessage(c);
         c.close();
     }
 
     @Override
     protected void onChange(Uri uri) {
-        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0 AND id IS NULL",null,null);
-        if(c==null) return;
-        if (c.getCount()>0 && c.moveToFirst()) handleNewMessage(c);
+        Cursor c = mContext.getContentResolver().query(uri, null, "syncstate=0 AND id IS NULL", null, null);
+        if (c == null) return;
+        if (c.getCount() > 0 && c.moveToFirst()) handleNewMessage(c);
         c.close();
     }
 
@@ -55,32 +55,32 @@ public class SendNewMessageHandler extends AbstractObserver {
 
         try {
             JSONObject params = new JSONObject();
-            JSONObject extras = TextUtils.isEmpty(m.extras)? new JSONObject() : new JSONObject(m.extras);
+            JSONObject extras = TextUtils.isEmpty(m.extras) ? new JSONObject() : new JSONObject(m.extras);
 
-            if(!extras.isNull("file")) params.put("file", extras.getJSONObject("file"));
-            if(!m.isGroupable()) params.put("groupable", false);
-            if(!TextUtils.isEmpty(m.attachments)) params.put("attachments", new JSONArray(m.attachments));
+            if (!extras.isNull("file")) params.put("file", extras.getJSONObject("file"));
+            if (!m.isGroupable()) params.put("groupable", false);
+            if (!TextUtils.isEmpty(m.attachments))
+                params.put("attachments", new JSONArray(m.attachments));
 
             mAPI.sendMessage(m.roomId, m.content, params).continueWith(new Continuation<DDPClientCallback.RPC, Object>() {
                 @Override
                 public Object then(Task<DDPClientCallback.RPC> task) throws Exception {
                     JSONObject result = task.getResult().result;
-                    if(task.isFaulted()){
+                    if (task.isFaulted()) {
                         m.syncstate = SyncState.FAILED;
-                        Log.e(TAG,"error",task.getError());
-                    }
-                    else{
+                        Log.e(TAG, "error", task.getError());
+                    } else {
                         m.syncstate = SyncState.SYNCED;
                         m.id = result.getString("_id");
                         m.timestamp = result.getJSONObject("ts").getLong("$date");
-                        m.userId = result.getJSONObject("u").getString("username");
+                        m.userId = result.getJSONObject("u").getString("_id");
                     }
                     m.putByContentProvider(mContext);
                     return null;
                 }
             });
         } catch (JSONException e) {
-            Log.e(TAG,"error",e);
+            Log.e(TAG, "error", e);
         }
     }
 }

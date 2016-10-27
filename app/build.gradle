@@ -5,18 +5,18 @@ apply plugin: 'io.fabric'
 
 def getCurrentCommitMessage() {
     def gitlog = 'git log origin/develop...HEAD --decorate'.execute().text
-    if (gitlog.trim().length()>0) return gitlog
+    if (gitlog.trim().length() > 0) return gitlog
     return 'git log -n 1 --decorate'.execute().text
 }
 
 def getKeyStore() {
     def path = System.getenv("KEYSTORE_PATH")
-    return file((path==null) ? "../Rocket.jks" : path)
+    return file((path == null) ? "../Rocket.jks" : path)
 }
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "24.0.3"
 
     Properties properties = new Properties()
     properties.load(project.rootProject.file('app/fabric.properties').newDataInputStream())
@@ -30,9 +30,9 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "0.0.0"
-        manifestPlaceholders = [fabric_api_key:properties.getProperty("apiKey", System.getenv("FABRIC_API_KEY"))]
-        ext.betaDistributionNotifications=false
-        ext.betaDistributionReleaseNotes=getCurrentCommitMessage()
+        manifestPlaceholders = [fabric_api_key: properties.getProperty("apiKey", System.getenv("FABRIC_API_KEY"))]
+        ext.betaDistributionNotifications = false
+        ext.betaDistributionReleaseNotes = getCurrentCommitMessage()
     }
     signingConfigs {
         release {
@@ -58,8 +58,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
 
     compile 'com.github.clans:fab:1.6.2'
 

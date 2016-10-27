@@ -25,13 +25,17 @@ abstract class AbstractRocketChatSubscription extends AbstractSubscriber {
     }
 
     protected abstract String getSubscriptionName();
+
     protected abstract String getSubscriptionCallbackName();
+
     protected abstract void onDocumentAdded(DDPSubscription.Added docEvent) throws JSONException;
-    protected void onDocumentChanged(DDPSubscription.Changed docEvent) throws JSONException{}
+
+    protected void onDocumentChanged(DDPSubscription.Changed docEvent) throws JSONException {
+    }
 
     @Override
     protected void onSubscribe() {
-        mAPI.subscribe(getSubscriptionName(),null).onSuccess(new Continuation<DDPSubscription.Ready, Object>() {
+        mAPI.subscribe(getSubscriptionName(), null).onSuccess(new Continuation<DDPSubscription.Ready, Object>() {
             @Override
             public Object then(Task<DDPSubscription.Ready> task) throws Exception {
                 mID = task.getResult().id;
@@ -41,7 +45,7 @@ abstract class AbstractRocketChatSubscription extends AbstractSubscriber {
         }).continueWith(new Continuation<Object, Object>() {
             @Override
             public Object then(Task<Object> task) throws Exception {
-                if(task.isFaulted()){
+                if (task.isFaulted()) {
                     Log.e(TAG, "error", task.getError());
                 }
                 return null;
@@ -51,7 +55,7 @@ abstract class AbstractRocketChatSubscription extends AbstractSubscriber {
         registerSubscriptionCallback();
     }
 
-    private void registerSubscriptionCallback(){
+    private void registerSubscriptionCallback() {
         mSubscription = mAPI.getSubscriptionCallback()
                 .filter(new Func1<DDPSubscription.Event, Boolean>() {
                     @Override
@@ -71,7 +75,7 @@ abstract class AbstractRocketChatSubscription extends AbstractSubscriber {
                                 onDocumentAdded((DDPSubscription.Added) docEvent);
                             } else if (docEvent instanceof DDPSubscription.Removed) {
                             } else if (docEvent instanceof DDPSubscription.Changed) {
-                                onDocumentChanged((DDPSubscription.Changed)docEvent);
+                                onDocumentChanged((DDPSubscription.Changed) docEvent);
                             } else if (docEvent instanceof DDPSubscription.MovedBefore) {
 
                             }
@@ -86,8 +90,8 @@ abstract class AbstractRocketChatSubscription extends AbstractSubscriber {
 
     @Override
     protected void onUnsubscribe() {
-        if(mSubscription!=null) mSubscription.unsubscribe();
-        if(!TextUtils.isEmpty(mID)) {
+        if (mSubscription != null) mSubscription.unsubscribe();
+        if (!TextUtils.isEmpty(mID)) {
             mAPI.unsubscribe(mID).continueWith(new Continuation<DDPSubscription.NoSub, Object>() {
                 @Override
                 public Object then(Task<DDPSubscription.NoSub> task) throws Exception {

@@ -39,17 +39,17 @@ public class MethodCallObserver extends AbstractObserver {
     @Override
     protected void onCreate(Uri uri) {
         super.onCreate(uri);
-        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate!=2",null,null);
-        if (c==null) return;
-        while(c.moveToNext()) handleMethod(c);
+        Cursor c = mContext.getContentResolver().query(uri, null, "syncstate!=2", null, null);
+        if (c == null) return;
+        while (c.moveToNext()) handleMethod(c);
         c.close();
     }
 
     @Override
     protected void onChange(Uri uri) {
-        Cursor c = mContext.getContentResolver().query(uri,null,"syncstate=0",null,null);
-        if (c==null) return;
-        if (c.getCount()>0 && c.moveToFirst()) handleMethod(c);
+        Cursor c = mContext.getContentResolver().query(uri, null, "syncstate=0", null, null);
+        if (c == null) return;
+        if (c.getCount() > 0 && c.moveToFirst()) handleMethod(c);
         c.close();
     }
 
@@ -66,13 +66,12 @@ public class MethodCallObserver extends AbstractObserver {
                 public Object then(Task<DDPClientCallback.RPC> task) throws Exception {
                     JSONObject result = task.getResult().result;
                     ResultHandler handler = getResultHandler(m, params);
-                    if(handler == null || !handler.handleResult(result)) {
+                    if (handler == null || !handler.handleResult(result)) {
                         m.returns = result.toString();
                         m.timestamp = System.currentTimeMillis();
                         m.syncstate = SyncState.SYNCED;
                         m.putByContentProvider(mContext);
-                    }
-                    else {
+                    } else {
                         m.deleteByContentProvider(mContext);
                     }
                     return null;
@@ -80,13 +79,12 @@ public class MethodCallObserver extends AbstractObserver {
             }).continueWith(new Continuation<Object, Object>() {
                 @Override
                 public Object then(Task<Object> task) throws Exception {
-                    if(task.isFaulted()){
+                    if (task.isFaulted()) {
                         Exception e = task.getError();
                         Log.e(TAG, "error", task.getError());
                         if (e instanceof JSONException || e instanceof IllegalArgumentException) {
                             m.deleteByContentProvider(mContext);
-                        }
-                        else {
+                        } else {
                             m.syncstate = SyncState.FAILED;
                             m.putByContentProvider(mContext);
                         }
@@ -95,7 +93,7 @@ public class MethodCallObserver extends AbstractObserver {
                 }
             });
         } catch (Exception e) {
-            Log.e(TAG, "error",e);
+            Log.e(TAG, "error", e);
             m.deleteByContentProvider(mContext);
         }
     }
@@ -103,13 +101,15 @@ public class MethodCallObserver extends AbstractObserver {
     @DebugLog
     private Task<DDPClientCallback.RPC> getMethod(final MethodCall m, JSONObject params) throws JSONException {
         String id = m.id;
-        if("loadMessages".equals(id)) {
-            return mAPI.loadMessages(params.getString("room_id"), params.optLong("end_ts",-1), params.optInt("num",50));
-        }
-        else if("logout".equals(id)) {
+        if ("loadMessages".equals(id)) {
+            return mAPI.loadMessages(params.getString("room_id"), params.optLong("end_ts", -1), params.optInt("num", 50));
+        } else if ("logout".equals(id)) {
             return mAPI.logout();
-        }
-        else if("uploadFile".equals(id)) {
+        } else if ("subscriptions/get".equals(id)) {
+            return mAPI.getSubscriptions();
+        } else if ("rooms/get".equals(id)) {
+            return mAPI.getRooms();
+        } else if ("uploadFile".equals(id)) {
             final Uri localFile = Uri.parse(params.getString("file_uri"));
             final String filename = params.getString("filename");
             return mAPI.uploadFile(mContext,
@@ -126,13 +126,13 @@ public class MethodCallObserver extends AbstractObserver {
                                         .put("sent", sent)
                                         .put("total", total).toString();
                                 m.putByContentProvider(mContext);
+                            } catch (JSONException e) {
                             }
-                            catch (JSONException e){ }
                         }
                     });
         }
 
-        throw new IllegalArgumentException("id("+id+") is not known.");
+        throw new IllegalArgumentException("id(" + id + ") is not known.");
     }
 
     private interface ResultHandler {
@@ -142,18 +142,19 @@ public class MethodCallObserver extends AbstractObserver {
     @DebugLog
     private ResultHandler getResultHandler(MethodCall m, JSONObject params) throws JSONException {
         String id = m.id;
-        if("loadMessages".equals(id)) {
+        if ("loadMessages".equals(id)) {
             final String roomId = params.getString("room_id");
             final boolean clearAllMessage = params.optBoolean("clean", false);
-            final int num = params.optInt("num",50);
+            final int num = params.optInt("num", 50);
             return new ResultHandler() {
                 @Override
                 public boolean handleResult(JSONObject result) throws Exception {
-                    Log.d(TAG,"unreadNotLoaded="+result.getInt("unreadNotLoaded"));
-                    if(clearAllMessage) Message.deleteByContentProvider(mContext, "room_id=?",new String[]{roomId});
+                    Log.d(TAG, "unreadNotLoaded=" + result.getInt("unreadNotLoaded"));
+                    if (clearAllMessage)
+                        Message.deleteByContentProvider(mContext, "room_id=?", new String[]{roomId});
                     JSONArray messages = result.getJSONArray("messages");
                     JSONParseEngine parser = new JSONParseEngine(mContext);
-                    for(int i=0;i<messages.length();i++) {
+                    for (int i = 0; i < messages.length(); i++) {
                         parser.parseMessage(messages.getJSONObject(i));
                     }
 
@@ -163,9 +164,9 @@ public class MethodCallObserver extends AbstractObserver {
                             return Room.getById(db, roomId);
                         }
                     });
-                    if(r!=null) {
+                    if (r != null) {
                         boolean hasMore = (messages.length() >= num);
-                        if(r.hasMore!=hasMore){
+                        if (r.hasMore != hasMore) {
                             r.hasMore = hasMore;
                             r.putByContentProvider(mContext);
                         }
@@ -174,8 +175,31 @@ public class MethodCallObserver extends AbstractObserver {
                     return true;
                 }
             };
-        }
-        else if ("logout".equals(id)) {
+        } else if ("subscriptions/get".equals(id)) {
+            return new ResultHandler() {
+                @Override
+                public boolean handleResult(JSONObject result) throws Exception {
+                    JSONParseEngine parser = new JSONParseEngine(mContext);
+                    JSONArray rooms = result.getJSONArray("update");
+                    for (int i = 0; i < rooms.length(); i++) {
+                        parser.parseRoom(rooms.getJSONObject(i));
+                    }
+                    return true;
+                }
+            };
+        } else if ("rooms/get".equals(id)) {
+            return new ResultHandler() {
+                @Override
+                public boolean handleResult(JSONObject result) throws Exception {
+                    JSONParseEngine parser = new JSONParseEngine(mContext);
+                    JSONArray rooms = result.getJSONArray("update");
+                    for (int i = 0; i < rooms.length(); i++) {
+                        parser.parseRoom(rooms.getJSONObject(i));
+                    }
+                    return true;
+                }
+            };
+        } else if ("logout".equals(id)) {
             return new ResultHandler() {
                 @Override
                 public boolean handleResult(JSONObject result) throws Exception {

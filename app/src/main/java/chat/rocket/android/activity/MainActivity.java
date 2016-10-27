@@ -31,6 +31,9 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionMenu;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import chat.rocket.android.Constants;
 import chat.rocket.android.R;
 import chat.rocket.android.content.RocketChatDatabaseHelper;
@@ -52,7 +55,7 @@ import chat.rocket.android.view.CursorRecyclerViewAdapter;
 public class MainActivity extends AbstractActivity {
     private static final String TAG = Constants.LOG_TAG;
     private static final int LOADER_ID = 0x12345;
-    public static final String TOGGLE_NAV_ACTION = MainActivity.class.getName()+".intent.action.TOGGLE_NAV";
+    public static final String TOGGLE_NAV_ACTION = MainActivity.class.getName() + ".intent.action.TOGGLE_NAV";
 
     private RoomAdapter mAdapter;
 
@@ -93,17 +96,18 @@ public class MainActivity extends AbstractActivity {
     private BroadcastReceiver mToggleNavReveiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(TOGGLE_NAV_ACTION.equals(intent.getAction())) {
+            if (TOGGLE_NAV_ACTION.equals(intent.getAction())) {
                 togglePaneIfNeeded();
             }
         }
     };
 
     private Handler mHandler = new Handler();
-    private void setupUserInfo(){
+
+    private void setupUserInfo() {
         final ServerConfig s = getPrimaryServerConfig();
-        final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID,"");
-        final String username = Cache.get(this).getString(Cache.KEY_MY_USER_NAME,"");
+        final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID, "");
+        final String username = Cache.get(this).getString(Cache.KEY_MY_USER_NAME, "");
         setupUserStatus(userId);
         setupUserInfoInner(s, username);
         Cache.waitForValue(this, Cache.KEY_MY_USER_NAME, new Cache.ValueCallback<String>() {
@@ -120,44 +124,43 @@ public class MainActivity extends AbstractActivity {
         });
     }
 
-    private void setupUserInfoInner(ServerConfig s, final String username){
-        if(s!=null){
+    private void setupUserInfoInner(ServerConfig s, final String username) {
+        if (s != null) {
             ((TextView) findViewById(R.id.txt_hostname_info)).setText(s.hostname);
-            if(!TextUtils.isEmpty(username)) {
+            if (!TextUtils.isEmpty(username)) {
                 ((TextView) findViewById(R.id.txt_account_info)).setText(username);
                 new Avatar(s.hostname,
                         findViewById(R.id.avatar_color),
-                        (TextView)findViewById(R.id.avatar_initials),
-                        (ImageView)findViewById(R.id.avatar_img)).setForUser(username);
-            }
-            else ((TextView) findViewById(R.id.txt_account_info)).setText(s.account);
-        }
-        else {
+                        (TextView) findViewById(R.id.avatar_initials),
+                        (ImageView) findViewById(R.id.avatar_img)).setForUser(username);
+            } else ((TextView) findViewById(R.id.txt_account_info)).setText(s.account);
+        } else {
             ((TextView) findViewById(R.id.txt_hostname_info)).setText("--");
             ((TextView) findViewById(R.id.txt_account_info)).setText("---");
         }
     }
 
     private void setupUserStatus(final String userId) {
-        if(TextUtils.isEmpty(userId)) return;
+        if (TextUtils.isEmpty(userId)) return;
 
         User u = RocketChatDatabaseHelper.read(this, new RocketChatDatabaseHelper.DBCallback<User>() {
             @Override
             public User process(SQLiteDatabase db) throws Exception {
-                return User.getById(db,userId);
+                return User.getById(db, userId);
             }
         });
         getContentResolver().unregisterContentObserver(mUserObserver);
-        if(u!=null) {
+        if (u != null) {
             setupUserStatusInner(userId);
-            getContentResolver().registerContentObserver(RocketChatProvider.getUriForQuery(User.TABLE_NAME,u._id), false, mUserObserver);
+            getContentResolver().registerContentObserver(RocketChatProvider.getUriForQuery(User.TABLE_NAME, u._id), false, mUserObserver);
         }
     }
+
     private ContentObserver mUserObserver = new ContentObserver(null) {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID,"");
+            final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID, "");
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -168,16 +171,18 @@ public class MainActivity extends AbstractActivity {
     };
 
     private void setupUserStatusInner(final String userId) {
-        if(TextUtils.isEmpty(userId)) return;
+        if (TextUtils.isEmpty(userId)) return;
 
         User u = RocketChatDatabaseHelper.read(MainActivity.this, new RocketChatDatabaseHelper.DBCallback<User>() {
             @Override
             public User process(SQLiteDatabase db) throws Exception {
-                return User.getById(db,userId);
+                return User.getById(db, userId);
             }
         });
-        if(u!=null) ((ImageView) findViewById(R.id.img_userstatus)).setImageResource(u.status.getDrawable());
-        else ((ImageView) findViewById(R.id.img_userstatus)).setImageResource(User.Status.OFFLINE.getDrawable());
+        if (u != null)
+            ((ImageView) findViewById(R.id.img_userstatus)).setImageResource(u.status.getDrawable());
+        else
+            ((ImageView) findViewById(R.id.img_userstatus)).setImageResource(User.Status.OFFLINE.getDrawable());
     }
 
 
@@ -191,9 +196,9 @@ public class MainActivity extends AbstractActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Context context = parent.getContext();
-            if(position<0 || position>= mUserStatusItems.length) return;
+            if (position < 0 || position >= mUserStatusItems.length) return;
 
-            final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID,"");
+            final String userId = Cache.get(MainActivity.this).getString(Cache.KEY_MY_USER_ID, "");
             User u = RocketChatDatabaseHelper.read(view.getContext(), new RocketChatDatabaseHelper.DBCallback<User>() {
                 @Override
                 public User process(SQLiteDatabase db) throws Exception {
@@ -201,7 +206,7 @@ public class MainActivity extends AbstractActivity {
                 }
             });
 
-            if(u==null) return;
+            if (u == null) return;
 
             User.Status status = mUserStatusItems[position];
 
@@ -220,14 +225,14 @@ public class MainActivity extends AbstractActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Context context = parent.getContext();
             final ServerConfig s = getPrimaryServerConfig();
-            if(s!=null) {
-                MethodCall.create("logout",null).putByContentProvider(context);
+            if (s != null) {
+                MethodCall.create("logout", null).putByContentProvider(context);
                 RocketChatDatabaseHelper.writeWithTransaction(context, new RocketChatDatabaseHelper.DBCallbackEx<Object>() {
                     @Override
                     public Object process(SQLiteDatabase db) throws Exception {
-                        Room.delete(db, null,null);
-                        Message.delete(db, null,null);
-                        User.delete(db, null,null);
+                        Room.delete(db, null, null);
+                        Message.delete(db, null, null);
+                        User.delete(db, null, null);
                         s.delete(db);
 
                         return null;
@@ -248,19 +253,19 @@ public class MainActivity extends AbstractActivity {
     };
 
 
-    private void showEntryActivity(){
+    private void showEntryActivity() {
         Intent intent = new Intent(this, EntryActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
-    private void setupUserActionToggle(){
+    private void setupUserActionToggle() {
         final ListView userStatusActionList = (ListView) findViewById(R.id.listview_user_status_actions);
-        userStatusActionList.setAdapter(new ArrayAdapter<User.Status>(this, R.layout.listitem_navi_menu, R.id.listitem_userstatus_text, mUserStatusItems){
+        userStatusActionList.setAdapter(new ArrayAdapter<User.Status>(this, R.layout.listitem_navi_menu, R.id.listitem_userstatus_text, mUserStatusItems) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View listitem = super.getView(position, convertView, parent);
-                if (position>=0 && position< mUserStatusItems.length) {
+                if (position >= 0 && position < mUserStatusItems.length) {
                     ((ImageView) listitem.findViewById(R.id.listitem_userstatus_icon)).setImageResource(mUserStatusItems[position].getDrawable());
                 }
                 return listitem;
@@ -280,11 +285,11 @@ public class MainActivity extends AbstractActivity {
         });
     }
 
-    private void toggleUserActionView(){
+    private void toggleUserActionView() {
         final ListView userStatusActionList = (ListView) findViewById(R.id.listview_user_status_actions);
         final ListView userActionList = (ListView) findViewById(R.id.listview_user_actions);
         final View toggle = findViewById(R.id.img_user_action_toggle);
-        if(userActionList.getVisibility()==View.GONE) {
+        if (userActionList.getVisibility() == View.GONE) {
             toggle.animate()
                     .rotation(180)
                     .withEndAction(new Runnable() {
@@ -294,8 +299,7 @@ public class MainActivity extends AbstractActivity {
                             userActionList.setVisibility(View.VISIBLE);
                         }
                     }).start();
-        }
-        else {
+        } else {
             toggle.animate()
                     .rotation(0)
                     .withEndAction(new Runnable() {
@@ -308,7 +312,7 @@ public class MainActivity extends AbstractActivity {
         }
     }
 
-    private void loadRooms(){
+    private void loadRooms() {
         mAdapter = new RoomAdapter(this, null);
         final RecyclerView roomListView = (RecyclerView) findViewById(R.id.listview_rooms);
         roomListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -331,9 +335,12 @@ public class MainActivity extends AbstractActivity {
                 mAdapter.swapCursor(null);
             }
         });
+
+        MethodCall.create("rooms/get", null).putByContentProvider(this);
+        MethodCall.create("subscriptions/get", null).putByContentProvider(this);
     }
 
-    private void setupAddRoomButton(){
+    private void setupAddRoomButton() {
         final FloatingActionMenu fabMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_add_room);
 
         findViewById(R.id.btn_add_channel).setOnClickListener(new View.OnClickListener() {
@@ -363,7 +370,7 @@ public class MainActivity extends AbstractActivity {
         // pane.isOpen is not correct before OnLayout.
         // https://code.google.com/p/android/issues/detail?id=176340
         final SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-        if(pane!=null) pane.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        if (pane != null) pane.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 pane.removeOnLayoutChangeListener(this);
@@ -379,24 +386,23 @@ public class MainActivity extends AbstractActivity {
 
     private void openPaneIfNeeded() {
         final SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-        if (pane!=null && pane.isSlideable() && !pane.isOpen()) {
+        if (pane != null && pane.isSlideable() && !pane.isOpen()) {
             pane.openPane();
         }
     }
 
-    private void closePaneIfNeeded(){
+    private void closePaneIfNeeded() {
         final SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-        if (pane!=null && pane.isSlideable() && pane.isOpen()) {
+        if (pane != null && pane.isSlideable() && pane.isOpen()) {
             pane.closePane();
         }
     }
 
-    private void togglePaneIfNeeded(){
+    private void togglePaneIfNeeded() {
         final SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-        if (pane!=null && pane.isSlideable() && pane.isOpen()) {
+        if (pane != null && pane.isSlideable() && pane.isOpen()) {
             pane.closePane();
-        }
-        else if (pane!=null && pane.isSlideable() && !pane.isOpen()) {
+        } else if (pane != null && pane.isSlideable() && !pane.isOpen()) {
             pane.openPane();
         }
     }
@@ -440,7 +446,7 @@ public class MainActivity extends AbstractActivity {
         public void bindView(RoomViewHolder viewHolder, Context context, int position, Cursor cursor) {
             final Room r = Room.createFromCursor(cursor);
 
-            switch (r.type){
+            switch (r.type) {
                 case CHANNEL:
                     viewHolder.roomType.setImageResource(R.drawable.ic_room_type_channel);
                     break;
@@ -453,25 +459,25 @@ public class MainActivity extends AbstractActivity {
             }
 
             viewHolder.roomName.setText(r.name);
-            viewHolder.roomName.setTypeface(null, r.alert? Typeface.BOLD : Typeface.NORMAL);
+            viewHolder.roomName.setTypeface(null, r.alert ? Typeface.BOLD : Typeface.NORMAL);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     closePaneIfNeeded();
                     showChatRoomFragment(r);
-                    if(r.alert) {
+                    if (r.alert) {
                         r.alert = false;
                         r.syncstate = SyncState.NOT_SYNCED;
                         r.putByContentProvider(v.getContext());
                     }
                 }
             });
-            viewHolder.unreadContainer.setVisibility(r.unread>0 ? View.VISIBLE : View.GONE);
+            viewHolder.unreadContainer.setVisibility(r.unread > 0 ? View.VISIBLE : View.GONE);
             viewHolder.unreadCount.setText(Integer.toString(r.unread));
         }
     }
 
-    private void showHomeRoomFragment(){
+    private void showHomeRoomFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(getContainerId(), new HomeRoomFragment())
                 .commit();
@@ -479,7 +485,7 @@ public class MainActivity extends AbstractActivity {
 
     private void showChatRoomFragment(Room r) {
         ServerConfig s = getPrimaryServerConfig();
-        if(s!=null) {
+        if (s != null) {
             if (getSupportFragmentManager().findFragmentById(getContainerId()) instanceof AbstractRoomFragment) {
                 getSupportFragmentManager().popBackStack();
             }

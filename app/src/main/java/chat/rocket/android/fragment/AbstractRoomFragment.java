@@ -22,6 +22,7 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
     protected String mHost;
     protected long mRoomBaseId;
     protected String mRoomId;
+    protected String mRid;
     protected String mRoomName;
     protected Room.Type mRoomType;
 
@@ -29,19 +30,20 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
         mHost = args.getString("host");
         mRoomBaseId = args.getLong("roomBaseId");
         mRoomId = args.getString("roomId");
+        mRid = args.getString("rid");
         mRoomName = args.getString("roomName");
         mRoomType = Room.Type.getType(args.getString("roomType"));
     }
 
     protected boolean hasValidArgs(Bundle args) {
-        if(args == null) return false;
+        if (args == null) return false;
         return args.containsKey("host")
                 && args.containsKey("roomBaseId")
                 && args.containsKey("roomId")
+                && args.containsKey("rid")
                 && args.containsKey("roomName")
                 && args.containsKey("roomType");
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,21 +59,21 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
         getContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
             @Override
             public void onChange(boolean selfChange) {
-                if(getContext()==null) return;
-                Cursor c = getContext().getContentResolver().query(uri, null,null,null,null);
-                if(c==null) return;
-                if(c.moveToFirst()) {
+                if (getContext() == null) return;
+                Cursor c = getContext().getContentResolver().query(uri, null, null, null, null);
+                if (c == null) return;
+                if (c.moveToFirst()) {
                     final Room r = Room.createFromCursor(c);
-                    if(r!=null){
-                        if(mRootView!=null) {
+                    if (r != null) {
+                        if (mRootView != null) {
                             mRootView.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(mRoomName != r.name){
+                                    if (mRoomName != r.name) {
                                         mRoomName = r.name;
                                         setupToolbar();
                                     }
-                                    if(mRoomType != r.type){
+                                    if (mRoomType != r.type) {
                                         mRoomType = r.type;
                                         setupToolbar();
                                     }
@@ -86,14 +88,15 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
         });
     }
 
-    protected void onRoomLoaded(final Room r){}
+    protected void onRoomLoaded(final Room r) {
+    }
 
     protected void initializeToolbar() {
         Toolbar bar = (Toolbar) mRootView.findViewById(R.id.toolbar_chatroom);
 
         setHasOptionsMenu(true);
         getAppCompatActivity().setSupportActionBar(bar);
-        if(getAppCompatActivity().getSupportActionBar()!=null){
+        if (getAppCompatActivity().getSupportActionBar() != null) {
             getAppCompatActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -108,7 +111,7 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
         setupToolbar();
     }
 
-    protected void setupToolbar(){
+    protected void setupToolbar() {
         Toolbar bar = (Toolbar) mRootView.findViewById(R.id.toolbar_chatroom);
         bar.setTitle(mRoomName);
     }
@@ -118,7 +121,6 @@ public abstract class AbstractRoomFragment extends AbstractFragment {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
     }
-
 
     protected final void focusToEditor(TextView editor) {
         editor.requestFocus();

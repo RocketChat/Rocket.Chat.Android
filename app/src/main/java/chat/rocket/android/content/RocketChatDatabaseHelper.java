@@ -14,8 +14,8 @@ import chat.rocket.android.model.UserRoom;
 
 public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = Constants.LOG_TAG;
-    private static final String DB_NAME="rockets.db";
-    static final int DB_VERSION=4;
+    private static final String DB_NAME = "rockets.db";
+    static final int DB_VERSION = 4;
 
     public RocketChatDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -32,6 +32,7 @@ public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
 
     public interface DBCallbackEx<T> {
         T process(SQLiteDatabase db) throws Exception;
+
         void handleException(Exception e);
     }
 
@@ -41,11 +42,9 @@ public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = new RocketChatDatabaseHelper(context).getReadableDatabase();
         try {
             ret = process.process(db);
-        }
-        catch(Exception e){
-            Log.e(TAG,"error",e);
-        }
-        finally {
+        } catch (Exception e) {
+            Log.e(TAG, "error", e);
+        } finally {
             db.close();
         }
         return ret;
@@ -57,11 +56,9 @@ public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = new RocketChatDatabaseHelper(context).getWritableDatabase();
         try {
             ret = process.process(db);
-        }
-        catch(Exception e){
-            Log.e(TAG,"error",e);
-        }
-        finally {
+        } catch (Exception e) {
+            Log.e(TAG, "error", e);
+        } finally {
             db.close();
         }
         return ret;
@@ -75,11 +72,9 @@ public class RocketChatDatabaseHelper extends SQLiteOpenHelper {
         try {
             ret = process.process(db);
             db.setTransactionSuccessful();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             process.handleException(e);
-        }
-        finally {
+        } finally {
             db.endTransaction();
             db.close();
         }
