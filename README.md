@@ -19,7 +19,6 @@ cd Rocket.Chat.Android
 git submodule init && git submodule update
 
 echo "sdk.dir="$ANDROID_HOME > local.properties
-echo 'REPRO_APP_TOKEN="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"' >> local.properties
 
 cp app/fabric.properties.sample app/fabric.properties
 
