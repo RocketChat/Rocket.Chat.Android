@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/avatar_image_size_normal" android:layout_height="@dimen/avatar_image_size_normal">
+
+    <FrameLayout
+        android:id="@+id/avatar_color"
+        android:layout_width="@dimen/avatar_image_size_normal"
+        android:layout_height="@dimen/avatar_image_size_normal"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/avatar_initials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/avatar_text_size_normal"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/avatar_img"
+        android:layout_width="@dimen/avatar_image_size_normal"
+        android:layout_height="@dimen/avatar_image_size_normal"
+        android:src="@drawable/ic_default_avatar"
+        android:scaleType="centerInside"/>
+
+</FrameLayout>

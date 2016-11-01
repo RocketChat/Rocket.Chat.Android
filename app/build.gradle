@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'realm-android'
+apply plugin: 'com.jakewharton.hugo'
 
 android {
     compileSdkVersion 25
@@ -10,6 +13,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -17,9 +22,34 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://github.com/YusukeIwaki/realm-java-helpers/raw/master/repo' }
+    maven { url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo' }
+    maven { url 'https://github.com/RocketChat/Android-DDP/raw/master/repository' }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    compile 'jp.co.crowdworks:realm-java-helpers:0.0.7'
+    compile 'jp.co.crowdworks:realm-java-helpers-bolts:0.0.7'
+
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+
+    compile 'com.facebook.stetho:stetho:1.4.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
+    compile 'com.uphyca:stetho_realm:2.0.0'
+
+    compile 'chat.rocket:android-ddp:0.0.4'
+
+    compile 'com.jakewharton.timber:timber:4.3.1'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
 }
