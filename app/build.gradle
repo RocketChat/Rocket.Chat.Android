@@ -3,6 +3,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'io.fabric'
 
+apply from: '../config/quality/quality.gradle'
+
 def getCurrentCommitMessage() {
     def gitlog = 'git log origin/develop...HEAD --decorate'.execute().text
     if (gitlog.trim().length() > 0) return gitlog
