@@ -1,9 +1,15 @@
 package chat.rocket.android.ws;
 
+import org.json.JSONArray;
+
+import java.util.UUID;
+
 import bolts.Task;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.android_ddp.DDPSubscription;
+import rx.Observable;
 
 public class RocketChatWebSocketAPI {
     private final DDPClient mDDPClient;
@@ -29,4 +35,18 @@ public class RocketChatWebSocketAPI {
     public void close() {
         mDDPClient.close();
     }
+
+
+    public Task<DDPSubscription.Ready> subscribe(final String name, JSONArray param) {
+        return mDDPClient.sub(UUID.randomUUID().toString(), name, param);
+    }
+
+    public Task<DDPSubscription.NoSub> unsubscribe(final String id) {
+        return mDDPClient.unsub(id);
+    }
+
+    public Observable<DDPSubscription.Event> getSubscriptionCallback() {
+        return mDDPClient.getSubscriptionCallback();
+    }
+
 }

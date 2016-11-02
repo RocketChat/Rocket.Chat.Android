@@ -48,7 +48,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
     compile 'com.uphyca:stetho_realm:2.0.0'
 
-    compile 'chat.rocket:android-ddp:0.0.4'
+    compile 'chat.rocket:android-ddp:0.0.5'
 
     compile 'com.jakewharton.timber:timber:4.3.1'
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'

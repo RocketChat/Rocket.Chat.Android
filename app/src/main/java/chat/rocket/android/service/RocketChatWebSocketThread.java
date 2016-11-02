@@ -12,7 +12,9 @@ import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.service.ddp_subscription.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android_ddp.DDPClient;
 import hugo.weaving.DebugLog;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
 import timber.log.Timber;
@@ -98,13 +100,16 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
 
     private void scheduleUnregisterListeners() {
-        new Handler(getLooper()).post(() -> {
-            Timber.d("thread %s: quit()", Thread.currentThread().getId());
-            unregisterListeners();
-        });
+        if (isAlive()) {
+            new Handler(getLooper()).post(() -> {
+                Timber.d("thread %s: quit()", Thread.currentThread().getId());
+                unregisterListeners();
+            });
+        }
     }
 
     private static final Class[] REGISTERABLE_CLASSES = {
+            LoginServiceConfigurationSubscriber.class
     };
 
     private final ArrayList<Registerable> mListeners = new ArrayList<>();
@@ -125,11 +130,19 @@ public class RocketChatWebSocketThread extends HandlerThread {
         return mWebSocketAPI.connect().onSuccess(task -> {
             registerListenersActually();
 
+            DDPClient client = task.getResult().client;
+
+            // handling WebSocket#onClose() callback.
+            client.getOnCloseCallback().onSuccess(_task -> {
+                quit();
+                return null;
+            });
 
             // just for debugging.
-            task.getResult().client.getSubscriptionCallback().subscribe(event -> {
+            client.getSubscriptionCallback().subscribe(event -> {
                 Timber.d(TAG, "Callback [DEBUG] < " + event);
             });
+
             return null;
         }).continueWith(task -> {
             if (task.isFaulted()) {
