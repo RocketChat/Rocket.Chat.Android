@@ -9,6 +9,9 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
+/**
+ * Customized Application-class for Rocket.Chat
+ */
 public class RocketChatApplication extends Application {
     @Override
     public void onCreate() {

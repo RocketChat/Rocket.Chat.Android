@@ -7,12 +7,13 @@ import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import io.realm.RealmObject;
 import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
 
-abstract class AbstractModelObserver<T extends RealmObject> extends RealmListObserver<T> implements Registerable {
+abstract class AbstractModelObserver<T extends RealmObject>
+        extends RealmListObserver<T> implements Registerable {
 
     protected final Context mContext;
     protected final RocketChatWebSocketAPI mAPI;
 
-    public AbstractModelObserver(Context context, RocketChatWebSocketAPI api) {
+    protected AbstractModelObserver(Context context, RocketChatWebSocketAPI api) {
         mContext = context;
         mAPI = api;
     }

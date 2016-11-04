@@ -15,35 +15,37 @@ import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 
 abstract class AbstractAuthedActivity extends AppCompatActivity {
 
-    private RealmListObserver<ServerConfig> mInsertEmptyRecordIfNoConfigurationExists = new RealmListObserver<ServerConfig>() {
-        @Override
-        protected RealmResults<ServerConfig> queryItems(Realm realm) {
-            return realm.where(ServerConfig.class).findAll();
-        }
+    private RealmListObserver<ServerConfig> mInsertEmptyRecordIfNoConfigurationExists =
+            new RealmListObserver<ServerConfig>() {
+                @Override
+                protected RealmResults<ServerConfig> queryItems(Realm realm) {
+                    return realm.where(ServerConfig.class).findAll();
+                }
 
-        @Override
-        protected void onCollectionChanged(List<ServerConfig> list) {
-            if (list.isEmpty()) {
-                final String newId = UUID.randomUUID().toString();
-                RealmHelperBolts
-                        .executeTransaction(realm -> realm.createObject(ServerConfig.class, newId))
-                        .continueWith(new LogcatIfError());
-            }
-        }
-    };
+                @Override
+                protected void onCollectionChanged(List<ServerConfig> list) {
+                    if (list.isEmpty()) {
+                        final String newId = UUID.randomUUID().toString();
+                        RealmHelperBolts
+                                .executeTransaction(realm ->
+                                        realm.createObject(ServerConfig.class, newId))
+                                .continueWith(new LogcatIfError());
+                    }
+                }
+            };
 
-    private RealmListObserver<ServerConfig> mShowConfigActivityIfNeeded = new RealmListObserver<ServerConfig>() {
+    private RealmListObserver<ServerConfig> mShowConfigActivityIfNeeded =
+            new RealmListObserver<ServerConfig>() {
+                @Override
+                protected RealmResults<ServerConfig> queryItems(Realm realm) {
+                    return ServerConfig.queryLoginRequiredConnections(realm).findAll();
+                }
 
-        @Override
-        protected RealmResults<ServerConfig> queryItems(Realm realm) {
-            return ServerConfig.queryLoginRequiredConnections(realm).findAll();
-        }
-
-        @Override
-        protected void onCollectionChanged(List<ServerConfig> list) {
-            ServerConfigActivity.launchFor(AbstractAuthedActivity.this, list);
-        }
-    };
+                @Override
+                protected void onCollectionChanged(List<ServerConfig> list) {
+                    ServerConfigActivity.launchFor(AbstractAuthedActivity.this, list);
+                }
+            };
 
     @Override
     protected void onResume() {

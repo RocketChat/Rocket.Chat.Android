@@ -17,31 +17,41 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
 
+/**
+ * Background service for Rocket.Chat.Application class.
+ */
 public class RocketChatService extends Service {
 
+    /**
+     * ensure RocketChatService alive.
+     */
     public static void keepalive(Context context) {
         context.startService(new Intent(context, RocketChatService.class));
     }
 
+    /**
+     * force stop RocketChatService.
+     */
     public static void kill(Context context) {
         context.stopService(new Intent(context, RocketChatService.class));
     }
 
     private HashMap<String, RocketChatWebSocketThread> mWebSocketThreads;
-    private RealmListObserver<ServerConfig> mConnectionRequiredServerConfigObserver = new RealmListObserver<ServerConfig>() {
-        @Override
-        protected RealmResults<ServerConfig> queryItems(Realm realm) {
-            return realm.where(ServerConfig.class)
-                    .isNotNull("hostname")
-                    .isNull("connectionError")
-                    .findAll();
-        }
+    private RealmListObserver<ServerConfig> mConnectionRequiredServerConfigObserver =
+            new RealmListObserver<ServerConfig>() {
+                @Override
+                protected RealmResults<ServerConfig> queryItems(Realm realm) {
+                    return realm.where(ServerConfig.class)
+                            .isNotNull("hostname")
+                            .isNull("connectionError")
+                            .findAll();
+                }
 
-        @Override
-        protected void onCollectionChanged(List<ServerConfig> list) {
-            syncWebSocketThreadsWith(list);
-        }
-    };
+                @Override
+                protected void onCollectionChanged(List<ServerConfig> list) {
+                    syncWebSocketThreadsWith(list);
+                }
+            };
 
     @Override
     public void onCreate() {
@@ -56,12 +66,14 @@ public class RocketChatService extends Service {
     }
 
     private void syncWebSocketThreadsWith(List<ServerConfig> configList) {
-        final Iterator<Map.Entry<String, RocketChatWebSocketThread>> it = mWebSocketThreads.entrySet().iterator();
-        while(it.hasNext()) {
+        final Iterator<Map.Entry<String, RocketChatWebSocketThread>> it =
+                mWebSocketThreads.entrySet().iterator();
+
+        while (it.hasNext()) {
             Map.Entry<String, RocketChatWebSocketThread> e = it.next();
             String id = e.getKey();
             boolean found = false;
-            for(ServerConfig config: configList) {
+            for (ServerConfig config: configList) {
                 if (id.equals(config.getId())) {
                     found = true;
                     break;
@@ -73,7 +85,7 @@ public class RocketChatService extends Service {
             }
         }
 
-        for(ServerConfig config: configList) {
+        for (ServerConfig config: configList) {
             findOrCreateWebSocketThread(config).onSuccess(task -> {
                 RocketChatWebSocketThread thread = task.getResult();
                 thread.syncStateWith(config);
@@ -86,12 +98,12 @@ public class RocketChatService extends Service {
         final String id = config.getId();
         if (mWebSocketThreads.containsKey(id)) {
             return Task.forResult(mWebSocketThreads.get(id));
-        }
-        else {
-            return RocketChatWebSocketThread.getStarted(getApplicationContext(), config).onSuccessTask(task -> {
-                mWebSocketThreads.put(id, task.getResult());
-                return task;
-            });
+        } else {
+            return RocketChatWebSocketThread.getStarted(getApplicationContext(), config)
+                    .onSuccessTask(task -> {
+                        mWebSocketThreads.put(id, task.getResult());
+                        return task;
+                    });
         }
     }
 

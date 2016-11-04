@@ -8,12 +8,13 @@ import chat.rocket.android.helper.TextUtils;
 
 abstract class AbstractServerConfigFragment extends AbstractFragment {
     protected String mServerConfigId;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        if (args==null) {
+        if (args == null) {
             finish();
             return;
         }

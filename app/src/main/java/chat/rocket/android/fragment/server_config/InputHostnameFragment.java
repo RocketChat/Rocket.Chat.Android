@@ -2,7 +2,6 @@ package chat.rocket.android.fragment.server_config;
 
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +16,9 @@ import io.realm.RealmQuery;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 
+/**
+ * Input server host.
+ */
 public class InputHostnameFragment extends AbstractServerConfigFragment {
     public InputHostnameFragment(){}
 
@@ -39,20 +41,25 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
     @Override
     protected void onSetupView() {
-        final TextView editor = (TextView) mRootView.findViewById(R.id.editor_hostname);
-        final View btnConnect = mRootView.findViewById(R.id.btn_connect);
-
-        btnConnect.setOnClickListener(v -> {
-            final String hostname = TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
-            RealmHelperBolts
-                    .executeTransaction(realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-                            .put("id", mServerConfigId)
-                            .put("hostname", hostname)
-                            .put("connectionError", JSONObject.NULL)))
-                    .continueWith(new LogcatIfError());
-        });
+        mRootView.findViewById(R.id.btn_connect).setOnClickListener(v -> handleConnect());
 
         mObserver.sub();
+    }
+
+    private void handleConnect() {
+        final TextView editor = (TextView) mRootView.findViewById(R.id.editor_hostname);
+
+        final String hostname = TextUtils.or(
+                TextUtils.or(editor.getText(), editor.getHint()),
+                "").toString();
+
+        RealmHelperBolts
+                .executeTransaction(realm ->
+                        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+                                .put("id", mServerConfigId)
+                                .put("hostname", hostname)
+                                .put("connectionError", JSONObject.NULL)))
+                .continueWith(new LogcatIfError());
     }
 
     @Override
@@ -82,6 +89,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
     private void onRenderServerConfig(ServerConfig config) {
         final TextView editor = (TextView) mRootView.findViewById(R.id.editor_hostname);
+
         if (!TextUtils.isEmpty(config.getHostname())) editor.setText(config.getHostname());
         if (!TextUtils.isEmpty(config.getConnectionError())) {
             clearConnectionErrorAndHostname();
@@ -91,10 +99,11 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
     private void clearConnectionErrorAndHostname() {
         RealmHelperBolts
-                .executeTransaction(realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-                        .put("id", mServerConfigId)
-                        .put("hostname", JSONObject.NULL)
-                        .put("connectionError", JSONObject.NULL)))
+                .executeTransaction(realm ->
+                        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+                                .put("id", mServerConfigId)
+                                .put("hostname", JSONObject.NULL)
+                                .put("connectionError", JSONObject.NULL)))
                 .continueWith(new LogcatIfError());
     }
 }

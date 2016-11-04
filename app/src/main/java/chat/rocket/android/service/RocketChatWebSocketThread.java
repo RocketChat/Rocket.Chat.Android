@@ -12,15 +12,16 @@ import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
-import chat.rocket.android.service.ddp_subscription.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.ddp_subscriber.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClient;
 import hugo.weaving.DebugLog;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
 import timber.log.Timber;
 
-import static android.content.ContentValues.TAG;
-
+/**
+ * Thread for handling WebSocket connection.
+ */
 public class RocketChatWebSocketThread extends HandlerThread {
     private final Context mAppContext;
     private final String mServerConfigId;
@@ -29,13 +30,17 @@ public class RocketChatWebSocketThread extends HandlerThread {
     private boolean mListenersRegistered;
 
     private RocketChatWebSocketThread(Context appContext, String id) {
-        super("RC_thread_"+id);
+        super("RC_thread_" + id);
         mServerConfigId = id;
         mAppContext = appContext;
     }
 
+    /**
+     * create new Thread.
+     */
     @DebugLog
-    public static Task<RocketChatWebSocketThread> getStarted(Context appContext, ServerConfig config) {
+    public static Task<RocketChatWebSocketThread> getStarted(Context appContext,
+                                                             ServerConfig config) {
         TaskCompletionSource<RocketChatWebSocketThread> task = new TaskCompletionSource<>();
         new RocketChatWebSocketThread(appContext, config.getId()){
             @Override
@@ -43,8 +48,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 try {
                     super.onLooperPrepared();
                     task.setResult(this);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     task.setError(e);
                 }
             }
@@ -52,6 +56,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
         return task.getTask();
     }
 
+    /**
+     * terminate the thread
+     */
     @DebugLog
     public static void terminate(RocketChatWebSocketThread t) {
         t.quit();
@@ -60,21 +67,24 @@ public class RocketChatWebSocketThread extends HandlerThread {
     private Task<Void> ensureConnection() {
         if (mWebSocketAPI == null || !mWebSocketAPI.isConnected()) {
             return registerListeners();
+        } else {
+            return Task.forResult(null);
         }
-        else return Task.forResult(null);
     }
 
+    /**
+     * synchronize the state of the thread with ServerConfig.
+     */
     @DebugLog
     public void syncStateWith(ServerConfig config) {
-        if (config == null || TextUtils.isEmpty(config.getHostname()) || !TextUtils.isEmpty(config.getConnectionError())) {
+        if (config == null
+                || TextUtils.isEmpty(config.getHostname())
+                || !TextUtils.isEmpty(config.getConnectionError())) {
             quit();
-        }
-        else {
+        } else {
             ensureConnection()
                     .continueWith(task -> {
-                        new Handler(getLooper()).post(() -> {
-                            keepaliveListeners();
-                        });
+                        new Handler(getLooper()).post(this::keepaliveListeners);
                         return null;
                     });
         }
@@ -115,14 +125,18 @@ public class RocketChatWebSocketThread extends HandlerThread {
     private final ArrayList<Registerable> mListeners = new ArrayList<>();
 
     private void prepareWebSocket() {
-        ServerConfig config = RealmHelper.executeTransactionForRead(realm -> realm.where(ServerConfig.class).equalTo("id", mServerConfigId).findFirst());
+        ServerConfig config = RealmHelper.executeTransactionForRead(realm ->
+                realm.where(ServerConfig.class)
+                        .equalTo("id", mServerConfigId)
+                        .findFirst());
+
         if (mWebSocketAPI == null || !mWebSocketAPI.isConnected()) {
             mWebSocketAPI = RocketChatWebSocketAPI.create(config.getHostname());
         }
     }
 
     @DebugLog
-    private Task<Void> registerListeners(){
+    private Task<Void> registerListeners() {
         if (mSocketExists) return Task.forResult(null);
 
         mSocketExists = true;
@@ -140,7 +154,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
             // just for debugging.
             client.getSubscriptionCallback().subscribe(event -> {
-                Timber.d(TAG, "Callback [DEBUG] < " + event);
+                Timber.d("Callback [DEBUG] < " + event);
             });
 
             return null;
@@ -157,35 +171,36 @@ public class RocketChatWebSocketThread extends HandlerThread {
         if (mListenersRegistered) return;
         mListenersRegistered = true;
 
-        for(Class clazz: REGISTERABLE_CLASSES){
+        for (Class clazz: REGISTERABLE_CLASSES) {
             try {
-                Constructor ctor = clazz.getConstructor(Context.class, RocketChatWebSocketAPI.class);
+                Constructor ctor = clazz.getConstructor(
+                        Context.class, RocketChatWebSocketAPI.class);
                 Object obj = ctor.newInstance(mAppContext, mWebSocketAPI);
 
-                if(obj instanceof Registerable) {
+                if (obj instanceof Registerable) {
                     Registerable l = (Registerable) obj;
                     l.register();
                     mListeners.add(l);
                 }
             } catch (Exception e) {
-                Timber.w(e);
+                Timber.w(e, "Failed to register listeners!!");
             }
         }
     }
 
     //@DebugLog
-    private void keepaliveListeners(){
+    private void keepaliveListeners() {
         if (!mSocketExists || !mListenersRegistered) return;
 
         for (Registerable l : mListeners) l.keepalive();
     }
 
     //@DebugLog
-    private void unregisterListeners(){
+    private void unregisterListeners() {
         if (!mSocketExists || !mListenersRegistered) return;
 
         Iterator<Registerable> it = mListeners.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             Registerable l = it.next();
             l.unregister();
             it.remove();

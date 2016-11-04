@@ -8,23 +8,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Fragment base class for this Application.
+ */
 public abstract class AbstractFragment extends Fragment {
     protected View mRootView;
     protected abstract @LayoutRes int getLayout();
     protected abstract void onSetupView();
 
     @Nullable
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(getLayout(), container,false);
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        mRootView = inflater.inflate(getLayout(), container, false);
         onSetupView();
         return mRootView;
     }
 
     protected void finish() {
-        if(getFragmentManager().getBackStackEntryCount()==0){
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
             getActivity().finish();
-        }
-        else {
+        } else {
             getFragmentManager().popBackStack();
         }
     }

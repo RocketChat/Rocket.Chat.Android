@@ -1,11 +1,14 @@
-package chat.rocket.android.service.ddp_subscription;
+package chat.rocket.android.service.ddp_subscriber;
 
 import android.content.Context;
 
-import chat.rocket.android.model.doc.MeteorLoginServiceConfiguration;
+import chat.rocket.android.model.MeteorLoginServiceConfiguration;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import io.realm.RealmObject;
 
+/**
+ * meteor.loginServiceConfiguration subscriber
+ */
 public class LoginServiceConfigurationSubscriber extends AbstractDDPDocEventSubscriber {
     public LoginServiceConfigurationSubscriber(Context context, RocketChatWebSocketAPI api) {
         super(context, api);

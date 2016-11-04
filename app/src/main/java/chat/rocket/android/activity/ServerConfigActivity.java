@@ -13,7 +13,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.ConnectingToHostFragment;
 import chat.rocket.android.fragment.server_config.InputHostnameFragment;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ServerAuthProvider;
+import chat.rocket.android.model.MeteorLoginServiceConfiguration;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.service.RocketChatService;
 import io.realm.Realm;
@@ -21,6 +21,9 @@ import io.realm.RealmList;
 import io.realm.RealmQuery;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
 
+/**
+ * Activity for Login, Sign-up, and Connecting...
+ */
 public class ServerConfigActivity extends AbstractFragmentActivity {
 
     @Override
@@ -29,30 +32,33 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     }
 
     private String mServerConfigId;
-    private RealmObjectObserver<ServerConfig> mServerConfigObserver = new RealmObjectObserver<ServerConfig>() {
-        @Override
-        protected RealmQuery<ServerConfig> query(Realm realm) {
-            return realm.where(ServerConfig.class).equalTo("id", mServerConfigId);
-        }
+    private RealmObjectObserver<ServerConfig> mServerConfigObserver =
+            new RealmObjectObserver<ServerConfig>() {
+                @Override
+                protected RealmQuery<ServerConfig> query(Realm realm) {
+                    return realm.where(ServerConfig.class).equalTo("id", mServerConfigId);
+                }
 
-        @Override
-        protected void onChange(ServerConfig config) {
-            onRenderServerConfig(config);
-        }
-    };
+                @Override
+                protected void onChange(ServerConfig config) {
+                    onRenderServerConfig(config);
+                }
+            };
 
+    /**
+     * Start the ServerConfigActivity with considering the priority of ServerConfig in the list.
+     */
     public static boolean launchFor(Context context, List<ServerConfig> configList) {
         for (ServerConfig config: configList) {
             if (TextUtils.isEmpty(config.getHostname())) {
                 return launchFor(context, config);
-            }
-            else if (!TextUtils.isEmpty(config.getConnectionError())) {
+            } else if (!TextUtils.isEmpty(config.getConnectionError())) {
                 return launchFor(context, config);
             }
         }
 
         for (ServerConfig config: configList) {
-            if (config.getProviders().isEmpty()) {
+            if (config.getAuthProviders().isEmpty()) {
                 return launchFor(context, config);
             }
         }
@@ -89,7 +95,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        if (intent==null || intent.getExtras()==null) {
+        if (intent == null || intent.getExtras() == null) {
             finish();
             return;
         }
@@ -117,7 +123,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     }
 
     private void onRenderServerConfig(ServerConfig config) {
-        if (config==null) {
+        if (config == null) {
             finish();
             return;
         }
@@ -138,7 +144,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
             return;
         }
 
-        RealmList<ServerAuthProvider> providers = config.getProviders();
+        RealmList<MeteorLoginServiceConfiguration> providers = config.getAuthProviders();
         if (!providers.isEmpty()) {
 
             return;
@@ -168,7 +174,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
 
     private void injectIdArgTo(Fragment f) {
         Bundle args = f.getArguments();
-        if(args==null) args = new Bundle();
+        if (args == null) args = new Bundle();
         args.putString("id", mServerConfigId);
         f.setArguments(args);
     }
@@ -177,8 +183,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     public void onBackPressed() {
         if (ServerConfig.hasActiveConnection()) {
             super.onBackPressed();
-        }
-        else {
+        } else {
             moveTaskToBack(true);
         }
     }

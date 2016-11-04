@@ -12,6 +12,9 @@ import io.realm.annotations.PrimaryKey;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 
+/**
+ * Server configuration
+ */
 public class ServerConfig extends RealmObject {
     @PrimaryKey
     private String id;
@@ -19,7 +22,7 @@ public class ServerConfig extends RealmObject {
     private String connectionError;
     private String token;
     private boolean tokenVerified;
-    private RealmList<ServerAuthProvider> providers;
+    private RealmList<MeteorLoginServiceConfiguration> authProviders;
     private String selectedProviderName;
 
     public String getId() {
@@ -62,12 +65,12 @@ public class ServerConfig extends RealmObject {
         this.tokenVerified = tokenVerified;
     }
 
-    public RealmList<ServerAuthProvider> getProviders() {
-        return providers;
+    public RealmList<MeteorLoginServiceConfiguration> getAuthProviders() {
+        return authProviders;
     }
 
-    public void setProviders(RealmList<ServerAuthProvider> providers) {
-        this.providers = providers;
+    public void setAuthProviders(RealmList<MeteorLoginServiceConfiguration> authProviders) {
+        this.authProviders = authProviders;
     }
 
     public String getSelectedProviderName() {
@@ -98,9 +101,10 @@ public class ServerConfig extends RealmObject {
     @DebugLog
     public static void logError(String id, Exception e) {
         RealmHelperBolts
-                .executeTransaction(realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-                        .put("id", id)
-                        .put("connectionError", e.getMessage())))
+                .executeTransaction(realm ->
+                        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+                                .put("id", id)
+                                .put("connectionError", e.getMessage())))
                 .continueWith(new LogcatIfError());
     }
 }

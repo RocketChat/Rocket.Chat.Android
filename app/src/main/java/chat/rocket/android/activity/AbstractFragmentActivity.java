@@ -11,13 +11,11 @@ abstract class AbstractFragmentActivity extends AppCompatActivity {
     protected abstract @IdRes int getLayoutContainerForFragment();
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Fragment f = getSupportFragmentManager().findFragmentById(getLayoutContainerForFragment());
-        if(f instanceof OnBackPressListener &&
-                ((OnBackPressListener) f).onBackPressed()){
+        if (f instanceof OnBackPressListener && ((OnBackPressListener) f).onBackPressed()) {
             //consumed. do nothing.
-        }
-        else super.onBackPressed();
+        } else super.onBackPressed();
     }
 
     protected void showFragment(Fragment f) {

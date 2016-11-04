@@ -9,26 +9,32 @@ abstract class AbstractCustomFontTextView extends AppCompatTextView {
 
     protected abstract String getFont();
 
+    //CHECKSTYLE:OFF RedundantModifier
     public AbstractCustomFontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
+    //CHECKSTYLE:ON RedundantModifier
 
+    //CHECKSTYLE:OFF RedundantModifier
     public AbstractCustomFontTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
+    //CHECKSTYLE:ON RedundantModifier
 
+    //CHECKSTYLE:OFF RedundantModifier
     public AbstractCustomFontTextView(Context context) {
         super(context);
         init();
     }
+    //CHECKSTYLE:ON RedundantModifier
 
     private void init() {
         String font = getFont();
-        if (font!=null) {
+        if (font != null) {
             Typeface tf = TypefaceHelper.getTypeface(getContext(), font);
-            if (tf!=null) setTypeface(tf);
+            if (tf != null) setTypeface(tf);
         }
     }
 }

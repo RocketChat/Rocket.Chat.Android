@@ -2,6 +2,9 @@ package chat.rocket.android.fragment.server_config;
 
 import chat.rocket.android.R;
 
+/**
+ * Just showing "connecting..." screen.
+ */
 public class ConnectingToHostFragment extends AbstractServerConfigFragment {
     @Override
     protected int getLayout() {

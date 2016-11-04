@@ -16,7 +16,9 @@ import java.util.ArrayList;
 
 import chat.rocket.android.R;
 
-
+/**
+ * View for indicating "waiting for connection ..." and so on.
+ */
 public class WaitingView extends LinearLayout {
     private ArrayList<View> mDots;
 
@@ -56,7 +58,7 @@ public class WaitingView extends LinearLayout {
 
         mDots = new ArrayList<>();
         setOrientation(HORIZONTAL);
-        for (int i=0; i<count; i++) addDot(context, size);
+        for (int i = 0; i < count; i++) addDot(context, size);
 
         addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
             @Override
@@ -73,7 +75,7 @@ public class WaitingView extends LinearLayout {
 
     private void addDot(Context context, int size) {
         FrameLayout f = new FrameLayout(context);
-        f.setLayoutParams(new LinearLayoutCompat.LayoutParams(size*3/2, size*3/2));
+        f.setLayoutParams(new LinearLayoutCompat.LayoutParams(size * 3 / 2, size * 3 / 2));
         ImageView dot = new ImageView(context);
         dot.setImageResource(R.drawable.white_circle);
         dot.setLayoutParams(new FrameLayout.LayoutParams(size, size, Gravity.CENTER));
@@ -83,12 +85,15 @@ public class WaitingView extends LinearLayout {
     }
 
     private void start() {
-        for(int i=0; i<mDots.size(); i++) {
-            animateDot(mDots.get(i), 160*i, 480, 480);
+        for (int i = 0; i < mDots.size(); i++) {
+            animateDot(mDots.get(i), 160 * i, 480, 480);
         }
     }
 
-    private void animateDot(final View dot, final long startDelay, final long duration, final long interval) {
+    private void animateDot(final View dot,
+                            final long startDelay,
+                            final long duration,
+                            final long interval) {
         dot.setScaleX(0);
         dot.setScaleY(0);
         dot.animate()
@@ -109,7 +114,7 @@ public class WaitingView extends LinearLayout {
     }
 
     private void cancel() {
-        for(View dot: mDots) {
+        for (View dot: mDots) {
             dot.clearAnimation();
         }
     }
