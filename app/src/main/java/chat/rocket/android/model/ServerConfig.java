@@ -1,7 +1,5 @@
 package chat.rocket.android.model;
 
-import org.json.JSONObject;
-
 import chat.rocket.android.helper.LogcatIfError;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
@@ -11,101 +9,95 @@ import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
+import org.json.JSONObject;
 
 /**
  * Server configuration
  */
-@SuppressWarnings("PMD.ShortVariable")
-public class ServerConfig extends RealmObject {
-    @PrimaryKey
-    private String id;
-    private String hostname;
-    private String connectionError;
-    private String token;
-    private boolean tokenVerified;
-    private RealmList<MeteorLoginServiceConfiguration> authProviders;
-    private String selectedProviderName;
+@SuppressWarnings("PMD.ShortVariable") public class ServerConfig extends RealmObject {
+  @PrimaryKey private String id;
+  private String hostname;
+  private String connectionError;
+  private String token;
+  private boolean tokenVerified;
+  private RealmList<MeteorLoginServiceConfiguration> authProviders;
+  private String selectedProviderName;
 
-    public String getId() {
-        return id;
-    }
+  public static RealmQuery<ServerConfig> queryLoginRequiredConnections(Realm realm) {
+    return realm.where(ServerConfig.class).equalTo("tokenVerified", false);
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public static RealmQuery<ServerConfig> queryActiveConnections(Realm realm) {
+    return realm.where(ServerConfig.class).isNotNull("token");
+  }
 
-    public String getHostname() {
-        return hostname;
-    }
+  public static boolean hasActiveConnection() {
+    ServerConfig config =
+        RealmHelper.executeTransactionForRead(realm -> queryActiveConnections(realm).findFirst());
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
+    return config != null;
+  }
 
-    public String getConnectionError() {
-        return connectionError;
-    }
+  @DebugLog public static void logError(String id, Exception exception) {
+    RealmHelperBolts.executeTransaction(
+        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
+            new JSONObject().put("id", id).put("connectionError", exception.getMessage())))
+        .continueWith(new LogcatIfError());
+  }
 
-    public void setConnectionError(String connectionError) {
-        this.connectionError = connectionError;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getToken() {
-        return token;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+  public String getHostname() {
+    return hostname;
+  }
 
-    public boolean isTokenVerified() {
-        return tokenVerified;
-    }
+  public void setHostname(String hostname) {
+    this.hostname = hostname;
+  }
 
-    public void setTokenVerified(boolean tokenVerified) {
-        this.tokenVerified = tokenVerified;
-    }
+  public String getConnectionError() {
+    return connectionError;
+  }
 
-    public RealmList<MeteorLoginServiceConfiguration> getAuthProviders() {
-        return authProviders;
-    }
+  public void setConnectionError(String connectionError) {
+    this.connectionError = connectionError;
+  }
 
-    public void setAuthProviders(RealmList<MeteorLoginServiceConfiguration> authProviders) {
-        this.authProviders = authProviders;
-    }
+  public String getToken() {
+    return token;
+  }
 
-    public String getSelectedProviderName() {
-        return selectedProviderName;
-    }
+  public void setToken(String token) {
+    this.token = token;
+  }
 
-    public void setSelectedProviderName(String selectedProviderName) {
-        this.selectedProviderName = selectedProviderName;
-    }
+  public boolean isTokenVerified() {
+    return tokenVerified;
+  }
 
-    public static RealmQuery<ServerConfig> queryLoginRequiredConnections(Realm realm) {
-        return realm.where(ServerConfig.class)
-                .equalTo("tokenVerified", false);
-    }
+  public void setTokenVerified(boolean tokenVerified) {
+    this.tokenVerified = tokenVerified;
+  }
 
-    public static RealmQuery<ServerConfig> queryActiveConnections(Realm realm) {
-        return realm.where(ServerConfig.class)
-                .isNotNull("token");
-    }
+  public RealmList<MeteorLoginServiceConfiguration> getAuthProviders() {
+    return authProviders;
+  }
 
-    public static boolean hasActiveConnection() {
-        ServerConfig config = RealmHelper.executeTransactionForRead(realm ->
-                queryActiveConnections(realm).findFirst());
+  public void setAuthProviders(RealmList<MeteorLoginServiceConfiguration> authProviders) {
+    this.authProviders = authProviders;
+  }
 
-        return config != null;
-    }
+  public String getSelectedProviderName() {
+    return selectedProviderName;
+  }
 
-    @DebugLog
-    public static void logError(String id, Exception exception) {
-        RealmHelperBolts
-                .executeTransaction(realm ->
-                        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-                                .put("id", id)
-                                .put("connectionError", exception.getMessage())))
-                .continueWith(new LogcatIfError());
-    }
+  public void setSelectedProviderName(String selectedProviderName) {
+    this.selectedProviderName = selectedProviderName;
+  }
 }

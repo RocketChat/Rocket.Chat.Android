@@ -5,10 +5,10 @@ package chat.rocket.android.helper;
  */
 public interface OnBackPressListener {
 
-    /**
-     * onBackPressed
-     *
-     * @return whether back is handled or not.
-     */
-    boolean onBackPressed();
+  /**
+   * onBackPressed
+   *
+   * @return whether back is handled or not.
+   */
+  boolean onBackPressed();
 }

@@ -1,44 +1,44 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="android:textColorLink">@drawable/selector_text_color_link</item>
-        <item name="android:listDivider">@color/divider</item>
-        <item name="colorControlActivated">@color/colorAccentDark</item>
-        <item name="android:textColorHighlight">@color/colorAccent_a40</item>
+    <item name="android:textColorLink">@drawable/selector_text_color_link</item>
+    <item name="android:listDivider">@color/divider</item>
+    <item name="colorControlActivated">@color/colorAccentDark</item>
+    <item name="android:textColorHighlight">@color/colorAccent_a40</item>
 
-        <item name="actionModeBackground">?attr/colorPrimaryDark</item>
-        <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
-    </style>
+    <item name="actionModeBackground">?attr/colorPrimaryDark</item>
+    <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
+    <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
+  </style>
 
-    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+  <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="android:textColorLink">@drawable/selector_text_color_link</item>
-        <item name="android:listDivider">@color/divider</item>
-        <item name="colorControlActivated">@color/colorAccentDark</item>
-        <item name="android:textColorHighlight">@color/colorAccent_a40</item>
+    <item name="android:textColorLink">@drawable/selector_text_color_link</item>
+    <item name="android:listDivider">@color/divider</item>
+    <item name="colorControlActivated">@color/colorAccentDark</item>
+    <item name="android:textColorHighlight">@color/colorAccent_a40</item>
 
-        <item name="actionModeBackground">?attr/colorPrimaryDark</item>
-        <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
-    </style>
+    <item name="actionModeBackground">?attr/colorPrimaryDark</item>
+    <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
+    <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
+  </style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+  <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="android:textColorLink">@drawable/selector_text_color_link</item>
-        <item name="android:listDivider">@color/divider</item>
-        <item name="colorControlActivated">@color/colorAccentDark</item>
-        <item name="android:textColorHighlight">@color/colorAccent_a40</item>
-    </style>
+    <item name="android:textColorLink">@drawable/selector_text_color_link</item>
+    <item name="android:listDivider">@color/divider</item>
+    <item name="colorControlActivated">@color/colorAccentDark</item>
+    <item name="android:textColorHighlight">@color/colorAccent_a40</item>
+  </style>
 </resources>

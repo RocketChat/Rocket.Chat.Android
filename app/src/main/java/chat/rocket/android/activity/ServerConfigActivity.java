@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
-import java.util.List;
-
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.ConnectingToHostFragment;
@@ -19,6 +16,7 @@ import chat.rocket.android.service.RocketChatService;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
+import java.util.List;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
 
 /**
@@ -26,165 +24,157 @@ import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
  */
 public class ServerConfigActivity extends AbstractFragmentActivity {
 
-    @Override
-    protected int getLayoutContainerForFragment() {
-        return R.id.content;
+  private String mServerConfigId;
+  private RealmObjectObserver<ServerConfig> mServerConfigObserver =
+      new RealmObjectObserver<ServerConfig>() {
+        @Override protected RealmQuery<ServerConfig> query(Realm realm) {
+          return realm.where(ServerConfig.class).equalTo("id", mServerConfigId);
+        }
+
+        @Override protected void onChange(ServerConfig config) {
+          onRenderServerConfig(config);
+        }
+      };
+
+  /**
+   * Start the ServerConfigActivity with considering the priority of ServerConfig in the list.
+   */
+  public static boolean launchFor(Context context, List<ServerConfig> configList) {
+    for (ServerConfig config : configList) {
+      if (TextUtils.isEmpty(config.getHostname())) {
+        return launchFor(context, config);
+      } else if (!TextUtils.isEmpty(config.getConnectionError())) {
+        return launchFor(context, config);
+      }
     }
 
-    private String mServerConfigId;
-    private RealmObjectObserver<ServerConfig> mServerConfigObserver =
-            new RealmObjectObserver<ServerConfig>() {
-                @Override
-                protected RealmQuery<ServerConfig> query(Realm realm) {
-                    return realm.where(ServerConfig.class).equalTo("id", mServerConfigId);
-                }
-
-                @Override
-                protected void onChange(ServerConfig config) {
-                    onRenderServerConfig(config);
-                }
-            };
-
-    /**
-     * Start the ServerConfigActivity with considering the priority of ServerConfig in the list.
-     */
-    public static boolean launchFor(Context context, List<ServerConfig> configList) {
-        for (ServerConfig config: configList) {
-            if (TextUtils.isEmpty(config.getHostname())) {
-                return launchFor(context, config);
-            } else if (!TextUtils.isEmpty(config.getConnectionError())) {
-                return launchFor(context, config);
-            }
-        }
-
-        for (ServerConfig config: configList) {
-            if (config.getAuthProviders().isEmpty()) {
-                return launchFor(context, config);
-            }
-        }
-
-        for (ServerConfig config: configList) {
-            if (TextUtils.isEmpty(config.getSelectedProviderName())) {
-                return launchFor(context, config);
-            }
-        }
-
-        for (ServerConfig config: configList) {
-            if (TextUtils.isEmpty(config.getToken())) {
-                return launchFor(context, config);
-            }
-        }
-
-        for (ServerConfig config: configList) {
-            if (!config.isTokenVerified()) {
-                return launchFor(context, config);
-            }
-        }
-
-        return false;
+    for (ServerConfig config : configList) {
+      if (config.getAuthProviders().isEmpty()) {
+        return launchFor(context, config);
+      }
     }
 
-    private static boolean launchFor(Context context, ServerConfig config) {
-        LaunchUtil.showServerConfigActivity(context, config.getId());
-        return true;
+    for (ServerConfig config : configList) {
+      if (TextUtils.isEmpty(config.getSelectedProviderName())) {
+        return launchFor(context, config);
+      }
     }
 
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-        if (intent == null || intent.getExtras() == null) {
-            finish();
-            return;
-        }
-
-        mServerConfigId = intent.getStringExtra("id");
-        if (TextUtils.isEmpty(mServerConfigId)) {
-            finish();
-            return;
-        }
-
-        setContentView(R.layout.simple_screen);
+    for (ServerConfig config : configList) {
+      if (TextUtils.isEmpty(config.getToken())) {
+        return launchFor(context, config);
+      }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        RocketChatService.keepalive(this);
-        mServerConfigObserver.sub();
+    for (ServerConfig config : configList) {
+      if (!config.isTokenVerified()) {
+        return launchFor(context, config);
+      }
     }
 
-    @Override
-    protected void onPause() {
-        mServerConfigObserver.unsub();
-        super.onPause();
+    return false;
+  }
+
+  private static boolean launchFor(Context context, ServerConfig config) {
+    LaunchUtil.showServerConfigActivity(context, config.getId());
+    return true;
+  }
+
+  @Override protected int getLayoutContainerForFragment() {
+    return R.id.content;
+  }
+
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    Intent intent = getIntent();
+    if (intent == null || intent.getExtras() == null) {
+      finish();
+      return;
     }
 
-    private void onRenderServerConfig(ServerConfig config) {
-        if (config == null) {
-            finish();
-            return;
-        }
-
-        if (config.isTokenVerified()) {
-            finish();
-            return;
-        }
-
-        final String token = config.getToken();
-        if (!TextUtils.isEmpty(token)) {
-            return;
-        }
-
-        final String selectedProviderName = config.getSelectedProviderName();
-        if (!TextUtils.isEmpty(selectedProviderName)) {
-
-            return;
-        }
-
-        RealmList<MeteorLoginServiceConfiguration> providers = config.getAuthProviders();
-        if (!providers.isEmpty()) {
-
-            return;
-        }
-
-        final String error = config.getConnectionError();
-        String hostname = config.getHostname();
-        if (!TextUtils.isEmpty(hostname) && TextUtils.isEmpty(error)) {
-            showFragment(new ConnectingToHostFragment());
-            return;
-        }
-
-        showFragment(new InputHostnameFragment());
+    mServerConfigId = intent.getStringExtra("id");
+    if (TextUtils.isEmpty(mServerConfigId)) {
+      finish();
+      return;
     }
 
-    @Override
-    protected void showFragment(Fragment fragment) {
-        injectIdArgTo(fragment);
-        super.showFragment(fragment);
+    setContentView(R.layout.simple_screen);
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+    RocketChatService.keepalive(this);
+    mServerConfigObserver.sub();
+  }
+
+  @Override protected void onPause() {
+    mServerConfigObserver.unsub();
+    super.onPause();
+  }
+
+  private void onRenderServerConfig(ServerConfig config) {
+    if (config == null) {
+      finish();
+      return;
     }
 
-    @Override
-    protected void showFragmentWithBackStack(Fragment fragment) {
-        injectIdArgTo(fragment);
-        super.showFragmentWithBackStack(fragment);
+    if (config.isTokenVerified()) {
+      finish();
+      return;
     }
 
-    private void injectIdArgTo(Fragment fragment) {
-        Bundle args = fragment.getArguments();
-        if (args == null) args = new Bundle();
-        args.putString("id", mServerConfigId);
-        fragment.setArguments(args);
+    final String token = config.getToken();
+    if (!TextUtils.isEmpty(token)) {
+      return;
     }
 
-    @Override
-    public void onBackPressed() {
-        if (ServerConfig.hasActiveConnection()) {
-            super.onBackPressed();
-        } else {
-            moveTaskToBack(true);
-        }
+    final String selectedProviderName = config.getSelectedProviderName();
+    if (!TextUtils.isEmpty(selectedProviderName)) {
+
+      return;
     }
+
+    RealmList<MeteorLoginServiceConfiguration> providers = config.getAuthProviders();
+    if (!providers.isEmpty()) {
+
+      return;
+    }
+
+    final String error = config.getConnectionError();
+    String hostname = config.getHostname();
+    if (!TextUtils.isEmpty(hostname) && TextUtils.isEmpty(error)) {
+      showFragment(new ConnectingToHostFragment());
+      return;
+    }
+
+    showFragment(new InputHostnameFragment());
+  }
+
+  @Override protected void showFragment(Fragment fragment) {
+    injectIdArgTo(fragment);
+    super.showFragment(fragment);
+  }
+
+  @Override protected void showFragmentWithBackStack(Fragment fragment) {
+    injectIdArgTo(fragment);
+    super.showFragmentWithBackStack(fragment);
+  }
+
+  private void injectIdArgTo(Fragment fragment) {
+    Bundle args = fragment.getArguments();
+    if (args == null) {
+      args = new Bundle();
+    }
+    args.putString("id", mServerConfigId);
+    fragment.setArguments(args);
+  }
+
+  @Override public void onBackPressed() {
+    if (ServerConfig.hasActiveConnection()) {
+      super.onBackPressed();
+    } else {
+      moveTaskToBack(true);
+    }
+  }
 }

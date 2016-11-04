@@ -8,11 +8,10 @@ import timber.log.Timber;
  * Bolts-Task continuation for just logging if error occurred.
  */
 public class LogcatIfError implements Continuation {
-    @Override
-    public Object then(Task task) throws Exception {
-        if (task.isFaulted()) {
-            Timber.w(task.getError());
-        }
-        return task;
+  @Override public Object then(Task task) throws Exception {
+    if (task.isFaulted()) {
+      Timber.w(task.getError());
     }
+    return task;
+  }
 }

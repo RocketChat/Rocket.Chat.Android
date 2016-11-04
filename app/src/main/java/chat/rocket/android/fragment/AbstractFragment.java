@@ -12,25 +12,25 @@ import android.view.ViewGroup;
  * Fragment base class for this Application.
  */
 public abstract class AbstractFragment extends Fragment {
-    protected View mRootView;
-    protected abstract @LayoutRes int getLayout();
-    protected abstract void onSetupView();
+  protected View mRootView;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(getLayout(), container, false);
-        onSetupView();
-        return mRootView;
-    }
+  protected abstract @LayoutRes int getLayout();
 
-    protected void finish() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            getActivity().finish();
-        } else {
-            getFragmentManager().popBackStack();
-        }
+  protected abstract void onSetupView();
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    mRootView = inflater.inflate(getLayout(), container, false);
+    onSetupView();
+    return mRootView;
+  }
+
+  protected void finish() {
+    if (getFragmentManager().getBackStackEntryCount() == 0) {
+      getActivity().finish();
+    } else {
+      getFragmentManager().popBackStack();
     }
+  }
 }
