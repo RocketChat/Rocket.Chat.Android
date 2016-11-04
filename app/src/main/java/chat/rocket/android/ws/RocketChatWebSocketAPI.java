@@ -62,8 +62,8 @@ public class RocketChatWebSocketAPI {
     /**
      * Unsubscribe with DDP client.
      */
-    public Task<DDPSubscription.NoSub> unsubscribe(final String id) {
-        return mDDPClient.unsub(id);
+    public Task<DDPSubscription.NoSub> unsubscribe(final String subscriptionId) {
+        return mDDPClient.unsub(subscriptionId);
     }
 
     /**

@@ -161,22 +161,22 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     }
 
     @Override
-    protected void showFragment(Fragment f) {
-        injectIdArgTo(f);
-        super.showFragment(f);
+    protected void showFragment(Fragment fragment) {
+        injectIdArgTo(fragment);
+        super.showFragment(fragment);
     }
 
     @Override
-    protected void showFragmentWithBackStack(Fragment f) {
-        injectIdArgTo(f);
-        super.showFragmentWithBackStack(f);
+    protected void showFragmentWithBackStack(Fragment fragment) {
+        injectIdArgTo(fragment);
+        super.showFragmentWithBackStack(fragment);
     }
 
-    private void injectIdArgTo(Fragment f) {
-        Bundle args = f.getArguments();
+    private void injectIdArgTo(Fragment fragment) {
+        Bundle args = fragment.getArguments();
         if (args == null) args = new Bundle();
         args.putString("id", mServerConfigId);
-        f.setArguments(args);
+        fragment.setArguments(args);
     }
 
     @Override

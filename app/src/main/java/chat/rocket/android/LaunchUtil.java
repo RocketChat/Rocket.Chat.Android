@@ -10,12 +10,12 @@ import chat.rocket.android.activity.ServerConfigActivity;
  */
 public class LaunchUtil {
     /**
-     * launc ServerConfigActivity with proper flags.
+     * launch ServerConfigActivity with proper flags.
      */
-    public static void showServerConfigActivity(Context context, String id) {
+    public static void showServerConfigActivity(Context context, String serverCondigId) {
         Intent intent = new Intent(context, ServerConfigActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("id", id);
+        intent.putExtra("id", serverCondigId);
         context.startActivity(intent);
     }
 }

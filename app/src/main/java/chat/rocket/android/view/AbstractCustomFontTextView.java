@@ -33,8 +33,8 @@ abstract class AbstractCustomFontTextView extends AppCompatTextView {
     private void init() {
         String font = getFont();
         if (font != null) {
-            Typeface tf = TypefaceHelper.getTypeface(getContext(), font);
-            if (tf != null) setTypeface(tf);
+            Typeface typeface = TypefaceHelper.getTypeface(getContext(), font);
+            if (typeface != null) setTypeface(typeface);
         }
     }
 }

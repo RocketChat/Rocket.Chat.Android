@@ -41,7 +41,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
     @Override
     protected void onSetupView() {
-        mRootView.findViewById(R.id.btn_connect).setOnClickListener(v -> handleConnect());
+        mRootView.findViewById(R.id.btn_connect).setOnClickListener(view -> handleConnect());
 
         mObserver.sub();
     }
@@ -83,8 +83,8 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
     private void showError(String errString) {
         mShowError.removeMessages(0);
-        Message m = Message.obtain(mShowError, 0, errString);
-        mShowError.sendMessageDelayed(m, 160);
+        Message msg = Message.obtain(mShowError, 0, errString);
+        mShowError.sendMessageDelayed(msg, 160);
     }
 
     private void onRenderServerConfig(ServerConfig config) {

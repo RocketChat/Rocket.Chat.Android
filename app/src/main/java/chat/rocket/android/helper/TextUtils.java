@@ -18,6 +18,7 @@ public class TextUtils {
     /**
      * Returns str if it is not empty; otherwise defaultValue is returned.
      */
+    @SuppressWarnings("PMD.ShortMethodName")
     public static CharSequence or(CharSequence str, CharSequence defaultValue) {
         if (isEmpty(str)) return defaultValue;
         return str;

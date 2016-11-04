@@ -15,6 +15,7 @@ import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 /**
  * Server configuration
  */
+@SuppressWarnings("PMD.ShortVariable")
 public class ServerConfig extends RealmObject {
     @PrimaryKey
     private String id;
@@ -99,12 +100,12 @@ public class ServerConfig extends RealmObject {
     }
 
     @DebugLog
-    public static void logError(String id, Exception e) {
+    public static void logError(String id, Exception exception) {
         RealmHelperBolts
                 .executeTransaction(realm ->
                         realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
                                 .put("id", id)
-                                .put("connectionError", e.getMessage())))
+                                .put("connectionError", exception.getMessage())))
                 .continueWith(new LogcatIfError());
     }
 }

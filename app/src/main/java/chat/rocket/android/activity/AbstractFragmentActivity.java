@@ -12,21 +12,24 @@ abstract class AbstractFragmentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Fragment f = getSupportFragmentManager().findFragmentById(getLayoutContainerForFragment());
-        if (f instanceof OnBackPressListener && ((OnBackPressListener) f).onBackPressed()) {
+        Fragment fragment =
+                getSupportFragmentManager().findFragmentById(getLayoutContainerForFragment());
+
+        if (fragment instanceof OnBackPressListener
+                && ((OnBackPressListener) fragment).onBackPressed()) {
             //consumed. do nothing.
         } else super.onBackPressed();
     }
 
-    protected void showFragment(Fragment f) {
+    protected void showFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(getLayoutContainerForFragment(), f)
+                .replace(getLayoutContainerForFragment(), fragment)
                 .commit();
     }
 
-    protected void showFragmentWithBackStack(Fragment f) {
+    protected void showFragmentWithBackStack(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(getLayoutContainerForFragment(), f)
+                .replace(getLayoutContainerForFragment(), fragment)
                 .addToBackStack(null)
                 .commit();
     }

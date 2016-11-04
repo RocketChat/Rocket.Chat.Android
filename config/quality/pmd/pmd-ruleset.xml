@@ -20,8 +20,8 @@
     <rule ref="rulesets/java/naming.xml">
         <!--<exclude name="AbstractNaming" />-->
         <exclude name="LongVariable" />
-        <exclude name="ShortMethodName" />
-        <exclude name="ShortVariable" />
+        <!--exclude name="ShortMethodName" /-->
+        <!--exclude name="ShortVariable" /-->
         <!--<exclude name="ShortClassName" />-->
         <!--<exclude name="VariableNamingConventions" />-->
     </rule>

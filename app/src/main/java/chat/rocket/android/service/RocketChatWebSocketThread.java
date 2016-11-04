@@ -29,9 +29,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
     private boolean mSocketExists;
     private boolean mListenersRegistered;
 
-    private RocketChatWebSocketThread(Context appContext, String id) {
-        super("RC_thread_" + id);
-        mServerConfigId = id;
+    private RocketChatWebSocketThread(Context appContext, String serverConfigId) {
+        super("RC_thread_" + serverConfigId);
+        mServerConfigId = serverConfigId;
         mAppContext = appContext;
     }
 
@@ -48,8 +48,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 try {
                     super.onLooperPrepared();
                     task.setResult(this);
-                } catch (Exception e) {
-                    task.setError(e);
+                } catch (Exception exception) {
+                    task.setError(exception);
                 }
             }
         }.start();
@@ -60,8 +60,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
      * terminate the thread
      */
     @DebugLog
-    public static void terminate(RocketChatWebSocketThread t) {
-        t.quit();
+    public static void terminate(RocketChatWebSocketThread thread) {
+        thread.quit();
     }
 
     private Task<Void> ensureConnection() {
@@ -178,12 +178,12 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 Object obj = ctor.newInstance(mAppContext, mWebSocketAPI);
 
                 if (obj instanceof Registerable) {
-                    Registerable l = (Registerable) obj;
-                    l.register();
-                    mListeners.add(l);
+                    Registerable registerable = (Registerable) obj;
+                    registerable.register();
+                    mListeners.add(registerable);
                 }
-            } catch (Exception e) {
-                Timber.w(e, "Failed to register listeners!!");
+            } catch (Exception exception) {
+                Timber.w(exception, "Failed to register listeners!!");
             }
         }
     }
@@ -192,18 +192,18 @@ public class RocketChatWebSocketThread extends HandlerThread {
     private void keepaliveListeners() {
         if (!mSocketExists || !mListenersRegistered) return;
 
-        for (Registerable l : mListeners) l.keepalive();
+        for (Registerable registerable : mListeners) registerable.keepalive();
     }
 
     //@DebugLog
     private void unregisterListeners() {
         if (!mSocketExists || !mListenersRegistered) return;
 
-        Iterator<Registerable> it = mListeners.iterator();
-        while (it.hasNext()) {
-            Registerable l = it.next();
-            l.unregister();
-            it.remove();
+        Iterator<Registerable> iterator = mListeners.iterator();
+        while (iterator.hasNext()) {
+            Registerable registerable = iterator.next();
+            registerable.unregister();
+            iterator.remove();
         }
         if (mWebSocketAPI != null) {
             mWebSocketAPI.close();

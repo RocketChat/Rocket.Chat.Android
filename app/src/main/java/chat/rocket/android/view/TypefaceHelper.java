@@ -18,16 +18,16 @@ public class TypefaceHelper {
     /**
      * read font in assets directory.
      */
-    public static Typeface getTypeface(Context c, String assetPath) {
+    public static Typeface getTypeface(Context context, String assetPath) {
         synchronized (CACHE) {
             if (!CACHE.containsKey(assetPath)) {
                 try {
-                    Typeface t = Typeface.createFromAsset(c.getAssets(),
+                    Typeface typeface = Typeface.createFromAsset(context.getAssets(),
                             assetPath);
-                    CACHE.put(assetPath, t);
-                } catch (Exception e) {
+                    CACHE.put(assetPath, typeface);
+                } catch (Exception exception) {
                     Log.e(TAG, "Could not get typeface '" + assetPath
-                            + "' because " + e.getMessage());
+                            + "' because " + exception.getMessage());
                     return null;
                 }
             }

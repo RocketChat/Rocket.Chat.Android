@@ -66,22 +66,22 @@ public class RocketChatService extends Service {
     }
 
     private void syncWebSocketThreadsWith(List<ServerConfig> configList) {
-        final Iterator<Map.Entry<String, RocketChatWebSocketThread>> it =
+        final Iterator<Map.Entry<String, RocketChatWebSocketThread>> iterator =
                 mWebSocketThreads.entrySet().iterator();
 
-        while (it.hasNext()) {
-            Map.Entry<String, RocketChatWebSocketThread> e = it.next();
-            String id = e.getKey();
+        while (iterator.hasNext()) {
+            Map.Entry<String, RocketChatWebSocketThread> entry = iterator.next();
+            String serverConfigId = entry.getKey();
             boolean found = false;
             for (ServerConfig config: configList) {
-                if (id.equals(config.getId())) {
+                if (serverConfigId.equals(config.getId())) {
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                RocketChatWebSocketThread.terminate(e.getValue());
-                it.remove();
+                RocketChatWebSocketThread.terminate(entry.getValue());
+                iterator.remove();
             }
         }
 
@@ -95,13 +95,13 @@ public class RocketChatService extends Service {
     }
 
     private Task<RocketChatWebSocketThread> findOrCreateWebSocketThread(final ServerConfig config) {
-        final String id = config.getId();
-        if (mWebSocketThreads.containsKey(id)) {
-            return Task.forResult(mWebSocketThreads.get(id));
+        final String serverConfigId = config.getId();
+        if (mWebSocketThreads.containsKey(serverConfigId)) {
+            return Task.forResult(mWebSocketThreads.get(serverConfigId));
         } else {
             return RocketChatWebSocketThread.getStarted(getApplicationContext(), config)
                     .onSuccessTask(task -> {
-                        mWebSocketThreads.put(id, task.getResult());
+                        mWebSocketThreads.put(serverConfigId, task.getResult());
                         return task;
                     });
         }

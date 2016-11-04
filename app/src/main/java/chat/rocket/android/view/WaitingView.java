@@ -48,12 +48,12 @@ public class WaitingView extends LinearLayout {
         int count = 3;
 
         if (attrs != null) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(
+            TypedArray array = context.getTheme().obtainStyledAttributes(
                     attrs,
                     R.styleable.WaitingView, 0, 0);
-            size = a.getDimensionPixelSize(R.styleable.WaitingView_dotSize, size);
-            count = a.getInteger(R.styleable.WaitingView_dotCount, count);
-            a.recycle();
+            size = array.getDimensionPixelSize(R.styleable.WaitingView_dotSize, size);
+            count = array.getInteger(R.styleable.WaitingView_dotCount, count);
+            array.recycle();
         }
 
         mDots = new ArrayList<>();
@@ -74,13 +74,14 @@ public class WaitingView extends LinearLayout {
     }
 
     private void addDot(Context context, int size) {
-        FrameLayout f = new FrameLayout(context);
-        f.setLayoutParams(new LinearLayoutCompat.LayoutParams(size * 3 / 2, size * 3 / 2));
+        FrameLayout frameLayout = new FrameLayout(context);
+        frameLayout.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(size * 3 / 2, size * 3 / 2));
         ImageView dot = new ImageView(context);
         dot.setImageResource(R.drawable.white_circle);
         dot.setLayoutParams(new FrameLayout.LayoutParams(size, size, Gravity.CENTER));
-        f.addView(dot);
-        addView(f);
+        frameLayout.addView(dot);
+        addView(frameLayout);
         mDots.add(dot);
     }
 

@@ -103,9 +103,9 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
     }
 
     private void mergeJSON(JSONObject target, JSONObject src) throws JSONException {
-        Iterator<String> it = src.keys();
-        while (it.hasNext()) {
-            String key = it.next();
+        Iterator<String> iterator = src.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
             target.put(key, src.get(key));
         }
     }
