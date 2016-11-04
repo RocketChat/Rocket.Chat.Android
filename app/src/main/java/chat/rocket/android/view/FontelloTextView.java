@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 /**
- * TextView with fontello
+ * TextView with fontello.
  */
 public class FontelloTextView extends AbstractCustomFontTextView {
   public FontelloTextView(Context context, AttributeSet attrs, int defStyle) {

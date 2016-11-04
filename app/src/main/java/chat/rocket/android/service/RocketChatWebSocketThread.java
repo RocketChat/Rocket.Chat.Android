@@ -24,17 +24,17 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private static final Class[] REGISTERABLE_CLASSES = {
       LoginServiceConfigurationSubscriber.class
   };
-  private final Context mAppContext;
-  private final String mServerConfigId;
-  private final ArrayList<Registerable> mListeners = new ArrayList<>();
-  private RocketChatWebSocketAPI mWebSocketAPI;
-  private boolean mSocketExists;
-  private boolean mListenersRegistered;
+  private final Context appContext;
+  private final String serverConfigId;
+  private final ArrayList<Registerable> listeners = new ArrayList<>();
+  private RocketChatWebSocketAPI webSocketAPI;
+  private boolean socketExists;
+  private boolean listenersRegistered;
 
   private RocketChatWebSocketThread(Context appContext, String serverConfigId) {
     super("RC_thread_" + serverConfigId);
-    mServerConfigId = serverConfigId;
-    mAppContext = appContext;
+    this.serverConfigId = serverConfigId;
+    this.appContext = appContext;
   }
 
   /**
@@ -57,14 +57,14 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   /**
-   * terminate the thread
+   * terminate the thread.
    */
   @DebugLog public static void terminate(RocketChatWebSocketThread thread) {
     thread.quit();
   }
 
   private Task<Void> ensureConnection() {
-    if (mWebSocketAPI == null || !mWebSocketAPI.isConnected()) {
+    if (webSocketAPI == null || !webSocketAPI.isConnected()) {
       return registerListeners();
     } else {
       return Task.forResult(null);
@@ -113,21 +113,21 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private void prepareWebSocket() {
     ServerConfig config = RealmHelper.executeTransactionForRead(
-        realm -> realm.where(ServerConfig.class).equalTo("id", mServerConfigId).findFirst());
+        realm -> realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
 
-    if (mWebSocketAPI == null || !mWebSocketAPI.isConnected()) {
-      mWebSocketAPI = RocketChatWebSocketAPI.create(config.getHostname());
+    if (webSocketAPI == null || !webSocketAPI.isConnected()) {
+      webSocketAPI = RocketChatWebSocketAPI.create(config.getHostname());
     }
   }
 
   @DebugLog private Task<Void> registerListeners() {
-    if (mSocketExists) {
+    if (socketExists) {
       return Task.forResult(null);
     }
 
-    mSocketExists = true;
+    socketExists = true;
     prepareWebSocket();
-    return mWebSocketAPI.connect().onSuccess(task -> {
+    return webSocketAPI.connect().onSuccess(task -> {
       registerListenersActually();
 
       DDPClient client = task.getResult().client;
@@ -146,7 +146,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
       return null;
     }).continueWith(task -> {
       if (task.isFaulted()) {
-        ServerConfig.logError(mServerConfigId, task.getError());
+        ServerConfig.logError(serverConfigId, task.getError());
       }
       return null;
     });
@@ -154,20 +154,20 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   //@DebugLog
   private void registerListenersActually() {
-    if (mListenersRegistered) {
+    if (listenersRegistered) {
       return;
     }
-    mListenersRegistered = true;
+    listenersRegistered = true;
 
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
         Constructor ctor = clazz.getConstructor(Context.class, RocketChatWebSocketAPI.class);
-        Object obj = ctor.newInstance(mAppContext, mWebSocketAPI);
+        Object obj = ctor.newInstance(appContext, webSocketAPI);
 
         if (obj instanceof Registerable) {
           Registerable registerable = (Registerable) obj;
           registerable.register();
-          mListeners.add(registerable);
+          listeners.add(registerable);
         }
       } catch (Exception exception) {
         Timber.w(exception, "Failed to register listeners!!");
@@ -177,32 +177,32 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   //@DebugLog
   private void keepaliveListeners() {
-    if (!mSocketExists || !mListenersRegistered) {
+    if (!socketExists || !listenersRegistered) {
       return;
     }
 
-    for (Registerable registerable : mListeners) {
+    for (Registerable registerable : listeners) {
       registerable.keepalive();
     }
   }
 
   //@DebugLog
   private void unregisterListeners() {
-    if (!mSocketExists || !mListenersRegistered) {
+    if (!socketExists || !listenersRegistered) {
       return;
     }
 
-    Iterator<Registerable> iterator = mListeners.iterator();
+    Iterator<Registerable> iterator = listeners.iterator();
     while (iterator.hasNext()) {
       Registerable registerable = iterator.next();
       registerable.unregister();
       iterator.remove();
     }
-    if (mWebSocketAPI != null) {
-      mWebSocketAPI.close();
-      mWebSocketAPI = null;
+    if (webSocketAPI != null) {
+      webSocketAPI.close();
+      webSocketAPI = null;
     }
-    mListenersRegistered = false;
-    mSocketExists = false;
+    listenersRegistered = false;
+    socketExists = false;
   }
 }

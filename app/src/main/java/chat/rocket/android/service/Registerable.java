@@ -1,21 +1,21 @@
 package chat.rocket.android.service;
 
 /**
- * interface for observer and ddp_subscription
+ * interface for observer and ddp_subscription.
  */
 public interface Registerable {
   /**
-   * register
+   * register.
    */
   void register();
 
   /**
-   * keepalive
+   * keepalive.
    */
   void keepalive();
 
   /**
-   * unregister
+   * unregister.
    */
   void unregister();
 }

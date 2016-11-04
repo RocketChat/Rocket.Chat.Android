@@ -13,12 +13,12 @@ import rx.Observable;
  * API for several POST actions.
  */
 public class RocketChatWebSocketAPI {
-  private final DDPClient mDDPClient;
-  private final String mHostName;
+  private final DDPClient ddpClient;
+  private final String hostname;
 
   private RocketChatWebSocketAPI(String hostname) {
-    mDDPClient = new DDPClient(OkHttpHelper.getClientForWebSocket());
-    mHostName = hostname;
+    ddpClient = new DDPClient(OkHttpHelper.getClientForWebSocket());
+    this.hostname = hostname;
   }
 
   /**
@@ -32,41 +32,41 @@ public class RocketChatWebSocketAPI {
    * Connect to WebSocket server with DDP client.
    */
   public Task<DDPClientCallback.Connect> connect() {
-    return mDDPClient.connect("wss://" + mHostName + "/websocket");
+    return ddpClient.connect("wss://" + hostname + "/websocket");
   }
 
   /**
    * Returns whether DDP client is connected to WebSocket server.
    */
   public boolean isConnected() {
-    return mDDPClient.isConnected();
+    return ddpClient.isConnected();
   }
 
   /**
    * close connection.
    */
   public void close() {
-    mDDPClient.close();
+    ddpClient.close();
   }
 
   /**
    * Subscribe with DDP client.
    */
   public Task<DDPSubscription.Ready> subscribe(final String name, JSONArray param) {
-    return mDDPClient.sub(UUID.randomUUID().toString(), name, param);
+    return ddpClient.sub(UUID.randomUUID().toString(), name, param);
   }
 
   /**
    * Unsubscribe with DDP client.
    */
   public Task<DDPSubscription.NoSub> unsubscribe(final String subscriptionId) {
-    return mDDPClient.unsub(subscriptionId);
+    return ddpClient.unsub(subscriptionId);
   }
 
   /**
    * Returns Observable for handling DDP subscription.
    */
   public Observable<DDPSubscription.Event> getSubscriptionCallback() {
-    return mDDPClient.getSubscriptionCallback();
+    return ddpClient.getSubscriptionCallback();
   }
 }

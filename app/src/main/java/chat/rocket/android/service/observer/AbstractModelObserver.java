@@ -9,12 +9,12 @@ import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
 abstract class AbstractModelObserver<T extends RealmObject> extends RealmListObserver<T>
     implements Registerable {
 
-  protected final Context mContext;
-  protected final RocketChatWebSocketAPI mAPI;
+  protected final Context context;
+  protected final RocketChatWebSocketAPI webSocketAPI;
 
   protected AbstractModelObserver(Context context, RocketChatWebSocketAPI api) {
-    mContext = context;
-    mAPI = api;
+    this.context = context;
+    webSocketAPI = api;
   }
 
   @Override public void register() {

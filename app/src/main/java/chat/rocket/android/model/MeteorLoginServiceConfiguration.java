@@ -4,9 +4,10 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * subscription model for "meteor_accounts_loginServiceConfiguration"
+ * subscription model for "meteor_accounts_loginServiceConfiguration".
  */
-@SuppressWarnings("PMD.ShortVariable") public class MeteorLoginServiceConfiguration
+@SuppressWarnings("PMD.ShortVariable")
+public class MeteorLoginServiceConfiguration
     extends RealmObject {
   @PrimaryKey private String id;
   private String service;

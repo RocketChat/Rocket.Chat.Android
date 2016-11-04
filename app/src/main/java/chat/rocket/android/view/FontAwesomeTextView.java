@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 /**
- * TextView with font-awesome
+ * TextView with font-awesome.
  */
 public class FontAwesomeTextView extends AbstractCustomFontTextView {
   public FontAwesomeTextView(Context context, AttributeSet attrs, int defStyle) {

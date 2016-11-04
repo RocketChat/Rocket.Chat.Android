@@ -18,14 +18,14 @@ import org.json.JSONObject;
  * Input server host.
  */
 public class InputHostnameFragment extends AbstractServerConfigFragment {
-  private Handler mShowError = new Handler() {
+  private Handler errorShowingHandler = new Handler() {
     @Override public void handleMessage(Message msg) {
-      Toast.makeText(mRootView.getContext(), (String) msg.obj, Toast.LENGTH_SHORT).show();
+      Toast.makeText(rootView.getContext(), (String) msg.obj, Toast.LENGTH_SHORT).show();
     }
   };
-  RealmObjectObserver<ServerConfig> mObserver = new RealmObjectObserver<ServerConfig>() {
+  RealmObjectObserver<ServerConfig> serverConfigObserver = new RealmObjectObserver<ServerConfig>() {
     @Override protected RealmQuery<ServerConfig> query(Realm realm) {
-      return realm.where(ServerConfig.class).equalTo("id", mServerConfigId);
+      return realm.where(ServerConfig.class).equalTo("id", serverConfigId);
     }
 
     @Override protected void onChange(ServerConfig config) {
@@ -41,42 +41,42 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   }
 
   @Override protected void onSetupView() {
-    mRootView.findViewById(R.id.btn_connect).setOnClickListener(view -> handleConnect());
+    rootView.findViewById(R.id.btn_connect).setOnClickListener(view -> handleConnect());
 
-    mObserver.sub();
+    serverConfigObserver.sub();
   }
 
   private void handleConnect() {
-    final TextView editor = (TextView) mRootView.findViewById(R.id.editor_hostname);
+    final TextView editor = (TextView) rootView.findViewById(R.id.editor_hostname);
 
     final String hostname =
         TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
 
     RealmHelperBolts.executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
-            new JSONObject().put("id", mServerConfigId)
+            new JSONObject().put("id", serverConfigId)
                 .put("hostname", hostname)
                 .put("connectionError", JSONObject.NULL))).continueWith(new LogcatIfError());
   }
 
   @Override public void onResume() {
     super.onResume();
-    mObserver.keepalive();
+    serverConfigObserver.keepalive();
   }
 
   @Override public void onDestroyView() {
-    mObserver.unsub();
+    serverConfigObserver.unsub();
     super.onDestroyView();
   }
 
   private void showError(String errString) {
-    mShowError.removeMessages(0);
-    Message msg = Message.obtain(mShowError, 0, errString);
-    mShowError.sendMessageDelayed(msg, 160);
+    errorShowingHandler.removeMessages(0);
+    Message msg = Message.obtain(errorShowingHandler, 0, errString);
+    errorShowingHandler.sendMessageDelayed(msg, 160);
   }
 
   private void onRenderServerConfig(ServerConfig config) {
-    final TextView editor = (TextView) mRootView.findViewById(R.id.editor_hostname);
+    final TextView editor = (TextView) rootView.findViewById(R.id.editor_hostname);
 
     if (!TextUtils.isEmpty(config.getHostname())) {
       editor.setText(config.getHostname());
@@ -90,7 +90,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   private void clearConnectionErrorAndHostname() {
     RealmHelperBolts.executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
-            new JSONObject().put("id", mServerConfigId)
+            new JSONObject().put("id", serverConfigId)
                 .put("hostname", JSONObject.NULL)
                 .put("connectionError", JSONObject.NULL))).continueWith(new LogcatIfError());
   }

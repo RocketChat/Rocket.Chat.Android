@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * View for indicating "waiting for connection ..." and so on.
  */
 public class WaitingView extends LinearLayout {
-  private ArrayList<View> mDots;
+  private ArrayList<View> dots;
 
   public WaitingView(Context context) {
     super(context);
@@ -53,7 +53,7 @@ public class WaitingView extends LinearLayout {
       array.recycle();
     }
 
-    mDots = new ArrayList<>();
+    dots = new ArrayList<>();
     setOrientation(HORIZONTAL);
     for (int i = 0; i < count; i++) {
       addDot(context, size);
@@ -78,12 +78,12 @@ public class WaitingView extends LinearLayout {
     dot.setLayoutParams(new FrameLayout.LayoutParams(size, size, Gravity.CENTER));
     frameLayout.addView(dot);
     addView(frameLayout);
-    mDots.add(dot);
+    dots.add(dot);
   }
 
   private void start() {
-    for (int i = 0; i < mDots.size(); i++) {
-      animateDot(mDots.get(i), 160 * i, 480, 480);
+    for (int i = 0; i < dots.size(); i++) {
+      animateDot(dots.get(i), 160 * i, 480, 480);
     }
   }
 
@@ -111,7 +111,7 @@ public class WaitingView extends LinearLayout {
   }
 
   private void cancel() {
-    for (View dot : mDots) {
+    for (View dot : dots) {
       dot.clearAnimation();
     }
   }

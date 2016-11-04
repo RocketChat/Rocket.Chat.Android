@@ -20,8 +20,8 @@ import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
  */
 public class RocketChatService extends Service {
 
-  private HashMap<String, RocketChatWebSocketThread> mWebSocketThreads;
-  private RealmListObserver<ServerConfig> mConnectionRequiredServerConfigObserver =
+  private HashMap<String, RocketChatWebSocketThread> webSocketThreads;
+  private RealmListObserver<ServerConfig> connectionRequiredServerConfigObserver =
       new RealmListObserver<ServerConfig>() {
         @Override protected RealmResults<ServerConfig> queryItems(Realm realm) {
           return realm.where(ServerConfig.class)
@@ -51,17 +51,17 @@ public class RocketChatService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    mWebSocketThreads = new HashMap<>();
+    webSocketThreads = new HashMap<>();
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    mConnectionRequiredServerConfigObserver.keepalive();
+    connectionRequiredServerConfigObserver.keepalive();
     return START_STICKY;
   }
 
   private void syncWebSocketThreadsWith(List<ServerConfig> configList) {
     final Iterator<Map.Entry<String, RocketChatWebSocketThread>> iterator =
-        mWebSocketThreads.entrySet().iterator();
+        webSocketThreads.entrySet().iterator();
 
     while (iterator.hasNext()) {
       Map.Entry<String, RocketChatWebSocketThread> entry = iterator.next();
@@ -90,18 +90,20 @@ public class RocketChatService extends Service {
 
   private Task<RocketChatWebSocketThread> findOrCreateWebSocketThread(final ServerConfig config) {
     final String serverConfigId = config.getId();
-    if (mWebSocketThreads.containsKey(serverConfigId)) {
-      return Task.forResult(mWebSocketThreads.get(serverConfigId));
+    if (webSocketThreads.containsKey(serverConfigId)) {
+      return Task.forResult(webSocketThreads.get(serverConfigId));
     } else {
       return RocketChatWebSocketThread.getStarted(getApplicationContext(), config)
           .onSuccessTask(task -> {
-            mWebSocketThreads.put(serverConfigId, task.getResult());
+            webSocketThreads.put(serverConfigId, task.getResult());
             return task;
           });
     }
   }
 
-  @Nullable @Override public IBinder onBind(Intent intent) {
+  @Nullable
+  @Override
+  public IBinder onBind(Intent intent) {
     return null;
   }
 }

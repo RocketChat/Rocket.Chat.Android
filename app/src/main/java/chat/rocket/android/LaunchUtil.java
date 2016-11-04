@@ -5,7 +5,7 @@ import android.content.Intent;
 import chat.rocket.android.activity.ServerConfigActivity;
 
 /**
- * utility class for launching Activity
+ * utility class for launching Activity.
  */
 public class LaunchUtil {
   /**

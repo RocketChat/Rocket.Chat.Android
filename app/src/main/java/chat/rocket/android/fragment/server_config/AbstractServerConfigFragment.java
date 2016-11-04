@@ -6,7 +6,7 @@ import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.helper.TextUtils;
 
 abstract class AbstractServerConfigFragment extends AbstractFragment {
-  protected String mServerConfigId;
+  protected String serverConfigId;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -17,8 +17,8 @@ abstract class AbstractServerConfigFragment extends AbstractFragment {
       return;
     }
 
-    mServerConfigId = args.getString("id");
-    if (TextUtils.isEmpty(mServerConfigId)) {
+    serverConfigId = args.getString("id");
+    if (TextUtils.isEmpty(serverConfigId)) {
       finish();
       return;
     }

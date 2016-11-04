@@ -24,11 +24,11 @@ import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
  */
 public class ServerConfigActivity extends AbstractFragmentActivity {
 
-  private String mServerConfigId;
-  private RealmObjectObserver<ServerConfig> mServerConfigObserver =
+  private String serverConfigId;
+  private RealmObjectObserver<ServerConfig> serverConfigObserver =
       new RealmObjectObserver<ServerConfig>() {
         @Override protected RealmQuery<ServerConfig> query(Realm realm) {
-          return realm.where(ServerConfig.class).equalTo("id", mServerConfigId);
+          return realm.where(ServerConfig.class).equalTo("id", serverConfigId);
         }
 
         @Override protected void onChange(ServerConfig config) {
@@ -93,8 +93,8 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
       return;
     }
 
-    mServerConfigId = intent.getStringExtra("id");
-    if (TextUtils.isEmpty(mServerConfigId)) {
+    serverConfigId = intent.getStringExtra("id");
+    if (TextUtils.isEmpty(serverConfigId)) {
       finish();
       return;
     }
@@ -105,11 +105,11 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
   @Override protected void onResume() {
     super.onResume();
     RocketChatService.keepalive(this);
-    mServerConfigObserver.sub();
+    serverConfigObserver.sub();
   }
 
   @Override protected void onPause() {
-    mServerConfigObserver.unsub();
+    serverConfigObserver.unsub();
     super.onPause();
   }
 
@@ -152,21 +152,21 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
   }
 
   @Override protected void showFragment(Fragment fragment) {
-    injectIdArgTo(fragment);
+    injectServerConfigIdArgTo(fragment);
     super.showFragment(fragment);
   }
 
   @Override protected void showFragmentWithBackStack(Fragment fragment) {
-    injectIdArgTo(fragment);
+    injectServerConfigIdArgTo(fragment);
     super.showFragmentWithBackStack(fragment);
   }
 
-  private void injectIdArgTo(Fragment fragment) {
+  private void injectServerConfigIdArgTo(Fragment fragment) {
     Bundle args = fragment.getArguments();
     if (args == null) {
       args = new Bundle();
     }
-    args.putString("id", mServerConfigId);
+    args.putString("id", serverConfigId);
     fragment.setArguments(args);
   }
 

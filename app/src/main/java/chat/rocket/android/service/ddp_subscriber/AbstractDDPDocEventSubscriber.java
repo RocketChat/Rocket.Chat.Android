@@ -16,14 +16,14 @@ import rx.Subscription;
 import timber.log.Timber;
 
 abstract class AbstractDDPDocEventSubscriber implements Registerable {
-  protected final Context mContext;
-  protected final RocketChatWebSocketAPI mAPI;
-  private String mID;
-  private Subscription mSubscription;
+  protected final Context context;
+  protected final RocketChatWebSocketAPI webSocketAPI;
+  private String subscriptionId;
+  private Subscription rxSubscription;
 
   protected AbstractDDPDocEventSubscriber(Context context, RocketChatWebSocketAPI api) {
-    mContext = context;
-    mAPI = api;
+    this.context = context;
+    this.webSocketAPI = api;
   }
 
   protected abstract String getSubscriptionName();
@@ -32,13 +32,13 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
 
   protected abstract Class<? extends RealmObject> getModelClass();
 
-  protected JSONObject customizeFieldJSON(JSONObject json) {
+  protected JSONObject customizeFieldJson(JSONObject json) {
     return json;
   }
 
   @Override public void register() {
-    mAPI.subscribe(getSubscriptionName(), null).onSuccess(task -> {
-      mID = task.getResult().id;
+    webSocketAPI.subscribe(getSubscriptionName(), null).onSuccess(task -> {
+      subscriptionId = task.getResult().id;
       return null;
     }).continueWith(task -> {
       if (task.isFaulted()) {
@@ -57,7 +57,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   }
 
   private void registerSubscriptionCallback() {
-    mSubscription = mAPI.getSubscriptionCallback()
+    rxSubscription = webSocketAPI.getSubscriptionCallback()
         .filter(event -> event instanceof DDPSubscription.DocEvent)
         .cast(DDPSubscription.DocEvent.class)
         .filter(event -> getSubscriptionCallbackName().equals(event.collection))
@@ -74,8 +74,8 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
             } else if (docEvent instanceof DDPSubscription.MovedBefore) {
               //ignore movedBefore
             }
-          } catch (Exception e) {
-            Timber.w(e, "failed to handle subscription callback");
+          } catch (Exception exception) {
+            Timber.w(exception, "failed to handle subscription callback");
           }
         });
   }
@@ -87,33 +87,18 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
     }).continueWith(new LogcatIfError());
   }
 
+  private void onDocumentAdded(Realm realm, DDPSubscription.Added docEvent) throws JSONException {
+    //executed in RealmTransaction
+    JSONObject json = new JSONObject().put("id", docEvent.docID);
+    mergeJson(json, docEvent.fields);
+    realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJson(json));
+  }
+
   protected void onDocumentChanged(DDPSubscription.Changed docEvent) {
     RealmHelperBolts.executeTransaction(realm -> {
       onDocumentChanged(realm, docEvent);
       return null;
     }).continueWith(new LogcatIfError());
-  }
-
-  protected void onDocumentRemoved(DDPSubscription.Removed docEvent) {
-    RealmHelperBolts.executeTransaction(realm -> {
-      onDocumentRemoved(realm, docEvent);
-      return null;
-    }).continueWith(new LogcatIfError());
-  }
-
-  private void mergeJSON(JSONObject target, JSONObject src) throws JSONException {
-    Iterator<String> iterator = src.keys();
-    while (iterator.hasNext()) {
-      String key = iterator.next();
-      target.put(key, src.get(key));
-    }
-  }
-
-  private void onDocumentAdded(Realm realm, DDPSubscription.Added docEvent) throws JSONException {
-    //executed in RealmTransaction
-    JSONObject json = new JSONObject().put("id", docEvent.docID);
-    mergeJSON(json, docEvent.fields);
-    realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJSON(json));
   }
 
   private void onDocumentChanged(Realm realm, DDPSubscription.Changed docEvent)
@@ -124,8 +109,15 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
       String fieldToDelete = docEvent.cleared.getString(i);
       json.remove(fieldToDelete);
     }
-    mergeJSON(json, docEvent.fields);
-    realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJSON(json));
+    mergeJson(json, docEvent.fields);
+    realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJson(json));
+  }
+
+  protected void onDocumentRemoved(DDPSubscription.Removed docEvent) {
+    RealmHelperBolts.executeTransaction(realm -> {
+      onDocumentRemoved(realm, docEvent);
+      return null;
+    }).continueWith(new LogcatIfError());
   }
 
   private void onDocumentRemoved(Realm realm, DDPSubscription.Removed docEvent)
@@ -134,16 +126,24 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
     realm.where(getModelClass()).equalTo("id", docEvent.docID).findAll().deleteAllFromRealm();
   }
 
+  private void mergeJson(JSONObject target, JSONObject src) throws JSONException {
+    Iterator<String> iterator = src.keys();
+    while (iterator.hasNext()) {
+      String key = iterator.next();
+      target.put(key, src.get(key));
+    }
+  }
+
   @Override public void keepalive() {
 
   }
 
   @Override public void unregister() {
-    if (mSubscription != null) {
-      mSubscription.unsubscribe();
+    if (rxSubscription != null) {
+      rxSubscription.unsubscribe();
     }
-    if (!TextUtils.isEmpty(mID)) {
-      mAPI.unsubscribe(mID).continueWith(new LogcatIfError());
+    if (!TextUtils.isEmpty(subscriptionId)) {
+      webSocketAPI.unsubscribe(subscriptionId).continueWith(new LogcatIfError());
     }
   }
 }

@@ -12,9 +12,10 @@ import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONObject;
 
 /**
- * Server configuration
+ * Server configuration.
  */
-@SuppressWarnings("PMD.ShortVariable") public class ServerConfig extends RealmObject {
+@SuppressWarnings("PMD.ShortVariable")
+public class ServerConfig extends RealmObject {
   @PrimaryKey private String id;
   private String hostname;
   private String connectionError;
