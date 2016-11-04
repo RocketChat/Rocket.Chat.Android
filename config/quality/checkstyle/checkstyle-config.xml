@@ -27,6 +27,16 @@
     <property name="eachLine" value="true"/>
   </module>
 
+  <module name="SuppressionCommentFilter">
+    <property name="offCommentFormat" value="CHECKSTYLE:OFF (\w+)"/>
+    <property name="onCommentFormat" value="CHECKSTYLE:ON (\w+)"/>
+    <property name="checkFormat" value="$1"/>
+  </module>
+  
+  <module name="SuppressionFilter">
+    <property name="file" value="config/quality/checkstyle/checkstyle-suppressions.xml"/>
+  </module>
+
   <module name="TreeWalker">
     <module name="OuterTypeFilename"/>
     <module name="IllegalTokenText">
@@ -91,11 +101,11 @@
       <property name="tokens" value="COMMA"/>
       <property name="option" value="EOL"/>
     </module>
-    <module name="PackageName">
+    <!-- TODO module name="PackageName">
       <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
       <message key="name.invalidPattern"
           value="Package name ''{0}'' must match pattern ''{1}''."/>
-    </module>
+    </module-->
     <module name="TypeName">
       <message key="name.invalidPattern"
           value="Type name ''{0}'' must match pattern ''{1}''."/>
@@ -158,16 +168,16 @@
     </module>
     <module name="AbbreviationAsWordInName">
       <property name="ignoreFinal" value="false"/>
-      <property name="allowedAbbreviationLength" value="1"/>
+      <!-- TODO property name="allowedAbbreviationLength" value="1"/-->
     </module>
     <module name="OverloadMethodsDeclarationOrder"/>
     <module name="VariableDeclarationUsageDistance"/>
-    <module name="CustomImportOrder">
+    <!-- TODO module name="CustomImportOrder">
       <property name="specialImportsRegExp" value="com.google"/>
       <property name="sortImportsInGroupAlphabetically" value="true"/>
       <property name="customImportOrderRules"
           value="STATIC###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE"/>
-    </module>
+    </module-->
     <module name="MethodParamPad"/>
     <module name="OperatorWrap">
       <property name="option" value="NL"/>
