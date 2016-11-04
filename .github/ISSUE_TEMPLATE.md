@@ -1,0 +1,1 @@
+Your Rocket.Chat.Android version: (make sure you are running the latest)
