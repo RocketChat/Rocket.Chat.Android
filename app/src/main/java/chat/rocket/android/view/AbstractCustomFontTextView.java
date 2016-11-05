@@ -7,28 +7,30 @@ import android.util.AttributeSet;
 
 abstract class AbstractCustomFontTextView extends AppCompatTextView {
 
-    protected abstract String getFont();
+  public AbstractCustomFontTextView(Context context, AttributeSet attrs, int defStyle) {
+    super(context, attrs, defStyle);
+    init();
+  }
 
-    public AbstractCustomFontTextView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
-    }
+  public AbstractCustomFontTextView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    init();
+  }
 
-    public AbstractCustomFontTextView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
+  public AbstractCustomFontTextView(Context context) {
+    super(context);
+    init();
+  }
 
-    public AbstractCustomFontTextView(Context context) {
-        super(context);
-        init();
-    }
+  protected abstract String getFont();
 
-    private void init() {
-        String font = getFont();
-        if (font!=null) {
-            Typeface tf = TypefaceHelper.getTypeface(getContext(), font);
-            if (tf!=null) setTypeface(tf);
-        }
+  private void init() {
+    String font = getFont();
+    if (font != null) {
+      Typeface typeface = TypefaceHelper.getTypeface(getContext(), font);
+      if (typeface != null) {
+        setTypeface(typeface);
+      }
     }
+  }
 }

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string translatable="false" name="fa_chevron_down">&#xf078;</string>
+  <string name="fa_chevron_down" translatable="false">&#xf078;</string>
 </resources>

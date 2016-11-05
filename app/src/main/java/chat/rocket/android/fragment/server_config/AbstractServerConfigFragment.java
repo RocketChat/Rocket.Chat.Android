@@ -2,26 +2,25 @@ package chat.rocket.android.fragment.server_config;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.helper.TextUtils;
 
 abstract class AbstractServerConfigFragment extends AbstractFragment {
-    protected String mServerConfigId;
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  protected String serverConfigId;
 
-        Bundle args = getArguments();
-        if (args==null) {
-            finish();
-            return;
-        }
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        mServerConfigId = args.getString("id");
-        if (TextUtils.isEmpty(mServerConfigId)) {
-            finish();
-            return;
-        }
+    Bundle args = getArguments();
+    if (args == null) {
+      finish();
+      return;
     }
+
+    serverConfigId = args.getString("id");
+    if (TextUtils.isEmpty(serverConfigId)) {
+      finish();
+      return;
+    }
+  }
 }

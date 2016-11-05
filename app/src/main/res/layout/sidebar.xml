@@ -1,65 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="288dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
-    android:theme="@style/AppTheme.Dark">
+    android:theme="@style/AppTheme.Dark"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/colorPrimaryDark"
+      android:orientation="vertical"
+      >
 
     <LinearLayout
+        android:id="@+id/user_info_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?attr/colorPrimaryDark">
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_16"
+        >
 
-        <LinearLayout
-            android:id="@+id/user_info_container"
+      <ImageView
+          android:id="@+id/img_userstatus"
+          android:layout_width="8dp"
+          android:layout_height="8dp"
+          android:src="@drawable/userstatus_online"
+          />
+
+      <Space
+          android:layout_width="@dimen/margin_8"
+          android:layout_height="wrap_content"
+          />
+
+      <include layout="@layout/avatar_container_large"/>
+
+      <FrameLayout
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/margin_8"
+          android:layout_marginRight="@dimen/margin_8"
+          android:layout_weight="1"
+          >
+
+        <TextView
+            android:id="@+id/txt_account_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="@dimen/margin_16"
-            android:background="?attr/selectableItemBackground">
+            android:layout_gravity="center_vertical"
+            android:text="John Doe"
+            android:textSize="14sp"
+            />
 
-            <ImageView
-                android:id="@+id/img_userstatus"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:src="@drawable/userstatus_online"/>
+      </FrameLayout>
 
-            <Space
-                android:layout_width="@dimen/margin_8"
-                android:layout_height="wrap_content"/>
+      <chat.rocket.android.view.FontAwesomeTextView
+          android:id="@+id/img_user_action_toggle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/fa_chevron_down"
+          android:textSize="16dp"
+          />
 
-            <include layout="@layout/avatar_container_large"/>
-
-            <FrameLayout
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="@dimen/margin_8"
-                android:layout_marginRight="@dimen/margin_8">
-
-                <TextView
-                    android:id="@+id/txt_account_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_gravity="center_vertical"
-                    android:text="John Doe"/>
-
-            </FrameLayout>
-
-            <chat.rocket.android.view.FontAwesomeTextView
-                android:id="@+id/img_user_action_toggle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fa_chevron_down"
-                android:textSize="16dp"/>
-
-        </LinearLayout>
     </LinearLayout>
+  </LinearLayout>
 
 </LinearLayout>

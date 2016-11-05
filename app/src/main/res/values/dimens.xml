@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="avatar_image_size_normal">24dp</dimen>
-    <dimen name="avatar_image_size_large">48dp</dimen>
-    <dimen name="avatar_text_size_normal">11sp</dimen>
-    <dimen name="avatar_text_size_large">28sp</dimen>
+  <dimen name="avatar_image_size_normal">24dp</dimen>
+  <dimen name="avatar_image_size_large">48dp</dimen>
+  <dimen name="avatar_text_size_normal">11sp</dimen>
+  <dimen name="avatar_text_size_large">28sp</dimen>
 </resources>
