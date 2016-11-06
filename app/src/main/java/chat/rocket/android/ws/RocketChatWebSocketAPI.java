@@ -1,5 +1,6 @@
 package chat.rocket.android.ws;
 
+import android.support.annotation.Nullable;
 import bolts.Task;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android_ddp.DDPClient;
@@ -31,8 +32,8 @@ public class RocketChatWebSocketAPI {
   /**
    * Connect to WebSocket server with DDP client.
    */
-  public Task<DDPClientCallback.Connect> connect() {
-    return ddpClient.connect("wss://" + hostname + "/websocket");
+  public Task<DDPClientCallback.Connect> connect(@Nullable String session) {
+    return ddpClient.connect("wss://" + hostname + "/websocket", session);
   }
 
   /**

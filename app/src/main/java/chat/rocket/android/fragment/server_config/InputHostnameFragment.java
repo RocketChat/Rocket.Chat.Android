@@ -56,7 +56,8 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
             new JSONObject().put("id", serverConfigId)
                 .put("hostname", hostname)
-                .put("connectionError", JSONObject.NULL))).continueWith(new LogcatIfError());
+                .put("connectionError", JSONObject.NULL)
+                .put("session", JSONObject.NULL))).continueWith(new LogcatIfError());
   }
 
   @Override public void onResume() {

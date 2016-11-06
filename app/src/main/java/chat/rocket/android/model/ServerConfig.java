@@ -3,7 +3,6 @@ package chat.rocket.android.model;
 import chat.rocket.android.helper.LogcatIfError;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
@@ -19,9 +18,9 @@ public class ServerConfig extends RealmObject {
   @PrimaryKey private String id;
   private String hostname;
   private String connectionError;
+  private String session;
   private String token;
   private boolean tokenVerified;
-  private RealmList<MeteorLoginServiceConfiguration> authProviders;
   private String selectedProviderName;
 
   public static RealmQuery<ServerConfig> queryLoginRequiredConnections(Realm realm) {
@@ -41,8 +40,10 @@ public class ServerConfig extends RealmObject {
 
   @DebugLog public static void logError(String id, Exception exception) {
     RealmHelperBolts.executeTransaction(
-        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
-            new JSONObject().put("id", id).put("connectionError", exception.getMessage())))
+        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+            .put("id", id)
+            .put("connectionError", exception.getMessage())
+            .put("session", JSONObject.NULL)))
         .continueWith(new LogcatIfError());
   }
 
@@ -70,6 +71,14 @@ public class ServerConfig extends RealmObject {
     this.connectionError = connectionError;
   }
 
+  public String getSession() {
+    return session;
+  }
+
+  public void setSession(String session) {
+    this.session = session;
+  }
+
   public String getToken() {
     return token;
   }
@@ -84,14 +93,6 @@ public class ServerConfig extends RealmObject {
 
   public void setTokenVerified(boolean tokenVerified) {
     this.tokenVerified = tokenVerified;
-  }
-
-  public RealmList<MeteorLoginServiceConfiguration> getAuthProviders() {
-    return authProviders;
-  }
-
-  public void setAuthProviders(RealmList<MeteorLoginServiceConfiguration> authProviders) {
-    this.authProviders = authProviders;
   }
 
   public String getSelectedProviderName() {

@@ -3,18 +3,22 @@ package chat.rocket.android.service;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
+import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.service.ddp_subscriber.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
-import chat.rocket.android_ddp.DDPClient;
+import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
+import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
+import org.json.JSONObject;
 import timber.log.Timber;
 
 /**
@@ -111,10 +115,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
   }
 
-  private void prepareWebSocket() {
-    ServerConfig config = RealmHelper.executeTransactionForRead(
-        realm -> realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
-
+  private void prepareWebSocket(ServerConfig config) {
     if (webSocketAPI == null || !webSocketAPI.isConnected()) {
       webSocketAPI = RocketChatWebSocketAPI.create(config.getHostname());
     }
@@ -124,26 +125,34 @@ public class RocketChatWebSocketThread extends HandlerThread {
     if (socketExists) {
       return Task.forResult(null);
     }
-
     socketExists = true;
-    prepareWebSocket();
-    return webSocketAPI.connect().onSuccess(task -> {
-      registerListenersActually();
 
-      DDPClient client = task.getResult().client;
+    final ServerConfig config = RealmHelper.executeTransactionForRead(
+        realm -> realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
 
-      // handling WebSocket#onClose() callback.
-      client.getOnCloseCallback().onSuccess(_task -> {
-        quit();
+    prepareWebSocket(config);
+    return webSocketAPI.connect(config.getSession()).onSuccessTask(task -> {
+      final String session = task.getResult().session;
+      RealmHelperBolts.executeTransaction(realm ->
+          realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+              .put("id", serverConfigId)
+              .put("session", session))
+      ).continueWith(new LogcatIfError());
+      return task;
+    }).onSuccess(new Continuation<DDPClientCallback.Connect, Object>() {
+      // TODO type detection doesn't work due to retrolambda's bug...
+      @Override public Object then(Task<DDPClientCallback.Connect> task)
+          throws Exception {
+        registerListenersActually();
+
+        // handling WebSocket#onClose() callback.
+        task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
+          quit();
+          return null;
+        });
+
         return null;
-      });
-
-      // just for debugging.
-      client.getSubscriptionCallback().subscribe(event -> {
-        Timber.d("Callback [DEBUG] < " + event);
-      });
-
-      return null;
+      }
     }).continueWith(task -> {
       if (task.isFaulted()) {
         ServerConfig.logError(serverConfigId, task.getError());

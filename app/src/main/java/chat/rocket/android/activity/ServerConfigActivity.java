@@ -9,12 +9,11 @@ import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.ConnectingToHostFragment;
 import chat.rocket.android.fragment.server_config.InputHostnameFragment;
+import chat.rocket.android.fragment.server_config.LoginFragment;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.MeteorLoginServiceConfiguration;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.service.RocketChatService;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmQuery;
 import java.util.List;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
@@ -49,7 +48,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     }
 
     for (ServerConfig config : configList) {
-      if (config.getAuthProviders().isEmpty()) {
+      if (TextUtils.isEmpty(config.getSession())) {
         return launchFor(context, config);
       }
     }
@@ -135,9 +134,8 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
       return;
     }
 
-    RealmList<MeteorLoginServiceConfiguration> providers = config.getAuthProviders();
-    if (!providers.isEmpty()) {
-
+    if (!TextUtils.isEmpty(config.getSession())) {
+      showFragment(new LoginFragment());
       return;
     }
 

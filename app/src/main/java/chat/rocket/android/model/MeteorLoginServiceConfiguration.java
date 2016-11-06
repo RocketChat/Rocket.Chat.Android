@@ -10,6 +10,7 @@ import io.realm.annotations.PrimaryKey;
 public class MeteorLoginServiceConfiguration
     extends RealmObject {
   @PrimaryKey private String id;
+  private ServerConfig serverConfig;
   private String service;
   private String consumerKey; //for Twitter
   private String appId; //for Facebook
