@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="fa_chevron_down" translatable="false">&#xf078;</string>
+  <string name="fa_twitter" translatable="false">&#xf099;</string>
+  <string name="fa_github" translatable="false">&#xf09b;</string>
 </resources>
