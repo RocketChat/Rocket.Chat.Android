@@ -9,8 +9,9 @@ import io.realm.RealmObject;
  * meteor.loginServiceConfiguration subscriber
  */
 public class LoginServiceConfigurationSubscriber extends AbstractDDPDocEventSubscriber {
-  public LoginServiceConfigurationSubscriber(Context context, RocketChatWebSocketAPI api) {
-    super(context, api);
+  public LoginServiceConfigurationSubscriber(Context context, String serverConfigId,
+      RocketChatWebSocketAPI api) {
+    super(context, serverConfigId, api);
   }
 
   @Override protected String getSubscriptionName() {

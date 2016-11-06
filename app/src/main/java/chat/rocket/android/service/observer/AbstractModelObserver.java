@@ -10,10 +10,13 @@ abstract class AbstractModelObserver<T extends RealmObject> extends RealmListObs
     implements Registerable {
 
   protected final Context context;
+  protected final String serverConfigId;
   protected final RocketChatWebSocketAPI webSocketAPI;
 
-  protected AbstractModelObserver(Context context, RocketChatWebSocketAPI api) {
+  protected AbstractModelObserver(Context context, String serverConfigId,
+      RocketChatWebSocketAPI api) {
     this.context = context;
+    this.serverConfigId = serverConfigId;
     webSocketAPI = api;
   }
 

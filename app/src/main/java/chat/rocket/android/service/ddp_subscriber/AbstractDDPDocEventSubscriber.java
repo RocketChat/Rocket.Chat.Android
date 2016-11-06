@@ -17,12 +17,15 @@ import timber.log.Timber;
 
 abstract class AbstractDDPDocEventSubscriber implements Registerable {
   protected final Context context;
+  protected final String serverConfigId;
   protected final RocketChatWebSocketAPI webSocketAPI;
   private String subscriptionId;
   private Subscription rxSubscription;
 
-  protected AbstractDDPDocEventSubscriber(Context context, RocketChatWebSocketAPI api) {
+  protected AbstractDDPDocEventSubscriber(Context context, String serverConfigId,
+      RocketChatWebSocketAPI api) {
     this.context = context;
+    this.serverConfigId = serverConfigId;
     this.webSocketAPI = api;
   }
 
@@ -90,6 +93,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   private void onDocumentAdded(Realm realm, DDPSubscription.Added docEvent) throws JSONException {
     //executed in RealmTransaction
     JSONObject json = new JSONObject().put("id", docEvent.docID);
+    json.put("serverConfig", new JSONObject().put("id", serverConfigId));
     mergeJson(json, docEvent.fields);
     realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJson(json));
   }
@@ -105,9 +109,10 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
       throws JSONException {
     //executed in RealmTransaction
     JSONObject json = new JSONObject().put("id", docEvent.docID);
+    json.put("serverConfig", new JSONObject().put("id", serverConfigId));
     for (int i = 0; i < docEvent.cleared.length(); i++) {
       String fieldToDelete = docEvent.cleared.getString(i);
-      json.remove(fieldToDelete);
+      json.put(fieldToDelete, JSONObject.NULL);
     }
     mergeJson(json, docEvent.fields);
     realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJson(json));

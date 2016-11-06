@@ -15,4 +15,52 @@ public class MeteorLoginServiceConfiguration
   private String consumerKey; //for Twitter
   private String appId; //for Facebook
   private String clientId; //for other auth providers
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public ServerConfig getServerConfig() {
+    return serverConfig;
+  }
+
+  public void setServerConfig(ServerConfig serverConfig) {
+    this.serverConfig = serverConfig;
+  }
+
+  public String getService() {
+    return service;
+  }
+
+  public void setService(String service) {
+    this.service = service;
+  }
+
+  public String getConsumerKey() {
+    return consumerKey;
+  }
+
+  public void setConsumerKey(String consumerKey) {
+    this.consumerKey = consumerKey;
+  }
+
+  public String getAppId() {
+    return appId;
+  }
+
+  public void setAppId(String appId) {
+    this.appId = appId;
+  }
+
+  public String getClientId() {
+    return clientId;
+  }
+
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
+  }
 }

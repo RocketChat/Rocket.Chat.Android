@@ -170,8 +170,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
-        Constructor ctor = clazz.getConstructor(Context.class, RocketChatWebSocketAPI.class);
-        Object obj = ctor.newInstance(appContext, webSocketAPI);
+        Constructor ctor = clazz.getConstructor(Context.class, String.class, RocketChatWebSocketAPI.class);
+        Object obj = ctor.newInstance(appContext, serverConfigId, webSocketAPI);
 
         if (obj instanceof Registerable) {
           Registerable registerable = (Registerable) obj;
