@@ -72,7 +72,7 @@ public class WaitingView extends LinearLayout {
     FrameLayout frameLayout = new FrameLayout(context);
     frameLayout.setLayoutParams(new LinearLayout.LayoutParams(size * 3 / 2, size * 3 / 2));
     ImageView dot = new ImageView(context);
-    dot.setImageResource(R.drawable.white_circle);
+    dot.setImageResource(R.drawable.normal_circle);
     dot.setLayoutParams(new FrameLayout.LayoutParams(size, size, Gravity.CENTER));
     frameLayout.addView(dot);
     addView(frameLayout);

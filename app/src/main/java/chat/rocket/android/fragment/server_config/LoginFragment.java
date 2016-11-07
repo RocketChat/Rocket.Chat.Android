@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import chat.rocket.android.R;
+import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.MeteorLoginServiceConfiguration;
@@ -14,9 +15,6 @@ import chat.rocket.android.model.ServerConfigCredential;
 import chat.rocket.android.renderer.ServerConfigCredentialRenderer;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
 import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
@@ -69,9 +67,17 @@ public class LoginFragment extends AbstractServerConfigFragment {
                   .put("type", ServerConfigCredential.TYPE_EMAIL)
                   .put("errorMessage", JSONObject.NULL)
                   .put("username", username.toString())
-                  .put("hashedPasswd", sha256sum(passwd.toString())))
+                  .put("hashedPasswd", CheckSum.sha256(passwd.toString())))
           )
       ).continueWith(new LogcatIfError());
+    });
+
+    final View btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
+    btnUserRegistration.setOnClickListener(view -> {
+
+      UserRegistrationDialogFragment.create(serverConfigId,
+          txtUsername.getText().toString(), txtPasswd.getText().toString())
+          .show(getFragmentManager(), UserRegistrationDialogFragment.class.getSimpleName());
     });
 
     showErrorIfNeeded();
@@ -100,23 +106,6 @@ public class LoginFragment extends AbstractServerConfigFragment {
     errorShowingHandler.removeMessages(0);
     Message msg = Message.obtain(errorShowingHandler, 0, errString);
     errorShowingHandler.sendMessageDelayed(msg, 160);
-  }
-
-  private static String sha256sum(String orig) {
-    MessageDigest messageDigest = null;
-    try {
-      messageDigest = MessageDigest.getInstance("SHA-256");
-    } catch (NoSuchAlgorithmException exception) {
-      return null;
-    }
-    messageDigest.update(orig.getBytes(Charset.forName("UTF-8")));
-
-    StringBuilder stringBuilder = new StringBuilder();
-    for (byte b : messageDigest.digest()) {
-      stringBuilder.append(String.format("%02x", b & 0xff));
-    }
-
-    return stringBuilder.toString();
   }
 
   private void onRenderAuthProviders(List<MeteorLoginServiceConfiguration> authProviders) {

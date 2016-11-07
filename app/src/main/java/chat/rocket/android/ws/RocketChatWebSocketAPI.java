@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.util.Patterns;
 import bolts.Task;
 import chat.rocket.android.helper.OkHttpHelper;
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfigCredential;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
@@ -77,6 +78,21 @@ public class RocketChatWebSocketAPI {
 
   private String generateId(String method) {
     return method + "-" + UUID.randomUUID().toString().replace("-", "");
+  }
+
+  /**
+   * Execute raw RPC.
+   */
+  public Task<DDPClientCallback.RPC> rpc(String methodCallId, String methodName, String params) {
+    if (TextUtils.isEmpty(params)) {
+      return ddpClient.rpc(methodName, null, methodCallId);
+    }
+
+    try {
+      return ddpClient.rpc(methodName, new JSONArray().put(new JSONObject(params)), methodCallId);
+    } catch (JSONException exception) {
+      return Task.forError(exception);
+    }
   }
 
   /**
