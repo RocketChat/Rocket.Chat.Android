@@ -1,4 +1,4 @@
-package chat.rocket.android.view;
+package chat.rocket.android.widget;
 
 import android.content.Context;
 import android.graphics.Typeface;

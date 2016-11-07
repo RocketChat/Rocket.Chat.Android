@@ -28,7 +28,7 @@
           android:layout_height="wrap_content"
           android:orientation="horizontal"
           >
-        <chat.rocket.android.view.FontAwesomeButton
+        <chat.rocket.android.widget.FontAwesomeButton
             android:id="@+id/btn_login_with_twitter"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -37,7 +37,7 @@
             android:layout_marginEnd="@dimen/margin_8"
             android:enabled="false"
             />
-        <chat.rocket.android.view.FontAwesomeButton
+        <chat.rocket.android.widget.FontAwesomeButton
             android:id="@+id/btn_login_with_github"
             android:layout_width="48dp"
             android:layout_height="48dp"

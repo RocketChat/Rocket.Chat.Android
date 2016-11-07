@@ -1,17 +1,15 @@
-package chat.rocket.android.view;
+package chat.rocket.android.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import chat.rocket.android.R;
 import java.util.ArrayList;
 
 /**
@@ -72,7 +70,7 @@ public class WaitingView extends LinearLayout {
 
   private void addDot(Context context, int size) {
     FrameLayout frameLayout = new FrameLayout(context);
-    frameLayout.setLayoutParams(new LinearLayoutCompat.LayoutParams(size * 3 / 2, size * 3 / 2));
+    frameLayout.setLayoutParams(new LinearLayout.LayoutParams(size * 3 / 2, size * 3 / 2));
     ImageView dot = new ImageView(context);
     dot.setImageResource(R.drawable.white_circle);
     dot.setLayoutParams(new FrameLayout.LayoutParams(size, size, Gravity.CENTER));
@@ -96,16 +94,20 @@ public class WaitingView extends LinearLayout {
         .scaleY(1)
         .setDuration(duration)
         .setStartDelay(startDelay)
-        .withEndAction(() -> {
-          dot.animate()
-              .scaleX(0)
-              .scaleY(0)
-              .setDuration(duration)
-              .setStartDelay(0)
-              .withEndAction(() -> {
-                animateDot(dot, interval, duration, interval);
-              })
-              .start();
+        .withEndAction(new Runnable() {
+          @Override public void run() {
+            dot.animate()
+                .scaleX(0)
+                .scaleY(0)
+                .setDuration(duration)
+                .setStartDelay(0)
+                .withEndAction(new Runnable() {
+                  @Override public void run() {
+                    animateDot(dot, interval, duration, interval);
+                  }
+                })
+                .start();
+          }
         })
         .start();
   }

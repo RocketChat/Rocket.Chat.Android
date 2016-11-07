@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile project(':rocket-chat-android-widgets')
   compile 'com.android.support:appcompat-v7:25.0.0'
   compile 'com.android.support:design:25.0.0'
   compile 'jp.co.crowdworks:realm-java-helpers:0.0.7'

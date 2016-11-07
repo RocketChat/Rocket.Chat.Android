@@ -58,7 +58,7 @@
 
       </FrameLayout>
 
-      <chat.rocket.android.view.FontAwesomeTextView
+      <chat.rocket.android.widget.FontAwesomeTextView
           android:id="@+id/img_user_action_toggle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"

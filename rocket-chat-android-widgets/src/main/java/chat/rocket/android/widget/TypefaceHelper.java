@@ -1,4 +1,4 @@
-package chat.rocket.android.view;
+package chat.rocket.android.widget;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -8,7 +8,7 @@ import java.util.Hashtable;
 /**
  * Helper for reading typeface. ref：https://code.google.com/p/android/issues/detail?id=9904#c7
  */
-public class TypefaceHelper {
+class TypefaceHelper {
   private static final String TAG = TypefaceHelper.class.getName();
 
   private static final Hashtable<String, Typeface> CACHE = new Hashtable<String, Typeface>();
