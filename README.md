@@ -1,9 +1,11 @@
 # UNDER HEAVY DEVELOPMENT for v1.0-beta
 
-rough design document is [here](https://github.com/RocketChat/Rocket.Chat.Android/blob/doc/README.md)
+* rough design document is [here](https://github.com/RocketChat/Rocket.Chat.Android/blob/doc/README.md)
+* Rocket.Chat.Android.Lily is moved to [deprecated_lily](https://github.com/RocketChat/Rocket.Chat.Android/tree/deprecated_lily) branch.
 
+---
 
-[![Circle CI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop2.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop2)
+[![CircleCI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop)
 
 # Rocket.Chat.Android
 Rocket.Chat Native Android Application.
@@ -23,8 +25,6 @@ git clone https://github.com/RocketChat/Rocket.Chat.Android.git
 cd Rocket.Chat.Android
 
 echo "sdk.dir="$ANDROID_HOME > local.properties
-
-cp app/fabric.properties.sample app/fabric.properties
 
 ./gradlew assembleDebug
 ```
