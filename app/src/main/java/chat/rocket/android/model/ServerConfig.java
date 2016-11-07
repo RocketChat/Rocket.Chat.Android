@@ -21,7 +21,7 @@ public class ServerConfig extends RealmObject {
   private String session;
   private String token;
   private boolean tokenVerified;
-  private String selectedProviderName;
+  private ServerConfigCredential credential;
 
   public static RealmQuery<ServerConfig> queryLoginRequiredConnections(Realm realm) {
     return realm.where(ServerConfig.class).equalTo("tokenVerified", false);
@@ -95,11 +95,11 @@ public class ServerConfig extends RealmObject {
     this.tokenVerified = tokenVerified;
   }
 
-  public String getSelectedProviderName() {
-    return selectedProviderName;
+  public ServerConfigCredential getCredential() {
+    return credential;
   }
 
-  public void setSelectedProviderName(String selectedProviderName) {
-    this.selectedProviderName = selectedProviderName;
+  public void setCredential(ServerConfigCredential credential) {
+    this.credential = credential;
   }
 }

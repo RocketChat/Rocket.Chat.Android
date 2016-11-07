@@ -10,6 +10,7 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.service.ddp_subscriber.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.observer.LoginCredentialObserver;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
@@ -26,7 +27,8 @@ import timber.log.Timber;
  */
 public class RocketChatWebSocketThread extends HandlerThread {
   private static final Class[] REGISTERABLE_CLASSES = {
-      LoginServiceConfigurationSubscriber.class
+      LoginServiceConfigurationSubscriber.class,
+      LoginCredentialObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;
@@ -128,7 +130,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     socketExists = true;
 
     final ServerConfig config = RealmHelper.executeTransactionForRead(
-        realm -> realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
+      realm -> realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
 
     prepareWebSocket(config);
     return webSocketAPI.connect(config.getSession()).onSuccessTask(task -> {
@@ -163,6 +165,14 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   //@DebugLog
   private void registerListenersActually() {
+    if (!Thread.currentThread().getName().equals("RC_thread_" + serverConfigId)) {
+      // execute in Looper.
+      new Handler(getLooper()).post(() -> {
+        registerListenersActually();
+      });
+      return;
+    }
+
     if (listenersRegistered) {
       return;
     }

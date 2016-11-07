@@ -5,15 +5,15 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 
 /**
- * Just showing "connecting..." screen.
  */
-public class ConnectingToHostFragment extends AbstractServerConfigFragment {
+public class AuthenticatingFragment extends AbstractServerConfigFragment {
   @Override protected int getLayout() {
     return R.layout.fragment_wait_for_connection;
   }
 
   @Override protected void onSetupView() {
     TextView caption = (TextView) rootView.findViewById(R.id.txt_caption);
-    caption.setVisibility(View.GONE);
+    caption.setVisibility(View.VISIBLE);
+    caption.setText("Authenticationg...");
   }
 }
