@@ -1,17 +1,34 @@
 package chat.rocket.android.model;
 
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android_ddp.DDPClientCallback;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ServerConfigCredential extends RealmObject {
-  @PrimaryKey private String type;
+  public static final String TYPE_EMAIL = "email";
+  public static final String TYPE_TWITTER = "twitter";
+  public static final String TYPE_GITHUB = "github";
+
+  @PrimaryKey private String id;
+  private String type;
   private String credentialToken;
   private String credentialSecret;
   private String username;
   private String hashedPasswd;
+  private String errorMessage;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 
   public String getType() {
     return type;
@@ -53,6 +70,14 @@ public class ServerConfigCredential extends RealmObject {
     this.hashedPasswd = hashedPasswd;
   }
 
+  public String getErrorMessage() {
+    return errorMessage;
+  }
+
+  public void setErrorMessage(String errorMessage) {
+    this.errorMessage = errorMessage;
+  }
+
   public static boolean hasSecret(ServerConfigCredential credential) {
     if (credential == null) {
       return false;
@@ -72,5 +97,26 @@ public class ServerConfigCredential extends RealmObject {
     }
 
     return false;
+  }
+
+  public static void logError(final String id, final Exception exception) {
+    RealmHelperBolts.executeTransaction(realm ->
+        realm.createOrUpdateObjectFromJson(ServerConfigCredential.class, new JSONObject()
+            .put("id", id)
+            .put("errorMessage", getErrorMessageFor(exception)))
+    ).continueWith(new LogcatIfError());
+  }
+
+  private static String getErrorMessageFor(Exception exception) throws JSONException {
+    if (exception instanceof DDPClientCallback.RPC.Error) {
+      JSONObject error = ((DDPClientCallback.RPC.Error) exception).error;
+      if (!error.isNull("message")) {
+        return error.getString("message");
+      } else {
+        return error.toString();
+      }
+    } else {
+      return exception.getMessage();
+    }
   }
 }

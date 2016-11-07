@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
-import chat.rocket.android.fragment.login.GitHubOAuthWebViewFragment;
+import chat.rocket.android.fragment.oauth.GitHubOAuthWebViewFragment;
 import chat.rocket.android.fragment.server_config.AuthenticatingFragment;
 import chat.rocket.android.fragment.server_config.ConnectingToHostFragment;
 import chat.rocket.android.fragment.server_config.InputHostnameFragment;
@@ -60,7 +60,9 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
 
     for (ServerConfig config : configList) {
       ServerConfigCredential credential = config.getCredential();
-      if (credential != null && !TextUtils.isEmpty(credential.getType())) {
+      if (credential != null
+          && !TextUtils.isEmpty(credential.getType())
+          && TextUtils.isEmpty(credential.getErrorMessage())) {
         return launchFor(context, config);
       }
     }
@@ -126,16 +128,20 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
 
     if (config.isTokenVerified()) {
       finish();
+      overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
       return;
     }
 
     final String token = config.getToken();
     if (!TextUtils.isEmpty(token)) {
+      showFragment(new AuthenticatingFragment());
       return;
     }
 
     final ServerConfigCredential credential = config.getCredential();
-    if (credential != null && !TextUtils.isEmpty(credential.getType())) {
+    if (credential != null
+        && !TextUtils.isEmpty(credential.getType())
+        && TextUtils.isEmpty(credential.getErrorMessage())) {
       if (ServerConfigCredential.hasSecret(credential)) {
         showFragment(new AuthenticatingFragment());
       } else {

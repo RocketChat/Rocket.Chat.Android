@@ -2,9 +2,9 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import bolts.Task;
-import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.ServerConfigCredential;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClientCallback;
 import io.realm.Realm;
@@ -31,6 +31,7 @@ public class LoginCredentialObserver extends AbstractModelObserver<ServerConfig>
         .isNotNull("credential.credentialToken")
         .isNotNull("credential.credentialSecret")
         .endGroup()
+        .isNull("credential.errorMessage")
         .findAll();
   }
 
@@ -41,6 +42,7 @@ public class LoginCredentialObserver extends AbstractModelObserver<ServerConfig>
 
     ServerConfig config = list.get(0);
     final String serverConfigId = config.getId();
+    final String credentialId = config.getCredential().getId();
 
     login(config).onSuccessTask(task -> {
       final String token = task.getResult().result.getString("token");
@@ -51,17 +53,7 @@ public class LoginCredentialObserver extends AbstractModelObserver<ServerConfig>
               .put("tokenVerified", true)));
     }).continueWith(task -> {
       if (task.isFaulted()) {
-        RealmHelperBolts.executeTransaction(realm -> {
-          ServerConfig _config = realm.where(ServerConfig.class)
-              .equalTo("id", serverConfigId)
-              .findFirst();
-
-          if (_config != null) {
-            _config.getCredential().deleteFromRealm();
-            _config.setToken(null);
-          }
-          return null;
-        }).continueWith(new LogcatIfError());
+        ServerConfigCredential.logError(credentialId, task.getError());
       }
       return null;
     });

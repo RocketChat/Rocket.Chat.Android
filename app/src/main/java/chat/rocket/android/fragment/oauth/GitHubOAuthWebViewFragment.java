@@ -1,4 +1,4 @@
-package chat.rocket.android.fragment.login;
+package chat.rocket.android.fragment.oauth;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +21,7 @@ import timber.log.Timber;
 public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
 
   private String serverConfigId;
+  private String credentialId;
   private String hostname;
   private String url;
   private boolean resultOK;
@@ -58,6 +59,7 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
       throw new IllegalArgumentException(
           "Invalid server_config_id given,");
     }
+    credentialId = serverConfig.getCredential().getId();
     hostname = serverConfig.getHostname();
     url = generateURL(oauthConfig.getClientId());
   }
@@ -151,6 +153,7 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
         realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
             .put("id", serverConfigId)
             .put("credential", new JSONObject()
+                .put("id", credentialId)
                 .put("type", "github")
                 .put("credentialToken", credentialToken)
                 .put("credentialSecret", credentialSecret))

@@ -157,7 +157,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
       }
     }).continueWith(task -> {
       if (task.isFaulted()) {
-        ServerConfig.logError(serverConfigId, task.getError());
+        ServerConfig.logConnectionError(serverConfigId, task.getError());
       }
       return null;
     });

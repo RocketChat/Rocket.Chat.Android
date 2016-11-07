@@ -38,7 +38,7 @@ public class ServerConfig extends RealmObject {
     return config != null;
   }
 
-  @DebugLog public static void logError(String id, Exception exception) {
+  @DebugLog public static void logConnectionError(String id, Exception exception) {
     RealmHelperBolts.executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
             .put("id", id)
