@@ -102,25 +102,30 @@ public class RocketChatWebSocketAPI {
             .put("credentialToken", credential.getCredentialToken())
             .put("credentialSecret", credential.getCredentialSecret()));
       }
-    }
-    catch (JSONException e) {
-      return Task.forError(e);
+    } catch (JSONException exception) {
+      return Task.forError(exception);
     }
 
     return ddpClient.rpc("login", new JSONArray().put(param), generateId("login"));
   }
 
+  /**
+   * Login with token.
+   */
   public Task<DDPClientCallback.RPC> loginWithToken(final String token) {
     JSONObject param = new JSONObject();
     try {
       param.put("resume", token);
-    } catch (JSONException e) {
-      return Task.forError(e);
+    } catch (JSONException exception) {
+      return Task.forError(exception);
     }
 
     return ddpClient.rpc("login", new JSONArray().put(param), generateId("login-token"));
   }
 
+  /**
+   * Logout.
+   */
   public Task<DDPClientCallback.RPC> logout() {
     return ddpClient.rpc("logout", null, generateId("logout"));
   }

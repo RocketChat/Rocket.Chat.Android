@@ -9,6 +9,7 @@ import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+@SuppressWarnings("PMD.ShortVariable")
 public class ServerConfigCredential extends RealmObject {
   public static final String TYPE_EMAIL = "email";
   public static final String TYPE_TWITTER = "twitter";

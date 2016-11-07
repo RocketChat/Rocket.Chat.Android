@@ -13,23 +13,26 @@ import chat.rocket.android.R;
 import chat.rocket.android.helper.OnBackPressListener;
 import hugo.weaving.DebugLog;
 
-public abstract class AbstractWebViewFragment extends AbstractFragment implements OnBackPressListener {
+public abstract class AbstractWebViewFragment extends AbstractFragment
+    implements OnBackPressListener {
   private WebView webview;
-  private WebViewClient mWebViewClient = new WebViewClient() {
-    private boolean mError;
+  private WebViewClient webviewClient = new WebViewClient() {
+    private boolean error;
 
     @Override public void onPageStarted(WebView webview, String url, Bitmap favicon) {
-      mError = false;
+      error = false;
     }
 
     @Override public void onPageFinished(WebView webview, String url) {
-      if (!mError) onPageLoaded(webview, url);
+      if (!error) {
+        onPageLoaded(webview, url);
+      }
     }
 
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
       super.onReceivedError(view, request, error);
-      mError = true;
+      this.error = true;
     }
 
     @Override public boolean shouldOverrideUrlLoading(WebView webview, String url) {
@@ -37,7 +40,8 @@ public abstract class AbstractWebViewFragment extends AbstractFragment implement
           || super.shouldOverrideUrlLoading(webview, url);
     }
 
-    @DebugLog @Override
+    @DebugLog
+    @Override
     public void onFormResubmission(WebView view, Message dontResend, Message resend) {
       //resend POST request without confirmation.
       resend.sendToTarget();
@@ -61,7 +65,7 @@ public abstract class AbstractWebViewFragment extends AbstractFragment implement
       settings.setJavaScriptEnabled(true);
     }
     webview.setHorizontalScrollBarEnabled(false);
-    webview.setWebViewClient(mWebViewClient);
+    webview.setWebViewClient(webviewClient);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       WebView.setWebContentsDebuggingEnabled(true);

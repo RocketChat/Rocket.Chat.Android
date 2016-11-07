@@ -14,6 +14,7 @@ import chat.rocket.android.model.ServerConfigCredential;
 import chat.rocket.android.renderer.ServerConfigCredentialRenderer;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -56,7 +57,9 @@ public class LoginFragment extends AbstractServerConfigFragment {
     btnEmail.setOnClickListener(view -> {
       final CharSequence username = txtUsername.getText();
       final CharSequence passwd = txtPasswd.getText();
-      if (TextUtils.isEmpty(username) || TextUtils.isEmpty(passwd)) return;
+      if (TextUtils.isEmpty(username) || TextUtils.isEmpty(passwd)) {
+        return;
+      }
 
       RealmHelperBolts.executeTransaction(realm ->
           realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
@@ -75,10 +78,11 @@ public class LoginFragment extends AbstractServerConfigFragment {
   }
 
   private void showErrorIfNeeded() {
-    ServerConfig config = RealmHelper.executeTransactionForRead(realm -> realm.where(ServerConfig.class)
-        .equalTo("id", serverConfigId)
-        .isNotNull("credential.errorMessage")
-        .findFirst());
+    ServerConfig config = RealmHelper.executeTransactionForRead(realm ->
+        realm.where(ServerConfig.class)
+            .equalTo("id", serverConfigId)
+            .isNotNull("credential.errorMessage")
+            .findFirst());
 
     if (config != null) {
       ServerConfigCredential credential = config.getCredential();
@@ -105,14 +109,14 @@ public class LoginFragment extends AbstractServerConfigFragment {
     } catch (NoSuchAlgorithmException exception) {
       return null;
     }
-    messageDigest.update(orig.getBytes());
+    messageDigest.update(orig.getBytes(Charset.forName("UTF-8")));
 
-    StringBuilder sb = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder();
     for (byte b : messageDigest.digest()) {
-      sb.append(String.format("%02x", b & 0xff));
+      stringBuilder.append(String.format("%02x", b & 0xff));
     }
 
-    return sb.toString();
+    return stringBuilder.toString();
   }
 
   private void onRenderAuthProviders(List<MeteorLoginServiceConfiguration> authProviders) {

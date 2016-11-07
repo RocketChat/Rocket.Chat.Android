@@ -129,8 +129,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
     socketExists = true;
 
-    final ServerConfig config = RealmHelper.executeTransactionForRead(
-      realm -> realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
+    final ServerConfig config = RealmHelper.executeTransactionForRead(realm ->
+        realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
 
     prepareWebSocket(config);
     return webSocketAPI.connect(config.getSession()).onSuccessTask(task -> {
@@ -180,7 +180,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
-        Constructor ctor = clazz.getConstructor(Context.class, String.class, RocketChatWebSocketAPI.class);
+        Constructor ctor = clazz.getConstructor(Context.class, String.class,
+            RocketChatWebSocketAPI.class);
         Object obj = ctor.newInstance(appContext, serverConfigId, webSocketAPI);
 
         if (obj instanceof Registerable) {

@@ -5,11 +5,17 @@ import android.widget.TextView;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfigCredential;
 
+/**
+ * renderer class for ServerConfigCredential.
+ */
 public class ServerConfigCredentialRenderer extends AbstractRenderer<ServerConfigCredential> {
   public ServerConfigCredentialRenderer(Context context, ServerConfigCredential credential) {
     super(context, credential);
   }
 
+  /**
+   * Inject username into TextView.
+   */
   public ServerConfigCredentialRenderer usernameInto(TextView textView) {
     if (!shouldHandle(textView)) {
       return this;

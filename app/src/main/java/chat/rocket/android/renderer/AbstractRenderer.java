@@ -21,7 +21,9 @@ abstract class AbstractRenderer<T> {
   protected boolean shouldHandle(View target, Condition additionalCondition, Optional optional,
       String key) {
     if (target == null || object == null) {
-      if (optional != null) optional.onNoData(key);
+      if (optional != null) {
+        optional.onNoData(key);
+      }
       return false;
     }
 

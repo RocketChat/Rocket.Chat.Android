@@ -5,6 +5,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 
 /**
+ * Just show "Authenticating..."
  */
 public class AuthenticatingFragment extends AbstractServerConfigFragment {
   @Override protected int getLayout() {
@@ -14,6 +15,6 @@ public class AuthenticatingFragment extends AbstractServerConfigFragment {
   @Override protected void onSetupView() {
     TextView caption = (TextView) rootView.findViewById(R.id.txt_caption);
     caption.setVisibility(View.VISIBLE);
-    caption.setText("Authenticationg...");
+    caption.setText("Authenticating...");
   }
 }

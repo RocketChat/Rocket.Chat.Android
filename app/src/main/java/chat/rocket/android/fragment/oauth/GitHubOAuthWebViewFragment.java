@@ -11,6 +11,7 @@ import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.MeteorLoginServiceConfiguration;
 import chat.rocket.android.model.ServerConfig;
+import java.nio.charset.Charset;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import okhttp3.HttpUrl;
@@ -26,6 +27,9 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
   private String url;
   private boolean resultOK;
 
+  /**
+   * create new Fragment with ServerConfig-ID.
+   */
   public static Fragment create(final String serverConfigId) {
     Bundle args = new Bundle();
     args.putString("server_config_id", serverConfigId);
@@ -70,7 +74,7 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
           .put("credentialToken", "github" + System.currentTimeMillis())
           .put("isCordova", true)
           .toString()
-          .getBytes(), Base64.NO_WRAP);
+          .getBytes(Charset.forName("UTF-8")), Base64.NO_WRAP);
 
       return new HttpUrl.Builder().scheme("https")
           .host("github.com")
@@ -123,8 +127,9 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
 
 
     if (url.contains(hostname) && url.contains("_oauth/github?close")) {
-      webview.loadUrl(
-          "javascript:window._rocketchet_hook.handleConfig(document.getElementById('config').innerText);");
+      final String jsHookUrl = "javascript:"
+          + "window._rocketchet_hook.handleConfig(document.getElementById('config').innerText);";
+      webview.loadUrl(jsHookUrl);
     }
   }
 
@@ -133,17 +138,17 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
   }
 
   private static final class JSInterface {
-    private final JSInterfaceCallback mCallback;
+    private final JSInterfaceCallback jsInterfaceCallback;
 
-    public JSInterface(JSInterfaceCallback callback) {
-      mCallback = callback;
+    JSInterface(JSInterfaceCallback callback) {
+      jsInterfaceCallback = callback;
     }
 
     @JavascriptInterface public void handleConfig(String config) {
       try {
-        mCallback.hanldeResult(new JSONObject(config));
-      } catch (Exception e) {
-        mCallback.hanldeResult(null);
+        jsInterfaceCallback.hanldeResult(new JSONObject(config));
+      } catch (Exception exception) {
+        jsInterfaceCallback.hanldeResult(null);
       }
     }
   }
