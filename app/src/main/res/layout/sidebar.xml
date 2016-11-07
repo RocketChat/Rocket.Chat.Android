@@ -37,7 +37,11 @@
           android:layout_height="wrap_content"
           />
 
-      <include layout="@layout/avatar_container_large"/>
+      <ImageView
+          android:id="@+id/img_my_avatar"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          />
 
       <FrameLayout
           android:layout_width="0px"

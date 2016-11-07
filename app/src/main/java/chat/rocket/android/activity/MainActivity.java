@@ -2,7 +2,9 @@ package chat.rocket.android.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 import chat.rocket.android.R;
+import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ServerConfig;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
@@ -23,5 +25,8 @@ public class MainActivity extends AbstractAuthedActivity {
         return null;
       }).continueWith(new LogcatIfError());
     }
+
+    ImageView myAvatar = (ImageView) findViewById(R.id.img_my_avatar);
+    new Avatar("demo.rocket.chat", "John Doe").into(myAvatar);
   }
 }
