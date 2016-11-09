@@ -11,6 +11,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.service.ddp_subscriber.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.service.observer.MethodCallObserver;
+import chat.rocket.android.service.observer.TokenLoginObserver;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
@@ -28,6 +29,7 @@ import timber.log.Timber;
 public class RocketChatWebSocketThread extends HandlerThread {
   private static final Class[] REGISTERABLE_CLASSES = {
       LoginServiceConfigurationSubscriber.class,
+      TokenLoginObserver.class,
       MethodCallObserver.class
   };
   private final Context appContext;

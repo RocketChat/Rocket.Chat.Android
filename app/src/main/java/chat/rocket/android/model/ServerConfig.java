@@ -1,10 +1,12 @@
 package chat.rocket.android.model;
 
+import bolts.Task;
 import chat.rocket.android.helper.LogcatIfError;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
@@ -26,16 +28,25 @@ public class ServerConfig extends RealmObject {
     return realm.where(ServerConfig.class).equalTo("tokenVerified", false);
   }
 
-  public static RealmQuery<ServerConfig> queryActiveConnections(Realm realm) {
-    return realm.where(ServerConfig.class).isNotNull("token");
-  }
-
   public static boolean hasLoginRequiredConnection() {
     ServerConfig config =
         RealmHelper.executeTransactionForRead(realm ->
             queryLoginRequiredConnections(realm).findFirst());
 
     return config != null;
+  }
+
+  public static Task<Void> forceInvalidateToken() {
+    return RealmHelperBolts.executeTransaction(realm -> {
+      RealmResults<ServerConfig> targetConfigs = realm.where(ServerConfig.class)
+          .isNotNull("token")
+          .equalTo("tokenVerified", true)
+          .findAll();
+      for (ServerConfig config : targetConfigs) {
+        config.setTokenVerified(false);
+      }
+      return null;
+    });
   }
 
   @DebugLog public static void logConnectionError(String id, Exception exception) {

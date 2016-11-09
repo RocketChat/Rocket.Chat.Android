@@ -10,8 +10,6 @@ import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.InputHostnameFragment;
 import chat.rocket.android.fragment.server_config.LoginFragment;
 import chat.rocket.android.fragment.server_config.WaitingFragment;
-import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.helper.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.service.RocketChatService;
@@ -123,8 +121,6 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     final String token = config.getToken();
     if (!TextUtils.isEmpty(token)) {
       showFragment(WaitingFragment.create("Authenticating..."));
-      new MethodCallHelper(serverConfigId).loginWithToken(token)
-          .continueWith(new LogcatIfError());
       return;
     }
 

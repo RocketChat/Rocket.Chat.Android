@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import bolts.Task;
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ServerConfig;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -52,6 +53,9 @@ public class RocketChatService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     webSocketThreads = new HashMap<>();
+
+    ServerConfig.forceInvalidateToken()
+        .continueWith(new LogcatIfError());
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
