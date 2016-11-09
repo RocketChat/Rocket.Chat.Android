@@ -1,6 +1,5 @@
 package chat.rocket.android.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.service.RocketChatService;
@@ -11,7 +10,7 @@ import java.util.UUID;
 import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 
-abstract class AbstractAuthedActivity extends AppCompatActivity {
+abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private RealmListObserver<ServerConfig> serverConfigEmptinessObserver =
       new RealmListObserver<ServerConfig>() {
         @Override protected RealmResults<ServerConfig> queryItems(Realm realm) {
