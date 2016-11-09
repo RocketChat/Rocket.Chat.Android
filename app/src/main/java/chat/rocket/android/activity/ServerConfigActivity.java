@@ -7,21 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
-import chat.rocket.android.fragment.oauth.GitHubOAuthWebViewFragment;
-import chat.rocket.android.fragment.server_config.AuthenticatingFragment;
-import chat.rocket.android.fragment.server_config.ConnectingToHostFragment;
 import chat.rocket.android.fragment.server_config.InputHostnameFragment;
 import chat.rocket.android.fragment.server_config.LoginFragment;
+import chat.rocket.android.fragment.server_config.WaitingFragment;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
-import chat.rocket.android.model.ServerConfigCredential;
 import chat.rocket.android.service.RocketChatService;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import java.util.List;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 
 /**
  * Activity for Login, Sign-up, and Connecting...
@@ -54,15 +51,6 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
 
     for (ServerConfig config : configList) {
       if (TextUtils.isEmpty(config.getSession())) {
-        return launchFor(context, config);
-      }
-    }
-
-    for (ServerConfig config : configList) {
-      ServerConfigCredential credential = config.getCredential();
-      if (credential != null
-          && !TextUtils.isEmpty(credential.getType())
-          && TextUtils.isEmpty(credential.getErrorMessage())) {
         return launchFor(context, config);
       }
     }
@@ -134,19 +122,9 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
 
     final String token = config.getToken();
     if (!TextUtils.isEmpty(token)) {
-      showFragment(new AuthenticatingFragment());
-      return;
-    }
-
-    final ServerConfigCredential credential = config.getCredential();
-    if (credential != null
-        && !TextUtils.isEmpty(credential.getType())
-        && TextUtils.isEmpty(credential.getErrorMessage())) {
-      if (ServerConfigCredential.hasSecret(credential)) {
-        showFragment(new AuthenticatingFragment());
-      } else {
-        showFragment(getAuthFragmentFor(credential.getType()));
-      }
+      showFragment(WaitingFragment.create("Authenticating..."));
+      new MethodCallHelper(serverConfigId).loginWithToken(token)
+          .continueWith(new LogcatIfError());
       return;
     }
 
@@ -158,26 +136,11 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     final String error = config.getConnectionError();
     String hostname = config.getHostname();
     if (!TextUtils.isEmpty(hostname) && TextUtils.isEmpty(error)) {
-      showFragment(new ConnectingToHostFragment());
+      showFragment(WaitingFragment.create("Connecting to server..."));
       return;
     }
 
     showFragment(new InputHostnameFragment());
-  }
-
-  private Fragment getAuthFragmentFor(final String authType) {
-    if ("github".equals(authType)) {
-      return GitHubOAuthWebViewFragment.create(serverConfigId);
-    } else if ("twitter".equals(authType)) {
-      // TODO
-    }
-
-    RealmHelperBolts.executeTransaction(realm -> realm.where(ServerConfigCredential.class)
-        .equalTo("type", authType)
-        .findAll()
-        .deleteAllFromRealm()
-    ).continueWith(new LogcatIfError());
-    throw new IllegalArgumentException("Invalid authType given:" + authType);
   }
 
   @Override protected void showFragment(Fragment fragment) {
@@ -199,9 +162,9 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     fragment.setArguments(args);
   }
 
-  @Override public void onBackPressed() {
+  @Override protected void onBackPresseNotHandled() {
     if (ServerConfig.hasActiveConnection()) {
-      super.onBackPressed();
+      super.onBackPresseNotHandled();
     } else {
       moveTaskToBack(true);
     }

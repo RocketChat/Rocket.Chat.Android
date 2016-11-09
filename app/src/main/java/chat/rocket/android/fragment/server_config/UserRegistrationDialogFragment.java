@@ -12,13 +12,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import chat.rocket.android.R;
-import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ServerConfig;
-import chat.rocket.android.model.ServerConfigCredential;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
-import org.json.JSONObject;
 
 /**
  * Dialog for user registration.
@@ -114,30 +109,22 @@ public class UserRegistrationDialogFragment extends DialogFragment {
       email = txtEmail.getText().toString();
       password = txtPasswd.getText().toString();
 
-      MethodCallHelper.registerUser(username, email, password, password).onSuccessTask(task ->
-          RealmHelperBolts.executeTransaction(realm ->
-              realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-                  .put("id", serverConfigId)
-                  .put("credential", new JSONObject()
-                      .put("id", serverConfigId)
-                      .put("type", ServerConfigCredential.TYPE_EMAIL)
-                      .put("errorMessage", JSONObject.NULL)
-                      .put("username", email)
-                      .put("hashedPasswd", CheckSum.sha256(password)))
-            )
-        )
-      ).onSuccessTask(task -> {
-        dismiss();
-        return null;
-      }).continueWith(task -> {
-        if (task.isFaulted()) {
-          Exception exception = task.getError();
-          showError(exception.getMessage());
-          view.setEnabled(true);
-          waitingView.setVisibility(View.GONE);
-        }
-        return null;
-      });
+      MethodCallHelper methodCallHelper = new MethodCallHelper(serverConfigId);
+      methodCallHelper.registerUser(username, email, password, password)
+          .onSuccessTask(task -> methodCallHelper.loginWithEmail(email, password))
+          .onSuccessTask(task -> {
+            dismiss();
+            return task;
+          })
+          .continueWith(task -> {
+            if (task.isFaulted()) {
+              Exception exception = task.getError();
+              showError(exception.getMessage());
+              view.setEnabled(true);
+              waitingView.setVisibility(View.GONE);
+            }
+            return null;
+          });
     });
     return dialog;
   }

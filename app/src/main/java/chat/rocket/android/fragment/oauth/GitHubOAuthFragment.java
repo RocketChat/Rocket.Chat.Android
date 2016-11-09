@@ -2,27 +2,25 @@ package chat.rocket.android.fragment.oauth;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.MethodCallHelper;
 import chat.rocket.android.model.MeteorLoginServiceConfiguration;
 import chat.rocket.android.model.ServerConfig;
 import java.nio.charset.Charset;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import okhttp3.HttpUrl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import timber.log.Timber;
 
-public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
+public class GitHubOAuthFragment extends AbstractWebViewFragment {
 
   private String serverConfigId;
-  private String credentialId;
   private String hostname;
   private String url;
   private boolean resultOK;
@@ -30,17 +28,17 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
   /**
    * create new Fragment with ServerConfig-ID.
    */
-  public static Fragment create(final String serverConfigId) {
+  public static GitHubOAuthFragment create(final String serverConfigId) {
     Bundle args = new Bundle();
-    args.putString("server_config_id", serverConfigId);
-    Fragment fragment = new GitHubOAuthWebViewFragment();
+    args.putString("serverConfigId", serverConfigId);
+    GitHubOAuthFragment fragment = new GitHubOAuthFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
   private boolean hasValidArgs(Bundle args) {
     return args != null
-        && args.containsKey("server_config_id");
+        && args.containsKey("serverConfigId");
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,10 +46,10 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
     Bundle args = getArguments();
     if (!hasValidArgs(args)) {
       throw new IllegalArgumentException(
-          "server_config_id required");
+          "serverConfigId required");
     }
 
-    serverConfigId = args.getString("server_config_id");
+    serverConfigId = args.getString("serverConfigId");
     ServerConfig serverConfig = RealmHelper.executeTransactionForRead(realm ->
         realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
     MeteorLoginServiceConfiguration oauthConfig = RealmHelper.executeTransactionForRead(realm ->
@@ -61,9 +59,8 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
             .findFirst());
     if (serverConfig == null || oauthConfig == null) {
       throw new IllegalArgumentException(
-          "Invalid server_config_id given,");
+          "Invalid serverConfigId given,");
     }
-    credentialId = serverConfig.getCredential().getId();
     hostname = serverConfig.getHostname();
     url = generateURL(oauthConfig.getClientId());
   }
@@ -154,16 +151,8 @@ public class GitHubOAuthWebViewFragment extends AbstractWebViewFragment {
   }
 
   private void handleOAuthCallback(final String credentialToken, final String credentialSecret) {
-    RealmHelperBolts.executeTransaction(realm ->
-        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("id", serverConfigId)
-            .put("credential", new JSONObject()
-                .put("id", credentialId)
-                .put("type", "github")
-                .put("credentialToken", credentialToken)
-                .put("credentialSecret", credentialSecret))
-        )
-    ).continueWith(new LogcatIfError());
+    new MethodCallHelper(serverConfigId).loginWithGitHub(credentialToken, credentialSecret)
+        .continueWith(new LogcatIfError());
   }
 
   private void onOAuthCompleted() {

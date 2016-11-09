@@ -24,11 +24,22 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     super(context, serverConfigId, api);
     RealmHelperBolts.executeTransaction(realm -> {
       RealmResults<MethodCall> pendingMethodCalls = realm.where(MethodCall.class)
+          .equalTo("serverConfigId", serverConfigId)
           .equalTo("syncstate", SyncState.SYNCING)
           .findAll();
       for (MethodCall call : pendingMethodCalls) {
         call.setSyncstate(SyncState.NOT_SYNCED);
       }
+
+      // clean up records.
+      realm.where(MethodCall.class)
+          .equalTo("serverConfigId", serverConfigId)
+          .beginGroup()
+          .equalTo("syncstate", SyncState.SYNCED)
+          .or()
+          .equalTo("syncstate", SyncState.FAILED)
+          .endGroup()
+          .findAll().deleteAllFromRealm();
       return null;
     }).continueWith(new LogcatIfError());
   }
@@ -36,6 +47,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
   @Override protected RealmResults<MethodCall> queryItems(Realm realm) {
     return realm.where(MethodCall.class)
         .isNotNull("name")
+        .equalTo("serverConfigId", serverConfigId)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
         .findAll();
   }
@@ -51,8 +63,8 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     final String params = call.getParamsJson();
     RealmHelperBolts.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
-            .put("id", methodCallId)
-            .put("syncstate", SyncState.SYNCING))
+          .put("id", methodCallId)
+          .put("syncstate", SyncState.SYNCING))
     ).onSuccessTask(task ->
         webSocketAPI.rpc(methodCallId, methodName, params).onSuccessTask(_task ->
             RealmHelperBolts.executeTransaction(realm -> {

@@ -18,6 +18,7 @@ import org.json.JSONObject;
 public class MethodCall extends RealmObject {
 
   @PrimaryKey private String id;
+  private String serverConfigId; //not ServerConfig!(not to be notified the change of ServerConfig)
   private int syncstate;
   private String name;
   private String paramsJson;
@@ -29,6 +30,14 @@ public class MethodCall extends RealmObject {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public String getServerConfigId() {
+    return serverConfigId;
+  }
+
+  public void setServerConfigId(String serverConfigId) {
+    this.serverConfigId = serverConfigId;
   }
 
   public int getSyncstate() {
@@ -73,13 +82,15 @@ public class MethodCall extends RealmObject {
     }
   }
 
-  public static Task<JSONObject> execute(String name, String paramsJson) {
+  public static Task<JSONObject> execute(String serverConfigId, String name, String paramsJson) {
     final String newId = UUID.randomUUID().toString();
     TaskCompletionSource<JSONObject> task = new TaskCompletionSource<>();
     RealmHelperBolts.executeTransaction(realm -> {
-      MethodCall call = realm.createObject(MethodCall.class, newId);
-      call.setSyncstate(SyncState.NOT_SYNCED);
-      call.setName(name);
+      MethodCall call = realm.createObjectFromJson(MethodCall.class, new JSONObject()
+          .put("id", newId)
+          .put("serverConfigId", serverConfigId)
+          .put("syncstate", SyncState.NOT_SYNCED)
+          .put("name", name));
       call.setParamsJson(paramsJson);
       return null;
     }).continueWith(_task -> {
