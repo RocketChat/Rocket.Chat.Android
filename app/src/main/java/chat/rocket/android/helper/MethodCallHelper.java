@@ -4,10 +4,12 @@ import android.util.Patterns;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.model.MethodCall;
+import chat.rocket.android.model.Room;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import java.util.UUID;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,8 +93,8 @@ public class MethodCallHelper {
         task -> Task.forResult(null)); // nothing to do.
   }
 
-  private Continuation<String, Task<Void>> saveToken() {
-    return task -> RealmHelperBolts.executeTransaction(realm ->
+  private Task<Void> saveToken(Task<String> task) {
+    return RealmHelperBolts.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
             .put("id", serverConfigId)
             .put("token", task.getResult())
@@ -112,7 +114,7 @@ public class MethodCallHelper {
       param.put("password", new JSONObject()
           .put("digest", CheckSum.sha256(password))
           .put("algorithm", "sha-256"));
-    }, task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(saveToken());
+    }, task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
   }
 
   /**
@@ -124,7 +126,7 @@ public class MethodCallHelper {
         .put("oauth", new JSONObject()
             .put("credentialToken", credentialToken)
             .put("credentialSecret", credentialSecret)),
-        task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(saveToken());
+        task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
   }
 
   /**
@@ -132,7 +134,7 @@ public class MethodCallHelper {
    */
   public Task<Void> loginWithToken(final String token) {
     return call("login", param -> param.put("resume", token),
-        task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(saveToken());
+        task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
   }
 
   /**
@@ -140,5 +142,37 @@ public class MethodCallHelper {
    */
   public Task<Void> logout() {
     return call("logout", task -> Task.forResult(null));
+  }
+
+  /**
+   * request "rooms/get".
+   */
+  public Task<Void> getRooms() {
+    return call("rooms/get", param -> param.put("$date", 0), this::updateRooms);
+  }
+
+  private Task<Void> updateRooms(Task<JSONObject> task) {
+    JSONObject result = task.getResult();
+
+    try {
+      JSONArray updatedRooms = result.getJSONArray("update");
+      for (int i = 0; i < updatedRooms.length(); i++) {
+        updatedRooms.getJSONObject(i).put("serverConfigId", serverConfigId);
+      }
+
+      return RealmHelperBolts.executeTransaction(realm -> {
+        realm.createOrUpdateAllFromJson(Room.class, result.getJSONArray("update"));
+        JSONArray removedRooms = result.getJSONArray("remove");
+        for (int i = 0; i < removedRooms.length(); i++) {
+          realm.where(Room.class)
+              .equalTo("serverConfigId", serverConfigId)
+              .equalTo("_id", removedRooms.getJSONObject(i).getString("_id"))
+              .findAll().deleteAllFromRealm();
+        }
+        return null;
+      });
+    } catch (JSONException exception) {
+      return Task.forError(exception);
+    }
   }
 }
