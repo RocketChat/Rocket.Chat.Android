@@ -25,7 +25,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
       new RealmListObserver<MeteorLoginServiceConfiguration>() {
         @Override protected RealmResults<MeteorLoginServiceConfiguration> queryItems(Realm realm) {
           return realm.where(MeteorLoginServiceConfiguration.class)
-              .equalTo("serverConfig.id", serverConfigId)
+              .equalTo("serverConfigId", serverConfigId)
               .findAll();
         }
 

@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
 public class MeteorLoginServiceConfiguration
     extends RealmObject {
   @PrimaryKey private String id;
-  private ServerConfig serverConfig;
+  private String serverConfigId;
   private String service;
   private String consumerKey; //for Twitter
   private String appId; //for Facebook
@@ -24,12 +24,12 @@ public class MeteorLoginServiceConfiguration
     this.id = id;
   }
 
-  public ServerConfig getServerConfig() {
-    return serverConfig;
+  public String getServerConfigId() {
+    return serverConfigId;
   }
 
-  public void setServerConfig(ServerConfig serverConfig) {
-    this.serverConfig = serverConfig;
+  public void setServerConfigId(String serverConfigId) {
+    this.serverConfigId = serverConfigId;
   }
 
   public String getService() {

@@ -55,7 +55,7 @@ public class GitHubOAuthFragment extends AbstractWebViewFragment {
     MeteorLoginServiceConfiguration oauthConfig = RealmHelper.executeTransactionForRead(realm ->
         realm.where(MeteorLoginServiceConfiguration.class)
             .equalTo("service", "github")
-            .equalTo("serverConfig.id", serverConfigId)
+            .equalTo("serverConfigId", serverConfigId)
             .findFirst());
     if (serverConfig == null || oauthConfig == null) {
       throw new IllegalArgumentException(
