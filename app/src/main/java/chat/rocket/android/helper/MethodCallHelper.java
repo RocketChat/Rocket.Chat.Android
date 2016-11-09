@@ -5,19 +5,37 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import java.util.UUID;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Utility class for creating/handling MethodCall.
+ * Utility class for creating/handling MethodCall or RPC.
  */
 public class MethodCallHelper {
 
   private final String serverConfigId;
+  private final RocketChatWebSocketAPI api;
 
   public MethodCallHelper(String serverConfigId) {
     this.serverConfigId = serverConfigId;
+    api = null;
+  }
+
+  public MethodCallHelper(String serverConfigId, RocketChatWebSocketAPI api) {
+    this.serverConfigId = serverConfigId;
+    this.api = api;
+  }
+
+  private Task<JSONObject> executeMethodCall(String methodName, String param) {
+    if (api != null) {
+      return api.rpc(UUID.randomUUID().toString(), methodName, param)
+          .onSuccessTask(task -> Task.forResult(task.getResult().result));
+    } else {
+      return MethodCall.execute(serverConfigId, methodName, param);
+    }
   }
 
   private Task<JSONObject> injectErrorHandler(Task<JSONObject> task) {
@@ -42,7 +60,7 @@ public class MethodCallHelper {
 
   private <T> Task<T> call(String methodName,
       Continuation<JSONObject, Task<T>> onSuccess) {
-    return injectErrorHandler(MethodCall.execute(serverConfigId, methodName, null))
+    return injectErrorHandler(executeMethodCall(methodName, null))
         .onSuccessTask(onSuccess);
   }
 
@@ -56,7 +74,7 @@ public class MethodCallHelper {
       return Task.forError(exception);
     }
 
-    return injectErrorHandler(MethodCall.execute(serverConfigId, methodName, param.toString()))
+    return injectErrorHandler(executeMethodCall(methodName, param.toString()))
         .onSuccessTask(onSuccess);
   }
 
