@@ -30,9 +30,10 @@ public class ServerConfig extends RealmObject {
     return realm.where(ServerConfig.class).isNotNull("token");
   }
 
-  public static boolean hasActiveConnection() {
+  public static boolean hasLoginRequiredConnection() {
     ServerConfig config =
-        RealmHelper.executeTransactionForRead(realm -> queryActiveConnections(realm).findFirst());
+        RealmHelper.executeTransactionForRead(realm ->
+            queryLoginRequiredConnections(realm).findFirst());
 
     return config != null;
   }

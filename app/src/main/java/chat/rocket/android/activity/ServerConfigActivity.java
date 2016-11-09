@@ -163,10 +163,10 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
   }
 
   @Override protected void onBackPresseNotHandled() {
-    if (ServerConfig.hasActiveConnection()) {
-      super.onBackPresseNotHandled();
-    } else {
+    if (ServerConfig.hasLoginRequiredConnection()) {
       moveTaskToBack(true);
+    } else {
+      super.onBackPresseNotHandled();
     }
   }
 }
