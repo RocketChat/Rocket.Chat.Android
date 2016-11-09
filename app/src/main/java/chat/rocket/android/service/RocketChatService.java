@@ -86,7 +86,9 @@ public class RocketChatService extends Service {
     for (ServerConfig config : configList) {
       findOrCreateWebSocketThread(config).onSuccess(task -> {
         RocketChatWebSocketThread thread = task.getResult();
-        thread.syncStateWith(config);
+        if (thread != null) {
+          thread.syncStateWith(config);
+        }
         return null;
       });
     }
@@ -97,6 +99,7 @@ public class RocketChatService extends Service {
     if (webSocketThreads.containsKey(serverConfigId)) {
       return Task.forResult(webSocketThreads.get(serverConfigId));
     } else {
+      webSocketThreads.put(serverConfigId, null);
       return RocketChatWebSocketThread.getStarted(getApplicationContext(), config)
           .onSuccessTask(task -> {
             webSocketThreads.put(serverConfigId, task.getResult());
