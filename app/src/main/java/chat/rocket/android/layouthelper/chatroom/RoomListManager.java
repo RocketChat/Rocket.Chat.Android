@@ -21,6 +21,9 @@ public class RoomListManager {
     this.dmContainer = dmContainer;
   }
 
+  /**
+   * update ViewGroups with room list.
+   */
   public void setRooms(List<Room> roomList) {
     for (Room room : roomList) {
       String name = room.getName();
