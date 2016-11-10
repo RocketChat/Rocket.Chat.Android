@@ -6,22 +6,23 @@ import io.realm.annotations.PrimaryKey;
 /**
  * subscription model for "meteor_accounts_loginServiceConfiguration".
  */
-@SuppressWarnings("PMD.ShortVariable")
+@SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
+    "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class MeteorLoginServiceConfiguration
     extends RealmObject {
-  @PrimaryKey private String id;
+  @PrimaryKey private String _id;
   private String serverConfigId;
   private String service;
   private String consumerKey; //for Twitter
   private String appId; //for Facebook
   private String clientId; //for other auth providers
 
-  public String getId() {
-    return id;
+  public String get_id() {
+    return _id;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void set_id(String _id) {
+    this._id = _id;
   }
 
   public String getServerConfigId() {

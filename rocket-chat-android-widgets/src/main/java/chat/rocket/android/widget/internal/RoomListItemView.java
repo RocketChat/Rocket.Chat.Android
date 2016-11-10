@@ -77,7 +77,7 @@ public class RoomListItemView extends LinearLayout {
     return this;
   }
 
-  public RoomListItemView setAlertCount(int count) {
+  public RoomListItemView setUnreadCount(int count) {
     View alertCountContainer = findViewById(R.id.alert_count_container);
     TextView alertCount = (TextView) findViewById(R.id.alert_count);
     if (count > 0) {

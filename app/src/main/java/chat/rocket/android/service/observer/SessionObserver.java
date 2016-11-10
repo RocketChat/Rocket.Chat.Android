@@ -52,7 +52,8 @@ public class SessionObserver extends AbstractModelObserver<ServerConfig> {
   }
 
   @DebugLog private void onLogin() {
-    new MethodCallHelper(serverConfigId).getRooms()
+    final MethodCallHelper methodCallHelper = new MethodCallHelper(serverConfigId);
+    methodCallHelper.getRooms()
         .continueWith(new LogcatIfError());
 
   }

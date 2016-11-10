@@ -4,7 +4,7 @@ import android.util.Patterns;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.model.MethodCall;
-import chat.rocket.android.model.Room;
+import chat.rocket.android.model.RoomSubscription;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import java.util.UUID;
@@ -145,34 +145,83 @@ public class MethodCallHelper {
   }
 
   /**
-   * request "rooms/get".
+   * request "subscriptions/get" and "rooms/get".
    */
   public Task<Void> getRooms() {
-    return call("rooms/get", param -> param.put("$date", 0), this::updateRooms);
+    return getRoomSubscriptionRecursive(0)
+        .onSuccessTask(task -> getRoomRecursive(0))
+        .onSuccessTask(task -> Task.forResult(null));
   }
 
-  private Task<Void> updateRooms(Task<JSONObject> task) {
-    JSONObject result = task.getResult();
+  private Task<Long> getRoomSubscriptionRecursive(long timestamp) {
+    return call("subscriptions/get", param -> param.put("$date", timestamp), task -> {
+      JSONObject result = task.getResult();
 
-    try {
-      JSONArray updatedRooms = result.getJSONArray("update");
-      for (int i = 0; i < updatedRooms.length(); i++) {
-        updatedRooms.getJSONObject(i).put("serverConfigId", serverConfigId);
+      long nextTimestamp = 0;
+      try {
+        nextTimestamp = result.getJSONArray("remove")
+            .getJSONObject(0).getJSONObject("_deletedAt").getLong("$date");
+      } catch (JSONException exception) {
       }
 
-      return RealmHelperBolts.executeTransaction(realm -> {
-        realm.createOrUpdateAllFromJson(Room.class, result.getJSONArray("update"));
-        JSONArray removedRooms = result.getJSONArray("remove");
-        for (int i = 0; i < removedRooms.length(); i++) {
-          realm.where(Room.class)
-              .equalTo("serverConfigId", serverConfigId)
-              .equalTo("_id", removedRooms.getJSONObject(i).getString("_id"))
-              .findAll().deleteAllFromRealm();
+      try {
+        JSONArray updatedRooms = result.getJSONArray("update");
+        for (int i = 0; i < updatedRooms.length(); i++) {
+          updatedRooms.getJSONObject(i).put("serverConfigId", serverConfigId);
         }
-        return null;
-      });
-    } catch (JSONException exception) {
-      return Task.forError(exception);
-    }
+
+        Task<Void> saveToDB =  RealmHelperBolts.executeTransaction(realm -> {
+          realm.createOrUpdateAllFromJson(RoomSubscription.class, result.getJSONArray("update"));
+          return null;
+        });
+
+        if (nextTimestamp > 0 && (timestamp == 0 || nextTimestamp < timestamp)) {
+          final long _next = nextTimestamp;
+          return saveToDB.onSuccessTask(_task -> getRoomSubscriptionRecursive(_next));
+        } else {
+          return saveToDB.onSuccessTask(_task -> Task.forResult(0L));
+        }
+      } catch (JSONException exception) {
+        return Task.forError(exception);
+      }
+    });
+  }
+
+  private Task<Long> getRoomRecursive(long timestamp) {
+    return call("rooms/get", param -> param.put("$date", timestamp), task -> {
+      JSONObject result = task.getResult();
+
+      long nextTimestamp = 0;
+      try {
+        nextTimestamp = result.getJSONArray("remove")
+            .getJSONObject(0).getJSONObject("_deletedAt").getLong("$date");
+      } catch (JSONException exception) {
+      }
+
+      try {
+        JSONArray updatedRooms = result.getJSONArray("update");
+        for (int i = 0; i < updatedRooms.length(); i++) {
+          JSONObject roomJson = updatedRooms.getJSONObject(i);
+          String rid = roomJson.getString("_id");
+          roomJson.put("rid", rid)
+              .put("serverConfigId", serverConfigId)
+              .remove("_id");
+        }
+
+        Task<Void> saveToDB =  RealmHelperBolts.executeTransaction(realm -> {
+          realm.createOrUpdateAllFromJson(RoomSubscription.class, result.getJSONArray("update"));
+          return null;
+        });
+
+        if (nextTimestamp > 0 && (timestamp == 0 || nextTimestamp < timestamp)) {
+          final long _next = nextTimestamp;
+          return saveToDB.onSuccessTask(_task -> getRoomRecursive(_next));
+        } else {
+          return saveToDB.onSuccessTask(_task -> Task.forResult(0L));
+        }
+      } catch (JSONException exception) {
+        return Task.forError(exception);
+      }
+    });
   }
 }

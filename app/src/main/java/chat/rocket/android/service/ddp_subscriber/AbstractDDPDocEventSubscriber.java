@@ -92,7 +92,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
 
   private void onDocumentAdded(Realm realm, DDPSubscription.Added docEvent) throws JSONException {
     //executed in RealmTransaction
-    JSONObject json = new JSONObject().put("id", docEvent.docID);
+    JSONObject json = new JSONObject().put("_id", docEvent.docID);
     json.put("serverConfigId", serverConfigId);
     mergeJson(json, docEvent.fields);
     realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJson(json));
@@ -108,7 +108,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   private void onDocumentChanged(Realm realm, DDPSubscription.Changed docEvent)
       throws JSONException {
     //executed in RealmTransaction
-    JSONObject json = new JSONObject().put("id", docEvent.docID);
+    JSONObject json = new JSONObject().put("_id", docEvent.docID);
     json.put("serverConfigId", serverConfigId);
     for (int i = 0; i < docEvent.cleared.length(); i++) {
       String fieldToDelete = docEvent.cleared.getString(i);
@@ -128,7 +128,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   private void onDocumentRemoved(Realm realm, DDPSubscription.Removed docEvent)
       throws JSONException {
     //executed in RealmTransaction
-    realm.where(getModelClass()).equalTo("id", docEvent.docID).findAll().deleteAllFromRealm();
+    realm.where(getModelClass()).equalTo("_id", docEvent.docID).findAll().deleteAllFromRealm();
   }
 
   private void mergeJson(JSONObject target, JSONObject src) throws JSONException {

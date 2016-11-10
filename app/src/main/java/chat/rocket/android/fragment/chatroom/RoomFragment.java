@@ -3,7 +3,7 @@ package chat.rocket.android.fragment.chatroom;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import chat.rocket.android.R;
-import chat.rocket.android.model.Room;
+import chat.rocket.android.model.RoomSubscription;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
@@ -44,18 +44,18 @@ public class RoomFragment extends AbstractChatRoomFragment {
 
   }
 
-  private RealmObjectObserver<Room> roomObserver = new RealmObjectObserver<Room>() {
-    @Override protected RealmQuery<Room> query(Realm realm) {
-      return realm.where(Room.class).equalTo("_id", roomId);
+  private RealmObjectObserver<RoomSubscription> roomObserver = new RealmObjectObserver<RoomSubscription>() {
+    @Override protected RealmQuery<RoomSubscription> query(Realm realm) {
+      return realm.where(RoomSubscription.class).equalTo("rid", roomId);
     }
 
-    @Override protected void onChange(Room room) {
-      onRenderRoom(room);
+    @Override protected void onChange(RoomSubscription roomSubscription) {
+      onRenderRoom(roomSubscription);
     }
   };
 
-  private void onRenderRoom(Room room) {
-    activityToolbar.setTitle(room.getName());
+  private void onRenderRoom(RoomSubscription roomSubscription) {
+    activityToolbar.setTitle(roomSubscription.getName());
   }
 
   @Override public void onResume() {

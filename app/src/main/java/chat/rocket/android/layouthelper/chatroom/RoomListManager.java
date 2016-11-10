@@ -3,7 +3,7 @@ package chat.rocket.android.layouthelper.chatroom;
 import android.view.View;
 import android.view.ViewGroup;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.Room;
+import chat.rocket.android.model.RoomSubscription;
 import chat.rocket.android.widget.internal.RoomListItemView;
 import java.util.List;
 
@@ -34,21 +34,21 @@ public class RoomListManager {
   /**
    * update ViewGroups with room list.
    */
-  public void setRooms(List<Room> roomList) {
-    for (Room room : roomList) {
-      String name = room.getName();
+  public void setRooms(List<RoomSubscription> roomSubscriptionList) {
+    for (RoomSubscription roomSubscription : roomSubscriptionList) {
+      String name = roomSubscription.getName();
       if (TextUtils.isEmpty(name)) {
         continue;
       }
 
-      String type = room.getT();
+      String type = roomSubscription.getT();
 
-      if (Room.TYPE_CHANNEL.equals(type) || Room.TYPE_PRIVATE.equals(type)) {
-        insertOrUpdateItem(channelsContainer, room);
+      if (RoomSubscription.TYPE_CHANNEL.equals(type) || RoomSubscription.TYPE_PRIVATE.equals(type)) {
+        insertOrUpdateItem(channelsContainer, roomSubscription);
         removeItemIfExists(dmContainer, name);
-      } else if (Room.TYPE_DIRECT_MESSAGE.equals(type)) {
+      } else if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(type)) {
         removeItemIfExists(channelsContainer, name);
-        insertOrUpdateItem(dmContainer, room);
+        insertOrUpdateItem(dmContainer, roomSubscription);
       }
     }
   }
@@ -60,15 +60,15 @@ public class RoomListManager {
     this.listener = listener;
   }
 
-  private void insertOrUpdateItem(ViewGroup parent, Room room) {
-    final String roomName = room.getName();
+  private void insertOrUpdateItem(ViewGroup parent, RoomSubscription roomSubscription) {
+    final String roomName = roomSubscription.getName();
 
     int index;
     for (index = 0; index < parent.getChildCount(); index++) {
       RoomListItemView roomListItemView = (RoomListItemView) parent.getChildAt(index);
       final String targetRoomName = roomListItemView.getRoomName();
       if (roomName.equals(targetRoomName)) {
-        updateRoomItemView(roomListItemView, room);
+        updateRoomItemView(roomListItemView, roomSubscription);
         return;
       }
       if (roomName.compareToIgnoreCase(targetRoomName) < 0) {
@@ -77,7 +77,7 @@ public class RoomListManager {
     }
 
     RoomListItemView roomListItemView = new RoomListItemView(parent.getContext());
-    updateRoomItemView(roomListItemView, room);
+    updateRoomItemView(roomListItemView, roomSubscription);
     if (index == parent.getChildCount()) {
       parent.addView(roomListItemView);
     } else {
@@ -85,12 +85,12 @@ public class RoomListManager {
     }
   }
 
-  private void updateRoomItemView(RoomListItemView roomListItemView, Room room) {
+  private void updateRoomItemView(RoomListItemView roomListItemView, RoomSubscription roomSubscription) {
     roomListItemView
-        .setRoomId(room.get_id())
-        .setRoomName(room.getName())
-        .setRoomType(room.getT())
-        .setAlertCount(0); // TODO not implemented yet.
+        .setRoomId(roomSubscription.getRid())
+        .setRoomName(roomSubscription.getName())
+        .setRoomType(roomSubscription.getT())
+        .setUnreadCount(roomSubscription.getUnread());
 
     roomListItemView.setOnClickListener(this::onItemClick);
   }

@@ -4,21 +4,24 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Chat Room.
+ * Chat Room(Subscription).
  */
 @SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
-public class Room extends RealmObject {
+public class RoomSubscription extends RealmObject {
   public static final String TYPE_CHANNEL = "c";
   public static final String TYPE_PRIVATE = "p";
   public static final String TYPE_DIRECT_MESSAGE = "d";
 
-  @PrimaryKey private String _id;
+  private String _id; //subscriptionId
   private String serverConfigId;
+  @PrimaryKey private String rid; //roomId
   private String name;
+  //private User u; // REMARK: do not save u, because it is just me.
   private String t; //type { c: channel, d: direct message, p: private }
-  private User u; //User who created this room.
-  private String topic;
+  private boolean open;
+  private boolean alert;
+  private int unread;
 
   public String get_id() {
     return _id;
@@ -34,6 +37,14 @@ public class Room extends RealmObject {
 
   public void setServerConfigId(String serverConfigId) {
     this.serverConfigId = serverConfigId;
+  }
+
+  public String getRid() {
+    return rid;
+  }
+
+  public void setRid(String rid) {
+    this.rid = rid;
   }
 
   public String getName() {
@@ -52,19 +63,27 @@ public class Room extends RealmObject {
     this.t = t;
   }
 
-  public User getU() {
-    return u;
+  public boolean isOpen() {
+    return open;
   }
 
-  public void setU(User u) {
-    this.u = u;
+  public void setOpen(boolean open) {
+    this.open = open;
   }
 
-  public String getTopic() {
-    return topic;
+  public boolean isAlert() {
+    return alert;
   }
 
-  public void setTopic(String topic) {
-    this.topic = topic;
+  public void setAlert(boolean alert) {
+    this.alert = alert;
+  }
+
+  public int getUnread() {
+    return unread;
+  }
+
+  public void setUnread(int unread) {
+    this.unread = unread;
   }
 }

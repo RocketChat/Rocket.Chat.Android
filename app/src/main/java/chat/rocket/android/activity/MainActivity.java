@@ -11,7 +11,7 @@ import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
-import chat.rocket.android.model.Room;
+import chat.rocket.android.model.RoomSubscription;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import io.realm.Realm;
@@ -75,12 +75,12 @@ public class MainActivity extends AbstractAuthedActivity {
         .subscribe(RxView.visibility(findViewById(R.id.user_action_container)));
   }
 
-  private RealmListObserver<Room> roomsObserver = new RealmListObserver<Room>() {
-    @Override protected RealmResults<Room> queryItems(Realm realm) {
-      return realm.where(Room.class).findAll();
+  private RealmListObserver<RoomSubscription> roomsObserver = new RealmListObserver<RoomSubscription>() {
+    @Override protected RealmResults<RoomSubscription> queryItems(Realm realm) {
+      return realm.where(RoomSubscription.class).findAll();
     }
 
-    @Override protected void onCollectionChanged(List<Room> list) {
+    @Override protected void onCollectionChanged(List<RoomSubscription> list) {
       roomListManager.setRooms(list);
     }
   };
