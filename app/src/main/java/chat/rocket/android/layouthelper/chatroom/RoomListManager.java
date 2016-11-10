@@ -6,10 +6,16 @@ import chat.rocket.android.model.Room;
 import chat.rocket.android.widget.internal.RoomListItemView;
 import java.util.List;
 
+/**
+ * Utility class for mapping Room list into channel list ViewGroup.
+ */
 public class RoomListManager {
   private ViewGroup channelsContainer;
   private ViewGroup dmContainer;
 
+  /**
+   * constructor with two ViewGroups.
+   */
   public RoomListManager(ViewGroup channelsContainer, ViewGroup dmContainer) {
     this.channelsContainer = channelsContainer;
     this.dmContainer = dmContainer;

@@ -61,7 +61,7 @@ public class MainActivity extends AbstractAuthedActivity {
         .subscribe(RxView.visibility(findViewById(R.id.user_action_container)));
   }
 
-  private RealmListObserver<Room> mRoomsObserver = new RealmListObserver<Room>() {
+  private RealmListObserver<Room> roomsObserver = new RealmListObserver<Room>() {
     @Override protected RealmResults<Room> queryItems(Realm realm) {
       return realm.where(Room.class).findAll();
     }
@@ -73,11 +73,11 @@ public class MainActivity extends AbstractAuthedActivity {
 
   @Override protected void onResume() {
     super.onResume();
-    mRoomsObserver.sub();
+    roomsObserver.sub();
   }
 
   @Override protected void onPause() {
-    mRoomsObserver.unsub();
+    roomsObserver.unsub();
     super.onPause();
   }
 }

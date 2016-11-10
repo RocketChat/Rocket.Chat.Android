@@ -6,7 +6,8 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Chat Room.
  */
-@SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable", "PMD.VariableNamingConventions"})
+@SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
+    "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class Room extends RealmObject {
   public static final String TYPE_CHANNEL = "c";
   public static final String TYPE_PRIVATE = "p";
