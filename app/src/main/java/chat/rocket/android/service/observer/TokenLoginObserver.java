@@ -17,6 +17,7 @@ public class TokenLoginObserver extends AbstractModelObserver<ServerConfig> {
 
   @Override protected RealmResults<ServerConfig> queryItems(Realm realm) {
     return realm.where(ServerConfig.class)
+        .isNotNull("session")
         .isNotNull("token")
         .equalTo("tokenVerified", false)
         .findAll();

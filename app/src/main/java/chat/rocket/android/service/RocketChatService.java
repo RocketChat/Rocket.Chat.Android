@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
+import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 
 /**
  * Background service for Rocket.Chat.Application class.
@@ -59,7 +60,19 @@ public class RocketChatService extends Service {
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    connectionRequiredServerConfigObserver.keepalive();
+    RealmHelperBolts.executeTransaction(realm -> {
+      RealmResults<ServerConfig> targetConfigs = realm.where(ServerConfig.class)
+          .isNotNull("token")
+          .isNotNull("connectionError")
+          .findAll();
+      for (ServerConfig config : targetConfigs) {
+        config.setConnectionError(null);
+      }
+      return null;
+    }).onSuccessTask(task -> {
+      connectionRequiredServerConfigObserver.keepalive();
+      return null;
+    });
     return START_STICKY;
   }
 
