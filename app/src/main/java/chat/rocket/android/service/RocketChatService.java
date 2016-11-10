@@ -67,6 +67,9 @@ public class RocketChatService extends Service {
           .findAll();
       for (ServerConfig config : targetConfigs) {
         config.setConnectionError(null);
+        if (config.isTokenVerified()) {
+          config.setTokenVerified(false);
+        }
       }
       return null;
     }).onSuccessTask(task -> {
