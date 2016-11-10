@@ -7,7 +7,6 @@
     <item name="colorAccent">@color/colorAccent</item>
 
     <item name="android:textColorLink">@drawable/selector_text_color_link</item>
-    <item name="android:listDivider">@color/divider</item>
     <item name="colorControlActivated">@color/colorAccentDark</item>
     <item name="android:textColorHighlight">@color/colorAccent_a40</item>
 
@@ -22,7 +21,6 @@
     <item name="colorAccent">@color/colorAccent</item>
 
     <item name="android:textColorLink">@drawable/selector_text_color_link</item>
-    <item name="android:listDivider">@color/divider</item>
     <item name="colorControlActivated">@color/colorAccentDark</item>
     <item name="android:textColorHighlight">@color/colorAccent_a40</item>
 
@@ -37,7 +35,6 @@
     <item name="colorAccent">@color/colorAccent</item>
 
     <item name="android:textColorLink">@drawable/selector_text_color_link</item>
-    <item name="android:listDivider">@color/divider</item>
     <item name="colorControlActivated">@color/colorAccentDark</item>
     <item name="android:textColorHighlight">@color/colorAccent_a40</item>
   </style>

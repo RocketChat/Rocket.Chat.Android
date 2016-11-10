@@ -3,10 +3,10 @@ package chat.rocket.android.activity;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import chat.rocket.android.helper.OnBackPressListener;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
-abstract class AbstractFragmentActivity extends AppCompatActivity {
+abstract class AbstractFragmentActivity extends RxAppCompatActivity {
 
   protected abstract @IdRes int getLayoutContainerForFragment();
 
