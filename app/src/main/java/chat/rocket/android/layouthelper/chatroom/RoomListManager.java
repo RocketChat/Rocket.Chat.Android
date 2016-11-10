@@ -1,5 +1,6 @@
 package chat.rocket.android.layouthelper.chatroom;
 
+import android.view.View;
 import android.view.ViewGroup;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.Room;
@@ -12,6 +13,15 @@ import java.util.List;
 public class RoomListManager {
   private ViewGroup channelsContainer;
   private ViewGroup dmContainer;
+
+  /**
+   * Callback interface for List item clicked.
+   */
+  public interface OnItemClickListener {
+    void onItemClick(RoomListItemView roomListItemView);
+  }
+
+  private OnItemClickListener mListener;
 
   /**
    * constructor with two ViewGroups.
@@ -43,13 +53,20 @@ public class RoomListManager {
     }
   }
 
-  private static void insertOrUpdateItem(ViewGroup parent, Room room) {
+  /**
+   * set callback on List item clicked.
+   */
+  public void setOnItemClickListener(OnItemClickListener listener) {
+    mListener = listener;
+  }
+
+  private void insertOrUpdateItem(ViewGroup parent, Room room) {
     final String roomName = room.getName();
 
     int index;
     for (index = 0; index < parent.getChildCount(); index++) {
       RoomListItemView roomListItemView = (RoomListItemView) parent.getChildAt(index);
-      final String targetRoomName = roomListItemView.getName();
+      final String targetRoomName = roomListItemView.getRoomName();
       if (roomName.equals(targetRoomName)) {
         updateRoomItemView(roomListItemView, room);
         return;
@@ -68,16 +85,28 @@ public class RoomListManager {
     }
   }
 
-  private static void updateRoomItemView(RoomListItemView roomListItemView, Room room) {
+  private void updateRoomItemView(RoomListItemView roomListItemView, Room room) {
     roomListItemView
-        .setRoom(room.getT(), room.getName())
+        .setRoomId(room.get_id())
+        .setRoomName(room.getName())
+        .setRoomType(room.getT())
         .setAlertCount(0); // TODO not implemented yet.
+
+    roomListItemView.setOnClickListener(this::onItemClick);
+  }
+
+  private void onItemClick(View view) {
+    if (view instanceof RoomListItemView) {
+      if (mListener != null) {
+        mListener.onItemClick((RoomListItemView) view);
+      }
+    }
   }
 
   private static void removeItemIfExists(ViewGroup parent, String roomName) {
     for (int i = 0; i < parent.getChildCount(); i++) {
       RoomListItemView roomListItemView = (RoomListItemView) parent.getChildAt(i);
-      if (roomName.equals(roomListItemView.getName())) {
+      if (roomName.equals(roomListItemView.getRoomName())) {
         parent.removeViewAt(i);
         break;
       }

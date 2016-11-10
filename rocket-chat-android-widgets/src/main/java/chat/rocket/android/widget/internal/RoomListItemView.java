@@ -2,6 +2,7 @@ package chat.rocket.android.widget.internal;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,7 +15,8 @@ import java.util.HashMap;
  * Room list-item view used in sidebar.
  */
 public class RoomListItemView extends LinearLayout {
-  private String name;
+  private String roomId;
+  private String roomName;
 
   private static HashMap<String, Integer> ICON_TABLE = new HashMap<String, Integer>(){
     {
@@ -47,18 +49,30 @@ public class RoomListItemView extends LinearLayout {
 
   private void initialize(Context context) {
     setOrientation(HORIZONTAL);
+
+    TypedArray array2 = context.getTheme().obtainStyledAttributes(new int[]{
+        R.attr.selectableItemBackground
+    });
+    setBackground(array2.getDrawable(0));
+    array2.recycle();
+
     View.inflate(context, R.layout.room_list_item, this);
   }
 
-  public RoomListItemView setRoom(String type, String name) {
+  public String getRoomId() {
+    return roomId;
+  }
+
+  public RoomListItemView setRoomId(String roomId) {
+    this.roomId = roomId;
+    return this;
+  }
+
+  public RoomListItemView setRoomType(String type) {
     if (ICON_TABLE.containsKey(type)) {
       TextView icon = (TextView) findViewById(R.id.icon);
       icon.setText(ICON_TABLE.get(type));
     }
-
-    TextView text = (TextView) findViewById(R.id.text);
-    text.setText(name);
-    this.name = name;
 
     return this;
   }
@@ -76,7 +90,15 @@ public class RoomListItemView extends LinearLayout {
     return this;
   }
 
-  public String getName() {
-    return name;
+  public String getRoomName() {
+    return roomName;
+  }
+
+  public RoomListItemView setRoomName(String roomName) {
+    this.roomName = roomName;
+    TextView text = (TextView) findViewById(R.id.text);
+    text.setText(roomName);
+
+    return this;
   }
 }

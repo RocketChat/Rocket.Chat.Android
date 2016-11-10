@@ -2,11 +2,13 @@ package chat.rocket.android.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.chatroom.HomeFragment;
+import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
 import chat.rocket.android.model.Room;
@@ -44,9 +46,21 @@ public class MainActivity extends AbstractAuthedActivity {
     roomListManager = new RoomListManager(
         (LinearLayout) findViewById(R.id.channels_container),
         (LinearLayout) findViewById(R.id.direct_messages_container));
+    roomListManager.setOnItemClickListener(view -> {
+      showRoomFragment(view.getRoomId());
+      closeSidebarIfNeeded();
+    });
 
     ImageView myAvatar = (ImageView) findViewById(R.id.img_my_avatar);
     new Avatar("demo.rocket.chat", "John Doe").into(myAvatar);
+  }
+
+  private void closeSidebarIfNeeded() {
+    // REMARK: Tablet UI doesn't have SlidingPane!
+    SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
+    if (pane != null) {
+      pane.closePane();
+    }
   }
 
   private void setupUserActionToggle() {
@@ -70,6 +84,10 @@ public class MainActivity extends AbstractAuthedActivity {
       roomListManager.setRooms(list);
     }
   };
+
+  private void showRoomFragment(String roomId) {
+    showFragment(RoomFragment.create(roomId));
+  }
 
   @Override protected void onResume() {
     super.onResume();

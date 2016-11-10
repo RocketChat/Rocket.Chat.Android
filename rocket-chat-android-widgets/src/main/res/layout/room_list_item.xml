@@ -5,7 +5,8 @@
   <FrameLayout
       android:layout_width="32dp"
       android:layout_height="?attr/listPreferredItemHeightSmall"
-      android:layout_marginEnd="16dp">
+      android:layout_marginEnd="16dp"
+      >
     <chat.rocket.android.widget.FontAwesomeTextView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
