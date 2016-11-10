@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Chat Room.
  */
-@SuppressWarnings("PMD.ShortVariable")
+@SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable", "PMD.VariableNamingConventions"})
 public class Room extends RealmObject {
   @PrimaryKey private String _id;
   private String serverConfigId;

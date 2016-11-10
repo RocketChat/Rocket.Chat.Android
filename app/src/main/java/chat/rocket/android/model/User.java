@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * User.
  */
-@SuppressWarnings("PMD.ShortVariable")
+@SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable", "PMD.VariableNamingConventions"})
 public class User extends RealmObject {
   @PrimaryKey private String _id;
   private String username;

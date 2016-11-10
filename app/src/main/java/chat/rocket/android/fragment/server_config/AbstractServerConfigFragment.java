@@ -9,7 +9,7 @@ import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.TextUtils;
 
 abstract class AbstractServerConfigFragment extends AbstractFragment
-  implements OnBackPressListener {
+    implements OnBackPressListener {
   protected String serverConfigId;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

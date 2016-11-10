@@ -23,7 +23,9 @@ public class TokenLoginObserver extends AbstractModelObserver<ServerConfig> {
   }
 
   @Override protected void onCollectionChanged(List<ServerConfig> list) {
-    if (list.isEmpty()) return;
+    if (list.isEmpty()) {
+      return;
+    }
 
     ServerConfig config = list.get(0);
     new MethodCallHelper(serverConfigId, webSocketAPI).loginWithToken(config.getToken())

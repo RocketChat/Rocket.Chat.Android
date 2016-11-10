@@ -12,7 +12,8 @@ import chat.rocket.android.fragment.AbstractFragment;
 abstract class AbstractChatRoomFragment extends AbstractFragment {
   protected Toolbar activityToolbar;
 
-  @Nullable @Override
+  @Nullable
+  @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     activityToolbar = (Toolbar) getActivity().findViewById(R.id.activity_main_toolbar);

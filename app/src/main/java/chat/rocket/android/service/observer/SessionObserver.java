@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class SessionObserver extends AbstractModelObserver<ServerConfig> {
   private int count;
+
   public SessionObserver(Context context, String serverConfigId, RocketChatWebSocketAPI api) {
     super(context, serverConfigId, api);
     count = 0;
