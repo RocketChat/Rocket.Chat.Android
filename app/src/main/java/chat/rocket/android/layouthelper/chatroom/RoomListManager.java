@@ -21,7 +21,7 @@ public class RoomListManager {
     void onItemClick(RoomListItemView roomListItemView);
   }
 
-  private OnItemClickListener mListener;
+  private OnItemClickListener listener;
 
   /**
    * constructor with two ViewGroups.
@@ -57,7 +57,7 @@ public class RoomListManager {
    * set callback on List item clicked.
    */
   public void setOnItemClickListener(OnItemClickListener listener) {
-    mListener = listener;
+    this.listener = listener;
   }
 
   private void insertOrUpdateItem(ViewGroup parent, Room room) {
@@ -96,10 +96,8 @@ public class RoomListManager {
   }
 
   private void onItemClick(View view) {
-    if (view instanceof RoomListItemView) {
-      if (mListener != null) {
-        mListener.onItemClick((RoomListItemView) view);
-      }
+    if (view instanceof RoomListItemView && listener != null) {
+      listener.onItemClick((RoomListItemView) view);
     }
   }
 

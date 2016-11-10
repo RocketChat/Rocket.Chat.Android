@@ -9,11 +9,15 @@ import io.realm.RealmQuery;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
 
 /**
+ * Chat room screen.
  */
 public class RoomFragment extends AbstractChatRoomFragment {
 
   private String roomId;
 
+  /**
+   * create fragment with roomId.
+   */
   public static RoomFragment create(String roomId) {
     Bundle args = new Bundle();
     args.putString("roomId", roomId);
