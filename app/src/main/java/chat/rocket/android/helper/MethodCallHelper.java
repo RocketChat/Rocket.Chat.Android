@@ -7,6 +7,7 @@ import chat.rocket.android.model.MethodCall;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android_ddp.DDPClientCallback;
 import java.util.UUID;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONArray;
@@ -20,6 +21,7 @@ public class MethodCallHelper {
 
   private final String serverConfigId;
   private final RocketChatWebSocketAPI api;
+  private static final long TIMEOUT_MS = 4000;
 
   public MethodCallHelper(String serverConfigId) {
     this.serverConfigId = serverConfigId;
@@ -31,12 +33,12 @@ public class MethodCallHelper {
     this.api = api;
   }
 
-  private Task<JSONObject> executeMethodCall(String methodName, String param) {
+  private Task<JSONObject> executeMethodCall(String methodName, String param, long timeout) {
     if (api != null) {
-      return api.rpc(UUID.randomUUID().toString(), methodName, param)
+      return api.rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
-      return MethodCall.execute(serverConfigId, methodName, param);
+      return MethodCall.execute(serverConfigId, methodName, param, timeout);
     }
   }
 
@@ -47,6 +49,8 @@ public class MethodCallHelper {
         if (exception instanceof MethodCall.Error) {
           String errMessage = new JSONObject(exception.getMessage()).getString("message");
           return Task.forError(new Exception(errMessage));
+        } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
+          return Task.forError(new MethodCall.Timeout());
         } else {
           return Task.forError(exception);
         }
@@ -57,16 +61,16 @@ public class MethodCallHelper {
   }
 
   private interface ParamBuilder {
-    void buildParam(JSONArray param) throws JSONException;
+    void buildParam(JSONArray params) throws JSONException;
   }
 
-  private <T> Task<T> call(String methodName,
+  private <T> Task<T> call(String methodName, long timeout,
       Continuation<JSONObject, Task<T>> onSuccess) {
-    return injectErrorHandler(executeMethodCall(methodName, null))
+    return injectErrorHandler(executeMethodCall(methodName, null, timeout))
         .onSuccessTask(onSuccess);
   }
 
-  private <T> Task<T> call(String methodName, ParamBuilder paramBuilder,
+  private <T> Task<T> call(String methodName, long timeout, ParamBuilder paramBuilder,
       Continuation<JSONObject, Task<T>> onSuccess) {
     JSONArray params = new JSONArray();
 
@@ -76,7 +80,7 @@ public class MethodCallHelper {
       return Task.forError(exception);
     }
 
-    return injectErrorHandler(executeMethodCall(methodName, params.toString()))
+    return injectErrorHandler(executeMethodCall(methodName, params.toString(), timeout))
         .onSuccessTask(onSuccess);
   }
 
@@ -85,7 +89,7 @@ public class MethodCallHelper {
    */
   public Task<Void> registerUser(final String name, final String email,
       final String password, final String confirmPassword) {
-    return call("registerUser", params -> params.put(new JSONObject()
+    return call("registerUser", TIMEOUT_MS, params -> params.put(new JSONObject()
         .put("name", name)
         .put("email", email)
         .put("pass", password)
@@ -105,7 +109,7 @@ public class MethodCallHelper {
    * Login with username/email and password.
    */
   public Task<Void> loginWithEmail(final String usernameOrEmail, final String password) {
-    return call("login", params -> {
+    return call("login", TIMEOUT_MS, params -> {
       JSONObject param = new JSONObject();
       if (Patterns.EMAIL_ADDRESS.matcher(usernameOrEmail).matches()) {
         param.put("user", new JSONObject().put("email", usernameOrEmail));
@@ -124,7 +128,7 @@ public class MethodCallHelper {
    */
   public Task<Void> loginWithGitHub(final String credentialToken,
       final String credentialSecret) {
-    return call("login", params -> params.put(new JSONObject()
+    return call("login", TIMEOUT_MS, params -> params.put(new JSONObject()
             .put("oauth", new JSONObject()
                 .put("credentialToken", credentialToken)
                 .put("credentialSecret", credentialSecret))
@@ -135,7 +139,7 @@ public class MethodCallHelper {
    * Login with token.
    */
   public Task<Void> loginWithToken(final String token) {
-    return call("login", param -> param.put(new JSONObject().put("resume", token)),
+    return call("login", TIMEOUT_MS, params -> params.put(new JSONObject().put("resume", token)),
         task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
   }
 
@@ -143,7 +147,7 @@ public class MethodCallHelper {
    * Logout.
    */
   public Task<Void> logout() {
-    return call("logout", task -> Task.forResult(null));
+    return call("logout", TIMEOUT_MS, task -> Task.forResult(null));
   }
 
   /**
@@ -180,7 +184,7 @@ public class MethodCallHelper {
   }
 
   private Task<Long> getObjectRecursive(String objName, Customizer customizer, long timestamp) {
-    return call(objName + "/get",
+    return call(objName + "/get", TIMEOUT_MS,
         params -> params.put(new JSONObject().put("$date", timestamp)),
         task -> {
           JSONObject result = task.getResult();

@@ -61,13 +61,14 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     final String methodCallId = call.getMethodCallId();
     final String methodName = call.getName();
     final String params = call.getParamsJson();
+    final long timeout = call.getTimeout();
     RealmHelperBolts.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
           .put("methodCallId", methodCallId)
           .put("syncstate", SyncState.SYNCING))
     ).onSuccessTask(task ->
-        webSocketAPI.rpc(methodCallId, methodName, params).onSuccessTask(_task ->
-            RealmHelperBolts.executeTransaction(realm -> {
+        webSocketAPI.rpc(methodCallId, methodName, params, timeout)
+            .onSuccessTask(_task -> RealmHelperBolts.executeTransaction(realm -> {
               JSONObject result = _task.getResult().result;
               return realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
                   .put("methodCallId", methodCallId)

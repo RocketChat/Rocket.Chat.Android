@@ -80,13 +80,14 @@ public class RocketChatWebSocketAPI {
   /**
    * Execute raw RPC.
    */
-  public Task<DDPClientCallback.RPC> rpc(String methodCallId, String methodName, String params) {
+  public Task<DDPClientCallback.RPC> rpc(String methodCallId, String methodName, String params,
+      long timeoutMs) {
     if (TextUtils.isEmpty(params)) {
-      return ddpClient.rpc(methodName, null, methodCallId);
+      return ddpClient.rpc(methodName, null, methodCallId, timeoutMs);
     }
 
     try {
-      return ddpClient.rpc(methodName, new JSONArray(params), methodCallId);
+      return ddpClient.rpc(methodName, new JSONArray(params), methodCallId, timeoutMs);
     } catch (JSONException exception) {
       return Task.forError(exception);
     }

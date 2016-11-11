@@ -22,6 +22,7 @@ public class MethodCall extends RealmObject {
   private String name;
   private String paramsJson;
   private String resultJson;
+  private long timeout;
 
   public String getMethodCallId() {
     return methodCallId;
@@ -71,6 +72,14 @@ public class MethodCall extends RealmObject {
     this.resultJson = resultJson;
   }
 
+  public long getTimeout() {
+    return timeout;
+  }
+
+  public void setTimeout(long timeout) {
+    this.timeout = timeout;
+  }
+
   public static class Error extends Exception {
     public Error(String message) {
       super(message);
@@ -81,10 +90,17 @@ public class MethodCall extends RealmObject {
     }
   }
 
+  public static class Timeout extends Exception {
+    public Timeout() {
+      super("MethodCall.Timeout");
+    }
+  }
+
   /**
    * insert a new record to request a method call.
    */
-  public static Task<JSONObject> execute(String serverConfigId, String name, String paramsJson) {
+  public static Task<JSONObject> execute(String serverConfigId, String name, String paramsJson,
+      long timeout) {
     final String newId = UUID.randomUUID().toString();
     TaskCompletionSource<JSONObject> task = new TaskCompletionSource<>();
     RealmHelperBolts.executeTransaction(realm -> {
@@ -92,6 +108,7 @@ public class MethodCall extends RealmObject {
           .put("methodCallId", newId)
           .put("serverConfigId", serverConfigId)
           .put("syncstate", SyncState.NOT_SYNCED)
+          .put("timeout", timeout)
           .put("name", name));
       call.setParamsJson(paramsJson);
       return null;

@@ -1,7 +1,6 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.MethodCallHelper;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
@@ -30,6 +29,11 @@ public class TokenLoginObserver extends AbstractModelObserver<ServerConfig> {
 
     ServerConfig config = list.get(0);
     new MethodCallHelper(serverConfigId, webSocketAPI).loginWithToken(config.getToken())
-        .continueWith(new LogcatIfError());
+        .continueWith(task -> {
+          if (task.isFaulted()) {
+            ServerConfig.logConnectionError(serverConfigId, task.getError());
+          }
+          return null;
+        });
   }
 }

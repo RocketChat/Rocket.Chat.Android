@@ -105,22 +105,20 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   @Override public boolean quit() {
-    scheduleUnregisterListeners();
-    return super.quit();
-  }
-
-  @Override public boolean quitSafely() {
-    scheduleUnregisterListeners();
-    return super.quitSafely();
-  }
-
-  private void scheduleUnregisterListeners() {
     if (isAlive()) {
-      new Handler(getLooper()).post(() -> {
-        Timber.d("thread %s: quit()", Thread.currentThread().getId());
-        unregisterListeners();
-      });
+      scheduleUnregisterListenersAndQuit();
+      return true;
+    } else {
+      return super.quit();
     }
+  }
+
+  private void scheduleUnregisterListenersAndQuit() {
+    new Handler(getLooper()).post(() -> {
+      Timber.d("thread %s: quit()", Thread.currentThread().getId());
+      unregisterListeners();
+      RocketChatWebSocketThread.super.quit();
+    });
   }
 
   private void prepareWebSocket(ServerConfig config) {
@@ -217,7 +215,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
   }
 
-  //@DebugLog
+  @DebugLog
   private void unregisterListeners() {
     if (!socketExists || !listenersRegistered) {
       return;
