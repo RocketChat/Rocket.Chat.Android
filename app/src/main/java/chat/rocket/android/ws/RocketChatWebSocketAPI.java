@@ -10,7 +10,6 @@ import chat.rocket.android_ddp.DDPSubscription;
 import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import rx.Observable;
 
 /**
@@ -87,7 +86,7 @@ public class RocketChatWebSocketAPI {
     }
 
     try {
-      return ddpClient.rpc(methodName, new JSONArray().put(new JSONObject(params)), methodCallId);
+      return ddpClient.rpc(methodName, new JSONArray(params), methodCallId);
     } catch (JSONException exception) {
       return Task.forError(exception);
     }

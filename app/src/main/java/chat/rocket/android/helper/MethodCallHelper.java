@@ -57,7 +57,7 @@ public class MethodCallHelper {
   }
 
   private interface ParamBuilder {
-    void buildParam(JSONObject param) throws JSONException;
+    void buildParam(JSONArray param) throws JSONException;
   }
 
   private <T> Task<T> call(String methodName,
@@ -68,15 +68,15 @@ public class MethodCallHelper {
 
   private <T> Task<T> call(String methodName, ParamBuilder paramBuilder,
       Continuation<JSONObject, Task<T>> onSuccess) {
-    JSONObject param = new JSONObject();
+    JSONArray params = new JSONArray();
 
     try {
-      paramBuilder.buildParam(param);
+      paramBuilder.buildParam(params);
     } catch (JSONException exception) {
       return Task.forError(exception);
     }
 
-    return injectErrorHandler(executeMethodCall(methodName, param.toString()))
+    return injectErrorHandler(executeMethodCall(methodName, params.toString()))
         .onSuccessTask(onSuccess);
   }
 
@@ -85,11 +85,11 @@ public class MethodCallHelper {
    */
   public Task<Void> registerUser(final String name, final String email,
       final String password, final String confirmPassword) {
-    return call("registerUser", param -> param
+    return call("registerUser", params -> params.put(new JSONObject()
         .put("name", name)
         .put("email", email)
         .put("pass", password)
-        .put("confirm-pass", confirmPassword),
+        .put("confirm-pass", confirmPassword)),
         task -> Task.forResult(null)); // nothing to do.
   }
 
@@ -105,7 +105,8 @@ public class MethodCallHelper {
    * Login with username/email and password.
    */
   public Task<Void> loginWithEmail(final String usernameOrEmail, final String password) {
-    return call("login", param -> {
+    return call("login", params -> {
+      JSONObject param = new JSONObject();
       if (Patterns.EMAIL_ADDRESS.matcher(usernameOrEmail).matches()) {
         param.put("user", new JSONObject().put("email", usernameOrEmail));
       } else {
@@ -114,6 +115,7 @@ public class MethodCallHelper {
       param.put("password", new JSONObject()
           .put("digest", CheckSum.sha256(password))
           .put("algorithm", "sha-256"));
+      params.put(param);
     }, task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
   }
 
@@ -122,18 +124,18 @@ public class MethodCallHelper {
    */
   public Task<Void> loginWithGitHub(final String credentialToken,
       final String credentialSecret) {
-    return call("login", param -> param
-        .put("oauth", new JSONObject()
-            .put("credentialToken", credentialToken)
-            .put("credentialSecret", credentialSecret)),
-        task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
+    return call("login", params -> params.put(new JSONObject()
+            .put("oauth", new JSONObject()
+                .put("credentialToken", credentialToken)
+                .put("credentialSecret", credentialSecret))
+    ), task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
   }
 
   /**
    * Login with token.
    */
   public Task<Void> loginWithToken(final String token) {
-    return call("login", param -> param.put("resume", token),
+    return call("login", param -> param.put(new JSONObject().put("resume", token)),
         task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
   }
 
@@ -178,35 +180,39 @@ public class MethodCallHelper {
   }
 
   private Task<Long> getObjectRecursive(String objName, Customizer customizer, long timestamp) {
-    return call(objName + "/get", param -> param.put("$date", timestamp), task -> {
-      JSONObject result = task.getResult();
+    return call(objName + "/get",
+        params -> params.put(new JSONObject().put("$date", timestamp)),
+        task -> {
+          JSONObject result = task.getResult();
 
-      long nextTimestamp = 0;
-      try {
-        nextTimestamp = result.getJSONArray("remove")
-            .getJSONObject(0).getJSONObject("_deletedAt").getLong("$date");
-      } catch (JSONException exception) {
-        // keep nextTimestamp = 0
-      }
+          long nextTimestamp = 0;
+          try {
+            nextTimestamp = result.getJSONArray("remove")
+                .getJSONObject(0).getJSONObject("_deletedAt").getLong("$date");
+          } catch (JSONException exception) {
+            // keep nextTimestamp = 0
+          }
 
-      try {
-        JSONArray updatedRooms = result.getJSONArray("update");
-        customizer.customizeResult(updatedRooms);
+          try {
+            JSONArray updatedRooms = result.getJSONArray("update");
+            customizer.customizeResult(updatedRooms);
 
-        Task<Void> saveToDB =  RealmHelperBolts.executeTransaction(realm -> {
-          realm.createOrUpdateAllFromJson(RoomSubscription.class, result.getJSONArray("update"));
-          return null;
+            Task<Void> saveToDB =  RealmHelperBolts.executeTransaction(realm -> {
+              realm.createOrUpdateAllFromJson(
+                  RoomSubscription.class, result.getJSONArray("update"));
+              return null;
+            });
+
+            if (nextTimestamp > 0 && (timestamp == 0 || nextTimestamp < timestamp)) {
+              final long _next = nextTimestamp;
+              return saveToDB.onSuccessTask(_task ->
+                  getObjectRecursive(objName, customizer, _next));
+            } else {
+              return saveToDB.onSuccessTask(_task -> Task.forResult(0L));
+            }
+          } catch (JSONException exception) {
+            return Task.forError(exception);
+          }
         });
-
-        if (nextTimestamp > 0 && (timestamp == 0 || nextTimestamp < timestamp)) {
-          final long _next = nextTimestamp;
-          return saveToDB.onSuccessTask(_task -> getObjectRecursive(objName, customizer, _next));
-        } else {
-          return saveToDB.onSuccessTask(_task -> Task.forResult(0L));
-        }
-      } catch (JSONException exception) {
-        return Task.forError(exception);
-      }
-    });
   }
 }
