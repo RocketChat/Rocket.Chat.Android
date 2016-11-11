@@ -9,7 +9,7 @@ import android.webkit.WebView;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.MethodCallHelper;
-import chat.rocket.android.model.MeteorLoginServiceConfiguration;
+import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.model.ServerConfig;
 import java.nio.charset.Charset;
 import jp.co.crowdworks.realm_java_helpers.RealmHelper;
@@ -51,7 +51,7 @@ public class GitHubOAuthFragment extends AbstractWebViewFragment {
 
     serverConfigId = args.getString("serverConfigId");
     ServerConfig serverConfig = RealmHelper.executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
+        realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
     MeteorLoginServiceConfiguration oauthConfig = RealmHelper.executeTransactionForRead(realm ->
         realm.where(MeteorLoginServiceConfiguration.class)
             .equalTo("service", "github")

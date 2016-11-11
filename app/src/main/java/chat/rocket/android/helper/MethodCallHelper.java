@@ -4,7 +4,7 @@ import android.util.Patterns;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.model.MethodCall;
-import chat.rocket.android.model.RoomSubscription;
+import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import java.util.UUID;
@@ -96,7 +96,7 @@ public class MethodCallHelper {
   private Task<Void> saveToken(Task<String> task) {
     return RealmHelperBolts.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("id", serverConfigId)
+            .put("serverConfigId", serverConfigId)
             .put("token", task.getResult())
             .put("tokenVerified", true)));
   }

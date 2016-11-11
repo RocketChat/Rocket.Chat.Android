@@ -14,22 +14,21 @@ import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("PMD.ShortVariable")
 public class MethodCall extends RealmObject {
 
-  @PrimaryKey private String id;
+  @PrimaryKey private String methodCallId;
   private String serverConfigId; //not ServerConfig!(not to be notified the change of ServerConfig)
   private int syncstate;
   private String name;
   private String paramsJson;
   private String resultJson;
 
-  public String getId() {
-    return id;
+  public String getMethodCallId() {
+    return methodCallId;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setMethodCallId(String methodCallId) {
+    this.methodCallId = methodCallId;
   }
 
   public String getServerConfigId() {
@@ -82,12 +81,15 @@ public class MethodCall extends RealmObject {
     }
   }
 
+  /**
+   * insert a new record to request a method call.
+   */
   public static Task<JSONObject> execute(String serverConfigId, String name, String paramsJson) {
     final String newId = UUID.randomUUID().toString();
     TaskCompletionSource<JSONObject> task = new TaskCompletionSource<>();
     RealmHelperBolts.executeTransaction(realm -> {
       MethodCall call = realm.createObjectFromJson(MethodCall.class, new JSONObject()
-          .put("id", newId)
+          .put("methodCallId", newId)
           .put("serverConfigId", serverConfigId)
           .put("syncstate", SyncState.NOT_SYNCED)
           .put("name", name));
@@ -99,7 +101,7 @@ public class MethodCall extends RealmObject {
       } else {
         new RealmObjectObserver<MethodCall>() {
           @Override protected RealmQuery<MethodCall> query(Realm realm) {
-            return realm.where(MethodCall.class).equalTo("id", newId);
+            return realm.where(MethodCall.class).equalTo("methodCallId", newId);
           }
 
           @Override protected void onChange(MethodCall methodCall) {
@@ -111,10 +113,10 @@ public class MethodCall extends RealmObject {
               } catch (JSONException exception) {
                 task.setError(new Error(exception));
               }
-              exit(methodCall.getId());
+              exit(methodCall.getMethodCallId());
             } else if (syncstate == SyncState.FAILED) {
               task.setError(new Error(methodCall.getResultJson()));
-              exit(methodCall.getId());
+              exit(methodCall.getMethodCallId());
             }
           }
 
@@ -129,8 +131,14 @@ public class MethodCall extends RealmObject {
     return task.getTask();
   }
 
-  public static final Task<Void> remove(String id) {
+  /**
+   * remove the request.
+   */
+  public static final Task<Void> remove(String methodCallId) {
     return RealmHelperBolts.executeTransaction(realm ->
-        realm.where(MethodCall.class).equalTo("id", id).findAll().deleteAllFromRealm());
+        realm.where(MethodCall.class)
+            .equalTo("methodCallId", methodCallId)
+            .findAll()
+            .deleteAllFromRealm());
   }
 }

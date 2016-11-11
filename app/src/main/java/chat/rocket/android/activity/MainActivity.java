@@ -11,7 +11,7 @@ import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
-import chat.rocket.android.model.RoomSubscription;
+import chat.rocket.android.model.ddp.RoomSubscription;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import io.realm.Realm;

@@ -7,7 +7,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.fragment.oauth.GitHubOAuthFragment;
 import chat.rocket.android.helper.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.MeteorLoginServiceConfiguration;
+import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;

@@ -58,19 +58,19 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     }
 
     MethodCall call = list.get(0);
-    final String methodCallId = call.getId();
+    final String methodCallId = call.getMethodCallId();
     final String methodName = call.getName();
     final String params = call.getParamsJson();
     RealmHelperBolts.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
-          .put("id", methodCallId)
+          .put("methodCallId", methodCallId)
           .put("syncstate", SyncState.SYNCING))
     ).onSuccessTask(task ->
         webSocketAPI.rpc(methodCallId, methodName, params).onSuccessTask(_task ->
             RealmHelperBolts.executeTransaction(realm -> {
               JSONObject result = _task.getResult().result;
               return realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
-                  .put("id", methodCallId)
+                  .put("methodCallId", methodCallId)
                   .put("syncstate", SyncState.SYNCED)
                   .put("resultJson", result == null ? null : result.toString()));
             })
@@ -83,7 +83,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
               ? ((DDPClientCallback.RPC.Error) exception).error.toString()
               : exception.getMessage();
           realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
-              .put("id", methodCallId)
+              .put("methodCallId", methodCallId)
               .put("syncstate", SyncState.FAILED)
               .put("resultJson", errMessage));
           return null;

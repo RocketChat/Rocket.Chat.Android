@@ -3,7 +3,7 @@ package chat.rocket.android.fragment.chatroom;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import chat.rocket.android.R;
-import chat.rocket.android.model.RoomSubscription;
+import chat.rocket.android.model.ddp.RoomSubscription;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;

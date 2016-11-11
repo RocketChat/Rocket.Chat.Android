@@ -3,7 +3,7 @@ package chat.rocket.android.service.observer;
 import android.content.Context;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.MethodCallHelper;
-import chat.rocket.android.model.RoomSubscription;
+import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import hugo.weaving.DebugLog;
@@ -25,7 +25,7 @@ public class SessionObserver extends AbstractModelObserver<ServerConfig> {
 
   @Override protected RealmResults<ServerConfig> queryItems(Realm realm) {
     return realm.where(ServerConfig.class)
-        .equalTo("id", serverConfigId)
+        .equalTo("serverConfigId", serverConfigId)
         .isNotNull("hostname")
         .isNull("connectionError")
         .isNotNull("session")

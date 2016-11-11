@@ -6,5 +6,5 @@
   <!-- suppress some checks for classes extending RealmObject -->
   <suppress
       checks="JavadocMethod|MemberName|ParameterName"
-      files="chat[\\/]rocket[\\/]android[\\/]model"/>
+      files="chat[\\/]rocket[\\/]android[\\/]model[\\/]ddp"/>
 </suppressions>

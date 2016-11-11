@@ -14,7 +14,7 @@ public class LaunchUtil {
   public static void showServerConfigActivity(Context context, String serverCondigId) {
     Intent intent = new Intent(context, ServerConfigActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    intent.putExtra("id", serverCondigId);
+    intent.putExtra("serverConfigId", serverCondigId);
     context.startActivity(intent);
   }
 }

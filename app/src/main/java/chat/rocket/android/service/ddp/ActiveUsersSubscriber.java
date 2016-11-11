@@ -1,11 +1,12 @@
-package chat.rocket.android.service.ddp_subscriber;
+package chat.rocket.android.service.ddp;
 
 import android.content.Context;
-import chat.rocket.android.model.User;
+import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import io.realm.RealmObject;
 
 /**
+ * "activeUsers" subscriber.
  */
 public class ActiveUsersSubscriber extends AbstractDDPDocEventSubscriber {
   public ActiveUsersSubscriber(Context context, String serverConfigId,

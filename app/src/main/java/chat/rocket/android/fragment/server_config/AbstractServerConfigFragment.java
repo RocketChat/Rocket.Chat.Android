@@ -21,7 +21,7 @@ abstract class AbstractServerConfigFragment extends AbstractFragment
       return;
     }
 
-    serverConfigId = args.getString("id");
+    serverConfigId = args.getString("serverConfigId");
     if (TextUtils.isEmpty(serverConfigId)) {
       finish();
       return;

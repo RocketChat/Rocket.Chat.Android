@@ -15,9 +15,8 @@ import org.json.JSONObject;
 /**
  * Server configuration.
  */
-@SuppressWarnings("PMD.ShortVariable")
 public class ServerConfig extends RealmObject {
-  @PrimaryKey private String id;
+  @PrimaryKey private String serverConfigId;
   private String hostname;
   private String connectionError;
   private String session;
@@ -28,6 +27,9 @@ public class ServerConfig extends RealmObject {
     return realm.where(ServerConfig.class).equalTo("tokenVerified", false);
   }
 
+  /**
+   * Check if connection login required exists.
+   */
   public static boolean hasLoginRequiredConnection() {
     ServerConfig config =
         RealmHelper.executeTransactionForRead(realm ->
@@ -36,6 +38,9 @@ public class ServerConfig extends RealmObject {
     return config != null;
   }
 
+  /**
+   * Request token refresh.
+   */
   public static Task<Void> forceInvalidateToken() {
     return RealmHelperBolts.executeTransaction(realm -> {
       RealmResults<ServerConfig> targetConfigs = realm.where(ServerConfig.class)
@@ -49,21 +54,24 @@ public class ServerConfig extends RealmObject {
     });
   }
 
-  @DebugLog public static void logConnectionError(String id, Exception exception) {
+  /**
+   * Log the server connection is lost due to soem exception.
+   */
+  @DebugLog public static void logConnectionError(String serverConfigId, Exception exception) {
     RealmHelperBolts.executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("id", id)
+            .put("serverConfigId", serverConfigId)
             .put("connectionError", exception.getMessage())
             .put("session", JSONObject.NULL)))
         .continueWith(new LogcatIfError());
   }
 
-  public String getId() {
-    return id;
+  public String getServerConfigId() {
+    return serverConfigId;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setServerConfigId(String serverConfigId) {
+    this.serverConfigId = serverConfigId;
   }
 
   public String getHostname() {

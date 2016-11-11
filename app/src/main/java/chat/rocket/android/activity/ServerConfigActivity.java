@@ -27,7 +27,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
   private RealmObjectObserver<ServerConfig> serverConfigObserver =
       new RealmObjectObserver<ServerConfig>() {
         @Override protected RealmQuery<ServerConfig> query(Realm realm) {
-          return realm.where(ServerConfig.class).equalTo("id", serverConfigId);
+          return realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId);
         }
 
         @Override protected void onChange(ServerConfig config) {
@@ -69,7 +69,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
   }
 
   private static boolean launchFor(Context context, ServerConfig config) {
-    LaunchUtil.showServerConfigActivity(context, config.getId());
+    LaunchUtil.showServerConfigActivity(context, config.getServerConfigId());
     return true;
   }
 
@@ -86,7 +86,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
       return;
     }
 
-    serverConfigId = intent.getStringExtra("id");
+    serverConfigId = intent.getStringExtra("serverConfigId");
     if (TextUtils.isEmpty(serverConfigId)) {
       finish();
       return;
@@ -154,7 +154,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     if (args == null) {
       args = new Bundle();
     }
-    args.putString("id", serverConfigId);
+    args.putString("serverConfigId", serverConfigId);
     fragment.setArguments(args);
   }
 

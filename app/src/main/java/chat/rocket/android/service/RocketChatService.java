@@ -88,7 +88,7 @@ public class RocketChatService extends Service {
       String serverConfigId = entry.getKey();
       boolean found = false;
       for (ServerConfig config : configList) {
-        if (serverConfigId.equals(config.getId())) {
+        if (serverConfigId.equals(config.getServerConfigId())) {
           found = true;
           break;
         }
@@ -111,7 +111,7 @@ public class RocketChatService extends Service {
   }
 
   private Task<RocketChatWebSocketThread> findOrCreateWebSocketThread(final ServerConfig config) {
-    final String serverConfigId = config.getId();
+    final String serverConfigId = config.getServerConfigId();
     if (webSocketThreads.containsKey(serverConfigId)) {
       return Task.forResult(webSocketThreads.get(serverConfigId));
     } else {

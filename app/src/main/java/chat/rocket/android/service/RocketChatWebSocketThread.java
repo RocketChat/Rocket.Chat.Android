@@ -9,8 +9,8 @@ import bolts.TaskCompletionSource;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
-import chat.rocket.android.service.ddp_subscriber.ActiveUsersSubscriber;
-import chat.rocket.android.service.ddp_subscriber.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.ddp.ActiveUsersSubscriber;
+import chat.rocket.android.service.ddp.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
@@ -55,7 +55,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @DebugLog public static Task<RocketChatWebSocketThread> getStarted(Context appContext,
       ServerConfig config) {
     TaskCompletionSource<RocketChatWebSocketThread> task = new TaskCompletionSource<>();
-    new RocketChatWebSocketThread(appContext, config.getId()) {
+    new RocketChatWebSocketThread(appContext, config.getServerConfigId()) {
       @Override protected void onLooperPrepared() {
         try {
           super.onLooperPrepared();
@@ -136,14 +136,14 @@ public class RocketChatWebSocketThread extends HandlerThread {
     socketExists = true;
 
     final ServerConfig config = RealmHelper.executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo("id", serverConfigId).findFirst());
+        realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
 
     prepareWebSocket(config);
     return webSocketAPI.connect(config.getSession()).onSuccessTask(task -> {
       final String session = task.getResult().session;
       RealmHelperBolts.executeTransaction(realm ->
           realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-              .put("id", serverConfigId)
+              .put("serverConfigId", serverConfigId)
               .put("session", session))
       ).continueWith(new LogcatIfError());
       return task;

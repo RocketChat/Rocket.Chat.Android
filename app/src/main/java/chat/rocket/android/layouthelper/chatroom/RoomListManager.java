@@ -3,7 +3,7 @@ package chat.rocket.android.layouthelper.chatroom;
 import android.view.View;
 import android.view.ViewGroup;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.RoomSubscription;
+import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.widget.internal.RoomListItemView;
 import java.util.List;
 

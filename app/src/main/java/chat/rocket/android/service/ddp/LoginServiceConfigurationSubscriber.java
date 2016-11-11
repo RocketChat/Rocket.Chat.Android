@@ -1,7 +1,7 @@
-package chat.rocket.android.service.ddp_subscriber;
+package chat.rocket.android.service.ddp;
 
 import android.content.Context;
-import chat.rocket.android.model.MeteorLoginServiceConfiguration;
+import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import io.realm.RealmObject;
 

@@ -25,7 +25,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   };
   RealmObjectObserver<ServerConfig> serverConfigObserver = new RealmObjectObserver<ServerConfig>() {
     @Override protected RealmQuery<ServerConfig> query(Realm realm) {
-      return realm.where(ServerConfig.class).equalTo("id", serverConfigId);
+      return realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId);
     }
 
     @Override protected void onChange(ServerConfig config) {
@@ -54,7 +54,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
     RealmHelperBolts.executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
-            new JSONObject().put("id", serverConfigId)
+            new JSONObject().put("serverConfigId", serverConfigId)
                 .put("hostname", hostname)
                 .put("connectionError", JSONObject.NULL)
                 .put("session", JSONObject.NULL))).continueWith(new LogcatIfError());
@@ -91,7 +91,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   private void clearConnectionErrorAndHostname() {
     RealmHelperBolts.executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
-            new JSONObject().put("id", serverConfigId)
+            new JSONObject().put("serverConfigId", serverConfigId)
                 .put("hostname", JSONObject.NULL)
                 .put("connectionError", JSONObject.NULL))).continueWith(new LogcatIfError());
   }

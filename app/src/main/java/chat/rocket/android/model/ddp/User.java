@@ -1,4 +1,4 @@
-package chat.rocket.android.model;
+package chat.rocket.android.model.ddp;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

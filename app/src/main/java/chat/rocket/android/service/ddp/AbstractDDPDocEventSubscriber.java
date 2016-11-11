@@ -1,4 +1,4 @@
-package chat.rocket.android.service.ddp_subscriber;
+package chat.rocket.android.service.ddp;
 
 import android.content.Context;
 import android.text.TextUtils;
