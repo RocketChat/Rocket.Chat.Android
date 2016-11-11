@@ -43,7 +43,8 @@ public class RoomListManager {
 
       String type = roomSubscription.getT();
 
-      if (RoomSubscription.TYPE_CHANNEL.equals(type) || RoomSubscription.TYPE_PRIVATE.equals(type)) {
+      if (RoomSubscription.TYPE_CHANNEL.equals(type)
+          || RoomSubscription.TYPE_PRIVATE.equals(type)) {
         insertOrUpdateItem(channelsContainer, roomSubscription);
         removeItemIfExists(dmContainer, name);
       } else if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(type)) {
@@ -85,7 +86,8 @@ public class RoomListManager {
     }
   }
 
-  private void updateRoomItemView(RoomListItemView roomListItemView, RoomSubscription roomSubscription) {
+  private void updateRoomItemView(RoomListItemView roomListItemView,
+      RoomSubscription roomSubscription) {
     roomListItemView
         .setRoomId(roomSubscription.getRid())
         .setRoomName(roomSubscription.getName())

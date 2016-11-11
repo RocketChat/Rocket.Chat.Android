@@ -44,15 +44,16 @@ public class RoomFragment extends AbstractChatRoomFragment {
 
   }
 
-  private RealmObjectObserver<RoomSubscription> roomObserver = new RealmObjectObserver<RoomSubscription>() {
-    @Override protected RealmQuery<RoomSubscription> query(Realm realm) {
-      return realm.where(RoomSubscription.class).equalTo("rid", roomId);
-    }
+  private RealmObjectObserver<RoomSubscription> roomObserver =
+      new RealmObjectObserver<RoomSubscription>() {
+        @Override protected RealmQuery<RoomSubscription> query(Realm realm) {
+          return realm.where(RoomSubscription.class).equalTo("rid", roomId);
+        }
 
-    @Override protected void onChange(RoomSubscription roomSubscription) {
-      onRenderRoom(roomSubscription);
-    }
-  };
+        @Override protected void onChange(RoomSubscription roomSubscription) {
+          onRenderRoom(roomSubscription);
+        }
+      };
 
   private void onRenderRoom(RoomSubscription roomSubscription) {
     activityToolbar.setTitle(roomSubscription.getName());

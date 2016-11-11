@@ -154,41 +154,31 @@ public class MethodCallHelper {
   }
 
   private Task<Long> getRoomSubscriptionRecursive(long timestamp) {
-    return call("subscriptions/get", param -> param.put("$date", timestamp), task -> {
-      JSONObject result = task.getResult();
-
-      long nextTimestamp = 0;
-      try {
-        nextTimestamp = result.getJSONArray("remove")
-            .getJSONObject(0).getJSONObject("_deletedAt").getLong("$date");
-      } catch (JSONException exception) {
+    return getObjectRecursive("subscriptions", updatedRooms -> {
+      for (int i = 0; i < updatedRooms.length(); i++) {
+        updatedRooms.getJSONObject(i).put("serverConfigId", serverConfigId);
       }
-
-      try {
-        JSONArray updatedRooms = result.getJSONArray("update");
-        for (int i = 0; i < updatedRooms.length(); i++) {
-          updatedRooms.getJSONObject(i).put("serverConfigId", serverConfigId);
-        }
-
-        Task<Void> saveToDB =  RealmHelperBolts.executeTransaction(realm -> {
-          realm.createOrUpdateAllFromJson(RoomSubscription.class, result.getJSONArray("update"));
-          return null;
-        });
-
-        if (nextTimestamp > 0 && (timestamp == 0 || nextTimestamp < timestamp)) {
-          final long _next = nextTimestamp;
-          return saveToDB.onSuccessTask(_task -> getRoomSubscriptionRecursive(_next));
-        } else {
-          return saveToDB.onSuccessTask(_task -> Task.forResult(0L));
-        }
-      } catch (JSONException exception) {
-        return Task.forError(exception);
-      }
-    });
+    }, timestamp);
   }
 
   private Task<Long> getRoomRecursive(long timestamp) {
-    return call("rooms/get", param -> param.put("$date", timestamp), task -> {
+    return getObjectRecursive("rooms", updatedRooms -> {
+      for (int i = 0; i < updatedRooms.length(); i++) {
+        JSONObject roomJson = updatedRooms.getJSONObject(i);
+        String rid = roomJson.getString("_id");
+        roomJson.put("rid", rid)
+            .put("serverConfigId", serverConfigId)
+            .remove("_id");
+      }
+    }, timestamp);
+  }
+
+  private interface Customizer {
+    void customizeResult(JSONArray updatedRooms) throws JSONException;
+  }
+
+  private Task<Long> getObjectRecursive(String objName, Customizer customizer, long timestamp) {
+    return call(objName + "/get", param -> param.put("$date", timestamp), task -> {
       JSONObject result = task.getResult();
 
       long nextTimestamp = 0;
@@ -196,17 +186,12 @@ public class MethodCallHelper {
         nextTimestamp = result.getJSONArray("remove")
             .getJSONObject(0).getJSONObject("_deletedAt").getLong("$date");
       } catch (JSONException exception) {
+        // keep nextTimestamp = 0
       }
 
       try {
         JSONArray updatedRooms = result.getJSONArray("update");
-        for (int i = 0; i < updatedRooms.length(); i++) {
-          JSONObject roomJson = updatedRooms.getJSONObject(i);
-          String rid = roomJson.getString("_id");
-          roomJson.put("rid", rid)
-              .put("serverConfigId", serverConfigId)
-              .remove("_id");
-        }
+        customizer.customizeResult(updatedRooms);
 
         Task<Void> saveToDB =  RealmHelperBolts.executeTransaction(realm -> {
           realm.createOrUpdateAllFromJson(RoomSubscription.class, result.getJSONArray("update"));
@@ -215,7 +200,7 @@ public class MethodCallHelper {
 
         if (nextTimestamp > 0 && (timestamp == 0 || nextTimestamp < timestamp)) {
           final long _next = nextTimestamp;
-          return saveToDB.onSuccessTask(_task -> getRoomRecursive(_next));
+          return saveToDB.onSuccessTask(_task -> getObjectRecursive(objName, customizer, _next));
         } else {
           return saveToDB.onSuccessTask(_task -> Task.forResult(0L));
         }

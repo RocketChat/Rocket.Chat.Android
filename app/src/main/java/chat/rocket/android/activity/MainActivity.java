@@ -75,15 +75,16 @@ public class MainActivity extends AbstractAuthedActivity {
         .subscribe(RxView.visibility(findViewById(R.id.user_action_container)));
   }
 
-  private RealmListObserver<RoomSubscription> roomsObserver = new RealmListObserver<RoomSubscription>() {
-    @Override protected RealmResults<RoomSubscription> queryItems(Realm realm) {
-      return realm.where(RoomSubscription.class).findAll();
-    }
+  private RealmListObserver<RoomSubscription> roomsObserver =
+      new RealmListObserver<RoomSubscription>() {
+        @Override protected RealmResults<RoomSubscription> queryItems(Realm realm) {
+          return realm.where(RoomSubscription.class).findAll();
+        }
 
-    @Override protected void onCollectionChanged(List<RoomSubscription> list) {
-      roomListManager.setRooms(list);
-    }
-  };
+        @Override protected void onCollectionChanged(List<RoomSubscription> list) {
+          roomListManager.setRooms(list);
+        }
+      };
 
   private void showRoomFragment(String roomId) {
     showFragment(RoomFragment.create(roomId));
