@@ -76,9 +76,9 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
                   .put("resultJson", result == null ? null : result.toString()));
             })
         )
-    ).continueWith(task -> {
+    ).continueWithTask(task -> {
       if (task.isFaulted()) {
-        RealmHelperBolts.executeTransaction(realm -> {
+        return RealmHelperBolts.executeTransaction(realm -> {
           Exception exception = task.getError();
           final String errMessage = (exception instanceof DDPClientCallback.RPC.Error)
               ? ((DDPClientCallback.RPC.Error) exception).error.toString()
@@ -88,9 +88,9 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
               .put("syncstate", SyncState.FAILED)
               .put("resultJson", errMessage));
           return null;
-        }).continueWith(new LogcatIfError());
+        });
       }
-      return null;
-    });
+      return task;
+    }).continueWith(new LogcatIfError());
   }
 }

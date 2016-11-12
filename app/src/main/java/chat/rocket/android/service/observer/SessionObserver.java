@@ -16,10 +16,15 @@ import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
  * Observes user is logged into server.
  */
 public class SessionObserver extends AbstractModelObserver<ServerConfig> {
+  private final MethodCallHelper methodCall;
   private int count;
 
+  /**
+   * constructor.
+   */
   public SessionObserver(Context context, String serverConfigId, RocketChatWebSocketAPI api) {
     super(context, serverConfigId, api);
+    methodCall = new MethodCallHelper(serverConfigId, api);
     count = 0;
   }
 
@@ -54,11 +59,10 @@ public class SessionObserver extends AbstractModelObserver<ServerConfig> {
   }
 
   @DebugLog private void onLogin() {
-    final MethodCallHelper methodCallHelper = new MethodCallHelper(serverConfigId);
     RealmHelperBolts.executeTransaction(realm -> {
       realm.delete(RoomSubscription.class);
       return null;
-    }).onSuccessTask(_task -> methodCallHelper.getRooms())
+    }).onSuccessTask(_task -> methodCall.getRooms())
         .continueWith(new LogcatIfError());
 
   }

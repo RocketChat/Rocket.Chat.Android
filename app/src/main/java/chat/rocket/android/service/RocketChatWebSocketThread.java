@@ -11,6 +11,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.service.ddp.ActiveUsersSubscriber;
 import chat.rocket.android.service.ddp.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
@@ -34,7 +35,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
       ActiveUsersSubscriber.class,
       TokenLoginObserver.class,
       MethodCallObserver.class,
-      SessionObserver.class
+      SessionObserver.class,
+      LoadMessageProcedureObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;

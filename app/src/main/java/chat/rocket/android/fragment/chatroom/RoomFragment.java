@@ -3,10 +3,15 @@ package chat.rocket.android.fragment.chatroom;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import chat.rocket.android.R;
+import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.model.LoadMessageProcedure;
+import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
+import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
+import org.json.JSONObject;
 
 /**
  * Chat room screen.
@@ -42,6 +47,18 @@ public class RoomFragment extends AbstractChatRoomFragment {
 
   @Override protected void onSetupView() {
 
+    // TODO: just a sample!!
+    RealmHelperBolts.executeTransaction(realm -> {
+      final String serverConfigId = realm.where(RoomSubscription.class)
+          .equalTo("rid", roomId).findFirst().getServerConfigId();
+      realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
+          .put("serverConfigId", serverConfigId)
+          .put("roomId", roomId)
+          .put("syncstate", SyncState.NOT_SYNCED)
+          .put("count", 50)
+          .put("reset", true));
+      return null;
+    }).continueWith(new LogcatIfError());
   }
 
   private RealmObjectObserver<RoomSubscription> roomObserver =

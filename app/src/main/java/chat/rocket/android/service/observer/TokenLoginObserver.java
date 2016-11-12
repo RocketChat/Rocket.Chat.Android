@@ -10,8 +10,11 @@ import java.util.List;
 
 public class TokenLoginObserver extends AbstractModelObserver<ServerConfig> {
 
+  private final MethodCallHelper methodCall;
+
   public TokenLoginObserver(Context context, String serverConfigId, RocketChatWebSocketAPI api) {
     super(context, serverConfigId, api);
+    methodCall = new MethodCallHelper(serverConfigId, api);
   }
 
   @Override protected RealmResults<ServerConfig> queryItems(Realm realm) {
@@ -28,7 +31,7 @@ public class TokenLoginObserver extends AbstractModelObserver<ServerConfig> {
     }
 
     ServerConfig config = list.get(0);
-    new MethodCallHelper(serverConfigId, webSocketAPI).loginWithToken(config.getToken())
+    methodCall.loginWithToken(config.getToken())
         .continueWith(task -> {
           if (task.isFaulted()) {
             ServerConfig.logConnectionError(serverConfigId, task.getError());

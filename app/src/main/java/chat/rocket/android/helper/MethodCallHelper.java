@@ -4,8 +4,9 @@ import android.util.Patterns;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.model.MethodCall;
-import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClientCallback;
 import java.util.UUID;
@@ -219,4 +220,32 @@ public class MethodCallHelper {
           }
         });
   }
+
+  /**
+   * Load messages for room.
+   */
+  public Task<Void> loadHistory(final String roomId, final long timestamp,
+      final int count, final long lastSeen) {
+    return call("loadHistory", TIMEOUT_MS, params -> params
+            .put(roomId)
+            .put(timestamp > 0 ? new JSONObject().put("$date", timestamp) : JSONObject.NULL)
+            .put(count)
+            .put(lastSeen > 0 ? new JSONObject().put("$date", lastSeen) : JSONObject.NULL),
+        task -> {
+          JSONObject result = task.getResult();
+          final JSONArray messages = result.getJSONArray("messages");
+          for (int i = 0; i < messages.length(); i++) {
+            Message.customizeJson(messages.getJSONObject(i));
+          }
+
+          return RealmHelperBolts.executeTransaction(realm -> {
+            if (timestamp == 0) {
+              realm.where(Message.class).equalTo("rid", roomId).findAll().deleteAllFromRealm();
+            }
+            realm.createOrUpdateAllFromJson(Message.class, messages);
+            return null;
+          });
+        });
+  }
+
 }
