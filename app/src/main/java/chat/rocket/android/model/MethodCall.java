@@ -11,7 +11,6 @@ import io.realm.annotations.PrimaryKey;
 import java.util.UUID;
 import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MethodCall extends RealmObject {
@@ -99,10 +98,10 @@ public class MethodCall extends RealmObject {
   /**
    * insert a new record to request a method call.
    */
-  public static Task<JSONObject> execute(String serverConfigId, String name, String paramsJson,
+  public static Task<String> execute(String serverConfigId, String name, String paramsJson,
       long timeout) {
     final String newId = UUID.randomUUID().toString();
-    TaskCompletionSource<JSONObject> task = new TaskCompletionSource<>();
+    TaskCompletionSource<String> task = new TaskCompletionSource<>();
     RealmHelperBolts.executeTransaction(realm -> {
       MethodCall call = realm.createObjectFromJson(MethodCall.class, new JSONObject()
           .put("methodCallId", newId)
@@ -124,12 +123,11 @@ public class MethodCall extends RealmObject {
           @Override protected void onChange(MethodCall methodCall) {
             int syncstate = methodCall.getSyncstate();
             if (syncstate == SyncState.SYNCED) {
-              try {
-                String resultJson = methodCall.getResultJson();
-                task.setResult(TextUtils.isEmpty(resultJson) ? null : new JSONObject(resultJson));
-              } catch (JSONException exception) {
-                task.setError(new Error(exception));
+              String resultJson = methodCall.getResultJson();
+              if (TextUtils.isEmpty(resultJson)) {
+                task.setResult(null);
               }
+              task.setResult(resultJson);
               exit(methodCall.getMethodCallId());
             } else if (syncstate == SyncState.FAILED) {
               task.setError(new Error(methodCall.getResultJson()));

@@ -34,7 +34,7 @@ public class MethodCallHelper {
     this.api = api;
   }
 
-  private Task<JSONObject> executeMethodCall(String methodName, String param, long timeout) {
+  private Task<String> executeMethodCall(String methodName, String param, long timeout) {
     if (api != null) {
       return api.rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
@@ -43,7 +43,7 @@ public class MethodCallHelper {
     }
   }
 
-  private Task<JSONObject> injectErrorHandler(Task<JSONObject> task) {
+  private Task<String> injectErrorHandler(Task<String> task) {
     return task.continueWithTask(_task -> {
       if (_task.isFaulted()) {
         Exception exception = _task.getError();
@@ -62,40 +62,39 @@ public class MethodCallHelper {
   }
 
   private interface ParamBuilder {
-    void buildParam(JSONArray params) throws JSONException;
+    JSONArray buildParam() throws JSONException;
   }
 
-  private <T> Task<T> call(String methodName, long timeout,
-      Continuation<JSONObject, Task<T>> onSuccess) {
-    return injectErrorHandler(executeMethodCall(methodName, null, timeout))
-        .onSuccessTask(onSuccess);
+  private Task<String> call(String methodName, long timeout) {
+    return injectErrorHandler(executeMethodCall(methodName, null, timeout));
   }
 
-  private <T> Task<T> call(String methodName, long timeout, ParamBuilder paramBuilder,
-      Continuation<JSONObject, Task<T>> onSuccess) {
-    JSONArray params = new JSONArray();
-
+  private Task<String> call(String methodName, long timeout, ParamBuilder paramBuilder) {
     try {
-      paramBuilder.buildParam(params);
+      final JSONArray params = paramBuilder.buildParam();
+      return injectErrorHandler(executeMethodCall(methodName,
+          params != null ? params.toString() : null, timeout));
     } catch (JSONException exception) {
       return Task.forError(exception);
     }
-
-    return injectErrorHandler(executeMethodCall(methodName, params.toString(), timeout))
-        .onSuccessTask(onSuccess);
   }
+
+  private static final Continuation<String, Task<JSONObject>> CONVERT_TO_JSON_OBJECT =
+      task -> Task.forResult(new JSONObject(task.getResult()));
+
+  private static final Continuation<String, Task<JSONArray>> CONVERT_TO_JSON_ARRAY =
+      task -> Task.forResult(new JSONArray(task.getResult()));
 
   /**
    * Register User.
    */
-  public Task<Void> registerUser(final String name, final String email,
+  public Task<String> registerUser(final String name, final String email,
       final String password, final String confirmPassword) {
-    return call("registerUser", TIMEOUT_MS, params -> params.put(new JSONObject()
+    return call("registerUser", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
         .put("name", name)
         .put("email", email)
         .put("pass", password)
-        .put("confirm-pass", confirmPassword)),
-        task -> Task.forResult(null)); // nothing to do.
+        .put("confirm-pass", confirmPassword))); // nothing to do.
   }
 
   private Task<Void> saveToken(Task<String> task) {
@@ -110,7 +109,7 @@ public class MethodCallHelper {
    * Login with username/email and password.
    */
   public Task<Void> loginWithEmail(final String usernameOrEmail, final String password) {
-    return call("login", TIMEOUT_MS, params -> {
+    return call("login", TIMEOUT_MS, () -> {
       JSONObject param = new JSONObject();
       if (Patterns.EMAIL_ADDRESS.matcher(usernameOrEmail).matches()) {
         param.put("user", new JSONObject().put("email", usernameOrEmail));
@@ -120,8 +119,10 @@ public class MethodCallHelper {
       param.put("password", new JSONObject()
           .put("digest", CheckSum.sha256(password))
           .put("algorithm", "sha-256"));
-      params.put(param);
-    }, task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
+      return new JSONArray().put(param);
+    }).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+        .onSuccessTask(this::saveToken);
   }
 
   /**
@@ -129,92 +130,50 @@ public class MethodCallHelper {
    */
   public Task<Void> loginWithGitHub(final String credentialToken,
       final String credentialSecret) {
-    return call("login", TIMEOUT_MS, params -> params.put(new JSONObject()
-            .put("oauth", new JSONObject()
-                .put("credentialToken", credentialToken)
-                .put("credentialSecret", credentialSecret))
-    ), task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
+    return call("login", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
+        .put("oauth", new JSONObject()
+            .put("credentialToken", credentialToken)
+            .put("credentialSecret", credentialSecret))
+    )).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+        .onSuccessTask(this::saveToken);
   }
 
   /**
    * Login with token.
    */
   public Task<Void> loginWithToken(final String token) {
-    return call("login", TIMEOUT_MS, params -> params.put(new JSONObject().put("resume", token)),
-        task -> Task.forResult(task.getResult().getString("token"))).onSuccessTask(this::saveToken);
+    return call("login", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
+        .put("resume", token)
+    )).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+        .onSuccessTask(this::saveToken);
   }
 
   /**
    * Logout.
    */
-  public Task<Void> logout() {
-    return call("logout", TIMEOUT_MS, task -> Task.forResult(null));
+  public Task<String> logout() {
+    return call("logout", TIMEOUT_MS);
   }
 
   /**
-   * request "subscriptions/get" and "rooms/get".
+   * request "subscriptions/get".
    */
   public Task<Void> getRooms() {
-    return getRoomSubscriptionRecursive(0)
-        .onSuccessTask(task -> getRoomRecursive(0))
-        .onSuccessTask(task -> Task.forResult(null));
-  }
-
-  private Task<Long> getRoomSubscriptionRecursive(long timestamp) {
-    return getObjectRecursive("subscriptions", updatedRooms -> {
-      for (int i = 0; i < updatedRooms.length(); i++) {
-        updatedRooms.getJSONObject(i).put("serverConfigId", serverConfigId);
-      }
-    }, timestamp);
-  }
-
-  private Task<Long> getRoomRecursive(long timestamp) {
-    return getObjectRecursive("rooms", updatedRooms -> {
-      for (int i = 0; i < updatedRooms.length(); i++) {
-        JSONObject roomJson = updatedRooms.getJSONObject(i);
-        String rid = roomJson.getString("_id");
-        roomJson.put("rid", rid)
-            .put("serverConfigId", serverConfigId)
-            .remove("_id");
-      }
-    }, timestamp);
-  }
-
-  private interface Customizer {
-    void customizeResult(JSONArray updatedRooms) throws JSONException;
-  }
-
-  private Task<Long> getObjectRecursive(String objName, Customizer customizer, long timestamp) {
-    return call(objName + "/get", TIMEOUT_MS,
-        params -> params.put(new JSONObject().put("$date", timestamp)),
-        task -> {
-          JSONObject result = task.getResult();
-
-          long nextTimestamp = 0;
+    return call("subscriptions/get", TIMEOUT_MS).onSuccessTask(CONVERT_TO_JSON_ARRAY)
+        .onSuccessTask(task -> {
+          final JSONArray result = task.getResult();
           try {
-            nextTimestamp = result.getJSONArray("remove")
-                .getJSONObject(0).getJSONObject("_deletedAt").getLong("$date");
-          } catch (JSONException exception) {
-            // keep nextTimestamp = 0
-          }
+            for (int i = 0; i < result.length(); i++) {
+              result.getJSONObject(i).put("serverConfigId", serverConfigId);
+            }
 
-          try {
-            JSONArray updatedRooms = result.getJSONArray("update");
-            customizer.customizeResult(updatedRooms);
-
-            Task<Void> saveToDB =  RealmHelperBolts.executeTransaction(realm -> {
+            return RealmHelperBolts.executeTransaction(realm -> {
               realm.createOrUpdateAllFromJson(
-                  RoomSubscription.class, result.getJSONArray("update"));
+                  RoomSubscription.class, result);
               return null;
             });
-
-            if (nextTimestamp > 0 && (timestamp == 0 || nextTimestamp < timestamp)) {
-              final long _next = nextTimestamp;
-              return saveToDB.onSuccessTask(_task ->
-                  getObjectRecursive(objName, customizer, _next));
-            } else {
-              return saveToDB.onSuccessTask(_task -> Task.forResult(0L));
-            }
           } catch (JSONException exception) {
             return Task.forError(exception);
           }
@@ -226,12 +185,13 @@ public class MethodCallHelper {
    */
   public Task<Void> loadHistory(final String roomId, final long timestamp,
       final int count, final long lastSeen) {
-    return call("loadHistory", TIMEOUT_MS, params -> params
-            .put(roomId)
-            .put(timestamp > 0 ? new JSONObject().put("$date", timestamp) : JSONObject.NULL)
-            .put(count)
-            .put(lastSeen > 0 ? new JSONObject().put("$date", lastSeen) : JSONObject.NULL),
-        task -> {
+    return call("loadHistory", TIMEOUT_MS, () -> new JSONArray()
+        .put(roomId)
+        .put(timestamp > 0 ? new JSONObject().put("$date", timestamp) : JSONObject.NULL)
+        .put(count)
+        .put(lastSeen > 0 ? new JSONObject().put("$date", lastSeen) : JSONObject.NULL)
+    ).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> {
           JSONObject result = task.getResult();
           final JSONArray messages = result.getJSONArray("messages");
           for (int i = 0; i < messages.length(); i++) {
