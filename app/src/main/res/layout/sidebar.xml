@@ -185,15 +185,16 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/user_action_outer_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/user_info_container"
+        android:layout_alignParentBottom="true"
         android:background="?attr/colorPrimaryDark"
         android:elevation="2dp"
-        tools:visibility="gone"
+        android:visibility="gone"
         >
       <LinearLayout
-          android:id="@+id/user_action_container"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="vertical"

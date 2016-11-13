@@ -85,7 +85,7 @@ public class MainActivity extends AbstractAuthedActivity {
     });
     RxCompoundButton.checkedChanges(toggleUserAction)
         .compose(bindToLifecycle())
-        .subscribe(RxView.visibility(findViewById(R.id.user_action_container)));
+        .subscribe(RxView.visibility(findViewById(R.id.user_action_outer_container)));
   }
 
   private RealmListObserver<RoomSubscription> roomsObserver =
