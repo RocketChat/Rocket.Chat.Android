@@ -1,213 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="288dp"
-    android:layout_height="match_parent"
+<android.support.v4.widget.SlidingPaneLayout
+    android:id="@+id/sub_sliding_pane"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="start"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
     android:theme="@style/AppTheme.Dark"
     >
-
-  <LinearLayout
-      android:id="@+id/user_info_container"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="?attr/colorPrimaryDark"
-      android:foreground="?attr/selectableItemBackground"
-      android:gravity="center_vertical"
-      android:orientation="horizontal"
-      android:padding="@dimen/margin_16"
-      android:layout_alignParentTop="true"
-      android:elevation="2dp"
-      >
-
-    <ImageView
-        android:id="@+id/img_userstatus"
-        android:layout_width="8dp"
-        android:layout_height="8dp"
-        android:src="@drawable/userstatus_online"
-        />
-
-    <Space
-        android:layout_width="@dimen/margin_8"
-        android:layout_height="wrap_content"
-        />
-
-    <ImageView
-        android:id="@+id/img_my_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        />
-
-    <FrameLayout
-        android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_8"
-        android:layout_marginRight="@dimen/margin_8"
-        android:layout_weight="1"
-        >
-
-      <TextView
-          android:id="@+id/txt_account_info"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_vertical"
-          android:text="John Doe"
-          android:textSize="14sp"
-          />
-
-    </FrameLayout>
-
-    <chat.rocket.android.widget.DownUpToggleView
-        android:id="@+id/toggle_user_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
-  </LinearLayout>
-
   <android.support.v4.widget.NestedScrollView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/user_info_container"
-      android:background="?attr/colorPrimary"
-      android:layout_alignParentBottom="true"
+      android:layout_width="96dp"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      android:background="?attr/colorPrimaryDark"
       >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="?attr/listPreferredItemPaddingLeft"
         android:orientation="vertical"
         >
-      <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/margin_8"
-          >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CHANNELS"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textStyle="bold"
-            android:alpha="0.62"
-            android:layout_gravity="start|center_vertical"
-            />
 
-        <chat.rocket.android.widget.FontAwesomeButton
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:text="@string/fa_plus"
-            android:textSize="12dp"
-            android:layout_gravity="end|center_vertical"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            />
-
-      </FrameLayout>
-
-      <LinearLayout
-          android:id="@+id/channels_container"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
+      <ImageButton
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:layout_margin="@dimen/margin_8"
+          android:src="@mipmap/ic_launcher"
+          style="@style/Base.Widget.AppCompat.Button.Borderless"
           />
-
-      <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/margin_8"
-          >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DIRECT MESSAGES"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textStyle="bold"
-            android:alpha="0.62"
-            android:layout_gravity="start|center_vertical"
-            />
-
-        <chat.rocket.android.widget.FontAwesomeButton
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:text="@string/fa_plus"
-            android:textSize="12dp"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_gravity="end|center_vertical"
-            />
-
-      </FrameLayout>
-
-      <LinearLayout
-          android:id="@+id/direct_messages_container"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
+      <chat.rocket.android.widget.FontAwesomeButton
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:layout_margin="@dimen/margin_8"
+          android:text="@string/fa_plus"
+          style="@style/Base.Widget.AppCompat.Button.Borderless"
           />
-
     </LinearLayout>
   </android.support.v4.widget.NestedScrollView>
 
-  <android.support.v4.widget.NestedScrollView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/user_info_container"
-      android:background="?attr/colorPrimaryDark"
-      android:elevation="2dp"
-      tools:visibility="gone"
-      >
+  <RelativeLayout
+    android:layout_width="288dp"
+    android:layout_height="match_parent">
+
     <LinearLayout
-        android:id="@+id/user_action_container"
+        android:id="@+id/user_info_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:background="?attr/colorPrimaryDark"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_16"
+        android:layout_alignParentTop="true"
+        android:elevation="2dp"
         >
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="?attr/listPreferredItemHeightSmall"
-          android:paddingStart="?attr/listPreferredItemPaddingLeft"
-          android:paddingEnd="?attr/listPreferredItemPaddingRight"
-          android:gravity="center_vertical"
-          android:text="Online"
-          />
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="?attr/listPreferredItemHeightSmall"
-          android:paddingStart="?attr/listPreferredItemPaddingLeft"
-          android:paddingEnd="?attr/listPreferredItemPaddingRight"
-          android:gravity="center_vertical"
-          android:text="Away"
-          />
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="?attr/listPreferredItemHeightSmall"
-          android:paddingStart="?attr/listPreferredItemPaddingLeft"
-          android:paddingEnd="?attr/listPreferredItemPaddingRight"
-          android:gravity="center_vertical"
-          android:text="Busy"
-          />
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="?attr/listPreferredItemHeightSmall"
-          android:paddingStart="?attr/listPreferredItemPaddingLeft"
-          android:paddingEnd="?attr/listPreferredItemPaddingRight"
-          android:gravity="center_vertical"
-          android:text="Invisible"
-          />
-      <chat.rocket.android.widget.DividerView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"/>
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="?attr/listPreferredItemHeightSmall"
-          android:paddingStart="?attr/listPreferredItemPaddingLeft"
-          android:paddingEnd="?attr/listPreferredItemPaddingRight"
-          android:gravity="center_vertical"
-          android:text="Logout"
-          />
-    </LinearLayout>
-  </android.support.v4.widget.NestedScrollView>
 
-</RelativeLayout>
+      <ImageView
+          android:id="@+id/img_userstatus"
+          android:layout_width="8dp"
+          android:layout_height="8dp"
+          android:src="@drawable/userstatus_online"
+          />
+
+      <Space
+          android:layout_width="@dimen/margin_8"
+          android:layout_height="wrap_content"
+          />
+
+      <ImageView
+          android:id="@+id/img_my_avatar"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          />
+
+      <FrameLayout
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/margin_8"
+          android:layout_marginRight="@dimen/margin_8"
+          android:layout_weight="1"
+          >
+
+        <TextView
+            android:id="@+id/txt_account_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="John Doe"
+            android:textSize="14sp"
+            />
+
+      </FrameLayout>
+
+      <chat.rocket.android.widget.DownUpToggleView
+          android:id="@+id/toggle_user_action"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_info_container"
+        android:background="?attr/colorPrimary"
+        android:layout_alignParentBottom="true"
+        >
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingStart="?attr/listPreferredItemPaddingLeft"
+          android:orientation="vertical"
+          >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8"
+            >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="CHANNELS"
+              android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+              android:textStyle="bold"
+              android:alpha="0.62"
+              android:layout_gravity="start|center_vertical"
+              />
+
+          <chat.rocket.android.widget.FontAwesomeButton
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:text="@string/fa_plus"
+              android:textSize="12dp"
+              android:layout_gravity="end|center_vertical"
+              style="@style/Widget.AppCompat.Button.Borderless"
+              />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/channels_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8"
+            >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="DIRECT MESSAGES"
+              android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+              android:textStyle="bold"
+              android:alpha="0.62"
+              android:layout_gravity="start|center_vertical"
+              />
+
+          <chat.rocket.android.widget.FontAwesomeButton
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:text="@string/fa_plus"
+              android:textSize="12dp"
+              style="@style/Widget.AppCompat.Button.Borderless"
+              android:layout_gravity="end|center_vertical"
+              />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/direct_messages_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
+            />
+
+      </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_info_container"
+        android:background="?attr/colorPrimaryDark"
+        android:elevation="2dp"
+        tools:visibility="gone"
+        >
+      <LinearLayout
+          android:id="@+id/user_action_container"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="?attr/listPreferredItemHeightSmall"
+            android:paddingStart="?attr/listPreferredItemPaddingLeft"
+            android:paddingEnd="?attr/listPreferredItemPaddingRight"
+            android:gravity="center_vertical"
+            android:text="Online"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="?attr/listPreferredItemHeightSmall"
+            android:paddingStart="?attr/listPreferredItemPaddingLeft"
+            android:paddingEnd="?attr/listPreferredItemPaddingRight"
+            android:gravity="center_vertical"
+            android:text="Away"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="?attr/listPreferredItemHeightSmall"
+            android:paddingStart="?attr/listPreferredItemPaddingLeft"
+            android:paddingEnd="?attr/listPreferredItemPaddingRight"
+            android:gravity="center_vertical"
+            android:text="Busy"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="?attr/listPreferredItemHeightSmall"
+            android:paddingStart="?attr/listPreferredItemPaddingLeft"
+            android:paddingEnd="?attr/listPreferredItemPaddingRight"
+            android:gravity="center_vertical"
+            android:text="Invisible"
+            />
+        <chat.rocket.android.widget.DividerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="?attr/listPreferredItemHeightSmall"
+            android:paddingStart="?attr/listPreferredItemPaddingLeft"
+            android:paddingEnd="?attr/listPreferredItemPaddingRight"
+            android:gravity="center_vertical"
+            android:text="Logout"
+            />
+      </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+  </RelativeLayout>
+</android.support.v4.widget.SlidingPaneLayout>

@@ -3,6 +3,7 @@ package chat.rocket.android.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,6 +52,18 @@ public class MainActivity extends AbstractAuthedActivity {
       closeSidebarIfNeeded();
     });
 
+    SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
+    if (pane != null) {
+      final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
+      pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
+        @Override public void onPanelClosed(View panel) {
+          super.onPanelClosed(panel);
+          if (subPane != null) {
+            subPane.closePane();
+          }
+        }
+      });
+    }
     ImageView myAvatar = (ImageView) findViewById(R.id.img_my_avatar);
     new Avatar("demo.rocket.chat", "John Doe").into(myAvatar);
   }
