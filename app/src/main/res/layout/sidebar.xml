@@ -82,23 +82,25 @@
       <FrameLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/margin_16"
-          android:layout_marginBottom="@dimen/margin_8"
+          android:layout_marginTop="@dimen/margin_8"
           >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="channels"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:text="CHANNELS"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"
+            android:alpha="0.62"
             android:layout_gravity="start|center_vertical"
             />
 
         <chat.rocket.android.widget.FontAwesomeButton
             android:layout_width="48dp"
-            android:layout_height="32dp"
+            android:layout_height="48dp"
             android:text="@string/fa_plus"
             android:textSize="12dp"
             android:layout_gravity="end|center_vertical"
+            style="@style/Widget.AppCompat.Button.Borderless"
             />
 
       </FrameLayout>
@@ -114,22 +116,24 @@
       <FrameLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/margin_16"
-          android:layout_marginBottom="@dimen/margin_8"
+          android:layout_marginTop="@dimen/margin_8"
           >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="direct messages"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:text="DIRECT MESSAGES"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"
+            android:alpha="0.62"
             android:layout_gravity="start|center_vertical"
             />
 
         <chat.rocket.android.widget.FontAwesomeButton
             android:layout_width="48dp"
-            android:layout_height="32dp"
+            android:layout_height="48dp"
             android:text="@string/fa_plus"
             android:textSize="12dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_gravity="end|center_vertical"
             />
 

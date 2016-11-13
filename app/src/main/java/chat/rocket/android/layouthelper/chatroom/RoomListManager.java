@@ -92,6 +92,7 @@ public class RoomListManager {
         .setRoomId(roomSubscription.getRid())
         .setRoomName(roomSubscription.getName())
         .setRoomType(roomSubscription.getT())
+        .setAlert(roomSubscription.isAlert())
         .setUnreadCount(roomSubscription.getUnread());
 
     roomListItemView.setOnClickListener(this::onItemClick);

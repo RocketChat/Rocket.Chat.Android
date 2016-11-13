@@ -90,6 +90,12 @@ public class RoomListItemView extends LinearLayout {
     return this;
   }
 
+  public RoomListItemView setAlert(boolean alert) {
+    setAlpha(alert ? 1.0f : 0.62f);
+
+    return this;
+  }
+
   public String getRoomName() {
     return roomName;
   }
