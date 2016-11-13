@@ -58,8 +58,8 @@ dependencies {
   compile project(':rocket-chat-android-widgets')
   compile 'com.android.support:appcompat-v7:25.0.0'
   compile 'com.android.support:design:25.0.0'
-  compile 'jp.co.crowdworks:realm-java-helpers:0.0.7'
-  compile 'jp.co.crowdworks:realm-java-helpers-bolts:0.0.7'
+  compile 'jp.co.crowdworks:realm-java-helpers:0.0.8'
+  compile 'jp.co.crowdworks:realm-java-helpers-bolts:0.0.8'
 
   compile 'com.squareup.okhttp3:okhttp:3.4.1'
   compile 'com.squareup.picasso:picasso:2.5.2'
