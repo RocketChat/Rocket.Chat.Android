@@ -202,7 +202,9 @@ public class MethodCallHelper {
             if (timestamp == 0) {
               realm.where(Message.class).equalTo("rid", roomId).findAll().deleteAllFromRealm();
             }
-            realm.createOrUpdateAllFromJson(Message.class, messages);
+            if (messages.length() > 0) {
+              realm.createOrUpdateAllFromJson(Message.class, messages);
+            }
             return null;
           });
         });

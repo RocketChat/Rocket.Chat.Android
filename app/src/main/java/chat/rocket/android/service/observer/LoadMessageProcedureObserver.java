@@ -5,10 +5,13 @@ import bolts.Task;
 import chat.rocket.android.helper.MethodCallHelper;
 import chat.rocket.android.model.LoadMessageProcedure;
 import chat.rocket.android.model.SyncState;
+import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import java.util.List;
+import jp.co.crowdworks.realm_java_helpers.RealmHelper;
 import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONObject;
 import timber.log.Timber;
@@ -51,11 +54,21 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
             .put("syncstate", SyncState.SYNCING))
     ).onSuccessTask(task ->
         methodCall.loadHistory(roomId, isReset ? 0 : timestamp, count, lastSeen)
-            .onSuccessTask(_task ->
-                RealmHelperBolts.executeTransaction(realm ->
-                    realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
-                        .put("roomId", roomId)
-                        .put("syncstate", SyncState.SYNCED))))
+            .onSuccessTask(_task -> {
+              Message lastMessage = RealmHelper.executeTransactionForRead(realm ->
+                  realm.where(Message.class)
+                      .equalTo("rid", roomId)
+                      .equalTo("syncstate", SyncState.SYNCED)
+                      .findAllSorted("ts", Sort.ASCENDING).last(null));
+              long lastTs = lastMessage != null ? lastMessage.getTs() : 0;
+              return RealmHelperBolts.executeTransaction(realm ->
+                  realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
+                      .put("roomId", roomId)
+                      .put("syncstate", SyncState.SYNCED)
+                      .put("timestamp", lastTs)
+                      .put("hasNext", lastTs > 0))
+              );
+            })
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
         Timber.w(task.getError());
