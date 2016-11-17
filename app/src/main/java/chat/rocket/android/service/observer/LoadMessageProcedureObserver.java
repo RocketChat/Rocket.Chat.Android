@@ -3,16 +3,15 @@ package chat.rocket.android.service.observer;
 import android.content.Context;
 import bolts.Task;
 import chat.rocket.android.helper.MethodCallHelper;
-import chat.rocket.android.model.LoadMessageProcedure;
+import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import java.util.List;
-import jp.co.crowdworks.realm_java_helpers.RealmHelper;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONObject;
 import timber.log.Timber;
 
@@ -23,45 +22,44 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
 
   private final MethodCallHelper methodCall;
 
-  public LoadMessageProcedureObserver(Context context, String serverConfigId,
+  public LoadMessageProcedureObserver(Context context, RealmHelper realmHelper,
       RocketChatWebSocketAPI api) {
-    super(context, serverConfigId, api);
-    methodCall = new MethodCallHelper(serverConfigId, api);
+    super(context, realmHelper, api);
+    methodCall = new MethodCallHelper(realmHelper, api);
   }
 
-  @Override protected RealmResults<LoadMessageProcedure> queryItems(Realm realm) {
+  @Override public RealmResults<LoadMessageProcedure> queryItems(Realm realm) {
     return realm.where(LoadMessageProcedure.class)
-        .equalTo("serverConfigId", serverConfigId)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
         .findAll();
   }
 
-  @Override protected void onCollectionChanged(List<LoadMessageProcedure> list) {
-    if (list == null || list.isEmpty()) {
+  @Override public void onUpdateResults(List<LoadMessageProcedure> results) {
+    if (results == null || results.isEmpty()) {
       return;
     }
 
-    LoadMessageProcedure procedure = list.get(0);
+    LoadMessageProcedure procedure = results.get(0);
     final String roomId = procedure.getRoomId();
     final boolean isReset = procedure.isReset();
     final long timestamp = procedure.getTimestamp();
     final int count = procedure.getCount();
     final long lastSeen = 0; // TODO: Not implemented yet.
 
-    RealmHelperBolts.executeTransaction(realm ->
+    realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
             .put("roomId", roomId)
             .put("syncstate", SyncState.SYNCING))
     ).onSuccessTask(task ->
         methodCall.loadHistory(roomId, isReset ? 0 : timestamp, count, lastSeen)
             .onSuccessTask(_task -> {
-              Message lastMessage = RealmHelper.executeTransactionForRead(realm ->
+              Message lastMessage = realmHelper.executeTransactionForRead(realm ->
                   realm.where(Message.class)
                       .equalTo("rid", roomId)
                       .equalTo("syncstate", SyncState.SYNCED)
                       .findAllSorted("ts", Sort.ASCENDING).last(null));
               long lastTs = lastMessage != null ? lastMessage.getTs() : 0;
-              return RealmHelperBolts.executeTransaction(realm ->
+              return realmHelper.executeTransaction(realm ->
                   realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
                       .put("roomId", roomId)
                       .put("syncstate", SyncState.SYNCED)
@@ -72,7 +70,7 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
         Timber.w(task.getError());
-        return RealmHelperBolts.executeTransaction(realm ->
+        return realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
                 .put("roomId", roomId)
                 .put("syncstate", SyncState.FAILED)));

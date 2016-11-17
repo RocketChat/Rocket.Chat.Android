@@ -3,13 +3,13 @@ package chat.rocket.android.service.ddp;
 import android.content.Context;
 import android.text.TextUtils;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.Registerable;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPSubscription;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import java.util.Iterator;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Subscription;
@@ -17,15 +17,15 @@ import timber.log.Timber;
 
 abstract class AbstractDDPDocEventSubscriber implements Registerable {
   protected final Context context;
-  protected final String serverConfigId;
+  protected final RealmHelper realmHelper;
   protected final RocketChatWebSocketAPI webSocketAPI;
   private String subscriptionId;
   private Subscription rxSubscription;
 
-  protected AbstractDDPDocEventSubscriber(Context context, String serverConfigId,
+  protected AbstractDDPDocEventSubscriber(Context context, RealmHelper realmHelper,
       RocketChatWebSocketAPI api) {
     this.context = context;
-    this.serverConfigId = serverConfigId;
+    this.realmHelper = realmHelper;
     this.webSocketAPI = api;
   }
 
@@ -50,7 +50,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
       return null;
     });
 
-    RealmHelperBolts.executeTransaction(realm -> {
+    realmHelper.executeTransaction(realm -> {
       realm.delete(getModelClass());
       return null;
     }).onSuccess(task -> {
@@ -84,7 +84,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   }
 
   protected void onDocumentAdded(DDPSubscription.Added docEvent) {
-    RealmHelperBolts.executeTransaction(realm -> {
+    realmHelper.executeTransaction(realm -> {
       onDocumentAdded(realm, docEvent);
       return null;
     }).continueWith(new LogcatIfError());
@@ -93,13 +93,12 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   private void onDocumentAdded(Realm realm, DDPSubscription.Added docEvent) throws JSONException {
     //executed in RealmTransaction
     JSONObject json = new JSONObject().put("_id", docEvent.docID);
-    json.put("serverConfigId", serverConfigId);
     mergeJson(json, docEvent.fields);
     realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJson(json));
   }
 
   protected void onDocumentChanged(DDPSubscription.Changed docEvent) {
-    RealmHelperBolts.executeTransaction(realm -> {
+    realmHelper.executeTransaction(realm -> {
       onDocumentChanged(realm, docEvent);
       return null;
     }).continueWith(new LogcatIfError());
@@ -109,7 +108,6 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
       throws JSONException {
     //executed in RealmTransaction
     JSONObject json = new JSONObject().put("_id", docEvent.docID);
-    json.put("serverConfigId", serverConfigId);
     for (int i = 0; i < docEvent.cleared.length(); i++) {
       String fieldToDelete = docEvent.cleared.getString(i);
       json.put(fieldToDelete, JSONObject.NULL);
@@ -119,7 +117,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   }
 
   protected void onDocumentRemoved(DDPSubscription.Removed docEvent) {
-    RealmHelperBolts.executeTransaction(realm -> {
+    realmHelper.executeTransaction(realm -> {
       onDocumentRemoved(realm, docEvent);
       return null;
     }).continueWith(new LogcatIfError());

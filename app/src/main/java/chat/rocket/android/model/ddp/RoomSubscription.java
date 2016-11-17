@@ -2,6 +2,8 @@ package chat.rocket.android.model.ddp;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Chat Room(Subscription).
@@ -14,7 +16,6 @@ public class RoomSubscription extends RealmObject {
   public static final String TYPE_DIRECT_MESSAGE = "d";
 
   private String _id; //subscriptionId
-  private String serverConfigId;
   @PrimaryKey private String rid; //roomId
   private String name;
   //private User u; // REMARK: do not save u, because it is just me.
@@ -29,14 +30,6 @@ public class RoomSubscription extends RealmObject {
 
   public void set_id(String _id) {
     this._id = _id;
-  }
-
-  public String getServerConfigId() {
-    return serverConfigId;
-  }
-
-  public void setServerConfigId(String serverConfigId) {
-    this.serverConfigId = serverConfigId;
   }
 
   public String getRid() {
@@ -85,5 +78,9 @@ public class RoomSubscription extends RealmObject {
 
   public void setUnread(int unread) {
     this.unread = unread;
+  }
+
+  public static JSONObject customizeJson(JSONObject roomSubscriptionJson) throws JSONException {
+    return roomSubscriptionJson;
   }
 }

@@ -3,14 +3,16 @@ package chat.rocket.android.helper;
 import android.util.Patterns;
 import bolts.Continuation;
 import bolts.Task;
-import chat.rocket.android.model.MethodCall;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.android.model.internal.MethodCall;
+import chat.rocket.android.model.internal.Session;
+import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClientCallback;
+import hugo.weaving.DebugLog;
 import java.util.UUID;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,26 +22,27 @@ import org.json.JSONObject;
  */
 public class MethodCallHelper {
 
-  private final String serverConfigId;
+  private final RealmHelper realmHelper;
   private final RocketChatWebSocketAPI api;
   private static final long TIMEOUT_MS = 4000;
 
   public MethodCallHelper(String serverConfigId) {
-    this.serverConfigId = serverConfigId;
+    this.realmHelper = RealmStore.get(serverConfigId);
     api = null;
   }
 
-  public MethodCallHelper(String serverConfigId, RocketChatWebSocketAPI api) {
-    this.serverConfigId = serverConfigId;
+  public MethodCallHelper(RealmHelper realmHelper, RocketChatWebSocketAPI api) {
+    this.realmHelper = realmHelper;
     this.api = api;
   }
 
+  @DebugLog
   private Task<String> executeMethodCall(String methodName, String param, long timeout) {
     if (api != null) {
       return api.rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
-      return MethodCall.execute(serverConfigId, methodName, param, timeout);
+      return MethodCall.execute(realmHelper, methodName, param, timeout);
     }
   }
 
@@ -48,7 +51,11 @@ public class MethodCallHelper {
       if (_task.isFaulted()) {
         Exception exception = _task.getError();
         if (exception instanceof MethodCall.Error) {
-          String errMessage = new JSONObject(exception.getMessage()).getString("message");
+          String errMessageJson = exception.getMessage();
+          if (TextUtils.isEmpty(errMessageJson)) {
+            return Task.forError(exception);
+          }
+          String errMessage = new JSONObject(errMessageJson).getString("message");
           return Task.forError(new Exception(errMessage));
         } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
           return Task.forError(new MethodCall.Timeout());
@@ -98,11 +105,12 @@ public class MethodCallHelper {
   }
 
   private Task<Void> saveToken(Task<String> task) {
-    return RealmHelperBolts.executeTransaction(realm ->
-        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("serverConfigId", serverConfigId)
+    return realmHelper.executeTransaction(realm ->
+        realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
+            .put("sessionId", Session.DEFAULT_ID)
             .put("token", task.getResult())
-            .put("tokenVerified", true)));
+            .put("tokenVerified", true)
+        ));
   }
 
   /**
@@ -166,10 +174,10 @@ public class MethodCallHelper {
           final JSONArray result = task.getResult();
           try {
             for (int i = 0; i < result.length(); i++) {
-              result.getJSONObject(i).put("serverConfigId", serverConfigId);
+              RoomSubscription.customizeJson(result.getJSONObject(i));
             }
 
-            return RealmHelperBolts.executeTransaction(realm -> {
+            return realmHelper.executeTransaction(realm -> {
               realm.createOrUpdateAllFromJson(
                   RoomSubscription.class, result);
               return null;
@@ -198,7 +206,7 @@ public class MethodCallHelper {
             Message.customizeJson(messages.getJSONObject(i));
           }
 
-          return RealmHelperBolts.executeTransaction(realm -> {
+          return realmHelper.executeTransaction(realm -> {
             if (timestamp == 0) {
               realm.where(Message.class).equalTo("rid", roomId).findAll().deleteAllFromRealm();
             }

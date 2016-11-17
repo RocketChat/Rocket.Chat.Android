@@ -9,6 +9,9 @@ import bolts.TaskCompletionSource;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.internal.Session;
+import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.ddp.ActiveUsersSubscriber;
 import chat.rocket.android.service.ddp.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
@@ -21,8 +24,6 @@ import hugo.weaving.DebugLog;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
-import jp.co.crowdworks.realm_java_helpers.RealmHelper;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONObject;
 import timber.log.Timber;
 
@@ -40,6 +41,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
   };
   private final Context appContext;
   private final String serverConfigId;
+  private final RealmHelper defaultRealm;
+  private final RealmHelper serverConfigRealm;
   private final ArrayList<Registerable> listeners = new ArrayList<>();
   private RocketChatWebSocketAPI webSocketAPI;
   private boolean socketExists;
@@ -47,8 +50,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private RocketChatWebSocketThread(Context appContext, String serverConfigId) {
     super("RC_thread_" + serverConfigId);
-    this.serverConfigId = serverConfigId;
     this.appContext = appContext;
+    this.serverConfigId = serverConfigId;
+    defaultRealm = RealmStore.getDefault();
+    serverConfigRealm = RealmStore.getOrCreate(serverConfigId);
   }
 
   /**
@@ -67,19 +72,52 @@ public class RocketChatWebSocketThread extends HandlerThread {
         }
       }
     }.start();
-    return task.getTask();
+    return task.getTask()
+        .onSuccessTask(_task ->
+            _task.getResult().connect().onSuccessTask(__task -> _task));
+  }
+
+  @Override protected void onLooperPrepared() {
+    super.onLooperPrepared();
+    forceInvalidateTokens();
+  }
+
+  private void forceInvalidateTokens() {
+    serverConfigRealm.executeTransaction(realm -> {
+      Session session = realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID).findFirst();
+      if (session != null
+          && !TextUtils.isEmpty(session.getToken())
+          && (session.isTokenVerified() || !TextUtils.isEmpty(session.getError()))) {
+        session.setTokenVerified(false);
+        session.setError(null);
+      }
+      return null;
+    }).continueWith(new LogcatIfError());
   }
 
   /**
-   * terminate the thread.
+   * destroy the thread.
    */
-  @DebugLog public static void terminate(RocketChatWebSocketThread thread) {
+  @DebugLog public static void destroy(RocketChatWebSocketThread thread) {
     thread.quit();
+  }
+
+  @Override public boolean quit() {
+    if (isAlive()) {
+      new Handler(getLooper()).post(() -> {
+        Timber.d("thread %s: quit()", Thread.currentThread().getId());
+        unregisterListeners();
+        RocketChatWebSocketThread.super.quit();
+      });
+      return true;
+    } else {
+      return super.quit();
+    }
   }
 
   private Task<Void> ensureConnection() {
     if (webSocketAPI == null || !webSocketAPI.isConnected()) {
-      return registerListeners();
+      return connect();
     } else {
       return Task.forResult(null);
     }
@@ -88,70 +126,52 @@ public class RocketChatWebSocketThread extends HandlerThread {
   /**
    * synchronize the state of the thread with ServerConfig.
    */
-  @DebugLog public void syncStateWith(ServerConfig config) {
-    if (config == null || TextUtils.isEmpty(config.getHostname()) || !TextUtils.isEmpty(
-        config.getConnectionError())) {
-      quit();
-    } else {
-      ensureConnection().continueWith(task -> {
-        new Handler(getLooper()).post(this::keepaliveListeners);
-        return null;
-      });
-    }
-  }
-
-  @Override protected void onLooperPrepared() {
-    super.onLooperPrepared();
-
-    registerListeners();
-  }
-
-  @Override public boolean quit() {
-    if (isAlive()) {
-      scheduleUnregisterListenersAndQuit();
-      return true;
-    } else {
-      return super.quit();
-    }
-  }
-
-  private void scheduleUnregisterListenersAndQuit() {
-    new Handler(getLooper()).post(() -> {
-      Timber.d("thread %s: quit()", Thread.currentThread().getId());
-      unregisterListeners();
-      RocketChatWebSocketThread.super.quit();
+  @DebugLog public void keepalive() {
+    ensureConnection().continueWith(task -> {
+      new Handler(getLooper()).post(this::keepaliveListeners);
+      return null;
     });
   }
 
-  private void prepareWebSocket(ServerConfig config) {
+  private void prepareWebSocket(String hostname) {
     if (webSocketAPI == null || !webSocketAPI.isConnected()) {
-      webSocketAPI = RocketChatWebSocketAPI.create(config.getHostname());
+      webSocketAPI = RocketChatWebSocketAPI.create(hostname);
     }
   }
 
-  @DebugLog private Task<Void> registerListeners() {
+  @DebugLog private Task<Void> connect() {
     if (socketExists) {
       return Task.forResult(null);
     }
     socketExists = true;
 
-    final ServerConfig config = RealmHelper.executeTransactionForRead(realm ->
+    final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
         realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
 
-    prepareWebSocket(config);
+    prepareWebSocket(config.getHostname());
     return webSocketAPI.connect(config.getSession()).onSuccessTask(task -> {
       final String session = task.getResult().session;
-      RealmHelperBolts.executeTransaction(realm ->
+      defaultRealm.executeTransaction(realm ->
           realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
               .put("serverConfigId", serverConfigId)
               .put("session", session))
-      ).continueWith(new LogcatIfError());
+      ).onSuccess(_task -> serverConfigRealm.executeTransaction(realm -> {
+        Session sessionObj = realm.where(Session.class)
+            .equalTo("sessionId", Session.DEFAULT_ID)
+            .findFirst();
+
+        if (sessionObj == null) {
+          realm.createOrUpdateObjectFromJson(Session.class,
+              new JSONObject().put("sessionId", Session.DEFAULT_ID));
+        }
+        return null;
+      })).continueWith(new LogcatIfError());
       return task;
     }).onSuccess(new Continuation<DDPClientCallback.Connect, Object>() {
       // TODO type detection doesn't work due to retrolambda's bug...
       @Override public Object then(Task<DDPClientCallback.Connect> task)
           throws Exception {
-        registerListenersActually();
+        registerListeners();
 
         // handling WebSocket#onClose() callback.
         task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
@@ -175,11 +195,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   //@DebugLog
-  private void registerListenersActually() {
+  private void registerListeners() {
     if (!Thread.currentThread().getName().equals("RC_thread_" + serverConfigId)) {
       // execute in Looper.
       new Handler(getLooper()).post(() -> {
-        registerListenersActually();
+        registerListeners();
       });
       return;
     }
@@ -191,9 +211,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
-        Constructor ctor = clazz.getConstructor(Context.class, String.class,
+        Constructor ctor = clazz.getConstructor(Context.class, RealmHelper.class,
             RocketChatWebSocketAPI.class);
-        Object obj = ctor.newInstance(appContext, serverConfigId, webSocketAPI);
+        Object obj = ctor.newInstance(appContext, serverConfigRealm, webSocketAPI);
 
         if (obj instanceof Registerable) {
           Registerable registerable = (Registerable) obj;

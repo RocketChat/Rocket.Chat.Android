@@ -4,13 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.LoadMessageProcedure;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.RoomSubscription;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
+import chat.rocket.android.model.internal.LoadMessageProcedure;
+import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.realm_helper.RealmObjectObserver;
+import chat.rocket.android.realm_helper.RealmStore;
 import org.json.JSONObject;
 
 /**
@@ -18,13 +17,15 @@ import org.json.JSONObject;
  */
 public class RoomFragment extends AbstractChatRoomFragment {
 
+  private RealmHelper realmHelper;
   private String roomId;
 
   /**
    * create fragment with roomId.
    */
-  public static RoomFragment create(String roomId) {
+  public static RoomFragment create(String serverConfigId, String roomId) {
     Bundle args = new Bundle();
+    args.putString("serverConfigId", serverConfigId);
     args.putString("roomId", roomId);
     RoomFragment fragment = new RoomFragment();
     fragment.setArguments(args);
@@ -38,6 +39,7 @@ public class RoomFragment extends AbstractChatRoomFragment {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
+    realmHelper = RealmStore.get(args.getString("serverConfigId"));
     roomId = args.getString("roomId");
   }
 
@@ -48,11 +50,8 @@ public class RoomFragment extends AbstractChatRoomFragment {
   @Override protected void onSetupView() {
 
     // TODO: just a sample!!
-    RealmHelperBolts.executeTransaction(realm -> {
-      final String serverConfigId = realm.where(RoomSubscription.class)
-          .equalTo("rid", roomId).findFirst().getServerConfigId();
+    realmHelper.executeTransaction(realm -> {
       realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
-          .put("serverConfigId", serverConfigId)
           .put("roomId", roomId)
           .put("syncstate", SyncState.NOT_SYNCED)
           .put("count", 50)
@@ -62,15 +61,9 @@ public class RoomFragment extends AbstractChatRoomFragment {
   }
 
   private RealmObjectObserver<RoomSubscription> roomObserver =
-      new RealmObjectObserver<RoomSubscription>() {
-        @Override protected RealmQuery<RoomSubscription> query(Realm realm) {
-          return realm.where(RoomSubscription.class).equalTo("rid", roomId);
-        }
-
-        @Override protected void onChange(RoomSubscription roomSubscription) {
-          onRenderRoom(roomSubscription);
-        }
-      };
+      realmHelper
+          .createObjectObserver(realm -> realm.where(RoomSubscription.class).equalTo("rid", roomId))
+          .setOnUpdateListener(this::onRenderRoom);
 
   private void onRenderRoom(RoomSubscription roomSubscription) {
     activityToolbar.setTitle(roomSubscription.getName());

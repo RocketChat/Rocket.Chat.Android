@@ -1,4 +1,4 @@
-package chat.rocket.android.model;
+package chat.rocket.android.model.internal;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -8,7 +8,6 @@ import io.realm.annotations.PrimaryKey;
  */
 public class LoadMessageProcedure extends RealmObject {
   @PrimaryKey private String roomId;
-  private String serverConfigId;
   private int syncstate;
 
   private boolean reset;
@@ -23,14 +22,6 @@ public class LoadMessageProcedure extends RealmObject {
 
   public void setRoomId(String roomId) {
     this.roomId = roomId;
-  }
-
-  public String getServerConfigId() {
-    return serverConfigId;
-  }
-
-  public void setServerConfigId(String serverConfigId) {
-    this.serverConfigId = serverConfigId;
   }
 
   public int getSyncstate() {

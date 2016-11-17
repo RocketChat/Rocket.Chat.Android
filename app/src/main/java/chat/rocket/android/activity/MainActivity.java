@@ -5,20 +5,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
-import chat.rocket.android.helper.Avatar;
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
-import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.android.model.internal.Session;
+import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.realm_helper.RealmStore;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.List;
-import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
+import hugo.weaving.DebugLog;
 
 /**
  * Entry-point for Rocket.Chat.Android application.
@@ -29,6 +28,7 @@ public class MainActivity extends AbstractAuthedActivity {
   @Override protected int getLayoutContainerForFragment() {
     return R.id.activity_main_container;
   }
+
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -64,8 +64,6 @@ public class MainActivity extends AbstractAuthedActivity {
         }
       });
     }
-    ImageView myAvatar = (ImageView) findViewById(R.id.img_my_avatar);
-    new Avatar("demo.rocket.chat", "John Doe").into(myAvatar);
   }
 
   private void closeSidebarIfNeeded() {
@@ -88,28 +86,33 @@ public class MainActivity extends AbstractAuthedActivity {
         .subscribe(RxView.visibility(findViewById(R.id.user_action_outer_container)));
   }
 
-  private RealmListObserver<RoomSubscription> roomsObserver =
-      new RealmListObserver<RoomSubscription>() {
-        @Override protected RealmResults<RoomSubscription> queryItems(Realm realm) {
-          return realm.where(RoomSubscription.class).findAll();
-        }
-
-        @Override protected void onCollectionChanged(List<RoomSubscription> list) {
-          roomListManager.setRooms(list);
-        }
-      };
-
   private void showRoomFragment(String roomId) {
-    showFragment(RoomFragment.create(roomId));
+    showFragment(RoomFragment.create(serverConfigId, roomId));
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-    roomsObserver.sub();
-  }
+  @DebugLog
+  @Override protected void onServerConfigIdUpdated() {
+    super.onServerConfigIdUpdated();
 
-  @Override protected void onPause() {
-    roomsObserver.unsub();
-    super.onPause();
+    if (serverConfigId == null) {
+      return;
+    }
+
+    RealmHelper realmHelper = RealmStore.get(serverConfigId);
+    if (realmHelper == null) {
+      return;
+    }
+
+    Session session = realmHelper.executeTransactionForRead(realm ->
+        realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID).findFirst());
+
+    if (session != null
+        && !TextUtils.isEmpty(session.getToken())
+        && session.isTokenVerified()
+        && TextUtils.isEmpty(session.getError())) {
+      // session is OK.
+    } else {
+      LaunchUtil.showServerConfigActivity(this, serverConfigId);
+    }
   }
 }

@@ -1,5 +1,7 @@
 package chat.rocket.android.fragment.server_config;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
@@ -8,10 +10,9 @@ import chat.rocket.android.fragment.oauth.GitHubOAuthFragment;
 import chat.rocket.android.helper.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import chat.rocket.android.realm_helper.RealmListObserver;
+import chat.rocket.android.realm_helper.RealmStore;
 import java.util.List;
-import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
 
 /**
  * Login screen.
@@ -21,18 +22,14 @@ public class LoginFragment extends AbstractServerConfigFragment {
     return R.layout.fragment_login;
   }
 
-  private RealmListObserver<MeteorLoginServiceConfiguration> authProvidersObserver =
-      new RealmListObserver<MeteorLoginServiceConfiguration>() {
-        @Override protected RealmResults<MeteorLoginServiceConfiguration> queryItems(Realm realm) {
-          return realm.where(MeteorLoginServiceConfiguration.class)
-              .equalTo("serverConfigId", serverConfigId)
-              .findAll();
-        }
+  private RealmListObserver<MeteorLoginServiceConfiguration> authProvidersObserver;
 
-        @Override protected void onCollectionChanged(List<MeteorLoginServiceConfiguration> list) {
-          onRenderAuthProviders(list);
-        }
-      };
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    authProvidersObserver = RealmStore.get(serverConfigId)
+        .createListObserver(realm -> realm.where(MeteorLoginServiceConfiguration.class).findAll())
+        .setOnUpdateListener(this::onRenderAuthProviders);
+  }
 
   @Override protected void onSetupView() {
     final View btnEmail = rootView.findViewById(R.id.btn_login_with_email);

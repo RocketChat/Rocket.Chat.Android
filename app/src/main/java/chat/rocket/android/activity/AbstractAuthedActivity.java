@@ -1,53 +1,74 @@
 package chat.rocket.android.activity;
 
-import chat.rocket.android.helper.LogcatIfError;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import chat.rocket.android.LaunchUtil;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.realm_helper.RealmListObserver;
+import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.List;
-import java.util.UUID;
-import jp.co.crowdworks.realm_java_helpers.RealmListObserver;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
-  private RealmListObserver<ServerConfig> serverConfigEmptinessObserver =
-      new RealmListObserver<ServerConfig>() {
-        @Override protected RealmResults<ServerConfig> queryItems(Realm realm) {
-          return realm.where(ServerConfig.class).findAll();
-        }
+  private RealmListObserver<ServerConfig> unconfiguredServersObserver =
+      RealmStore.getDefault()
+          .createListObserver(realm ->
+              realm.where(ServerConfig.class).isNotNull("session").findAll())
+          .setOnUpdateListener(results -> {
+            if (results.isEmpty()) {
+              LaunchUtil.showAddServerActivity(this);
+            }
+          });
 
-        @Override protected void onCollectionChanged(List<ServerConfig> list) {
-          if (list.isEmpty()) {
-            final String newId = UUID.randomUUID().toString();
-            RealmHelperBolts.executeTransaction(
-                realm -> realm.createObject(ServerConfig.class, newId))
-                .continueWith(new LogcatIfError());
-          }
+  protected String serverConfigId;
+
+  SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
+      (sharedPreferences, s) -> {
+        if (RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID.equals(s)) {
+          updateServerConfigIdIfNeeded(sharedPreferences);
         }
       };
 
-  private RealmListObserver<ServerConfig> loginRequiredServerConfigObserver =
-      new RealmListObserver<ServerConfig>() {
-        @Override protected RealmResults<ServerConfig> queryItems(Realm realm) {
-          return ServerConfig.queryLoginRequiredConnections(realm).findAll();
-        }
+  private void updateServerConfigIdIfNeeded(SharedPreferences prefs) {
+    String newServerConfigId = prefs.getString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, null);
+    if (serverConfigId == null) {
+      if (newServerConfigId != null) {
+        serverConfigId = newServerConfigId;
+        onServerConfigIdUpdated();
+      }
+    } else {
+      if (!serverConfigId.equals(newServerConfigId)) {
+        serverConfigId = newServerConfigId;
+        onServerConfigIdUpdated();
+      }
+    }
+  }
 
-        @Override protected void onCollectionChanged(List<ServerConfig> list) {
-          ServerConfigActivity.launchFor(AbstractAuthedActivity.this, list);
-        }
-      };
+  protected void onServerConfigIdUpdated() {}
+
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    SharedPreferences prefs = RocketChatCache.get(this);
+    updateServerConfigIdIfNeeded(prefs);
+  }
 
   @Override protected void onResume() {
     super.onResume();
     RocketChatService.keepalive(this);
-    serverConfigEmptinessObserver.sub();
-    loginRequiredServerConfigObserver.sub();
+    unconfiguredServersObserver.sub();
+
+    SharedPreferences prefs = RocketChatCache.get(this);
+    updateServerConfigIdIfNeeded(prefs);
+    prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
   }
 
   @Override protected void onPause() {
-    loginRequiredServerConfigObserver.unsub();
-    serverConfigEmptinessObserver.unsub();
+    SharedPreferences prefs = RocketChatCache.get(this);
+    prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
+
+    unconfiguredServersObserver.unsub();
     super.onPause();
   }
 }

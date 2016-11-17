@@ -4,13 +4,33 @@ apply plugin: 'realm-android'
 apply plugin: 'com.jakewharton.hugo'
 apply from: '../config/quality/quality.gradle'
 
+buildscript {
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+  dependencies {
+    classpath rootProject.ext.androidPlugin
+
+    // NOTE: Do not place your application dependencies here; they belong
+    // in the individual module build.gradle files
+    classpath 'me.tatarka:gradle-retrolambda:3.3.1'
+    classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+    classpath rootProject.ext.realmPlugin
+    classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+  }
+
+  // Exclude the version that the android plugin depends on.
+  configurations.classpath.exclude group: 'com.android.tools.external.lombok'
+}
+
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.0"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
   defaultConfig {
     applicationId "chat.rocket.android"
     minSdkVersion 17
-    targetSdkVersion 25
+    targetSdkVersion rootProject.ext.compileSdkVersion
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -56,10 +76,9 @@ repositories {
 
 dependencies {
   compile project(':rocket-chat-android-widgets')
-  compile 'com.android.support:appcompat-v7:25.0.0'
-  compile 'com.android.support:design:25.0.0'
-  compile 'jp.co.crowdworks:realm-java-helpers:0.0.8'
-  compile 'jp.co.crowdworks:realm-java-helpers-bolts:0.0.8'
+  compile project(':realm-helpers')
+  compile rootProject.ext.supportAppCompat
+  compile rootProject.ext.supportDesign
 
   compile 'com.squareup.okhttp3:okhttp:3.4.1'
   compile 'com.squareup.picasso:picasso:2.5.2'
@@ -70,7 +89,7 @@ dependencies {
 
   compile 'chat.rocket:android-ddp:0.0.8'
 
-  compile 'com.jakewharton.timber:timber:4.3.1'
+  compile rootProject.ext.timber
   compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
 
   compile 'com.trello:rxlifecycle:1.0'

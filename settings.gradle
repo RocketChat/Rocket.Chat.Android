@@ -1,1 +1,1 @@
-include ':app', ':rocket-chat-android-widgets'
+include ':app', ':rocket-chat-android-widgets', ':realm-helpers'

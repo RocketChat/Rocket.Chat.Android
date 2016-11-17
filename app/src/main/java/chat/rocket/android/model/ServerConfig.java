@@ -2,69 +2,26 @@ package chat.rocket.android.model;
 
 import bolts.Task;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.realm_helper.RealmStore;
 import hugo.weaving.DebugLog;
-import io.realm.Realm;
 import io.realm.RealmObject;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
-import jp.co.crowdworks.realm_java_helpers.RealmHelper;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
 import org.json.JSONObject;
 
 /**
  * Server configuration.
  */
 public class ServerConfig extends RealmObject {
+  public static final int STATE_READY = 0;
+  public static final int STATE_CONNECTING = 1;
+  public static final int STATE_CONNECTED = 2;
+  public static final int STATE_CONNECTION_ERROR = 3;
+
   @PrimaryKey private String serverConfigId;
   private String hostname;
-  private String connectionError;
+  private int state;
   private String session;
-  private String token;
-  private boolean tokenVerified;
-
-  public static RealmQuery<ServerConfig> queryLoginRequiredConnections(Realm realm) {
-    return realm.where(ServerConfig.class).equalTo("tokenVerified", false);
-  }
-
-  /**
-   * Check if connection login required exists.
-   */
-  public static boolean hasLoginRequiredConnection() {
-    ServerConfig config =
-        RealmHelper.executeTransactionForRead(realm ->
-            queryLoginRequiredConnections(realm).findFirst());
-
-    return config != null;
-  }
-
-  /**
-   * Request token refresh.
-   */
-  public static Task<Void> forceInvalidateToken() {
-    return RealmHelperBolts.executeTransaction(realm -> {
-      RealmResults<ServerConfig> targetConfigs = realm.where(ServerConfig.class)
-          .isNotNull("token")
-          .equalTo("tokenVerified", true)
-          .findAll();
-      for (ServerConfig config : targetConfigs) {
-        config.setTokenVerified(false);
-      }
-      return null;
-    });
-  }
-
-  /**
-   * Log the server connection is lost due to soem exception.
-   */
-  @DebugLog public static void logConnectionError(String serverConfigId, Exception exception) {
-    RealmHelperBolts.executeTransaction(
-        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("serverConfigId", serverConfigId)
-            .put("connectionError", exception.getMessage())
-            .put("session", JSONObject.NULL)))
-        .continueWith(new LogcatIfError());
-  }
+  private String error;
 
   public String getServerConfigId() {
     return serverConfigId;
@@ -82,12 +39,12 @@ public class ServerConfig extends RealmObject {
     this.hostname = hostname;
   }
 
-  public String getConnectionError() {
-    return connectionError;
+  public int getState() {
+    return state;
   }
 
-  public void setConnectionError(String connectionError) {
-    this.connectionError = connectionError;
+  public void setState(int state) {
+    this.state = state;
   }
 
   public String getSession() {
@@ -98,19 +55,36 @@ public class ServerConfig extends RealmObject {
     this.session = session;
   }
 
-  public String getToken() {
-    return token;
+  public String getError() {
+    return error;
   }
 
-  public void setToken(String token) {
-    this.token = token;
+  public void setError(String error) {
+    this.error = error;
   }
 
-  public boolean isTokenVerified() {
-    return tokenVerified;
+  /**
+   * Log the server connection is lost due to soem exception.
+   */
+  @DebugLog public static void logConnectionError(String serverConfigId, Exception exception) {
+    RealmStore.getDefault().executeTransaction(
+        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+            .put("serverConfigId", serverConfigId)
+            .put("state", STATE_CONNECTION_ERROR)
+            .put("error", exception.getMessage())))
+        .continueWith(new LogcatIfError());
   }
 
-  public void setTokenVerified(boolean tokenVerified) {
-    this.tokenVerified = tokenVerified;
+  public static Task<Void> setState(final String serverConfigId, int state) {
+    return RealmStore.getDefault().executeTransaction(realm -> {
+      ServerConfig config =
+          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst();
+      if (config == null || config.getState() != state) {
+        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+            .put("serverConfigId", serverConfigId)
+            .put("state", state));
+      }
+      return null;
+    });
   }
 }

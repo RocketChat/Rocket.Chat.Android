@@ -2,39 +2,40 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import chat.rocket.android.helper.MethodCallHelper;
-import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.internal.Session;
+import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;
 
-public class TokenLoginObserver extends AbstractModelObserver<ServerConfig> {
+public class TokenLoginObserver extends AbstractModelObserver<Session> {
 
   private final MethodCallHelper methodCall;
 
-  public TokenLoginObserver(Context context, String serverConfigId, RocketChatWebSocketAPI api) {
-    super(context, serverConfigId, api);
-    methodCall = new MethodCallHelper(serverConfigId, api);
+  public TokenLoginObserver(Context context, RealmHelper realmHelper, RocketChatWebSocketAPI api) {
+    super(context, realmHelper, api);
+    methodCall = new MethodCallHelper(realmHelper, api);
   }
 
-  @Override protected RealmResults<ServerConfig> queryItems(Realm realm) {
-    return realm.where(ServerConfig.class)
-        .isNotNull("session")
+  @Override public RealmResults<Session> queryItems(Realm realm) {
+    return realm.where(Session.class)
         .isNotNull("token")
         .equalTo("tokenVerified", false)
+        .isNull("error")
         .findAll();
   }
 
-  @Override protected void onCollectionChanged(List<ServerConfig> list) {
-    if (list.isEmpty()) {
+  @Override public void onUpdateResults(List<Session> results) {
+    if (results.isEmpty()) {
       return;
     }
 
-    ServerConfig config = list.get(0);
-    methodCall.loginWithToken(config.getToken())
+    Session session = results.get(0);
+    methodCall.loginWithToken(session.getToken())
         .continueWith(task -> {
           if (task.isFaulted()) {
-            ServerConfig.logConnectionError(serverConfigId, task.getError());
+            Session.logError(realmHelper, task.getError());
           }
           return null;
         });

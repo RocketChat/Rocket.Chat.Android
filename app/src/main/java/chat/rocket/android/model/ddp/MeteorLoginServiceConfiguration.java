@@ -11,7 +11,6 @@ import io.realm.annotations.PrimaryKey;
 public class MeteorLoginServiceConfiguration
     extends RealmObject {
   @PrimaryKey private String _id;
-  private String serverConfigId;
   private String service;
   private String consumerKey; //for Twitter
   private String appId; //for Facebook
@@ -23,14 +22,6 @@ public class MeteorLoginServiceConfiguration
 
   public void set_id(String _id) {
     this._id = _id;
-  }
-
-  public String getServerConfigId() {
-    return serverConfigId;
-  }
-
-  public void setServerConfigId(String serverConfigId) {
-    this.serverConfigId = serverConfigId;
   }
 
   public String getService() {

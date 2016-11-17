@@ -1,37 +1,23 @@
 package chat.rocket.android.fragment.server_config;
 
-import android.os.Handler;
-import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.widget.TextView;
-import android.widget.Toast;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import jp.co.crowdworks.realm_java_helpers.RealmObjectObserver;
-import jp.co.crowdworks.realm_java_helpers_bolts.RealmHelperBolts;
+import chat.rocket.android.realm_helper.RealmObjectObserver;
+import chat.rocket.android.realm_helper.RealmStore;
 import org.json.JSONObject;
 
 /**
  * Input server host.
  */
 public class InputHostnameFragment extends AbstractServerConfigFragment {
-  private Handler errorShowingHandler = new Handler() {
-    @Override public void handleMessage(Message msg) {
-      Toast.makeText(rootView.getContext(), (String) msg.obj, Toast.LENGTH_SHORT).show();
-    }
-  };
-  RealmObjectObserver<ServerConfig> serverConfigObserver = new RealmObjectObserver<ServerConfig>() {
-    @Override protected RealmQuery<ServerConfig> query(Realm realm) {
-      return realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId);
-    }
-
-    @Override protected void onChange(ServerConfig config) {
-      onRenderServerConfig(config);
-    }
-  };
+  RealmObjectObserver<ServerConfig> serverConfigObserver = RealmStore.getDefault()
+      .createObjectObserver(realm ->
+          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId))
+      .setOnUpdateListener(this::onRenderServerConfig);
 
   public InputHostnameFragment() {
   }
@@ -52,12 +38,13 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
     final String hostname =
         TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
 
-    RealmHelperBolts.executeTransaction(
+    RealmStore.getDefault().executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
             new JSONObject().put("serverConfigId", serverConfigId)
                 .put("hostname", hostname)
-                .put("connectionError", JSONObject.NULL)
-                .put("session", JSONObject.NULL))).continueWith(new LogcatIfError());
+                .put("error", JSONObject.NULL)
+                .put("session", JSONObject.NULL)
+                .put("state", ServerConfig.STATE_READY))).continueWith(new LogcatIfError());
   }
 
   @Override public void onResume() {
@@ -71,28 +58,21 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   }
 
   private void showError(String errString) {
-    errorShowingHandler.removeMessages(0);
-    Message msg = Message.obtain(errorShowingHandler, 0, errString);
-    errorShowingHandler.sendMessageDelayed(msg, 160);
+    Snackbar.make(rootView, errString, Snackbar.LENGTH_LONG).show();
   }
 
   private void onRenderServerConfig(ServerConfig config) {
+    if (config == null) {
+      return;
+    }
+
     final TextView editor = (TextView) rootView.findViewById(R.id.editor_hostname);
 
     if (!TextUtils.isEmpty(config.getHostname())) {
       editor.setText(config.getHostname());
     }
-    if (!TextUtils.isEmpty(config.getConnectionError())) {
-      clearConnectionErrorAndHostname();
-      showError(config.getConnectionError());
+    if (!TextUtils.isEmpty(config.getError())) {
+      showError(config.getError());
     }
-  }
-
-  private void clearConnectionErrorAndHostname() {
-    RealmHelperBolts.executeTransaction(
-        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
-            new JSONObject().put("serverConfigId", serverConfigId)
-                .put("hostname", JSONObject.NULL)
-                .put("connectionError", JSONObject.NULL))).continueWith(new LogcatIfError());
   }
 }
