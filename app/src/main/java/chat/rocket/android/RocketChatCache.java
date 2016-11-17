@@ -8,6 +8,10 @@ import android.content.SharedPreferences;
  */
 public class RocketChatCache {
   public static final String KEY_SELECTED_SERVER_CONFIG_ID = "selectedServerConfigId";
+
+  /**
+   * get SharedPreference instance for RocketChat application cache.
+   */
   public static SharedPreferences get(Context context) {
     return context.getSharedPreferences("cache", Context.MODE_PRIVATE);
   }

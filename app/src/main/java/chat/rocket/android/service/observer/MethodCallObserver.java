@@ -19,6 +19,7 @@ import org.json.JSONObject;
 public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
 
   private String prevHash;
+
   /**
    * constructor.
    */
@@ -94,13 +95,12 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     ).onSuccessTask(task ->
         webSocketAPI.rpc(methodCallId, methodName, params, timeout)
             .onSuccessTask(_task -> realmHelper.executeTransaction(realm -> {
-                  String json = _task.getResult().result;
-                  return realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
-                      .put("methodCallId", methodCallId)
-                      .put("syncstate", SyncState.SYNCED)
-                      .put("resultJson", json));
-                })
-            )
+              String json = _task.getResult().result;
+              return realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
+                  .put("methodCallId", methodCallId)
+                  .put("syncstate", SyncState.SYNCED)
+                  .put("resultJson", json));
+            }))
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
         return realmHelper.executeTransaction(realm -> {

@@ -84,7 +84,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private void forceInvalidateTokens() {
     serverConfigRealm.executeTransaction(realm -> {
-      Session session = realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID).findFirst();
+      Session session = realm.where(Session.class)
+          .equalTo("sessionId", Session.DEFAULT_ID).findFirst();
       if (session != null
           && !TextUtils.isEmpty(session.getToken())
           && (session.isTokenVerified() || !TextUtils.isEmpty(session.getError()))) {

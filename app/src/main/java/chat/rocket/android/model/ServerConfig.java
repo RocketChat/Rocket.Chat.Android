@@ -75,7 +75,10 @@ public class ServerConfig extends RealmObject {
         .continueWith(new LogcatIfError());
   }
 
-  public static Task<Void> setState(final String serverConfigId, int state) {
+  /**
+   * Update the state of the ServerConfig with serverConfigId.
+   */
+  public static Task<Void> updateState(final String serverConfigId, int state) {
     return RealmStore.getDefault().executeTransaction(realm -> {
       ServerConfig config =
           realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst();

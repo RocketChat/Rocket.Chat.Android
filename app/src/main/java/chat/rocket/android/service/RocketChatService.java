@@ -113,16 +113,16 @@ public class RocketChatService extends Service {
   private Task<RocketChatWebSocketThread> findOrCreateWebSocketThread(final ServerConfig config) {
     final String serverConfigId = config.getServerConfigId();
     if (webSocketThreads.containsKey(serverConfigId)) {
-      return ServerConfig.setState(serverConfigId, ServerConfig.STATE_CONNECTED)
+      return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED)
           .onSuccessTask(_task -> Task.forResult(webSocketThreads.get(serverConfigId)));
     } else {
-      return ServerConfig.setState(serverConfigId, ServerConfig.STATE_CONNECTING)
+      return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTING)
           .onSuccessTask(_task -> {
             webSocketThreads.put(serverConfigId, null);
             return RocketChatWebSocketThread.getStarted(getApplicationContext(), config);
           })
           .onSuccessTask(task ->
-              ServerConfig.setState(serverConfigId, ServerConfig.STATE_CONNECTED)
+              ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED)
                   .onSuccessTask(_task -> task))
           .onSuccessTask(task -> {
             webSocketThreads.put(serverConfigId, task.getResult());

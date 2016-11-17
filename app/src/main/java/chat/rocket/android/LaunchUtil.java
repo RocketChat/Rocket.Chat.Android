@@ -10,6 +10,9 @@ import chat.rocket.android.activity.ServerConfigActivity;
  */
 public class LaunchUtil {
 
+  /**
+   * launch AddServerActivity with proper flags.
+   */
   public static void showAddServerActivity(Context context) {
     Intent intent = new Intent(context, AddServerActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);

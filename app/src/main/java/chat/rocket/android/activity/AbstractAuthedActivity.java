@@ -24,8 +24,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   protected String serverConfigId;
 
   SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
-      (sharedPreferences, s) -> {
-        if (RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID.equals(s)) {
+      (sharedPreferences, key) -> {
+        if (RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID.equals(key)) {
           updateServerConfigIdIfNeeded(sharedPreferences);
         }
       };
