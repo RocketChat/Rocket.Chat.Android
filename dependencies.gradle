@@ -1,6 +1,6 @@
 ext {
   androidPlugin = 'com.android.tools.build:gradle:2.2.2'
-  realmPlugin = 'io.realm:realm-gradle-plugin:2.2.0'
+  realmPlugin = 'io.realm:realm-gradle-plugin:2.2.1'
   compileSdkVersion = 25
   buildToolsVersion = '25.0.0'
 
