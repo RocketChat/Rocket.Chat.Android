@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.Registerable;
-import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android.api.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPSubscription;
 import io.realm.Realm;
 import io.realm.RealmObject;

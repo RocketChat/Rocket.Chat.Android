@@ -1,10 +1,10 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import chat.rocket.android.helper.MethodCallHelper;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android.api.RocketChatWebSocketAPI;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;

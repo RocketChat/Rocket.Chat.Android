@@ -1,4 +1,4 @@
-package chat.rocket.android.ws;
+package chat.rocket.android.api;
 
 import android.support.annotation.Nullable;
 import bolts.Task;

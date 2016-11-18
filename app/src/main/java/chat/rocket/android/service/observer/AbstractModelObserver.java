@@ -4,7 +4,7 @@ import android.content.Context;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.service.Registerable;
-import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android.api.RocketChatWebSocketAPI;
 import io.realm.RealmObject;
 
 abstract class AbstractModelObserver<T extends RealmObject>

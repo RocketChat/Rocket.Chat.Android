@@ -8,7 +8,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.helper.MethodCallHelper;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmStore;

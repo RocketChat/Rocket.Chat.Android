@@ -18,7 +18,7 @@ import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
-import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android.api.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
 import java.lang.reflect.Constructor;

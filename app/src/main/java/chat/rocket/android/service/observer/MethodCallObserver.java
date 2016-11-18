@@ -6,7 +6,7 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android.api.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClientCallback;
 import io.realm.Realm;
 import io.realm.RealmResults;

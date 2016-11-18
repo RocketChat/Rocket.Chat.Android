@@ -3,7 +3,7 @@ package chat.rocket.android.service.ddp;
 import android.content.Context;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android.api.RocketChatWebSocketAPI;
 import io.realm.RealmObject;
 
 /**

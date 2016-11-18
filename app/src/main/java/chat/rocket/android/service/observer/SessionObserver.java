@@ -2,11 +2,11 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.helper.MethodCallHelper;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.ws.RocketChatWebSocketAPI;
+import chat.rocket.android.api.RocketChatWebSocketAPI;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
 import io.realm.RealmResults;

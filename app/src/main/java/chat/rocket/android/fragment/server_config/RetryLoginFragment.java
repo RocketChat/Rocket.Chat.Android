@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 import chat.rocket.android.R;
-import chat.rocket.android.helper.MethodCallHelper;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmObjectObserver;

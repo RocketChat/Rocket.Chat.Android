@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import chat.rocket.android.R;
-import chat.rocket.android.helper.MethodCallHelper;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
 
 /**

@@ -1,15 +1,16 @@
-package chat.rocket.android.helper;
+package chat.rocket.android.api;
 
 import android.util.Patterns;
 import bolts.Continuation;
 import bolts.Task;
+import chat.rocket.android.helper.CheckSum;
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
-import chat.rocket.android.ws.RocketChatWebSocketAPI;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
 import java.util.UUID;
