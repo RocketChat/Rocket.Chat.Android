@@ -69,7 +69,7 @@ android {
 repositories {
   mavenCentral()
   maven { url 'https://github.com/YusukeIwaki/realm-java-helpers/raw/master/repo' }
-  maven { url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo' }
+  maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
   maven { url 'https://github.com/RocketChat/Android-DDP/raw/master/repository' }
   maven { url 'http://dl.bintray.com/amulyakhare/maven' }
 }
@@ -85,7 +85,7 @@ dependencies {
 
   compile 'com.facebook.stetho:stetho:1.4.1'
   compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
-  compile 'com.uphyca:stetho_realm:2.0.0'
+  compile 'com.uphyca:stetho_realm:2.0.1'
 
   compile 'chat.rocket:android-ddp:0.0.8'
 
