@@ -8,7 +8,7 @@ public class RealmStore {
 
   private static RealmConfiguration createConfigFor(String name) {
     return new RealmConfiguration.Builder()
-        .name(name)
+        .name(name + ".realm")
         .deleteRealmIfMigrationNeeded().build();
   }
 
