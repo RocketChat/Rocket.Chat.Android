@@ -13,13 +13,13 @@ import org.json.JSONException;
 import rx.Observable;
 
 /**
- * API for several POST actions.
+ * DDP client wrapper.
  */
-public class RocketChatWebSocketAPI {
+public class DDPClientWraper {
   private final DDPClient ddpClient;
   private final String hostname;
 
-  private RocketChatWebSocketAPI(String hostname) {
+  private DDPClientWraper(String hostname) {
     ddpClient = new DDPClient(OkHttpHelper.getClientForWebSocket());
     this.hostname = hostname;
   }
@@ -27,8 +27,8 @@ public class RocketChatWebSocketAPI {
   /**
    * create new API client instance.
    */
-  public static RocketChatWebSocketAPI create(String hostname) {
-    return new RocketChatWebSocketAPI(hostname);
+  public static DDPClientWraper create(String hostname) {
+    return new DDPClientWraper(hostname);
   }
 
   /**

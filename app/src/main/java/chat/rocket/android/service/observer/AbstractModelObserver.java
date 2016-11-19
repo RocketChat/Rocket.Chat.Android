@@ -4,7 +4,7 @@ import android.content.Context;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.service.Registerable;
-import chat.rocket.android.api.RocketChatWebSocketAPI;
+import chat.rocket.android.api.DDPClientWraper;
 import io.realm.RealmObject;
 
 abstract class AbstractModelObserver<T extends RealmObject>
@@ -12,14 +12,14 @@ abstract class AbstractModelObserver<T extends RealmObject>
 
   protected final Context context;
   protected final RealmHelper realmHelper;
-  protected final RocketChatWebSocketAPI webSocketAPI;
+  protected final DDPClientWraper ddpClient;
   private final RealmListObserver observer;
 
   protected AbstractModelObserver(Context context, RealmHelper realmHelper,
-      RocketChatWebSocketAPI api) {
+      DDPClientWraper ddpClient) {
     this.context = context;
     this.realmHelper = realmHelper;
-    webSocketAPI = api;
+    this.ddpClient = ddpClient;
     observer = realmHelper.createListObserver(this).setOnUpdateListener(this);
   }
 

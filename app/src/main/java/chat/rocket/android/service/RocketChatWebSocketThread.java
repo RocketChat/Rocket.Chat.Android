@@ -18,7 +18,7 @@ import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
-import chat.rocket.android.api.RocketChatWebSocketAPI;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
 import java.lang.reflect.Constructor;
@@ -44,7 +44,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final RealmHelper defaultRealm;
   private final RealmHelper serverConfigRealm;
   private final ArrayList<Registerable> listeners = new ArrayList<>();
-  private RocketChatWebSocketAPI webSocketAPI;
+  private DDPClientWraper ddpClient;
   private boolean socketExists;
   private boolean listenersRegistered;
 
@@ -117,7 +117,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Task<Void> ensureConnection() {
-    if (webSocketAPI == null || !webSocketAPI.isConnected()) {
+    if (ddpClient == null || !ddpClient.isConnected()) {
       return connect();
     } else {
       return Task.forResult(null);
@@ -135,8 +135,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private void prepareWebSocket(String hostname) {
-    if (webSocketAPI == null || !webSocketAPI.isConnected()) {
-      webSocketAPI = RocketChatWebSocketAPI.create(hostname);
+    if (ddpClient == null || !ddpClient.isConnected()) {
+      ddpClient = DDPClientWraper.create(hostname);
     }
   }
 
@@ -150,7 +150,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
 
     prepareWebSocket(config.getHostname());
-    return webSocketAPI.connect(config.getSession()).onSuccessTask(task -> {
+    return ddpClient.connect(config.getSession()).onSuccessTask(task -> {
       final String session = task.getResult().session;
       defaultRealm.executeTransaction(realm ->
           realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
@@ -213,8 +213,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
         Constructor ctor = clazz.getConstructor(Context.class, RealmHelper.class,
-            RocketChatWebSocketAPI.class);
-        Object obj = ctor.newInstance(appContext, serverConfigRealm, webSocketAPI);
+            DDPClientWraper.class);
+        Object obj = ctor.newInstance(appContext, serverConfigRealm, ddpClient);
 
         if (obj instanceof Registerable) {
           Registerable registerable = (Registerable) obj;
@@ -250,9 +250,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
       registerable.unregister();
       iterator.remove();
     }
-    if (webSocketAPI != null) {
-      webSocketAPI.close();
-      webSocketAPI = null;
+    if (ddpClient != null) {
+      ddpClient.close();
+      ddpClient = null;
     }
     listenersRegistered = false;
     socketExists = false;

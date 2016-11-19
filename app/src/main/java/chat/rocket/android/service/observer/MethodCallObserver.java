@@ -6,7 +6,7 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.RocketChatWebSocketAPI;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android_ddp.DDPClientCallback;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -23,8 +23,8 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
   /**
    * constructor.
    */
-  public MethodCallObserver(Context context, RealmHelper realmHelper, RocketChatWebSocketAPI api) {
-    super(context, realmHelper, api);
+  public MethodCallObserver(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, realmHelper, ddpClient);
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
       RealmResults<MethodCall> pendingMethodCalls = realm.where(MethodCall.class)
@@ -93,7 +93,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
             .put("methodCallId", methodCallId)
             .put("syncstate", SyncState.SYNCING))
     ).onSuccessTask(task ->
-        webSocketAPI.rpc(methodCallId, methodName, params, timeout)
+        ddpClient.rpc(methodCallId, methodName, params, timeout)
             .onSuccessTask(_task -> realmHelper.executeTransaction(realm -> {
               String json = _task.getResult().result;
               return realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()

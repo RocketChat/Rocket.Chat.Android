@@ -24,23 +24,23 @@ import org.json.JSONObject;
 public class MethodCallHelper {
 
   private final RealmHelper realmHelper;
-  private final RocketChatWebSocketAPI api;
+  private final DDPClientWraper ddpClient;
   private static final long TIMEOUT_MS = 4000;
 
   public MethodCallHelper(String serverConfigId) {
     this.realmHelper = RealmStore.get(serverConfigId);
-    api = null;
+    ddpClient = null;
   }
 
-  public MethodCallHelper(RealmHelper realmHelper, RocketChatWebSocketAPI api) {
+  public MethodCallHelper(RealmHelper realmHelper, DDPClientWraper ddpClient) {
     this.realmHelper = realmHelper;
-    this.api = api;
+    this.ddpClient = ddpClient;
   }
 
   @DebugLog
   private Task<String> executeMethodCall(String methodName, String param, long timeout) {
-    if (api != null) {
-      return api.rpc(UUID.randomUUID().toString(), methodName, param, timeout)
+    if (ddpClient != null) {
+      return ddpClient.rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
       return MethodCall.execute(realmHelper, methodName, param, timeout);

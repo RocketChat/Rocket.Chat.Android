@@ -7,7 +7,7 @@ import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.RocketChatWebSocketAPI;
+import chat.rocket.android.api.DDPClientWraper;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -23,9 +23,9 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
   private final MethodCallHelper methodCall;
 
   public LoadMessageProcedureObserver(Context context, RealmHelper realmHelper,
-      RocketChatWebSocketAPI api) {
-    super(context, realmHelper, api);
-    methodCall = new MethodCallHelper(realmHelper, api);
+      DDPClientWraper ddpClient) {
+    super(context, realmHelper, ddpClient);
+    methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }
 
   @Override public RealmResults<LoadMessageProcedure> queryItems(Realm realm) {

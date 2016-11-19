@@ -3,7 +3,7 @@ package chat.rocket.android.service.ddp;
 import android.content.Context;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.RocketChatWebSocketAPI;
+import chat.rocket.android.api.DDPClientWraper;
 import io.realm.RealmObject;
 
 /**
@@ -11,8 +11,8 @@ import io.realm.RealmObject;
  */
 public class ActiveUsersSubscriber extends AbstractDDPDocEventSubscriber {
   public ActiveUsersSubscriber(Context context, RealmHelper realmHelper,
-      RocketChatWebSocketAPI api) {
-    super(context, realmHelper, api);
+      DDPClientWraper ddpClient) {
+    super(context, realmHelper, ddpClient);
   }
 
   @Override protected String getSubscriptionName() {

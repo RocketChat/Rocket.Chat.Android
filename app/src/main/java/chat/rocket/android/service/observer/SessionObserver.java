@@ -6,7 +6,7 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.RocketChatWebSocketAPI;
+import chat.rocket.android.api.DDPClientWraper;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -22,9 +22,9 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   /**
    * constructor.
    */
-  public SessionObserver(Context context, RealmHelper realmHelper, RocketChatWebSocketAPI api) {
-    super(context, realmHelper, api);
-    methodCall = new MethodCallHelper(realmHelper, api);
+  public SessionObserver(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, realmHelper, ddpClient);
+    methodCall = new MethodCallHelper(realmHelper, ddpClient);
     count = 0;
   }
 

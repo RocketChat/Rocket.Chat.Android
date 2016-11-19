@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.Registerable;
-import chat.rocket.android.api.RocketChatWebSocketAPI;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android_ddp.DDPSubscription;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -18,15 +18,15 @@ import timber.log.Timber;
 abstract class AbstractDDPDocEventSubscriber implements Registerable {
   protected final Context context;
   protected final RealmHelper realmHelper;
-  protected final RocketChatWebSocketAPI webSocketAPI;
+  protected final DDPClientWraper ddpClient;
   private String subscriptionId;
   private Subscription rxSubscription;
 
   protected AbstractDDPDocEventSubscriber(Context context, RealmHelper realmHelper,
-      RocketChatWebSocketAPI api) {
+      DDPClientWraper ddpClient) {
     this.context = context;
     this.realmHelper = realmHelper;
-    this.webSocketAPI = api;
+    this.ddpClient = ddpClient;
   }
 
   protected abstract String getSubscriptionName();
@@ -40,7 +40,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   }
 
   @Override public void register() {
-    webSocketAPI.subscribe(getSubscriptionName(), null).onSuccess(task -> {
+    ddpClient.subscribe(getSubscriptionName(), null).onSuccess(task -> {
       subscriptionId = task.getResult().id;
       return null;
     }).continueWith(task -> {
@@ -60,7 +60,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
   }
 
   private void registerSubscriptionCallback() {
-    rxSubscription = webSocketAPI.getSubscriptionCallback()
+    rxSubscription = ddpClient.getSubscriptionCallback()
         .filter(event -> event instanceof DDPSubscription.DocEvent)
         .cast(DDPSubscription.DocEvent.class)
         .filter(event -> getSubscriptionCallbackName().equals(event.collection))
@@ -146,7 +146,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
       rxSubscription.unsubscribe();
     }
     if (!TextUtils.isEmpty(subscriptionId)) {
-      webSocketAPI.unsubscribe(subscriptionId).continueWith(new LogcatIfError());
+      ddpClient.unsubscribe(subscriptionId).continueWith(new LogcatIfError());
     }
   }
 }

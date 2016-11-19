@@ -4,7 +4,7 @@ import android.content.Context;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.RocketChatWebSocketAPI;
+import chat.rocket.android.api.DDPClientWraper;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;
@@ -13,9 +13,9 @@ public class TokenLoginObserver extends AbstractModelObserver<Session> {
 
   private final MethodCallHelper methodCall;
 
-  public TokenLoginObserver(Context context, RealmHelper realmHelper, RocketChatWebSocketAPI api) {
-    super(context, realmHelper, api);
-    methodCall = new MethodCallHelper(realmHelper, api);
+  public TokenLoginObserver(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, realmHelper, ddpClient);
+    methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }
 
   @Override public RealmResults<Session> queryItems(Realm realm) {
