@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 /**
  * Utility class for creating/handling MethodCall or RPC.
+ *
+ * TODO: separate method into several manager classes (SubscriptionManager, MessageManager, ...).
  */
 public class MethodCallHelper {
 
