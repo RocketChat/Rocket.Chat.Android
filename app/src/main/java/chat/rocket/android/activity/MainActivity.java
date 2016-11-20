@@ -59,10 +59,17 @@ public class MainActivity extends AbstractAuthedActivity {
   @Override protected void onServerConfigIdUpdated() {
     super.onServerConfigIdUpdated();
 
+    updateSidebarMainFragment();
+    showServerConfigActivityIfNeeded();
+  }
+
+  private void updateSidebarMainFragment() {
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(serverConfigId))
         .commit();
+  }
 
+  private void showServerConfigActivityIfNeeded() {
     if (serverConfigId == null) {
       return;
     }

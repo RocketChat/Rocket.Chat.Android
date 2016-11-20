@@ -10,6 +10,11 @@ import io.realm.annotations.PrimaryKey;
 @SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class User extends RealmObject {
+  public static final String STATUS_ONLINE = "online";
+  public static final String STATUS_BUSY = "busy";
+  public static final String STATUS_AWAY = "away";
+  public static final String STATUS_OFFLINE = "offline";
+
   @PrimaryKey private String _id;
   private String username;
   private String status;

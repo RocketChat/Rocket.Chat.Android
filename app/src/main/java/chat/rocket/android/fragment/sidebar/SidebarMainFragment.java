@@ -3,16 +3,22 @@ package chat.rocket.android.fragment.sidebar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
+import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmListObserver;
+import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.renderer.UserRenderer;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
@@ -20,11 +26,16 @@ public class SidebarMainFragment extends AbstractFragment {
 
   private String serverConfigId;
   private RoomListManager roomListManager;
+  private String hostname;
   private RealmListObserver<RoomSubscription> roomsObserver;
+  private RealmObjectObserver<User> currentUserObserver;
 
   public SidebarMainFragment() {
   }
 
+  /**
+   * create SidebarMainFragment with serverConfigId.
+   */
   public static SidebarMainFragment create(String serverConfigId) {
     Bundle args = new Bundle();
     args.putString("serverConfigId", serverConfigId);
@@ -40,11 +51,21 @@ public class SidebarMainFragment extends AbstractFragment {
     Bundle args = getArguments();
     serverConfigId = args == null ? null : args.getString("serverConfigId");
     if (!TextUtils.isEmpty(serverConfigId)) {
+      ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
+          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
+      if (config != null) {
+        hostname = config.getHostname();
+      }
+
       RealmHelper realmHelper = RealmStore.get(serverConfigId);
       if (realmHelper != null) {
         roomsObserver = realmHelper
             .createListObserver(realm -> realm.where(RoomSubscription.class).findAll())
             .setOnUpdateListener(list -> roomListManager.setRooms(list));
+
+        currentUserObserver = realmHelper
+            .createObjectObserver(realm -> realm.where(User.class).isNotEmpty("emails"))
+            .setOnUpdateListener(this::updateCurrentUser);
       }
     }
   }
@@ -86,15 +107,26 @@ public class SidebarMainFragment extends AbstractFragment {
         .subscribe(RxView.visibility(rootView.findViewById(R.id.user_action_outer_container)));
   }
 
+  private void updateCurrentUser(User user) {
+    if (user != null && !TextUtils.isEmpty(hostname)) {
+      new UserRenderer(getContext(), user)
+          .avatarInto((ImageView) rootView.findViewById(R.id.current_user_avatar), hostname)
+          .usernameInto((TextView) rootView.findViewById(R.id.current_user_name))
+          .statusColorInto((ImageView) rootView.findViewById(R.id.current_user_status));
+    }
+  }
+
   @Override public void onResume() {
     super.onResume();
     if (roomsObserver != null) {
       roomsObserver.sub();
+      currentUserObserver.sub();
     }
   }
 
   @Override public void onPause() {
     if (roomsObserver != null) {
+      currentUserObserver.unsub();
       roomsObserver.unsub();
     }
     super.onPause();
