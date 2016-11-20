@@ -45,7 +45,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final RealmHelper serverConfigRealm;
   private final ArrayList<Registerable> listeners = new ArrayList<>();
   private DDPClientWraper ddpClient;
-  private boolean socketExists;
   private boolean listenersRegistered;
 
   private RocketChatWebSocketThread(Context appContext, String serverConfigId) {
@@ -116,22 +115,24 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
   }
 
-  private Task<Void> ensureConnection() {
-    if (ddpClient == null || !ddpClient.isConnected()) {
-      return connect();
-    } else {
-      return Task.forResult(null);
-    }
-  }
-
   /**
    * synchronize the state of the thread with ServerConfig.
    */
   @DebugLog public void keepalive() {
-    ensureConnection().continueWith(task -> {
+    if (ddpClient == null || !ddpClient.isConnected()) {
+      defaultRealm.executeTransaction(realm -> {
+        ServerConfig config = realm.where(ServerConfig.class)
+            .equalTo("serverConfigId", serverConfigId)
+            .findFirst();
+        if (config != null && config.getState() == ServerConfig.STATE_CONNECTED) {
+          config.setState(ServerConfig.STATE_READY);
+          quit();
+        }
+        return null;
+      });
+    } else {
       new Handler(getLooper()).post(this::keepaliveListeners);
-      return null;
-    });
+    }
   }
 
   private void prepareWebSocket(String hostname) {
@@ -141,11 +142,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   @DebugLog private Task<Void> connect() {
-    if (socketExists) {
-      return Task.forResult(null);
-    }
-    socketExists = true;
-
     final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
         realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
 
@@ -229,7 +225,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   //@DebugLog
   private void keepaliveListeners() {
-    if (!socketExists || !listenersRegistered) {
+    if (!listenersRegistered) {
       return;
     }
 
@@ -240,7 +236,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   @DebugLog
   private void unregisterListeners() {
-    if (!socketExists || !listenersRegistered) {
+    if (!listenersRegistered) {
       return;
     }
 
@@ -255,6 +251,5 @@ public class RocketChatWebSocketThread extends HandlerThread {
       ddpClient = null;
     }
     listenersRegistered = false;
-    socketExists = false;
   }
 }

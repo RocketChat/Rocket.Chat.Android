@@ -13,9 +13,7 @@ import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import io.realm.RealmResults;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Background service for Rocket.Chat.Application class.
@@ -42,7 +40,7 @@ public class RocketChatService extends Service {
                 .isNotNull("hostname")
                 .equalTo("state", ServerConfig.STATE_READY)
                 .findAll())
-            .setOnUpdateListener(this::syncWebSocketThreadsWith);
+            .setOnUpdateListener(this::connectToServerWithServerConfig);
 
     refreshServerConfigState();
   }
@@ -51,17 +49,37 @@ public class RocketChatService extends Service {
     realmHelper.executeTransaction(realm -> {
       RealmResults<ServerConfig> configs = realm.where(ServerConfig.class).findAll();
       for (ServerConfig config: configs) {
-        config.setState(ServerConfig.STATE_READY);
+        if (config.getState() != ServerConfig.STATE_READY) {
+          config.setState(ServerConfig.STATE_READY);
+        }
       }
       return null;
     }).continueWith(new LogcatIfError());;
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    List<ServerConfig> configs = realmHelper.executeTransactionForReadResults(realm ->
+        realm.where(ServerConfig.class)
+            .equalTo("state", ServerConfig.STATE_CONNECTED)
+            .findAll());
+    for (ServerConfig config: configs) {
+      String serverConfigId = config.getServerConfigId();
+      if (webSocketThreads.containsKey(serverConfigId)) {
+        RocketChatWebSocketThread thread = webSocketThreads.get(serverConfigId);
+        if (thread != null) {
+          thread.keepalive();
+        }
+      }
+    }
+
     realmHelper.executeTransaction(realm -> {
       RealmResults<ServerConfig> targetConfigs = realm
           .where(ServerConfig.class)
+          .beginGroup()
           .equalTo("state", ServerConfig.STATE_CONNECTION_ERROR)
+          .or()
+          .isNotNull("error")
+          .endGroup()
           .isNotNull("session")
           .findAll();
       for (ServerConfig config : targetConfigs) {
@@ -76,58 +94,42 @@ public class RocketChatService extends Service {
     return START_STICKY;
   }
 
-  private void syncWebSocketThreadsWith(List<ServerConfig> configList) {
-    final Iterator<Map.Entry<String, RocketChatWebSocketThread>> iterator =
-        webSocketThreads.entrySet().iterator();
-
-    while (iterator.hasNext()) {
-      Map.Entry<String, RocketChatWebSocketThread> entry = iterator.next();
-      String serverConfigId = entry.getKey();
-      boolean found = false;
-      for (ServerConfig config : configList) {
-        if (serverConfigId.equals(config.getServerConfigId())) {
-          found = true;
-          break;
-        }
-      }
-      if (!found) {
-        RocketChatWebSocketThread thread = entry.getValue();
-        if (thread != null) {
-          RocketChatWebSocketThread.destroy(thread);
-        }
-        iterator.remove();
-      }
+  private void connectToServerWithServerConfig(List<ServerConfig> configList) {
+    if (configList.isEmpty()) {
+      return;
     }
 
-    for (ServerConfig config : configList) {
-      findOrCreateWebSocketThread(config).onSuccess(task -> {
-        RocketChatWebSocketThread thread = task.getResult();
-        if (thread != null) {
-          thread.keepalive();
-        }
-        return null;
-      });
-    }
+    ServerConfig config = configList.get(0);
+    createWebSocketThread(config).onSuccess(task -> {
+      RocketChatWebSocketThread thread = task.getResult();
+      if (thread != null) {
+        thread.keepalive();
+      }
+      return null;
+    });
+  }
+
+  private Task<RocketChatWebSocketThread> createWebSocketThread(final ServerConfig config) {
+    final String serverConfigId = config.getServerConfigId();
+    webSocketThreads.put(serverConfigId, null);
+    return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTING)
+        .onSuccessTask(_task ->
+            RocketChatWebSocketThread.getStarted(getApplicationContext(), config))
+        .onSuccessTask(task ->
+            ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED)
+                .onSuccessTask(_task -> task))
+        .onSuccessTask(task -> {
+          webSocketThreads.put(serverConfigId, task.getResult());
+          return task;
+        });
   }
 
   private Task<RocketChatWebSocketThread> findOrCreateWebSocketThread(final ServerConfig config) {
     final String serverConfigId = config.getServerConfigId();
     if (webSocketThreads.containsKey(serverConfigId)) {
-      return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED)
-          .onSuccessTask(_task -> Task.forResult(webSocketThreads.get(serverConfigId)));
+      return Task.forResult(webSocketThreads.get(serverConfigId));
     } else {
-      return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTING)
-          .onSuccessTask(_task -> {
-            webSocketThreads.put(serverConfigId, null);
-            return RocketChatWebSocketThread.getStarted(getApplicationContext(), config);
-          })
-          .onSuccessTask(task ->
-              ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED)
-                  .onSuccessTask(_task -> task))
-          .onSuccessTask(task -> {
-            webSocketThreads.put(serverConfigId, task.getResult());
-            return task;
-          });
+      return createWebSocketThread(config);
     }
   }
 

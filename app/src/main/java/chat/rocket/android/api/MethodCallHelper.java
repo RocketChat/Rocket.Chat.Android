@@ -112,6 +112,7 @@ public class MethodCallHelper {
             .put("sessionId", Session.DEFAULT_ID)
             .put("token", task.getResult())
             .put("tokenVerified", true)
+            .put("error", JSONObject.NULL)
         ));
   }
 
