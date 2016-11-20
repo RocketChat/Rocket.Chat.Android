@@ -3,15 +3,15 @@ package chat.rocket.android.fragment;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 /**
  * Fragment base class for this Application.
  */
-public abstract class AbstractFragment extends Fragment {
+public abstract class AbstractFragment extends RxFragment {
   protected View rootView;
 
   protected abstract @LayoutRes int getLayout();

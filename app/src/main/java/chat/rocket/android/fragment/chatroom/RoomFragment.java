@@ -19,6 +19,7 @@ public class RoomFragment extends AbstractChatRoomFragment {
 
   private RealmHelper realmHelper;
   private String roomId;
+  private RealmObjectObserver<RoomSubscription> roomObserver;
 
   /**
    * create fragment with roomId.
@@ -41,6 +42,9 @@ public class RoomFragment extends AbstractChatRoomFragment {
     Bundle args = getArguments();
     realmHelper = RealmStore.get(args.getString("serverConfigId"));
     roomId = args.getString("roomId");
+    roomObserver = realmHelper
+        .createObjectObserver(realm -> realm.where(RoomSubscription.class).equalTo("rid", roomId))
+        .setOnUpdateListener(this::onRenderRoom);
   }
 
   @Override protected int getLayout() {
@@ -59,11 +63,6 @@ public class RoomFragment extends AbstractChatRoomFragment {
       return null;
     }).continueWith(new LogcatIfError());
   }
-
-  private RealmObjectObserver<RoomSubscription> roomObserver =
-      realmHelper
-          .createObjectObserver(realm -> realm.where(RoomSubscription.class).equalTo("rid", roomId))
-          .setOnUpdateListener(this::onRenderRoom);
 
   private void onRenderRoom(RoomSubscription roomSubscription) {
     activityToolbar.setTitle(roomSubscription.getName());

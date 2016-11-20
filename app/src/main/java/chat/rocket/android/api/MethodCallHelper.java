@@ -181,6 +181,7 @@ public class MethodCallHelper {
             }
 
             return realmHelper.executeTransaction(realm -> {
+              realm.delete(RoomSubscription.class);
               realm.createOrUpdateAllFromJson(
                   RoomSubscription.class, result);
               return null;

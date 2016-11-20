@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/AppTheme.Dark"
+    >
+
+  <LinearLayout
+      android:id="@+id/user_info_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?attr/colorPrimaryDark"
+      android:foreground="?attr/selectableItemBackground"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:padding="@dimen/margin_16"
+      android:layout_alignParentTop="true"
+      android:elevation="2dp"
+      >
+
+    <ImageView
+        android:id="@+id/img_userstatus"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:src="@drawable/userstatus_online"
+        />
+
+    <Space
+        android:layout_width="@dimen/margin_8"
+        android:layout_height="wrap_content"
+        />
+
+    <ImageView
+        android:id="@+id/img_my_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        />
+
+    <FrameLayout
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_8"
+        android:layout_marginRight="@dimen/margin_8"
+        android:layout_weight="1"
+        >
+
+      <TextView
+          android:id="@+id/txt_account_info"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:text="John Doe"
+          android:textSize="14sp"
+          />
+
+    </FrameLayout>
+
+    <chat.rocket.android.widget.DownUpToggleView
+        android:id="@+id/toggle_user_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+  </LinearLayout>
+
+  <android.support.v4.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/user_info_container"
+      android:background="?attr/colorPrimary"
+      android:layout_alignParentBottom="true"
+      >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="?attr/listPreferredItemPaddingLeft"
+        android:orientation="vertical"
+        >
+      <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/margin_8"
+          >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CHANNELS"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"
+            android:alpha="0.62"
+            android:layout_gravity="start|center_vertical"
+            />
+
+        <chat.rocket.android.widget.FontAwesomeButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="@string/fa_plus"
+            android:textSize="12dp"
+            android:layout_gravity="end|center_vertical"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            />
+
+      </FrameLayout>
+
+      <LinearLayout
+          android:id="@+id/channels_container"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
+          />
+
+      <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/margin_8"
+          >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DIRECT MESSAGES"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"
+            android:alpha="0.62"
+            android:layout_gravity="start|center_vertical"
+            />
+
+        <chat.rocket.android.widget.FontAwesomeButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="@string/fa_plus"
+            android:textSize="12dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_gravity="end|center_vertical"
+            />
+
+      </FrameLayout>
+
+      <LinearLayout
+          android:id="@+id/direct_messages_container"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
+          />
+
+    </LinearLayout>
+  </android.support.v4.widget.NestedScrollView>
+
+  <android.support.v4.widget.NestedScrollView
+      android:id="@+id/user_action_outer_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/user_info_container"
+      android:layout_alignParentBottom="true"
+      android:background="?attr/colorPrimaryDark"
+      android:elevation="2dp"
+      android:visibility="gone"
+      tools:visibility="visible"
+      >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+      <LinearLayout
+          android:id="@+id/btn_status_online"
+          android:orientation="horizontal"
+          style="@style/sidebar_list_item"
+          >
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            >
+          <ImageView
+              android:layout_width="16dp"
+              android:layout_height="16dp"
+              android:src="@drawable/userstatus_online"
+              android:layout_gravity="center"
+              />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Online"
+            android:textAppearance="?attr/textAppearanceListItemSmall"
+            />
+      </LinearLayout>
+      <LinearLayout
+          android:id="@+id/btn_status_away"
+          android:orientation="horizontal"
+          style="@style/sidebar_list_item"
+          >
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            >
+          <ImageView
+              android:layout_width="16dp"
+              android:layout_height="16dp"
+              android:src="@drawable/userstatus_away"
+              android:layout_gravity="center"
+              />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Away"
+            android:textAppearance="?attr/textAppearanceListItemSmall"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/btn_status_busy"
+          android:orientation="horizontal"
+          style="@style/sidebar_list_item"
+          >
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            >
+          <ImageView
+              android:layout_width="16dp"
+              android:layout_height="16dp"
+              android:src="@drawable/userstatus_busy"
+              android:layout_gravity="center"
+              />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Busy"
+            android:textAppearance="?attr/textAppearanceListItemSmall"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/btn_status_invisible"
+          android:orientation="horizontal"
+          style="@style/sidebar_list_item"
+          >
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            >
+          <ImageView
+              android:layout_width="16dp"
+              android:layout_height="16dp"
+              android:src="@drawable/userstatus_offline"
+              android:layout_gravity="center"
+              />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invisible"
+            android:textAppearance="?attr/textAppearanceListItemSmall"
+            />
+      </LinearLayout>
+
+      <chat.rocket.android.widget.DividerView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
+
+      <LinearLayout
+          android:id="@+id/btn_logout"
+          android:orientation="horizontal"
+          style="@style/sidebar_list_item"
+          >
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            >
+          <chat.rocket.android.widget.FontAwesomeTextView
+              android:layout_width="16dp"
+              android:layout_height="16dp"
+              android:textSize="14dp"
+              android:text="@string/fa_sign_out"
+              android:layout_gravity="center"
+              android:gravity="center"
+              />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textAppearance="?attr/textAppearanceListItemSmall"
+            />
+      </LinearLayout>
+    </LinearLayout>
+  </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

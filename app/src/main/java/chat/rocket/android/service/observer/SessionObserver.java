@@ -1,12 +1,11 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.DDPClientWraper;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -56,11 +55,7 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   }
 
   @DebugLog private void onLogin() {
-    realmHelper.executeTransaction(realm -> {
-      realm.delete(RoomSubscription.class);
-      return null;
-    }).onSuccessTask(_task -> methodCall.getRooms())
-        .continueWith(new LogcatIfError());
+    methodCall.getRooms().continueWith(new LogcatIfError());
 
   }
 
