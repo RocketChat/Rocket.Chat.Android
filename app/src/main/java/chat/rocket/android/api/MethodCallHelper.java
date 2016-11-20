@@ -222,4 +222,12 @@ public class MethodCallHelper {
         });
   }
 
+  /**
+   * update user's status.
+   */
+  public Task<Void> setUserStatus(final String status) {
+    return call("UserPresence:setDefaultStatus", TIMEOUT_MS, () -> new JSONArray().put(status))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
 }

@@ -8,7 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
 import chat.rocket.android.model.ServerConfig;
@@ -65,7 +67,7 @@ public class SidebarMainFragment extends AbstractFragment {
 
         currentUserObserver = realmHelper
             .createObjectObserver(realm -> realm.where(User.class).isNotEmpty("emails"))
-            .setOnUpdateListener(this::updateCurrentUser);
+            .setOnUpdateListener(this::onRenderCurrentUser);
       }
     }
   }
@@ -84,6 +86,7 @@ public class SidebarMainFragment extends AbstractFragment {
     }
 
     setupUserActionToggle();
+    setupUserStatusButtons();
 
     roomListManager = new RoomListManager(
         (LinearLayout) rootView.findViewById(R.id.channels_container),
@@ -107,7 +110,29 @@ public class SidebarMainFragment extends AbstractFragment {
         .subscribe(RxView.visibility(rootView.findViewById(R.id.user_action_outer_container)));
   }
 
-  private void updateCurrentUser(User user) {
+  private void setupUserStatusButtons() {
+    rootView.findViewById(R.id.btn_status_online).setOnClickListener(view -> {
+      updateCurrentUserStatus(User.STATUS_ONLINE);
+    });
+    rootView.findViewById(R.id.btn_status_away).setOnClickListener(view -> {
+      updateCurrentUserStatus(User.STATUS_AWAY);
+    });
+    rootView.findViewById(R.id.btn_status_busy).setOnClickListener(view -> {
+      updateCurrentUserStatus(User.STATUS_BUSY);
+    });
+    rootView.findViewById(R.id.btn_status_invisible).setOnClickListener(view -> {
+      updateCurrentUserStatus(User.STATUS_OFFLINE);
+    });
+  }
+
+  private void updateCurrentUserStatus(String status) {
+    if (!TextUtils.isEmpty(serverConfigId)) {
+      new MethodCallHelper(serverConfigId).setUserStatus(status)
+          .continueWith(new LogcatIfError());
+    }
+  }
+
+  private void onRenderCurrentUser(User user) {
     if (user != null && !TextUtils.isEmpty(hostname)) {
       new UserRenderer(getContext(), user)
           .avatarInto((ImageView) rootView.findViewById(R.id.current_user_avatar), hostname)

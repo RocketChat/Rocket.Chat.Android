@@ -115,8 +115,9 @@ public class MethodCall extends RealmObject {
             String resultJson = methodCall.getResultJson();
             if (TextUtils.isEmpty(resultJson)) {
               task.setResult(null);
+            } else {
+              task.setResult(resultJson);
             }
-            task.setResult(resultJson);
             observer.unsub();
             remove(realmHelper, methodCall.getMethodCallId()).continueWith(new LogcatIfError());
           } else if (syncstate == SyncState.FAILED) {
