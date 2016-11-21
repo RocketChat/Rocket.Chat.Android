@@ -2,6 +2,7 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.api.DDPClientWraper;
@@ -32,12 +33,6 @@ public class TokenLoginObserver extends AbstractModelObserver<Session> {
     }
 
     Session session = results.get(0);
-    methodCall.loginWithToken(session.getToken())
-        .continueWith(task -> {
-          if (task.isFaulted()) {
-            Session.logError(realmHelper, task.getError());
-          }
-          return null;
-        });
+    methodCall.loginWithToken(session.getToken()).continueWith(new LogcatIfError());
   }
 }

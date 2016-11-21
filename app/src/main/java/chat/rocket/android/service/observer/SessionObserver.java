@@ -4,6 +4,8 @@ import android.content.Context;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.model.internal.LoadMessageProcedure;
+import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import hugo.weaving.DebugLog;
@@ -60,6 +62,11 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   }
 
   @DebugLog private void onLogout() {
-
+    realmHelper.executeTransaction(realm -> {
+      // remove all tables. ONLY INTERNAL TABLES!.
+      realm.delete(MethodCall.class);
+      realm.delete(LoadMessageProcedure.class);
+      return null;
+    }).continueWith(new LogcatIfError());
   }
 }

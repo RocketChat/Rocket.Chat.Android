@@ -35,6 +35,9 @@ public class RoomListManager {
    * update ViewGroups with room list.
    */
   public void setRooms(List<RoomSubscription> roomSubscriptionList) {
+    removeDeletedItem(channelsContainer, roomSubscriptionList);
+    removeDeletedItem(dmContainer, roomSubscriptionList);
+
     for (RoomSubscription roomSubscription : roomSubscriptionList) {
       String name = roomSubscription.getName();
       if (TextUtils.isEmpty(name)) {
@@ -59,6 +62,25 @@ public class RoomListManager {
    */
   public void setOnItemClickListener(OnItemClickListener listener) {
     this.listener = listener;
+  }
+
+  private void removeDeletedItem(ViewGroup parent, List<RoomSubscription> roomSubscriptionList) {
+    for (int index = parent.getChildCount() - 1; index >= 0; index--) {
+      RoomListItemView roomListItemView = (RoomListItemView) parent.getChildAt(index);
+      final String targetRoomName = roomListItemView.getRoomName();
+      if (!TextUtils.isEmpty(targetRoomName)) {
+        boolean found = false;
+        for (RoomSubscription roomSubscription : roomSubscriptionList) {
+          if (targetRoomName.equals(roomSubscription.getName())) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          parent.removeViewAt(index);
+        }
+      }
+    }
   }
 
   private void insertOrUpdateItem(ViewGroup parent, RoomSubscription roomSubscription) {

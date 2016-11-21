@@ -51,7 +51,6 @@ public class RetryLoginFragment extends AbstractServerConfigFragment {
               if (task.isFaulted()) {
                 view.setEnabled(true);
                 waitingView.setVisibility(View.GONE);
-                Session.logError(RealmStore.get(serverConfigId), task.getError());
               }
               return null;
             });

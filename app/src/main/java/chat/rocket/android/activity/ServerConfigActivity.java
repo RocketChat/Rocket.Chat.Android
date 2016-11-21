@@ -63,6 +63,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
 
   private void onRenderServerConfigSession(Session session) {
     if (session == null) {
+      showFragment(new LoginFragment());
       return;
     }
 

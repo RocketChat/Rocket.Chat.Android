@@ -1,6 +1,7 @@
 package chat.rocket.android.model.internal;
 
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.realm_helper.RealmHelper;
 import hugo.weaving.DebugLog;
 import io.realm.RealmObject;
@@ -53,12 +54,19 @@ public class Session extends RealmObject {
    * Log the server connection is lost due to soem exception.
    */
   @DebugLog public static void logError(RealmHelper realmHelper, Exception exception) {
-    // TODO: should remove token if 403.
-    realmHelper.executeTransaction(
-        realm -> realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
-            .put("sessionId", Session.DEFAULT_ID)
-            .put("tokenVerified", false)
-            .put("error", exception.getMessage())))
-        .continueWith(new LogcatIfError());
+    String errString = exception.getMessage();
+    if (!TextUtils.isEmpty(errString) && errString.contains("[403]")) {
+      realmHelper.executeTransaction(realm -> {
+        realm.delete(Session.class);
+        return null;
+      }).continueWith(new LogcatIfError());
+    } else {
+      realmHelper.executeTransaction(
+          realm -> realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
+              .put("sessionId", Session.DEFAULT_ID)
+              .put("tokenVerified", false)
+              .put("error", errString)))
+          .continueWith(new LogcatIfError());
+    }
   }
 }

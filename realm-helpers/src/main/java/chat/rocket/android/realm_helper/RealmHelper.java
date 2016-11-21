@@ -168,8 +168,4 @@ public class RealmHelper {
       RealmObjectObserver.Query<T> query) {
     return new RealmObjectObserver<T>(this, query);
   }
-
-  public void delete() {
-    Realm.deleteRealm(realmConfiguration);
-  }
 }

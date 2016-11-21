@@ -59,6 +59,9 @@ public class MethodCallHelper {
           }
           String errMessage = new JSONObject(errMessageJson).getString("message");
           return Task.forError(new Exception(errMessage));
+        } else if (exception instanceof DDPClientCallback.RPC.Error) {
+          String errMessage = ((DDPClientCallback.RPC.Error) exception).error.getString("message");
+          return Task.forError(new Exception(errMessage));
         } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
           return Task.forError(new MethodCall.Timeout());
         } else {
@@ -158,14 +161,24 @@ public class MethodCallHelper {
         .put("resume", token)
     )).onSuccessTask(CONVERT_TO_JSON_OBJECT)
         .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
-        .onSuccessTask(this::saveToken);
+        .onSuccessTask(this::saveToken)
+        .continueWithTask(task -> {
+          if (task.isFaulted()) {
+            Session.logError(realmHelper, task.getError());
+          }
+          return task;
+        });
   }
 
   /**
    * Logout.
    */
-  public Task<String> logout() {
-    return call("logout", TIMEOUT_MS);
+  public Task<Void> logout() {
+    return call("logout", TIMEOUT_MS).onSuccessTask(task ->
+        realmHelper.executeTransaction(realm -> {
+          realm.delete(Session.class);
+          return null;
+        }));
   }
 
   /**

@@ -31,6 +31,7 @@ public class SidebarMainFragment extends AbstractFragment {
   private String hostname;
   private RealmListObserver<RoomSubscription> roomsObserver;
   private RealmObjectObserver<User> currentUserObserver;
+  private MethodCallHelper methodCallHelper;
 
   public SidebarMainFragment() {
   }
@@ -68,6 +69,8 @@ public class SidebarMainFragment extends AbstractFragment {
         currentUserObserver = realmHelper
             .createObjectObserver(realm -> realm.where(User.class).isNotEmpty("emails"))
             .setOnUpdateListener(this::onRenderCurrentUser);
+
+        methodCallHelper = new MethodCallHelper(serverConfigId);
       }
     }
   }
@@ -87,6 +90,7 @@ public class SidebarMainFragment extends AbstractFragment {
 
     setupUserActionToggle();
     setupUserStatusButtons();
+    setupLogoutButton();
 
     roomListManager = new RoomListManager(
         (LinearLayout) rootView.findViewById(R.id.channels_container),
@@ -111,24 +115,19 @@ public class SidebarMainFragment extends AbstractFragment {
   }
 
   private void setupUserStatusButtons() {
-    rootView.findViewById(R.id.btn_status_online).setOnClickListener(view -> {
-      updateCurrentUserStatus(User.STATUS_ONLINE);
-    });
-    rootView.findViewById(R.id.btn_status_away).setOnClickListener(view -> {
-      updateCurrentUserStatus(User.STATUS_AWAY);
-    });
-    rootView.findViewById(R.id.btn_status_busy).setOnClickListener(view -> {
-      updateCurrentUserStatus(User.STATUS_BUSY);
-    });
-    rootView.findViewById(R.id.btn_status_invisible).setOnClickListener(view -> {
-      updateCurrentUserStatus(User.STATUS_OFFLINE);
-    });
+    rootView.findViewById(R.id.btn_status_online).setOnClickListener(view ->
+        updateCurrentUserStatus(User.STATUS_ONLINE));
+    rootView.findViewById(R.id.btn_status_away).setOnClickListener(view ->
+        updateCurrentUserStatus(User.STATUS_AWAY));
+    rootView.findViewById(R.id.btn_status_busy).setOnClickListener(view ->
+        updateCurrentUserStatus(User.STATUS_BUSY));
+    rootView.findViewById(R.id.btn_status_invisible).setOnClickListener(view ->
+        updateCurrentUserStatus(User.STATUS_OFFLINE));
   }
 
   private void updateCurrentUserStatus(String status) {
-    if (!TextUtils.isEmpty(serverConfigId)) {
-      new MethodCallHelper(serverConfigId).setUserStatus(status)
-          .continueWith(new LogcatIfError());
+    if (methodCallHelper != null) {
+      methodCallHelper.setUserStatus(status).continueWith(new LogcatIfError());
     }
   }
 
@@ -139,6 +138,14 @@ public class SidebarMainFragment extends AbstractFragment {
           .usernameInto((TextView) rootView.findViewById(R.id.current_user_name))
           .statusColorInto((ImageView) rootView.findViewById(R.id.current_user_status));
     }
+  }
+
+  private void setupLogoutButton() {
+    rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
+      if (methodCallHelper != null) {
+        methodCallHelper.logout().continueWith(new LogcatIfError());
+      }
+    });
   }
 
   @Override public void onResume() {
