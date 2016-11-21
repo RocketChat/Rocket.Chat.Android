@@ -31,15 +31,15 @@
       android:minWidth="20dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="8dp"
-      android:padding="4dp"
+      android:padding="3dp"
       android:layout_gravity="center_vertical"
-      android:background="@color/room_list_item_unread_count_background"
+      android:background="@drawable/unread_count_background"
       >
     <TextView
         android:id="@+id/alert_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12dp"
+        android:textSize="14dp"
         android:layout_gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         />
