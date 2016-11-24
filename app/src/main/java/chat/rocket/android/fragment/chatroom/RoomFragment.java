@@ -2,14 +2,22 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.model.SyncState;
+import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.realm_helper.RealmModelListView;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import org.json.JSONObject;
 
 /**
@@ -45,6 +53,8 @@ public class RoomFragment extends AbstractChatRoomFragment {
     roomObserver = realmHelper
         .createObjectObserver(realm -> realm.where(RoomSubscription.class).equalTo("rid", roomId))
         .setOnUpdateListener(this::onRenderRoom);
+
+    initialRequest();
   }
 
   @Override protected int getLayout() {
@@ -52,8 +62,24 @@ public class RoomFragment extends AbstractChatRoomFragment {
   }
 
   @Override protected void onSetupView() {
+    RealmModelListView listView = (RealmModelListView) rootView.findViewById(R.id.listview);
 
-    // TODO: just a sample!!
+    realmHelper.bindListView(listView,
+        realm -> realm.where(Message.class)
+            .equalTo("rid", roomId)
+            .findAllSorted("ts", Sort.DESCENDING),
+        MessageListAdapter::new);
+
+    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+        LinearLayoutManager.VERTICAL, true);
+    listView.setLayoutManager(layoutManager);
+  }
+
+  private void onRenderRoom(RoomSubscription roomSubscription) {
+    activityToolbar.setTitle(roomSubscription.getName());
+  }
+
+  private void initialRequest() {
     realmHelper.executeTransaction(realm -> {
       realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
           .put("roomId", roomId)
@@ -64,8 +90,8 @@ public class RoomFragment extends AbstractChatRoomFragment {
     }).continueWith(new LogcatIfError());
   }
 
-  private void onRenderRoom(RoomSubscription roomSubscription) {
-    activityToolbar.setTitle(roomSubscription.getName());
+  private RealmResults<Message> queryItems(Realm realm) {
+    return realm.where(Message.class).equalTo("rid", roomId).findAllSorted("ts");
   }
 
   @Override public void onResume() {

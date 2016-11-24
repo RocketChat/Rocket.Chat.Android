@@ -29,7 +29,9 @@ public class MainActivity extends AbstractAuthedActivity {
     setContentView(R.layout.activity_main);
 
     setupSidebar();
-    showFragment(new HomeFragment());
+    if (roomId == null) {
+      showFragment(new HomeFragment());
+    }
   }
 
   private void setupSidebar() {

@@ -1,12 +1,14 @@
 package chat.rocket.android.activity;
 
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
+import icepick.State;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private RealmListObserver<ServerConfig> unconfiguredServersObserver =
@@ -19,8 +21,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
             }
           });
 
-  protected String serverConfigId;
-  protected String roomId;
+  @State protected String serverConfigId;
+  @State protected String roomId;
 
   SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
       (sharedPreferences, key) -> {
@@ -67,11 +69,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     onRoomIdUpdated();
   }
 
-  protected void onServerConfigIdUpdated() {
-    RocketChatCache.get(this).edit()
-        .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
-        .apply();
-  }
+  protected void onServerConfigIdUpdated() {}
 
   protected void onRoomIdUpdated() {}
 
@@ -92,5 +90,9 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
 
     unconfiguredServersObserver.unsub();
     super.onPause();
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
   }
 }

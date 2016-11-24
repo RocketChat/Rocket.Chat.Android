@@ -32,7 +32,7 @@ abstract class AbstractRealmResultsObserver<T extends RealmObject> {
   }
 
   public void keepalive() {
-    if (realm == null || realm.isClosed()) {
+    if (realm == null || realm.isClosed() || !results.isValid()) {
       unsub();
       sub();
     }
@@ -41,7 +41,9 @@ abstract class AbstractRealmResultsObserver<T extends RealmObject> {
   public void unsub() {
     try {
       if (results != null) {
-        results.removeChangeListener(listener);
+        if (results.isValid()) {
+          results.removeChangeListener(listener);
+        }
         results = null;
       }
       if (realm != null && !realm.isClosed()) {

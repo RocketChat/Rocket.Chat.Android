@@ -3,6 +3,8 @@ package chat.rocket.android.realm_helper;
 import android.os.Looper;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import chat.rocket.android.realm_adapter.RealmModelListAdapter;
+import chat.rocket.android.realm_adapter.RealmModelViewHolder;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
@@ -167,5 +169,14 @@ public class RealmHelper {
   public <T extends RealmObject> RealmObjectObserver<T> createObjectObserver(
       RealmObjectObserver.Query<T> query) {
     return new RealmObjectObserver<T>(this, query);
+  }
+
+  public <T extends RealmObject, VH extends RealmModelViewHolder<T>> void bindListView(
+      RealmModelListView listView,
+      RealmModelListAdapter.Query<T> query,
+      RealmModelListAdapter.Constructor<T, VH> constructor) {
+    if (listView != null) {
+      listView.setup(this, query, constructor);
+    }
   }
 }

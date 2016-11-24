@@ -64,8 +64,7 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
                       .put("roomId", roomId)
                       .put("syncstate", SyncState.SYNCED)
                       .put("timestamp", lastTs)
-                      .put("hasNext", lastTs > 0))
-              );
+                      .put("hasNext", lastTs > 0)));
             })
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
