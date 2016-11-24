@@ -72,6 +72,7 @@ repositories {
   maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
   maven { url 'https://github.com/RocketChat/Android-DDP/raw/master/repository' }
   maven { url 'http://dl.bintray.com/amulyakhare/maven' }
+  maven {url "https://clojars.org/repo/"} //for icepick.
 }
 
 dependencies {
@@ -97,4 +98,7 @@ dependencies {
   compile 'com.trello:rxlifecycle-components:1.0'
 
   compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+  compile 'frankiesardo:icepick:3.2.0'
+  provided 'frankiesardo:icepick-processor:3.2.0'
 }

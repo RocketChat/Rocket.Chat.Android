@@ -1,12 +1,25 @@
 package chat.rocket.android.activity;
 
+import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import chat.rocket.android.helper.OnBackPressListener;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import icepick.Icepick;
 
 abstract class AbstractFragmentActivity extends RxAppCompatActivity {
+
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Icepick.restoreInstanceState(this, savedInstanceState);
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    Icepick.saveInstanceState(this, outState);
+  }
 
   protected abstract @IdRes int getLayoutContainerForFragment();
 
