@@ -22,7 +22,7 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
     }
 
     protected boolean isSame(T element1, T element2) {
-      return false;
+      return element1.equals(element2);
     }
   }
 
@@ -47,26 +47,28 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
 
   private T previousResult;
 
-  @Override protected final RealmResults<T> queryItems(Realm realm) {
+  @Override
+  protected final RealmResults<T> queryItems(Realm realm) {
     return query.query(realm).findAll();
   }
 
-  @Override protected final RealmChangeListener<RealmResults<T>> getListener() {
+  @Override
+  protected final RealmChangeListener<RealmResults<T>> getListener() {
     return new RealmChangeListener<RealmResults<T>>() {
-      @Override public void onChange(RealmResults<T> element) {
-        T source = impl.extractObjectFromResults(element);
-        T target = source != null ? realm.copyFromRealm(source) : null;
-        if (previousResult != null && impl.isSame(previousResult, target)) {
+      @Override
+      public void onChange(RealmResults<T> element) {
+        T currentResult = impl.extractObjectFromResults(element);
+        if (previousResult != null && impl.isSame(previousResult, currentResult)) {
           return;
         }
-        previousResult = target;
+        previousResult = currentResult;
         if (onUpdateListener != null) {
-          onUpdateListener.onUpdateObject(target);
+          onUpdateListener.onUpdateObject(
+              currentResult != null ? realm.copyFromRealm(currentResult) : null);
         }
       }
     };
   }
-
 
   public void sub() {
     previousResult = null;
