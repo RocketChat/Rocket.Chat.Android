@@ -12,6 +12,7 @@ import chat.rocket.android.renderer.MessageRenderer;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 
 /**
+ * View holder of NORMAL chat message.
  */
 public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
   private final ImageView avatar;
@@ -23,6 +24,9 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
   private final View newDayContainer;
   private final TextView newDayText;
 
+  /**
+   * constructor WITH hostname.
+   */
   public MessageViewHolder(View itemView, String hostname) {
     super(itemView);
     avatar = (ImageView) itemView.findViewById(R.id.user_avatar);
@@ -35,6 +39,9 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
     this.hostname = hostname;
   }
 
+  /**
+   * bind the view model.
+   */
   public void bind(PairedMessage pairedMessage) {
     new MessageRenderer(itemView.getContext(), pairedMessage.target)
         .avatarInto(avatar, hostname)

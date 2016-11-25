@@ -15,12 +15,18 @@ public class PairedMessage {
     this.nextSibling = nextSibling;
   }
 
+  /**
+   * Returns true if target and nextSibling has the same date of timestamp.
+   */
   public boolean hasSameDate() {
     return nextSibling != null
         && DateTime.fromEpocMs(nextSibling.getTs(), DateTime.Format.DATE)
         .equals(DateTime.fromEpocMs(target.getTs(), DateTime.Format.DATE));
   }
 
+  /**
+   * Returns true if target and nextSibling are sent by the same user.
+   */
   public boolean hasSameUser() {
     return nextSibling != null
         && nextSibling.getU() != null && target.getU() != null
