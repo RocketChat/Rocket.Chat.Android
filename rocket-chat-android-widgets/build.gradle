@@ -32,4 +32,5 @@ dependencies {
   compile rootProject.ext.supportAnnotations
   compile rootProject.ext.supportAppCompat
   compile rootProject.ext.supportDesign
+  compile 'org.nibor.autolink:autolink:0.5.0'
 }

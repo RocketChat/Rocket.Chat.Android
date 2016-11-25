@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="TextAppearance.RocketChat" parent="TextAppearance.AppCompat"/>
+  <style name="TextAppearance.RocketChat.MessageBody" parent="TextAppearance.AppCompat.Body2">
+
+  </style>
+
+  <color name="highlight_text_color">#333</color>
+  <color name="highlight_text_background_color">#f8f8f8</color>
+  <color name="highlight_text_border_color">#ccc</color>
+</resources>

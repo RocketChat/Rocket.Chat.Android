@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newday_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:layout_margin="16dp"
+    >
+
+  <View
+      android:layout_width="0px"
+      android:layout_height="1dp"
+      android:layout_weight="1"
+      android:background="@color/newday_color"/>
+
+  <TextView
+      android:id="@+id/list_item_message_newday_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/newday_color"
+      android:textSize="8sp"
+      android:textStyle="bold"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      tools:text="2016/01/23"/>
+
+  <View
+      android:layout_width="0px"
+      android:layout_height="1dp"
+      android:layout_weight="1"
+      android:background="@color/newday_color"/>
+
+</LinearLayout>

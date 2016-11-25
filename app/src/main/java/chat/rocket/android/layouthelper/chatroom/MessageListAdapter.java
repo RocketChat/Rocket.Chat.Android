@@ -2,6 +2,7 @@ package chat.rocket.android.layouthelper.chatroom;
 
 import android.content.Context;
 import android.view.View;
+import chat.rocket.android.R;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.realm_adapter.RealmModelListAdapter;
 
@@ -10,8 +11,11 @@ import chat.rocket.android.realm_adapter.RealmModelListAdapter;
  */
 public class MessageListAdapter extends RealmModelListAdapter<Message, MessageViewHolder> {
 
-  public MessageListAdapter(Context context) {
+  private final String hostname;
+
+  public MessageListAdapter(Context context, String hostname) {
     super(context);
+    this.hostname = hostname;
   }
 
   @Override protected int getItemViewType(Message model) {
@@ -19,10 +23,10 @@ public class MessageListAdapter extends RealmModelListAdapter<Message, MessageVi
   }
 
   @Override protected int getLayout(int viewType) {
-    return android.R.layout.simple_list_item_1;
+    return R.layout.list_item_message;
   }
 
   @Override protected MessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
-    return new MessageViewHolder(itemView);
+    return new MessageViewHolder(itemView, hostname);
   }
 }

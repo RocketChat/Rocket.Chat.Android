@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
+import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
@@ -28,6 +29,7 @@ public class RoomFragment extends AbstractChatRoomFragment {
   private RealmHelper realmHelper;
   private String roomId;
   private RealmObjectObserver<RoomSubscription> roomObserver;
+  private String hostname;
 
   /**
    * create fragment with roomId.
@@ -48,8 +50,14 @@ public class RoomFragment extends AbstractChatRoomFragment {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
-    realmHelper = RealmStore.get(args.getString("serverConfigId"));
+    String serverConfigId = args.getString("serverConfigId");
+    realmHelper = RealmStore.get(serverConfigId);
     roomId = args.getString("roomId");
+    hostname = RealmStore.getDefault().executeTransactionForRead(realm ->
+        realm.where(ServerConfig.class)
+            .equalTo("serverConfigId", serverConfigId)
+            .isNotNull("hostname")
+            .findFirst()).getHostname();
     roomObserver = realmHelper
         .createObjectObserver(realm -> realm.where(RoomSubscription.class).equalTo("rid", roomId))
         .setOnUpdateListener(this::onRenderRoom);
@@ -68,7 +76,7 @@ public class RoomFragment extends AbstractChatRoomFragment {
         realm -> realm.where(Message.class)
             .equalTo("rid", roomId)
             .findAllSorted("ts", Sort.DESCENDING),
-        MessageListAdapter::new);
+        context -> new MessageListAdapter(context, hostname));
 
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);

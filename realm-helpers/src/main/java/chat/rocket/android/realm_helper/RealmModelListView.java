@@ -33,13 +33,16 @@ public class RealmModelListView extends RecyclerView {
       @Override public void onViewAttachedToWindow(View view) {
         realm = realmHelper.instance();
         RealmResults<T> results = query.queryItems(realm);
-        RealmModelListAdapter<T, VH> adapter = constructor.getNewInstance(view.getContext());
-        adapter.updateData(results);
-        setAdapter(adapter);
+        if (getAdapter() instanceof RealmModelListAdapter) {
+          ((RealmModelListAdapter<T, VH>) getAdapter()).updateData(results);
+        } else {
+          RealmModelListAdapter<T, VH> adapter = constructor.getNewInstance(view.getContext());
+          adapter.updateData(results);
+          setAdapter(adapter);
+        }
       }
 
       @Override public void onViewDetachedFromWindow(View view) {
-        setAdapter(null);
         if (realm != null && !realm.isClosed()) {
           realm.close();
         }
