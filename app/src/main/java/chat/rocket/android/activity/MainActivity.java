@@ -49,12 +49,14 @@ public class MainActivity extends AbstractAuthedActivity {
     }
   }
 
-  private void closeSidebarIfNeeded() {
+  private boolean closeSidebarIfNeeded() {
     // REMARK: Tablet UI doesn't have SlidingPane!
     SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-    if (pane != null) {
+    if (pane != null && pane.isOpen()) {
       pane.closePane();
+      return true;
     }
+    return false;
   }
 
   @DebugLog
@@ -105,5 +107,7 @@ public class MainActivity extends AbstractAuthedActivity {
     }
   }
 
-
+  @Override protected boolean onBackPress() {
+    return closeSidebarIfNeeded() || super.onBackPress();
+  }
 }
