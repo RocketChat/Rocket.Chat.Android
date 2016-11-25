@@ -36,5 +36,4 @@ dependencies {
   compile rootProject.ext.supportAnnotations
   compile rootProject.ext.supportAppCompat
   compile rootProject.ext.supportDesign
-  compile 'io.realm:android-adapters:1.4.0'
 }

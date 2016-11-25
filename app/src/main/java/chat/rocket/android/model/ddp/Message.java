@@ -111,6 +111,10 @@ public class Message extends RealmObject {
     messageJson.remove("ts");
     messageJson.put("ts", ts).put("syncstate", SyncState.SYNCED);
 
+    if (messageJson.isNull("groupable")) {
+      messageJson.put("groupable", true);
+    }
+
     return messageJson;
   }
 }

@@ -1,10 +1,10 @@
 package chat.rocket.android.realm_helper;
 
+import android.content.Context;
 import android.os.Looper;
+import android.support.v7.widget.RecyclerView;
 import bolts.Task;
 import bolts.TaskCompletionSource;
-import chat.rocket.android.realm_adapter.RealmModelListAdapter;
-import chat.rocket.android.realm_adapter.RealmModelViewHolder;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
@@ -171,12 +171,9 @@ public class RealmHelper {
     return new RealmObjectObserver<T>(this, query);
   }
 
-  public <T extends RealmObject, VH extends RealmModelViewHolder<T>> void bindListView(
-      RealmModelListView listView,
-      RealmModelListAdapter.Query<T> query,
-      RealmModelListAdapter.Constructor<T, VH> constructor) {
-    if (listView != null) {
-      listView.setup(this, query, constructor);
-    }
+  public <T extends RealmObject, VM, VH extends RealmModelViewHolder<VM>>
+  RecyclerView.Adapter<VH> createListAdapter(Context context, RealmListObserver.Query<T> query,
+    RealmModelListAdapter.Constructor<T, VM, VH> constructor) {
+    return constructor.getNewInstance(context).initializeWith(this, query);
   }
 }

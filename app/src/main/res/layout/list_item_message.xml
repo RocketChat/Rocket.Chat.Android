@@ -29,6 +29,7 @@
         android:orientation="vertical"
         android:layout_marginEnd="8dp">
       <LinearLayout
+          android:id="@+id/user_and_timestamp_container"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal">

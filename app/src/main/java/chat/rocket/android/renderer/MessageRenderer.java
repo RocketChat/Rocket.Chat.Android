@@ -12,7 +12,7 @@ import chat.rocket.android.widget.message.RocketChatMessageLayout;
  */
 public class MessageRenderer extends AbstractRenderer<Message> {
 
-  private UserRenderer userRenderer;
+  private final UserRenderer userRenderer;
 
   public MessageRenderer(Context context, Message message) {
     super(context, message);

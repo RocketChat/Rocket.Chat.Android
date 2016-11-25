@@ -1,10 +1,9 @@
-package chat.rocket.android.realm_adapter;
+package chat.rocket.android.realm_helper;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import io.realm.RealmObject;
 
-public abstract class RealmModelViewHolder<T extends RealmObject> extends RecyclerView.ViewHolder {
+public abstract class RealmModelViewHolder<T> extends RecyclerView.ViewHolder {
 
   public RealmModelViewHolder(View itemView) {
     super(itemView);

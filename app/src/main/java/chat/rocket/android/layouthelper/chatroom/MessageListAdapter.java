@@ -4,12 +4,16 @@ import android.content.Context;
 import android.view.View;
 import chat.rocket.android.R;
 import chat.rocket.android.model.ddp.Message;
-import chat.rocket.android.realm_adapter.RealmModelListAdapter;
+import chat.rocket.android.realm_helper.RealmModelListAdapter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * message list adapter for chat room.
+ * target list adapter for chat room.
  */
-public class MessageListAdapter extends RealmModelListAdapter<Message, MessageViewHolder> {
+public class MessageListAdapter
+    extends RealmModelListAdapter<Message, PairedMessage, MessageViewHolder> {
 
   private final String hostname;
 
@@ -18,7 +22,7 @@ public class MessageListAdapter extends RealmModelListAdapter<Message, MessageVi
     this.hostname = hostname;
   }
 
-  @Override protected int getItemViewType(Message model) {
+  @Override protected int getRealmModelViewType(PairedMessage model) {
     return 0;
   }
 
@@ -28,5 +32,19 @@ public class MessageListAdapter extends RealmModelListAdapter<Message, MessageVi
 
   @Override protected MessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
     return new MessageViewHolder(itemView, hostname);
+  }
+
+  @Override protected List<PairedMessage> mapResultsToViewModel(List<Message> results) {
+    if (results.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    ArrayList<PairedMessage> extMessages = new ArrayList<>();
+    for (int i = 0; i < results.size() - 1; i++) {
+      extMessages.add(new PairedMessage(results.get(i), results.get(i + 1)));
+    }
+    extMessages.add(new PairedMessage(results.get(results.size() - 1), null));
+
+    return extMessages;
   }
 }

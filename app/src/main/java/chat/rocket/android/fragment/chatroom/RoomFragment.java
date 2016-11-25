@@ -13,7 +13,6 @@ import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmModelListView;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import io.realm.Realm;
@@ -70,13 +69,13 @@ public class RoomFragment extends AbstractChatRoomFragment {
   }
 
   @Override protected void onSetupView() {
-    RealmModelListView listView = (RealmModelListView) rootView.findViewById(R.id.listview);
-
-    realmHelper.bindListView(listView,
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    listView.setAdapter(realmHelper.createListAdapter(getContext(),
         realm -> realm.where(Message.class)
             .equalTo("rid", roomId)
             .findAllSorted("ts", Sort.DESCENDING),
-        context -> new MessageListAdapter(context, hostname));
+        context -> new MessageListAdapter(context, hostname)
+    ));
 
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);
