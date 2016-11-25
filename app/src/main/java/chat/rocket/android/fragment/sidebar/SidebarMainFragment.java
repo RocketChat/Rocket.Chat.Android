@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,12 +34,9 @@ public class SidebarMainFragment extends AbstractFragment {
   private RealmObjectObserver<User> currentUserObserver;
   private MethodCallHelper methodCallHelper;
 
-  public SidebarMainFragment() {
-  }
+  public SidebarMainFragment() {}
 
-  /**
-   * create SidebarMainFragment with serverConfigId.
-   */
+  /** create SidebarMainFragment with serverConfigId. */
   public static SidebarMainFragment create(String serverConfigId) {
     Bundle args = new Bundle();
     args.putString("serverConfigId", serverConfigId);
@@ -48,34 +46,44 @@ public class SidebarMainFragment extends AbstractFragment {
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
     serverConfigId = args == null ? null : args.getString("serverConfigId");
     if (!TextUtils.isEmpty(serverConfigId)) {
-      ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
-          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
+      ServerConfig config =
+          RealmStore.getDefault()
+              .executeTransactionForRead(
+                  realm ->
+                      realm
+                          .where(ServerConfig.class)
+                          .equalTo("serverConfigId", serverConfigId)
+                          .findFirst());
       if (config != null) {
         hostname = config.getHostname();
       }
 
       RealmHelper realmHelper = RealmStore.get(serverConfigId);
       if (realmHelper != null) {
-        roomsObserver = realmHelper
-            .createListObserver(realm -> realm.where(RoomSubscription.class).findAll())
-            .setOnUpdateListener(list -> roomListManager.setRooms(list));
+        roomsObserver =
+            realmHelper
+                .createListObserver(realm -> realm.where(RoomSubscription.class).findAll())
+                .setOnUpdateListener(list -> roomListManager.setRooms(list));
 
-        currentUserObserver = realmHelper
-            .createObjectObserver(realm -> realm.where(User.class).isNotEmpty("emails"))
-            .setOnUpdateListener(this::onRenderCurrentUser);
+        currentUserObserver =
+            realmHelper
+                .createObjectObserver(realm -> realm.where(User.class).isNotEmpty("emails"))
+                .setOnUpdateListener(this::onRenderCurrentUser);
 
         methodCallHelper = new MethodCallHelper(serverConfigId);
       }
     }
   }
 
-  @Override protected int getLayout() {
+  @Override
+  protected int getLayout() {
     if (serverConfigId == null) {
       return R.layout.simple_screen;
     } else {
@@ -83,7 +91,8 @@ public class SidebarMainFragment extends AbstractFragment {
     }
   }
 
-  @Override protected void onSetupView() {
+  @Override
+  protected void onSetupView() {
     if (serverConfigId == null) {
       return;
     }
@@ -92,37 +101,47 @@ public class SidebarMainFragment extends AbstractFragment {
     setupUserStatusButtons();
     setupLogoutButton();
 
-    roomListManager = new RoomListManager(
-        (LinearLayout) rootView.findViewById(R.id.channels_container),
-        (LinearLayout) rootView.findViewById(R.id.direct_messages_container));
-    roomListManager.setOnItemClickListener(view -> {
-      RocketChatCache.get(view.getContext()).edit()
-          .putString(RocketChatCache.KEY_SELECTED_ROOM_ID, view.getRoomId())
-          .apply();
-    });
+    roomListManager =
+        new RoomListManager(
+            (LinearLayout) rootView.findViewById(R.id.channels_container),
+            (LinearLayout) rootView.findViewById(R.id.direct_messages_container));
+    roomListManager.setOnItemClickListener(
+        view -> {
+          RocketChatCache.get(view.getContext())
+              .edit()
+              .putString(RocketChatCache.KEY_SELECTED_ROOM_ID, view.getRoomId())
+              .apply();
+        });
   }
 
   private void setupUserActionToggle() {
     final CompoundButton toggleUserAction =
         ((CompoundButton) rootView.findViewById(R.id.toggle_user_action));
     toggleUserAction.setFocusableInTouchMode(false);
-    rootView.findViewById(R.id.user_info_container).setOnClickListener(view -> {
-      toggleUserAction.toggle();
-    });
+    rootView
+        .findViewById(R.id.user_info_container)
+        .setOnClickListener(
+            view -> {
+              toggleUserAction.toggle();
+            });
     RxCompoundButton.checkedChanges(toggleUserAction)
         .compose(bindToLifecycle())
         .subscribe(RxView.visibility(rootView.findViewById(R.id.user_action_outer_container)));
   }
 
   private void setupUserStatusButtons() {
-    rootView.findViewById(R.id.btn_status_online).setOnClickListener(view ->
-        updateCurrentUserStatus(User.STATUS_ONLINE));
-    rootView.findViewById(R.id.btn_status_away).setOnClickListener(view ->
-        updateCurrentUserStatus(User.STATUS_AWAY));
-    rootView.findViewById(R.id.btn_status_busy).setOnClickListener(view ->
-        updateCurrentUserStatus(User.STATUS_BUSY));
-    rootView.findViewById(R.id.btn_status_invisible).setOnClickListener(view ->
-        updateCurrentUserStatus(User.STATUS_OFFLINE));
+    rootView
+        .findViewById(R.id.btn_status_online)
+        .setOnClickListener(view -> updateCurrentUserStatus(User.STATUS_ONLINE));
+    rootView
+        .findViewById(R.id.btn_status_away)
+        .setOnClickListener(view -> updateCurrentUserStatus(User.STATUS_AWAY));
+    rootView
+        .findViewById(R.id.btn_status_busy)
+        .setOnClickListener(view -> updateCurrentUserStatus(User.STATUS_BUSY));
+    rootView
+        .findViewById(R.id.btn_status_invisible)
+        .setOnClickListener(view -> updateCurrentUserStatus(User.STATUS_OFFLINE));
   }
 
   private void updateCurrentUserStatus(String status) {
@@ -141,26 +160,31 @@ public class SidebarMainFragment extends AbstractFragment {
   }
 
   private void setupLogoutButton() {
-    rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
-      if (methodCallHelper != null) {
-        methodCallHelper.logout().continueWith(new LogcatIfError());
-      }
-    });
+    rootView
+        .findViewById(R.id.btn_logout)
+        .setOnClickListener(
+            view -> {
+              if (methodCallHelper != null) {
+                methodCallHelper.logout().continueWith(new LogcatIfError());
+              }
+            });
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     if (roomsObserver != null) {
       roomsObserver.sub();
       currentUserObserver.sub();
     }
   }
 
-  @Override public void onPause() {
+  @Override
+  public void onDestroyView() {
     if (roomsObserver != null) {
       currentUserObserver.unsub();
       roomsObserver.unsub();
     }
-    super.onPause();
+    super.onDestroyView();
   }
 }
