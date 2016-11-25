@@ -20,10 +20,6 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
     protected T extractObjectFromResults(RealmResults<T> results) {
       return results.isEmpty() ? null : results.last();
     }
-
-    protected boolean isSame(T element1, T element2) {
-      return element1.equals(element2);
-    }
   }
 
   private final Query<T> query;
@@ -45,23 +41,21 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
     return this;
   }
 
-  private T previousResult;
+  private String previousResultString;
 
-  @Override
-  protected final RealmResults<T> queryItems(Realm realm) {
+  @Override protected final RealmResults<T> queryItems(Realm realm) {
     return query.query(realm).findAll();
   }
 
-  @Override
-  protected final RealmChangeListener<RealmResults<T>> getListener() {
+  @Override protected final RealmChangeListener<RealmResults<T>> getListener() {
     return new RealmChangeListener<RealmResults<T>>() {
-      @Override
-      public void onChange(RealmResults<T> element) {
+      @Override public void onChange(RealmResults<T> element) {
         T currentResult = impl.extractObjectFromResults(element);
-        if (previousResult != null && impl.isSame(previousResult, currentResult)) {
+        String currentResultString = currentResult != null ? currentResult.toString() : null;
+        if (previousResultString != null && previousResultString.equals(currentResultString)) {
           return;
         }
-        previousResult = currentResult;
+        previousResultString = currentResultString;
         if (onUpdateListener != null) {
           onUpdateListener.onUpdateObject(
               currentResult != null ? realm.copyFromRealm(currentResult) : null);
@@ -70,8 +64,9 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
     };
   }
 
+
   public void sub() {
-    previousResult = null;
+    previousResultString = null;
     super.sub();
   }
 }
