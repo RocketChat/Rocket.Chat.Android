@@ -24,12 +24,12 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
     this.inflater = LayoutInflater.from(context);
   }
 
-  /*package*/ RealmModelListAdapter<T, VM, VH> initializeWith(RealmHelper realmHelper,
+  /*package*/ RealmModelListAdapter<T, VM, VH> initializeWith(final RealmHelper realmHelper,
       RealmListObserver.Query<T> query) {
     realmListObserver = new RealmListObserver<>(realmHelper, query)
         .setOnUpdateListener(new RealmListObserver.OnUpdateListener<T>() {
           @Override public void onUpdateResults(List<T> results) {
-            updateData(results);
+            updateData(realmHelper.copyFromRealm(results));
           }
         });
     return this;
