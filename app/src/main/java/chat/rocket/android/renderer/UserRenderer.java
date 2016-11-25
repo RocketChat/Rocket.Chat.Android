@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.User;
 
 /**
@@ -24,7 +25,9 @@ public class UserRenderer extends AbstractRenderer<User> {
       return this;
     }
 
-    new Avatar(hostname, object.getUsername()).into(imageView);
+    if (!TextUtils.isEmpty(object.getUsername())) {
+      new Avatar(hostname, object.getUsername()).into(imageView);
+    }
     return this;
   }
 

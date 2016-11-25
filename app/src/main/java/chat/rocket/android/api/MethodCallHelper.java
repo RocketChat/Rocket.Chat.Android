@@ -120,6 +120,18 @@ public class MethodCallHelper {
   }
 
   /**
+   * set current user's name.
+   */
+  public Task<String> setUsername(final String username) {
+    return call("setUsername", TIMEOUT_MS, () -> new JSONArray().put(username));
+  }
+
+  public Task<Void> joinDefaultChannels() {
+    return call("joinDefaultChannels", TIMEOUT_MS)
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
+  /**
    * Login with username/email and password.
    */
   public Task<Void> loginWithEmail(final String usernameOrEmail, final String password) {

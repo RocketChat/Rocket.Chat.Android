@@ -5,6 +5,7 @@ import android.os.Bundle;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
@@ -36,14 +37,26 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private void updateServerConfigIdIfNeeded(SharedPreferences prefs) {
     String newServerConfigId = prefs.getString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, null);
     if (serverConfigId == null) {
-      if (newServerConfigId != null) {
+      if (newServerConfigId != null && assertServerConfigExists(newServerConfigId, prefs)) {
         updateServerConfigId(newServerConfigId);
       }
     } else {
-      if (!serverConfigId.equals(newServerConfigId)) {
+      if (!serverConfigId.equals(newServerConfigId)
+          && assertServerConfigExists(newServerConfigId, prefs)) {
         updateServerConfigId(newServerConfigId);
       }
     }
+  }
+
+  private boolean assertServerConfigExists(String serverConfigId, SharedPreferences prefs) {
+    if (RealmStore.get(serverConfigId) == null) {
+      prefs.edit()
+          .remove(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID)
+          .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
+          .apply();
+      return false;
+    }
+    return true;
   }
 
   private void updateServerConfigId(String serverConfigId) {
@@ -54,14 +67,30 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private void updateRoomIdIfNeeded(SharedPreferences prefs) {
     String newRoomId = prefs.getString(RocketChatCache.KEY_SELECTED_ROOM_ID, null);
     if (roomId == null) {
-      if (newRoomId != null) {
+      if (newRoomId != null && assertRoomSubscriptionExists(newRoomId, prefs)) {
         updateRoomId(newRoomId);
       }
     } else {
-      if (!roomId.equals(newRoomId)) {
+      if (!roomId.equals(newRoomId) && assertRoomSubscriptionExists(newRoomId, prefs)) {
         updateRoomId(newRoomId);
       }
     }
+  }
+
+  private boolean assertRoomSubscriptionExists(String roomId, SharedPreferences prefs) {
+    if (!assertServerConfigExists(serverConfigId, prefs)) {
+      return false;
+    }
+
+    RoomSubscription room = RealmStore.get(serverConfigId).executeTransactionForRead(realm ->
+        realm.where(RoomSubscription.class).equalTo("rid", roomId).findFirst());
+    if (room == null) {
+      prefs.edit()
+          .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
+          .apply();
+      return false;
+    }
+    return true;
   }
 
   private void updateRoomId(String roomId) {

@@ -112,6 +112,8 @@ public class UserRegistrationDialogFragment extends DialogFragment {
       MethodCallHelper methodCallHelper = new MethodCallHelper(serverConfigId);
       methodCallHelper.registerUser(username, email, password, password)
           .onSuccessTask(task -> methodCallHelper.loginWithEmail(email, password))
+          .onSuccessTask(task -> methodCallHelper.setUsername(username)) //TODO: should prompt!
+          .onSuccessTask(task -> methodCallHelper.joinDefaultChannels())
           .onSuccessTask(task -> {
             dismiss();
             return task;
