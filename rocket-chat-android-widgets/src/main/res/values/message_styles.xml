@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <style name="TextAppearance.RocketChat" parent="TextAppearance.AppCompat"/>
-  <style name="TextAppearance.RocketChat.MessageBody" parent="TextAppearance.AppCompat.Body2">
+  <style name="TextAppearance.RocketChat.MessageBody" parent="TextAppearance.AppCompat.Body1">
 
   </style>
 
