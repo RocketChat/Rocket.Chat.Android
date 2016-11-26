@@ -9,9 +9,9 @@ import chat.rocket.android.R;
 import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
-import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import hugo.weaving.DebugLog;
 
@@ -19,10 +19,12 @@ import hugo.weaving.DebugLog;
  * Entry-point for Rocket.Chat.Android application.
  */
 public class MainActivity extends AbstractAuthedActivity {
+
+  private RealmObjectObserver<Session> sessionObserver;
+
   @Override protected int getLayoutContainerForFragment() {
     return R.id.activity_main_container;
   }
-
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -62,18 +64,16 @@ public class MainActivity extends AbstractAuthedActivity {
   @DebugLog
   @Override protected void onServerConfigIdUpdated() {
     super.onServerConfigIdUpdated();
-
+    updateSessionObserver();
     updateSidebarMainFragment();
-    showServerConfigActivityIfNeeded();
   }
 
-  private void updateSidebarMainFragment() {
-    getSupportFragmentManager().beginTransaction()
-        .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(serverConfigId))
-        .commit();
-  }
+  private void updateSessionObserver() {
+    if (sessionObserver != null) {
+      sessionObserver.unsub();
+      sessionObserver = null;
+    }
 
-  private void showServerConfigActivityIfNeeded() {
     if (serverConfigId == null) {
       return;
     }
@@ -83,17 +83,25 @@ public class MainActivity extends AbstractAuthedActivity {
       return;
     }
 
-    Session session = realmHelper.executeTransactionForRead(realm ->
-        realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID).findFirst());
+    sessionObserver = realmHelper
+        .createObjectObserver(realm ->
+            realm.where(Session.class)
+                .equalTo("sessionId", Session.DEFAULT_ID)
+                .isNotNull("token")
+                .equalTo("tokenVerified", true)
+                .isNull("error"))
+        .setOnUpdateListener(session -> {
+          if (session == null) {
+            LaunchUtil.showServerConfigActivity(this, serverConfigId);
+          }
+        });
+    sessionObserver.sub();
+  }
 
-    if (session != null
-        && !TextUtils.isEmpty(session.getToken())
-        && session.isTokenVerified()
-        && TextUtils.isEmpty(session.getError())) {
-      // session is OK.
-    } else {
-      LaunchUtil.showServerConfigActivity(this, serverConfigId);
-    }
+  private void updateSidebarMainFragment() {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(serverConfigId))
+        .commit();
   }
 
   @Override protected void onRoomIdUpdated() {
@@ -105,6 +113,21 @@ public class MainActivity extends AbstractAuthedActivity {
     } else {
       showFragment(new HomeFragment());
     }
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+    if (sessionObserver != null) {
+      sessionObserver.keepalive();
+    }
+  }
+
+  @Override protected void onDestroy() {
+    if (sessionObserver != null) {
+      sessionObserver.unsub();
+      sessionObserver = null;
+    }
+    super.onDestroy();
   }
 
   @Override protected boolean onBackPress() {
