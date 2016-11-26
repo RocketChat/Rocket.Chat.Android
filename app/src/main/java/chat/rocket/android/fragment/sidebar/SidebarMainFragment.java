@@ -128,6 +128,7 @@ public class SidebarMainFragment extends AbstractFragment {
   private void updateCurrentUserStatus(String status) {
     if (methodCallHelper != null) {
       methodCallHelper.setUserStatus(status).continueWith(new LogcatIfError());
+      closeUserActionContainer();
     }
   }
 
@@ -144,8 +145,17 @@ public class SidebarMainFragment extends AbstractFragment {
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
       if (methodCallHelper != null) {
         methodCallHelper.logout().continueWith(new LogcatIfError());
+        closeUserActionContainer();
       }
     });
+  }
+
+  private void closeUserActionContainer() {
+    final CompoundButton toggleUserAction =
+        ((CompoundButton) rootView.findViewById(R.id.toggle_user_action));
+    if (toggleUserAction != null && toggleUserAction.isChecked()) {
+      toggleUserAction.setChecked(false);
+    }
   }
 
   @Override public void onResume() {
