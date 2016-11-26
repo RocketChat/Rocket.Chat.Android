@@ -1,9 +1,10 @@
 package chat.rocket.android.helper;
 
+import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -64,27 +65,29 @@ public class Avatar {
    * render avatar into imageView.
    */
   public void into(final ImageView imageView) {
-    Picasso.with(imageView.getContext())
+    Object tag = imageView.getTag();
+    if (tag != null && tag instanceof String) {
+      String username = (String) tag;
+      if (this.username.equals(username)) {
+        return;
+      }
+    }
+    imageView.setTag(this.username);
+
+    final Context context = imageView.getContext();
+    Picasso.with(context)
         .load(getImageUrl())
-        .into(imageView, new Callback() {
-          @Override public void onSuccess() {
-
-          }
-
-          @Override public void onError() {
-            textInto(imageView);
-          }
-        });
+        .placeholder(getTextDrawable(context))
+        .into(imageView);
   }
 
-  private void textInto(final ImageView imageView) {
-    int round = (int) (4 * imageView.getContext().getResources().getDisplayMetrics().density);
+  private Drawable getTextDrawable(Context context) {
+    int round = (int) (4 * context.getResources().getDisplayMetrics().density);
 
-    imageView.setImageDrawable(TextDrawable.builder()
+    return TextDrawable.builder()
         .beginConfig()
         .useFont(Typeface.SANS_SERIF)
         .endConfig()
-        .buildRoundRect(getInitialsForUser(username), getColorForUser(username), round));
-
+        .buildRoundRect(getInitialsForUser(username), getColorForUser(username), round);
   }
 }
