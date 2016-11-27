@@ -5,4 +5,8 @@
   <string name="fa_github" translatable="false">&#xf09b;</string>
   <string name="fa_plus" translatable="false">&#xf067;</string>
   <string name="fa_sign_out" translatable="false">&#xf08b;</string>
+
+  <string name="fa_search" translatable="false">&#xf002;</string>
+  <string name="fa_users" translatable="false">&#xf0c0;</string>
+  <string name="fa_at" translatable="false">&#xf1fa;</string>
 </resources>

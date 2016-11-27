@@ -2,8 +2,13 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
@@ -17,7 +22,9 @@ import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
+import com.jakewharton.rxbinding.support.v4.widget.RxDrawerLayout;
 import io.realm.Sort;
+import java.lang.reflect.Field;
 import org.json.JSONObject;
 import timber.log.Timber;
 
@@ -96,6 +103,39 @@ public class RoomFragment extends AbstractChatRoomFragment {
       }
     };
     listView.addOnScrollListener(scrollListener);
+
+    setupSideMenu();
+  }
+
+  private void setupSideMenu() {
+    View sidemenu = rootView.findViewById(R.id.room_side_menu);
+    sidemenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
+      Toast.makeText(view.getContext(), "not implemented yet.", Toast.LENGTH_SHORT).show();
+      closeSideMenuIfNeeded();
+    });
+
+    DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
+    SlidingPaneLayout pane = (SlidingPaneLayout) getActivity().findViewById(R.id.sliding_pane);
+    if (drawerLayout != null && pane != null) {
+      RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
+          .compose(bindToLifecycle())
+          .subscribe(opened -> {
+            try {
+              Field fieldSlidable = pane.getClass().getDeclaredField("mCanSlide");
+              fieldSlidable.setAccessible(true);
+              fieldSlidable.setBoolean(pane, !opened);
+            } catch (Exception exception) {
+              Timber.w(exception);
+            }
+          });
+    }
+  }
+
+  private void closeSideMenuIfNeeded() {
+    DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
+    if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.END)) {
+      drawerLayout.closeDrawer(GravityCompat.END);
+    }
   }
 
   private void onRenderRoom(RoomSubscription roomSubscription) {
@@ -160,6 +200,7 @@ public class RoomFragment extends AbstractChatRoomFragment {
     super.onResume();
     roomObserver.sub();
     procedureObserver.sub();
+    closeSideMenuIfNeeded();
   }
 
   @Override public void onPause() {
