@@ -109,7 +109,7 @@ public class UserRegistrationDialogFragment extends DialogFragment {
       email = txtEmail.getText().toString();
       password = txtPasswd.getText().toString();
 
-      MethodCallHelper methodCallHelper = new MethodCallHelper(serverConfigId);
+      MethodCallHelper methodCallHelper = new MethodCallHelper(getContext(), serverConfigId);
       methodCallHelper.registerUser(username, email, password, password)
           .onSuccessTask(task -> methodCallHelper.loginWithEmail(email, password))
           .onSuccessTask(task -> methodCallHelper.setUsername(username)) //TODO: should prompt!

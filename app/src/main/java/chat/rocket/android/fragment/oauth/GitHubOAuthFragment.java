@@ -151,7 +151,8 @@ public class GitHubOAuthFragment extends AbstractWebViewFragment {
   }
 
   private void handleOAuthCallback(final String credentialToken, final String credentialSecret) {
-    new MethodCallHelper(serverConfigId).loginWithGitHub(credentialToken, credentialSecret)
+    new MethodCallHelper(getContext(), serverConfigId)
+        .loginWithGitHub(credentialToken, credentialSecret)
         .continueWith(new LogcatIfError());
   }
 

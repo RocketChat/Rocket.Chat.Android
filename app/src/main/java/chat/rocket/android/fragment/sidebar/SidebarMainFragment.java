@@ -70,7 +70,7 @@ public class SidebarMainFragment extends AbstractFragment {
             .createObjectObserver(realm -> realm.where(User.class).isNotEmpty("emails"))
             .setOnUpdateListener(this::onRenderCurrentUser);
 
-        methodCallHelper = new MethodCallHelper(serverConfigId);
+        methodCallHelper = new MethodCallHelper(getContext(), serverConfigId);
       }
     }
   }

@@ -43,7 +43,8 @@ public class LoginFragment extends AbstractServerConfigFragment {
       }
       view.setEnabled(false);
 
-      new MethodCallHelper(serverConfigId).loginWithEmail(username.toString(), passwd.toString())
+      new MethodCallHelper(getContext(), serverConfigId)
+          .loginWithEmail(username.toString(), passwd.toString())
           .continueWith(task -> {
             if (task.isFaulted()) {
               showError(task.getError().getMessage());

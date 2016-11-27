@@ -46,7 +46,7 @@ public class RetryLoginFragment extends AbstractServerConfigFragment {
         view.setEnabled(false);
         waitingView.setVisibility(View.VISIBLE);
 
-        new MethodCallHelper(serverConfigId).loginWithToken(token)
+        new MethodCallHelper(getContext(), serverConfigId).loginWithToken(token)
             .continueWith(task -> {
               if (task.isFaulted()) {
                 view.setEnabled(true);

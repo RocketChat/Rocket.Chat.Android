@@ -1,5 +1,7 @@
 package chat.rocket.android.model.internal;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.helper.LogcatIfError;
@@ -7,6 +9,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
+import chat.rocket.android.service.RocketChatService;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.util.UUID;
@@ -89,8 +92,8 @@ public class MethodCall extends RealmObject {
   /**
    * insert a new record to request a method call.
    */
-  public static Task<String> execute(RealmHelper realmHelper, String name, String paramsJson,
-      long timeout) {
+  public static Task<String> execute(@Nullable final Context context,
+      RealmHelper realmHelper, String name, String paramsJson, long timeout) {
     final String newId = UUID.randomUUID().toString();
     TaskCompletionSource<String> task = new TaskCompletionSource<>();
     realmHelper.executeTransaction(realm -> {
@@ -127,6 +130,10 @@ public class MethodCall extends RealmObject {
           }
         });
         observer.sub();
+
+        if (context != null) {
+          RocketChatService.keepalive(context);
+        }
       }
       return null;
     });

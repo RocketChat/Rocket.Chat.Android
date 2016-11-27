@@ -1,5 +1,6 @@
 package chat.rocket.android.api;
 
+import android.content.Context;
 import android.util.Patterns;
 import bolts.Continuation;
 import bolts.Task;
@@ -24,16 +25,33 @@ import org.json.JSONObject;
  */
 public class MethodCallHelper {
 
+  private final Context context;
   private final RealmHelper realmHelper;
   private final DDPClientWraper ddpClient;
   private static final long TIMEOUT_MS = 4000;
 
+  @Deprecated
+  /**
+   * Deprecated. use MethodCall(Context, String) instead.
+   */
   public MethodCallHelper(String serverConfigId) {
+    this(null, serverConfigId);
+  }
+
+  /**
+   * initialize with Context and ServerConfigId.
+   */
+  public MethodCallHelper(Context context, String serverConfigId) {
+    this.context = context;
     this.realmHelper = RealmStore.get(serverConfigId);
     ddpClient = null;
   }
 
+  /**
+   * initialize with RealmHelper and DDPClient.
+   */
   public MethodCallHelper(RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    this.context = null;
     this.realmHelper = realmHelper;
     this.ddpClient = ddpClient;
   }
@@ -44,7 +62,7 @@ public class MethodCallHelper {
       return ddpClient.rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
-      return MethodCall.execute(realmHelper, methodName, param, timeout);
+      return MethodCall.execute(context, realmHelper, methodName, param, timeout);
     }
   }
 
