@@ -6,6 +6,7 @@ import chat.rocket.android.realm_helper.RealmModelListAdapter;
 import chat.rocket.android.realm_helper.RealmModelViewHolder;
 import io.realm.RealmObject;
 
+@SuppressWarnings({"PMD.AbstractNaming", "PMD.GenericsNaming"})
 /**
  * RealmModelListAdapter with header and footer.
  */
