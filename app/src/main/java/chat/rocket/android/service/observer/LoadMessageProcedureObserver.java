@@ -57,14 +57,16 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
                   realm.where(Message.class)
                       .equalTo("rid", roomId)
                       .equalTo("syncstate", SyncState.SYNCED)
-                      .findAllSorted("ts", Sort.ASCENDING).last(null));
+                      .findAllSorted("ts", Sort.ASCENDING).first(null));
               long lastTs = lastMessage != null ? lastMessage.getTs() : 0;
+              int messageCount = _task.getResult().length();
               return realmHelper.executeTransaction(realm ->
                   realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
                       .put("roomId", roomId)
                       .put("syncstate", SyncState.SYNCED)
                       .put("timestamp", lastTs)
-                      .put("hasNext", lastTs > 0)));
+                      .put("reset", false)
+                      .put("hasNext", messageCount == count)));
             })
     ).continueWithTask(task -> {
       if (task.isFaulted()) {

@@ -238,7 +238,7 @@ public class MethodCallHelper {
   /**
    * Load messages for room.
    */
-  public Task<Void> loadHistory(final String roomId, final long timestamp,
+  public Task<JSONArray> loadHistory(final String roomId, final long timestamp,
       final int count, final long lastSeen) {
     return call("loadHistory", TIMEOUT_MS, () -> new JSONArray()
         .put(roomId)
@@ -261,7 +261,7 @@ public class MethodCallHelper {
               realm.createOrUpdateAllFromJson(Message.class, messages);
             }
             return null;
-          });
+          }).onSuccessTask(_task -> Task.forResult(messages));
         });
   }
 

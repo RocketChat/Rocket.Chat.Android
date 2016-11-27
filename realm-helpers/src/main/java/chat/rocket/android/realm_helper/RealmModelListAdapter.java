@@ -16,7 +16,7 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
     RealmModelListAdapter<T, VM, VH> getNewInstance(Context context);
   }
 
-  private final LayoutInflater inflater;
+  protected final LayoutInflater inflater;
   private RealmListObserver<T> realmListObserver;
   private List<VM> adapterData;
 
@@ -54,11 +54,11 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
   protected abstract List<VM> mapResultsToViewModel(List<T> results);
 
 
-  @Override public final int getItemViewType(int position) {
+  @Override public int getItemViewType(int position) {
     return getRealmModelViewType(getItem(position));
   }
 
-  @Override public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override public final VH onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView = inflater.inflate(getLayout(viewType), parent, false);
     return onCreateRealmModelViewHolder(viewType, itemView);
   }
