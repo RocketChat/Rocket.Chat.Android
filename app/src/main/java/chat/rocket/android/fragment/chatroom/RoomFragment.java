@@ -12,6 +12,7 @@ import android.widget.Toast;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
@@ -31,7 +32,7 @@ import timber.log.Timber;
 /**
  * Chat room screen.
  */
-public class RoomFragment extends AbstractChatRoomFragment {
+public class RoomFragment extends AbstractChatRoomFragment implements OnBackPressListener {
 
   private RealmHelper realmHelper;
   private String roomId;
@@ -131,11 +132,13 @@ public class RoomFragment extends AbstractChatRoomFragment {
     }
   }
 
-  private void closeSideMenuIfNeeded() {
+  private boolean closeSideMenuIfNeeded() {
     DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
     if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.END)) {
       drawerLayout.closeDrawer(GravityCompat.END);
+      return true;
     }
+    return false;
   }
 
   private void onRenderRoom(RoomSubscription roomSubscription) {
@@ -207,5 +210,9 @@ public class RoomFragment extends AbstractChatRoomFragment {
     procedureObserver.unsub();
     roomObserver.unsub();
     super.onPause();
+  }
+
+  @Override public boolean onBackPressed() {
+    return closeSideMenuIfNeeded();
   }
 }

@@ -54,7 +54,7 @@ public class MainActivity extends AbstractAuthedActivity {
   private boolean closeSidebarIfNeeded() {
     // REMARK: Tablet UI doesn't have SlidingPane!
     SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-    if (pane != null && pane.isOpen()) {
+    if (pane != null && pane.isSlideable() && pane.isOpen()) {
       pane.closePane();
       return true;
     }
