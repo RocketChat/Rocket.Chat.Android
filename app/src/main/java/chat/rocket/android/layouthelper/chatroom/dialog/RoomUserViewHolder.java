@@ -14,6 +14,9 @@ public class RoomUserViewHolder extends RecyclerView.ViewHolder {
   ImageView avatar;
   TextView username;
 
+  /**
+   * Constructor.
+   */
   public RoomUserViewHolder(View itemView) {
     super(itemView);
     status = (ImageView) itemView.findViewById(R.id.room_user_status);

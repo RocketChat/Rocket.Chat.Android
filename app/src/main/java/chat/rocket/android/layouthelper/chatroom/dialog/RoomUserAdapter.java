@@ -13,6 +13,7 @@ import chat.rocket.android.renderer.UserRenderer;
 import java.util.List;
 
 /**
+ * RecyclerView adapter for UsersOfRooms.
  */
 public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
 
@@ -22,6 +23,9 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
   private final String hostname;
   private List<String> usernames;
 
+  /**
+   * Constructor with required parameters.
+   */
   public RoomUserAdapter(Context context, RealmHelper realmHelper, String hostname) {
     this.context = context;
     this.inflater = LayoutInflater.from(context);

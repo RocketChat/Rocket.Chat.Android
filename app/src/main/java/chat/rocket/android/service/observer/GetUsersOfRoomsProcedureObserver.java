@@ -14,8 +14,10 @@ import org.json.JSONObject;
 import timber.log.Timber;
 
 /**
+ * Model observer for executing getUsersOfRooms.
  */
-public class GetUsersOfRoomsProcedureObserver extends AbstractModelObserver<GetUsersOfRoomsProcedure> {
+public class GetUsersOfRoomsProcedureObserver
+    extends AbstractModelObserver<GetUsersOfRoomsProcedure> {
 
   private final MethodCallHelper methodCall;
 
