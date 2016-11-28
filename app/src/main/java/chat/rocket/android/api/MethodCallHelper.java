@@ -273,4 +273,9 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
+
+  public Task<JSONObject> getUsersOfRoom(final String roomId, final boolean showAll) {
+    return call("getUsersOfRoom", TIMEOUT_MS, () -> new JSONArray().put(roomId).put(showAll))
+        .onSuccessTask(CONVERT_TO_JSON_OBJECT);
+  }
 }

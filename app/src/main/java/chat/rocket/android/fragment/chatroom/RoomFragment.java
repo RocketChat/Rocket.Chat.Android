@@ -8,8 +8,8 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 import chat.rocket.android.R;
+import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
@@ -34,6 +34,7 @@ import timber.log.Timber;
  */
 public class RoomFragment extends AbstractChatRoomFragment implements OnBackPressListener {
 
+  private String serverConfigId;
   private RealmHelper realmHelper;
   private String roomId;
   private RealmObjectObserver<RoomSubscription> roomObserver;
@@ -60,7 +61,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
-    String serverConfigId = args.getString("serverConfigId");
+    serverConfigId = args.getString("serverConfigId");
     realmHelper = RealmStore.get(serverConfigId);
     roomId = args.getString("roomId");
     hostname = RealmStore.getDefault().executeTransactionForRead(realm ->
@@ -111,7 +112,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
   private void setupSideMenu() {
     View sidemenu = rootView.findViewById(R.id.room_side_menu);
     sidemenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
-      Toast.makeText(view.getContext(), "not implemented yet.", Toast.LENGTH_SHORT).show();
+      UsersOfRoomDialogFragment.create(serverConfigId, roomId, hostname)
+          .show(getFragmentManager(), UsersOfRoomDialogFragment.class.getSimpleName());
       closeSideMenuIfNeeded();
     });
 

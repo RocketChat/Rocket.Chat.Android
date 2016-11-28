@@ -9,4 +9,6 @@
   <string name="fragment_sidebar_main_logout_title">Logout</string>
 
   <string name="start_of_conversation">Start of conversation</string>
+  <string name="users_of_room_title">Members List</string>
+  <string name="fmt_room_user_count">Total: %,d users</string>
 </resources>

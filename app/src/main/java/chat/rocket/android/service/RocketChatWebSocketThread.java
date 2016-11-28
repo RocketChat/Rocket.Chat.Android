@@ -6,6 +6,7 @@ import android.os.HandlerThread;
 import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
@@ -14,11 +15,11 @@ import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.ddp.ActiveUsersSubscriber;
 import chat.rocket.android.service.ddp.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
-import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
 import java.lang.reflect.Constructor;
@@ -37,7 +38,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
       TokenLoginObserver.class,
       MethodCallObserver.class,
       SessionObserver.class,
-      LoadMessageProcedureObserver.class
+      LoadMessageProcedureObserver.class,
+      GetUsersOfRoomsProcedureObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;
