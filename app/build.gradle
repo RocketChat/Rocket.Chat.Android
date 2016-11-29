@@ -25,8 +25,6 @@ buildscript {
   configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
-apply plugin: 'com.google.gms.google-services'
-
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
   buildToolsVersion rootProject.ext.buildToolsVersion
@@ -115,3 +113,5 @@ dependencies {
   compile 'frankiesardo:icepick:3.2.0'
   provided 'frankiesardo:icepick-processor:3.2.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
