@@ -3,6 +3,8 @@
 * rough design document is [here](https://github.com/RocketChat/Rocket.Chat.Android/blob/doc/README.md)
 * Rocket.Chat.Android.Lily is moved to [deprecated_lily](https://github.com/RocketChat/Rocket.Chat.Android/tree/deprecated_lily) branch.
 
+Contribution to [the issue with `v1.0-beta` without asignee](https://github.com/RocketChat/Rocket.Chat.Android/issues?utf8=%E2%9C%93&q=is%3Aopen%20is%3Aissue%20no%3Aassignee%20v1.0-beta) is very Welcome! :smile:
+
 ---
 
 [![CircleCI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop)
