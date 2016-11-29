@@ -30,3 +30,12 @@ echo "sdk.dir="$ANDROID_HOME > local.properties
 
 ./gradlew assembleDebug
 ```
+
+
+## Bug report & Feature request
+
+Please report via instabug
+
+![Instabug](https://cloud.githubusercontent.com/assets/11763113/20717302/6b0918d2-b698-11e6-86f5-df25813f0158.png)
+
+Of course, [GitHub issue](https://github.com/RocketChat/Rocket.Chat.Android/issues) is also available :)
