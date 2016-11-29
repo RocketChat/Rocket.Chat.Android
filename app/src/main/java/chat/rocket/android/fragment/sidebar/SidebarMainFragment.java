@@ -63,7 +63,7 @@ public class SidebarMainFragment extends AbstractFragment {
       RealmHelper realmHelper = RealmStore.get(serverConfigId);
       if (realmHelper != null) {
         roomsObserver = realmHelper
-            .createListObserver(realm -> realm.where(RoomSubscription.class).findAll())
+            .createListObserver(realm -> realm.where(RoomSubscription.class).equalTo("open", true).findAll())
             .setOnUpdateListener(list -> roomListManager.setRooms(list));
 
         currentUserObserver = realmHelper
