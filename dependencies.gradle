@@ -21,7 +21,7 @@ subprojects { project ->
     resolutionStrategy {
       eachDependency { details ->
         if (details.requested.group == 'com.android.support'
-            && details.requested.name != "multidex") {
+            && details.requested.name.indexOf("multidex") == -1) {
           details.useVersion(rootProject.ext.supportVersion)
         }
       }
