@@ -18,11 +18,14 @@ buildscript {
     classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     classpath rootProject.ext.realmPlugin
     classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+    classpath 'com.google.gms:google-services:3.0.0'
   }
 
   // Exclude the version that the android plugin depends on.
   configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
+
+apply plugin: 'com.google.gms.google-services'
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
@@ -72,7 +75,7 @@ repositories {
   maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
   maven { url 'https://github.com/RocketChat/Android-DDP/raw/master/repository' }
   maven { url 'http://dl.bintray.com/amulyakhare/maven' }
-  maven {url "https://clojars.org/repo/"} //for icepick.
+  maven { url "https://clojars.org/repo/" } //for icepick.
 }
 
 dependencies {
@@ -80,6 +83,9 @@ dependencies {
   compile project(':realm-helpers')
   compile rootProject.ext.supportAppCompat
   compile rootProject.ext.supportDesign
+
+  compile 'com.google.firebase:firebase-core:10.0.0'
+  compile 'com.google.firebase:firebase-crash:10.0.0'
 
   compile 'com.squareup.okhttp3:okhttp:3.4.1'
   compile 'com.squareup.picasso:picasso:2.5.2'
