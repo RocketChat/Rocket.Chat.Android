@@ -32,13 +32,14 @@ android {
   buildToolsVersion rootProject.ext.buildToolsVersion
   defaultConfig {
     applicationId "chat.rocket.android"
-    minSdkVersion 17
+    minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.compileSdkVersion
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     vectorDrawables.useSupportLibrary = true
+    multiDexEnabled true
   }
   signingConfigs {
     release {
@@ -83,6 +84,11 @@ dependencies {
   compile project(':realm-helpers')
   compile rootProject.ext.supportAppCompat
   compile rootProject.ext.supportDesign
+
+  compile('com.instabug.library:instabug:3.1.0') {
+    exclude group: 'io.reactivex'
+  }
+  compile 'com.android.support:multidex:1.0.1'
 
   compile 'com.google.firebase:firebase-core:10.0.0'
   compile 'com.google.firebase:firebase-crash:10.0.0'

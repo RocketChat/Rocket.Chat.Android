@@ -1,9 +1,11 @@
 package chat.rocket.android;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmStore;
 import com.facebook.stetho.Stetho;
+import com.instabug.library.Instabug;
+import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -13,7 +15,7 @@ import timber.log.Timber;
 /**
  * Customized Application-class for Rocket.Chat
  */
-public class RocketChatApplication extends Application {
+public class RocketChatApplication extends MultiDexApplication {
   @Override public void onCreate() {
     super.onCreate();
 
@@ -33,6 +35,10 @@ public class RocketChatApplication extends Application {
         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
         .build());
+
+    new Instabug.Builder(this, getString(R.string.instabug_api_key))
+        .setInvocationEvent(InstabugInvocationEvent.FLOATING_BUTTON)
+        .build();
 
     //TODO: add periodic trigger for RocketChatService.keepalive(this) here!
   }

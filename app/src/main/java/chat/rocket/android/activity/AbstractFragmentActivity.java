@@ -5,7 +5,9 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.MotionEvent;
 import chat.rocket.android.helper.OnBackPressListener;
+import com.instabug.library.InstabugTrackingDelegate;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import icepick.Icepick;
 
@@ -61,5 +63,10 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
         .replace(getLayoutContainerForFragment(), fragment)
         .addToBackStack(null)
         .commit();
+  }
+
+  @Override public boolean dispatchTouchEvent(MotionEvent ev) {
+    InstabugTrackingDelegate.notifyActivityGotTouchEvent(ev, this);
+    return super.dispatchTouchEvent(ev);
   }
 }

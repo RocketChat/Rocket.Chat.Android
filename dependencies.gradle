@@ -2,9 +2,10 @@ ext {
   androidPlugin = 'com.android.tools.build:gradle:2.2.2'
   realmPlugin = 'io.realm:realm-gradle-plugin:2.2.1'
   compileSdkVersion = 25
-  buildToolsVersion = '25.0.0'
+  buildToolsVersion = '25.0.1'
+  minSdkVersion = 21 //for accelerating multi-dex build. OVERRIDEN BY Circle CI to 17
 
-  supportVersion = '25.0.0'
+  supportVersion = '25.0.1'
   supportAnnotations = "com.android.support:support-annotations:$supportVersion"
   supportRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
   supportAppCompat = "com.android.support:appcompat-v7:$supportVersion"
@@ -19,7 +20,8 @@ subprojects { project ->
   project.configurations.all {
     resolutionStrategy {
       eachDependency { details ->
-        if (details.requested.group == 'com.android.support') {
+        if (details.requested.group == 'com.android.support'
+            && details.requested.name != "multidex") {
           details.useVersion(rootProject.ext.supportVersion)
         }
       }
