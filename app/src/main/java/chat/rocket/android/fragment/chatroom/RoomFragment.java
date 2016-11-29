@@ -144,6 +144,16 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
   }
 
   private void onRenderRoom(RoomSubscription roomSubscription) {
+    String type = roomSubscription.getT();
+    if (RoomSubscription.TYPE_CHANNEL.equals(type)) {
+      activityToolbar.setNavigationIcon(R.drawable.ic_hashtag_white_24dp);
+    } else if (RoomSubscription.TYPE_PRIVATE.equals(type)) {
+      activityToolbar.setNavigationIcon(R.drawable.ic_lock_white_24dp);
+    } else if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(type)) {
+      activityToolbar.setNavigationIcon(R.drawable.ic_at_white_24dp);
+    } else {
+      activityToolbar.setNavigationIcon(null);
+    }
     activityToolbar.setTitle(roomSubscription.getName());
   }
 

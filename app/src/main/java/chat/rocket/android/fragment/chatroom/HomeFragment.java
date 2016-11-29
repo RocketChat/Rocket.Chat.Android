@@ -16,6 +16,7 @@ public class HomeFragment extends AbstractChatRoomFragment {
 
   @Override public void onResume() {
     super.onResume();
+    activityToolbar.setNavigationIcon(null);
     activityToolbar.setTitle("Rocket.Chat - Home");
   }
 }
