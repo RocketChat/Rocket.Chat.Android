@@ -65,8 +65,8 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
         .commit();
   }
 
-  @Override public boolean dispatchTouchEvent(MotionEvent ev) {
-    InstabugTrackingDelegate.notifyActivityGotTouchEvent(ev, this);
-    return super.dispatchTouchEvent(ev);
+  @Override public boolean dispatchTouchEvent(MotionEvent event) {
+    InstabugTrackingDelegate.notifyActivityGotTouchEvent(event, this);
+    return super.dispatchTouchEvent(event);
   }
 }
