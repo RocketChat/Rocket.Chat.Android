@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.AppCompat.Light"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="@dimen/margin_16"
-    android:gravity="center">
+    android:theme="@style/Theme.AppCompat.Light">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to Rocket.Chat.Android\nSelect a channel from the drawer."
-        android:textSize="14sp"
+        android:layout_marginBottom="@dimen/margin_16"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/margin_16"/>
+        android:text="@string/fragmnet_home_welcome_message"
+        android:textSize="14sp" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/ic_launcher" />
 </LinearLayout>

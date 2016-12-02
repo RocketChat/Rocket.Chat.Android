@@ -11,4 +11,14 @@
   <string name="start_of_conversation">Start of conversation</string>
   <string name="users_of_room_title">Members List</string>
   <string name="fmt_room_user_count">Total: %,d users</string>
+  <string name="dialog_user_registration_email">email address</string>
+  <string name="dialog_user_registration_username">username</string>
+  <string name="dialog_user_registration_password">password</string>
+  <string name="fragmnet_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
+  <string name="fragment_input_hostname_hostname">hostname</string>
+  <string name="fragment_input_hostname_server_hint">demo.rocket.chat</string>
+  <string name="fragment_login_username_or_email">username or email</string>
+  <string name="fragment_login_password">password</string>
+  <string name="fragment_retry_login_retry_title">RETRY</string>
+  <string name="fragment_retry_login_error_title">Oops...</string>
 </resources>

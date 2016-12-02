@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SlidingPaneLayout
+<android.support.v4.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sub_sliding_pane"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_gravity="start"
     android:layout_width="280dp"
     android:layout_height="match_parent"
-    android:theme="@style/AppTheme.Dark"
-    >
-  <android.support.v4.widget.NestedScrollView
-      android:layout_width="96dp"
-      android:layout_height="match_parent"
-      android:layout_gravity="start"
-      android:background="?attr/colorPrimaryDark"
-      >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+    android:layout_gravity="start"
+    android:theme="@style/AppTheme.Dark">
 
-      <ImageButton
-          android:layout_width="80dp"
-          android:layout_height="80dp"
-          android:layout_margin="@dimen/margin_8"
-          android:src="@mipmap/ic_launcher"
-          style="@style/Base.Widget.AppCompat.Button.Borderless"
-          />
-      <chat.rocket.android.widget.FontAwesomeButton
-          android:layout_width="80dp"
-          android:layout_height="80dp"
-          android:layout_margin="@dimen/margin_8"
-          android:text="@string/fa_plus"
-          style="@style/Base.Widget.AppCompat.Button.Borderless"
-          />
-    </LinearLayout>
-  </android.support.v4.widget.NestedScrollView>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="96dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="?attr/colorPrimaryDark">
 
-  <FrameLayout
-      android:id="@+id/sidebar_fragment_container"
-      android:layout_width="280dp"
-      android:layout_height="match_parent"
-      />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="@dimen/margin_8"
+                android:src="@mipmap/ic_launcher" />
+
+            <chat.rocket.android.widget.FontAwesomeButton
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="@dimen/margin_8"
+                android:text="@string/fa_plus" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/sidebar_fragment_container"
+        android:layout_width="280dp"
+        android:layout_height="match_parent" />
 
 </android.support.v4.widget.SlidingPaneLayout>
