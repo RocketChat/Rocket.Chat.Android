@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_16"
         android:gravity="center"
-        android:text="@string/fragmnet_home_welcome_message"
+        android:text="@string/fragment_home_welcome_message"
         android:textSize="14sp" />
 
     <ImageView
