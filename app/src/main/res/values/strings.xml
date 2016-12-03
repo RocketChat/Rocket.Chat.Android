@@ -8,10 +8,21 @@
   <string name="user_status_invisible">Invisible</string>
   <string name="fragment_sidebar_main_logout_title">Logout</string>
 
-  <string name="start_of_conversation">Start of conversation</string>
-  <string name="users_of_room_title">Members List</string>
-  <string name="fmt_room_user_count">Total: %,d users</string>
-  <string name="sending">Sending...</string>
-  <string name="resend">Resend</string>
-  <string name="discard">Discard</string>
+    <string name="start_of_conversation">Start of conversation</string>
+    <string name="users_of_room_title">Members List</string>
+    <string name="fmt_room_user_count">Total: %,d users</string>
+    <string name="sending">Sending...</string>
+    <string name="resend">Resend</string>
+    <string name="discard">Discard</string>
+
+    <string name="dialog_user_registration_email">Email</string>
+    <string name="dialog_user_registration_username">Username</string>
+    <string name="dialog_user_registration_password">Password</string>
+    <string name="fragment_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
+    <string name="fragment_input_hostname_hostname">Hostname</string>
+    <string name="fragment_input_hostname_server_hint">demo.rocket.chat</string>
+    <string name="fragment_login_username_or_email">Username or email</string>
+    <string name="fragment_login_password">Password</string>
+    <string name="fragment_retry_login_retry_title">RETRY</string>
+    <string name="fragment_retry_login_error_title">Oops…</string>
 </resources>
