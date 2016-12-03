@@ -11,6 +11,7 @@ import io.realm.RealmObject;
 import io.realm.RealmResults;
 import java.util.Collections;
 import java.util.List;
+import org.json.JSONException;
 import timber.log.Timber;
 
 public class RealmHelper {
@@ -34,12 +35,9 @@ public class RealmHelper {
       return Collections.emptyList();
     }
 
-    Realm realm = instance();
-    List<E> list = realm.copyFromRealm(objects);
-    if (!realm.isClosed()) {
-      realm.close();
+    try (Realm realm = instance()) {
+      return realm.copyFromRealm(objects);
     }
-    return list;
   }
 
   public <E extends RealmObject> E copyFromRealm(E object) {
@@ -47,56 +45,33 @@ public class RealmHelper {
       return null;
     }
 
-    Realm realm = instance();
-    E element = realm.copyFromRealm(object);
-    if (!realm.isClosed()) {
-      realm.close();
+    try (Realm realm = instance()) {
+      return realm.copyFromRealm(object);
     }
-    return element;
   }
 
   public interface Transaction<T> {
-    T execute(Realm realm) throws Exception;
+    T execute(Realm realm) throws JSONException;
   }
 
   public <T extends RealmObject> T executeTransactionForRead(Transaction<T> transaction) {
-    Realm realm = instance();
-
-    T object;
-
-    try {
+    try (Realm realm = instance()) {
       T source = transaction.execute(realm);
-      object = source != null ? realm.copyFromRealm(source) : null;
+      return source != null ? realm.copyFromRealm(source) : null;
     } catch (Exception exception) {
       Timber.w(exception);
-      object = null;
-    } finally {
-      if (!realm.isClosed()) {
-        realm.close();
-      }
+      return null;
     }
-
-    return object;
   }
 
   public <T extends RealmObject> List<T> executeTransactionForReadResults(
       Transaction<RealmResults<T>> transaction) {
-    Realm realm = instance();
-
-    List<T> object;
-
-    try {
-      object = realm.copyFromRealm(transaction.execute(realm));
+    try (Realm realm = instance()) {
+      return realm.copyFromRealm(transaction.execute(realm));
     } catch (Exception exception) {
       Timber.w(exception);
-      object = null;
-    } finally {
-      if (!realm.isClosed()) {
-        realm.close();
-      }
+      return Collections.emptyList();
     }
-
-    return object;
   }
 
   public Task<Void> executeTransaction(final RealmHelper.Transaction transaction) {
@@ -107,19 +82,19 @@ public class RealmHelper {
   private Task<Void> executeTransactionSync(final RealmHelper.Transaction transaction) {
     final TaskCompletionSource<Void> task = new TaskCompletionSource<>();
 
-    final Realm realm = instance();
-    realm.executeTransaction(new Realm.Transaction() {
-      @Override public void execute(Realm realm) {
-        try {
-          transaction.execute(realm);
-          task.setResult(null);
-        } catch (Exception exception) {
-          task.setError(exception);
+    try (Realm realm = instance()) {
+      realm.executeTransaction(new Realm.Transaction() {
+        @Override public void execute(Realm realm) {
+          try {
+            transaction.execute(realm);
+          } catch (JSONException exception) {
+            throw new RuntimeException(exception);
+          }
         }
-      }
-    });
-    if (!realm.isClosed()) {
-      realm.close();
+      });
+      task.setResult(null);
+    } catch (Exception exception) {
+      task.setError(exception);
     }
 
     return task.getTask();
@@ -133,27 +108,22 @@ public class RealmHelper {
       @Override public void execute(Realm realm) {
         try {
           transaction.execute(realm);
-        } catch (Exception exception) {
-          task.setError(exception);
-          if (!realm.isClosed()) {
-            realm.close();
-          }
+        } catch (JSONException exception) {
+          throw new RuntimeException(exception);
         }
       }
     }, new Realm.Transaction.OnSuccess() {
       @Override public void onSuccess() {
-        if (task.trySetResult(null)) {
-          if (realm != null && !realm.isClosed()) {
-            realm.close();
-          }
-        }
+        realm.close();
+        task.setResult(null);
       }
     }, new Realm.Transaction.OnError() {
       @Override public void onError(Throwable error) {
-        if (task.trySetError(new Exception(error))) {
-          if (!realm.isClosed()) {
-            realm.close();
-          }
+        realm.close();
+        if (error instanceof Exception) {
+          task.setError((Exception) error);
+        } else {
+          task.setError(new Exception(error));
         }
       }
     });

@@ -108,9 +108,11 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
       throws JSONException {
     //executed in RealmTransaction
     JSONObject json = new JSONObject().put("_id", docEvent.docID);
-    for (int i = 0; i < docEvent.cleared.length(); i++) {
-      String fieldToDelete = docEvent.cleared.getString(i);
-      json.put(fieldToDelete, JSONObject.NULL);
+    if (docEvent.cleared != null) {
+      for (int i = 0; i < docEvent.cleared.length(); i++) {
+        String fieldToDelete = docEvent.cleared.getString(i);
+        json.put(fieldToDelete, JSONObject.NULL);
+      }
     }
     mergeJson(json, docEvent.fields);
     realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJson(json));
