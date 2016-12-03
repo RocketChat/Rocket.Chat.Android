@@ -11,6 +11,14 @@
       android:layout_height="match_parent"
       />
 
+  <chat.rocket.android.widget.message.MessageComposer
+      android:id="@+id/message_composer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:theme="@style/Theme.AppCompat.Light"
+      android:layout_gravity="bottom"
+      android:background="@android:color/white"/>
+
   <android.support.design.widget.FloatingActionButton
       android:id="@+id/fab_compose"
       android:layout_width="wrap_content"

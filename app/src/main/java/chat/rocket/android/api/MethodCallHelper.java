@@ -6,6 +6,7 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.MethodCall;
@@ -255,7 +256,10 @@ public class MethodCallHelper {
 
           return realmHelper.executeTransaction(realm -> {
             if (timestamp == 0) {
-              realm.where(Message.class).equalTo("rid", roomId).findAll().deleteAllFromRealm();
+              realm.where(Message.class)
+                  .equalTo("rid", roomId)
+                  .equalTo("syncstate", SyncState.SYNCED)
+                  .findAll().deleteAllFromRealm();
             }
             if (messages.length() > 0) {
               realm.createOrUpdateAllFromJson(Message.class, messages);
@@ -277,5 +281,28 @@ public class MethodCallHelper {
   public Task<JSONObject> getUsersOfRoom(final String roomId, final boolean showAll) {
     return call("getUsersOfRoom", TIMEOUT_MS, () -> new JSONArray().put(roomId).put(showAll))
         .onSuccessTask(CONVERT_TO_JSON_OBJECT);
+  }
+
+  /**
+   * send message.
+   */
+  public Task<JSONObject> sendMessage(String messageId, String roomId, String msg) {
+    try {
+      return sendMessage(new JSONObject()
+          .put("_id", messageId)
+          .put("rid", roomId)
+          .put("msg", msg));
+    } catch (JSONException exception) {
+      return Task.forError(exception);
+    }
+  }
+
+  /**
+   * Send message object.
+   */
+  public Task<JSONObject> sendMessage(final JSONObject messageJson) {
+    return call("sendMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
+        .onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(Message.customizeJson(task.getResult())));
   }
 }
