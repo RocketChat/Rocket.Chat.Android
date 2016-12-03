@@ -7,6 +7,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.model.SyncState;
 import chat.rocket.android.realm_helper.RealmModelViewHolder;
 import chat.rocket.android.renderer.MessageRenderer;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
@@ -48,6 +49,15 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
         .usernameInto(username)
         .timestampInto(timestamp)
         .bodyInto(body);
+
+    if (pairedMessage.target != null) {
+      int syncstate = pairedMessage.target.getSyncstate();
+      if (syncstate == SyncState.NOT_SYNCED || syncstate == SyncState.SYNCING) {
+        itemView.setAlpha(0.6f);
+      } else {
+        itemView.setAlpha(1.0f);
+      }
+    }
 
     renderNewDayAndSequential(pairedMessage);
   }
