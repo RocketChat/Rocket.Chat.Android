@@ -16,9 +16,14 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
     RealmModelListAdapter<T, VM, VH> getNewInstance(Context context);
   }
 
+  public interface OnItemClickListener<VM> {
+    void onItemClick(VM model);
+  }
+
   protected final LayoutInflater inflater;
   private RealmListObserver<T> realmListObserver;
   private List<VM> adapterData;
+  private OnItemClickListener<VM> onItemClickListener;
 
   protected RealmModelListAdapter(Context context) {
     this.inflater = LayoutInflater.from(context);
@@ -64,7 +69,17 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
   }
 
   @Override public void onBindViewHolder(VH holder, int position) {
-    holder.bind(getItem(position));
+    VM model = getItem(position);
+    holder.itemView.setTag(model);
+    holder.itemView.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        VM model2 = (VM) (view.getTag());
+        if (model2 != null && onItemClickListener != null) {
+          onItemClickListener.onItemClick(model2);
+        }
+      }
+    });
+    holder.bind(model);
   }
 
   @Override public int getItemCount() {
@@ -84,5 +99,9 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
       adapterData = mapResultsToViewModel(newData);
       notifyDataSetChanged();
     }
+  }
+
+  public void setOnItemClickListener(OnItemClickListener<VM> onItemClickListener) {
+    this.onItemClickListener = onItemClickListener;
   }
 }
