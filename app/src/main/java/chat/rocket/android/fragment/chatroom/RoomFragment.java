@@ -166,7 +166,7 @@ public class RoomFragment extends AbstractChatRoomFragment
               fieldSlidable.setAccessible(true);
               fieldSlidable.setBoolean(pane, !opened);
             } catch (Exception exception) {
-              Timber.w(exception);
+              Timber.w(exception, "failed to set CanSlide.");
             }
           });
     }

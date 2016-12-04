@@ -50,7 +50,7 @@ abstract class AbstractRealmResultsObserver<T extends RealmObject> {
         realm.close();
       }
     } catch (IllegalStateException exception) {
-      Timber.w(exception);
+      Timber.w(exception, "failed to unsub. ignore.");
     }
   }
 

@@ -59,7 +59,7 @@ public class RealmHelper {
       T source = transaction.execute(realm);
       return source != null ? realm.copyFromRealm(source) : null;
     } catch (Exception exception) {
-      Timber.w(exception);
+      Timber.w(exception, "failed to execute copyFromRealm");
       return null;
     }
   }
@@ -69,7 +69,7 @@ public class RealmHelper {
     try (Realm realm = instance()) {
       return realm.copyFromRealm(transaction.execute(realm));
     } catch (Exception exception) {
-      Timber.w(exception);
+      Timber.w(exception, "failed to execute copyFromRealm");
       return Collections.emptyList();
     }
   }
