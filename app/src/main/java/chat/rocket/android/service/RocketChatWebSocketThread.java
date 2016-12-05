@@ -15,6 +15,7 @@ import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.ddp.ActiveUsersSubscriber;
 import chat.rocket.android.service.ddp.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.ddp.UserDataSubscriber;
 import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
@@ -36,6 +37,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private static final Class[] REGISTERABLE_CLASSES = {
       LoginServiceConfigurationSubscriber.class,
       ActiveUsersSubscriber.class,
+      UserDataSubscriber.class,
       TokenLoginObserver.class,
       MethodCallObserver.class,
       SessionObserver.class,
