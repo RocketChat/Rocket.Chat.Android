@@ -76,7 +76,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     final String token = session.getToken();
     if (!TextUtils.isEmpty(token)) {
       if (TextUtils.isEmpty(session.getError())) {
-        showFragment(WaitingFragment.create("Authenticating..."));
+        showFragment(WaitingFragment.create(getString(R.string.server_config_activity_authenticating)));
       } else {
         showFragment(new RetryLoginFragment());
       }
