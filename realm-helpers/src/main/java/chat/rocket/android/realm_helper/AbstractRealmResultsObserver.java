@@ -4,7 +4,6 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
-import timber.log.Timber;
 
 abstract class AbstractRealmResultsObserver<T extends RealmObject> {
   protected Realm realm;
@@ -31,26 +30,16 @@ abstract class AbstractRealmResultsObserver<T extends RealmObject> {
     results.addChangeListener(listener);
   }
 
-  public void keepalive() {
-    if (realm == null || realm.isClosed() || !results.isValid()) {
-      unsub();
-      sub();
-    }
-  }
-
   public void unsub() {
-    try {
+    if (realm != null) {
       if (results != null) {
         if (results.isValid()) {
           results.removeChangeListener(listener);
         }
         results = null;
       }
-      if (realm != null && !realm.isClosed()) {
-        realm.close();
-      }
-    } catch (IllegalStateException exception) {
-      Timber.w(exception, "failed to unsub. ignore.");
+      realm.close();
+      realm = null;
     }
   }
 

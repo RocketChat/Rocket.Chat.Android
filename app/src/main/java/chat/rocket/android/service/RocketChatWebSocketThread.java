@@ -134,8 +134,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
         }
         return null;
       });
-    } else {
-      new Handler(getLooper()).post(this::keepaliveListeners);
     }
   }
 
@@ -224,17 +222,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
       } catch (Exception exception) {
         Timber.w(exception, "Failed to register listeners!!");
       }
-    }
-  }
-
-  //@DebugLog
-  private void keepaliveListeners() {
-    if (!listenersRegistered) {
-      return;
-    }
-
-    for (Registerable registerable : listeners) {
-      registerable.keepalive();
     }
   }
 

@@ -139,10 +139,6 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
     }
   }
 
-  @Override public void keepalive() {
-
-  }
-
   @Override public void unregister() {
     if (rxSubscription != null) {
       rxSubscription.unsubscribe();

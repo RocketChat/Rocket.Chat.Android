@@ -49,7 +49,6 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
   @Override public void onResume() {
     super.onResume();
-    serverConfigObserver.keepalive();
   }
 
   @Override public void onDestroyView() {
