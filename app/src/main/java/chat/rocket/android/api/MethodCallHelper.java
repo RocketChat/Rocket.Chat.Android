@@ -215,7 +215,7 @@ public class MethodCallHelper {
   /**
    * request "subscriptions/get".
    */
-  public Task<Void> getRooms() {
+  public Task<Void> getRoomSubscriptions() {
     return call("subscriptions/get", TIMEOUT_MS).onSuccessTask(CONVERT_TO_JSON_ARRAY)
         .onSuccessTask(task -> {
           final JSONArray result = task.getResult();
