@@ -8,6 +8,7 @@ import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.internal.StreamRoomMessageManager;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -19,12 +20,16 @@ import java.util.List;
 public class SessionObserver extends AbstractModelObserver<Session> {
   private int count;
 
+  private final StreamRoomMessageManager streamNotifyMessage;
+
   /**
    * constructor.
    */
   public SessionObserver(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, realmHelper, ddpClient);
     count = 0;
+
+    streamNotifyMessage = new StreamRoomMessageManager(context, realmHelper, ddpClient);
   }
 
   @Override public RealmResults<Session> queryItems(Realm realm) {
@@ -55,10 +60,12 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   }
 
   @DebugLog private void onLogin() {
-
+    streamNotifyMessage.register();
   }
 
   @DebugLog private void onLogout() {
+    streamNotifyMessage.unregister();
+
     realmHelper.executeTransaction(realm -> {
       // remove all tables. ONLY INTERNAL TABLES!.
       realm.delete(MethodCall.class);

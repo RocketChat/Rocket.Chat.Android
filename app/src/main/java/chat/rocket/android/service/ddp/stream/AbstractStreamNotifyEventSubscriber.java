@@ -29,8 +29,8 @@ abstract class AbstractStreamNotifyEventSubscriber extends AbstractDDPDocEventSu
   @Override protected void onDocumentChanged(DDPSubscription.Changed docEvent) {
     try {
       JSONArray args = docEvent.fields.getJSONArray("args");
-      String msg = args.getString(0);
-      JSONObject target = args.getJSONObject(1);
+      String msg = args.length() > 0 ? args.getString(0) : null;
+      JSONObject target = args.getJSONObject(args.length() - 1);
       if ("removed".equals(msg)) {
         realmHelper.executeTransaction(realm ->
             realm.where(getModelClass())

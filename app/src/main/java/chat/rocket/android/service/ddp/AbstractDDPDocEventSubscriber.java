@@ -42,9 +42,13 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
 
   protected abstract Class<? extends RealmObject> getModelClass();
 
-  protected JSONObject customizeFieldJson(JSONObject json) {
+  protected JSONObject customizeFieldJson(JSONObject json) throws JSONException {
     return json;
   }
+
+  protected void onRegister() {}
+
+  protected void onUnregister() {}
 
   @Override public final void register() {
     JSONArray params = null;
@@ -75,6 +79,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
     } else {
       rxSubscription = subscribe();
     }
+    onRegister();
   }
 
   protected Subscription subscribe() {
@@ -158,6 +163,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
   }
 
   @Override public final void unregister() {
+    onUnregister();
     if (rxSubscription != null) {
       rxSubscription.unsubscribe();
     }
