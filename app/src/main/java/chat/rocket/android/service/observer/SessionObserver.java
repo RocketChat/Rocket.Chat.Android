@@ -2,8 +2,8 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import chat.rocket.android.api.DDPClientWraper;
-import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.model.internal.Session;
@@ -17,7 +17,6 @@ import java.util.List;
  * Observes user is logged into server.
  */
 public class SessionObserver extends AbstractModelObserver<Session> {
-  private final MethodCallHelper methodCall;
   private int count;
 
   /**
@@ -25,7 +24,6 @@ public class SessionObserver extends AbstractModelObserver<Session> {
    */
   public SessionObserver(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, realmHelper, ddpClient);
-    methodCall = new MethodCallHelper(realmHelper, ddpClient);
     count = 0;
   }
 
@@ -57,7 +55,6 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   }
 
   @DebugLog private void onLogin() {
-    methodCall.getRooms().continueWith(new LogcatIfError());
 
   }
 
@@ -66,6 +63,7 @@ public class SessionObserver extends AbstractModelObserver<Session> {
       // remove all tables. ONLY INTERNAL TABLES!.
       realm.delete(MethodCall.class);
       realm.delete(LoadMessageProcedure.class);
+      realm.delete(GetUsersOfRoomsProcedure.class);
       return null;
     }).continueWith(new LogcatIfError());
   }

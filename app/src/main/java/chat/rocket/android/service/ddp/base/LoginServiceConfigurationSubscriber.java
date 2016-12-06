@@ -1,4 +1,4 @@
-package chat.rocket.android.service.ddp;
+package chat.rocket.android.service.ddp.base;
 
 import android.content.Context;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
@@ -9,7 +9,7 @@ import io.realm.RealmObject;
 /**
  * meteor.loginServiceConfiguration subscriber
  */
-public class LoginServiceConfigurationSubscriber extends AbstractDDPDocEventSubscriber {
+public class LoginServiceConfigurationSubscriber extends AbstractBaseSubscriber {
   public LoginServiceConfigurationSubscriber(Context context, RealmHelper realmHelper,
       DDPClientWraper ddpClient) {
     super(context, realmHelper, ddpClient);

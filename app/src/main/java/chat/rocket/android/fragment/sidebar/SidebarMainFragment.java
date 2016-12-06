@@ -67,7 +67,7 @@ public class SidebarMainFragment extends AbstractFragment {
             .setOnUpdateListener(list -> roomListManager.setRooms(list));
 
         currentUserObserver = realmHelper
-            .createObjectObserver(realm -> realm.where(User.class).isNotEmpty("emails"))
+            .createObjectObserver(User::queryCurrentUser)
             .setOnUpdateListener(this::onRenderCurrentUser);
 
         methodCallHelper = new MethodCallHelper(getContext(), serverConfigId);

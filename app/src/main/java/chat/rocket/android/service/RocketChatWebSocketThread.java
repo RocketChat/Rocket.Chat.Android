@@ -13,9 +13,10 @@ import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
-import chat.rocket.android.service.ddp.ActiveUsersSubscriber;
-import chat.rocket.android.service.ddp.LoginServiceConfigurationSubscriber;
-import chat.rocket.android.service.ddp.UserDataSubscriber;
+import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
+import chat.rocket.android.service.ddp.base.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.ddp.base.UserDataSubscriber;
+import chat.rocket.android.service.observer.CurrentUserObserver;
 import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
@@ -43,7 +44,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
       SessionObserver.class,
       LoadMessageProcedureObserver.class,
       GetUsersOfRoomsProcedureObserver.class,
-      NewMessageObserver.class
+      NewMessageObserver.class,
+      CurrentUserObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;

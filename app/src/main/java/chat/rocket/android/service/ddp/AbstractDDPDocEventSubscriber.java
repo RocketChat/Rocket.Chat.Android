@@ -2,20 +2,21 @@ package chat.rocket.android.service.ddp;
 
 import android.content.Context;
 import android.text.TextUtils;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.Registerable;
-import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android_ddp.DDPSubscription;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import java.util.Iterator;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Subscription;
 import timber.log.Timber;
 
-abstract class AbstractDDPDocEventSubscriber implements Registerable {
+public abstract class AbstractDDPDocEventSubscriber implements Registerable {
   protected final Context context;
   protected final RealmHelper realmHelper;
   protected final DDPClientWraper ddpClient;
@@ -31,7 +32,13 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
 
   protected abstract String getSubscriptionName();
 
-  protected abstract String getSubscriptionCallbackName();
+  protected abstract JSONArray getSubscriptionParams() throws JSONException;
+
+  protected boolean shouldTruncateTableOnInitialize() {
+    return false;
+  }
+
+  protected abstract boolean isTarget(String callbackName);
 
   protected abstract Class<? extends RealmObject> getModelClass();
 
@@ -39,8 +46,15 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
     return json;
   }
 
-  @Override public void register() {
-    ddpClient.subscribe(getSubscriptionName(), null).onSuccess(task -> {
+  @Override public final void register() {
+    JSONArray params = null;
+    try {
+      params = getSubscriptionParams();
+    } catch (JSONException exception) {
+      // just ignore.
+    }
+
+    ddpClient.subscribe(getSubscriptionName(), params).onSuccess(task -> {
       subscriptionId = task.getResult().id;
       return null;
     }).continueWith(task -> {
@@ -50,20 +64,24 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
       return null;
     });
 
-    realmHelper.executeTransaction(realm -> {
-      realm.delete(getModelClass());
-      return null;
-    }).onSuccess(task -> {
-      registerSubscriptionCallback();
-      return null;
-    }).continueWith(new LogcatIfError());
+    if (shouldTruncateTableOnInitialize()) {
+      realmHelper.executeTransaction(realm -> {
+        realm.delete(getModelClass());
+        return null;
+      }).onSuccess(task -> {
+        rxSubscription = subscribe();
+        return null;
+      }).continueWith(new LogcatIfError());
+    } else {
+      rxSubscription = subscribe();
+    }
   }
 
-  private void registerSubscriptionCallback() {
-    rxSubscription = ddpClient.getSubscriptionCallback()
+  protected Subscription subscribe() {
+    return ddpClient.getSubscriptionCallback()
         .filter(event -> event instanceof DDPSubscription.DocEvent)
         .cast(DDPSubscription.DocEvent.class)
-        .filter(event -> getSubscriptionCallbackName().equals(event.collection))
+        .filter(event -> isTarget(event.collection))
         .subscribe(docEvent -> {
           try {
             if (docEvent instanceof DDPSubscription.Added.Before) {
@@ -139,7 +157,7 @@ abstract class AbstractDDPDocEventSubscriber implements Registerable {
     }
   }
 
-  @Override public void unregister() {
+  @Override public final void unregister() {
     if (rxSubscription != null) {
       rxSubscription.unsubscribe();
     }
