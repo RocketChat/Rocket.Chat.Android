@@ -3,20 +3,22 @@ package chat.rocket.android.fragment.oauth;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import okhttp3.HttpUrl;
 
-public class GitHubOAuthFragment extends AbstractOAuthFragment {
+public class FacebookOAuthFragment extends AbstractOAuthFragment {
 
   @Override protected String getOAuthServiceName() {
-    return "github";
+    return "facebook";
   }
 
   @Override protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
     return new HttpUrl.Builder().scheme("https")
-        .host("github.com")
-        .addPathSegment("login")
+        .host("www.facebook.com")
+        .addPathSegment("v2.2")
+        .addPathSegment("dialog")
         .addPathSegment("oauth")
-        .addPathSegment("authorize")
-        .addQueryParameter("client_id", oauthConfig.getClientId())
-        .addQueryParameter("scope", "user:email")
+        .addQueryParameter("client_id", oauthConfig.getAppId())
+        .addQueryParameter("redirect_uri", "https://" + hostname + "/_oauth/facebook?close")
+        .addQueryParameter("display", "popup")
+        .addQueryParameter("scope", "email")
         .addQueryParameter("state", getStateString())
         .build()
         .toString();

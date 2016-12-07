@@ -3,6 +3,7 @@ package chat.rocket.android.fragment.oauth;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import chat.rocket.android.api.MethodCallHelper;
@@ -11,6 +12,7 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmStore;
+import java.nio.charset.Charset;
 import org.json.JSONException;
 import org.json.JSONObject;
 import timber.log.Timber;
@@ -29,6 +31,18 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
   private boolean hasValidArgs(Bundle args) {
     return args != null
         && args.containsKey("serverConfigId");
+  }
+
+  protected final String getStateString() {
+    try {
+      return Base64.encodeToString(new JSONObject().put("loginStyle", "popup")
+          .put("credentialToken", getOAuthServiceName() + System.currentTimeMillis())
+          .put("isCordova", true)
+          .toString()
+          .getBytes(Charset.forName("UTF-8")), Base64.NO_WRAP);
+    } catch (JSONException exception) {
+      throw new RuntimeException(exception);
+    }
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

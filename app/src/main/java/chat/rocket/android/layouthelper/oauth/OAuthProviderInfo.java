@@ -2,6 +2,7 @@ package chat.rocket.android.layouthelper.oauth;
 
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.oauth.AbstractOAuthFragment;
+import chat.rocket.android.fragment.oauth.FacebookOAuthFragment;
 import chat.rocket.android.fragment.oauth.GitHubOAuthFragment;
 import chat.rocket.android.fragment.oauth.GoogleOAuthFragment;
 import chat.rocket.android.fragment.oauth.TwitterOAuthFragment;
@@ -27,6 +28,8 @@ public class OAuthProviderInfo {
           "github", R.id.btn_login_with_github, GitHubOAuthFragment.class));
       add(new OAuthProviderInfo(
           "google", R.id.btn_login_with_google, GoogleOAuthFragment.class));
+      add(new OAuthProviderInfo(
+          "facebook", R.id.btn_login_with_facebook, FacebookOAuthFragment.class));
     }
   };
 }

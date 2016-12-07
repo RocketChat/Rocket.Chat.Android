@@ -31,7 +31,6 @@
                 android:id="@+id/btn_login_with_facebook"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:enabled="false"
                 android:layout_marginEnd="@dimen/margin_8"
                 android:text="@string/fa_facebook_official"
                 android:textSize="16dp" />
