@@ -46,8 +46,8 @@ public class StreamRoomMessageManager implements Registerable {
     if (streamRoomMessage != null) {
       handler.post(() -> {
         streamRoomMessage.unregister();
+        streamRoomMessage = null;
       });
-      streamRoomMessage = null;
     }
   }
 
