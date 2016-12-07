@@ -6,19 +6,19 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmStore;
+import hugo.weaving.DebugLog;
 import java.nio.charset.Charset;
-import okhttp3.HttpUrl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import timber.log.Timber;
 
-public class GitHubOAuthFragment extends AbstractWebViewFragment {
+public class TwitterOAuthFragment extends AbstractWebViewFragment {
 
   private String serverConfigId;
   private String hostname;
@@ -28,10 +28,10 @@ public class GitHubOAuthFragment extends AbstractWebViewFragment {
   /**
    * create new Fragment with ServerConfig-ID.
    */
-  public static GitHubOAuthFragment create(final String serverConfigId) {
+  public static TwitterOAuthFragment create(final String serverConfigId) {
     Bundle args = new Bundle();
     args.putString("serverConfigId", serverConfigId);
-    GitHubOAuthFragment fragment = new GitHubOAuthFragment();
+    TwitterOAuthFragment fragment = new TwitterOAuthFragment();
     fragment.setArguments(args);
     return fragment;
   }
@@ -55,36 +55,27 @@ public class GitHubOAuthFragment extends AbstractWebViewFragment {
     MeteorLoginServiceConfiguration oauthConfig =
         RealmStore.get(serverConfigId).executeTransactionForRead(realm ->
             realm.where(MeteorLoginServiceConfiguration.class)
-                .equalTo("service", "github")
+                .equalTo("service", "twitter")
                 .findFirst());
     if (serverConfig == null || oauthConfig == null) {
       throw new IllegalArgumentException(
           "Invalid serverConfigId given,");
     }
     hostname = serverConfig.getHostname();
-    url = generateURL(oauthConfig.getClientId());
+    url = generateURL();
   }
 
-  private String generateURL(String clientId) {
+  private String generateURL() {
     try {
       String state = Base64.encodeToString(new JSONObject().put("loginStyle", "popup")
-          .put("credentialToken", "github" + System.currentTimeMillis())
+          .put("credentialToken", "twitter" + System.currentTimeMillis())
           .put("isCordova", true)
           .toString()
           .getBytes(Charset.forName("UTF-8")), Base64.NO_WRAP);
 
-      return new HttpUrl.Builder().scheme("https")
-          .host("github.com")
-          .addPathSegment("login")
-          .addPathSegment("oauth")
-          .addPathSegment("authorize")
-          .addQueryParameter("client_id", clientId)
-          .addQueryParameter("scope", "user:email")
-          .addQueryParameter("state", state)
-          .build()
-          .toString();
+      return "https://" + hostname + "/_oauth/twitter/?requestTokenAndRedirect=true&state=" + state;
     } catch (Exception exception) {
-      Timber.e(exception, "failed to generate GitHub OAUth URL");
+      Timber.e(exception, "failed to generate Twitter OAUth URL");
     }
     return null;
   }
@@ -119,11 +110,12 @@ public class GitHubOAuthFragment extends AbstractWebViewFragment {
     }), "_rocketchet_hook");
   }
 
+  @DebugLog
   @Override protected void onPageLoaded(WebView webview, String url) {
     super.onPageLoaded(webview, url);
 
 
-    if (url.contains(hostname) && url.contains("_oauth/github?close")) {
+    if (url.contains(hostname) && url.contains("_oauth/twitter?close")) {
       final String jsHookUrl = "javascript:"
           + "window._rocketchet_hook.handleConfig(document.getElementById('config').innerText);";
       webview.loadUrl(jsHookUrl);

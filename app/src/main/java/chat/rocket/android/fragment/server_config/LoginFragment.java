@@ -8,6 +8,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.oauth.GitHubOAuthFragment;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.fragment.oauth.TwitterOAuthFragment;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmListObserver;
@@ -77,7 +78,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
           && "twitter".equals(authProvider.getService())) {
         hasTwitter = true;
         btnTwitter.setOnClickListener(view -> {
-
+          showFragmentWithBackStack(TwitterOAuthFragment.create(serverConfigId));
         });
       }
       if (!hasGitHub
