@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import chat.rocket.android.R;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
@@ -269,11 +270,21 @@ public class RoomFragment extends AbstractChatRoomFragment
     }).continueWith(new LogcatIfError());
   }
 
+  private void markAsReadIfNeeded() {
+    RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
+        realm.where(RoomSubscription.class).equalTo("rid", roomId).findFirst());
+    if (room != null && room.isAlert()) {
+      new MethodCallHelper(getContext(), serverConfigId).readMessages(roomId)
+          .continueWith(new LogcatIfError());
+    }
+  }
+
   @Override public void onResume() {
     super.onResume();
     roomObserver.sub();
     procedureObserver.sub();
     closeSideMenuIfNeeded();
+    markAsReadIfNeeded();
   }
 
   @Override public void onPause() {

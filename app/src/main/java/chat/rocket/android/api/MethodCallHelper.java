@@ -305,4 +305,12 @@ public class MethodCallHelper {
         .onSuccessTask(CONVERT_TO_JSON_OBJECT)
         .onSuccessTask(task -> Task.forResult(Message.customizeJson(task.getResult())));
   }
+
+  /**
+   * mark all messages are read in the room.
+   */
+  public Task<Void> readMessages(final String roomId) {
+    return call("readMessages", TIMEOUT_MS, () -> new JSONArray().put(roomId))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
 }
