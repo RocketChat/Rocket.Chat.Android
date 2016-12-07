@@ -36,19 +36,19 @@ public class StreamRoomMessageManager implements Registerable {
   }
 
   private void registerStreamNotifyMessage(String roomId) {
-    streamRoomMessage = new StreamRoomMessage(context, realmHelper, ddpClient, roomId);
     handler.post(() -> {
+      streamRoomMessage = new StreamRoomMessage(context, realmHelper, ddpClient, roomId);
       streamRoomMessage.register();
     });
   }
 
   private void unregisterStreamNotifyMessageIfNeeded() {
-    if (streamRoomMessage != null) {
-      handler.post(() -> {
+    handler.post(() -> {
+      if (streamRoomMessage != null) {
         streamRoomMessage.unregister();
         streamRoomMessage = null;
-      });
-    }
+      }
+    });
   }
 
   @Override public void register() {
