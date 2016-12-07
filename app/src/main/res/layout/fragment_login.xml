@@ -24,7 +24,6 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="@dimen/margin_8"
-                android:enabled="false"
                 android:text="@string/fa_twitter"
                 android:textSize="16dp" />
 

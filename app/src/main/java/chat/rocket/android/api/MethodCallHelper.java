@@ -171,9 +171,9 @@ public class MethodCallHelper {
   }
 
   /**
-   * Login with GitHub OAuth.
+   * Login with OAuth.
    */
-  public Task<Void> loginWithGitHub(final String credentialToken,
+  public Task<Void> loginWithOAuth(final String credentialToken,
       final String credentialSecret) {
     return call("login", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
         .put("oauth", new JSONObject()
