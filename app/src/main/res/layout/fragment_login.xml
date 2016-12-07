@@ -28,12 +28,30 @@
                 android:textSize="16dp" />
 
             <chat.rocket.android.widget.FontAwesomeButton
+                android:id="@+id/btn_login_with_facebook"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:enabled="false"
+                android:layout_marginEnd="@dimen/margin_8"
+                android:text="@string/fa_facebook_official"
+                android:textSize="16dp" />
+
+            <chat.rocket.android.widget.FontAwesomeButton
                 android:id="@+id/btn_login_with_github"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="@dimen/margin_8"
                 android:text="@string/fa_github"
                 android:textSize="16dp" />
+
+            <chat.rocket.android.widget.FontAwesomeButton
+                android:id="@+id/btn_login_with_google"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="@dimen/margin_8"
+                android:text="@string/fa_google"
+                android:textSize="16dp" />
+
         </LinearLayout>
 
         <android.support.design.widget.TextInputLayout

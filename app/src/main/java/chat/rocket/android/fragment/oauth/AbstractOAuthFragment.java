@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import timber.log.Timber;
 
-abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
+public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
 
   protected String serverConfigId;
   protected String hostname;

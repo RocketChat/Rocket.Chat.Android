@@ -1,6 +1,5 @@
 package chat.rocket.android.fragment.oauth;
 
-import android.os.Bundle;
 import android.util.Base64;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import java.nio.charset.Charset;
@@ -8,17 +7,6 @@ import org.json.JSONObject;
 import timber.log.Timber;
 
 public class TwitterOAuthFragment extends AbstractOAuthFragment {
-
-  /**
-   * create new Fragment with ServerConfig-ID.
-   */
-  public static TwitterOAuthFragment create(final String serverConfigId) {
-    Bundle args = new Bundle();
-    args.putString("serverConfigId", serverConfigId);
-    TwitterOAuthFragment fragment = new TwitterOAuthFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
 
   @Override protected String getOAuthServiceName() {
     return "twitter";
