@@ -2,6 +2,7 @@ ext {
   androidPlugin = 'com.android.tools.build:gradle:2.2.2'
   realmPlugin = 'io.realm:realm-gradle-plugin:2.2.1'
   retroLambdaPlugin = 'me.tatarka:gradle-retrolambda:3.3.1'
+  retroLambdaPatch = 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
   compileSdkVersion = 25
   buildToolsVersion = '25.0.1'
   minSdkVersion = 21 //for accelerating multi-dex build. OVERRIDEN BY Circle CI to 17

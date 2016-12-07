@@ -8,6 +8,7 @@ buildscript {
   dependencies {
     classpath rootProject.ext.androidPlugin
     classpath rootProject.ext.retroLambdaPlugin
+    classpath rootProject.ext.retroLambdaPatch
   }
 }
 
