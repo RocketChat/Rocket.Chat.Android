@@ -3,7 +3,9 @@ package chat.rocket.android.renderer;
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.TextView;
+import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
+import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 
@@ -23,7 +25,14 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show Avatar image.
    */
   public MessageRenderer avatarInto(ImageView imageView, String hostname) {
-    userRenderer.avatarInto(imageView, hostname);
+    switch (object.getSyncstate()) {
+      case SyncState.FAILED:
+        imageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
+        break;
+      default:
+        userRenderer.avatarInto(imageView, hostname);
+        break;
+    }
     return this;
   }
 
@@ -43,7 +52,15 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       return this;
     }
 
-    textView.setText(DateTime.fromEpocMs(object.getTs(), DateTime.Format.TIME));
+    switch (object.getSyncstate()) {
+      case SyncState.NOT_SYNCED:
+      case SyncState.SYNCING:
+        textView.setText(R.string.sending);
+        break;
+      default:
+        textView.setText(DateTime.fromEpocMs(object.getTs(), DateTime.Format.TIME));
+        break;
+    }
 
     return this;
   }

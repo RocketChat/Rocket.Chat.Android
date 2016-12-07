@@ -36,7 +36,7 @@ public class AddServerActivity extends AbstractFragmentActivity {
         if (config == null || config.getState() == ServerConfig.STATE_CONNECTION_ERROR) {
           showFragment(new InputHostnameFragment());
         } else {
-          showFragment(WaitingFragment.create("Connecting to server..."));
+          showFragment(WaitingFragment.create(getString(R.string.add_server_activity_waiting_server)));
         }
       });
 

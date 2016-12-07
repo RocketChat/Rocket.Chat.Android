@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-  <include layout="@layout/fragment_room_main"/>
+    <include layout="@layout/fragment_room_main" />
 
-  <include layout="@layout/room_side_menu"/>
+    <include layout="@layout/room_side_menu" />
 </LinearLayout>

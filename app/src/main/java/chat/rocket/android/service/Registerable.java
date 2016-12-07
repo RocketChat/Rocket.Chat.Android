@@ -10,11 +10,6 @@ public interface Registerable {
   void register();
 
   /**
-   * keepalive.
-   */
-  void keepalive();
-
-  /**
    * unregister.
    */
   void unregister();

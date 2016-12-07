@@ -1,7 +1,9 @@
 package chat.rocket.android.model.ddp;
 
+import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -59,5 +61,9 @@ public class User extends RealmObject {
 
   public void setEmails(RealmList<Email> emails) {
     this.emails = emails;
+  }
+
+  public static RealmQuery<User> queryCurrentUser(Realm realm) {
+    return realm.where(User.class).isNotEmpty("emails");
   }
 }

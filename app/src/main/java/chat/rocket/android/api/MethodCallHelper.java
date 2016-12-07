@@ -6,6 +6,7 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.MethodCall;
@@ -170,9 +171,9 @@ public class MethodCallHelper {
   }
 
   /**
-   * Login with GitHub OAuth.
+   * Login with OAuth.
    */
-  public Task<Void> loginWithGitHub(final String credentialToken,
+  public Task<Void> loginWithOAuth(final String credentialToken,
       final String credentialSecret) {
     return call("login", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
         .put("oauth", new JSONObject()
@@ -214,7 +215,7 @@ public class MethodCallHelper {
   /**
    * request "subscriptions/get".
    */
-  public Task<Void> getRooms() {
+  public Task<Void> getRoomSubscriptions() {
     return call("subscriptions/get", TIMEOUT_MS).onSuccessTask(CONVERT_TO_JSON_ARRAY)
         .onSuccessTask(task -> {
           final JSONArray result = task.getResult();
@@ -255,7 +256,10 @@ public class MethodCallHelper {
 
           return realmHelper.executeTransaction(realm -> {
             if (timestamp == 0) {
-              realm.where(Message.class).equalTo("rid", roomId).findAll().deleteAllFromRealm();
+              realm.where(Message.class)
+                  .equalTo("rid", roomId)
+                  .equalTo("syncstate", SyncState.SYNCED)
+                  .findAll().deleteAllFromRealm();
             }
             if (messages.length() > 0) {
               realm.createOrUpdateAllFromJson(Message.class, messages);
@@ -277,5 +281,36 @@ public class MethodCallHelper {
   public Task<JSONObject> getUsersOfRoom(final String roomId, final boolean showAll) {
     return call("getUsersOfRoom", TIMEOUT_MS, () -> new JSONArray().put(roomId).put(showAll))
         .onSuccessTask(CONVERT_TO_JSON_OBJECT);
+  }
+
+  /**
+   * send message.
+   */
+  public Task<JSONObject> sendMessage(String messageId, String roomId, String msg) {
+    try {
+      return sendMessage(new JSONObject()
+          .put("_id", messageId)
+          .put("rid", roomId)
+          .put("msg", msg));
+    } catch (JSONException exception) {
+      return Task.forError(exception);
+    }
+  }
+
+  /**
+   * Send message object.
+   */
+  public Task<JSONObject> sendMessage(final JSONObject messageJson) {
+    return call("sendMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
+        .onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(Message.customizeJson(task.getResult())));
+  }
+
+  /**
+   * mark all messages are read in the room.
+   */
+  public Task<Void> readMessages(final String roomId) {
+    return call("readMessages", TIMEOUT_MS, () -> new JSONArray().put(roomId))
+        .onSuccessTask(task -> Task.forResult(null));
   }
 }

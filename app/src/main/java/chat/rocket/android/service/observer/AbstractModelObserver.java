@@ -27,10 +27,6 @@ abstract class AbstractModelObserver<T extends RealmObject>
     observer.sub();
   }
 
-  @Override public void keepalive() {
-    observer.keepalive();
-  }
-
   @Override public void unregister() {
     observer.unsub();
   }

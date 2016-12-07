@@ -12,6 +12,7 @@ import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.service.RocketChatService;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import java.util.HashMap;
 import java.util.UUID;
 import org.json.JSONObject;
 import timber.log.Timber;
@@ -89,6 +90,8 @@ public class MethodCall extends RealmObject {
     }
   }
 
+  private static final HashMap<String, RealmObjectObserver<MethodCall>> refMap = new HashMap<>();
+
   /**
    * insert a new record to request a method call.
    */
@@ -122,14 +125,17 @@ public class MethodCall extends RealmObject {
               task.setResult(resultJson);
             }
             observer.unsub();
+            refMap.remove(methodCall.getMethodCallId());
             remove(realmHelper, methodCall.getMethodCallId()).continueWith(new LogcatIfError());
           } else if (syncstate == SyncState.FAILED) {
             task.setError(new Error(methodCall.getResultJson()));
             observer.unsub();
+            refMap.remove(methodCall.getMethodCallId());
             remove(realmHelper, methodCall.getMethodCallId()).continueWith(new LogcatIfError());
           }
         });
         observer.sub();
+        refMap.put(newId, observer);
 
         if (context != null) {
           RocketChatService.keepalive(context);

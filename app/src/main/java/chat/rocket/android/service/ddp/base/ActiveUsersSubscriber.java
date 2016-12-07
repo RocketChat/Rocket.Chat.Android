@@ -1,4 +1,4 @@
-package chat.rocket.android.service.ddp;
+package chat.rocket.android.service.ddp.base;
 
 import android.content.Context;
 import chat.rocket.android.model.ddp.User;
@@ -9,7 +9,7 @@ import io.realm.RealmObject;
 /**
  * "activeUsers" subscriber.
  */
-public class ActiveUsersSubscriber extends AbstractDDPDocEventSubscriber {
+public class ActiveUsersSubscriber extends AbstractBaseSubscriber {
   public ActiveUsersSubscriber(Context context, RealmHelper realmHelper,
       DDPClientWraper ddpClient) {
     super(context, realmHelper, ddpClient);

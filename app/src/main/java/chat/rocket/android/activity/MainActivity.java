@@ -123,13 +123,6 @@ public class MainActivity extends AbstractAuthedActivity {
     }
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-    if (sessionObserver != null) {
-      sessionObserver.keepalive();
-    }
-  }
-
   @Override protected void onDestroy() {
     if (sessionObserver != null) {
       sessionObserver.unsub();

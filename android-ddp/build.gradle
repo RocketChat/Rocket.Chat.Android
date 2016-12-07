@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath rootProject.ext.androidPlugin
+    classpath rootProject.ext.retroLambdaPlugin
+    classpath rootProject.ext.retroLambdaPatch
+  }
+}
+
+android {
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.compileSdkVersion
+    versionCode 1
+    versionName "0.0.8"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+dependencies {
+  compile rootProject.ext.supportAnnotations
+  compile 'com.squareup.okhttp3:okhttp-ws:3.4.1'
+  compile rootProject.ext.rxJava
+  compile rootProject.ext.boltsTask
+  compile rootProject.ext.timber
+}

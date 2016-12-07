@@ -11,12 +11,12 @@ public class HomeFragment extends AbstractChatRoomFragment {
   }
 
   @Override protected void onSetupView() {
-    activityToolbar.setTitle("Rocket.Chat - Home");
+    activityToolbar.setTitle(R.string.home_fragment_title);
   }
 
   @Override public void onResume() {
     super.onResume();
     activityToolbar.setNavigationIcon(null);
-    activityToolbar.setTitle("Rocket.Chat - Home");
+    activityToolbar.setTitle(R.string.home_fragment_title);
   }
 }

@@ -3,16 +3,19 @@ package chat.rocket.android.fragment.server_config;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 import chat.rocket.android.R;
-import chat.rocket.android.fragment.oauth.GitHubOAuthFragment;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.layouthelper.oauth.OAuthProviderInfo;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
+import java.util.HashMap;
 import java.util.List;
+import timber.log.Timber;
 
 /**
  * Login screen.
@@ -67,30 +70,42 @@ public class LoginFragment extends AbstractServerConfigFragment {
   }
 
   private void onRenderAuthProviders(List<MeteorLoginServiceConfiguration> authProviders) {
-    final View btnTwitter = rootView.findViewById(R.id.btn_login_with_twitter);
-    final View btnGitHub = rootView.findViewById(R.id.btn_login_with_github);
+    HashMap<String, View> viewMap = new HashMap<>();
+    HashMap<String, Boolean> supportedMap = new HashMap<>();
+    for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
+      viewMap.put(info.serviceName, rootView.findViewById(info.buttonId));
+      supportedMap.put(info.serviceName, false);
+    }
 
-    boolean hasTwitter = false;
-    boolean hasGitHub = false;
     for (MeteorLoginServiceConfiguration authProvider : authProviders) {
-      if (!hasTwitter
-          && "twitter".equals(authProvider.getService())) {
-        hasTwitter = true;
-        btnTwitter.setOnClickListener(view -> {
-
-        });
-      }
-      if (!hasGitHub
-          && "github".equals(authProvider.getService())) {
-        hasGitHub = true;
-        btnGitHub.setOnClickListener(view -> {
-          showFragmentWithBackStack(GitHubOAuthFragment.create(serverConfigId));
-        });
+      for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
+        if (!supportedMap.get(info.serviceName)
+          && info.serviceName.equals(authProvider.getService())) {
+          supportedMap.put(info.serviceName, true);
+          viewMap.get(info.serviceName).setOnClickListener(view -> {
+            Fragment fragment = null;
+            try {
+              fragment = info.fragmentClass.newInstance();
+            } catch (java.lang.InstantiationException | IllegalAccessException exception) {
+              Timber.w(exception, "failed to create new Fragment");
+            }
+            if (fragment != null) {
+              Bundle args = new Bundle();
+              args.putString("serverConfigId", serverConfigId);
+              fragment.setArguments(args);
+              showFragmentWithBackStack(fragment);
+            }
+          });
+          viewMap.get(info.serviceName).setVisibility(View.VISIBLE);
+        }
       }
     }
 
-    btnTwitter.setVisibility(hasTwitter ? View.VISIBLE : View.GONE);
-    btnGitHub.setVisibility(hasGitHub ? View.VISIBLE : View.GONE);
+    for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
+      if (!supportedMap.get(info.serviceName)) {
+        viewMap.get(info.serviceName).setVisibility(View.GONE);
+      }
+    }
   }
 
   @Override public void onResume() {

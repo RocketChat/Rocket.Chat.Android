@@ -14,8 +14,8 @@ buildscript {
 
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
-    classpath 'me.tatarka:gradle-retrolambda:3.3.1'
-    classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+    classpath rootProject.ext.retroLambdaPlugin
+    classpath rootProject.ext.retroLambdaPatch
     classpath rootProject.ext.realmPlugin
     classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
     classpath 'com.google.gms:google-services:3.0.0'
@@ -78,6 +78,7 @@ repositories {
 }
 
 dependencies {
+  compile project(':android-ddp')
   compile project(':rocket-chat-android-widgets')
   compile project(':realm-helpers')
   compile rootProject.ext.supportAppCompat
@@ -97,8 +98,6 @@ dependencies {
   compile 'com.facebook.stetho:stetho:1.4.1'
   compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
   compile 'com.uphyca:stetho_realm:2.0.1'
-
-  compile 'chat.rocket:android-ddp:0.0.8'
 
   compile rootProject.ext.timber
   compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'

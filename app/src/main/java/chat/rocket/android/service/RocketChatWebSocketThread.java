@@ -13,11 +13,14 @@ import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
-import chat.rocket.android.service.ddp.ActiveUsersSubscriber;
-import chat.rocket.android.service.ddp.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
+import chat.rocket.android.service.ddp.base.LoginServiceConfigurationSubscriber;
+import chat.rocket.android.service.ddp.base.UserDataSubscriber;
+import chat.rocket.android.service.observer.CurrentUserObserver;
 import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
+import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
 import chat.rocket.android_ddp.DDPClientCallback;
@@ -35,11 +38,14 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private static final Class[] REGISTERABLE_CLASSES = {
       LoginServiceConfigurationSubscriber.class,
       ActiveUsersSubscriber.class,
+      UserDataSubscriber.class,
       TokenLoginObserver.class,
       MethodCallObserver.class,
       SessionObserver.class,
       LoadMessageProcedureObserver.class,
-      GetUsersOfRoomsProcedureObserver.class
+      GetUsersOfRoomsProcedureObserver.class,
+      NewMessageObserver.class,
+      CurrentUserObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;
@@ -132,8 +138,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
         }
         return null;
       });
-    } else {
-      new Handler(getLooper()).post(this::keepaliveListeners);
     }
   }
 
@@ -222,17 +226,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
       } catch (Exception exception) {
         Timber.w(exception, "Failed to register listeners!!");
       }
-    }
-  }
-
-  //@DebugLog
-  private void keepaliveListeners() {
-    if (!listenersRegistered) {
-      return;
-    }
-
-    for (Registerable registerable : listeners) {
-      registerable.keepalive();
     }
   }
 

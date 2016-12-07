@@ -88,7 +88,7 @@ public class RocketChatService extends Service {
       }
       return null;
     }).onSuccessTask(task -> {
-      connectionRequiredServerConfigObserver.keepalive();
+      connectionRequiredServerConfigObserver.sub();
       return null;
     });
     return START_STICKY;
@@ -131,6 +131,13 @@ public class RocketChatService extends Service {
     } else {
       return createWebSocketThread(config);
     }
+  }
+
+  @Override public void onDestroy() {
+    if (connectionRequiredServerConfigObserver != null) {
+      connectionRequiredServerConfigObserver.unsub();
+    }
+    super.onDestroy();
   }
 
   @Nullable

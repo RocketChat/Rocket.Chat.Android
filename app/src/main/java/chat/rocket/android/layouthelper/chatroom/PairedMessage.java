@@ -7,7 +7,7 @@ import chat.rocket.android.model.ddp.Message;
  * View Model for messages in chatroom.
  */
 public class PairedMessage {
-  final Message target;
+  public final Message target;
   final Message nextSibling;
 
   public PairedMessage(Message target, Message nextSibling) {

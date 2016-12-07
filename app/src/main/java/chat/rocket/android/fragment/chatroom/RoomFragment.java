@@ -2,37 +2,46 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import chat.rocket.android.R;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
+import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
+import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.realm_helper.RealmModelListAdapter;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
+import chat.rocket.android.widget.message.MessageComposer;
 import com.jakewharton.rxbinding.support.v4.widget.RxDrawerLayout;
 import io.realm.Sort;
 import java.lang.reflect.Field;
+import java.util.UUID;
 import org.json.JSONObject;
 import timber.log.Timber;
 
 /**
  * Chat room screen.
  */
-public class RoomFragment extends AbstractChatRoomFragment implements OnBackPressListener {
+public class RoomFragment extends AbstractChatRoomFragment
+    implements OnBackPressListener, RealmModelListAdapter.OnItemClickListener<PairedMessage> {
 
   private String serverConfigId;
   private RealmHelper realmHelper;
@@ -41,6 +50,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
   private String hostname;
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
+  private MessageComposerManager messageComposerManager;
 
   /**
    * create fragment with roomId.
@@ -88,12 +98,14 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
 
   @Override protected void onSetupView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    listView.setAdapter(realmHelper.createListAdapter(getContext(),
+    MessageListAdapter adapter = (MessageListAdapter) realmHelper.createListAdapter(getContext(),
         realm -> realm.where(Message.class)
             .equalTo("rid", roomId)
             .findAllSorted("ts", Sort.DESCENDING),
         context -> new MessageListAdapter(context, hostname)
-    ));
+    );
+    listView.setAdapter(adapter);
+    adapter.setOnItemClickListener(this);
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);
@@ -107,6 +119,33 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
     listView.addOnScrollListener(scrollListener);
 
     setupSideMenu();
+    setupMessageComposer();
+  }
+
+  @Override public void onItemClick(PairedMessage pairedMessage) {
+    if (pairedMessage.target != null) {
+      final int syncstate = pairedMessage.target.getSyncstate();
+      if (syncstate == SyncState.FAILED) {
+        final String messageId = pairedMessage.target.get_id();
+        new AlertDialog.Builder(getContext())
+            .setPositiveButton(R.string.resend, (dialog, which) -> {
+              realmHelper.executeTransaction(realm ->
+                  realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
+                      .put("_id", messageId)
+                      .put("syncstate", SyncState.NOT_SYNCED))
+              ).continueWith(new LogcatIfError());
+            })
+            .setNegativeButton(android.R.string.cancel, null)
+            .setNeutralButton(R.string.discard, (dialog, which) -> {
+              realmHelper.executeTransaction(realm ->
+                  realm.where(Message.class)
+                      .equalTo("_id", messageId).findAll().deleteAllFromRealm()
+              ).continueWith(new LogcatIfError());;
+            })
+            .show();
+      }
+    }
+
   }
 
   private void setupSideMenu() {
@@ -128,7 +167,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
               fieldSlidable.setAccessible(true);
               fieldSlidable.setBoolean(pane, !opened);
             } catch (Exception exception) {
-              Timber.w(exception);
+              Timber.w(exception, "failed to set CanSlide.");
             }
           });
     }
@@ -143,7 +182,27 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
     return false;
   }
 
+  private void setupMessageComposer() {
+    final FloatingActionButton fabCompose =
+        (FloatingActionButton) rootView.findViewById(R.id.fab_compose);
+    final MessageComposer messageComposer =
+        (MessageComposer) rootView.findViewById(R.id.message_composer);
+    messageComposerManager = new MessageComposerManager(fabCompose, messageComposer);
+    messageComposerManager.setCallback(messageText ->
+        realmHelper.executeTransaction(realm ->
+            realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
+                .put("_id", UUID.randomUUID().toString())
+                .put("syncstate", SyncState.NOT_SYNCED)
+                .put("ts", System.currentTimeMillis())
+                .put("rid", roomId)
+                .put("msg", messageText))));
+  }
+
   private void onRenderRoom(RoomSubscription roomSubscription) {
+    if (roomSubscription == null) {
+      return;
+    }
+
     String type = roomSubscription.getT();
     if (RoomSubscription.TYPE_CHANNEL.equals(type)) {
       activityToolbar.setNavigationIcon(R.drawable.ic_hashtag_white_24dp);
@@ -211,11 +270,21 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
     }).continueWith(new LogcatIfError());
   }
 
+  private void markAsReadIfNeeded() {
+    RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
+        realm.where(RoomSubscription.class).equalTo("rid", roomId).findFirst());
+    if (room != null && room.isAlert()) {
+      new MethodCallHelper(getContext(), serverConfigId).readMessages(roomId)
+          .continueWith(new LogcatIfError());
+    }
+  }
+
   @Override public void onResume() {
     super.onResume();
     roomObserver.sub();
     procedureObserver.sub();
     closeSideMenuIfNeeded();
+    markAsReadIfNeeded();
   }
 
   @Override public void onPause() {
@@ -225,6 +294,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements OnBackPres
   }
 
   @Override public boolean onBackPressed() {
-    return closeSideMenuIfNeeded();
+    return closeSideMenuIfNeeded() || messageComposerManager.hideMessageComposerIfNeeded();
   }
 }

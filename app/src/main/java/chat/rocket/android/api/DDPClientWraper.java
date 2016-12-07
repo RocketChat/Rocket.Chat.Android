@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONException;
 import rx.Observable;
+import timber.log.Timber;
 
 /**
  * DDP client wrapper.
@@ -82,12 +83,28 @@ public class DDPClientWraper {
    */
   public Task<DDPClientCallback.RPC> rpc(String methodCallId, String methodName, String params,
       long timeoutMs) {
+    Timber.d("rpc:[%s]> %s(%s) timeout=%d", methodCallId, methodName, params, timeoutMs);
     if (TextUtils.isEmpty(params)) {
-      return ddpClient.rpc(methodName, null, methodCallId, timeoutMs);
+      return ddpClient.rpc(methodName, null, methodCallId, timeoutMs).continueWithTask(task -> {
+        if (task.isFaulted()) {
+          Timber.d("rpc:[%s]< error = %s", methodCallId, task.getError());
+        } else {
+          Timber.d("rpc:[%s]< result = %s", methodCallId, task.getResult().result);
+        }
+        return task;
+      });
     }
 
     try {
-      return ddpClient.rpc(methodName, new JSONArray(params), methodCallId, timeoutMs);
+      return ddpClient.rpc(methodName, new JSONArray(params), methodCallId, timeoutMs)
+          .continueWithTask(task -> {
+            if (task.isFaulted()) {
+              Timber.d("rpc:[%s]< error = %s", methodCallId, task.getError());
+            } else {
+              Timber.d("rpc:[%s]< result = %s", methodCallId, task.getResult().result);
+            }
+            return task;
+          });
     } catch (JSONException exception) {
       return Task.forError(exception);
     }

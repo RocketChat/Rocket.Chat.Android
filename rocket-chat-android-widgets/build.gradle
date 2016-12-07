@@ -18,6 +18,8 @@ android {
     targetSdkVersion rootProject.ext.compileSdkVersion
     versionCode 1
     versionName "1"
+
+    vectorDrawables.useSupportLibrary = true
   }
   buildTypes {
     release {

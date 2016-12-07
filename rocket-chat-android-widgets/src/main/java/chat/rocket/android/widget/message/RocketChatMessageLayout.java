@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.helper.Linkify;
+import com.emojione.Emojione;
 
 /**
  */
@@ -49,7 +50,7 @@ public class RocketChatMessageLayout extends LinearLayout {
 
   private void appendTextView(String text) {
     TextView textView = (TextView) inflater.inflate(R.layout.message_body, this, false);
-    textView.setText(text);
+    textView.setText(Emojione.shortnameToUnicode(text, false));
 
     Linkify.markup(textView);
     InlineHightlighter.highlight(textView);
