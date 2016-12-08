@@ -142,4 +142,11 @@ public class RealmHelper {
       RealmModelListAdapter.Constructor<T, VM, VH> constructor) {
     return constructor.getNewInstance(context).initializeWith(this, query);
   }
+
+  public <T extends RealmObject> RealmAutoCompleteAdapter<T> createAutoCompleteAdapter(
+      Context context,
+      RealmAutoCompleteAdapter.RealmFilter<T> filter,
+      RealmAutoCompleteAdapter.Constructor constructor) {
+    return constructor.getNewInstance(context).initializeWith(this, filter);
+  }
 }

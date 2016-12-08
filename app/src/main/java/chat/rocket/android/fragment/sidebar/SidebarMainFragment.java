@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -10,6 +11,9 @@ import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
+import chat.rocket.android.fragment.sidebar.dialog.AbstractAddRoomDialogFragment;
+import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
+import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
@@ -91,6 +95,7 @@ public class SidebarMainFragment extends AbstractFragment {
     setupUserActionToggle();
     setupUserStatusButtons();
     setupLogoutButton();
+    setupAddChannelButton();
 
     roomListManager = new RoomListManager(
         (LinearLayout) rootView.findViewById(R.id.channels_container),
@@ -156,6 +161,24 @@ public class SidebarMainFragment extends AbstractFragment {
     if (toggleUserAction != null && toggleUserAction.isChecked()) {
       toggleUserAction.setChecked(false);
     }
+  }
+
+  private void setupAddChannelButton() {
+    rootView.findViewById(R.id.btn_add_channel).setOnClickListener(view -> {
+      showAddRoomDialog(new AddChannelDialogFragment());
+    });
+
+    rootView.findViewById(R.id.btn_add_direct_message).setOnClickListener(view -> {
+      showAddRoomDialog(new AddDirectMessageDialogFragment());
+    });
+  }
+
+  private void showAddRoomDialog(DialogFragment dialog) {
+    Bundle args = new Bundle();
+    args.putString("serverConfigId", serverConfigId);
+    args.putString("hostname", hostname);
+    dialog.setArguments(args);
+    dialog.show(getFragmentManager(), AbstractAddRoomDialogFragment.class.getSimpleName());
   }
 
   @Override public void onResume() {
