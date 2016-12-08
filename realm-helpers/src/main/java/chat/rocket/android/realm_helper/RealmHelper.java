@@ -104,27 +104,21 @@ public class RealmHelper {
     final TaskCompletionSource<Void> task = new TaskCompletionSource<>();
 
     final Realm realm = instance();
-    realm.executeTransactionAsync(new Realm.Transaction() {
-      @Override public void execute(Realm realm) {
-        try {
-          transaction.execute(realm);
-        } catch (JSONException exception) {
-          throw new RuntimeException(exception);
-        }
+    realm.executeTransactionAsync(_realm -> {
+      try {
+        transaction.execute(_realm);
+      } catch (JSONException exception) {
+        throw new RuntimeException(exception);
       }
-    }, new Realm.Transaction.OnSuccess() {
-      @Override public void onSuccess() {
-        realm.close();
-        task.setResult(null);
-      }
-    }, new Realm.Transaction.OnError() {
-      @Override public void onError(Throwable error) {
-        realm.close();
-        if (error instanceof Exception) {
-          task.setError((Exception) error);
-        } else {
-          task.setError(new Exception(error));
-        }
+    }, () -> {
+      realm.close();
+      task.setResult(null);
+    }, error -> {
+      realm.close();
+      if (error instanceof Exception) {
+        task.setError((Exception) error);
+      } else {
+        task.setError(new Exception(error));
       }
     });
 
@@ -143,7 +137,7 @@ public class RealmHelper {
 
   public <T extends RealmObject, VM, VH extends RealmModelViewHolder<VM>>
   RecyclerView.Adapter<VH> createListAdapter(Context context, RealmListObserver.Query<T> query,
-    RealmModelListAdapter.Constructor<T, VM, VH> constructor) {
+      RealmModelListAdapter.Constructor<T, VM, VH> constructor) {
     return constructor.getNewInstance(context).initializeWith(this, query);
   }
 }

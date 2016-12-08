@@ -48,18 +48,16 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
   }
 
   @Override protected final RealmChangeListener<RealmResults<T>> getListener() {
-    return new RealmChangeListener<RealmResults<T>>() {
-      @Override public void onChange(RealmResults<T> element) {
-        T currentResult = impl.extractObjectFromResults(element);
-        String currentResultString = currentResult != null ? currentResult.toString() : null;
-        if (previousResultString != null && previousResultString.equals(currentResultString)) {
-          return;
-        }
-        previousResultString = currentResultString;
-        if (onUpdateListener != null) {
-          onUpdateListener.onUpdateObject(
-              currentResult != null ? realm.copyFromRealm(currentResult) : null);
-        }
+    return element -> {
+      T currentResult = impl.extractObjectFromResults(element);
+      String currentResultString = currentResult != null ? currentResult.toString() : null;
+      if (previousResultString != null && previousResultString.equals(currentResultString)) {
+        return;
+      }
+      previousResultString = currentResultString;
+      if (onUpdateListener != null) {
+        onUpdateListener.onUpdateObject(
+            currentResult != null ? realm.copyFromRealm(currentResult) : null);
       }
     };
   }

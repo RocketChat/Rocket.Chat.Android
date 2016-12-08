@@ -32,11 +32,7 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
   /*package*/ RealmModelListAdapter<T, VM, VH> initializeWith(final RealmHelper realmHelper,
       RealmListObserver.Query<T> query) {
     realmListObserver = new RealmListObserver<>(realmHelper, query)
-        .setOnUpdateListener(new RealmListObserver.OnUpdateListener<T>() {
-          @Override public void onUpdateResults(List<T> results) {
-            updateData(realmHelper.copyFromRealm(results));
-          }
-        });
+        .setOnUpdateListener(results -> updateData(realmHelper.copyFromRealm(results)));
     return this;
   }
 
@@ -71,12 +67,10 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
   @Override public void onBindViewHolder(VH holder, int position) {
     VM model = getItem(position);
     holder.itemView.setTag(model);
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        VM model2 = (VM) (view.getTag());
-        if (model2 != null && onItemClickListener != null) {
-          onItemClickListener.onItemClick(model2);
-        }
+    holder.itemView.setOnClickListener(view -> {
+      VM model2 = (VM) (view.getTag());
+      if (model2 != null && onItemClickListener != null) {
+        onItemClickListener.onItemClick(model2);
       }
     });
     holder.bind(model);

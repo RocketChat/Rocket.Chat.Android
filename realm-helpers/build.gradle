@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
 
 buildscript {
   repositories {
@@ -8,6 +9,8 @@ buildscript {
   dependencies {
     classpath rootProject.ext.androidPlugin
     classpath rootProject.ext.realmPlugin
+    classpath rootProject.ext.retroLambdaPlugin
+    classpath rootProject.ext.retroLambdaPatch
   }
 }
 
@@ -15,6 +18,10 @@ android {
   compileSdkVersion rootProject.ext.compileSdkVersion
   buildToolsVersion rootProject.ext.buildToolsVersion
 
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
   defaultConfig {
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.compileSdkVersion

@@ -32,11 +32,9 @@ public class RealmListObserver<T extends RealmObject> extends AbstractRealmResul
   }
 
   @Override public final RealmChangeListener<RealmResults<T>> getListener() {
-    return new RealmChangeListener<RealmResults<T>>() {
-      @Override public void onChange(RealmResults<T> element) {
-        if (onUpdateListener != null) {
-          onUpdateListener.onUpdateResults(element);
-        }
+    return element -> {
+      if (onUpdateListener != null) {
+        onUpdateListener.onUpdateResults(element);
       }
     };
   }

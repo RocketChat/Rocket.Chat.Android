@@ -9,7 +9,9 @@ abstract class AbstractRealmResultsObserver<T extends RealmObject> {
   protected Realm realm;
 
   private RealmChangeListener<RealmResults<T>> listener;
+
   protected abstract RealmResults<T> queryItems(Realm realm);
+
   protected abstract RealmChangeListener<RealmResults<T>> getListener();
 
   private RealmResults<T> results;
