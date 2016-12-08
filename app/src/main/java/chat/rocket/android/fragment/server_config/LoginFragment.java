@@ -86,7 +86,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
             Fragment fragment = null;
             try {
               fragment = info.fragmentClass.newInstance();
-            } catch (java.lang.InstantiationException | IllegalAccessException exception) {
+            } catch (Exception exception) {
               Timber.w(exception, "failed to create new Fragment");
             }
             if (fragment != null) {
