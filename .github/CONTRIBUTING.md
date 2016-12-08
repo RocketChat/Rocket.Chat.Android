@@ -8,7 +8,9 @@ __Note:__ If there's a feature you'd like, there's a bug you'd like to fix, or y
 
 ## Coding standards
 
-We are following / moving to [Google Java Style](https://google.github.io/styleguide/javaguide.html). There's a nice IntelliJ (and therefore Android Studio) [plugin](https://plugins.jetbrains.com/plugin/8527) for code formatting.
+We are following / moving to [Google Java Style](https://google.github.io/styleguide/javaguide.html). There's a nice IntelliJ style file for the project in `config/quality/style-guide` for code formatting. (Note: We'll be hosting the style guide file until it's updated in the official repo)
+
+We are evaluating the Google's IntelliJ (and therefore Android Studio) [plugin](https://plugins.jetbrains.com/plugin/8527) for code formatting.
 
 We acknowledge all the code does not meet these standards but we are working to change this over time.
 
