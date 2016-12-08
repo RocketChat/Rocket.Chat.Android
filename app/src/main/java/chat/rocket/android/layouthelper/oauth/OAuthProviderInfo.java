@@ -20,7 +20,7 @@ public class OAuthProviderInfo {
     this.fragmentClass = fragmentClass;
   }
 
-  public static ArrayList<OAuthProviderInfo> LIST = new ArrayList<OAuthProviderInfo>() {
+  public static final ArrayList<OAuthProviderInfo> LIST = new ArrayList<OAuthProviderInfo>() {
     {
       add(new OAuthProviderInfo(
           "twitter", R.id.btn_login_with_twitter, TwitterOAuthFragment.class));

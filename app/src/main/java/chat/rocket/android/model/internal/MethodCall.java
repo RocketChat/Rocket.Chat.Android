@@ -90,7 +90,7 @@ public class MethodCall extends RealmObject {
     }
   }
 
-  private static final HashMap<String, RealmObjectObserver<MethodCall>> refMap = new HashMap<>();
+  private static final HashMap<String, RealmObjectObserver<MethodCall>> REF_MAP = new HashMap<>();
 
   /**
    * insert a new record to request a method call.
@@ -125,17 +125,17 @@ public class MethodCall extends RealmObject {
               task.setResult(resultJson);
             }
             observer.unsub();
-            refMap.remove(methodCall.getMethodCallId());
+            REF_MAP.remove(methodCall.getMethodCallId());
             remove(realmHelper, methodCall.getMethodCallId()).continueWith(new LogcatIfError());
           } else if (syncstate == SyncState.FAILED) {
             task.setError(new Error(methodCall.getResultJson()));
             observer.unsub();
-            refMap.remove(methodCall.getMethodCallId());
+            REF_MAP.remove(methodCall.getMethodCallId());
             remove(realmHelper, methodCall.getMethodCallId()).continueWith(new LogcatIfError());
           }
         });
         observer.sub();
-        refMap.put(newId, observer);
+        REF_MAP.put(newId, observer);
 
         if (context != null) {
           RocketChatService.keepalive(context);
