@@ -1,5 +1,6 @@
 package chat.rocket.android.realm_helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import java.util.List;
 import org.json.JSONException;
 import timber.log.Timber;
 
+@SuppressLint("NewApi")
 public class RealmHelper {
   private final RealmConfiguration realmConfiguration;
 
