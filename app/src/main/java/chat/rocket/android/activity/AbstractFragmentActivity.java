@@ -7,8 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MotionEvent;
 import chat.rocket.android.helper.OnBackPressListener;
-import com.instabug.library.InstabugTrackingDelegate;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
+import chat.rocket.android.wrappers.InstabugWrapper;
 import icepick.Icepick;
 import timber.log.Timber;
 
@@ -68,7 +69,7 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
 
   @Override public boolean dispatchTouchEvent(MotionEvent event) {
     try {
-      InstabugTrackingDelegate.notifyActivityGotTouchEvent(event, this);
+      InstabugWrapper.wrap(event, this);
     } catch (IllegalStateException exception) {
       Timber.w(exception, "Instabug error (ignored)");
     }
