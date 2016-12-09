@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.Toast;
+import bolts.Task;
+import chat.rocket.android.R;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 import com.trello.rxlifecycle.components.support.RxAppCompatDialogFragment;
@@ -12,6 +17,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatDialogFragment;
 public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFragment {
 
   protected RealmHelper realmHelper;
+  protected MethodCallHelper methodCall;
   protected String hostname;
 
   protected @LayoutRes abstract int getLayout();
@@ -30,6 +36,7 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
   protected void handleArgs(@NonNull Bundle args) {
     String serverConfigId = args.getString("serverConfigId");
     realmHelper = RealmStore.get(serverConfigId);
+    methodCall = new MethodCallHelper(getContext(), serverConfigId);
     hostname = args.getString("hostname");
   }
 
@@ -37,5 +44,28 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
     super.setupDialog(dialog, style);
     dialog.setContentView(getLayout());
     onSetupDialog();
+  }
+
+  protected final void showOrHideWaitingView(boolean show) {
+    View waiting = getDialog().findViewById(R.id.waiting);
+    if (waiting != null) {
+      waiting.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+  }
+
+  protected abstract Task<Void> getMethodCallForSubmitAction();
+
+  protected final void createRoom() {
+    showOrHideWaitingView(true);
+
+    getMethodCallForSubmitAction().continueWith(task -> {
+      showOrHideWaitingView(false);
+      if (task.isFaulted()) {
+        Toast.makeText(getContext(), task.getError().getMessage(), Toast.LENGTH_SHORT).show();
+      } else {
+        dismiss();
+      }
+      return null;
+    });
   }
 }

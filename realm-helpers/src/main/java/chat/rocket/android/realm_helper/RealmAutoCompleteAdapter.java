@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.TextView;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
@@ -28,7 +29,10 @@ public abstract class RealmAutoCompleteAdapter<T extends RealmObject> extends Ar
   protected void filterList(List<T> items, String text) {
   }
 
-  public class AutoCompleteFilter<T extends RealmObject> extends Filter {
+  /**
+   * Filter for completion.
+   */
+  private class AutoCompleteFilter<T extends RealmObject> extends Filter {
     private final RealmAutoCompleteAdapter<T> adapter;
     private final RealmFilter<T> realmFilter;
 
@@ -62,17 +66,23 @@ public abstract class RealmAutoCompleteAdapter<T extends RealmObject> extends Ar
         adapter.addAll((List<T>) filterResults.values);
       }
     }
+
+    @Override public CharSequence convertResultToString(Object resultValue) {
+      return adapter.getStringForSelectedItem((T) resultValue);
+    }
   }
 
   private RealmHelper realmHelper;
   private AutoCompleteFilter filter;
+  private final int textViewResourceId;
 
-  protected RealmAutoCompleteAdapter(Context context, int resource) {
-    super(context, resource);
-  }
-
+  /**
+   * NOTE
+   * getStringForSelectedItem(T model) is automatically set to the TextView(id=textViewResourceId).
+   */
   protected RealmAutoCompleteAdapter(Context context, int resource, int textViewResourceId) {
     super(context, resource, textViewResourceId);
+    this.textViewResourceId = textViewResourceId;
   }
 
   /*package*/ RealmAutoCompleteAdapter<T> initializeWith(RealmHelper realmHelper,
@@ -87,11 +97,18 @@ public abstract class RealmAutoCompleteAdapter<T extends RealmObject> extends Ar
     return filter;
   }
 
-  @NonNull @Override public final View getView(int position, View convertView, ViewGroup parent) {
+  @NonNull
+  @Override public final View getView(int position, View convertView, @NonNull ViewGroup parent) {
     View itemView = super.getView(position, convertView, parent);
-    onBindItemView(itemView, getItem(position));
+
+    T item = getItem(position);
+    TextView textView = (TextView) itemView.findViewById(textViewResourceId);
+    textView.setText(getStringForSelectedItem(item));
+    onBindItemView(itemView, item);
     return itemView;
   }
 
   protected abstract void onBindItemView(View itemView, T model);
+
+  protected abstract String getStringForSelectedItem(T model);
 }

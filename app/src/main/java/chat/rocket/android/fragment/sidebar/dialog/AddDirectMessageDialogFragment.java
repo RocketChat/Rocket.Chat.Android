@@ -2,6 +2,8 @@ package chat.rocket.android.fragment.sidebar.dialog;
 
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
+import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.sidebar.dialog.SuggestUserAdapter;
@@ -38,6 +40,12 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
         .compose(bindToLifecycle())
         .subscribe(RxView.enabled(buttonAddDirectMessage));
 
-    //buttonAddDirectMessage.setOnClick...
+    buttonAddDirectMessage.setOnClickListener(view -> createRoom());
+  }
+
+  @Override protected Task<Void> getMethodCallForSubmitAction() {
+    String username =
+        ((TextView) getDialog().findViewById(R.id.editor_username)).getText().toString();
+    return methodCall.createDirectMessage(username);
   }
 }

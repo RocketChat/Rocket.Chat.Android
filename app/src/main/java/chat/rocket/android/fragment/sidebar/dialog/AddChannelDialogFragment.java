@@ -3,6 +3,7 @@ package chat.rocket.android.fragment.sidebar.dialog;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import com.jakewharton.rxbinding.view.RxView;
@@ -26,13 +27,7 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
         .compose(bindToLifecycle())
         .subscribe(RxView.enabled(buttonAddChannel));
 
-    buttonAddChannel.setOnClickListener(view -> {
-      TextView channelNameText = (TextView) getDialog().findViewById(R.id.editor_channel_name);
-      String channelName = channelNameText.getText().toString();
-      boolean isPrivate = isChecked(R.id.checkbox_private);
-      boolean isReadOnly = isChecked(R.id.checkbox_read_only);
-      createChannel(channelName, isPrivate, isReadOnly);
-    });
+    buttonAddChannel.setOnClickListener(view -> createRoom());
   }
 
   private boolean isChecked(int viewId) {
@@ -40,7 +35,16 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
     return check.isChecked();
   }
 
-  private void createChannel(String name, boolean isPrivate, boolean isReadOnly) {
+  @Override protected Task<Void> getMethodCallForSubmitAction() {
+    TextView channelNameText = (TextView) getDialog().findViewById(R.id.editor_channel_name);
+    String channelName = channelNameText.getText().toString();
+    boolean isPrivate = isChecked(R.id.checkbox_private);
+    boolean isReadOnly = isChecked(R.id.checkbox_read_only);
 
+    if (isPrivate) {
+      return methodCall.createPrivateGroup(channelName, isReadOnly);
+    } else {
+      return methodCall.createChannel(channelName, isReadOnly);
+    }
   }
 }

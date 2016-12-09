@@ -283,6 +283,27 @@ public class MethodCallHelper {
         .onSuccessTask(CONVERT_TO_JSON_OBJECT);
   }
 
+  public Task<Void> createChannel(final String name, final boolean readOnly) {
+    return call("createChannel", TIMEOUT_MS, () -> new JSONArray()
+        .put(name)
+        .put(new JSONArray())
+        .put(readOnly))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
+  public Task<Void> createPrivateGroup(final String name, final boolean readOnly) {
+    return call("createPrivateGroup", TIMEOUT_MS, () -> new JSONArray()
+        .put(name)
+        .put(new JSONArray())
+        .put(readOnly))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
+  public Task<Void> createDirectMessage(final String username) {
+    return call("createDirectMessage", TIMEOUT_MS, () -> new JSONArray().put(username))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
   /**
    * send message.
    */

@@ -3,7 +3,6 @@ package chat.rocket.android.layouthelper.sidebar.dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmAutoCompleteAdapter;
@@ -25,8 +24,7 @@ public class SuggestUserAdapter extends RealmAutoCompleteAdapter<User> {
   @Override protected void onBindItemView(View itemView, User user) {
     new UserRenderer(itemView.getContext(), user)
         .statusColorInto((ImageView) itemView.findViewById(R.id.room_user_status))
-        .avatarInto((ImageView) itemView.findViewById(R.id.room_user_avatar), hostname)
-        .usernameInto((TextView) itemView.findViewById(R.id.room_user_name));
+        .avatarInto((ImageView) itemView.findViewById(R.id.room_user_avatar), hostname);
   }
 
   @Override protected void filterList(List<User> users, String text) {
@@ -38,5 +36,9 @@ public class SuggestUserAdapter extends RealmAutoCompleteAdapter<User> {
         itUsers.remove();
       }
     }
+  }
+
+  @Override protected String getStringForSelectedItem(User user) {
+    return user.getUsername();
   }
 }
