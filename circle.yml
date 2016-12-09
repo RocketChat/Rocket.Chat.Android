@@ -1,0 +1,44 @@
+#
+# Build configuration for Circle CI
+#
+# See this thread for speeding up and caching directories: https://discuss.circleci.com/t/installing-android-build-tools-23-0-2/924
+#
+
+machine:
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
+
+dependencies:
+  pre:
+    - echo "sdk.dir="$ANDROID_HOME > local.properties
+
+    - echo $ROCKET_JKS_BASE64 | base64 --decode > Rocket.jks
+
+    - mkdir -p app/src/release/res/values
+    - echo $GOOGLE_SERVICES_BASE64 | base64 --decode > app/src/release/google-services.json
+    - echo $API_KEY_STRINGS_BASE64 | base64 --decode > app/src/release/res/values/api_key_strings.xml
+
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools
+    - echo y | android update sdk --no-ui --all --filter android-25
+    - echo y | android update sdk --no-ui --all --filter extra-android-m2repository,extra-android-support
+    - echo y | android update sdk --no-ui --all --filter extra-google-m2repository,extra-google-google_play_services
+    - echo y | android update sdk --no-ui --all --filter build-tools-25.0.1
+  cache_directories:
+    - /usr/local/android-sdk-linux/tools
+    - /usr/local/android-sdk-linux/build-tools/25.0.1
+
+deployment:
+  beta:
+    tag: /v\d+\.\d+\.\d+(?!.)/
+    branch: master
+    owner: RocketChat
+    commands:
+      - ./gradlew publishListingProdRelease
+        -Dorg.gradle.project.track=beta
+  alpha:
+    tag: /v\d+\.\d+\.\d+/
+    branch: develop
+    owner: RocketChat
+    commands:
+      - ./gradlew publishListingQaRelease
+        -Dorg.gradle.project.track=alpha
