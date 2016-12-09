@@ -30,15 +30,13 @@ dependencies:
 deployment:
   beta:
     tag: /v\d+\.\d+\.\d+(?!.)/
-    branch: master
     owner: RocketChat
     commands:
       - ./gradlew publishListingProdRelease
         -Dorg.gradle.project.track=beta
   alpha:
     tag: /v\d+\.\d+\.\d+/
-    branch: develop
     owner: RocketChat
     commands:
       - ./gradlew publishListingQaRelease
-        -Dorg.gradle.project.track=alpha
+        -Dorg.gradle.pr oject.track=alpha
