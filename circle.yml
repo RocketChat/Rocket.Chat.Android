@@ -13,6 +13,7 @@ dependencies:
     - echo "sdk.dir="$ANDROID_HOME > local.properties
 
     - echo $ROCKET_JKS_BASE64 | base64 --decode > Rocket.jks
+    - echo $ROCKET_PLAY_JSON | base64 --decode > app/rocket-chat.json
 
     - mkdir -p app/src/release/res/values
     - echo $GOOGLE_SERVICES_BASE64 | base64 --decode > app/src/release/google-services.json
