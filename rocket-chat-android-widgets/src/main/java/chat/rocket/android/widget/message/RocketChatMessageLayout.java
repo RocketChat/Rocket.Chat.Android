@@ -3,6 +3,7 @@ package chat.rocket.android.widget.message;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -46,7 +47,29 @@ public class RocketChatMessageLayout extends LinearLayout {
 
   public void setText(String messageBody) {
     removeAllViews();
-    appendTextView(messageBody);
+    if (messageBody.contains("```")) {
+      boolean highlight = false;
+      for (final String chunk : TextUtils.split(messageBody.replace("\r\n", "\n"), "```")) {
+        final String trimmedChunk = chunk.replaceFirst("^\n", "").replaceFirst("\n$", "");
+        if (highlight) {
+          appendHighlightTextView(trimmedChunk);
+        } else if (trimmedChunk.length() > 0) {
+          appendTextView(trimmedChunk);
+        }
+        highlight = !highlight;
+      }
+    } else {
+      appendTextView(messageBody);
+    }
+  }
+
+  private void appendHighlightTextView(String text) {
+    TextView textView = (TextView) inflater.inflate(R.layout.message_body_highlight, this, false);
+    textView.setText(text);
+
+    Linkify.markup(textView);
+
+    addView(textView);
   }
 
   private void appendTextView(String text) {

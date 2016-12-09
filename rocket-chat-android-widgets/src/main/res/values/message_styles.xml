@@ -4,6 +4,11 @@
   <style name="TextAppearance.RocketChat.MessageBody" parent="TextAppearance.AppCompat.Body1">
 
   </style>
+  <style name="TextAppearance.RocketChat.MessageBody.Highlight">
+    <item name="android:textColor">@color/highlight_text_color</item>
+    <item name="android:typeface">monospace</item>
+    <item name="android:textStyle">bold</item>
+  </style>
 
   <color name="highlight_text_color">#333</color>
   <color name="highlight_text_background_color">#f8f8f8</color>
