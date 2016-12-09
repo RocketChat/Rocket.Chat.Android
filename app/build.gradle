@@ -53,6 +53,7 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       signingConfig signingConfigs.release
     }
+    production.initWith(buildTypes.release)
   }
   packagingOptions {
     exclude 'META-INF/LICENSE.txt'
@@ -84,9 +85,13 @@ dependencies {
   compile rootProject.ext.supportAppCompat
   compile rootProject.ext.supportDesign
 
-  compile('com.instabug.library:instabug:3.1.0') {
+  debugCompile('com.instabug.library:instabug:3.1.0') {
     exclude group: 'io.reactivex'
   }
+  releaseCompile('com.instabug.library:instabug:3.1.0') {
+    exclude group: 'io.reactivex'
+  }
+  productionCompile project(':instabug-stub')
   compile 'com.android.support:multidex:1.0.1'
 
   compile 'com.google.firebase:firebase-core:10.0.0'
