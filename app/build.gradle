@@ -50,15 +50,15 @@ android {
     }
   }
   buildTypes {
+    debug {
+      defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersionDebug
+      }
+    }
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       signingConfig signingConfigs.release
-    }
-    debug {
-      defaultConfig {
-        minSdkVersion 21
-      }
     }
   }
   productFlavors {

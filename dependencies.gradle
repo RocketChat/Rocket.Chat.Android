@@ -5,6 +5,7 @@ ext {
   retroLambdaPatch = 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
   compileSdkVersion = 25
   buildToolsVersion = '25.0.1'
+  minSdkVersionDebug = 21
   minSdkVersion = 17
 
   supportVersion = '25.0.1'

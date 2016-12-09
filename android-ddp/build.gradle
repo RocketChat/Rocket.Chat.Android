@@ -27,14 +27,14 @@ android {
     versionName "0.0.8"
   }
   buildTypes {
+    debug {
+      defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersionDebug
+      }
+    }
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-    debug {
-      defaultConfig {
-        minSdkVersion 21
-      }
     }
   }
 }

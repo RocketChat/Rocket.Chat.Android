@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.helper.InlineHightlighter;
 import chat.rocket.android.widget.helper.Linkify;
 import com.emojione.Emojione;
 
