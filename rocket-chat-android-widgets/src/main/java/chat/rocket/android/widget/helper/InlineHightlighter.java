@@ -1,4 +1,4 @@
-package chat.rocket.android.widget.message;
+package chat.rocket.android.widget.helper;
 
 import android.content.Context;
 import android.graphics.Color;
