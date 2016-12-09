@@ -7,6 +7,9 @@
     <string name="user_status_busy">Busy</string>
     <string name="user_status_invisible">Invisible</string>
     <string name="fragment_sidebar_main_logout_title">Logout</string>
+    <string name="dialog_add_channel_name">name</string>
+    <string name="dialog_add_channel_private">private</string>
+    <string name="dialog_add_channel_read_only">read only</string>
 
     <string name="start_of_conversation">Start of conversation</string>
     <string name="users_of_room_title">Members List</string>
