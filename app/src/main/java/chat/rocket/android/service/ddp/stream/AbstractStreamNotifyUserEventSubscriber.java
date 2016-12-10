@@ -1,0 +1,24 @@
+package chat.rocket.android.service.ddp.stream;
+
+import android.content.Context;
+import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.realm_helper.RealmHelper;
+
+abstract class AbstractStreamNotifyUserEventSubscriber extends AbstractStreamNotifyEventSubscriber {
+  protected final String userId;
+  protected AbstractStreamNotifyUserEventSubscriber(Context context, RealmHelper realmHelper,
+      DDPClientWraper ddpClient, String userId) {
+    super(context, realmHelper, ddpClient);
+    this.userId = userId;
+  }
+
+  @Override protected final String getSubscriptionName() {
+    return "stream-notify-user";
+  }
+
+  @Override protected final String getSubscriptionParam() {
+    return userId + "/" + getSubscriptionSubParam();
+  }
+
+  protected abstract String getSubscriptionSubParam();
+}
