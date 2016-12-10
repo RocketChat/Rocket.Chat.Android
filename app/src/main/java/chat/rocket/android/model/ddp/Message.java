@@ -1,7 +1,6 @@
 package chat.rocket.android.model.ddp;
 
 import chat.rocket.android.model.SyncState;
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import org.json.JSONException;
@@ -23,8 +22,8 @@ public class Message extends RealmObject {
   private String msg;
   private User u;
   private boolean groupable;
-  private RealmList<MessageAttachment> attachments;
-  private RealmList<MessageUrl> urls;
+  private String attachments; //JSONArray.
+  private String urls; //JSONArray.
 
   public String get_id() {
     return _id;
@@ -90,19 +89,19 @@ public class Message extends RealmObject {
     this.groupable = groupable;
   }
 
-  public RealmList<MessageAttachment> getAttachments() {
+  public String getAttachments() {
     return attachments;
   }
 
-  public void setAttachments(RealmList<MessageAttachment> attachments) {
+  public void setAttachments(String attachments) {
     this.attachments = attachments;
   }
 
-  public RealmList<MessageUrl> getUrls() {
+  public String getUrls() {
     return urls;
   }
 
-  public void setUrls(RealmList<MessageUrl> urls) {
+  public void setUrls(String urls) {
     this.urls = urls;
   }
 
