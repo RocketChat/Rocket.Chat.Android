@@ -18,7 +18,7 @@ import org.json.JSONObject;
  */
 public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
 
-  private String prevHash;
+  private String prevDigest;
 
   /**
    * constructor.
@@ -53,7 +53,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
         .findAll();
   }
 
-  private String getHashFor(List<MethodCall> results) {
+  private String getDigestFor(List<MethodCall> results) {
     if (results == null) {
       return "-";
     }
@@ -68,17 +68,17 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
   }
 
   @Override public void onUpdateResults(List<MethodCall> results) {
-    String hash = getHashFor(results);
-    if (prevHash == null) {
-      if (hash == null) {
+    String digest = getDigestFor(results);
+    if (prevDigest == null) {
+      if (digest == null) {
         return;
       }
     } else {
-      if (prevHash.equals(hash)) {
+      if (prevDigest.equals(digest)) {
         return;
       }
     }
-    prevHash = hash;
+    prevDigest = digest;
     if (results == null || results.isEmpty()) {
       return;
     }
