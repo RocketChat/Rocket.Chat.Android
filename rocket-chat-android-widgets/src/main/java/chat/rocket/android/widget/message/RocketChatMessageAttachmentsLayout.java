@@ -30,6 +30,7 @@ import org.json.JSONObject;
 public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   private LayoutInflater inflater;
   private String hostname;
+  private String attachmentsString;
 
   private String userId;
   private String token;
@@ -93,6 +94,10 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   }
 
   public void setAttachments(String attachmentsString) {
+    if (this.attachmentsString != null && this.attachmentsString.equals(attachmentsString)) {
+      return;
+    }
+    this.attachmentsString = attachmentsString;
     removeAllViews();
 
     try {

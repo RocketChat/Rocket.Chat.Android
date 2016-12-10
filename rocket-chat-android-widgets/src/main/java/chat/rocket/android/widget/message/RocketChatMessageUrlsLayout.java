@@ -23,6 +23,7 @@ import org.json.JSONObject;
  */
 public class RocketChatMessageUrlsLayout extends LinearLayout {
   private LayoutInflater inflater;
+  private String urlsString;
 
   public RocketChatMessageUrlsLayout(Context context) {
     super(context);
@@ -52,6 +53,10 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
   }
 
   public void setUrls(String urlsString) {
+    if (this.urlsString != null && this.urlsString.equals(urlsString)) {
+      return;
+    }
+    this.urlsString = urlsString;
     removeAllViews();
 
     try {
