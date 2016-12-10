@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.helper.ImageFormat;
 import com.squareup.picasso.Picasso;
-import java.util.HashSet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,15 +22,6 @@ import org.json.JSONObject;
 /**
  */
 public class RocketChatMessageUrlsLayout extends LinearLayout {
-  private static final HashSet<String> SUPPORTED_IMAGE_FORMATS = new HashSet<String>() {
-    {
-      add("image/png");
-      add("image/jpg");
-      add("image/jpeg");
-      add("image/webp");
-    }
-  };
-
   private LayoutInflater inflater;
 
   public RocketChatMessageUrlsLayout(Context context) {
@@ -78,7 +69,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     final String url = urlObj.getString("url");
     String contentType = urlObj.getJSONObject("headers").getString("contentType");
 
-    if (contentType.startsWith("image/") && SUPPORTED_IMAGE_FORMATS.contains(contentType)) {
+    if (contentType.startsWith("image/") && ImageFormat.SUPPORTED_LIST.contains(contentType)) {
       View inlineImage = inflater.inflate(R.layout.message_inline_image, this, false);
       Picasso.with(getContext())
           .load(url)

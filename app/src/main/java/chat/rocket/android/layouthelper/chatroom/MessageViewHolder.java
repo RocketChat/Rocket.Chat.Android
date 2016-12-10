@@ -57,7 +57,7 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
         .timestampInto(timestamp)
         .bodyInto(body)
         .urlsInto(urls)
-        .attachmentsInto(attachments);
+        .attachmentsInto(attachments, hostname);
 
     if (pairedMessage.target != null) {
       int syncstate = pairedMessage.target.getSyncstate();

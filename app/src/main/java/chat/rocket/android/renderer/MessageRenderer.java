@@ -104,7 +104,8 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   /**
    * show urls in RocketChatMessageUrlsLayout.
    */
-  public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout) {
+  public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout,
+      String hostname) {
     if (!shouldHandle(attachmentsLayout)) {
       return this;
     }
@@ -114,6 +115,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       attachmentsLayout.setVisibility(View.GONE);
     } else {
       attachmentsLayout.setVisibility(View.VISIBLE);
+      attachmentsLayout.setHostname(hostname);
       attachmentsLayout.setAttachments(attachments);
     }
 
