@@ -65,14 +65,9 @@ public class Avatar {
    * render avatar into imageView.
    */
   public void into(final ImageView imageView) {
-    Object tag = imageView.getTag();
-    if (tag != null && tag instanceof String) {
-      String username = (String) tag;
-      if (this.username.equals(username)) {
-        return;
-      }
+    if (ViewDataCache.isStored(username, imageView)) {
+      return;
     }
-    imageView.setTag(this.username);
 
     final Context context = imageView.getContext();
     Picasso.with(context)
