@@ -1,13 +1,17 @@
 package chat.rocket.android.renderer;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
+import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
 
 /**
  * Renderer for Message model.
@@ -77,4 +81,43 @@ public class MessageRenderer extends AbstractRenderer<Message> {
 
     return this;
   }
+
+  /**
+   * show urls in RocketChatMessageUrlsLayout.
+   */
+  public MessageRenderer urlsInto(RocketChatMessageUrlsLayout urlsLayout) {
+    if (!shouldHandle(urlsLayout)) {
+      return this;
+    }
+
+    String urls = object.getUrls();
+    if (TextUtils.isEmpty(urls)) {
+      urlsLayout.setVisibility(View.GONE);
+    } else {
+      urlsLayout.setVisibility(View.VISIBLE);
+      urlsLayout.setUrls(urls);
+    }
+
+    return this;
+  }
+
+  /**
+   * show urls in RocketChatMessageUrlsLayout.
+   */
+  public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout) {
+    if (!shouldHandle(attachmentsLayout)) {
+      return this;
+    }
+
+    String attachments = object.getAttachments();
+    if (TextUtils.isEmpty(attachments)) {
+      attachmentsLayout.setVisibility(View.GONE);
+    } else {
+      attachmentsLayout.setVisibility(View.VISIBLE);
+      attachmentsLayout.setAttachments(attachments);
+    }
+
+    return this;
+  }
+
 }

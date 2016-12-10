@@ -40,4 +40,5 @@ dependencies {
   compile rootProject.ext.supportAppCompat
   compile rootProject.ext.supportDesign
   compile 'org.nibor.autolink:autolink:0.5.0'
+  compile rootProject.ext.picasso
 }

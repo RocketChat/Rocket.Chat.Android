@@ -17,6 +17,7 @@ ext {
   rxJava = 'io.reactivex:rxjava:1.2.2'
   boltsTask = 'com.parse.bolts:bolts-tasks:1.4.0'
   timber = 'com.jakewharton.timber:timber:4.3.1'
+  picasso = 'com.squareup.picasso:picasso:2.5.2'
 }
 
 subprojects { project ->

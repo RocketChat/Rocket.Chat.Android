@@ -10,7 +10,9 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.realm_helper.RealmModelViewHolder;
 import chat.rocket.android.renderer.MessageRenderer;
+import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
+import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
 
 /**
  * View holder of NORMAL chat message.
@@ -22,6 +24,8 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
   private final View userAndTimeContainer;
   private final String hostname;
   private final RocketChatMessageLayout body;
+  private final RocketChatMessageUrlsLayout urls;
+  private final RocketChatMessageAttachmentsLayout attachments;
   private final View newDayContainer;
   private final TextView newDayText;
 
@@ -35,6 +39,9 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
     timestamp = (TextView) itemView.findViewById(R.id.timestamp);
     userAndTimeContainer = itemView.findViewById(R.id.user_and_timestamp_container);
     body = (RocketChatMessageLayout) itemView.findViewById(R.id.message_body);
+    urls = (RocketChatMessageUrlsLayout) itemView.findViewById(R.id.message_urls);
+    attachments =
+        (RocketChatMessageAttachmentsLayout) itemView.findViewById(R.id.message_attachments);
     newDayContainer = itemView.findViewById(R.id.newday_container);
     newDayText = (TextView) itemView.findViewById(R.id.newday_text);
     this.hostname = hostname;
@@ -48,7 +55,9 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
         .avatarInto(avatar, hostname)
         .usernameInto(username)
         .timestampInto(timestamp)
-        .bodyInto(body);
+        .bodyInto(body)
+        .urlsInto(urls)
+        .attachmentsInto(attachments);
 
     if (pairedMessage.target != null) {
       int syncstate = pairedMessage.target.getSyncstate();
