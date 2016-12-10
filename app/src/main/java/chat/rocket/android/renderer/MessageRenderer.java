@@ -105,7 +105,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show urls in RocketChatMessageUrlsLayout.
    */
   public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout,
-      String hostname) {
+      String hostname, String userId, String token) {
     if (!shouldHandle(attachmentsLayout)) {
       return this;
     }
@@ -116,6 +116,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     } else {
       attachmentsLayout.setVisibility(View.VISIBLE);
       attachmentsLayout.setHostname(hostname);
+      attachmentsLayout.setCredential(userId, token);
       attachmentsLayout.setAttachments(attachments);
     }
 

@@ -23,6 +23,8 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
   private final TextView timestamp;
   private final View userAndTimeContainer;
   private final String hostname;
+  private final String userId;
+  private final String token;
   private final RocketChatMessageLayout body;
   private final RocketChatMessageUrlsLayout urls;
   private final RocketChatMessageAttachmentsLayout attachments;
@@ -32,7 +34,7 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
   /**
    * constructor WITH hostname.
    */
-  public MessageViewHolder(View itemView, String hostname) {
+  public MessageViewHolder(View itemView, String hostname, String userId, String token) {
     super(itemView);
     avatar = (ImageView) itemView.findViewById(R.id.user_avatar);
     username = (TextView) itemView.findViewById(R.id.username);
@@ -45,6 +47,8 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
     newDayContainer = itemView.findViewById(R.id.newday_container);
     newDayText = (TextView) itemView.findViewById(R.id.newday_text);
     this.hostname = hostname;
+    this.userId = userId;
+    this.token = token;
   }
 
   /**
@@ -57,7 +61,7 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
         .timestampInto(timestamp)
         .bodyInto(body)
         .urlsInto(urls)
-        .attachmentsInto(attachments, hostname);
+        .attachmentsInto(attachments, hostname, userId, token);
 
     if (pairedMessage.target != null) {
       int syncstate = pairedMessage.target.getSyncstate();

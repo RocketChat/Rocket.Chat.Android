@@ -15,12 +15,16 @@ import java.util.List;
 public class MessageListAdapter
     extends ExtRealmModelListAdapter<Message, PairedMessage, MessageViewHolder> {
   private final String hostname;
+  private final String userId;
+  private final String token;
   private boolean hasNext;
   private boolean isLoaded;
 
-  public MessageListAdapter(Context context, String hostname) {
+  public MessageListAdapter(Context context, String hostname, String userId, String token) {
     super(context);
     this.hostname = hostname;
+    this.userId = userId;
+    this.token = token;
   }
 
   /**
@@ -53,7 +57,7 @@ public class MessageListAdapter
   }
 
   @Override protected MessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
-    return new MessageViewHolder(itemView, hostname);
+    return new MessageViewHolder(itemView, hostname, userId, token);
   }
 
   @Override protected List<PairedMessage> mapResultsToViewModel(List<Message> results) {

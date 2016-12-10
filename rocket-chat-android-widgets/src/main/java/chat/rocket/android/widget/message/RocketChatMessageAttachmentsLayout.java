@@ -14,7 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.helper.ImageFormat;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
+import java.io.IOException;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +30,10 @@ import org.json.JSONObject;
 public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   private LayoutInflater inflater;
   private String hostname;
+
+  private String userId;
+  private String token;
+  private OkHttp3Downloader downloader;
 
   public RocketChatMessageAttachmentsLayout(Context context) {
     super(context);
@@ -54,6 +64,32 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
   public void setHostname(String hostname) {
     this.hostname = hostname;
+  }
+
+  public void setCredential(String userId, String token) {
+    this.userId = userId;
+    this.token = token;
+  }
+
+  private OkHttp3Downloader getDownloader() {
+    if (downloader == null) {
+      Interceptor interceptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+          // uid/token is required to download attachment files.
+          // see: RocketChat:lib/fileUpload.coffee
+          Request newRequest = chain.request().newBuilder()
+              .header("Cookie", "rc_uid=" + userId + ";rc_token=" + token)
+              .build();
+          return chain.proceed(newRequest);
+        }
+      };
+      OkHttpClient okHttpClient = new OkHttpClient.Builder()
+          .addInterceptor(interceptor)
+          .build();
+      downloader = new OkHttp3Downloader(okHttpClient);
+    }
+    return downloader;
   }
 
   public void setAttachments(String attachmentsString) {
@@ -87,9 +123,10 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     View attachmentView = inflater.inflate(R.layout.message_inline_attachment, this, false);
 
-    imageURL = absolutize(imageURL);
-    Picasso.with(getContext())
-        .load(imageURL)
+    new Picasso.Builder(getContext())
+        .downloader(getDownloader())
+        .build()
+        .load(absolutize(imageURL))
         .placeholder(R.drawable.image_dummy)
         .error(R.drawable.image_error)
         .into((ImageView) attachmentView.findViewById(R.id.image));
