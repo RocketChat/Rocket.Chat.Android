@@ -91,8 +91,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private void forceInvalidateTokens() {
     serverConfigRealm.executeTransaction(realm -> {
-      Session session = realm.where(Session.class)
-          .equalTo("sessionId", Session.DEFAULT_ID).findFirst();
+      Session session = Session.queryDefaultSession(realm).findFirst();
       if (session != null
           && !TextUtils.isEmpty(session.getToken())
           && (session.isTokenVerified() || !TextUtils.isEmpty(session.getError()))) {
@@ -159,9 +158,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
               .put("serverConfigId", serverConfigId)
               .put("session", session))
       ).onSuccess(_task -> serverConfigRealm.executeTransaction(realm -> {
-        Session sessionObj = realm.where(Session.class)
-            .equalTo("sessionId", Session.DEFAULT_ID)
-            .findFirst();
+        Session sessionObj = Session.queryDefaultSession(realm).findFirst();
 
         if (sessionObj == null) {
           realm.createOrUpdateObjectFromJson(Session.class,

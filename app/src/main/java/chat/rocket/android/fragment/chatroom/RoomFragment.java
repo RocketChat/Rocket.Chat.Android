@@ -86,7 +86,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     userId = realmHelper.executeTransactionForRead(realm ->
         User.queryCurrentUser(realm).findFirst()).get_id();
     token = realmHelper.executeTransactionForRead(realm ->
-        realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID).findFirst()).getToken();
+        Session.queryDefaultSession(realm).findFirst()).getToken();
     roomObserver = realmHelper
         .createObjectObserver(realm -> realm.where(RoomSubscription.class).equalTo("rid", roomId))
         .setOnUpdateListener(this::onRenderRoom);
