@@ -47,11 +47,11 @@ public class RocketChatService extends Service {
 
   private void refreshServerConfigState() {
     realmHelper.executeTransaction(realm -> {
-      RealmResults<ServerConfig> configs = realm.where(ServerConfig.class).findAll();
+      RealmResults<ServerConfig> configs = realm.where(ServerConfig.class)
+          .notEqualTo("state", ServerConfig.STATE_READY)
+          .findAll();
       for (ServerConfig config: configs) {
-        if (config.getState() != ServerConfig.STATE_READY) {
-          config.setState(ServerConfig.STATE_READY);
-        }
+        config.setState(ServerConfig.STATE_READY);
       }
       return null;
     }).continueWith(new LogcatIfError());;
@@ -100,37 +100,26 @@ public class RocketChatService extends Service {
     }
 
     ServerConfig config = configList.get(0);
-    createWebSocketThread(config).onSuccess(task -> {
-      RocketChatWebSocketThread thread = task.getResult();
-      if (thread != null) {
-        thread.keepalive();
-      }
-      return null;
-    });
+    final String serverConfigId = config.getServerConfigId();
+    ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTING)
+        .onSuccessTask(task -> createWebSocketThread(config))
+        .onSuccessTask(task -> {
+          RocketChatWebSocketThread thread = task.getResult();
+          if (thread != null) {
+            thread.keepalive();
+          }
+          return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED);
+        }).continueWith(new LogcatIfError());
   }
 
   private Task<RocketChatWebSocketThread> createWebSocketThread(final ServerConfig config) {
     final String serverConfigId = config.getServerConfigId();
     webSocketThreads.put(serverConfigId, null);
-    return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTING)
-        .onSuccessTask(_task ->
-            RocketChatWebSocketThread.getStarted(getApplicationContext(), config))
-        .onSuccessTask(task ->
-            ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED)
-                .onSuccessTask(_task -> task))
+    return RocketChatWebSocketThread.getStarted(getApplicationContext(), config)
         .onSuccessTask(task -> {
           webSocketThreads.put(serverConfigId, task.getResult());
           return task;
         });
-  }
-
-  private Task<RocketChatWebSocketThread> findOrCreateWebSocketThread(final ServerConfig config) {
-    final String serverConfigId = config.getServerConfigId();
-    if (webSocketThreads.containsKey(serverConfigId)) {
-      return Task.forResult(webSocketThreads.get(serverConfigId));
-    } else {
-      return createWebSocketThread(config);
-    }
   }
 
   @Override public void onDestroy() {
