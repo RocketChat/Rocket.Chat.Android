@@ -21,9 +21,9 @@ public class GetUsersOfRoomsProcedureObserver
 
   private final MethodCallHelper methodCall;
 
-  public GetUsersOfRoomsProcedureObserver(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+  public GetUsersOfRoomsProcedureObserver(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }
 

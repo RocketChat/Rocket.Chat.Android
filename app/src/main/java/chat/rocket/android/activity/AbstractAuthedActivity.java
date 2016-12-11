@@ -1,7 +1,9 @@
 package chat.rocket.android.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ServerConfig;
@@ -33,6 +35,25 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
           updateRoomIdIfNeeded(sharedPreferences);
         }
       };
+
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (savedInstanceState == null) {
+      Intent intent = getIntent();
+      if (intent != null) {
+        if (intent.hasExtra("serverConfigId")) {
+          SharedPreferences.Editor editor = RocketChatCache.get(this).edit();
+          editor.putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID,
+              intent.getStringExtra("serverConfigId"));
+
+          if (intent.hasExtra("roomId")) {
+            editor.putString(RocketChatCache.KEY_SELECTED_ROOM_ID, intent.getStringExtra("roomId"));
+          }
+          editor.apply();
+        }
+      }
+    }
+  }
 
   private void updateServerConfigIdIfNeeded(SharedPreferences prefs) {
     String newServerConfigId = prefs.getString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, null);

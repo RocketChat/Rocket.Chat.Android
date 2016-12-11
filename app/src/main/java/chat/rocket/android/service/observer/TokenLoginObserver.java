@@ -14,8 +14,9 @@ public class TokenLoginObserver extends AbstractModelObserver<Session> {
 
   private final MethodCallHelper methodCall;
 
-  public TokenLoginObserver(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+  public TokenLoginObserver(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }
 

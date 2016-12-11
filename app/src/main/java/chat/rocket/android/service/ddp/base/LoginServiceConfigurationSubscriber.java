@@ -10,9 +10,9 @@ import io.realm.RealmObject;
  * meteor.loginServiceConfiguration subscriber
  */
 public class LoginServiceConfigurationSubscriber extends AbstractBaseSubscriber {
-  public LoginServiceConfigurationSubscriber(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+  public LoginServiceConfigurationSubscriber(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, hostname, realmHelper, ddpClient);
   }
 
   @Override protected String getSubscriptionName() {

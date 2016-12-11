@@ -15,14 +15,16 @@ public class StreamRoomMessageManager implements Registerable {
   private StreamRoomMessage streamRoomMessage;
 
   private final Context context;
+  private final String hostname;
   private final RealmHelper realmHelper;
   private final DDPClientWraper ddpClient;
   private final AbstractRocketChatCacheObserver cacheObserver;
   private final Handler handler;
 
-  public StreamRoomMessageManager(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
+  public StreamRoomMessageManager(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
     this.context = context;
+    this.hostname = hostname;
     this.realmHelper = realmHelper;
     this.ddpClient = ddpClient;
 
@@ -37,7 +39,7 @@ public class StreamRoomMessageManager implements Registerable {
 
   private void registerStreamNotifyMessage(String roomId) {
     handler.post(() -> {
-      streamRoomMessage = new StreamRoomMessage(context, realmHelper, ddpClient, roomId);
+      streamRoomMessage = new StreamRoomMessage(context, hostname, realmHelper, ddpClient, roomId);
       streamRoomMessage.register();
     });
   }

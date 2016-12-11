@@ -23,8 +23,9 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
   /**
    * constructor.
    */
-  public MethodCallObserver(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+  public MethodCallObserver(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, hostname, realmHelper, ddpClient);
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
       RealmResults<MethodCall> pendingMethodCalls = realm.where(MethodCall.class)
