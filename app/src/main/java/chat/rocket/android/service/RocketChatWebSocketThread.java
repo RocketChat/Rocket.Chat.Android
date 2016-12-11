@@ -209,11 +209,15 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
     listenersRegistered = true;
 
+    final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
+        realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
+    final String hostname = config.getHostname();
+
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
-        Constructor ctor = clazz.getConstructor(Context.class, RealmHelper.class,
+        Constructor ctor = clazz.getConstructor(Context.class, String.class, RealmHelper.class,
             DDPClientWraper.class);
-        Object obj = ctor.newInstance(appContext, serverConfigRealm, ddpClient);
+        Object obj = ctor.newInstance(appContext, hostname, serverConfigRealm, ddpClient);
 
         if (obj instanceof Registerable) {
           Registerable registerable = (Registerable) obj;

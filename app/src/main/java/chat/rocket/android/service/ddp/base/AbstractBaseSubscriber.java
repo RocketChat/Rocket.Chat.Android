@@ -7,9 +7,9 @@ import chat.rocket.android.service.ddp.AbstractDDPDocEventSubscriber;
 import org.json.JSONArray;
 
 abstract class AbstractBaseSubscriber extends AbstractDDPDocEventSubscriber {
-  protected AbstractBaseSubscriber(Context context, RealmHelper realmHelper,
+  protected AbstractBaseSubscriber(Context context, String hostname, RealmHelper realmHelper,
       DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+    super(context, hostname, realmHelper, ddpClient);
   }
 
   @Override protected final JSONArray getSubscriptionParams() {

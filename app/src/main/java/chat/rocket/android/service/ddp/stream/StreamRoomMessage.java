@@ -14,9 +14,9 @@ import org.json.JSONObject;
 public class StreamRoomMessage extends AbstractStreamNotifyEventSubscriber {
   private String roomId;
 
-  public StreamRoomMessage(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient,
-      String roomId) {
-    super(context, realmHelper, ddpClient);
+  public StreamRoomMessage(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient, String roomId) {
+    super(context, hostname, realmHelper, ddpClient);
     this.roomId = roomId;
   }
 

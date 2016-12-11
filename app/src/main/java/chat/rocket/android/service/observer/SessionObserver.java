@@ -25,11 +25,12 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   /**
    * constructor.
    */
-  public SessionObserver(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+  public SessionObserver(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, hostname, realmHelper, ddpClient);
     count = 0;
 
-    streamNotifyMessage = new StreamRoomMessageManager(context, realmHelper, ddpClient);
+    streamNotifyMessage = new StreamRoomMessageManager(context, hostname, realmHelper, ddpClient);
   }
 
   @Override public RealmResults<Session> queryItems(Realm realm) {

@@ -22,9 +22,9 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
 
   private final MethodCallHelper methodCall;
 
-  public LoadMessageProcedureObserver(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+  public LoadMessageProcedureObserver(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }
 

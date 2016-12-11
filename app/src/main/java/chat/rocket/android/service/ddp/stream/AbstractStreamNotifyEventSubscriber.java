@@ -12,9 +12,9 @@ import org.json.JSONObject;
 import timber.log.Timber;
 
 abstract class AbstractStreamNotifyEventSubscriber extends AbstractDDPDocEventSubscriber {
-  protected AbstractStreamNotifyEventSubscriber(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+  protected AbstractStreamNotifyEventSubscriber(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+    super(context, hostname, realmHelper, ddpClient);
   }
 
   @Override protected final boolean shouldTruncateTableOnInitialize() {

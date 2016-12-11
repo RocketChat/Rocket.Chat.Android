@@ -18,14 +18,16 @@ import timber.log.Timber;
 
 public abstract class AbstractDDPDocEventSubscriber implements Registerable {
   protected final Context context;
+  protected final String hostname;
   protected final RealmHelper realmHelper;
   protected final DDPClientWraper ddpClient;
   private String subscriptionId;
   private Subscription rxSubscription;
 
-  protected AbstractDDPDocEventSubscriber(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
+  protected AbstractDDPDocEventSubscriber(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
     this.context = context;
+    this.hostname = hostname;
     this.realmHelper = realmHelper;
     this.ddpClient = ddpClient;
   }

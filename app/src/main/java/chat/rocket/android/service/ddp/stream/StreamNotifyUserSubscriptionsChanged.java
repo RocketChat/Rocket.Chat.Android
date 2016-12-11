@@ -7,9 +7,9 @@ import chat.rocket.android.realm_helper.RealmHelper;
 import io.realm.RealmObject;
 
 public class StreamNotifyUserSubscriptionsChanged extends AbstractStreamNotifyUserEventSubscriber {
-  public StreamNotifyUserSubscriptionsChanged(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient, String userId) {
-    super(context, realmHelper, ddpClient, userId);
+  public StreamNotifyUserSubscriptionsChanged(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient, String userId) {
+    super(context, hostname, realmHelper, ddpClient, userId);
   }
 
   @Override protected String getSubscriptionSubParam() {

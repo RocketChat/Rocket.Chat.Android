@@ -6,9 +6,9 @@ import chat.rocket.android.realm_helper.RealmHelper;
 
 abstract class AbstractStreamNotifyUserEventSubscriber extends AbstractStreamNotifyEventSubscriber {
   protected final String userId;
-  protected AbstractStreamNotifyUserEventSubscriber(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient, String userId) {
-    super(context, realmHelper, ddpClient);
+  protected AbstractStreamNotifyUserEventSubscriber(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient, String userId) {
+    super(context, hostname, realmHelper, ddpClient);
     this.userId = userId;
   }
 

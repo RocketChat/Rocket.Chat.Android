@@ -11,9 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class StreamNotifyUserNotification extends AbstractStreamNotifyUserEventSubscriber {
-  public StreamNotifyUserNotification(Context context, RealmHelper realmHelper,
+  public StreamNotifyUserNotification(Context context, String hostname, RealmHelper realmHelper,
       DDPClientWraper ddpClient, String userId) {
-    super(context, realmHelper, ddpClient, userId);
+    super(context, hostname, realmHelper, ddpClient, userId);
   }
 
   @Override protected String getSubscriptionSubParam() {
@@ -22,7 +22,7 @@ public class StreamNotifyUserNotification extends AbstractStreamNotifyUserEventS
 
   @Override protected void handleArgs(JSONArray args) throws JSONException {
     JSONObject target = args.getJSONObject(args.length() - 1);
-    Notifier notifier = new StreamNotifyUserNotifier(context,
+    Notifier notifier = new StreamNotifyUserNotifier(context, hostname,
         target.getString("title"),
         target.getString("text"),
         target.getJSONObject("payload"));
