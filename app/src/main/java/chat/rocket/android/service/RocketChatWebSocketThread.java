@@ -9,6 +9,7 @@ import bolts.TaskCompletionSource;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -29,7 +30,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 /**
  * Thread for handling WebSocket connection.
@@ -91,8 +91,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private void forceInvalidateTokens() {
     serverConfigRealm.executeTransaction(realm -> {
-      Session session = realm.where(Session.class)
-          .equalTo("sessionId", Session.DEFAULT_ID).findFirst();
+      Session session = Session.queryDefaultSession(realm).findFirst();
       if (session != null
           && !TextUtils.isEmpty(session.getToken())
           && (session.isTokenVerified() || !TextUtils.isEmpty(session.getError()))) {
@@ -113,7 +112,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @Override public boolean quit() {
     if (isAlive()) {
       new Handler(getLooper()).post(() -> {
-        Timber.d("thread %s: quit()", Thread.currentThread().getId());
+        RCLog.d("thread %s: quit()", Thread.currentThread().getId());
         unregisterListeners();
         RocketChatWebSocketThread.super.quit();
       });
@@ -159,9 +158,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
               .put("serverConfigId", serverConfigId)
               .put("session", session))
       ).onSuccess(_task -> serverConfigRealm.executeTransaction(realm -> {
-        Session sessionObj = realm.where(Session.class)
-            .equalTo("sessionId", Session.DEFAULT_ID)
-            .findFirst();
+        Session sessionObj = Session.queryDefaultSession(realm).findFirst();
 
         if (sessionObj == null) {
           realm.createOrUpdateObjectFromJson(Session.class,
@@ -212,11 +209,15 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
     listenersRegistered = true;
 
+    final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
+        realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
+    final String hostname = config.getHostname();
+
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
-        Constructor ctor = clazz.getConstructor(Context.class, RealmHelper.class,
+        Constructor ctor = clazz.getConstructor(Context.class, String.class, RealmHelper.class,
             DDPClientWraper.class);
-        Object obj = ctor.newInstance(appContext, serverConfigRealm, ddpClient);
+        Object obj = ctor.newInstance(appContext, hostname, serverConfigRealm, ddpClient);
 
         if (obj instanceof Registerable) {
           Registerable registerable = (Registerable) obj;
@@ -224,7 +225,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
           listeners.add(registerable);
         }
       } catch (Exception exception) {
-        Timber.w(exception, "Failed to register listeners!!");
+        RCLog.w(exception, "Failed to register listeners!!");
       }
     }
   }

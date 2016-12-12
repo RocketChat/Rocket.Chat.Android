@@ -5,7 +5,6 @@ import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.realm_helper.RealmHelper;
 import io.realm.RealmObject;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,9 +14,9 @@ import org.json.JSONObject;
 public class StreamRoomMessage extends AbstractStreamNotifyEventSubscriber {
   private String roomId;
 
-  public StreamRoomMessage(Context context, RealmHelper realmHelper, DDPClientWraper ddpClient,
-      String roomId) {
-    super(context, realmHelper, ddpClient);
+  public StreamRoomMessage(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient, String roomId) {
+    super(context, hostname, realmHelper, ddpClient);
     this.roomId = roomId;
   }
 
@@ -25,10 +24,8 @@ public class StreamRoomMessage extends AbstractStreamNotifyEventSubscriber {
     return "stream-room-messages";
   }
 
-  @Override protected JSONArray getSubscriptionParams() throws JSONException {
-    return new JSONArray()
-        .put(roomId)
-        .put(false);
+  @Override protected String getSubscriptionParam() {
+    return roomId;
   }
 
   @Override protected Class<? extends RealmObject> getModelClass() {

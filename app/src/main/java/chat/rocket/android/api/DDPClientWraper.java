@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import bolts.Task;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.android_ddp.DDPSubscription;
@@ -11,7 +12,6 @@ import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONException;
 import rx.Observable;
-import timber.log.Timber;
 
 /**
  * DDP client wrapper.
@@ -83,13 +83,13 @@ public class DDPClientWraper {
    */
   public Task<DDPClientCallback.RPC> rpc(String methodCallId, String methodName, String params,
       long timeoutMs) {
-    Timber.d("rpc:[%s]> %s(%s) timeout=%d", methodCallId, methodName, params, timeoutMs);
+    RCLog.d("rpc:[%s]> %s(%s) timeout=%d", methodCallId, methodName, params, timeoutMs);
     if (TextUtils.isEmpty(params)) {
       return ddpClient.rpc(methodName, null, methodCallId, timeoutMs).continueWithTask(task -> {
         if (task.isFaulted()) {
-          Timber.d("rpc:[%s]< error = %s", methodCallId, task.getError());
+          RCLog.d("rpc:[%s]< error = %s", methodCallId, task.getError());
         } else {
-          Timber.d("rpc:[%s]< result = %s", methodCallId, task.getResult().result);
+          RCLog.d("rpc:[%s]< result = %s", methodCallId, task.getResult().result);
         }
         return task;
       });
@@ -99,9 +99,9 @@ public class DDPClientWraper {
       return ddpClient.rpc(methodName, new JSONArray(params), methodCallId, timeoutMs)
           .continueWithTask(task -> {
             if (task.isFaulted()) {
-              Timber.d("rpc:[%s]< error = %s", methodCallId, task.getError());
+              RCLog.d("rpc:[%s]< error = %s", methodCallId, task.getError());
             } else {
-              Timber.d("rpc:[%s]< result = %s", methodCallId, task.getResult().result);
+              RCLog.d("rpc:[%s]< result = %s", methodCallId, task.getResult().result);
             }
             return task;
           });

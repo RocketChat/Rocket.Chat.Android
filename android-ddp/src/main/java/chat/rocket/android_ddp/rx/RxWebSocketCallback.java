@@ -1,11 +1,11 @@
 package chat.rocket.android_ddp.rx;
 
+import chat.rocket.android.log.RCLog;
 import java.io.IOException;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.ws.WebSocket;
 import okio.Buffer;
-import timber.log.Timber;
 
 import static android.R.attr.type;
 
@@ -60,7 +60,7 @@ public class RxWebSocketCallback {
       try {
         this.responseBodyString = responseBody.string();
       } catch (Exception e) {
-        Timber.e(e, "error in reading response(Message)");
+        RCLog.e(e, "error in reading response(Message)");
       }
     }
 

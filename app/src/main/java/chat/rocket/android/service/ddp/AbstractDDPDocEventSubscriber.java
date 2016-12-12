@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.Registerable;
 import chat.rocket.android_ddp.DDPSubscription;
@@ -14,18 +15,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Subscription;
-import timber.log.Timber;
 
 public abstract class AbstractDDPDocEventSubscriber implements Registerable {
   protected final Context context;
+  protected final String hostname;
   protected final RealmHelper realmHelper;
   protected final DDPClientWraper ddpClient;
   private String subscriptionId;
   private Subscription rxSubscription;
 
-  protected AbstractDDPDocEventSubscriber(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
+  protected AbstractDDPDocEventSubscriber(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
     this.context = context;
+    this.hostname = hostname;
     this.realmHelper = realmHelper;
     this.ddpClient = ddpClient;
   }
@@ -63,7 +65,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
       return null;
     }).continueWith(task -> {
       if (task.isFaulted()) {
-        Timber.w(task.getError(), "DDP subscription failed.");
+        RCLog.w(task.getError(), "DDP subscription failed.");
       }
       return null;
     });
@@ -101,7 +103,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
               //ignore movedBefore
             }
           } catch (Exception exception) {
-            Timber.w(exception, "failed to handle subscription callback");
+            RCLog.w(exception, "failed to handle subscription callback");
           }
         });
   }

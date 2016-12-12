@@ -9,7 +9,6 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.util.List;
 import chat.rocket.android.wrappers.InstabugWrapper;
-import timber.log.Timber;
 
 /**
  * Customized Application-class for Rocket.Chat
@@ -17,8 +16,6 @@ import timber.log.Timber;
 public class RocketChatApplication extends MultiDexApplication {
   @Override public void onCreate() {
     super.onCreate();
-
-    Timber.plant(new Timber.DebugTree());
 
     Realm.init(this);
     Realm.setDefaultConfiguration(

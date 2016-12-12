@@ -93,8 +93,7 @@ public class MainActivity extends AbstractAuthedActivity {
 
     sessionObserver = realmHelper
         .createObjectObserver(realm ->
-            realm.where(Session.class)
-                .equalTo("sessionId", Session.DEFAULT_ID)
+            Session.queryDefaultSession(realm)
                 .isNotNull("token")
                 .equalTo("tokenVerified", true)
                 .isNull("error"))

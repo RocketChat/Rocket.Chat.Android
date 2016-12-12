@@ -1,14 +1,22 @@
 package chat.rocket.android.helper;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.ImageView;
+import bolts.Task;
+import bolts.TaskCompletionSource;
+import chat.rocket.android.log.RCLog;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import timber.log.Timber;
 
 /**
  * Helper for rendering user avatar image.
@@ -56,7 +64,7 @@ public class Avatar {
     try {
       return "https://" + hostname + "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
     } catch (UnsupportedEncodingException exception) {
-      Timber.e(exception, "failed to get URL for user: %s", username);
+      RCLog.e(exception, "failed to get URL for user: %s", username);
       return null;
     }
   }
@@ -65,14 +73,9 @@ public class Avatar {
    * render avatar into imageView.
    */
   public void into(final ImageView imageView) {
-    Object tag = imageView.getTag();
-    if (tag != null && tag instanceof String) {
-      String username = (String) tag;
-      if (this.username.equals(username)) {
-        return;
-      }
+    if (ViewDataCache.isStored(username, imageView)) {
+      return;
     }
-    imageView.setTag(this.username);
 
     final Context context = imageView.getContext();
     Picasso.with(context)
@@ -90,4 +93,58 @@ public class Avatar {
         .endConfig()
         .buildRoundRect(getInitialsForUser(username), getColorForUser(username), round);
   }
+
+  public Task<Bitmap> getBitmap(Context context, int size) {
+    TaskCompletionSource<Bitmap> task = new TaskCompletionSource<>();
+
+    // Picasso can be triggered only on Main Thread.
+    if (Looper.myLooper() != Looper.getMainLooper()) {
+      new Handler(Looper.getMainLooper()).post(() -> {
+        getBitmap(context, size).continueWith(_task -> {
+          if (_task.isFaulted()) {
+            task.setError(_task.getError());
+          } else {
+            task.setResult(_task.getResult());
+          }
+          return null;
+        });
+      });
+      return task.getTask();
+    }
+
+    Picasso.with(context)
+        .load(getImageUrl())
+        .error(getTextDrawable(context))
+        .into(new Target() {
+          @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            if (bitmap != null) {
+              task.trySetResult(bitmap);
+            }
+          }
+
+          @Override public void onBitmapFailed(Drawable errorDrawable) {
+            task.trySetResult(drawableToBitmap(errorDrawable, size));
+          }
+
+          @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+          }
+        });
+    return task.getTask();
+  }
+
+  private static Bitmap drawableToBitmap (Drawable drawable, int size) {
+    if (drawable instanceof BitmapDrawable) {
+      BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+      if(bitmapDrawable.getBitmap() != null) {
+        return bitmapDrawable.getBitmap();
+      }
+    }
+
+    Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+    drawable.draw(canvas);
+    return bitmap;
+  }
+
 }

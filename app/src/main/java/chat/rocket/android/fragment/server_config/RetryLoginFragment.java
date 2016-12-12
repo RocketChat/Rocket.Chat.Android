@@ -24,8 +24,7 @@ public class RetryLoginFragment extends AbstractServerConfigFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sessionObserver = RealmStore.get(serverConfigId)
-        .createObjectObserver(realm ->
-            realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID))
+        .createObjectObserver(Session::queryDefaultSession)
         .setOnUpdateListener(this::onRenderServerConfigSession);
   }
 

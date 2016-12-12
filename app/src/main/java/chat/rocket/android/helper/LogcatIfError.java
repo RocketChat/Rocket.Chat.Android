@@ -2,7 +2,7 @@ package chat.rocket.android.helper;
 
 import bolts.Continuation;
 import bolts.Task;
-import timber.log.Timber;
+import chat.rocket.android.log.RCLog;
 
 /**
  * Bolts-Task continuation for just logging if error occurred.
@@ -10,7 +10,7 @@ import timber.log.Timber;
 public class LogcatIfError implements Continuation {
   @Override public Object then(Task task) throws Exception {
     if (task.isFaulted()) {
-      Timber.w(task.getError());
+      RCLog.w(task.getError());
     }
     return task;
   }

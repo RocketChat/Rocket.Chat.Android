@@ -4,7 +4,9 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.realm_helper.RealmHelper;
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
 import org.json.JSONObject;
 
@@ -48,6 +50,10 @@ public class Session extends RealmObject {
 
   public void setError(String error) {
     this.error = error;
+  }
+
+  public static RealmQuery<Session> queryDefaultSession(Realm realm) {
+    return realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID);
   }
 
   /**

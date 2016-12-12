@@ -42,8 +42,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     }
 
     sessionObserver = RealmStore.get(serverConfigId)
-        .createObjectObserver(realm ->
-            realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID))
+        .createObjectObserver(Session::queryDefaultSession)
         .setOnUpdateListener(this::onRenderServerConfigSession);
 
     setContentView(R.layout.simple_screen);
@@ -105,7 +104,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     fragment.setArguments(args);
   }
 
-  @Override protected void onBackPresseNotHandled() {
+  @Override protected void onBackPressedNotHandled() {
     moveTaskToBack(true);
   }
 }

@@ -89,14 +89,14 @@ play {
 
 repositories {
   mavenCentral()
-  maven { url 'https://github.com/YusukeIwaki/realm-java-helpers/raw/master/repo' }
   maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
-  maven { url 'https://github.com/RocketChat/Android-DDP/raw/master/repository' }
   maven { url 'http://dl.bintray.com/amulyakhare/maven' }
   maven { url "https://clojars.org/repo/" } //for icepick.
 }
 
 dependencies {
+  debugCompile project(':log-wrapper-dev')
+  releaseCompile project(':log-wrapper-rel')
   compile project(':android-ddp')
   compile project(':rocket-chat-android-widgets')
   compile project(':realm-helpers')
@@ -111,14 +111,13 @@ dependencies {
   compile 'com.google.firebase:firebase-core:10.0.0'
   compile 'com.google.firebase:firebase-crash:10.0.0'
 
-  compile 'com.squareup.okhttp3:okhttp:3.4.1'
-  compile 'com.squareup.picasso:picasso:2.5.2'
+  compile rootProject.ext.okhttp3
+  compile rootProject.ext.picasso
 
   compile 'com.facebook.stetho:stetho:1.4.1'
   compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
   compile 'com.uphyca:stetho_realm:2.0.1'
 
-  compile rootProject.ext.timber
   compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
   compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
 

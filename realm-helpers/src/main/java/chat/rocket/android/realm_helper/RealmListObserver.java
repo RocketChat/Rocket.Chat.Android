@@ -31,10 +31,17 @@ public class RealmListObserver<T extends RealmObject> extends AbstractRealmResul
     return query.queryItems(realm);
   }
 
+  private String previousResultsString;
+
   @Override public final RealmChangeListener<RealmResults<T>> getListener() {
-    return element -> {
+    return results -> {
+      String currentResultString = results != null ? results.toString() : null;
+      if (previousResultsString != null && previousResultsString.equals(currentResultString)) {
+        return;
+      }
+      previousResultsString = currentResultString;
       if (onUpdateListener != null) {
-        onUpdateListener.onUpdateResults(element);
+        onUpdateListener.onUpdateResults(results);
       }
     };
   }

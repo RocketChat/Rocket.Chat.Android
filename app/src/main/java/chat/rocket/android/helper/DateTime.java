@@ -1,11 +1,11 @@
 package chat.rocket.android.helper;
 
+import chat.rocket.android.log.RCLog;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import timber.log.Timber;
 
 /**
  * Utility class for converting epoch ms and date-time string.
@@ -64,7 +64,7 @@ public class DateTime {
       cal.setTime(DATE_FORMAT.parse(dateString));
       return cal.getTimeInMillis();
     } catch (ParseException exception) {
-      Timber.w(exception, "failed to parse date: %s", dateString);
+      RCLog.w(exception, "failed to parse date: %s", dateString);
     }
     return 0;
   }

@@ -6,30 +6,37 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MotionEvent;
+
 import chat.rocket.android.helper.OnBackPressListener;
+import chat.rocket.android.log.RCLog;
+
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import chat.rocket.android.wrappers.InstabugWrapper;
 import icepick.Icepick;
-import timber.log.Timber;
 
 abstract class AbstractFragmentActivity extends RxAppCompatActivity {
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Icepick.restoreInstanceState(this, savedInstanceState);
   }
 
-  @Override protected void onSaveInstanceState(Bundle outState) {
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     Icepick.saveInstanceState(this, outState);
   }
 
-  protected abstract @IdRes int getLayoutContainerForFragment();
+  protected abstract
+  @IdRes
+  int getLayoutContainerForFragment();
 
-  @Override public final void onBackPressed() {
+  @Override
+  public final void onBackPressed() {
     if (!onBackPress()) {
-      onBackPresseNotHandled();
+      onBackPressedNotHandled();
     }
   }
 
@@ -50,7 +57,7 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
     return false;
   }
 
-  protected void onBackPresseNotHandled() {
+  protected void onBackPressedNotHandled() {
     super.onBackPressed();
   }
 
@@ -67,11 +74,12 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
         .commit();
   }
 
-  @Override public boolean dispatchTouchEvent(MotionEvent event) {
+  @Override
+  public boolean dispatchTouchEvent(MotionEvent event) {
     try {
       InstabugWrapper.wrap(event, this);
     } catch (IllegalStateException exception) {
-      Timber.w(exception, "Instabug error (ignored)");
+      RCLog.w(exception, "Instabug error (ignored)");
     }
     return super.dispatchTouchEvent(event);
   }

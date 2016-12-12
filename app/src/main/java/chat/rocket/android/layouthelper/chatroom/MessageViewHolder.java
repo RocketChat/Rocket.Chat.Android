@@ -10,7 +10,9 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.realm_helper.RealmModelViewHolder;
 import chat.rocket.android.renderer.MessageRenderer;
+import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
+import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
 
 /**
  * View holder of NORMAL chat message.
@@ -21,23 +23,32 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
   private final TextView timestamp;
   private final View userAndTimeContainer;
   private final String hostname;
+  private final String userId;
+  private final String token;
   private final RocketChatMessageLayout body;
+  private final RocketChatMessageUrlsLayout urls;
+  private final RocketChatMessageAttachmentsLayout attachments;
   private final View newDayContainer;
   private final TextView newDayText;
 
   /**
    * constructor WITH hostname.
    */
-  public MessageViewHolder(View itemView, String hostname) {
+  public MessageViewHolder(View itemView, String hostname, String userId, String token) {
     super(itemView);
     avatar = (ImageView) itemView.findViewById(R.id.user_avatar);
     username = (TextView) itemView.findViewById(R.id.username);
     timestamp = (TextView) itemView.findViewById(R.id.timestamp);
     userAndTimeContainer = itemView.findViewById(R.id.user_and_timestamp_container);
     body = (RocketChatMessageLayout) itemView.findViewById(R.id.message_body);
+    urls = (RocketChatMessageUrlsLayout) itemView.findViewById(R.id.message_urls);
+    attachments =
+        (RocketChatMessageAttachmentsLayout) itemView.findViewById(R.id.message_attachments);
     newDayContainer = itemView.findViewById(R.id.newday_container);
     newDayText = (TextView) itemView.findViewById(R.id.newday_text);
     this.hostname = hostname;
+    this.userId = userId;
+    this.token = token;
   }
 
   /**
@@ -48,7 +59,9 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
         .avatarInto(avatar, hostname)
         .usernameInto(username)
         .timestampInto(timestamp)
-        .bodyInto(body);
+        .bodyInto(body)
+        .urlsInto(urls)
+        .attachmentsInto(attachments, hostname, userId, token);
 
     if (pairedMessage.target != null) {
       int syncstate = pairedMessage.target.getSyncstate();

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.layouthelper.chatroom.dialog.RoomUserAdapter;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
@@ -19,7 +20,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 /**
  * Dialog to show members in a room.
@@ -122,7 +122,7 @@ public class UsersOfRoomDialogFragment extends AbstractChatroomDialogFragment {
         }
         onRenderUsers(users);
       } catch (JSONException exception) {
-        Timber.e(exception);
+        RCLog.e(exception);
       }
     }
   }

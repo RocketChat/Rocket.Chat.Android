@@ -10,9 +10,9 @@ import io.realm.RealmObject;
  * "userData" subscriber.
  */
 public class UserDataSubscriber extends AbstractBaseSubscriber {
-  public UserDataSubscriber(Context context, RealmHelper realmHelper,
+  public UserDataSubscriber(Context context, String hostname, RealmHelper realmHelper,
       DDPClientWraper ddpClient) {
-    super(context, realmHelper, ddpClient);
+    super(context, hostname, realmHelper, ddpClient);
   }
 
   @Override protected String getSubscriptionName() {

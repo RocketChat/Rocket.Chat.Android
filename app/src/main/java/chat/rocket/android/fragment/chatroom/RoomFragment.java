@@ -19,11 +19,14 @@ import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
+import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmModelListAdapter;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
@@ -35,7 +38,6 @@ import io.realm.Sort;
 import java.lang.reflect.Field;
 import java.util.UUID;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 /**
  * Chat room screen.
@@ -48,6 +50,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   private String roomId;
   private RealmObjectObserver<RoomSubscription> roomObserver;
   private String hostname;
+  private String userId;
+  private String token;
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageComposerManager messageComposerManager;
@@ -79,6 +83,10 @@ public class RoomFragment extends AbstractChatRoomFragment
             .equalTo("serverConfigId", serverConfigId)
             .isNotNull("hostname")
             .findFirst()).getHostname();
+    userId = realmHelper.executeTransactionForRead(realm ->
+        User.queryCurrentUser(realm).findFirst()).get_id();
+    token = realmHelper.executeTransactionForRead(realm ->
+        Session.queryDefaultSession(realm).findFirst()).getToken();
     roomObserver = realmHelper
         .createObjectObserver(realm -> realm.where(RoomSubscription.class).equalTo("rid", roomId))
         .setOnUpdateListener(this::onRenderRoom);
@@ -102,7 +110,7 @@ public class RoomFragment extends AbstractChatRoomFragment
         realm -> realm.where(Message.class)
             .equalTo("rid", roomId)
             .findAllSorted("ts", Sort.DESCENDING),
-        context -> new MessageListAdapter(context, hostname)
+        context -> new MessageListAdapter(context, hostname, userId, token)
     );
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
@@ -167,7 +175,7 @@ public class RoomFragment extends AbstractChatRoomFragment
               fieldSlidable.setAccessible(true);
               fieldSlidable.setBoolean(pane, !opened);
             } catch (Exception exception) {
-              Timber.w(exception, "failed to set CanSlide.");
+              RCLog.w(exception);
             }
           });
     }
@@ -225,7 +233,7 @@ public class RoomFragment extends AbstractChatRoomFragment
       MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
       final int syncstate = procedure.getSyncstate();
       final boolean hasNext = procedure.isHasNext();
-      Timber.d("hasNext: %s syncstate: %d", hasNext, syncstate);
+      RCLog.d("hasNext: %s syncstate: %d", hasNext, syncstate);
       if (syncstate == SyncState.SYNCED || syncstate == SyncState.FAILED) {
         scrollListener.setLoadingDone();
         adapter.updateFooter(hasNext, true);

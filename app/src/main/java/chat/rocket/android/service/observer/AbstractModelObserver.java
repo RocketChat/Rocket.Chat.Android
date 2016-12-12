@@ -11,13 +11,15 @@ abstract class AbstractModelObserver<T extends RealmObject>
     implements Registerable, RealmListObserver.Query<T>, RealmListObserver.OnUpdateListener<T> {
 
   protected final Context context;
+  protected final String hostname;
   protected final RealmHelper realmHelper;
   protected final DDPClientWraper ddpClient;
   private final RealmListObserver observer;
 
-  protected AbstractModelObserver(Context context, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
+  protected AbstractModelObserver(Context context, String hostname,
+      RealmHelper realmHelper, DDPClientWraper ddpClient) {
     this.context = context;
+    this.hostname = hostname;
     this.realmHelper = realmHelper;
     this.ddpClient = ddpClient;
     observer = realmHelper.createListObserver(this).setOnUpdateListener(this);
