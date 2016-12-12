@@ -104,7 +104,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     fragment.setArguments(args);
   }
 
-  @Override protected void onBackPresseNotHandled() {
+  @Override protected void onBackPressedNotHandled() {
     moveTaskToBack(true);
   }
 }

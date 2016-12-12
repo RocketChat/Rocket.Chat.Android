@@ -4,13 +4,11 @@ import android.support.multidex.MultiDexApplication;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmStore;
 import com.facebook.stetho.Stetho;
-import com.instabug.library.Feature;
-import com.instabug.library.Instabug;
-import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.util.List;
+import chat.rocket.android.wrappers.InstabugWrapper;
 
 /**
  * Customized Application-class for Rocket.Chat
@@ -34,10 +32,7 @@ public class RocketChatApplication extends MultiDexApplication {
         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
         .build());
 
-    new Instabug.Builder(this, getString(R.string.instabug_api_key))
-        .setInvocationEvent(InstabugInvocationEvent.FLOATING_BUTTON)
-        .setInAppMessagingState(Feature.State.DISABLED) //not available in Free plan...
-        .build();
+    InstabugWrapper.build(this, getString(R.string.instabug_api_key));
 
     //TODO: add periodic trigger for RocketChatService.keepalive(this) here!
   }
