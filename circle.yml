@@ -11,6 +11,8 @@ machine:
 
 dependencies:
   pre:
+    - git fetch --tags
+
     - echo "sdk.dir="$ANDROID_HOME > local.properties
 
     - echo $ROCKET_JKS_BASE64 | base64 --decode > Rocket.jks
