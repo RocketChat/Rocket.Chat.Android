@@ -11,14 +11,12 @@ import android.os.Looper;
 import android.widget.ImageView;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import chat.rocket.android.log.RCLog;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import timber.log.Timber;
-
-import static android.R.attr.bitmap;
 
 /**
  * Helper for rendering user avatar image.
@@ -66,7 +64,7 @@ public class Avatar {
     try {
       return "https://" + hostname + "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
     } catch (UnsupportedEncodingException exception) {
-      Timber.e(exception, "failed to get URL for user: %s", username);
+      RCLog.e(exception, "failed to get URL for user: %s", username);
       return null;
     }
   }

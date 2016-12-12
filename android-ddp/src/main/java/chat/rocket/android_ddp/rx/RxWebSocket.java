@@ -1,5 +1,6 @@
 package chat.rocket.android_ddp.rx;
 
+import chat.rocket.android.log.RCLog;
 import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,7 +15,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.observables.ConnectableObservable;
-import timber.log.Timber;
 
 public class RxWebSocket {
   private OkHttpClient httpClient;
@@ -44,7 +44,7 @@ public class RxWebSocket {
               isConnected = false;
               subscriber.onError(new RxWebSocketCallback.Failure(webSocket, e, response));
             } catch (OnErrorNotImplementedException ex) {
-              Timber.w(ex, "OnErrorNotImplementedException ignored");
+              RCLog.w(ex, "OnErrorNotImplementedException ignored");
             }
           }
 

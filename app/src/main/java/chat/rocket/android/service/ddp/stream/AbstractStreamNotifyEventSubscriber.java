@@ -3,13 +3,13 @@ package chat.rocket.android.service.ddp.stream;
 import android.content.Context;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.ddp.AbstractDDPDocEventSubscriber;
 import chat.rocket.android_ddp.DDPSubscription;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 abstract class AbstractStreamNotifyEventSubscriber extends AbstractDDPDocEventSubscriber {
   protected AbstractStreamNotifyEventSubscriber(Context context, String hostname,
@@ -49,7 +49,7 @@ abstract class AbstractStreamNotifyEventSubscriber extends AbstractDDPDocEventSu
 
       handleArgs(docEvent.fields.getJSONArray("args"));
     } catch (Exception exception) {
-      Timber.w(exception, "failed to save stream-notify event.");
+      RCLog.w(exception, "failed to save stream-notify event.");
     }
   }
 

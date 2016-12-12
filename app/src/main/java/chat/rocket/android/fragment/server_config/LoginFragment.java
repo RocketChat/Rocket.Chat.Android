@@ -10,12 +10,12 @@ import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.oauth.OAuthProviderInfo;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import java.util.HashMap;
 import java.util.List;
-import timber.log.Timber;
 
 /**
  * Login screen.
@@ -87,7 +87,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
             try {
               fragment = info.fragmentClass.newInstance();
             } catch (Exception exception) {
-              Timber.w(exception, "failed to create new Fragment");
+              RCLog.w(exception, "failed to create new Fragment");
             }
             if (fragment != null) {
               Bundle args = new Bundle();

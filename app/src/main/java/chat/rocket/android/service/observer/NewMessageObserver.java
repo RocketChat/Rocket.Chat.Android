@@ -4,6 +4,7 @@ import android.content.Context;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -11,7 +12,6 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 /**
  * Observe messages for sending.
@@ -69,7 +69,7 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
         })
     ).continueWith(task -> {
       if (task.isFaulted()) {
-        Timber.w(task.getError());
+        RCLog.w(task.getError());
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
                 .put("_id", messageId)

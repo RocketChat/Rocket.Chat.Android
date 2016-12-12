@@ -19,6 +19,7 @@ import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
@@ -37,7 +38,6 @@ import io.realm.Sort;
 import java.lang.reflect.Field;
 import java.util.UUID;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 /**
  * Chat room screen.
@@ -175,7 +175,7 @@ public class RoomFragment extends AbstractChatRoomFragment
               fieldSlidable.setAccessible(true);
               fieldSlidable.setBoolean(pane, !opened);
             } catch (Exception exception) {
-              Timber.w(exception, "failed to set CanSlide.");
+              RCLog.w(exception);
             }
           });
     }
@@ -233,7 +233,7 @@ public class RoomFragment extends AbstractChatRoomFragment
       MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
       final int syncstate = procedure.getSyncstate();
       final boolean hasNext = procedure.isHasNext();
-      Timber.d("hasNext: %s syncstate: %d", hasNext, syncstate);
+      RCLog.d("hasNext: %s syncstate: %d", hasNext, syncstate);
       if (syncstate == SyncState.SYNCED || syncstate == SyncState.FAILED) {
         scrollListener.setLoadingDone();
         adapter.updateFooter(hasNext, true);

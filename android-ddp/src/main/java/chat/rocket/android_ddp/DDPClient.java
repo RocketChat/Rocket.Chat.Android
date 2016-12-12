@@ -7,7 +7,6 @@ import chat.rocket.android_ddp.rx.RxWebSocketCallback;
 import okhttp3.OkHttpClient;
 import org.json.JSONArray;
 import rx.Observable;
-import timber.log.Timber;
 
 public class DDPClient {
   // reference: https://github.com/eddflrs/meteor-ddp/blob/master/meteor-ddp.js
@@ -16,7 +15,6 @@ public class DDPClient {
 
   public DDPClient(OkHttpClient client) {
     impl = new DDPClientImpl(this, client);
-    Timber.plant(new Timber.DebugTree());
   }
 
   public Task<DDPClientCallback.Connect> connect(String url) {

@@ -6,6 +6,7 @@ import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
@@ -15,7 +16,6 @@ import io.realm.annotations.PrimaryKey;
 import java.util.HashMap;
 import java.util.UUID;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 public class MethodCall extends RealmObject {
 
@@ -116,7 +116,7 @@ public class MethodCall extends RealmObject {
                 realm.where(MethodCall.class).equalTo("methodCallId", newId));
         observer.setOnUpdateListener(methodCall -> {
           int syncstate = methodCall.getSyncstate();
-          Timber.d("MethodCall[%s] syncstate=%d", methodCall.getMethodCallId(), syncstate);
+          RCLog.d("MethodCall[%s] syncstate=%d", methodCall.getMethodCallId(), syncstate);
           if (syncstate == SyncState.SYNCED) {
             String resultJson = methodCall.getResultJson();
             if (TextUtils.isEmpty(resultJson)) {

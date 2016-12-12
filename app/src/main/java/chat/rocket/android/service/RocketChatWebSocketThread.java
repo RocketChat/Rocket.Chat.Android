@@ -9,6 +9,7 @@ import bolts.TaskCompletionSource;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -29,7 +30,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 /**
  * Thread for handling WebSocket connection.
@@ -112,7 +112,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @Override public boolean quit() {
     if (isAlive()) {
       new Handler(getLooper()).post(() -> {
-        Timber.d("thread %s: quit()", Thread.currentThread().getId());
+        RCLog.d("thread %s: quit()", Thread.currentThread().getId());
         unregisterListeners();
         RocketChatWebSocketThread.super.quit();
       });
@@ -225,7 +225,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
           listeners.add(registerable);
         }
       } catch (Exception exception) {
-        Timber.w(exception, "Failed to register listeners!!");
+        RCLog.w(exception, "Failed to register listeners!!");
       }
     }
   }

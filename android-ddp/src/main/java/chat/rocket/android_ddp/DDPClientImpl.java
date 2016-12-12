@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.rx.RxWebSocket;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +17,6 @@ import org.json.JSONObject;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 public class DDPClientImpl {
   private final DDPClient client;
@@ -86,7 +86,7 @@ public class DDPClientImpl {
 
       subscribeBaseListeners();
     } catch (Exception e) {
-      Timber.e(e);
+      RCLog.e(e);
     }
   }
 
@@ -304,9 +304,7 @@ public class DDPClientImpl {
 
     observable.filter(callback -> callback instanceof RxWebSocketCallback.Close)
         .cast(RxWebSocketCallback.Close.class)
-        .subscribe(close -> {
-          task.setResult(close);
-        }, err -> {
+        .subscribe(task::setResult, err -> {
           if (err instanceof Exception) {
             task.setError((Exception) err);
           } else {
@@ -326,7 +324,7 @@ public class DDPClientImpl {
       String msg2 = (json == null ? origJson : json.create(origJson)).toString();
       websocket.sendText(msg2);
     } catch (Exception e) {
-      Timber.e(e);
+      RCLog.e(e);
     }
   }
 
@@ -342,7 +340,7 @@ public class DDPClientImpl {
     try {
       websocket.close(code, reason);
     } catch (Exception e) {
-      Timber.e(e);
+      RCLog.e(e);
     }
   }
 

@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import chat.rocket.android.log.RCLog;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
@@ -13,7 +14,6 @@ import io.realm.RealmResults;
 import java.util.Collections;
 import java.util.List;
 import org.json.JSONException;
-import timber.log.Timber;
 
 @SuppressLint("NewApi")
 public class RealmHelper {
@@ -61,7 +61,7 @@ public class RealmHelper {
       T source = transaction.execute(realm);
       return source != null ? realm.copyFromRealm(source) : null;
     } catch (Exception exception) {
-      Timber.w(exception, "failed to execute copyFromRealm");
+      RCLog.w(exception);
       return null;
     }
   }
@@ -71,7 +71,7 @@ public class RealmHelper {
     try (Realm realm = instance()) {
       return realm.copyFromRealm(transaction.execute(realm));
     } catch (Exception exception) {
-      Timber.w(exception, "failed to execute copyFromRealm");
+      RCLog.w(exception);
       return Collections.emptyList();
     }
   }
@@ -85,13 +85,11 @@ public class RealmHelper {
     final TaskCompletionSource<Void> task = new TaskCompletionSource<>();
 
     try (Realm realm = instance()) {
-      realm.executeTransaction(new Realm.Transaction() {
-        @Override public void execute(Realm realm) {
-          try {
-            transaction.execute(realm);
-          } catch (JSONException exception) {
-            throw new RuntimeException(exception);
-          }
+      realm.executeTransaction(_realm -> {
+        try {
+          transaction.execute(_realm);
+        } catch (JSONException exception) {
+          throw new RuntimeException(exception);
         }
       });
       task.setResult(null);

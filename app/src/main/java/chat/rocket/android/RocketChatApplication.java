@@ -11,7 +11,6 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.util.List;
-import timber.log.Timber;
 
 /**
  * Customized Application-class for Rocket.Chat
@@ -19,8 +18,6 @@ import timber.log.Timber;
 public class RocketChatApplication extends MultiDexApplication {
   @Override public void onCreate() {
     super.onCreate();
-
-    Timber.plant(new Timber.DebugTree());
 
     Realm.init(this);
     Realm.setDefaultConfiguration(

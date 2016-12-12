@@ -2,18 +2,18 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import bolts.Task;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.model.internal.LoadMessageProcedure;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.DDPClientWraper;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import java.util.List;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 /**
  * Background process for loading messages.
@@ -70,7 +70,7 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
             })
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
-        Timber.w(task.getError());
+        RCLog.w(task.getError());
         return realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
                 .put("roomId", roomId)

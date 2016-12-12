@@ -9,13 +9,13 @@ import android.webkit.WebView;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmStore;
 import java.nio.charset.Charset;
 import org.json.JSONException;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
 
@@ -91,7 +91,7 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
           handleOAuthCallback(credentialToken, credentialSecret);
           resultOK = true;
         } catch (JSONException exception) {
-          Timber.e(exception, "failed to parse OAuth result.");
+          RCLog.e(exception, "failed to parse OAuth result.");
         }
       }
 

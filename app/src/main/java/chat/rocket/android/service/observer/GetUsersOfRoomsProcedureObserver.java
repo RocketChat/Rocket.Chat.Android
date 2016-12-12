@@ -4,6 +4,7 @@ import android.content.Context;
 import bolts.Task;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -11,7 +12,6 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 /**
  * Model observer for executing getUsersOfRooms.
@@ -58,7 +58,7 @@ public class GetUsersOfRoomsProcedureObserver
             })
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
-        Timber.w(task.getError());
+        RCLog.w(task.getError());
         return realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(GetUsersOfRoomsProcedure.class, new JSONObject()
                 .put("roomId", roomId)
