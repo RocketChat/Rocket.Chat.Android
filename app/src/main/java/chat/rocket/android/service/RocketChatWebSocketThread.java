@@ -22,6 +22,8 @@ import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.NewMessageObserver;
+import chat.rocket.android.service.observer.NotificationItemObserver;
+import chat.rocket.android.service.observer.ReactiveNotificationManager;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
 import chat.rocket.android_ddp.DDPClientCallback;
@@ -45,7 +47,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
       LoadMessageProcedureObserver.class,
       GetUsersOfRoomsProcedureObserver.class,
       NewMessageObserver.class,
-      CurrentUserObserver.class
+      CurrentUserObserver.class,
+      ReactiveNotificationManager.class,
+      NotificationItemObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;
