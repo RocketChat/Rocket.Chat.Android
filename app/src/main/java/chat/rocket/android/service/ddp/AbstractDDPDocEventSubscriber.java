@@ -21,6 +21,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
   protected final String hostname;
   protected final RealmHelper realmHelper;
   protected final DDPClientWraper ddpClient;
+  private boolean isUnsubscribed;
   private String subscriptionId;
   private Subscription rxSubscription;
 
@@ -53,6 +54,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
   protected void onUnregister() {}
 
   @Override public final void register() {
+    isUnsubscribed = false;
     JSONArray params = null;
     try {
       params = getSubscriptionParams();
@@ -61,7 +63,11 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
     }
 
     ddpClient.subscribe(getSubscriptionName(), params).onSuccess(task -> {
-      subscriptionId = task.getResult().id;
+      if (isUnsubscribed) {
+        ddpClient.unsubscribe(task.getResult().id).continueWith(new LogcatIfError());
+      } else {
+        subscriptionId = task.getResult().id;
+      }
       return null;
     }).continueWith(task -> {
       if (task.isFaulted()) {
@@ -165,6 +171,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
   }
 
   @Override public final void unregister() {
+    isUnsubscribed = true;
     onUnregister();
     if (rxSubscription != null) {
       rxSubscription.unsubscribe();

@@ -57,13 +57,16 @@ public class DDPClientWraper {
    * Subscribe with DDP client.
    */
   public Task<DDPSubscription.Ready> subscribe(final String name, JSONArray param) {
-    return ddpClient.sub(UUID.randomUUID().toString(), name, param);
+    final String subscriptionId = UUID.randomUUID().toString();
+    RCLog.d("sub:[%s]> %s(%s)", subscriptionId, name, param);
+    return ddpClient.sub(subscriptionId, name, param);
   }
 
   /**
    * Unsubscribe with DDP client.
    */
   public Task<DDPSubscription.NoSub> unsubscribe(final String subscriptionId) {
+    RCLog.d("unsub:[%s]>", subscriptionId);
     return ddpClient.unsub(subscriptionId);
   }
 
