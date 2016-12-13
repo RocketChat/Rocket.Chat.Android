@@ -31,6 +31,8 @@
         android:windowSoftInputMode="adjustResize"/>
 
     <service android:name=".service.RocketChatService"/>
+
+    <service android:name=".service.notification.NotificationDismissalCallbackService"/>
   </application>
 
 </manifest>

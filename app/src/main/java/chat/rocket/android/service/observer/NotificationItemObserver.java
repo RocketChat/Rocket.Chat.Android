@@ -20,6 +20,7 @@ import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.internal.NotificationItem;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.service.notification.NotificationDismissalCallbackService;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;
@@ -83,8 +84,7 @@ public class NotificationItemObserver extends AbstractModelObserver<Notification
         });
   }
 
-  private Notification generateNotification(String roomId, String title,
-      @NonNull String description, int unreadCount, @Nullable Bitmap icon) {
+  private PendingIntent getContentIntent(String roomId) {
     Intent intent = new Intent(context, MainActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
@@ -94,9 +94,27 @@ public class NotificationItemObserver extends AbstractModelObserver<Notification
       intent.putExtra("roomId", roomId);
     }
 
-    PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(),
+    return PendingIntent.getActivity(context.getApplicationContext(),
         (int) (System.currentTimeMillis() % Integer.MAX_VALUE),
         intent, PendingIntent.FLAG_ONE_SHOT);
+  }
+
+  private PendingIntent getDeleteIntent(String roomId) {
+    Intent intent = new Intent(context, NotificationDismissalCallbackService.class);
+    ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
+        realm.where(ServerConfig.class).equalTo("hostname", hostname).findFirst());
+    if (config != null) {
+      intent.putExtra("serverConfigId", config.getServerConfigId());
+      intent.putExtra("roomId", roomId);
+    }
+
+    return PendingIntent.getService(context.getApplicationContext(),
+        (int) (System.currentTimeMillis() % Integer.MAX_VALUE),
+        intent, PendingIntent.FLAG_ONE_SHOT);
+  }
+
+  private Notification generateNotification(String roomId, String title,
+      @NonNull String description, int unreadCount, @Nullable Bitmap icon) {
 
     NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
         .setContentTitle(title)
@@ -104,7 +122,8 @@ public class NotificationItemObserver extends AbstractModelObserver<Notification
         .setNumber(unreadCount)
         .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
         .setSmallIcon(R.drawable.rocket_chat_notification_24dp)
-        .setContentIntent(pendingIntent);
+        .setContentIntent(getContentIntent(roomId))
+        .setDeleteIntent(getDeleteIntent(roomId));
 
     if (icon != null) {
       builder.setLargeIcon(icon);

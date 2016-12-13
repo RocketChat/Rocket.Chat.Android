@@ -76,8 +76,20 @@ public class RealmHelper {
     }
   }
 
+  private boolean shouldUseSync() {
+    // ref: realm-java:realm/realm-library/src/main/java/io/realm/AndroidNotifier.java
+    // #isAutoRefreshAvailable()
+
+    if (Looper.myLooper() == null) {
+      return true;
+    }
+
+    String threadName = Thread.currentThread().getName();
+    return threadName != null && threadName.startsWith("IntentService[");
+  }
+
   public Task<Void> executeTransaction(final RealmHelper.Transaction transaction) {
-    return Looper.myLooper() == null ? executeTransactionSync(transaction)
+    return shouldUseSync() ? executeTransactionSync(transaction)
         : executeTransactionAsync(transaction);
   }
 
