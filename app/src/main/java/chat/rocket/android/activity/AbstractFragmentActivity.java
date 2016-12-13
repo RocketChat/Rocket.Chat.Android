@@ -77,7 +77,7 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
   @Override
   public boolean dispatchTouchEvent(MotionEvent event) {
     try {
-      InstabugWrapper.wrap(event, this);
+      InstabugWrapper.trackTouchEventOnActivity(event, this);
     } catch (IllegalStateException exception) {
       RCLog.w(exception, "Instabug error (ignored)");
     }

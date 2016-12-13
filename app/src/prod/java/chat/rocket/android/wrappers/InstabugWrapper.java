@@ -10,7 +10,7 @@ public class InstabugWrapper {
     // stub
   }
 
-  public static void wrap(MotionEvent event, Activity activity) {
+  public static void trackTouchEventOnActivity(MotionEvent event, Activity activity) {
     // stub
   }
 }
