@@ -95,8 +95,7 @@ repositories {
 }
 
 dependencies {
-  debugCompile project(':log-wrapper-dev')
-  releaseCompile project(':log-wrapper-rel')
+  compile project(':log-wrapper')
   compile project(':android-ddp')
   compile project(':rocket-chat-android-widgets')
   compile project(':realm-helpers')

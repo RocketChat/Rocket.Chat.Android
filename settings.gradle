@@ -1,3 +1,2 @@
 include ':app', ':android-ddp', ':rocket-chat-android-widgets', ':realm-helpers',
-    ':log-wrapper-dev',
-    ':log-wrapper-rel'
+    ':log-wrapper'

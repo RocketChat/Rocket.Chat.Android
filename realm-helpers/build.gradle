@@ -43,7 +43,7 @@ android {
 
 dependencies {
   testCompile 'junit:junit:4.12'
-  compile project(':log-wrapper-rel')
+  compile project(':log-wrapper')
   compile rootProject.ext.boltsTask
   compile rootProject.ext.supportAnnotations
   compile rootProject.ext.supportAppCompat
