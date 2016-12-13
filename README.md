@@ -12,7 +12,7 @@ Contribution to [the issue with `v1.0-beta` without asignee](https://github.com/
 # Rocket.Chat.Android
 Rocket.Chat Native Android Application.
 
-![screenshots](https://cloud.githubusercontent.com/assets/11763113/11993320/ccdcf296-aa72-11e5-9950-e08f7a280516.png)
+![screenshots](https://cloud.githubusercontent.com/assets/11763113/21146109/e730ccce-c193-11e6-8b77-7812c1c1e219.png)
 
 *Warning: This app is not production ready. It is under heavy development and any contributions are welcome.*
 
