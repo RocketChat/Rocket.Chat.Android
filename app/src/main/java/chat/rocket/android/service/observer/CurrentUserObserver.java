@@ -59,10 +59,12 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
 
     // get and observe Room subscriptions.
     methodCall.getRoomSubscriptions().onSuccess(task -> {
-      Registerable listener = new StreamNotifyUserSubscriptionsChanged(
-          context, hostname, realmHelper, ddpClient, userId);
-      listener.register();
-      listeners.add(listener);
+      if (listeners != null) {
+        Registerable listener = new StreamNotifyUserSubscriptionsChanged(
+            context, hostname, realmHelper, ddpClient, userId);
+        listener.register();
+        listeners.add(listener);
+      }
       return null;
     });
 
