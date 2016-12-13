@@ -23,6 +23,8 @@ public class RoomSubscription extends RealmObject {
   private boolean open;
   private boolean alert;
   private int unread;
+  private long _updatedAt;
+  private long ls; //last seen.
 
   public String get_id() {
     return _id;
@@ -80,7 +82,35 @@ public class RoomSubscription extends RealmObject {
     this.unread = unread;
   }
 
+  public long get_updatedAt() {
+    return _updatedAt;
+  }
+
+  public void set_updatedAt(long _updatedAt) {
+    this._updatedAt = _updatedAt;
+  }
+
+  public long getLs() {
+    return ls;
+  }
+
+  public void setLs(long ls) {
+    this.ls = ls;
+  }
+
   public static JSONObject customizeJson(JSONObject roomSubscriptionJson) throws JSONException {
+    if (!roomSubscriptionJson.isNull("ls")) {
+      long ls = roomSubscriptionJson.getJSONObject("ls").getLong("$date");
+      roomSubscriptionJson.remove("ls");
+      roomSubscriptionJson.put("ls", ls);
+    }
+
+    if (!roomSubscriptionJson.isNull("_updatedAt")) {
+      long updatedAt = roomSubscriptionJson.getJSONObject("_updatedAt").getLong("$date");
+      roomSubscriptionJson.remove("_updatedAt");
+      roomSubscriptionJson.put("_updatedAt", updatedAt);
+    }
+
     return roomSubscriptionJson;
   }
 }

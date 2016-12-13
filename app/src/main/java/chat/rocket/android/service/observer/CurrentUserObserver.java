@@ -3,6 +3,7 @@ package chat.rocket.android.service.observer;
 import android.content.Context;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.Registerable;
@@ -65,7 +66,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
         listeners.add(listener);
       }
       return null;
-    });
+    }).continueWith(new LogcatIfError());
   }
 
   @DebugLog

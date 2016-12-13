@@ -22,7 +22,7 @@ import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.NewMessageObserver;
-import chat.rocket.android.service.observer.ReactiveNotificationCancelManager;
+import chat.rocket.android.service.observer.NotificationItemObserver;
 import chat.rocket.android.service.observer.ReactiveNotificationManager;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
@@ -49,7 +49,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
       NewMessageObserver.class,
       CurrentUserObserver.class,
       ReactiveNotificationManager.class,
-      ReactiveNotificationCancelManager.class
+      NotificationItemObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;
