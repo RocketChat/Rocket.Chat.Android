@@ -7,7 +7,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.NotificationItem;
 import chat.rocket.android.realm_helper.RealmHelper;
-import hugo.weaving.DebugLog;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.List;
@@ -30,10 +29,7 @@ public class ReactiveNotificationManager extends AbstractModelObserver<RoomSubsc
         .findAll();
   }
 
-  @DebugLog
   @Override public void onUpdateResults(List<RoomSubscription> roomSubscriptions) {
-    // TODO implement!
-
     JSONArray notifications = new JSONArray();
     for (RoomSubscription roomSubscription : roomSubscriptions) {
       final String roomId = roomSubscription.getRid();
