@@ -6,7 +6,6 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.Registerable;
-import chat.rocket.android.service.ddp.stream.StreamNotifyUserNotification;
 import chat.rocket.android.service.ddp.stream.StreamNotifyUserSubscriptionsChanged;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
@@ -67,11 +66,6 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
       }
       return null;
     });
-
-    Registerable listener = new StreamNotifyUserNotification(
-        context, hostname, realmHelper, ddpClient, userId);
-    listener.register();
-    listeners.add(listener);
   }
 
   @DebugLog
