@@ -38,4 +38,9 @@
     <item name="colorControlActivated">@color/colorAccentDark</item>
     <item name="android:textColorHighlight">@color/colorAccent_a40</item>
   </style>
+
+  <style name="AppTheme.ProgressBar.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
+    <item name="android:minHeight">11dp</item>
+    <item name="android:progressDrawable">@drawable/progress_bar</item>
+  </style>
 </resources>

@@ -8,13 +8,18 @@ import chat.rocket.android.widget.message.MessageComposer;
  * handling visibility of FAB-compose and MessageComposer.
  */
 public class MessageComposerManager {
-  public interface Callback {
+  public interface SendMessageCallback {
     Task<Void> onSubmit(String messageText);
+  }
+
+  public interface VisibilityChangedListener {
+    void onVisibilityChanged(boolean shown);
   }
 
   private final FloatingActionButton fabCompose;
   private final MessageComposer messageComposer;
-  private Callback callback;
+  private SendMessageCallback sendMessageCallback;
+  private VisibilityChangedListener visibilityChangedListener;
 
   public MessageComposerManager(FloatingActionButton fabCompose, MessageComposer messageComposer) {
     this.fabCompose = fabCompose;
@@ -29,9 +34,9 @@ public class MessageComposerManager {
 
     messageComposer.setOnActionListener(new MessageComposer.ActionListener() {
       @Override public void onSubmit(String message) {
-        if (callback != null) {
+        if (sendMessageCallback != null) {
           messageComposer.setEnabled(false);
-          callback.onSubmit(message).onSuccess(task -> {
+          sendMessageCallback.onSubmit(message).onSuccess(task -> {
             clearComposingText();
             return null;
           }).continueWith(task -> {
@@ -49,8 +54,12 @@ public class MessageComposerManager {
     setMessageComposerVisibility(false);
   }
 
-  public void setCallback(Callback callback) {
-    this.callback = callback;
+  public void setSendMessageCallback(SendMessageCallback sendMessageCallback) {
+    this.sendMessageCallback = sendMessageCallback;
+  }
+
+  public void setVisibilityChangedListener(VisibilityChangedListener listener) {
+    this.visibilityChangedListener = listener;
   }
 
   public void clearComposingText() {
@@ -60,9 +69,18 @@ public class MessageComposerManager {
   private void setMessageComposerVisibility(boolean show) {
     if (show) {
       fabCompose.hide();
-      messageComposer.show(null);
+      messageComposer.show(() -> {
+        if (visibilityChangedListener != null) {
+          visibilityChangedListener.onVisibilityChanged(true);
+        }
+      });
     } else {
-      messageComposer.hide(fabCompose::show);
+      messageComposer.hide(() -> {
+        fabCompose.show();
+        if (visibilityChangedListener != null) {
+          visibilityChangedListener.onVisibilityChanged(false);
+        }
+      });
     }
   }
 

@@ -1,5 +1,7 @@
 package chat.rocket.android.fragment.chatroom;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,10 +14,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
+import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.layouthelper.chatroom.FileUploadHelper;
 import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
@@ -44,6 +49,8 @@ import org.json.JSONObject;
  */
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, RealmModelListAdapter.OnItemClickListener<PairedMessage> {
+
+  private static final int RC_UPL = 0x12;
 
   private String serverConfigId;
   private RealmHelper realmHelper;
@@ -128,6 +135,7 @@ public class RoomFragment extends AbstractChatRoomFragment
 
     setupSideMenu();
     setupMessageComposer();
+    setupFileUploader();
   }
 
   @Override public void onItemClick(PairedMessage pairedMessage) {
@@ -196,7 +204,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     final MessageComposer messageComposer =
         (MessageComposer) rootView.findViewById(R.id.message_composer);
     messageComposerManager = new MessageComposerManager(fabCompose, messageComposer);
-    messageComposerManager.setCallback(messageText ->
+    messageComposerManager.setSendMessageCallback(messageText ->
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
                 .put("_id", UUID.randomUUID().toString())
@@ -204,6 +212,43 @@ public class RoomFragment extends AbstractChatRoomFragment
                 .put("ts", System.currentTimeMillis())
                 .put("rid", roomId)
                 .put("msg", messageText))));
+    messageComposerManager.setVisibilityChangedListener(shown -> {
+      FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab_upload_file);
+      if (shown) {
+        fab.hide();
+      } else {
+        fab.show();
+      }
+    });
+  }
+
+  private void setupFileUploader() {
+    rootView.findViewById(R.id.fab_upload_file).setOnClickListener(view -> {
+      Intent intent = new Intent();
+      intent.setType("image/*");
+      intent.setAction(Intent.ACTION_GET_CONTENT);
+      startActivityForResult(Intent.createChooser(intent, "Select Picture to Upload"), RC_UPL);
+    });
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode != RC_UPL || resultCode != Activity.RESULT_OK) {
+      return;
+    }
+
+    if (data == null || data.getData() == null) {
+      return;
+    }
+
+    String uplId = new FileUploadHelper(getContext(), realmHelper, roomId)
+        .requestUploading(data.getData());
+    if (!TextUtils.isEmpty(uplId)) {
+      FileUploadProgressDialogFragment.create(serverConfigId, roomId, uplId)
+          .show(getFragmentManager(), FileUploadProgressDialogFragment.class.getSimpleName());
+    } else {
+      //show error.
+    }
   }
 
   private void onRenderRoom(RoomSubscription roomSubscription) {
