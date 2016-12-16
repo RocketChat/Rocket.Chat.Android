@@ -19,7 +19,7 @@ import chat.rocket.android.service.ddp.base.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.service.ddp.base.UserDataSubscriber;
 import chat.rocket.android.service.observer.CurrentUserObserver;
 import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
-import chat.rocket.android.service.observer.FileUploadingToGridFsObserver;
+import chat.rocket.android.service.observer.FileUploadingWithUfsObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.NewMessageObserver;
@@ -53,7 +53,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
       ReactiveNotificationManager.class,
       NotificationItemObserver.class,
       FileUploadingToS3Observer.class,
-      FileUploadingToGridFsObserver.class
+      FileUploadingWithUfsObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;

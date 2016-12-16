@@ -9,6 +9,7 @@ import io.realm.annotations.PrimaryKey;
 public class FileUploading extends RealmObject {
   public static final String STORAGE_TYPE_S3 = "AmazonS3";
   public static final String STORAGE_TYPE_GRID_FS = "GridFS";
+  public static final String STORAGE_TYPE_FILE_SYSTEM = "FileSystem";
 
   @PrimaryKey private String uplId;
   private int syncstate;

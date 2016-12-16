@@ -39,21 +39,21 @@ public class FileUploadingHelper extends MethodCallHelper {
         .onSuccessTask(CONVERT_TO_JSON_OBJECT);
   }
 
-  public Task<JSONObject> ufsCreate(String filename, long filesize, String mimeType,
+  public Task<JSONObject> ufsCreate(String filename, long filesize, String mimeType, String store,
       String roomId) {
     return call("ufsCreate", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
         .put("name", filename)
         .put("size", filesize)
         .put("type", mimeType)
-        .put("store", "rocketchat_uploads")
+        .put("store", store)
         .put("rid", roomId)
     )).onSuccessTask(CONVERT_TO_JSON_OBJECT);
   }
 
-  public Task<JSONObject> ufsComplete(String fileId, String token) {
+  public Task<JSONObject> ufsComplete(String fileId, String token, String store) {
     return call("ufsComplete", TIMEOUT_MS, () -> new JSONArray()
         .put(fileId)
-        .put("rocketchat_uploads")
+        .put(store)
         .put(token)
     ).onSuccessTask(CONVERT_TO_JSON_OBJECT);
   }

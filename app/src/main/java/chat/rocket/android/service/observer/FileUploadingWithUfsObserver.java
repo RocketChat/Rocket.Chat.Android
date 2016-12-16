@@ -26,10 +26,10 @@ import org.json.JSONObject;
 /**
  * execute file uploading and requesting sendMessage with attachment.
  */
-public class FileUploadingToGridFsObserver extends AbstractModelObserver<FileUploading> {
+public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUploading> {
   private FileUploadingHelper methodCall;
 
-  public FileUploadingToGridFsObserver(Context context, String hostname,
+  public FileUploadingWithUfsObserver(Context context, String hostname,
       RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new FileUploadingHelper(realmHelper, ddpClient);
@@ -38,7 +38,11 @@ public class FileUploadingToGridFsObserver extends AbstractModelObserver<FileUpl
       // resume pending operations.
       RealmResults<FileUploading> pendingUploadRequests = realm.where(FileUploading.class)
           .equalTo("syncstate", SyncState.SYNCING)
+          .beginGroup()
           .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
+          .or()
+          .equalTo("storageType", FileUploading.STORAGE_TYPE_FILE_SYSTEM)
+          .endGroup()
           .findAll();
       for (FileUploading req : pendingUploadRequests) {
         req.setSyncstate(SyncState.NOT_SYNCED);
@@ -51,7 +55,11 @@ public class FileUploadingToGridFsObserver extends AbstractModelObserver<FileUpl
           .or()
           .equalTo("syncstate", SyncState.FAILED)
           .endGroup()
+          .beginGroup()
           .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
+          .or()
+          .equalTo("storageType", FileUploading.STORAGE_TYPE_FILE_SYSTEM)
+          .endGroup()
           .findAll().deleteAllFromRealm();
       return null;
     }).continueWith(new LogcatIfError());
@@ -60,7 +68,11 @@ public class FileUploadingToGridFsObserver extends AbstractModelObserver<FileUpl
   @Override public RealmResults<FileUploading> queryItems(Realm realm) {
     return realm.where(FileUploading.class)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
+        .beginGroup()
         .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
+        .or()
+        .equalTo("storageType", FileUploading.STORAGE_TYPE_FILE_SYSTEM)
+        .endGroup()
         .findAll();
   }
 
@@ -93,13 +105,17 @@ public class FileUploadingToGridFsObserver extends AbstractModelObserver<FileUpl
     final long filesize = fileUploading.getFilesize();
     final String mimeType = fileUploading.getMimeType();
     final Uri fileUri = Uri.parse(fileUploading.getUri());
+    final String store = FileUploading.STORAGE_TYPE_GRID_FS.equals(fileUploading.getStorageType())
+        ? "rocketchat_uploads"
+        : (FileUploading.STORAGE_TYPE_FILE_SYSTEM.equals(fileUploading.getStorageType())
+            ? "fileSystem" : null);
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
             .put("uplId", uplId)
             .put("syncstate", SyncState.SYNCING)
         )
-    ).onSuccessTask(_task -> methodCall.ufsCreate(filename, filesize, mimeType, roomId)
+    ).onSuccessTask(_task -> methodCall.ufsCreate(filename, filesize, mimeType, store, roomId)
     ).onSuccessTask(task -> {
       final JSONObject info = task.getResult();
       final String fileId = info.getString("fileId");
@@ -136,7 +152,7 @@ public class FileUploadingToGridFsObserver extends AbstractModelObserver<FileUpl
         }
       }
 
-      return methodCall.ufsComplete(fileId, token);
+      return methodCall.ufsComplete(fileId, token, store);
     }).onSuccessTask(task -> methodCall.sendFileMessage(roomId, null, task.getResult())
     ).onSuccessTask(task -> realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
