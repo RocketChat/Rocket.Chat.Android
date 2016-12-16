@@ -278,6 +278,15 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
+  public Task<Void> setUserAway() {
+    return call("UserPresence:away", TIMEOUT_MS, JSONArray::new)
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
+  public Task<Void> setUserOnline() {
+    return call("UserPresence:online", TIMEOUT_MS, JSONArray::new)
+        .onSuccessTask(task -> Task.forResult(null));
+  }
 
   public Task<JSONObject> getUsersOfRoom(final String roomId, final boolean showAll) {
     return call("getUsersOfRoom", TIMEOUT_MS, () -> new JSONArray().put(roomId).put(showAll))

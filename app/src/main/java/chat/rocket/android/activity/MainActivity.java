@@ -7,9 +7,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
@@ -34,6 +36,34 @@ public class MainActivity extends AbstractAuthedActivity {
     setupSidebar();
     if (roomId == null) {
       showFragment(new HomeFragment());
+    }
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+
+    setUserOnlineIfServerAvailable();
+  }
+
+  @Override
+  protected void onStop() {
+    setUserAwayIfServerAvailable();
+
+    super.onStop();
+  }
+
+  private void setUserOnlineIfServerAvailable() {
+    if (serverConfigId != null) {
+      new MethodCallHelper(this, serverConfigId).setUserOnline()
+          .continueWith(new LogcatIfError());
+    }
+  }
+
+  private void setUserAwayIfServerAvailable() {
+    if (serverConfigId != null) {
+      new MethodCallHelper(this, serverConfigId).setUserAway()
+          .continueWith(new LogcatIfError());
     }
   }
 
