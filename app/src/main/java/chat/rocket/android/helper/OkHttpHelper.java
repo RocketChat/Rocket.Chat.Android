@@ -8,7 +8,17 @@ import okhttp3.OkHttpClient;
  * Helper class for OkHttp client.
  */
 public class OkHttpHelper {
+  private static OkHttpClient sHttpClientForUplFile;
   private static OkHttpClient sHttpClientForWS;
+
+  public static OkHttpClient getClientForUploadFile() {
+    if (sHttpClientForUplFile == null) {
+      sHttpClientForUplFile = new OkHttpClient.Builder()
+          .addNetworkInterceptor(new StethoInterceptor())
+          .build();
+    }
+    return sHttpClientForUplFile;
+  }
 
   /**
    * acquire OkHttpClient instance for WebSocket connection.

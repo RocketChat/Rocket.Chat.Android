@@ -18,6 +18,8 @@
     <string name="resend">Resend</string>
     <string name="discard">Discard</string>
 
+    <string name="file_uploading_title">Uploading...</string>
+
     <string name="dialog_user_registration_email">Email</string>
     <string name="dialog_user_registration_username">Username</string>
     <string name="dialog_user_registration_password">Password</string>

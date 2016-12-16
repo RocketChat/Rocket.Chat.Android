@@ -3,6 +3,7 @@ package chat.rocket.android.fragment.server_config;
 import android.support.design.widget.Snackbar;
 import android.widget.TextView;
 import chat.rocket.android.R;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
@@ -37,6 +38,10 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
     final String hostname =
         TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
+
+    RocketChatCache.get(getContext()).edit()
+        .putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, serverConfigId)
+        .apply();
 
     RealmStore.getDefault().executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
