@@ -6,123 +6,123 @@ apply plugin: 'com.github.triplet.play'
 apply from: '../config/quality/quality.gradle'
 
 buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath rootProject.ext.androidPlugin
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+  dependencies {
+    classpath rootProject.ext.androidPlugin
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-        classpath rootProject.ext.retroLambdaPlugin
-        classpath rootProject.ext.retroLambdaPatch
-        classpath rootProject.ext.realmPlugin
-        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
-    }
+    // NOTE: Do not place your application dependencies here; they belong
+    // in the individual module build.gradle files
+    classpath rootProject.ext.retroLambdaPlugin
+    classpath rootProject.ext.retroLambdaPatch
+    classpath rootProject.ext.realmPlugin
+    classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+    classpath 'com.google.gms:google-services:3.0.0'
+    classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
+  }
 
-    // Exclude the version that the android plugin depends on.
-    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
+  // Exclude the version that the android plugin depends on.
+  configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    defaultConfig {
-        applicationId "chat.rocket.android"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 2
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+  defaultConfig {
+    applicationId "chat.rocket.android"
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.compileSdkVersion
+    versionCode 2
+    versionName "1.0"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
+    vectorDrawables.useSupportLibrary = true
+    multiDexEnabled true
+  }
+  signingConfigs {
+    release {
+      storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
+      storePassword System.getenv("KEYSTORE_PASSWORD")
+      keyAlias System.getenv("KEY_ALIAS")
+      keyPassword System.getenv("KEY_PASSWORD")
     }
-    signingConfigs {
-        release {
-            storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
-            storePassword System.getenv("KEYSTORE_PASSWORD")
-            keyAlias System.getenv("KEY_ALIAS")
-            keyPassword System.getenv("KEY_PASSWORD")
-        }
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
+  }
+  productFlavors {
+    qa {
+      // something - qa builds will have some extra stuff for alpha testers
     }
-    productFlavors {
-        qa {
-            // something - qa builds will have some extra stuff for alpha testers
-        }
-        prod {
-            // another
-        }
+    prod {
+      // another
     }
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    lintOptions {
-        //avoiding okio error: https://github.com/square/okhttp/issues/896
-        lintConfig file("lint.xml")
-    }
+  }
+  packagingOptions {
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/NOTICE.txt'
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  lintOptions {
+    //avoiding okio error: https://github.com/square/okhttp/issues/896
+    lintConfig file("lint.xml")
+  }
 }
 play {
-    jsonFile = file('rocket-chat.json')
-    track = "${track}"
+  jsonFile = file('rocket-chat.json')
+  track = "${track}"
 }
 
 repositories {
-    mavenCentral()
-    maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
-    maven { url 'http://dl.bintray.com/amulyakhare/maven' }
-    maven { url "https://clojars.org/repo/" } //for icepick.
+  mavenCentral()
+  maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
+  maven { url 'http://dl.bintray.com/amulyakhare/maven' }
+  maven { url "https://clojars.org/repo/" } //for icepick.
 }
 
 dependencies {
-    compile project(':log-wrapper')
-    compile project(':android-ddp')
-    compile project(':rocket-chat-android-widgets')
-    compile project(':realm-helpers')
-    compile rootProject.ext.supportAppCompat
-    compile rootProject.ext.supportDesign
+  compile project(':log-wrapper')
+  compile project(':android-ddp')
+  compile project(':rocket-chat-android-widgets')
+  compile project(':realm-helpers')
+  compile rootProject.ext.supportAppCompat
+  compile rootProject.ext.supportDesign
 
-    qaCompile('com.instabug.library:instabug:3.1.0') {
-        exclude group: 'io.reactivex'
-    }
-    compile 'com.android.support:multidex:1.0.1'
+  qaCompile('com.instabug.library:instabug:3.1.0') {
+    exclude group: 'io.reactivex'
+  }
+  compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.google.firebase:firebase-core:10.0.0'
-    compile 'com.google.firebase:firebase-crash:10.0.0'
+  compile 'com.google.firebase:firebase-core:10.0.0'
+  compile 'com.google.firebase:firebase-crash:10.0.0'
 
-    compile rootProject.ext.okhttp3
-    compile rootProject.ext.picasso
+  compile rootProject.ext.okhttp3
+  compile rootProject.ext.picasso
 
-    compile 'com.facebook.stetho:stetho:1.4.1'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
-    compile 'com.uphyca:stetho_realm:2.0.1'
+  compile 'com.facebook.stetho:stetho:1.4.1'
+  compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
+  compile 'com.uphyca:stetho_realm:2.0.1'
 
-    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
+  compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+  compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
 
-    compile 'com.trello:rxlifecycle:1.0'
-    compile 'com.trello:rxlifecycle-android:1.0'
-    compile 'com.trello:rxlifecycle-components:1.0'
+  compile 'com.trello:rxlifecycle:1.0'
+  compile 'com.trello:rxlifecycle-android:1.0'
+  compile 'com.trello:rxlifecycle-components:1.0'
 
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+  compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
-    compile 'frankiesardo:icepick:3.2.0'
-    provided 'frankiesardo:icepick-processor:3.2.0'
+  compile 'frankiesardo:icepick:3.2.0'
+  provided 'frankiesardo:icepick-processor:3.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
