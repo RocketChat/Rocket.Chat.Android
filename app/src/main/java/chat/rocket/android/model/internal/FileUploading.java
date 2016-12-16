@@ -7,11 +7,12 @@ import io.realm.annotations.PrimaryKey;
  * holding statuses for uploading file.
  */
 public class FileUploading extends RealmObject {
-  public static final int TO_S3 = 1;
+  public static final String STORAGE_TYPE_S3 = "AmazonS3";
+  public static final String STORAGE_TYPE_GRID_FS = "GridFS";
 
   @PrimaryKey private String uplId;
   private int syncstate;
-  private int repository;
+  private String storageType;
   private String uri;
   private String filename;
   private long filesize;
@@ -37,12 +38,12 @@ public class FileUploading extends RealmObject {
     this.syncstate = syncstate;
   }
 
-  public int getRepository() {
-    return repository;
+  public String getStorageType() {
+    return storageType;
   }
 
-  public void setRepository(int repository) {
-    this.repository = repository;
+  public void setStorageType(String storageType) {
+    this.storageType = storageType;
   }
 
   public String getUri() {

@@ -20,7 +20,7 @@ import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.layouthelper.chatroom.FileUploadHelper;
+import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
@@ -241,8 +241,8 @@ public class RoomFragment extends AbstractChatRoomFragment
       return;
     }
 
-    String uplId = new FileUploadHelper(getContext(), realmHelper, roomId)
-        .requestUploading(data.getData());
+    String uplId = new FileUploadHelper(getContext(), realmHelper)
+        .requestUploading(roomId, data.getData());
     if (!TextUtils.isEmpty(uplId)) {
       FileUploadProgressDialogFragment.create(serverConfigId, roomId, uplId)
           .show(getFragmentManager(), FileUploadProgressDialogFragment.class.getSimpleName());

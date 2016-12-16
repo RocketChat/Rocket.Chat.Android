@@ -9,31 +9,27 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
+import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.model.internal.FileUploading;
+import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
-import okio.Okio;
-import okio.Source;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
  * execute file uploading and requesting sendMessage with attachment.
  */
-public class S3FileUploadingObserver extends AbstractModelObserver<FileUploading> {
+public class FileUploadingToGridFsObserver extends AbstractModelObserver<FileUploading> {
   private FileUploadingHelper methodCall;
 
-  public S3FileUploadingObserver(Context context, String hostname,
+  public FileUploadingToGridFsObserver(Context context, String hostname,
       RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new FileUploadingHelper(realmHelper, ddpClient);
@@ -42,7 +38,7 @@ public class S3FileUploadingObserver extends AbstractModelObserver<FileUploading
       // resume pending operations.
       RealmResults<FileUploading> pendingUploadRequests = realm.where(FileUploading.class)
           .equalTo("syncstate", SyncState.SYNCING)
-          .equalTo("repository", FileUploading.TO_S3)
+          .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
           .findAll();
       for (FileUploading req : pendingUploadRequests) {
         req.setSyncstate(SyncState.NOT_SYNCED);
@@ -55,7 +51,7 @@ public class S3FileUploadingObserver extends AbstractModelObserver<FileUploading
           .or()
           .equalTo("syncstate", SyncState.FAILED)
           .endGroup()
-          .equalTo("repository", FileUploading.TO_S3)
+          .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
           .findAll().deleteAllFromRealm();
       return null;
     }).continueWith(new LogcatIfError());
@@ -64,7 +60,7 @@ public class S3FileUploadingObserver extends AbstractModelObserver<FileUploading
   @Override public RealmResults<FileUploading> queryItems(Realm realm) {
     return realm.where(FileUploading.class)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
-        .equalTo("repository", FileUploading.TO_S3)
+        .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
         .findAll();
   }
 
@@ -75,10 +71,20 @@ public class S3FileUploadingObserver extends AbstractModelObserver<FileUploading
 
     List<FileUploading> uploadingList = realmHelper.executeTransactionForReadResults(realm ->
         realm.where(FileUploading.class).equalTo("syncstate", SyncState.SYNCING).findAll());
-    if (uploadingList.size() >= 3) {
-      // do not upload more than 3 files simultaneously
+    if (uploadingList.size() >= 1) {
+      // do not upload multiple files simultaneously
       return;
     }
+
+    User currentUser = realmHelper.executeTransactionForRead(realm ->
+        User.queryCurrentUser(realm).findFirst());
+    Session session = realmHelper.executeTransactionForRead(realm ->
+        Session.queryDefaultSession(realm).findFirst());
+    if (currentUser == null || session == null) {
+      return;
+    }
+    final String cookie = String.format("rc_uid=%s; rc_token=%s",
+        currentUser.get_id(), session.getToken());
 
     FileUploading fileUploading = results.get(0);
     final String roomId = fileUploading.getRoomId();
@@ -93,69 +99,46 @@ public class S3FileUploadingObserver extends AbstractModelObserver<FileUploading
             .put("uplId", uplId)
             .put("syncstate", SyncState.SYNCING)
         )
-    ).onSuccessTask(_task -> methodCall.uploadRequest(filename, filesize, mimeType, roomId)
+    ).onSuccessTask(_task -> methodCall.ufsCreate(filename, filesize, mimeType, roomId)
     ).onSuccessTask(task -> {
       final JSONObject info = task.getResult();
-      final String uploadUrl = info.getString("upload");
-      final String downloadUrl = info.getString("download");
-      final JSONArray postDataList = info.getJSONArray("postData");
+      final String fileId = info.getString("fileId");
+      final String token = info.getString("token");
+      final String url = info.getString("url");
 
-      MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
-          .setType(MultipartBody.FORM);
+      final int bufSize = 16384; //16KB
+      final byte[] buffer = new byte[bufSize];
+      int offset = 0;
+      final MediaType contentType = MediaType.parse(mimeType);
 
-      for (int i = 0; i < postDataList.length(); i++) {
-        JSONObject postData = postDataList.getJSONObject(i);
-        bodyBuilder.addFormDataPart(postData.getString("name"), postData.getString("value"));
+      try (InputStream inputStream = context.getContentResolver().openInputStream(fileUri)) {
+        int read;
+        while ((read = inputStream.read(buffer)) > 0) {
+          offset += read;
+          double progress = 1.0 * offset / filesize;
+
+          Request request = new Request.Builder()
+              .url(url + "&progress=" + progress)
+              .header("Cookie", cookie)
+              .post(RequestBody.create(contentType, buffer, 0, read))
+              .build();
+
+          Response response = OkHttpHelper.getClientForUploadFile().newCall(request).execute();
+          if (response.isSuccessful()) {
+            final JSONObject obj = new JSONObject()
+                .put("uplId", uplId)
+                .put("uploadedSize", offset);
+            realmHelper.executeTransaction(realm ->
+                realm.createOrUpdateObjectFromJson(FileUploading.class, obj));
+          } else {
+            return Task.forError(new Exception(response.message()));
+          }
+        }
       }
 
-      bodyBuilder.addFormDataPart("file", filename,
-          new RequestBody() {
-            private long numBytes = 0;
-            @Override public MediaType contentType() {
-              return MediaType.parse(mimeType);
-            }
-
-            @Override public long contentLength() throws IOException {
-              return filesize;
-            }
-
-            @Override public void writeTo(BufferedSink sink) throws IOException {
-              InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
-              try (Source source = Okio.source(inputStream)) {
-                long readBytes;
-                while ((readBytes = source.read(sink.buffer(), 8192)) > 0) {
-                  numBytes += readBytes;
-                  realmHelper.executeTransaction(realm ->
-                      realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-                          .put("uplId", uplId)
-                          .put("uploadedSize", numBytes)))
-                      .continueWith(new LogcatIfError());
-                }
-              }
-            }
-          });
-
-      Request request = new Request.Builder()
-          .url(uploadUrl)
-          .post(bodyBuilder.build())
-          .build();
-
-      Response response = OkHttpHelper.getClientForUploadFile().newCall(request).execute();
-      if (response.isSuccessful()) {
-        return Task.forResult(downloadUrl);
-      } else {
-        return Task.forError(new Exception(response.message()));
-      }
-    }).onSuccessTask(task -> {
-      String downloadUrl = task.getResult();
-      return methodCall.sendFileMessage(roomId, "s3", new JSONObject()
-          .put("_id", Uri.parse(downloadUrl).getLastPathSegment())
-          .put("type", mimeType)
-          .put("size", filesize)
-          .put("name", filename)
-          .put("url", downloadUrl)
-      );
-    }).onSuccessTask(task -> realmHelper.executeTransaction(realm ->
+      return methodCall.ufsComplete(fileId, token);
+    }).onSuccessTask(task -> methodCall.sendFileMessage(roomId, null, task.getResult())
+    ).onSuccessTask(task -> realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
             .put("uplId", uplId)
             .put("syncstate", SyncState.SYNCED)
