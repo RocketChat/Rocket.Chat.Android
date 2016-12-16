@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import bolts.Task;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.FileUploadingHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OkHttpHelper;
@@ -35,7 +35,7 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
   private FileUploadingHelper methodCall;
 
   public FileUploadingToS3Observer(Context context, String hostname,
-                                   RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                                   RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new FileUploadingHelper(realmHelper, ddpClient);
 

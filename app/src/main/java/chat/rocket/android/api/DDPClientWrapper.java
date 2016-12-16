@@ -17,11 +17,11 @@ import rx.Observable;
 /**
  * DDP client wrapper.
  */
-public class DDPClientWraper {
+public class DDPClientWrapper {
   private final DDPClient ddpClient;
   private final String hostname;
 
-  private DDPClientWraper(String hostname) {
+  private DDPClientWrapper(String hostname) {
     ddpClient = new DDPClient(OkHttpHelper.getClientForWebSocket());
     this.hostname = hostname;
   }
@@ -29,8 +29,8 @@ public class DDPClientWraper {
   /**
    * create new API client instance.
    */
-  public static DDPClientWraper create(String hostname) {
-    return new DDPClientWraper(hostname);
+  public static DDPClientWrapper create(String hostname) {
+    return new DDPClientWrapper(hostname);
   }
 
   /**

@@ -6,7 +6,7 @@ import io.realm.RealmResults;
 import org.json.JSONObject;
 
 import java.util.List;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
@@ -22,7 +22,7 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
   private final MethodCallHelper methodCall;
 
   public NewMessageObserver(Context context, String hostname,
-                            RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                            RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
 

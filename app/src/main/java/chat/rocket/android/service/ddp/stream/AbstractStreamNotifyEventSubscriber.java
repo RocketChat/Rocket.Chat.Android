@@ -5,7 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -15,7 +15,7 @@ import chat.rocket.android_ddp.DDPSubscription;
 abstract class AbstractStreamNotifyEventSubscriber extends AbstractDDPDocEventSubscriber {
   protected AbstractStreamNotifyEventSubscriber(Context context, String hostname,
                                                 RealmHelper realmHelper,
-                                                DDPClientWraper ddpClient) {
+                                                DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
   }
 

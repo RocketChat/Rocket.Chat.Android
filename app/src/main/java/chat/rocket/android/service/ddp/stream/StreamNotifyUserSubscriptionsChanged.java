@@ -5,13 +5,13 @@ import io.realm.RealmObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.realm_helper.RealmHelper;
 
 public class StreamNotifyUserSubscriptionsChanged extends AbstractStreamNotifyUserEventSubscriber {
   public StreamNotifyUserSubscriptionsChanged(Context context, String hostname,
-                                              RealmHelper realmHelper, DDPClientWraper ddpClient,
+                                              RealmHelper realmHelper, DDPClientWrapper ddpClient,
                                               String userId) {
     super(context, hostname, realmHelper, ddpClient, userId);
   }

@@ -17,7 +17,7 @@ import java.util.List;
 import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.MainActivity;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
@@ -31,7 +31,7 @@ import chat.rocket.android.service.notification.NotificationDismissalCallbackSer
  */
 public class NotificationItemObserver extends AbstractModelObserver<NotificationItem> {
   public NotificationItemObserver(Context context, String hostname, RealmHelper realmHelper,
-                                  DDPClientWraper ddpClient) {
+                                  DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
   }
 

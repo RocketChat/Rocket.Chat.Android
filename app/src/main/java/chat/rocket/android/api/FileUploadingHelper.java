@@ -16,7 +16,7 @@ public class FileUploadingHelper extends MethodCallHelper {
     super(context, serverConfigId);
   }
 
-  public FileUploadingHelper(RealmHelper realmHelper, DDPClientWraper ddpClient) {
+  public FileUploadingHelper(RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(realmHelper, ddpClient);
   }
 

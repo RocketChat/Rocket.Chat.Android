@@ -11,7 +11,7 @@ import java.util.Iterator;
 import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
@@ -60,8 +60,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final String serverConfigId;
   private final RealmHelper defaultRealm;
   private final RealmHelper serverConfigRealm;
-  private final ArrayList<Registerable> listeners = new ArrayList<>();
-  private DDPClientWraper ddpClient;
+  private final ArrayList<Registrable> listeners = new ArrayList<>();
+  private DDPClientWrapper ddpClient;
   private boolean listenersRegistered;
 
   private RocketChatWebSocketThread(Context appContext, String serverConfigId) {
@@ -157,7 +157,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private void prepareWebSocket(String hostname) {
     if (ddpClient == null || !ddpClient.isConnected()) {
-      ddpClient = DDPClientWraper.create(hostname);
+      ddpClient = DDPClientWrapper.create(hostname);
     }
   }
 
@@ -233,11 +233,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
         Constructor ctor = clazz.getConstructor(Context.class, String.class, RealmHelper.class,
-            DDPClientWraper.class);
+            DDPClientWrapper.class);
         Object obj = ctor.newInstance(appContext, hostname, serverConfigRealm, ddpClient);
 
-        if (obj instanceof Registerable) {
-          Registerable registerable = (Registerable) obj;
+        if (obj instanceof Registrable) {
+          Registrable registerable = (Registrable) obj;
           registerable.register();
           listeners.add(registerable);
         }
@@ -253,9 +253,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
       return;
     }
 
-    Iterator<Registerable> iterator = listeners.iterator();
+    Iterator<Registrable> iterator = listeners.iterator();
     while (iterator.hasNext()) {
-      Registerable registerable = iterator.next();
+      Registrable registerable = iterator.next();
       registerable.unregister();
       iterator.remove();
     }

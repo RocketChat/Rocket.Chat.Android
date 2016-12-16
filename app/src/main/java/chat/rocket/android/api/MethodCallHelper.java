@@ -35,7 +35,7 @@ public class MethodCallHelper {
       task -> Task.forResult(new JSONArray(task.getResult()));
   protected final Context context;
   protected final RealmHelper realmHelper;
-  protected final DDPClientWraper ddpClient;
+  protected final DDPClientWrapper ddpClient;
 
   @Deprecated
   /**
@@ -57,7 +57,7 @@ public class MethodCallHelper {
   /**
    * initialize with RealmHelper and DDPClient.
    */
-  public MethodCallHelper(RealmHelper realmHelper, DDPClientWraper ddpClient) {
+  public MethodCallHelper(RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     this.context = null;
     this.realmHelper = realmHelper;
     this.ddpClient = ddpClient;

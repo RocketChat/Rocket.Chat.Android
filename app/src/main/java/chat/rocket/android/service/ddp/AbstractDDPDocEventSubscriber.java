@@ -9,25 +9,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.service.Registerable;
+import chat.rocket.android.service.Registrable;
 import chat.rocket.android_ddp.DDPSubscription;
 import rx.Subscription;
 
-public abstract class AbstractDDPDocEventSubscriber implements Registerable {
+public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   protected final Context context;
   protected final String hostname;
   protected final RealmHelper realmHelper;
-  protected final DDPClientWraper ddpClient;
+  protected final DDPClientWrapper ddpClient;
   private boolean isUnsubscribed;
   private String subscriptionId;
   private Subscription rxSubscription;
 
   protected AbstractDDPDocEventSubscriber(Context context, String hostname,
-                                          RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                                          RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     this.context = context;
     this.hostname = hostname;
     this.realmHelper = realmHelper;

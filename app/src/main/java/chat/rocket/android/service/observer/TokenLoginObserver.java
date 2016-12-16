@@ -5,7 +5,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.util.List;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.internal.Session;
@@ -16,7 +16,7 @@ public class TokenLoginObserver extends AbstractModelObserver<Session> {
   private final MethodCallHelper methodCall;
 
   public TokenLoginObserver(Context context, String hostname,
-                            RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                            RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }

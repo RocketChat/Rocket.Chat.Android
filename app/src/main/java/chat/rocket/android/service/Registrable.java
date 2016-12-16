@@ -3,7 +3,7 @@ package chat.rocket.android.service;
 /**
  * interface for observer and ddp_subscription.
  */
-public interface Registerable {
+public interface Registrable {
   /**
    * register.
    */

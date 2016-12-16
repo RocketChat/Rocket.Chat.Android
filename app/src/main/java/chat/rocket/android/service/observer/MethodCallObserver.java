@@ -6,7 +6,7 @@ import io.realm.RealmResults;
 import org.json.JSONObject;
 
 import java.util.List;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.SyncState;
@@ -25,7 +25,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
    * constructor.
    */
   public MethodCallObserver(Context context, String hostname,
-                            RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                            RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.

@@ -6,12 +6,12 @@ import io.realm.RealmResults;
 
 import java.util.ArrayList;
 import java.util.List;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.service.Registerable;
+import chat.rocket.android.service.Registrable;
 import chat.rocket.android.service.ddp.stream.StreamNotifyUserSubscriptionsChanged;
 import hugo.weaving.DebugLog;
 
@@ -21,10 +21,10 @@ import hugo.weaving.DebugLog;
 public class CurrentUserObserver extends AbstractModelObserver<User> {
   private final MethodCallHelper methodCall;
   private boolean currentUserExists;
-  private ArrayList<Registerable> listeners;
+  private ArrayList<Registrable> listeners;
 
   public CurrentUserObserver(Context context, String hostname,
-                             RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                             RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
     currentUserExists = false;
@@ -61,7 +61,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
     // get and observe Room subscriptions.
     methodCall.getRoomSubscriptions().onSuccess(task -> {
       if (listeners != null) {
-        Registerable listener = new StreamNotifyUserSubscriptionsChanged(
+        Registrable listener = new StreamNotifyUserSubscriptionsChanged(
             context, hostname, realmHelper, ddpClient, userId);
         listener.register();
         listeners.add(listener);
@@ -73,7 +73,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
   @DebugLog
   private void onLogout() {
     if (listeners != null) {
-      for (Registerable listener : listeners) {
+      for (Registrable listener : listeners) {
         listener.unregister();
       }
     }

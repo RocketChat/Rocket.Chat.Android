@@ -5,7 +5,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.util.List;
-import chat.rocket.android.api.DDPClientWraper;
+import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ddp.PublicSetting;
@@ -28,7 +28,7 @@ public class SessionObserver extends AbstractModelObserver<Session> {
    * constructor.
    */
   public SessionObserver(Context context, String hostname,
-                         RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                         RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     count = 0;
 
