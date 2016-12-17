@@ -2,6 +2,7 @@ package chat.rocket.android.service.internal;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.RoomSubscription;
@@ -12,6 +13,12 @@ public abstract class AbstractRocketChatCacheObserver implements Registerable {
   private final Context context;
   private final RealmHelper realmHelper;
   private String roomId;
+  private SharedPreferences.OnSharedPreferenceChangeListener listener =
+      (prefs, key) -> {
+        if (RocketChatCache.KEY_SELECTED_ROOM_ID.equals(key)) {
+          updateRoomIdWith(prefs);
+        }
+      };
 
   protected AbstractRocketChatCacheObserver(Context context, RealmHelper realmHelper) {
     this.context = context;
@@ -40,20 +47,15 @@ public abstract class AbstractRocketChatCacheObserver implements Registerable {
 
   protected abstract void onRoomIdUpdated(String roomId);
 
-  private SharedPreferences.OnSharedPreferenceChangeListener listener =
-      (prefs, key) -> {
-        if (RocketChatCache.KEY_SELECTED_ROOM_ID.equals(key)) {
-          updateRoomIdWith(prefs);
-        }
-      };
-
-  @Override public final void register() {
+  @Override
+  public final void register() {
     SharedPreferences prefs = RocketChatCache.get(context);
     prefs.registerOnSharedPreferenceChangeListener(listener);
     updateRoomIdWith(prefs);
   }
 
-  @Override public final void unregister() {
+  @Override
+  public final void unregister() {
     RocketChatCache.get(context).unregisterOnSharedPreferenceChangeListener(listener);
   }
 }

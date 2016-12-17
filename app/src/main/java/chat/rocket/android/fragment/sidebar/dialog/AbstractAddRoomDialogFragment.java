@@ -7,12 +7,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
+import com.trello.rxlifecycle.components.support.RxAppCompatDialogFragment;
+
 import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
-import com.trello.rxlifecycle.components.support.RxAppCompatDialogFragment;
 
 public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFragment {
 
@@ -20,11 +21,14 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
   protected MethodCallHelper methodCall;
   protected String hostname;
 
-  protected @LayoutRes abstract int getLayout();
+  protected
+  @LayoutRes
+  abstract int getLayout();
 
   protected abstract void onSetupDialog();
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
@@ -40,7 +44,8 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
     hostname = args.getString("hostname");
   }
 
-  @Override public final void setupDialog(Dialog dialog, int style) {
+  @Override
+  public final void setupDialog(Dialog dialog, int style) {
     super.setupDialog(dialog, style);
     dialog.setContentView(getLayout());
     onSetupDialog();

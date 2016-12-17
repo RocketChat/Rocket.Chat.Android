@@ -1,69 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:theme="@style/AppTheme">
-
-    <include layout="@layout/list_item_message_newday" />
-
-    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:theme="@style/AppTheme"
+        >
+
+    <include layout="@layout/list_item_message_newday"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
 
         <ImageView
-            android:id="@+id/user_avatar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_margin="8dp"
-            tools:src="@drawable/ic_default_avatar" />
+                android:id="@+id/user_avatar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                tools:src="@drawable/ic_default_avatar"
+                />
 
         <LinearLayout
-            android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
 
             <LinearLayout
-                android:id="@+id/user_and_timestamp_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:id="@+id/user_and_timestamp_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
 
                 <TextView
-                    android:id="@+id/username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    tools:text="John Doe" />
+                        android:id="@+id/username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        tools:text="John Doe"
+                        />
 
                 <Space
-                    android:layout_width="@dimen/margin_8"
-                    android:layout_height="wrap_content" />
+                        android:layout_width="@dimen/margin_8"
+                        android:layout_height="wrap_content"
+                        />
 
                 <TextView
-                    android:id="@+id/timestamp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    tools:text="12:34" />
+                        android:id="@+id/timestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        tools:text="12:34"
+                        />
             </LinearLayout>
 
             <chat.rocket.android.widget.message.RocketChatMessageLayout
-                android:id="@+id/message_body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    android:id="@+id/message_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
             <chat.rocket.android.widget.message.RocketChatMessageUrlsLayout
-                android:id="@+id/message_urls"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                    android:id="@+id/message_urls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
             <chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
-                android:id="@+id/message_attachments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    android:id="@+id/message_attachments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

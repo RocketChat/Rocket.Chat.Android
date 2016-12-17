@@ -1,11 +1,11 @@
 package chat.rocket.android.helper;
 
-import chat.rocket.android.log.RCLog;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import chat.rocket.android.log.RCLog;
 
 /**
  * Utility class for converting epoch ms and date-time string.

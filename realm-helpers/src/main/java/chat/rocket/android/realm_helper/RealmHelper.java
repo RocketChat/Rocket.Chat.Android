@@ -4,16 +4,17 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
-import bolts.Task;
-import bolts.TaskCompletionSource;
-import chat.rocket.android.log.RCLog;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+import org.json.JSONException;
+
 import java.util.Collections;
 import java.util.List;
-import org.json.JSONException;
+import bolts.Task;
+import bolts.TaskCompletionSource;
+import chat.rocket.android.log.RCLog;
 
 @SuppressLint("NewApi")
 public class RealmHelper {
@@ -50,10 +51,6 @@ public class RealmHelper {
     try (Realm realm = instance()) {
       return realm.copyFromRealm(object);
     }
-  }
-
-  public interface Transaction<T> {
-    T execute(Realm realm) throws JSONException;
   }
 
   public <T extends RealmObject> T executeTransactionForRead(Transaction<T> transaction) {
@@ -149,7 +146,7 @@ public class RealmHelper {
 
   public <T extends RealmObject, VM, VH extends RealmModelViewHolder<VM>>
   RecyclerView.Adapter<VH> createListAdapter(Context context, RealmListObserver.Query<T> query,
-      RealmModelListAdapter.Constructor<T, VM, VH> constructor) {
+                                             RealmModelListAdapter.Constructor<T, VM, VH> constructor) {
     return constructor.getNewInstance(context).initializeWith(this, query);
   }
 
@@ -158,5 +155,9 @@ public class RealmHelper {
       RealmAutoCompleteAdapter.RealmFilter<T> filter,
       RealmAutoCompleteAdapter.Constructor constructor) {
     return constructor.getNewInstance(context).initializeWith(this, filter);
+  }
+
+  public interface Transaction<T> {
+    T execute(Realm realm) throws JSONException;
   }
 }

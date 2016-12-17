@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import java.util.ArrayList;
 
 /**
@@ -58,11 +59,13 @@ public class WaitingView extends LinearLayout {
     }
 
     addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
-      @Override public void onViewAttachedToWindow(View view) {
+      @Override
+      public void onViewAttachedToWindow(View view) {
         start();
       }
 
-      @Override public void onViewDetachedFromWindow(View view) {
+      @Override
+      public void onViewDetachedFromWindow(View view) {
         cancel();
       }
     });
@@ -86,7 +89,7 @@ public class WaitingView extends LinearLayout {
   }
 
   private void animateDot(final View dot, final long startDelay, final long duration,
-      final long interval) {
+                          final long interval) {
     dot.setScaleX(0);
     dot.setScaleY(0);
     dot.animate()
@@ -95,14 +98,16 @@ public class WaitingView extends LinearLayout {
         .setDuration(duration)
         .setStartDelay(startDelay)
         .withEndAction(new Runnable() {
-          @Override public void run() {
+          @Override
+          public void run() {
             dot.animate()
                 .scaleX(0)
                 .scaleY(0)
                 .setDuration(duration)
                 .setStartDelay(0)
                 .withEndAction(new Runnable() {
-                  @Override public void run() {
+                  @Override
+                  public void run() {
                     animateDot(dot, interval, duration, interval);
                   }
                 })

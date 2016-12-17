@@ -11,10 +11,11 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.HashSet;
 import org.nibor.autolink.LinkExtractor;
 import org.nibor.autolink.LinkSpan;
 import org.nibor.autolink.LinkType;
+
+import java.util.HashSet;
 
 public class Linkify {
 
@@ -48,7 +49,8 @@ public class Linkify {
 
   private static ClickableSpan createLinkSpan(final String url) {
     return new ClickableSpan() {
-      @Override public void onClick(View view) {
+      @Override
+      public void onClick(View view) {
         final Context context = view.getContext();
         try {
           Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

@@ -1,12 +1,13 @@
 package chat.rocket.android.model;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import org.json.JSONObject;
+
 import bolts.Task;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.realm_helper.RealmStore;
 import hugo.weaving.DebugLog;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import org.json.JSONObject;
 
 /**
  * Server configuration.
@@ -22,6 +23,35 @@ public class ServerConfig extends RealmObject {
   private int state;
   private String session;
   private String error;
+
+  /**
+   * Log the server connection is lost due to soem exception.
+   */
+  @DebugLog
+  public static void logConnectionError(String serverConfigId, Exception exception) {
+    RealmStore.getDefault().executeTransaction(
+        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+            .put("serverConfigId", serverConfigId)
+            .put("state", STATE_CONNECTION_ERROR)
+            .put("error", exception.getMessage())))
+        .continueWith(new LogcatIfError());
+  }
+
+  /**
+   * Update the state of the ServerConfig with serverConfigId.
+   */
+  public static Task<Void> updateState(final String serverConfigId, int state) {
+    return RealmStore.getDefault().executeTransaction(realm -> {
+      ServerConfig config =
+          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst();
+      if (config == null || config.getState() != state) {
+        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+            .put("serverConfigId", serverConfigId)
+            .put("state", state));
+      }
+      return null;
+    });
+  }
 
   public String getServerConfigId() {
     return serverConfigId;
@@ -61,33 +91,5 @@ public class ServerConfig extends RealmObject {
 
   public void setError(String error) {
     this.error = error;
-  }
-
-  /**
-   * Log the server connection is lost due to soem exception.
-   */
-  @DebugLog public static void logConnectionError(String serverConfigId, Exception exception) {
-    RealmStore.getDefault().executeTransaction(
-        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("serverConfigId", serverConfigId)
-            .put("state", STATE_CONNECTION_ERROR)
-            .put("error", exception.getMessage())))
-        .continueWith(new LogcatIfError());
-  }
-
-  /**
-   * Update the state of the ServerConfig with serverConfigId.
-   */
-  public static Task<Void> updateState(final String serverConfigId, int state) {
-    return RealmStore.getDefault().executeTransaction(realm -> {
-      ServerConfig config =
-          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst();
-      if (config == null || config.getState() != state) {
-        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("serverConfigId", serverConfigId)
-            .put("state", state));
-      }
-      return null;
-    });
   }
 }

@@ -2,6 +2,7 @@ package chat.rocket.android.service.notification;
 
 import android.app.IntentService;
 import android.content.Intent;
+
 import chat.rocket.android.model.internal.NotificationItem;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
@@ -14,7 +15,8 @@ public class NotificationDismissalCallbackService extends IntentService {
     super(NotificationDismissalCallbackService.class.getSimpleName());
   }
 
-  @Override protected void onHandleIntent(Intent intent) {
+  @Override
+  protected void onHandleIntent(Intent intent) {
     if (!intent.hasExtra("serverConfigId") || !intent.hasExtra("roomId")) {
       return;
     }

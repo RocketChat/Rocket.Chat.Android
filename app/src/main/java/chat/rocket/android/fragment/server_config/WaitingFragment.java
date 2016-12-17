@@ -3,6 +3,7 @@ package chat.rocket.android.fragment.server_config;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 
@@ -12,6 +13,9 @@ import chat.rocket.android.helper.TextUtils;
 public class WaitingFragment extends AbstractServerConfigFragment {
 
   private String caption;
+
+  public WaitingFragment() {
+  }
 
   /**
    * create new "Waiting..." screen with caption.
@@ -24,13 +28,13 @@ public class WaitingFragment extends AbstractServerConfigFragment {
     return fragment;
   }
 
-  public WaitingFragment() {}
-
-  @Override protected int getLayout() {
+  @Override
+  protected int getLayout() {
     return R.layout.fragment_waiting;
   }
 
-  @Override protected void onSetupView() {
+  @Override
+  protected void onSetupView() {
     Bundle args = getArguments();
     if (args != null) {
       caption = args.getString("caption");

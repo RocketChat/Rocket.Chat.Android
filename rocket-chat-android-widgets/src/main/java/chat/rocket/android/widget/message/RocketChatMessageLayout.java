@@ -8,10 +8,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.emojione.Emojione;
+
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.helper.InlineHightlighter;
 import chat.rocket.android.widget.helper.Linkify;
-import com.emojione.Emojione;
 
 /**
  */
@@ -35,7 +36,7 @@ public class RocketChatMessageLayout extends LinearLayout {
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public RocketChatMessageLayout(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
+                                 int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     initialize(context, attrs);
   }

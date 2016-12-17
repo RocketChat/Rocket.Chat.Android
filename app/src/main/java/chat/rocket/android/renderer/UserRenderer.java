@@ -3,6 +3,7 @@ package chat.rocket.android.renderer;
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.TextUtils;

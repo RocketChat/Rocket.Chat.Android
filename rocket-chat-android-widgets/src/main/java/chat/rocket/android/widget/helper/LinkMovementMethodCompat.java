@@ -21,12 +21,14 @@ public class LinkMovementMethodCompat extends LinkMovementMethod {
     return sInstance;
   }
 
-  @Override public boolean canSelectArbitrarily() {
+  @Override
+  public boolean canSelectArbitrarily() {
     return true;
   }
 
   // http://stackoverflow.com/a/30572151/2104686
-  @Override public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+  @Override
+  public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
     int action = event.getAction();
 
     if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {

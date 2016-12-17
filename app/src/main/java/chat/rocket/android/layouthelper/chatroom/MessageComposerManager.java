@@ -1,6 +1,7 @@
 package chat.rocket.android.layouthelper.chatroom;
 
 import android.support.design.widget.FloatingActionButton;
+
 import bolts.Task;
 import chat.rocket.android.widget.message.MessageComposer;
 
@@ -8,14 +9,6 @@ import chat.rocket.android.widget.message.MessageComposer;
  * handling visibility of FAB-compose and MessageComposer.
  */
 public class MessageComposerManager {
-  public interface SendMessageCallback {
-    Task<Void> onSubmit(String messageText);
-  }
-
-  public interface VisibilityChangedListener {
-    void onVisibilityChanged(boolean shown);
-  }
-
   private final FloatingActionButton fabCompose;
   private final MessageComposer messageComposer;
   private SendMessageCallback sendMessageCallback;
@@ -33,7 +26,8 @@ public class MessageComposerManager {
     });
 
     messageComposer.setOnActionListener(new MessageComposer.ActionListener() {
-      @Override public void onSubmit(String message) {
+      @Override
+      public void onSubmit(String message) {
         if (sendMessageCallback != null) {
           messageComposer.setEnabled(false);
           sendMessageCallback.onSubmit(message).onSuccess(task -> {
@@ -46,7 +40,8 @@ public class MessageComposerManager {
         }
       }
 
-      @Override public void onCancel() {
+      @Override
+      public void onCancel() {
         setMessageComposerVisibility(false);
       }
     });
@@ -90,5 +85,13 @@ public class MessageComposerManager {
       return true;
     }
     return false;
+  }
+
+  public interface SendMessageCallback {
+    Task<Void> onSubmit(String messageText);
+  }
+
+  public interface VisibilityChangedListener {
+    void onVisibilityChanged(boolean shown);
   }
 }

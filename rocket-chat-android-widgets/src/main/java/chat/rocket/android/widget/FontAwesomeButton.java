@@ -19,7 +19,8 @@ public class FontAwesomeButton extends AbstractCustomFontButton {
     super(context);
   }
 
-  @Override protected String getFont() {
+  @Override
+  protected String getFont() {
     return "fontawesome-webfont.ttf";
   }
 }

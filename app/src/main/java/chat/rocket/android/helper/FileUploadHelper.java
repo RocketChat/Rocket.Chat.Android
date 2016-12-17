@@ -8,15 +8,16 @@ import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.webkit.MimeTypeMap;
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.UUID;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.internal.FileUploading;
 import chat.rocket.android.realm_helper.RealmHelper;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.UUID;
-import org.json.JSONObject;
 
 /**
  * utility class for uploading file.
@@ -35,7 +36,9 @@ public class FileUploadHelper {
    * requestUploading file.
    * returns id for observing progress.
    */
-  public @Nullable String requestUploading(String roomId, Uri uri) {
+  public
+  @Nullable
+  String requestUploading(String roomId, Uri uri) {
     try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         String filename = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
@@ -54,7 +57,7 @@ public class FileUploadHelper {
   }
 
   private String insertRequestRecord(String roomId,
-      Uri uri, String filename, long filesize, String mimeType) {
+                                     Uri uri, String filename, long filesize, String mimeType) {
     final String uplId = UUID.randomUUID().toString();
     final String storageType =
         PublicSetting.getString(realmHelper, "FileUpload_Storage_Type", null);

@@ -5,12 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.renderer.UserRenderer;
-import java.util.List;
 
 /**
  * RecyclerView adapter for UsersOfRooms.
@@ -33,12 +34,14 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
     this.hostname = hostname;
   }
 
-  @Override public RoomUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override
+  public RoomUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView = inflater.inflate(R.layout.listitem_room_user, parent, false);
     return new RoomUserViewHolder(itemView);
   }
 
-  @Override public void onBindViewHolder(RoomUserViewHolder holder, int position) {
+  @Override
+  public void onBindViewHolder(RoomUserViewHolder holder, int position) {
     String username = usernames.get(position);
     if (TextUtils.isEmpty(username)) {
       return;
@@ -60,7 +63,8 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
     }
   }
 
-  @Override public int getItemCount() {
+  @Override
+  public int getItemCount() {
     return usernames != null ? usernames.size() : 0;
   }
 

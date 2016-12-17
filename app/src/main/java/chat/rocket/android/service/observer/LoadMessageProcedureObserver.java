@@ -1,6 +1,12 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
+import org.json.JSONObject;
+
+import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
@@ -9,11 +15,6 @@ import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
-import java.util.List;
-import org.json.JSONObject;
 
 /**
  * Background process for loading messages.
@@ -23,18 +24,20 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
   private final MethodCallHelper methodCall;
 
   public LoadMessageProcedureObserver(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                                      RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }
 
-  @Override public RealmResults<LoadMessageProcedure> queryItems(Realm realm) {
+  @Override
+  public RealmResults<LoadMessageProcedure> queryItems(Realm realm) {
     return realm.where(LoadMessageProcedure.class)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
         .findAll();
   }
 
-  @Override public void onUpdateResults(List<LoadMessageProcedure> results) {
+  @Override
+  public void onUpdateResults(List<LoadMessageProcedure> results) {
     if (results == null || results.isEmpty()) {
       return;
     }

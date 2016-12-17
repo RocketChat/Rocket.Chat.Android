@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
@@ -90,7 +91,7 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
     }
   }
 
-  private void setSequential( boolean sequential) {
+  private void setSequential(boolean sequential) {
     if (sequential) {
       avatar.setVisibility(View.INVISIBLE);
       userAndTimeContainer.setVisibility(View.GONE);

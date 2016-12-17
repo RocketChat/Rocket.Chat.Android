@@ -1,11 +1,12 @@
 package chat.rocket.android.api;
 
 import android.content.Context;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import bolts.Task;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.realm_helper.RealmHelper;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * MethodCall for uploading file.
@@ -20,7 +21,7 @@ public class FileUploadingHelper extends MethodCallHelper {
   }
 
   public Task<JSONObject> uploadRequest(String filename, long filesize, String mimeType,
-      String roomId) {
+                                        String roomId) {
     return call("slingshot/uploadRequest", TIMEOUT_MS, () -> new JSONArray()
         .put("rocketchat-uploads")
         .put(new JSONObject()
@@ -40,7 +41,7 @@ public class FileUploadingHelper extends MethodCallHelper {
   }
 
   public Task<JSONObject> ufsCreate(String filename, long filesize, String mimeType, String store,
-      String roomId) {
+                                    String roomId) {
     return call("ufsCreate", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
         .put("name", filename)
         .put("size", filesize)

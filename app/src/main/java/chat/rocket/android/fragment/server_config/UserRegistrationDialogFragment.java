@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
@@ -24,11 +25,15 @@ public class UserRegistrationDialogFragment extends DialogFragment {
   private String email;
   private String password;
 
+  public UserRegistrationDialogFragment() {
+    super();
+  }
+
   /**
    * create UserRegistrationDialogFragment with auto-detect email/username.
    */
   public static UserRegistrationDialogFragment create(String serverConfigId,
-      String usernameOrEmail, String password) {
+                                                      String usernameOrEmail, String password) {
     if (Patterns.EMAIL_ADDRESS.matcher(usernameOrEmail).matches()) {
       return create(serverConfigId, null, usernameOrEmail, password);
     } else {
@@ -40,7 +45,8 @@ public class UserRegistrationDialogFragment extends DialogFragment {
    * create UserRegistrationDialogFragment.
    */
   public static UserRegistrationDialogFragment create(String serverConfigId,
-      String username, String email, String password) {
+                                                      String username, String email,
+                                                      String password) {
     Bundle args = new Bundle();
     args.putString("serverConfigId", serverConfigId);
     if (!TextUtils.isEmpty(username)) {
@@ -57,11 +63,8 @@ public class UserRegistrationDialogFragment extends DialogFragment {
     return dialog;
   }
 
-  public UserRegistrationDialogFragment() {
-    super();
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
@@ -74,7 +77,8 @@ public class UserRegistrationDialogFragment extends DialogFragment {
   }
 
   @NonNull
-  @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
     return new AlertDialog.Builder(getContext(), R.style.AppTheme_Dialog)
         .setView(createDialogView())
         .create();

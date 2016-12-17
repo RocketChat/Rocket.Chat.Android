@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
+
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
@@ -15,20 +16,23 @@ import chat.rocket.android.realm_helper.RealmStore;
  * Login screen.
  */
 public class RetryLoginFragment extends AbstractServerConfigFragment {
-  @Override protected int getLayout() {
+  private RealmObjectObserver<Session> sessionObserver;
+
+  @Override
+  protected int getLayout() {
     return R.layout.fragment_retry_login;
   }
 
-  private RealmObjectObserver<Session> sessionObserver;
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     sessionObserver = RealmStore.get(serverConfigId)
         .createObjectObserver(Session::queryDefaultSession)
         .setOnUpdateListener(this::onRenderServerConfigSession);
   }
 
-  @Override protected void onSetupView() {
+  @Override
+  protected void onSetupView() {
   }
 
   private void onRenderServerConfigSession(Session session) {
@@ -63,12 +67,14 @@ public class RetryLoginFragment extends AbstractServerConfigFragment {
     }
   }
 
-  @Override public void onResume() {
+  @Override
+  public void onResume() {
     super.onResume();
     sessionObserver.sub();
   }
 
-  @Override public void onPause() {
+  @Override
+  public void onPause() {
     sessionObserver.unsub();
     super.onPause();
   }

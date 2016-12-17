@@ -1,7 +1,7 @@
 package chat.rocket.android_ddp.rx;
 
-import chat.rocket.android.log.RCLog;
 import java.io.IOException;
+import chat.rocket.android.log.RCLog;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -31,15 +31,18 @@ public class RxWebSocket {
     WebSocketCall call = WebSocketCall.create(httpClient, request);
 
     return Observable.create(new Observable.OnSubscribe<RxWebSocketCallback.Base>() {
-      @Override public void call(Subscriber<? super RxWebSocketCallback.Base> subscriber) {
+      @Override
+      public void call(Subscriber<? super RxWebSocketCallback.Base> subscriber) {
         call.enqueue(new WebSocketListener() {
-          @Override public void onOpen(WebSocket webSocket, Response response) {
+          @Override
+          public void onOpen(WebSocket webSocket, Response response) {
             isConnected = true;
             RxWebSocket.this.webSocket = webSocket;
             subscriber.onNext(new RxWebSocketCallback.Open(RxWebSocket.this.webSocket, response));
           }
 
-          @Override public void onFailure(IOException e, Response response) {
+          @Override
+          public void onFailure(IOException e, Response response) {
             try {
               isConnected = false;
               subscriber.onError(new RxWebSocketCallback.Failure(webSocket, e, response));
@@ -48,17 +51,20 @@ public class RxWebSocket {
             }
           }
 
-          @Override public void onMessage(ResponseBody responseBody) throws IOException {
+          @Override
+          public void onMessage(ResponseBody responseBody) throws IOException {
             isConnected = true;
             subscriber.onNext(new RxWebSocketCallback.Message(webSocket, responseBody));
           }
 
-          @Override public void onPong(Buffer payload) {
+          @Override
+          public void onPong(Buffer payload) {
             isConnected = true;
             subscriber.onNext(new RxWebSocketCallback.Pong(webSocket, payload));
           }
 
-          @Override public void onClose(int code, String reason) {
+          @Override
+          public void onClose(int code, String reason) {
             isConnected = false;
             subscriber.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
             subscriber.onCompleted();

@@ -10,6 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
+import io.realm.Realm;
+import io.realm.RealmResults;
+
+import java.util.List;
 import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.activity.MainActivity;
@@ -21,24 +25,23 @@ import chat.rocket.android.model.internal.NotificationItem;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.notification.NotificationDismissalCallbackService;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.List;
 
 /**
  * observes NotificationItem and notify/cancel notification.
  */
 public class NotificationItemObserver extends AbstractModelObserver<NotificationItem> {
   public NotificationItemObserver(Context context, String hostname, RealmHelper realmHelper,
-      DDPClientWraper ddpClient) {
+                                  DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
   }
 
-  @Override public RealmResults<NotificationItem> queryItems(Realm realm) {
+  @Override
+  public RealmResults<NotificationItem> queryItems(Realm realm) {
     return realm.where(NotificationItem.class).findAll();
   }
 
-  @Override public void onUpdateResults(List<NotificationItem> results) {
+  @Override
+  public void onUpdateResults(List<NotificationItem> results) {
     if (results.isEmpty()) {
       return;
     }
@@ -114,7 +117,8 @@ public class NotificationItemObserver extends AbstractModelObserver<Notification
   }
 
   private Notification generateNotification(String roomId, String title,
-      @NonNull String description, int unreadCount, @Nullable Bitmap icon) {
+                                            @NonNull String description, int unreadCount,
+                                            @Nullable Bitmap icon) {
 
     NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
         .setContentTitle(title)

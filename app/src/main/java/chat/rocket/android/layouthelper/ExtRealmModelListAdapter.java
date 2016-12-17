@@ -2,9 +2,10 @@ package chat.rocket.android.layouthelper;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import io.realm.RealmObject;
+
 import chat.rocket.android.realm_helper.RealmModelListAdapter;
 import chat.rocket.android.realm_helper.RealmModelViewHolder;
-import io.realm.RealmObject;
 
 @SuppressWarnings({"PMD.AbstractNaming", "PMD.GenericsNaming"})
 /**
@@ -19,7 +20,8 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
     super(context);
   }
 
-  @Override public int getItemCount() {
+  @Override
+  public int getItemCount() {
     return super.getItemCount() + 2;
   }
 
@@ -35,7 +37,8 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
     notifyItemChanged(position + 1);
   }
 
-  @Override public int getItemViewType(int position) {
+  @Override
+  public int getItemViewType(int position) {
     if (position == 0) {
       return VIEW_TYPE_HEADER;
     }
@@ -47,13 +50,20 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
     return super.getItemViewType(position - 1);
   }
 
-  protected abstract @LayoutRes int getHeaderLayout();
+  protected abstract
+  @LayoutRes
+  int getHeaderLayout();
 
-  protected abstract @LayoutRes int getFooterLayout();
+  protected abstract
+  @LayoutRes
+  int getFooterLayout();
 
-  protected abstract @LayoutRes int getRealmModelLayout(int viewType);
+  protected abstract
+  @LayoutRes
+  int getRealmModelLayout(int viewType);
 
-  @Override protected final int getLayout(int viewType) {
+  @Override
+  protected final int getLayout(int viewType) {
     if (viewType == VIEW_TYPE_HEADER) {
       return getHeaderLayout();
     }
@@ -64,7 +74,8 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
     return getRealmModelLayout(viewType);
   }
 
-  @Override public final void onBindViewHolder(VH holder, int position) {
+  @Override
+  public final void onBindViewHolder(VH holder, int position) {
     if (position == 0 || position == super.getItemCount() + 1) {
       return;
     }

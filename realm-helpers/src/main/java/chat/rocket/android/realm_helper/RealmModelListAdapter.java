@@ -7,18 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import io.realm.RealmObject;
+
 import java.util.List;
 
 public abstract class RealmModelListAdapter<T extends RealmObject, VM,
     VH extends RealmModelViewHolder<VM>> extends RecyclerView.Adapter<VH> {
-
-  public interface Constructor<T extends RealmObject, VM, VH extends RealmModelViewHolder<VM>> {
-    RealmModelListAdapter<T, VM, VH> getNewInstance(Context context);
-  }
-
-  public interface OnItemClickListener<VM> {
-    void onItemClick(VM model);
-  }
 
   protected final LayoutInflater inflater;
   private RealmListObserver<T> realmListObserver;
@@ -30,41 +23,47 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
   }
 
   /*package*/ RealmModelListAdapter<T, VM, VH> initializeWith(final RealmHelper realmHelper,
-      RealmListObserver.Query<T> query) {
+                                                              RealmListObserver.Query<T> query) {
     realmListObserver = new RealmListObserver<>(realmHelper, query)
         .setOnUpdateListener(results -> updateData(realmHelper.copyFromRealm(results)));
     return this;
   }
 
-  @Override public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+  @Override
+  public void onAttachedToRecyclerView(RecyclerView recyclerView) {
     super.onAttachedToRecyclerView(recyclerView);
     realmListObserver.sub();
   }
 
-  @Override public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+  @Override
+  public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
     realmListObserver.unsub();
     super.onDetachedFromRecyclerView(recyclerView);
   }
 
   protected abstract int getRealmModelViewType(VM model);
 
-  protected abstract @LayoutRes int getLayout(int viewType);
+  protected abstract
+  @LayoutRes
+  int getLayout(int viewType);
 
   protected abstract VH onCreateRealmModelViewHolder(int viewType, View itemView);
 
   protected abstract List<VM> mapResultsToViewModel(List<T> results);
 
-
-  @Override public int getItemViewType(int position) {
+  @Override
+  public int getItemViewType(int position) {
     return getRealmModelViewType(getItem(position));
   }
 
-  @Override public final VH onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override
+  public final VH onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView = inflater.inflate(getLayout(viewType), parent, false);
     return onCreateRealmModelViewHolder(viewType, itemView);
   }
 
-  @Override public void onBindViewHolder(VH holder, int position) {
+  @Override
+  public void onBindViewHolder(VH holder, int position) {
     VM model = getItem(position);
     holder.itemView.setTag(model);
     holder.itemView.setOnClickListener(view -> {
@@ -76,7 +75,8 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
     holder.bind(model);
   }
 
-  @Override public int getItemCount() {
+  @Override
+  public int getItemCount() {
     return adapterData != null ? adapterData.size() : 0;
   }
 
@@ -97,5 +97,13 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
 
   public void setOnItemClickListener(OnItemClickListener<VM> onItemClickListener) {
     this.onItemClickListener = onItemClickListener;
+  }
+
+  public interface Constructor<T extends RealmObject, VM, VH extends RealmModelViewHolder<VM>> {
+    RealmModelListAdapter<T, VM, VH> getNewInstance(Context context);
+  }
+
+  public interface OnItemClickListener<VM> {
+    void onItemClick(VM model);
   }
 }

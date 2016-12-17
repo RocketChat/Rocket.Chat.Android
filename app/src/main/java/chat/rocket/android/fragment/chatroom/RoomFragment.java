@@ -12,15 +12,21 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import com.jakewharton.rxbinding.support.v4.widget.RxDrawerLayout;
+import io.realm.Sort;
+import org.json.JSONObject;
+
+import java.lang.reflect.Field;
+import java.util.UUID;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
+import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
@@ -38,11 +44,6 @@ import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
 import chat.rocket.android.widget.message.MessageComposer;
-import com.jakewharton.rxbinding.support.v4.widget.RxDrawerLayout;
-import io.realm.Sort;
-import java.lang.reflect.Field;
-import java.util.UUID;
-import org.json.JSONObject;
 
 /**
  * Chat room screen.
@@ -63,6 +64,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageComposerManager messageComposerManager;
 
+  public RoomFragment() {
+  }
+
   /**
    * create fragment with roomId.
    */
@@ -75,10 +79,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     return fragment;
   }
 
-  public RoomFragment() {
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
@@ -107,11 +109,13 @@ public class RoomFragment extends AbstractChatRoomFragment
     }
   }
 
-  @Override protected int getLayout() {
+  @Override
+  protected int getLayout() {
     return R.layout.fragment_room;
   }
 
-  @Override protected void onSetupView() {
+  @Override
+  protected void onSetupView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
     MessageListAdapter adapter = (MessageListAdapter) realmHelper.createListAdapter(getContext(),
         realm -> realm.where(Message.class)
@@ -127,7 +131,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     listView.setLayoutManager(layoutManager);
 
     scrollListener = new LoadMoreScrollListener(layoutManager, 40) {
-      @Override public void requestMoreItem() {
+      @Override
+      public void requestMoreItem() {
         loadMoreRequest();
       }
     };
@@ -138,7 +143,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     setupFileUploader();
   }
 
-  @Override public void onItemClick(PairedMessage pairedMessage) {
+  @Override
+  public void onItemClick(PairedMessage pairedMessage) {
     if (pairedMessage.target != null) {
       final int syncstate = pairedMessage.target.getSyncstate();
       if (syncstate == SyncState.FAILED) {
@@ -156,7 +162,8 @@ public class RoomFragment extends AbstractChatRoomFragment
               realmHelper.executeTransaction(realm ->
                   realm.where(Message.class)
                       .equalTo("_id", messageId).findAll().deleteAllFromRealm()
-              ).continueWith(new LogcatIfError());;
+              ).continueWith(new LogcatIfError());
+              ;
             })
             .show();
       }
@@ -231,7 +238,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     });
   }
 
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode != RC_UPL || resultCode != Activity.RESULT_OK) {
       return;
@@ -332,7 +340,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     }
   }
 
-  @Override public void onResume() {
+  @Override
+  public void onResume() {
     super.onResume();
     roomObserver.sub();
     procedureObserver.sub();
@@ -340,13 +349,15 @@ public class RoomFragment extends AbstractChatRoomFragment
     markAsReadIfNeeded();
   }
 
-  @Override public void onPause() {
+  @Override
+  public void onPause() {
     procedureObserver.unsub();
     roomObserver.unsub();
     super.onPause();
   }
 
-  @Override public boolean onBackPressed() {
+  @Override
+  public boolean onBackPressed() {
     return closeSideMenuIfNeeded() || messageComposerManager.hideMessageComposerIfNeeded();
   }
 }

@@ -2,12 +2,13 @@ package chat.rocket.android.layouthelper.chatroom;
 
 import android.content.Context;
 import android.view.View;
-import chat.rocket.android.R;
-import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
-import chat.rocket.android.model.ddp.Message;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import chat.rocket.android.R;
+import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
+import chat.rocket.android.model.ddp.Message;
 
 /**
  * target list adapter for chat room.
@@ -36,11 +37,13 @@ public class MessageListAdapter
     notifyFooterChanged();
   }
 
-  @Override protected int getHeaderLayout() {
+  @Override
+  protected int getHeaderLayout() {
     return R.layout.list_item_message_header;
   }
 
-  @Override protected int getFooterLayout() {
+  @Override
+  protected int getFooterLayout() {
     if (!hasNext || isLoaded) {
       return R.layout.list_item_message_start_of_conversation;
     } else {
@@ -48,19 +51,23 @@ public class MessageListAdapter
     }
   }
 
-  @Override protected int getRealmModelViewType(PairedMessage model) {
+  @Override
+  protected int getRealmModelViewType(PairedMessage model) {
     return 0;
   }
 
-  @Override protected int getRealmModelLayout(int viewType) {
+  @Override
+  protected int getRealmModelLayout(int viewType) {
     return R.layout.list_item_message;
   }
 
-  @Override protected MessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
+  @Override
+  protected MessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
     return new MessageViewHolder(itemView, hostname, userId, token);
   }
 
-  @Override protected List<PairedMessage> mapResultsToViewModel(List<Message> results) {
+  @Override
+  protected List<PairedMessage> mapResultsToViewModel(List<Message> results) {
     if (results.isEmpty()) {
       return Collections.emptyList();
     }

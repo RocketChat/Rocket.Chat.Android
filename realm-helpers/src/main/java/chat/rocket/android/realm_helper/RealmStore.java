@@ -1,6 +1,7 @@
 package chat.rocket.android.realm_helper;
 
 import io.realm.RealmConfiguration;
+
 import java.util.HashMap;
 
 public class RealmStore {

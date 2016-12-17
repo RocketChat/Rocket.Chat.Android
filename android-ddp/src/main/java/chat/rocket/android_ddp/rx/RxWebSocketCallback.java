@@ -1,13 +1,13 @@
 package chat.rocket.android_ddp.rx;
 
-import chat.rocket.android.log.RCLog;
+import static android.R.attr.type;
+
 import java.io.IOException;
+import chat.rocket.android.log.RCLog;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.ws.WebSocket;
 import okio.Buffer;
-
-import static android.R.attr.type;
 
 public class RxWebSocketCallback {
   public static abstract class Base {
@@ -19,7 +19,8 @@ public class RxWebSocketCallback {
       this.ws = ws;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "[" + type + "]";
     }
   }
@@ -43,7 +44,8 @@ public class RxWebSocketCallback {
       this.response = response;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       if (response != null) {
         return "[" + type + "] " + response.message();
       } else {
@@ -64,7 +66,8 @@ public class RxWebSocketCallback {
       }
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "[" + type + "] " + responseBodyString;
     }
   }
@@ -88,7 +91,8 @@ public class RxWebSocketCallback {
       this.reason = reason;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "[" + type + "] code=" + code + ", reason=" + reason;
     }
   }

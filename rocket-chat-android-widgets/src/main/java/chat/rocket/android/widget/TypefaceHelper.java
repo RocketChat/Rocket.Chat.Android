@@ -3,6 +3,7 @@ package chat.rocket.android.widget;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
+
 import java.util.Hashtable;
 
 /**

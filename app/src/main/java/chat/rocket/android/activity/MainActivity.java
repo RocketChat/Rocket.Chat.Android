@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -26,11 +27,13 @@ public class MainActivity extends AbstractAuthedActivity {
 
   private RealmObjectObserver<Session> sessionObserver;
 
-  @Override protected int getLayoutContainerForFragment() {
+  @Override
+  protected int getLayoutContainerForFragment() {
     return R.id.activity_main_container;
   }
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
@@ -73,7 +76,8 @@ public class MainActivity extends AbstractAuthedActivity {
     if (pane != null) {
       final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
       pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
-        @Override public void onPanelClosed(View panel) {
+        @Override
+        public void onPanelClosed(View panel) {
           super.onPanelClosed(panel);
           if (subPane != null) {
             subPane.closePane();
@@ -101,7 +105,8 @@ public class MainActivity extends AbstractAuthedActivity {
   }
 
   @DebugLog
-  @Override protected void onServerConfigIdUpdated() {
+  @Override
+  protected void onServerConfigIdUpdated() {
     super.onServerConfigIdUpdated();
     updateSessionObserver();
     updateSidebarMainFragment();
@@ -142,7 +147,8 @@ public class MainActivity extends AbstractAuthedActivity {
         .commit();
   }
 
-  @Override protected void onRoomIdUpdated() {
+  @Override
+  protected void onRoomIdUpdated() {
     super.onRoomIdUpdated();
 
     if (roomId != null) {
@@ -153,7 +159,8 @@ public class MainActivity extends AbstractAuthedActivity {
     }
   }
 
-  @Override protected void onDestroy() {
+  @Override
+  protected void onDestroy() {
     if (sessionObserver != null) {
       sessionObserver.unsub();
       sessionObserver = null;
@@ -161,7 +168,8 @@ public class MainActivity extends AbstractAuthedActivity {
     super.onDestroy();
   }
 
-  @Override protected boolean onBackPress() {
+  @Override
+  protected boolean onBackPress() {
     return closeSidebarIfNeeded() || super.onBackPress();
   }
 }

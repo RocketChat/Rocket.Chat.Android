@@ -12,12 +12,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import chat.rocket.android.widget.R;
-import chat.rocket.android.widget.helper.ImageFormat;
 import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.helper.ImageFormat;
 
 /**
  */
@@ -42,7 +43,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public RocketChatMessageUrlsLayout(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
+                                     int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     initialize(context, attrs);
   }
@@ -115,7 +116,6 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
         }
       }
 
-
       String imageURL = null;
       if (!meta.isNull("ogImage")) {
         imageURL = meta.getString("ogImage");
@@ -130,7 +130,6 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
       ((TextView) embedUrl.findViewById(R.id.hostname)).setText(host);
       ((TextView) embedUrl.findViewById(R.id.title)).setText(title);
       ((TextView) embedUrl.findViewById(R.id.description)).setText(description);
-
 
       ImageView image = (ImageView) embedUrl.findViewById(R.id.image);
       if (TextUtils.isEmpty(imageURL)) {

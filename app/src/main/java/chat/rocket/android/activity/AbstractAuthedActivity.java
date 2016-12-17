@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ServerConfig;
@@ -14,6 +15,16 @@ import chat.rocket.android.service.RocketChatService;
 import icepick.State;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
+  @State protected String serverConfigId;
+  @State protected String roomId;
+  SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
+      (sharedPreferences, key) -> {
+        if (RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID.equals(key)) {
+          updateServerConfigIdIfNeeded(sharedPreferences);
+        } else if (RocketChatCache.KEY_SELECTED_ROOM_ID.equals(key)) {
+          updateRoomIdIfNeeded(sharedPreferences);
+        }
+      };
   private RealmListObserver<ServerConfig> unconfiguredServersObserver =
       RealmStore.getDefault()
           .createListObserver(realm ->
@@ -24,19 +35,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
             }
           });
 
-  @State protected String serverConfigId;
-  @State protected String roomId;
-
-  SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
-      (sharedPreferences, key) -> {
-        if (RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID.equals(key)) {
-          updateServerConfigIdIfNeeded(sharedPreferences);
-        } else if (RocketChatCache.KEY_SELECTED_ROOM_ID.equals(key)) {
-          updateRoomIdIfNeeded(sharedPreferences);
-        }
-      };
-
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (savedInstanceState == null) {
       Intent intent = getIntent();
@@ -119,11 +119,14 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     onRoomIdUpdated();
   }
 
-  protected void onServerConfigIdUpdated() {}
+  protected void onServerConfigIdUpdated() {
+  }
 
-  protected void onRoomIdUpdated() {}
+  protected void onRoomIdUpdated() {
+  }
 
-  @Override protected void onResume() {
+  @Override
+  protected void onResume() {
     super.onResume();
     RocketChatService.keepalive(this);
     unconfiguredServersObserver.sub();
@@ -134,7 +137,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
   }
 
-  @Override protected void onPause() {
+  @Override
+  protected void onPause() {
     SharedPreferences prefs = RocketChatCache.get(this);
     prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
 
@@ -142,7 +146,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     super.onPause();
   }
 
-  @Override protected void onSaveInstanceState(Bundle outState) {
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
   }
 }

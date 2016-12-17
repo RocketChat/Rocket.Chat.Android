@@ -1,17 +1,18 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import org.json.JSONObject;
+
+import java.util.List;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android_ddp.DDPClientCallback;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.List;
-import org.json.JSONObject;
 
 /**
  * Observing MethodCall record, executing RPC if needed.
@@ -24,7 +25,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
    * constructor.
    */
   public MethodCallObserver(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                            RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
@@ -47,7 +48,8 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     }).continueWith(new LogcatIfError());
   }
 
-  @Override public RealmResults<MethodCall> queryItems(Realm realm) {
+  @Override
+  public RealmResults<MethodCall> queryItems(Realm realm) {
     return realm.where(MethodCall.class)
         .isNotNull("name")
         .equalTo("syncstate", SyncState.NOT_SYNCED)
@@ -68,7 +70,8 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     return CheckSum.sha256(stringBuilder.toString());
   }
 
-  @Override public void onUpdateResults(List<MethodCall> results) {
+  @Override
+  public void onUpdateResults(List<MethodCall> results) {
     String digest = getDigestFor(results);
     if (prevDigest == null) {
       if (digest == null) {

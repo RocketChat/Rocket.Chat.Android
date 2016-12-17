@@ -12,18 +12,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import chat.rocket.android.widget.R;
-import chat.rocket.android.widget.helper.ImageFormat;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.helper.ImageFormat;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  */
@@ -53,7 +54,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public RocketChatMessageAttachmentsLayout(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
+                                            int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     initialize(context, attrs);
   }
@@ -120,11 +121,10 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     String imageType = attachmentObj.getString("image_type");
 
     if (TextUtils.isEmpty(imageURL)
-      || !imageType.startsWith("image/")
-      || !ImageFormat.SUPPORTED_LIST.contains(imageType)) {
+        || !imageType.startsWith("image/")
+        || !ImageFormat.SUPPORTED_LIST.contains(imageType)) {
       return;
     }
-
 
     View attachmentView = inflater.inflate(R.layout.message_inline_attachment, this, false);
 
@@ -149,7 +149,8 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       } else {
         final String link = absolutize(attachmentObj.getString("title_link"));
         titleView.setOnClickListener(new OnClickListener() {
-          @Override public void onClick(View view) {
+          @Override
+          public void onClick(View view) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             view.getContext().startActivity(intent);

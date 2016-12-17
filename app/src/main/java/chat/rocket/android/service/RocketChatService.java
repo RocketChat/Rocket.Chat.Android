@@ -5,15 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import io.realm.RealmResults;
+
+import java.util.HashMap;
+import java.util.List;
 import bolts.Task;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
-import io.realm.RealmResults;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Background service for Rocket.Chat.Application class.
@@ -31,16 +32,17 @@ public class RocketChatService extends Service {
     context.startService(new Intent(context, RocketChatService.class));
   }
 
-  @Override public void onCreate() {
+  @Override
+  public void onCreate() {
     super.onCreate();
     webSocketThreads = new HashMap<>();
     realmHelper = RealmStore.getDefault();
     connectionRequiredServerConfigObserver = realmHelper
-            .createListObserver(realm -> realm.where(ServerConfig.class)
-                .isNotNull("hostname")
-                .equalTo("state", ServerConfig.STATE_READY)
-                .findAll())
-            .setOnUpdateListener(this::connectToServerWithServerConfig);
+        .createListObserver(realm -> realm.where(ServerConfig.class)
+            .isNotNull("hostname")
+            .equalTo("state", ServerConfig.STATE_READY)
+            .findAll())
+        .setOnUpdateListener(this::connectToServerWithServerConfig);
 
     refreshServerConfigState();
   }
@@ -50,19 +52,21 @@ public class RocketChatService extends Service {
       RealmResults<ServerConfig> configs = realm.where(ServerConfig.class)
           .notEqualTo("state", ServerConfig.STATE_READY)
           .findAll();
-      for (ServerConfig config: configs) {
+      for (ServerConfig config : configs) {
         config.setState(ServerConfig.STATE_READY);
       }
       return null;
-    }).continueWith(new LogcatIfError());;
+    }).continueWith(new LogcatIfError());
+    ;
   }
 
-  @Override public int onStartCommand(Intent intent, int flags, int startId) {
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
     List<ServerConfig> configs = realmHelper.executeTransactionForReadResults(realm ->
         realm.where(ServerConfig.class)
             .equalTo("state", ServerConfig.STATE_CONNECTED)
             .findAll());
-    for (ServerConfig config: configs) {
+    for (ServerConfig config : configs) {
       String serverConfigId = config.getServerConfigId();
       if (webSocketThreads.containsKey(serverConfigId)) {
         RocketChatWebSocketThread thread = webSocketThreads.get(serverConfigId);
@@ -122,7 +126,8 @@ public class RocketChatService extends Service {
         });
   }
 
-  @Override public void onDestroy() {
+  @Override
+  public void onDestroy() {
     if (connectionRequiredServerConfigObserver != null) {
       connectionRequiredServerConfigObserver.unsub();
     }

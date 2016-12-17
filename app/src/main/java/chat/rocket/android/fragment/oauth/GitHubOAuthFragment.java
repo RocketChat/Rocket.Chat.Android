@@ -5,11 +5,13 @@ import okhttp3.HttpUrl;
 
 public class GitHubOAuthFragment extends AbstractOAuthFragment {
 
-  @Override protected String getOAuthServiceName() {
+  @Override
+  protected String getOAuthServiceName() {
     return "github";
   }
 
-  @Override protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
+  @Override
+  protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
     return new HttpUrl.Builder().scheme("https")
         .host("github.com")
         .addPathSegment("login")

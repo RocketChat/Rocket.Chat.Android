@@ -6,6 +6,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
@@ -14,27 +17,28 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Login screen.
  */
 public class LoginFragment extends AbstractServerConfigFragment {
-  @Override protected int getLayout() {
+  private RealmListObserver<MeteorLoginServiceConfiguration> authProvidersObserver;
+
+  @Override
+  protected int getLayout() {
     return R.layout.fragment_login;
   }
 
-  private RealmListObserver<MeteorLoginServiceConfiguration> authProvidersObserver;
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     authProvidersObserver = RealmStore.get(serverConfigId)
         .createListObserver(realm -> realm.where(MeteorLoginServiceConfiguration.class).findAll())
         .setOnUpdateListener(this::onRenderAuthProviders);
   }
 
-  @Override protected void onSetupView() {
+  @Override
+  protected void onSetupView() {
     final View btnEmail = rootView.findViewById(R.id.btn_login_with_email);
     final TextView txtUsername = (TextView) rootView.findViewById(R.id.editor_username);
     final TextView txtPasswd = (TextView) rootView.findViewById(R.id.editor_passwd);
@@ -80,7 +84,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
     for (MeteorLoginServiceConfiguration authProvider : authProviders) {
       for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
         if (!supportedMap.get(info.serviceName)
-          && info.serviceName.equals(authProvider.getService())) {
+            && info.serviceName.equals(authProvider.getService())) {
           supportedMap.put(info.serviceName, true);
           viewMap.get(info.serviceName).setOnClickListener(view -> {
             Fragment fragment = null;
@@ -108,12 +112,14 @@ public class LoginFragment extends AbstractServerConfigFragment {
     }
   }
 
-  @Override public void onResume() {
+  @Override
+  public void onResume() {
     super.onResume();
     authProvidersObserver.sub();
   }
 
-  @Override public void onPause() {
+  @Override
+  public void onPause() {
     authProvidersObserver.unsub();
     super.onPause();
   }

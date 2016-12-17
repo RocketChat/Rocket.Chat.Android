@@ -1,6 +1,11 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import org.json.JSONObject;
+
+import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
@@ -8,10 +13,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.List;
-import org.json.JSONObject;
 
 /**
  * Model observer for executing getUsersOfRooms.
@@ -22,18 +23,20 @@ public class GetUsersOfRoomsProcedureObserver
   private final MethodCallHelper methodCall;
 
   public GetUsersOfRoomsProcedureObserver(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                                          RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }
 
-  @Override public RealmResults<GetUsersOfRoomsProcedure> queryItems(Realm realm) {
+  @Override
+  public RealmResults<GetUsersOfRoomsProcedure> queryItems(Realm realm) {
     return realm.where(GetUsersOfRoomsProcedure.class)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
         .findAll();
   }
 
-  @Override public void onUpdateResults(List<GetUsersOfRoomsProcedure> results) {
+  @Override
+  public void onUpdateResults(List<GetUsersOfRoomsProcedure> results) {
     if (results == null || results.isEmpty()) {
       return;
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
@@ -105,7 +106,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show urls in RocketChatMessageUrlsLayout.
    */
   public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout,
-      String hostname, String userId, String token) {
+                                         String hostname, String userId, String token) {
     if (!shouldHandle(attachmentsLayout)) {
       return this;
     }

@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.widget.TextView;
+
 import chat.rocket.android.widget.R;
 
 public class InlineHightlighter {
@@ -25,7 +26,7 @@ public class InlineHightlighter {
   }
 
   private static CharacterStyle[] createCharStyles(final Context context) {
-    return new CharacterStyle[] {
+    return new CharacterStyle[]{
         new ForegroundColorSpan(ContextCompat.getColor(context, R.color.highlight_text_color)),
         new BackgroundColorSpan(
             ContextCompat.getColor(context, R.color.highlight_text_background_color)),

@@ -29,7 +29,8 @@ public class DDPSubscription {
       this.id = id;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "NoSub[id=" + id + "]";
     }
 
@@ -53,7 +54,8 @@ public class DDPSubscription {
       this.id = id;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Ready[id=" + id + "]";
     }
   }
@@ -68,7 +70,8 @@ public class DDPSubscription {
       this.docID = docID;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "DocEvent[id=" + docID + ", collection=" + collection + "]";
     }
   }
@@ -85,7 +88,7 @@ public class DDPSubscription {
       public String before;
 
       public Before(DDPClient client, String collection, String docID, JSONObject fields,
-          String before) {
+                    String before) {
         super(client, collection, docID, fields);
         this.before = before;
       }
@@ -97,7 +100,7 @@ public class DDPSubscription {
     public JSONArray cleared;
 
     public Changed(DDPClient client, String collection, String docID, JSONObject fields,
-        @NonNull JSONArray cleared) {
+                   @NonNull JSONArray cleared) {
       super(client, collection, docID);
       this.fields = fields;
       this.cleared = cleared;

@@ -1,26 +1,28 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
+import io.realm.Realm;
+import io.realm.RealmResults;
+
+import java.util.List;
+import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.api.DDPClientWraper;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.List;
 
 public class TokenLoginObserver extends AbstractModelObserver<Session> {
 
   private final MethodCallHelper methodCall;
 
   public TokenLoginObserver(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                            RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
   }
 
-  @Override public RealmResults<Session> queryItems(Realm realm) {
+  @Override
+  public RealmResults<Session> queryItems(Realm realm) {
     return realm.where(Session.class)
         .isNotNull("token")
         .equalTo("tokenVerified", false)
@@ -28,7 +30,8 @@ public class TokenLoginObserver extends AbstractModelObserver<Session> {
         .findAll();
   }
 
-  @Override public void onUpdateResults(List<Session> results) {
+  @Override
+  public void onUpdateResults(List<Session> results) {
     if (results.isEmpty()) {
       return;
     }

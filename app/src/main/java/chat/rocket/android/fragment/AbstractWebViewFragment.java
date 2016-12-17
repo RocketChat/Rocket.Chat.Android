@@ -9,6 +9,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import chat.rocket.android.R;
 import chat.rocket.android.helper.OnBackPressListener;
 import hugo.weaving.DebugLog;
@@ -19,11 +20,13 @@ public abstract class AbstractWebViewFragment extends AbstractFragment
   private WebViewClient webviewClient = new WebViewClient() {
     private boolean error;
 
-    @Override public void onPageStarted(WebView webview, String url, Bitmap favicon) {
+    @Override
+    public void onPageStarted(WebView webview, String url, Bitmap favicon) {
       error = false;
     }
 
-    @Override public void onPageFinished(WebView webview, String url) {
+    @Override
+    public void onPageFinished(WebView webview, String url) {
       if (!error) {
         onPageLoaded(webview, url);
       }
@@ -35,7 +38,8 @@ public abstract class AbstractWebViewFragment extends AbstractFragment
       this.error = true;
     }
 
-    @Override public boolean shouldOverrideUrlLoading(WebView webview, String url) {
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView webview, String url) {
       return (shouldOverride(webview, url) && onHandleCallback(webview, url))
           || super.shouldOverrideUrlLoading(webview, url);
     }
@@ -48,11 +52,13 @@ public abstract class AbstractWebViewFragment extends AbstractFragment
     }
   };
 
-  @Override protected int getLayout() {
+  @Override
+  protected int getLayout() {
     return R.layout.webview;
   }
 
-  @Override protected void onSetupView() {
+  @Override
+  protected void onSetupView() {
     webview = (WebView) rootView.findViewById(R.id.webview);
     setupWebView();
 
@@ -76,7 +82,8 @@ public abstract class AbstractWebViewFragment extends AbstractFragment
     }
   }
 
-  @Override public boolean onBackPressed() {
+  @Override
+  public boolean onBackPressed() {
     if (webview.canGoBack()) {
       webview.goBack();
       return true;

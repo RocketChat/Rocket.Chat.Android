@@ -2,18 +2,19 @@ package chat.rocket.android.service.ddp;
 
 import android.content.Context;
 import android.text.TextUtils;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.Registerable;
 import chat.rocket.android_ddp.DDPSubscription;
-import io.realm.Realm;
-import io.realm.RealmObject;
-import java.util.Iterator;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import rx.Subscription;
 
 public abstract class AbstractDDPDocEventSubscriber implements Registerable {
@@ -26,7 +27,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
   private Subscription rxSubscription;
 
   protected AbstractDDPDocEventSubscriber(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                                          RealmHelper realmHelper, DDPClientWraper ddpClient) {
     this.context = context;
     this.hostname = hostname;
     this.realmHelper = realmHelper;
@@ -49,11 +50,14 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
     return json;
   }
 
-  protected void onRegister() {}
+  protected void onRegister() {
+  }
 
-  protected void onUnregister() {}
+  protected void onUnregister() {
+  }
 
-  @Override public final void register() {
+  @Override
+  public final void register() {
     isUnsubscribed = false;
     JSONArray params = null;
     try {
@@ -170,7 +174,8 @@ public abstract class AbstractDDPDocEventSubscriber implements Registerable {
     }
   }
 
-  @Override public final void unregister() {
+  @Override
+  public final void unregister() {
     isUnsubscribed = true;
     onUnregister();
     if (rxSubscription != null) {

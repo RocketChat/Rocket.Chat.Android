@@ -3,6 +3,11 @@ package chat.rocket.android.service;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
+import org.json.JSONObject;
+
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Iterator;
 import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
@@ -18,22 +23,18 @@ import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
 import chat.rocket.android.service.ddp.base.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.service.ddp.base.UserDataSubscriber;
 import chat.rocket.android.service.observer.CurrentUserObserver;
-import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
+import chat.rocket.android.service.observer.FileUploadingToS3Observer;
 import chat.rocket.android.service.observer.FileUploadingWithUfsObserver;
+import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.NotificationItemObserver;
 import chat.rocket.android.service.observer.ReactiveNotificationManager;
-import chat.rocket.android.service.observer.FileUploadingToS3Observer;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Iterator;
-import org.json.JSONObject;
 
 /**
  * Thread for handling WebSocket connection.
@@ -74,11 +75,13 @@ public class RocketChatWebSocketThread extends HandlerThread {
   /**
    * create new Thread.
    */
-  @DebugLog public static Task<RocketChatWebSocketThread> getStarted(Context appContext,
-      ServerConfig config) {
+  @DebugLog
+  public static Task<RocketChatWebSocketThread> getStarted(Context appContext,
+                                                           ServerConfig config) {
     TaskCompletionSource<RocketChatWebSocketThread> task = new TaskCompletionSource<>();
     new RocketChatWebSocketThread(appContext, config.getServerConfigId()) {
-      @Override protected void onLooperPrepared() {
+      @Override
+      protected void onLooperPrepared() {
         try {
           super.onLooperPrepared();
           task.setResult(this);
@@ -92,7 +95,16 @@ public class RocketChatWebSocketThread extends HandlerThread {
             _task.getResult().connect().onSuccessTask(__task -> _task));
   }
 
-  @Override protected void onLooperPrepared() {
+  /**
+   * destroy the thread.
+   */
+  @DebugLog
+  public static void destroy(RocketChatWebSocketThread thread) {
+    thread.quit();
+  }
+
+  @Override
+  protected void onLooperPrepared() {
     super.onLooperPrepared();
     forceInvalidateTokens();
   }
@@ -110,14 +122,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }).continueWith(new LogcatIfError());
   }
 
-  /**
-   * destroy the thread.
-   */
-  @DebugLog public static void destroy(RocketChatWebSocketThread thread) {
-    thread.quit();
-  }
-
-  @Override public boolean quit() {
+  @Override
+  public boolean quit() {
     if (isAlive()) {
       new Handler(getLooper()).post(() -> {
         RCLog.d("thread %s: quit()", Thread.currentThread().getId());
@@ -133,7 +139,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
   /**
    * synchronize the state of the thread with ServerConfig.
    */
-  @DebugLog public void keepalive() {
+  @DebugLog
+  public void keepalive() {
     if (ddpClient == null || !ddpClient.isConnected()) {
       defaultRealm.executeTransaction(realm -> {
         ServerConfig config = realm.where(ServerConfig.class)
@@ -154,7 +161,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
   }
 
-  @DebugLog private Task<Void> connect() {
+  @DebugLog
+  private Task<Void> connect() {
     final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
         realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
 
@@ -177,7 +185,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
       return task;
     }).onSuccess(new Continuation<DDPClientCallback.Connect, Object>() {
       // TODO type detection doesn't work due to retrolambda's bug...
-      @Override public Object then(Task<DDPClientCallback.Connect> task)
+      @Override
+      public Object then(Task<DDPClientCallback.Connect> task)
           throws Exception {
         registerListeners();
 

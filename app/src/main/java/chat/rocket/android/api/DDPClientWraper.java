@@ -1,6 +1,10 @@
 package chat.rocket.android.api;
 
 import android.support.annotation.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.UUID;
 import bolts.Task;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.TextUtils;
@@ -8,9 +12,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.android_ddp.DDPSubscription;
-import java.util.UUID;
-import org.json.JSONArray;
-import org.json.JSONException;
 import rx.Observable;
 
 /**
@@ -85,7 +86,7 @@ public class DDPClientWraper {
    * Execute raw RPC.
    */
   public Task<DDPClientCallback.RPC> rpc(String methodCallId, String methodName, String params,
-      long timeoutMs) {
+                                         long timeoutMs) {
     RCLog.d("rpc:[%s]> %s(%s) timeout=%d", methodCallId, methodName, params, timeoutMs);
     if (TextUtils.isEmpty(params)) {
       return ddpClient.rpc(methodName, null, methodCallId, timeoutMs).continueWithTask(task -> {

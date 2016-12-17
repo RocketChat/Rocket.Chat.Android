@@ -23,6 +23,10 @@ public class User extends RealmObject {
   private double utcOffset;
   private RealmList<Email> emails;
 
+  public static RealmQuery<User> queryCurrentUser(Realm realm) {
+    return realm.where(User.class).isNotEmpty("emails");
+  }
+
   public String get_id() {
     return _id;
   }
@@ -61,9 +65,5 @@ public class User extends RealmObject {
 
   public void setEmails(RealmList<Email> emails) {
     this.emails = emails;
-  }
-
-  public static RealmQuery<User> queryCurrentUser(Realm realm) {
-    return realm.where(User.class).isNotEmpty("emails");
   }
 }

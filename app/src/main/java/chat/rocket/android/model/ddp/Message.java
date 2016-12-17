@@ -1,10 +1,11 @@
 package chat.rocket.android.model.ddp;
 
-import chat.rocket.android.model.SyncState;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import chat.rocket.android.model.SyncState;
 
 /**
  * Message.
@@ -24,6 +25,18 @@ public class Message extends RealmObject {
   private boolean groupable;
   private String attachments; //JSONArray.
   private String urls; //JSONArray.
+
+  public static JSONObject customizeJson(JSONObject messageJson) throws JSONException {
+    long ts = messageJson.getJSONObject("ts").getLong("$date");
+    messageJson.remove("ts");
+    messageJson.put("ts", ts).put("syncstate", SyncState.SYNCED);
+
+    if (messageJson.isNull("groupable")) {
+      messageJson.put("groupable", true);
+    }
+
+    return messageJson;
+  }
 
   public String get_id() {
     return _id;
@@ -103,17 +116,5 @@ public class Message extends RealmObject {
 
   public void setUrls(String urls) {
     this.urls = urls;
-  }
-
-  public static JSONObject customizeJson(JSONObject messageJson) throws JSONException {
-    long ts = messageJson.getJSONObject("ts").getLong("$date");
-    messageJson.remove("ts");
-    messageJson.put("ts", ts).put("syncstate", SyncState.SYNCED);
-
-    if (messageJson.isNull("groupable")) {
-      messageJson.put("groupable", true);
-    }
-
-    return messageJson;
   }
 }

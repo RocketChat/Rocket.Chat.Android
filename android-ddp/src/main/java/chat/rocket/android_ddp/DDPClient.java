@@ -1,11 +1,12 @@
 package chat.rocket.android_ddp;
 
 import android.support.annotation.Nullable;
+import org.json.JSONArray;
+
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
 import okhttp3.OkHttpClient;
-import org.json.JSONArray;
 import rx.Observable;
 
 public class DDPClient {
@@ -34,7 +35,7 @@ public class DDPClient {
   }
 
   public Task<DDPClientCallback.RPC> rpc(String method, JSONArray params, String id,
-      long timeoutMs) {
+                                         long timeoutMs) {
     TaskCompletionSource<DDPClientCallback.RPC> task = new TaskCompletionSource<>();
     impl.rpc(task, method, params, id, timeoutMs);
     return task.getTask();

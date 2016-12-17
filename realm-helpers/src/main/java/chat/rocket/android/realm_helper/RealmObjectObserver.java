@@ -8,23 +8,10 @@ import io.realm.RealmResults;
 
 public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmResultsObserver<T> {
 
-  public interface Query<T extends RealmObject> {
-    RealmQuery<T> query(Realm realm);
-  }
-
-  public interface OnUpdateListener<T extends RealmObject> {
-    void onUpdateObject(T element);
-  }
-
-  public static class Impl<T extends RealmObject> {
-    protected T extractObjectFromResults(RealmResults<T> results) {
-      return results.isEmpty() ? null : results.last();
-    }
-  }
-
   private final Query<T> query;
   private OnUpdateListener<T> onUpdateListener;
   private Impl<T> impl;
+  private String previousResultString;
 
   /*package*/ RealmObjectObserver(RealmHelper helper, Query<T> query) {
     super(helper);
@@ -41,13 +28,13 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
     return this;
   }
 
-  private String previousResultString;
-
-  @Override protected final RealmResults<T> queryItems(Realm realm) {
+  @Override
+  protected final RealmResults<T> queryItems(Realm realm) {
     return query.query(realm).findAll();
   }
 
-  @Override protected final RealmChangeListener<RealmResults<T>> getListener() {
+  @Override
+  protected final RealmChangeListener<RealmResults<T>> getListener() {
     return element -> {
       T currentResult = impl.extractObjectFromResults(element);
       String currentResultString = currentResult != null ? currentResult.toString() : null;
@@ -62,9 +49,22 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
     };
   }
 
-
   public void sub() {
     previousResultString = null;
     super.sub();
+  }
+
+  public interface Query<T extends RealmObject> {
+    RealmQuery<T> query(Realm realm);
+  }
+
+  public interface OnUpdateListener<T extends RealmObject> {
+    void onUpdateObject(T element);
+  }
+
+  public static class Impl<T extends RealmObject> {
+    protected T extractObjectFromResults(RealmResults<T> results) {
+      return results.isEmpty() ? null : results.last();
+    }
   }
 }

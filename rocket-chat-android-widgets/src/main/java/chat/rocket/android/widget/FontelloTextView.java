@@ -19,7 +19,8 @@ public class FontelloTextView extends AbstractCustomFontTextView {
     super(context);
   }
 
-  @Override protected String getFont() {
+  @Override
+  protected String getFont() {
     return "fontello.ttf";
   }
 }

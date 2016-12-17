@@ -2,6 +2,14 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import android.net.Uri;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.FileUploadingHelper;
@@ -11,11 +19,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.FileUploading;
 import chat.rocket.android.realm_helper.RealmHelper;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
@@ -24,8 +27,6 @@ import okhttp3.Response;
 import okio.BufferedSink;
 import okio.Okio;
 import okio.Source;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * execute file uploading and requesting sendMessage with attachment.
@@ -34,7 +35,7 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
   private FileUploadingHelper methodCall;
 
   public FileUploadingToS3Observer(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                                   RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new FileUploadingHelper(realmHelper, ddpClient);
 
@@ -61,14 +62,16 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
     }).continueWith(new LogcatIfError());
   }
 
-  @Override public RealmResults<FileUploading> queryItems(Realm realm) {
+  @Override
+  public RealmResults<FileUploading> queryItems(Realm realm) {
     return realm.where(FileUploading.class)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
         .equalTo("storageType", FileUploading.STORAGE_TYPE_S3)
         .findAll();
   }
 
-  @Override public void onUpdateResults(List<FileUploading> results) {
+  @Override
+  public void onUpdateResults(List<FileUploading> results) {
     if (results.isEmpty()) {
       return;
     }
@@ -111,15 +114,19 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
       bodyBuilder.addFormDataPart("file", filename,
           new RequestBody() {
             private long numBytes = 0;
-            @Override public MediaType contentType() {
+
+            @Override
+            public MediaType contentType() {
               return MediaType.parse(mimeType);
             }
 
-            @Override public long contentLength() throws IOException {
+            @Override
+            public long contentLength() throws IOException {
               return filesize;
             }
 
-            @Override public void writeTo(BufferedSink sink) throws IOException {
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
               InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
               try (Source source = Okio.source(inputStream)) {
                 long readBytes;

@@ -1,6 +1,11 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import org.json.JSONObject;
+
+import java.util.List;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
@@ -8,10 +13,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.realm_helper.RealmHelper;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.util.List;
-import org.json.JSONObject;
 
 /**
  * Observe messages for sending.
@@ -21,7 +22,7 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
   private final MethodCallHelper methodCall;
 
   public NewMessageObserver(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                            RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
 
@@ -38,14 +39,16 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
     }).continueWith(new LogcatIfError());
   }
 
-  @Override public RealmResults<Message> queryItems(Realm realm) {
+  @Override
+  public RealmResults<Message> queryItems(Realm realm) {
     return realm.where(Message.class)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
         .isNotNull("rid")
         .findAll();
   }
 
-  @Override public void onUpdateResults(List<Message> results) {
+  @Override
+  public void onUpdateResults(List<Message> results) {
     if (results.isEmpty()) {
       return;
     }

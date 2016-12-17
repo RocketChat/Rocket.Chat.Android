@@ -1,12 +1,9 @@
 package chat.rocket.android.widget;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.v4.widget.Space;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 
 /**
@@ -29,7 +26,9 @@ public class DividerView extends FrameLayout {
   }
 
   private void initialize(Context context, AttributeSet attrs) {
-    int thickness = context.getResources().getDimensionPixelSize(R.dimen.def_divider_view_thickness);
+    int
+        thickness =
+        context.getResources().getDimensionPixelSize(R.dimen.def_divider_view_thickness);
 
     if (attrs != null) {
       TypedArray array =

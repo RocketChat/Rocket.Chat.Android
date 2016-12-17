@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import chat.rocket.android.widget.R;
 
 public class MessageComposer extends LinearLayout {
@@ -47,7 +48,8 @@ public class MessageComposer extends LinearLayout {
     composer = (ViewGroup) LayoutInflater.from(getContext())
         .inflate(R.layout.message_composer, this, false);
     composer.findViewById(R.id.btn_submit).setOnClickListener(new OnClickListener() {
-      @Override public void onClick(View view) {
+      @Override
+      public void onClick(View view) {
         String messageText = getText();
         if (messageText.length() > 0) {
           if (actionListener != null) {

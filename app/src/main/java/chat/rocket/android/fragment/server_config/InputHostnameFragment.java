@@ -2,6 +2,8 @@ package chat.rocket.android.fragment.server_config;
 
 import android.support.design.widget.Snackbar;
 import android.widget.TextView;
+import org.json.JSONObject;
+
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.LogcatIfError;
@@ -9,7 +11,6 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
-import org.json.JSONObject;
 
 /**
  * Input server host.
@@ -23,11 +24,13 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   public InputHostnameFragment() {
   }
 
-  @Override protected int getLayout() {
+  @Override
+  protected int getLayout() {
     return R.layout.fragment_input_hostname;
   }
 
-  @Override protected void onSetupView() {
+  @Override
+  protected void onSetupView() {
     rootView.findViewById(R.id.btn_connect).setOnClickListener(view -> handleConnect());
 
     serverConfigObserver.sub();
@@ -52,11 +55,13 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
                 .put("state", ServerConfig.STATE_READY))).continueWith(new LogcatIfError());
   }
 
-  @Override public void onResume() {
+  @Override
+  public void onResume() {
     super.onResume();
   }
 
-  @Override public void onDestroyView() {
+  @Override
+  public void onDestroyView() {
     serverConfigObserver.unsub();
     super.onDestroyView();
   }

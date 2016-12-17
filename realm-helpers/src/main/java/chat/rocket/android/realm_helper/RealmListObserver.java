@@ -4,18 +4,13 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+
 import java.util.List;
 
 public class RealmListObserver<T extends RealmObject> extends AbstractRealmResultsObserver<T> {
-  public interface Query<T extends RealmObject> {
-    RealmResults<T> queryItems(Realm realm);
-  }
-  public interface OnUpdateListener<T extends RealmObject> {
-    void onUpdateResults(List<T> results);
-  }
-
   private final Query<T> query;
   private OnUpdateListener<T> onUpdateListener;
+  private String previousResultsString;
 
   /*package*/ RealmListObserver(RealmHelper helper, Query<T> query) {
     super(helper);
@@ -27,13 +22,13 @@ public class RealmListObserver<T extends RealmObject> extends AbstractRealmResul
     return this;
   }
 
-  @Override protected final RealmResults<T> queryItems(Realm realm) {
+  @Override
+  protected final RealmResults<T> queryItems(Realm realm) {
     return query.queryItems(realm);
   }
 
-  private String previousResultsString;
-
-  @Override public final RealmChangeListener<RealmResults<T>> getListener() {
+  @Override
+  public final RealmChangeListener<RealmResults<T>> getListener() {
     return results -> {
       String currentResultString = results != null ? results.toString() : null;
       if (previousResultsString != null && previousResultsString.equals(currentResultString)) {
@@ -44,5 +39,13 @@ public class RealmListObserver<T extends RealmObject> extends AbstractRealmResul
         onUpdateListener.onUpdateResults(results);
       }
     };
+  }
+
+  public interface Query<T extends RealmObject> {
+    RealmResults<T> queryItems(Realm realm);
+  }
+
+  public interface OnUpdateListener<T extends RealmObject> {
+    void onUpdateResults(List<T> results);
   }
 }

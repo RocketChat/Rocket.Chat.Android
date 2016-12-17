@@ -5,11 +5,13 @@ import okhttp3.HttpUrl;
 
 public class FacebookOAuthFragment extends AbstractOAuthFragment {
 
-  @Override protected String getOAuthServiceName() {
+  @Override
+  protected String getOAuthServiceName() {
     return "facebook";
   }
 
-  @Override protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
+  @Override
+  protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
     return new HttpUrl.Builder().scheme("https")
         .host("www.facebook.com")
         .addPathSegment("v2.2")

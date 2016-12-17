@@ -2,10 +2,11 @@ package chat.rocket.android.layouthelper.chatroom;
 
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.List;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.widget.internal.RoomListItemView;
-import java.util.List;
 
 /**
  * Utility class for mapping Room list into channel list ViewGroup.
@@ -13,14 +14,6 @@ import java.util.List;
 public class RoomListManager {
   private ViewGroup channelsContainer;
   private ViewGroup dmContainer;
-
-  /**
-   * Callback interface for List item clicked.
-   */
-  public interface OnItemClickListener {
-    void onItemClick(RoomListItemView roomListItemView);
-  }
-
   private OnItemClickListener listener;
 
   /**
@@ -29,6 +22,16 @@ public class RoomListManager {
   public RoomListManager(ViewGroup channelsContainer, ViewGroup dmContainer) {
     this.channelsContainer = channelsContainer;
     this.dmContainer = dmContainer;
+  }
+
+  private static void removeItemIfExists(ViewGroup parent, String roomName) {
+    for (int i = 0; i < parent.getChildCount(); i++) {
+      RoomListItemView roomListItemView = (RoomListItemView) parent.getChildAt(i);
+      if (roomName.equals(roomListItemView.getRoomName())) {
+        parent.removeViewAt(i);
+        break;
+      }
+    }
   }
 
   /**
@@ -109,7 +112,7 @@ public class RoomListManager {
   }
 
   private void updateRoomItemView(RoomListItemView roomListItemView,
-      RoomSubscription roomSubscription) {
+                                  RoomSubscription roomSubscription) {
     roomListItemView
         .setRoomId(roomSubscription.getRid())
         .setRoomName(roomSubscription.getName())
@@ -126,13 +129,10 @@ public class RoomListManager {
     }
   }
 
-  private static void removeItemIfExists(ViewGroup parent, String roomName) {
-    for (int i = 0; i < parent.getChildCount(); i++) {
-      RoomListItemView roomListItemView = (RoomListItemView) parent.getChildAt(i);
-      if (roomName.equals(roomListItemView.getRoomName())) {
-        parent.removeViewAt(i);
-        break;
-      }
-    }
+  /**
+   * Callback interface for List item clicked.
+   */
+  public interface OnItemClickListener {
+    void onItemClick(RoomListItemView roomListItemView);
   }
 }

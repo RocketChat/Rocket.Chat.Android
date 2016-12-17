@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 
@@ -14,11 +15,14 @@ abstract class AbstractChatroomDialogFragment extends BottomSheetDialogFragment 
   protected RealmHelper realmHelper;
   protected String roomId;
 
-  protected @LayoutRes abstract int getLayout();
+  protected
+  @LayoutRes
+  abstract int getLayout();
 
   protected abstract void onSetupDialog();
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
@@ -33,7 +37,8 @@ abstract class AbstractChatroomDialogFragment extends BottomSheetDialogFragment 
     roomId = args.getString("roomId");
   }
 
-  @Override public final void setupDialog(Dialog dialog, int style) {
+  @Override
+  public final void setupDialog(Dialog dialog, int style) {
     super.setupDialog(dialog, style);
     dialog.setContentView(getLayout());
     onSetupDialog();

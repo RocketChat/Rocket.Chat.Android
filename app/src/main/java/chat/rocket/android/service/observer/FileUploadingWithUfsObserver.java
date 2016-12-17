@@ -2,6 +2,12 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import android.net.Uri;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.api.FileUploadingHelper;
@@ -13,15 +19,10 @@ import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.model.internal.FileUploading;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import java.io.InputStream;
-import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.json.JSONObject;
 
 /**
  * execute file uploading and requesting sendMessage with attachment.
@@ -30,7 +31,7 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
   private FileUploadingHelper methodCall;
 
   public FileUploadingWithUfsObserver(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                                      RealmHelper realmHelper, DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new FileUploadingHelper(realmHelper, ddpClient);
 
@@ -65,7 +66,8 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
     }).continueWith(new LogcatIfError());
   }
 
-  @Override public RealmResults<FileUploading> queryItems(Realm realm) {
+  @Override
+  public RealmResults<FileUploading> queryItems(Realm realm) {
     return realm.where(FileUploading.class)
         .equalTo("syncstate", SyncState.NOT_SYNCED)
         .beginGroup()
@@ -76,7 +78,8 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
         .findAll();
   }
 
-  @Override public void onUpdateResults(List<FileUploading> results) {
+  @Override
+  public void onUpdateResults(List<FileUploading> results) {
     if (results.isEmpty()) {
       return;
     }

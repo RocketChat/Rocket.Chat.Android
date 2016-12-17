@@ -2,6 +2,11 @@ package chat.rocket.android.api;
 
 import android.content.Context;
 import android.util.Patterns;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.UUID;
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
@@ -16,10 +21,6 @@ import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
-import java.util.UUID;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Utility class for creating/handling MethodCall or RPC.
@@ -27,10 +28,14 @@ import org.json.JSONObject;
  */
 public class MethodCallHelper {
 
+  protected static final long TIMEOUT_MS = 4000;
+  protected static final Continuation<String, Task<JSONObject>> CONVERT_TO_JSON_OBJECT =
+      task -> Task.forResult(new JSONObject(task.getResult()));
+  protected static final Continuation<String, Task<JSONArray>> CONVERT_TO_JSON_ARRAY =
+      task -> Task.forResult(new JSONArray(task.getResult()));
   protected final Context context;
   protected final RealmHelper realmHelper;
   protected final DDPClientWraper ddpClient;
-  protected static final long TIMEOUT_MS = 4000;
 
   @Deprecated
   /**
@@ -93,10 +98,6 @@ public class MethodCallHelper {
     });
   }
 
-  protected interface ParamBuilder {
-    JSONArray buildParam() throws JSONException;
-  }
-
   protected final Task<String> call(String methodName, long timeout) {
     return injectErrorHandler(executeMethodCall(methodName, null, timeout));
   }
@@ -111,17 +112,11 @@ public class MethodCallHelper {
     }
   }
 
-  protected static final Continuation<String, Task<JSONObject>> CONVERT_TO_JSON_OBJECT =
-      task -> Task.forResult(new JSONObject(task.getResult()));
-
-  protected static final Continuation<String, Task<JSONArray>> CONVERT_TO_JSON_ARRAY =
-      task -> Task.forResult(new JSONArray(task.getResult()));
-
   /**
    * Register User.
    */
   public Task<String> registerUser(final String name, final String email,
-      final String password, final String confirmPassword) {
+                                   final String password, final String confirmPassword) {
     return call("registerUser", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
         .put("name", name)
         .put("email", email)
@@ -175,7 +170,7 @@ public class MethodCallHelper {
    * Login with OAuth.
    */
   public Task<Void> loginWithOAuth(final String credentialToken,
-      final String credentialSecret) {
+                                   final String credentialSecret) {
     return call("login", TIMEOUT_MS, () -> new JSONArray().put(new JSONObject()
         .put("oauth", new JSONObject()
             .put("credentialToken", credentialToken)
@@ -241,7 +236,7 @@ public class MethodCallHelper {
    * Load messages for room.
    */
   public Task<JSONArray> loadHistory(final String roomId, final long timestamp,
-      final int count, final long lastSeen) {
+                                     final int count, final long lastSeen) {
     return call("loadHistory", TIMEOUT_MS, () -> new JSONArray()
         .put(roomId)
         .put(timestamp > 0 ? new JSONObject().put("$date", timestamp) : JSONObject.NULL)
@@ -340,7 +335,6 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
-
   public Task<Void> getPublicSettings() {
     return call("public-settings/get", TIMEOUT_MS)
         .onSuccessTask(CONVERT_TO_JSON_ARRAY)
@@ -356,5 +350,10 @@ public class MethodCallHelper {
             return null;
           });
         });
+  }
+
+
+  protected interface ParamBuilder {
+    JSONArray buildParam() throws JSONException;
   }
 }

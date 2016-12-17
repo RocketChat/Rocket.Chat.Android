@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import chat.rocket.android.R;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.FileUploading;
@@ -21,10 +22,11 @@ public class FileUploadProgressDialogFragment extends AbstractChatroomDialogFrag
   private String uplId;
   private RealmObjectObserver<FileUploading> fileUploadingObserver;
 
-  public FileUploadProgressDialogFragment() {}
+  public FileUploadProgressDialogFragment() {
+  }
 
   public static FileUploadProgressDialogFragment create(String serverConfigId,
-      String roomId, String uplId) {
+                                                        String roomId, String uplId) {
     Bundle args = new Bundle();
     args.putString("serverConfigId", serverConfigId);
     args.putString("roomId", roomId);
@@ -36,12 +38,14 @@ public class FileUploadProgressDialogFragment extends AbstractChatroomDialogFrag
     return fragment;
   }
 
-  @Override protected void handleArgs(@NonNull Bundle args) {
+  @Override
+  protected void handleArgs(@NonNull Bundle args) {
     super.handleArgs(args);
     uplId = args.getString("uplId");
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     fileUploadingObserver = realmHelper
@@ -49,11 +53,13 @@ public class FileUploadProgressDialogFragment extends AbstractChatroomDialogFrag
         .setOnUpdateListener(this::onRenderFileUploadingState);
   }
 
-  @Override protected int getLayout() {
+  @Override
+  protected int getLayout() {
     return R.layout.dialog_file_uploading;
   }
 
-  @Override protected void onSetupDialog() {
+  @Override
+  protected void onSetupDialog() {
 
   }
 
@@ -78,17 +84,20 @@ public class FileUploadProgressDialogFragment extends AbstractChatroomDialogFrag
     }
   }
 
-  @Override public void onResume() {
+  @Override
+  public void onResume() {
     super.onResume();
     fileUploadingObserver.sub();
   }
 
-  @Override public void onPause() {
+  @Override
+  public void onPause() {
     fileUploadingObserver.unsub();
     super.onPause();
   }
 
-  @Override public void onCancel(DialogInterface dialog) {
+  @Override
+  public void onCancel(DialogInterface dialog) {
     //TODO: should cancel uploading? or continue with showing notification with progress?
   }
 }

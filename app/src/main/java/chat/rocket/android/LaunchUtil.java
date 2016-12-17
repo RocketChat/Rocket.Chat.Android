@@ -2,6 +2,7 @@ package chat.rocket.android;
 
 import android.content.Context;
 import android.content.Intent;
+
 import chat.rocket.android.activity.AddServerActivity;
 import chat.rocket.android.activity.ServerConfigActivity;
 

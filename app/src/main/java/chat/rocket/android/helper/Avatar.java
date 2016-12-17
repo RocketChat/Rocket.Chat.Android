@@ -9,27 +9,27 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
-import bolts.Task;
-import bolts.TaskCompletionSource;
-import chat.rocket.android.log.RCLog;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import bolts.Task;
+import bolts.TaskCompletionSource;
+import chat.rocket.android.log.RCLog;
 
 /**
  * Helper for rendering user avatar image.
  */
 public class Avatar {
-  private final String hostname;
-  private final String username;
-
   private static final int[] COLORS = new int[]{
       0xFFF44336, 0xFFE91E63, 0xFF9C27B0, 0xFF673AB7, 0xFF3F51B5, 0xFF2196F3,
       0xFF03A9F4, 0xFF00BCD4, 0xFF009688, 0xFF4CAF50, 0xFF8BC34A, 0xFFCDDC39,
       0xFFFFC107, 0xFFFF9800, 0xFFFF5722, 0xFF795548, 0xFF9E9E9E, 0xFF607D8B
   };
+  private final String hostname;
+  private final String username;
 
   public Avatar(String hostname, String username) {
     this.hostname = hostname;
@@ -56,6 +56,21 @@ public class Avatar {
 
   private static String firstChar(String str) {
     return TextUtils.isEmpty(str) ? "" : str.substring(0, 1);
+  }
+
+  private static Bitmap drawableToBitmap(Drawable drawable, int size) {
+    if (drawable instanceof BitmapDrawable) {
+      BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+      if (bitmapDrawable.getBitmap() != null) {
+        return bitmapDrawable.getBitmap();
+      }
+    }
+
+    Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+    drawable.draw(canvas);
+    return bitmap;
   }
 
   private String getImageUrl() {
@@ -116,35 +131,23 @@ public class Avatar {
         .load(getImageUrl())
         .error(getTextDrawable(context))
         .into(new Target() {
-          @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+          @Override
+          public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             if (bitmap != null) {
               task.trySetResult(bitmap);
             }
           }
 
-          @Override public void onBitmapFailed(Drawable errorDrawable) {
+          @Override
+          public void onBitmapFailed(Drawable errorDrawable) {
             task.trySetResult(drawableToBitmap(errorDrawable, size));
           }
 
-          @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+          @Override
+          public void onPrepareLoad(Drawable placeHolderDrawable) {
           }
         });
     return task.getTask();
-  }
-
-  private static Bitmap drawableToBitmap (Drawable drawable, int size) {
-    if (drawable instanceof BitmapDrawable) {
-      BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-      if(bitmapDrawable.getBitmap() != null) {
-        return bitmapDrawable.getBitmap();
-      }
-    }
-
-    Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-    Canvas canvas = new Canvas(bitmap);
-    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-    drawable.draw(canvas);
-    return bitmap;
   }
 
 }

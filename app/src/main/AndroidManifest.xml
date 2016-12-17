@@ -1,38 +1,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="chat.rocket.android">
+        package="chat.rocket.android">
 
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-  <application
-      android:name=".RocketChatApplication"
-      android:allowBackup="true"
-      android:icon="@mipmap/ic_launcher"
-      android:label="@string/app_name"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme">
+    <application
+            android:name=".RocketChatApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme">
 
-    <activity
-        android:name=".activity.MainActivity"
-        android:windowSoftInputMode="adjustResize">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
+        <activity
+                android:name=".activity.MainActivity"
+                android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
-    <activity
-        android:name=".activity.AddServerActivity"
-        android:windowSoftInputMode="adjustResize"/>
-    <activity
-        android:name=".activity.ServerConfigActivity"
-        android:windowSoftInputMode="adjustResize"/>
+        <activity
+                android:name=".activity.AddServerActivity"
+                android:windowSoftInputMode="adjustResize"/>
+        <activity
+                android:name=".activity.ServerConfigActivity"
+                android:windowSoftInputMode="adjustResize"/>
 
-    <service android:name=".service.RocketChatService"/>
+        <service android:name=".service.RocketChatService"/>
 
-    <service android:name=".service.notification.NotificationDismissalCallbackService"/>
-  </application>
+        <service android:name=".service.notification.NotificationDismissalCallbackService"/>
+    </application>
 
 </manifest>

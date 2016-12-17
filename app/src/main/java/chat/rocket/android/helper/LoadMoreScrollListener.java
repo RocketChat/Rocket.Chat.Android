@@ -19,7 +19,8 @@ public abstract class LoadMoreScrollListener extends RecyclerView.OnScrollListen
     setLoadingDone();
   }
 
-  @Override public void onScrolled(RecyclerView recyclerView, int deltaX, int deltaY) {
+  @Override
+  public void onScrolled(RecyclerView recyclerView, int deltaX, int deltaY) {
     super.onScrolled(recyclerView, deltaX, deltaY);
 
     final int visibleItemCount = recyclerView.getChildCount();

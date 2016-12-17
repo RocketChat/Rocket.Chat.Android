@@ -8,23 +8,23 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import chat.rocket.android.widget.R;
+
 import java.util.HashMap;
+import chat.rocket.android.widget.R;
 
 /**
  * Room list-item view used in sidebar.
  */
 public class RoomListItemView extends LinearLayout {
-  private String roomId;
-  private String roomName;
-
-  private static HashMap<String, Integer> ICON_TABLE = new HashMap<String, Integer>(){
+  private static HashMap<String, Integer> ICON_TABLE = new HashMap<String, Integer>() {
     {
       put("c", R.string.fa_hashtag);
       put("p", R.string.fa_lock);
       put("d", R.string.fa_at);
     }
   };
+  private String roomId;
+  private String roomName;
 
   public RoomListItemView(Context context) {
     super(context);

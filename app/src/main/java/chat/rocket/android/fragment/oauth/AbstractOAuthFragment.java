@@ -6,6 +6,10 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.Charset;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
@@ -13,9 +17,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmStore;
-import java.nio.charset.Charset;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
 
@@ -45,7 +46,8 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
     }
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Bundle args = getArguments();
     if (!hasValidArgs(args)) {
@@ -69,7 +71,8 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
     url = generateURL(oauthConfig);
   }
 
-  @Override protected void navigateToInitialPage(WebView webview) {
+  @Override
+  protected void navigateToInitialPage(WebView webview) {
     if (TextUtils.isEmpty(url)) {
       finish();
       return;
@@ -99,15 +102,25 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
     }), "_rocketchet_hook");
   }
 
-  @Override protected void onPageLoaded(WebView webview, String url) {
+  @Override
+  protected void onPageLoaded(WebView webview, String url) {
     super.onPageLoaded(webview, url);
-
 
     if (url.contains(hostname) && url.contains("_oauth/" + getOAuthServiceName() + "?close")) {
       final String jsHookUrl = "javascript:"
           + "window._rocketchet_hook.handleConfig(document.getElementById('config').innerText);";
       webview.loadUrl(jsHookUrl);
     }
+  }
+
+  private void handleOAuthCallback(final String credentialToken, final String credentialSecret) {
+    new MethodCallHelper(getContext(), serverConfigId)
+        .loginWithOAuth(credentialToken, credentialSecret)
+        .continueWith(new LogcatIfError());
+  }
+
+  protected void onOAuthCompleted() {
+
   }
 
   private interface JSInterfaceCallback {
@@ -121,22 +134,13 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
       jsInterfaceCallback = callback;
     }
 
-    @JavascriptInterface public void handleConfig(String config) {
+    @JavascriptInterface
+    public void handleConfig(String config) {
       try {
         jsInterfaceCallback.hanldeResult(new JSONObject(config));
       } catch (Exception exception) {
         jsInterfaceCallback.hanldeResult(null);
       }
     }
-  }
-
-  private void handleOAuthCallback(final String credentialToken, final String credentialSecret) {
-    new MethodCallHelper(getContext(), serverConfigId)
-        .loginWithOAuth(credentialToken, credentialSecret)
-        .continueWith(new LogcatIfError());
-  }
-
-  protected void onOAuthCompleted() {
-
   }
 }

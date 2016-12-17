@@ -1,47 +1,55 @@
 package chat.rocket.android.service.ddp.stream;
 
 import android.content.Context;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import chat.rocket.android.api.DDPClientWraper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.service.ddp.AbstractDDPDocEventSubscriber;
 import chat.rocket.android_ddp.DDPSubscription;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 abstract class AbstractStreamNotifyEventSubscriber extends AbstractDDPDocEventSubscriber {
   protected AbstractStreamNotifyEventSubscriber(Context context, String hostname,
-      RealmHelper realmHelper, DDPClientWraper ddpClient) {
+                                                RealmHelper realmHelper,
+                                                DDPClientWraper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
   }
 
-  @Override protected final boolean shouldTruncateTableOnInitialize() {
+  @Override
+  protected final boolean shouldTruncateTableOnInitialize() {
     return false;
   }
 
-  @Override protected final boolean isTarget(String callbackName) {
+  @Override
+  protected final boolean isTarget(String callbackName) {
     return getSubscriptionName().equals(callbackName);
   }
 
   protected abstract String getSubscriptionParam();
 
-  @Override protected final JSONArray getSubscriptionParams() throws JSONException {
+  @Override
+  protected final JSONArray getSubscriptionParams() throws JSONException {
     return new JSONArray().put(getSubscriptionParam()).put(false);
   }
 
   protected abstract String getPrimaryKeyForModel();
 
-  @Override protected final void onDocumentAdded(DDPSubscription.Added docEvent) {
+  @Override
+  protected final void onDocumentAdded(DDPSubscription.Added docEvent) {
     // do nothing.
   }
 
-  @Override protected final void onDocumentRemoved(DDPSubscription.Removed docEvent) {
+  @Override
+  protected final void onDocumentRemoved(DDPSubscription.Removed docEvent) {
     // do nothing.
   }
 
-  @Override protected final void onDocumentChanged(DDPSubscription.Changed docEvent) {
+  @Override
+  protected final void onDocumentChanged(DDPSubscription.Changed docEvent) {
     try {
       if (!docEvent.fields.getString("eventName").equals(getSubscriptionParam())) {
         return;

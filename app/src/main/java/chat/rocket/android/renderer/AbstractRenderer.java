@@ -2,6 +2,7 @@ package chat.rocket.android.renderer;
 
 import android.content.Context;
 import android.view.View;
+
 import chat.rocket.android.renderer.optional.Condition;
 import chat.rocket.android.renderer.optional.Optional;
 
@@ -19,7 +20,7 @@ abstract class AbstractRenderer<T> {
   }
 
   protected boolean shouldHandle(View target, Condition additionalCondition, Optional optional,
-      String key) {
+                                 String key) {
     if (target == null || object == null) {
       if (optional != null) {
         optional.onNoData(key);

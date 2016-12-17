@@ -7,7 +7,6 @@ public interface OnBackPressListener {
 
   /**
    * onBackPressed
-   *
    * @return whether back is handled or not.
    */
   boolean onBackPressed();

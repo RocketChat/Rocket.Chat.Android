@@ -6,20 +6,18 @@ import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 abstract class AbstractRealmResultsObserver<T extends RealmObject> {
-  protected Realm realm;
-
-  private RealmChangeListener<RealmResults<T>> listener;
-
-  protected abstract RealmResults<T> queryItems(Realm realm);
-
-  protected abstract RealmChangeListener<RealmResults<T>> getListener();
-
-  private RealmResults<T> results;
   private final RealmHelper helper;
+  protected Realm realm;
+  private RealmChangeListener<RealmResults<T>> listener;
+  private RealmResults<T> results;
 
   protected AbstractRealmResultsObserver(RealmHelper helper) {
     this.helper = helper;
   }
+
+  protected abstract RealmResults<T> queryItems(Realm realm);
+
+  protected abstract RealmChangeListener<RealmResults<T>> getListener();
 
   public void sub() {
     unsub();

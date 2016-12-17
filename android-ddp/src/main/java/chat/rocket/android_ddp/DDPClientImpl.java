@@ -3,17 +3,18 @@ package chat.rocket.android_ddp;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.rx.RxWebSocket;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import okhttp3.OkHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
@@ -30,7 +31,9 @@ public class DDPClientImpl {
   }
 
   private static JSONObject toJson(String s) {
-    if (TextUtils.isEmpty(s)) return null;
+    if (TextUtils.isEmpty(s)) {
+      return null;
+    }
     try {
       return new JSONObject(s);
     } catch (JSONException e) {
@@ -47,7 +50,7 @@ public class DDPClientImpl {
   }
 
   public void connect(final TaskCompletionSource<DDPClientCallback.Connect> task, final String url,
-      String session) {
+                      String session) {
     try {
       observable = websocket.connect(url).autoConnect();
       CompositeSubscription subscriptions = new CompositeSubscription();
@@ -95,7 +98,7 @@ public class DDPClientImpl {
   }
 
   public void ping(final TaskCompletionSource<DDPClientCallback.Ping> task,
-      @Nullable final String id) {
+                   @Nullable final String id) {
     CompositeSubscription subscriptions = new CompositeSubscription();
 
     subscriptions.add(
@@ -131,7 +134,7 @@ public class DDPClientImpl {
   }
 
   public void sub(final TaskCompletionSource<DDPSubscription.Ready> task, String name,
-      JSONArray params, String id) {
+                  JSONArray params, String id) {
     CompositeSubscription subscriptions = new CompositeSubscription();
 
     subscriptions.add(
@@ -168,7 +171,7 @@ public class DDPClientImpl {
   }
 
   public void unsub(final TaskCompletionSource<DDPSubscription.NoSub> task,
-      @Nullable final String id) {
+                    @Nullable final String id) {
     CompositeSubscription subscriptions = new CompositeSubscription();
 
     subscriptions.add(
@@ -193,7 +196,7 @@ public class DDPClientImpl {
   }
 
   public void rpc(final TaskCompletionSource<DDPClientCallback.RPC> task, String method,
-      JSONArray params, String id, long timeoutMs) {
+                  JSONArray params, String id, long timeoutMs) {
     CompositeSubscription subscriptions = new CompositeSubscription();
 
     subscriptions.add(
@@ -252,14 +255,16 @@ public class DDPClientImpl {
   }
 
   public Observable<DDPSubscription.Event> getDDPSubscription() {
-    String[] targetMsgs = { "added", "changed", "removed", "addedBefore", "movedBefore" };
+    String[] targetMsgs = {"added", "changed", "removed", "addedBefore", "movedBefore"};
     return observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
         .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
         .map(DDPClientImpl::toJson)
         .filter(response -> {
           String msg = extractMsg(response);
           for (String m : targetMsgs) {
-            if (m.equals(msg)) return true;
+            if (m.equals(msg)) {
+              return true;
+            }
           }
           return false;
         })
@@ -345,6 +350,7 @@ public class DDPClientImpl {
   }
 
   private interface JSONBuilder {
-    @NonNull JSONObject create(JSONObject root) throws JSONException;
+    @NonNull
+    JSONObject create(JSONObject root) throws JSONException;
   }
 }

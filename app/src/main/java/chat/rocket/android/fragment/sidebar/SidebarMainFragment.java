@@ -7,13 +7,16 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
+
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AbstractAddRoomDialogFragment;
-import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
+import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
@@ -25,8 +28,6 @@ import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.renderer.UserRenderer;
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 public class SidebarMainFragment extends AbstractFragment {
 
@@ -52,7 +53,8 @@ public class SidebarMainFragment extends AbstractFragment {
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
@@ -67,7 +69,8 @@ public class SidebarMainFragment extends AbstractFragment {
       RealmHelper realmHelper = RealmStore.get(serverConfigId);
       if (realmHelper != null) {
         roomsObserver = realmHelper
-            .createListObserver(realm -> realm.where(RoomSubscription.class).equalTo("open", true).findAll())
+            .createListObserver(
+                realm -> realm.where(RoomSubscription.class).equalTo("open", true).findAll())
             .setOnUpdateListener(list -> roomListManager.setRooms(list));
 
         currentUserObserver = realmHelper
@@ -79,7 +82,8 @@ public class SidebarMainFragment extends AbstractFragment {
     }
   }
 
-  @Override protected int getLayout() {
+  @Override
+  protected int getLayout() {
     if (serverConfigId == null) {
       return R.layout.simple_screen;
     } else {
@@ -87,7 +91,8 @@ public class SidebarMainFragment extends AbstractFragment {
     }
   }
 
-  @Override protected void onSetupView() {
+  @Override
+  protected void onSetupView() {
     if (serverConfigId == null) {
       return;
     }
@@ -181,7 +186,8 @@ public class SidebarMainFragment extends AbstractFragment {
     dialog.show(getFragmentManager(), AbstractAddRoomDialogFragment.class.getSimpleName());
   }
 
-  @Override public void onResume() {
+  @Override
+  public void onResume() {
     super.onResume();
     if (roomsObserver != null) {
       roomsObserver.sub();
@@ -189,7 +195,8 @@ public class SidebarMainFragment extends AbstractFragment {
     }
   }
 
-  @Override public void onPause() {
+  @Override
+  public void onPause() {
     if (roomsObserver != null) {
       currentUserObserver.unsub();
       roomsObserver.unsub();

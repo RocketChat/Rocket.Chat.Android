@@ -6,12 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MotionEvent;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.log.RCLog;
-
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-
 import chat.rocket.android.wrappers.InstabugWrapper;
 import icepick.Icepick;
 

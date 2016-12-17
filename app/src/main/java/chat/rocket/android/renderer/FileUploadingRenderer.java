@@ -3,6 +3,7 @@ package chat.rocket.android.renderer;
 import android.content.Context;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import chat.rocket.android.model.internal.FileUploading;
 
 /**
@@ -43,11 +44,11 @@ public class FileUploadingRenderer extends AbstractRenderer<FileUploading> {
       uploadedSizeText.setText(String.format("%,d", uploaded));
       totalSizeText.setText(String.format("%,d", total));
     } else if (total < 8 * 1048576) { //<8MB
-      uploadedSizeText.setText(String.format("%,d", uploaded/1024));
-      totalSizeText.setText(String.format("%,d KB", total/1024));
+      uploadedSizeText.setText(String.format("%,d", uploaded / 1024));
+      totalSizeText.setText(String.format("%,d KB", total / 1024));
     } else {
-      uploadedSizeText.setText(String.format("%,d", uploaded/1048576));
-      totalSizeText.setText(String.format("%,d MB", total/1048576));
+      uploadedSizeText.setText(String.format("%,d", uploaded / 1048576));
+      totalSizeText.setText(String.format("%,d MB", total / 1048576));
     }
 
     return this;

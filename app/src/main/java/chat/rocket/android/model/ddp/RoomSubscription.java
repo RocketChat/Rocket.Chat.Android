@@ -26,6 +26,22 @@ public class RoomSubscription extends RealmObject {
   private long _updatedAt;
   private long ls; //last seen.
 
+  public static JSONObject customizeJson(JSONObject roomSubscriptionJson) throws JSONException {
+    if (!roomSubscriptionJson.isNull("ls")) {
+      long ls = roomSubscriptionJson.getJSONObject("ls").getLong("$date");
+      roomSubscriptionJson.remove("ls");
+      roomSubscriptionJson.put("ls", ls);
+    }
+
+    if (!roomSubscriptionJson.isNull("_updatedAt")) {
+      long updatedAt = roomSubscriptionJson.getJSONObject("_updatedAt").getLong("$date");
+      roomSubscriptionJson.remove("_updatedAt");
+      roomSubscriptionJson.put("_updatedAt", updatedAt);
+    }
+
+    return roomSubscriptionJson;
+  }
+
   public String get_id() {
     return _id;
   }
@@ -96,21 +112,5 @@ public class RoomSubscription extends RealmObject {
 
   public void setLs(long ls) {
     this.ls = ls;
-  }
-
-  public static JSONObject customizeJson(JSONObject roomSubscriptionJson) throws JSONException {
-    if (!roomSubscriptionJson.isNull("ls")) {
-      long ls = roomSubscriptionJson.getJSONObject("ls").getLong("$date");
-      roomSubscriptionJson.remove("ls");
-      roomSubscriptionJson.put("ls", ls);
-    }
-
-    if (!roomSubscriptionJson.isNull("_updatedAt")) {
-      long updatedAt = roomSubscriptionJson.getJSONObject("_updatedAt").getLong("$date");
-      roomSubscriptionJson.remove("_updatedAt");
-      roomSubscriptionJson.put("_updatedAt", updatedAt);
-    }
-
-    return roomSubscriptionJson;
   }
 }

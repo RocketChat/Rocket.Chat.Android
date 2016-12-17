@@ -5,11 +5,13 @@ import okhttp3.HttpUrl;
 
 public class GoogleOAuthFragment extends AbstractOAuthFragment {
 
-  @Override protected String getOAuthServiceName() {
+  @Override
+  protected String getOAuthServiceName() {
     return "google";
   }
 
-  @Override protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
+  @Override
+  protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
     return new HttpUrl.Builder().scheme("https")
         .host("accounts.google.com")
         .addPathSegment("o")

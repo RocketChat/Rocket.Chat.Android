@@ -19,7 +19,8 @@ public class FontAwesomeTextView extends AbstractCustomFontTextView {
     super(context);
   }
 
-  @Override protected String getFont() {
+  @Override
+  protected String getFont() {
     return "fontawesome-webfont.ttf";
   }
 }
