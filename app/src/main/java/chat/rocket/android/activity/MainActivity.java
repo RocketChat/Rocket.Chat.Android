@@ -12,6 +12,7 @@ import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
@@ -55,14 +56,14 @@ public class MainActivity extends AbstractAuthedActivity {
 
   private void setUserOnlineIfServerAvailable() {
     if (serverConfigId != null) {
-      new MethodCallHelper(this, serverConfigId).setUserOnline()
+      new MethodCallHelper(this, serverConfigId).setUserPresence(User.STATUS_ONLINE)
           .continueWith(new LogcatIfError());
     }
   }
 
   private void setUserAwayIfServerAvailable() {
     if (serverConfigId != null) {
-      new MethodCallHelper(this, serverConfigId).setUserAway()
+      new MethodCallHelper(this, serverConfigId).setUserPresence(User.STATUS_AWAY)
           .continueWith(new LogcatIfError());
     }
   }
