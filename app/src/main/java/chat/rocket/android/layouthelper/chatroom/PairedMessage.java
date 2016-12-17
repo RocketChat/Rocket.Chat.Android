@@ -20,8 +20,8 @@ public class PairedMessage {
    */
   public boolean hasSameDate() {
     return nextSibling != null
-        && DateTime.fromEpocMs(nextSibling.getTs(), DateTime.Format.DATE)
-        .equals(DateTime.fromEpocMs(target.getTs(), DateTime.Format.DATE));
+        && DateTime.fromEpocMs(nextSibling.getTimestamp(), DateTime.Format.DATE)
+        .equals(DateTime.fromEpocMs(target.getTimestamp(), DateTime.Format.DATE));
   }
 
   /**
@@ -29,7 +29,7 @@ public class PairedMessage {
    */
   public boolean hasSameUser() {
     return nextSibling != null
-        && nextSibling.getU() != null && target.getU() != null
-        && nextSibling.getU().get_id().equals(target.getU().get_id());
+        && nextSibling.getUser() != null && target.getUser() != null
+        && nextSibling.getUser().getId().equals(target.getUser().getId());
   }
 }

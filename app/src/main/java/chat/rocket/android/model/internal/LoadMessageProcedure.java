@@ -24,11 +24,11 @@ public class LoadMessageProcedure extends RealmObject {
     this.roomId = roomId;
   }
 
-  public int getSyncstate() {
+  public int getSyncState() {
     return syncstate;
   }
 
-  public void setSyncstate(int syncstate) {
+  public void setSyncState(int syncstate) {
     this.syncstate = syncstate;
   }
 
@@ -56,7 +56,7 @@ public class LoadMessageProcedure extends RealmObject {
     this.count = count;
   }
 
-  public boolean isHasNext() {
+  public boolean hasNext() {
     return hasNext;
   }
 

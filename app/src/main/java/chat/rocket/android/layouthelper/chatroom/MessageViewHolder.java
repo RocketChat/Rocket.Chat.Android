@@ -65,7 +65,7 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
         .attachmentsInto(attachments, hostname, userId, token);
 
     if (pairedMessage.target != null) {
-      int syncstate = pairedMessage.target.getSyncstate();
+      int syncstate = pairedMessage.target.getSyncState();
       if (syncstate == SyncState.NOT_SYNCED || syncstate == SyncState.SYNCING) {
         itemView.setAlpha(0.6f);
       } else {
@@ -79,7 +79,7 @@ public class MessageViewHolder extends RealmModelViewHolder<PairedMessage> {
   private void renderNewDayAndSequential(PairedMessage pairedMessage) {
     //see Rocket.Chat:packages/rocketchat-livechat/app/client/views/message.coffee
     if (!pairedMessage.hasSameDate()) {
-      setNewDay(DateTime.fromEpocMs(pairedMessage.target.getTs(), DateTime.Format.DATE));
+      setNewDay(DateTime.fromEpocMs(pairedMessage.target.getTimestamp(), DateTime.Format.DATE));
       setSequential(false);
     } else if (!pairedMessage.target.isGroupable() || !pairedMessage.nextSibling.isGroupable()
         || !pairedMessage.hasSameUser()) {

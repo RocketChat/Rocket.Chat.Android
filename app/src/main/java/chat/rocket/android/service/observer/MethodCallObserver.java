@@ -33,7 +33,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
           .equalTo("syncstate", SyncState.SYNCING)
           .findAll();
       for (MethodCall call : pendingMethodCalls) {
-        call.setSyncstate(SyncState.NOT_SYNCED);
+        call.setSyncState(SyncState.NOT_SYNCED);
       }
 
       // clean up records.

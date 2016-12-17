@@ -32,7 +32,7 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
           .equalTo("syncstate", SyncState.SYNCING)
           .findAll();
       for (Message message : pendingMethodCalls) {
-        message.setSyncstate(SyncState.NOT_SYNCED);
+        message.setSyncState(SyncState.NOT_SYNCED);
       }
 
       return null;
@@ -54,9 +54,9 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
     }
 
     Message message = results.get(0);
-    final String messageId = message.get_id();
-    final String roomId = message.getRid();
-    final String msg = message.getMsg();
+    final String messageId = message.getId();
+    final String roomId = message.getRoomId();
+    final String msg = message.getMessage();
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()

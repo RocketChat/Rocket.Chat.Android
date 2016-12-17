@@ -56,7 +56,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
     }
     listeners = new ArrayList<>();
 
-    final String userId = user.get_id();
+    final String userId = user.getId();
 
     // get and observe Room subscriptions.
     methodCall.getRoomSubscriptions().onSuccess(task -> {

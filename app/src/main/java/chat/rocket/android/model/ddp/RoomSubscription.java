@@ -42,19 +42,19 @@ public class RoomSubscription extends RealmObject {
     return roomSubscriptionJson;
   }
 
-  public String get_id() {
+  public String getId() {
     return _id;
   }
 
-  public void set_id(String _id) {
+  public void setId(String _id) {
     this._id = _id;
   }
 
-  public String getRid() {
+  public String getRoomId() {
     return rid;
   }
 
-  public void setRid(String rid) {
+  public void setRoomId(String rid) {
     this.rid = rid;
   }
 
@@ -66,11 +66,11 @@ public class RoomSubscription extends RealmObject {
     this.name = name;
   }
 
-  public String getT() {
+  public String getType() {
     return t;
   }
 
-  public void setT(String t) {
+  public void setType(String t) {
     this.t = t;
   }
 
@@ -98,19 +98,19 @@ public class RoomSubscription extends RealmObject {
     this.unread = unread;
   }
 
-  public long get_updatedAt() {
+  public long getUpdatedAt() {
     return _updatedAt;
   }
 
-  public void set_updatedAt(long _updatedAt) {
+  public void setUpdatedAt(long _updatedAt) {
     this._updatedAt = _updatedAt;
   }
 
-  public long getLs() {
+  public long getLastSeen() {
     return ls;
   }
 
-  public void setLs(long ls) {
+  public void setLastSeen(long ls) {
     this.ls = ls;
   }
 }

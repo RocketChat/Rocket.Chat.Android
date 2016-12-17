@@ -46,7 +46,7 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
           .endGroup()
           .findAll();
       for (FileUploading req : pendingUploadRequests) {
-        req.setSyncstate(SyncState.NOT_SYNCED);
+        req.setSyncState(SyncState.NOT_SYNCED);
       }
 
       // clean up records.
@@ -99,7 +99,7 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
       return;
     }
     final String cookie = String.format("rc_uid=%s; rc_token=%s",
-        currentUser.get_id(), session.getToken());
+        currentUser.getId(), session.getToken());
 
     FileUploading fileUploading = results.get(0);
     final String roomId = fileUploading.getRoomId();

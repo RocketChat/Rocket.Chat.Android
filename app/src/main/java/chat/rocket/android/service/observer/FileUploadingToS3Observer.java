@@ -46,7 +46,7 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
           .equalTo("storageType", FileUploading.STORAGE_TYPE_S3)
           .findAll();
       for (FileUploading req : pendingUploadRequests) {
-        req.setSyncstate(SyncState.NOT_SYNCED);
+        req.setSyncState(SyncState.NOT_SYNCED);
       }
 
       // clean up records.

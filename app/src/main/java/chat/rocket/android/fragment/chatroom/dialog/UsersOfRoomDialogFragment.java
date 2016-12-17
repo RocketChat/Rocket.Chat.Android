@@ -113,7 +113,7 @@ public class UsersOfRoomDialogFragment extends AbstractChatroomDialogFragment {
       return;
     }
 
-    int syncstate = procedure.getSyncstate();
+    int syncstate = procedure.getSyncState();
     if (previousSyncState != syncstate) {
       onSyncStateUpdated(syncstate);
       previousSyncState = syncstate;

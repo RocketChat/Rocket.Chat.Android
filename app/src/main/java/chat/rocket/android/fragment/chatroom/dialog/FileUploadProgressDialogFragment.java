@@ -68,7 +68,7 @@ public class FileUploadProgressDialogFragment extends AbstractChatroomDialogFrag
       return;
     }
 
-    int syncstate = state.getSyncstate();
+    int syncstate = state.getSyncState();
     if (syncstate == SyncState.SYNCED) {
       dismiss();
     } else if (syncstate == SyncState.FAILED) {

@@ -31,11 +31,11 @@ public class FileUploading extends RealmObject {
     this.uplId = uplId;
   }
 
-  public int getSyncstate() {
+  public int getSyncState() {
     return syncstate;
   }
 
-  public void setSyncstate(int syncstate) {
+  public void setSyncState(int syncstate) {
     this.syncstate = syncstate;
   }
 

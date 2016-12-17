@@ -47,7 +47,7 @@ public class RoomListManager {
         continue;
       }
 
-      String type = roomSubscription.getT();
+      String type = roomSubscription.getType();
 
       if (RoomSubscription.TYPE_CHANNEL.equals(type)
           || RoomSubscription.TYPE_PRIVATE.equals(type)) {
@@ -114,9 +114,9 @@ public class RoomListManager {
   private void updateRoomItemView(RoomListItemView roomListItemView,
                                   RoomSubscription roomSubscription) {
     roomListItemView
-        .setRoomId(roomSubscription.getRid())
+        .setRoomId(roomSubscription.getRoomId())
         .setRoomName(roomSubscription.getName())
-        .setRoomType(roomSubscription.getT())
+        .setRoomType(roomSubscription.getType())
         .setAlert(roomSubscription.isAlert())
         .setUnreadCount(roomSubscription.getUnread());
 

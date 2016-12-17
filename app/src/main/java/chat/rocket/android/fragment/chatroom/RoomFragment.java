@@ -93,7 +93,7 @@ public class RoomFragment extends AbstractChatRoomFragment
             .isNotNull("hostname")
             .findFirst()).getHostname();
     userId = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst()).get_id();
+        User.queryCurrentUser(realm).findFirst()).getId();
     token = realmHelper.executeTransactionForRead(realm ->
         Session.queryDefaultSession(realm).findFirst()).getToken();
     roomObserver = realmHelper
@@ -146,9 +146,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void onItemClick(PairedMessage pairedMessage) {
     if (pairedMessage.target != null) {
-      final int syncstate = pairedMessage.target.getSyncstate();
+      final int syncstate = pairedMessage.target.getSyncState();
       if (syncstate == SyncState.FAILED) {
-        final String messageId = pairedMessage.target.get_id();
+        final String messageId = pairedMessage.target.getId();
         new AlertDialog.Builder(getContext())
             .setPositiveButton(R.string.resend, (dialog, which) -> {
               realmHelper.executeTransaction(realm ->
@@ -264,7 +264,7 @@ public class RoomFragment extends AbstractChatRoomFragment
       return;
     }
 
-    String type = roomSubscription.getT();
+    String type = roomSubscription.getType();
     if (RoomSubscription.TYPE_CHANNEL.equals(type)) {
       activityToolbar.setNavigationIcon(R.drawable.ic_hashtag_white_24dp);
     } else if (RoomSubscription.TYPE_PRIVATE.equals(type)) {
@@ -284,8 +284,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
     if (listView != null && listView.getAdapter() instanceof MessageListAdapter) {
       MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
-      final int syncstate = procedure.getSyncstate();
-      final boolean hasNext = procedure.isHasNext();
+      final int syncstate = procedure.getSyncState();
+      final boolean hasNext = procedure.hasNext();
       RCLog.d("hasNext: %s syncstate: %d", hasNext, syncstate);
       if (syncstate == SyncState.SYNCED || syncstate == SyncState.FAILED) {
         scrollListener.setLoadingDone();
@@ -322,7 +322,7 @@ public class RoomFragment extends AbstractChatRoomFragment
           .equalTo("hasNext", true)
           .findFirst();
       if (procedure != null) {
-        procedure.setSyncstate(SyncState.NOT_SYNCED);
+        procedure.setSyncState(SyncState.NOT_SYNCED);
       }
       return null;
     }).onSuccessTask(task -> {

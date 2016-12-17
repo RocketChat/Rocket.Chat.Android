@@ -60,11 +60,11 @@ public class PublicSetting extends RealmObject {
     return defaultValue;
   }
 
-  public String get_id() {
+  public String getId() {
     return _id;
   }
 
-  public void set_id(String _id) {
+  public void setId(String _id) {
     this._id = _id;
   }
 
@@ -92,11 +92,11 @@ public class PublicSetting extends RealmObject {
     this.value = value;
   }
 
-  public long get_updatedAt() {
+  public long getUpdatedAt() {
     return _updatedAt;
   }
 
-  public void set_updatedAt(long _updatedAt) {
+  public void setUpdatedAt(long _updatedAt) {
     this._updatedAt = _updatedAt;
   }
 

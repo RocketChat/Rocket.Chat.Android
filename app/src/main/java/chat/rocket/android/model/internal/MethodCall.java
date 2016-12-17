@@ -52,7 +52,7 @@ public class MethodCall extends RealmObject {
             realmHelper.createObjectObserver(realm ->
                 realm.where(MethodCall.class).equalTo("methodCallId", newId));
         observer.setOnUpdateListener(methodCall -> {
-          int syncstate = methodCall.getSyncstate();
+          int syncstate = methodCall.getSyncState();
           RCLog.d("MethodCall[%s] syncstate=%d", methodCall.getMethodCallId(), syncstate);
           if (syncstate == SyncState.SYNCED) {
             String resultJson = methodCall.getResultJson();
@@ -102,11 +102,11 @@ public class MethodCall extends RealmObject {
     this.methodCallId = methodCallId;
   }
 
-  public int getSyncstate() {
+  public int getSyncState() {
     return syncstate;
   }
 
-  public void setSyncstate(int syncstate) {
+  public void setSyncState(int syncstate) {
     this.syncstate = syncstate;
   }
 

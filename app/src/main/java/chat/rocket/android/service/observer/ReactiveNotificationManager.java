@@ -35,21 +35,21 @@ public class ReactiveNotificationManager extends AbstractModelObserver<RoomSubsc
   public void onUpdateResults(List<RoomSubscription> roomSubscriptions) {
     JSONArray notifications = new JSONArray();
     for (RoomSubscription roomSubscription : roomSubscriptions) {
-      final String roomId = roomSubscription.getRid();
+      final String roomId = roomSubscription.getRoomId();
       NotificationItem item = realmHelper.executeTransactionForRead(realm ->
           realm.where(NotificationItem.class).equalTo("roomId", roomId).findFirst());
 
-      long lastSeenAt = Math.max(item != null ? item.getLastSeenAt() : 0, roomSubscription.getLs());
+      long lastSeenAt = Math.max(item != null ? item.getLastSeenAt() : 0, roomSubscription.getLastSeen());
       try {
         JSONObject notification = new JSONObject()
-            .put("roomId", roomSubscription.getRid())
+            .put("roomId", roomSubscription.getRoomId())
             .put("title", roomSubscription.getName())
             .put("description", "new message")
             .put("unreadCount", roomSubscription.getUnread())
-            .put("contentUpdatedAt", roomSubscription.get_updatedAt())
+            .put("contentUpdatedAt", roomSubscription.getUpdatedAt())
             .put("lastSeenAt", lastSeenAt);
 
-        if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(roomSubscription.getT())) {
+        if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(roomSubscription.getType())) {
           notification.put("senderName", roomSubscription.getName());
         } else {
           notification.put("senderName", JSONObject.NULL);
