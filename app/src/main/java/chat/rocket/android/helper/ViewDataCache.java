@@ -1,7 +1,6 @@
 package chat.rocket.android.helper;
 
 import android.view.View;
-import hugo.weaving.DebugLog;
 
 /**
  * save String to setTag.
