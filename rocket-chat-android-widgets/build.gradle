@@ -22,11 +22,6 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
-        debug {
-            defaultConfig {
-                minSdkVersion rootProject.ext.minSdkVersionDebug
-            }
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
