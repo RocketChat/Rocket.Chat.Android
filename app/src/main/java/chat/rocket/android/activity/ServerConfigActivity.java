@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.LoginFragment;
+import chat.rocket.android.fragment.server_config.RetryConnectFragment;
 import chat.rocket.android.fragment.server_config.RetryLoginFragment;
 import chat.rocket.android.fragment.server_config.WaitingFragment;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
@@ -21,6 +23,7 @@ import chat.rocket.android.service.RocketChatService;
 public class ServerConfigActivity extends AbstractFragmentActivity {
 
   private String serverConfigId;
+  private RealmObjectObserver<ServerConfig> serverConfigErrorObserver;
   private RealmObjectObserver<Session> sessionObserver;
 
   @Override
@@ -44,6 +47,13 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
       return;
     }
 
+    serverConfigErrorObserver = RealmStore.getDefault()
+        .createObjectObserver(realm ->
+            realm.where(ServerConfig.class)
+                .equalTo("serverConfigId", serverConfigId)
+                .equalTo("state", ServerConfig.STATE_CONNECTION_ERROR))
+        .setOnUpdateListener(this::onRenderServerConfigError);
+
     sessionObserver = RealmStore.get(serverConfigId)
         .createObjectObserver(Session::queryDefaultSession)
         .setOnUpdateListener(this::onRenderServerConfigSession);
@@ -56,13 +66,23 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
   protected void onResume() {
     super.onResume();
     RocketChatService.keepalive(this);
-    sessionObserver.sub();
+    serverConfigErrorObserver.sub();
   }
 
   @Override
   protected void onPause() {
     sessionObserver.unsub();
+    serverConfigErrorObserver.unsub();
     super.onPause();
+  }
+
+  private void onRenderServerConfigError(ServerConfig config) {
+    if (config != null) {
+      sessionObserver.unsub();
+      showFragment(new RetryConnectFragment());
+    } else {
+      sessionObserver.sub();
+    }
   }
 
   private void onRenderServerConfigSession(Session session) {

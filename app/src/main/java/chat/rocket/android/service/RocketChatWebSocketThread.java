@@ -183,10 +183,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
         return null;
       })).continueWith(new LogcatIfError());
       return task;
-    }).onSuccess(new Continuation<DDPClientCallback.Connect, Object>() {
+    }).onSuccess(new Continuation<DDPClientCallback.Connect, Void>() {
       // TODO type detection doesn't work due to retrolambda's bug...
       @Override
-      public Object then(Task<DDPClientCallback.Connect> task)
+      public Void then(Task<DDPClientCallback.Connect> task)
           throws Exception {
         registerListeners();
 
@@ -194,20 +194,20 @@ public class RocketChatWebSocketThread extends HandlerThread {
         task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
           quit();
           return null;
-        }).continueWith(_task -> {
+        }).continueWithTask(_task -> {
           if (_task.isFaulted()) {
             ServerConfig.logConnectionError(serverConfigId, _task.getError());
           }
-          return null;
+          return _task;
         });
 
         return null;
       }
-    }).continueWith(task -> {
+    }).continueWithTask(task -> {
       if (task.isFaulted()) {
         ServerConfig.logConnectionError(serverConfigId, task.getError());
       }
-      return null;
+      return task;
     });
   }
 
