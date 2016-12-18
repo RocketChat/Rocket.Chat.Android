@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import chat.rocket.android.R;
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
 import chat.rocket.android.model.ddp.Message;
 
@@ -14,7 +15,12 @@ import chat.rocket.android.model.ddp.Message;
  * target list adapter for chat room.
  */
 public class MessageListAdapter
-    extends ExtRealmModelListAdapter<Message, PairedMessage, MessageViewHolder> {
+    extends ExtRealmModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
+
+  private static final int VIEW_TYPE_UNKNOWN = 0;
+  private static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
+  private static final int VIEW_TYPE_SYSTEM_MESSAGE = 2;
+
   private final String hostname;
   private final String userId;
   private final String token;
@@ -53,17 +59,43 @@ public class MessageListAdapter
 
   @Override
   protected int getRealmModelViewType(PairedMessage model) {
-    return 0;
+    if (model.target != null) {
+      if (TextUtils.isEmpty(model.target.getType())) {
+        return VIEW_TYPE_NORMAL_MESSAGE;
+      } else {
+        return VIEW_TYPE_SYSTEM_MESSAGE;
+      }
+    }
+    return VIEW_TYPE_UNKNOWN;
   }
 
   @Override
   protected int getRealmModelLayout(int viewType) {
-    return R.layout.list_item_message;
+    switch (viewType) {
+      case VIEW_TYPE_NORMAL_MESSAGE:
+        return R.layout.list_item_normal_message;
+      case VIEW_TYPE_SYSTEM_MESSAGE:
+        return R.layout.list_item_system_message;
+      default:
+        return R.layout.simple_screen;
+    }
   }
 
   @Override
-  protected MessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
-    return new MessageViewHolder(itemView, hostname, userId, token);
+  protected AbstractMessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
+    switch (viewType) {
+      case VIEW_TYPE_NORMAL_MESSAGE:
+        return new MessageNormalViewHolder(itemView, hostname, userId, token);
+      case VIEW_TYPE_SYSTEM_MESSAGE:
+        return new MessageSystemViewHolder(itemView, hostname, userId, token);
+      default:
+        return new AbstractMessageViewHolder(itemView, hostname, userId, token) {
+          @Override
+          protected void bindMessage(PairedMessage pairedMessage) {
+
+          }
+        };
+    }
   }
 
   @Override
