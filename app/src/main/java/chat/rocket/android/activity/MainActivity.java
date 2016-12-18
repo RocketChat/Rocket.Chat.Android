@@ -26,6 +26,7 @@ import hugo.weaving.DebugLog;
 public class MainActivity extends AbstractAuthedActivity {
 
   private RealmObjectObserver<Session> sessionObserver;
+  private boolean isForeground;
 
   @Override
   protected int getLayoutContainerForFragment() {
@@ -48,6 +49,18 @@ public class MainActivity extends AbstractAuthedActivity {
     super.onStart();
 
     setUserOnlineIfServerAvailable();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    isForeground = true;
+  }
+
+  @Override
+  protected void onPause() {
+    isForeground = false;
+    super.onPause();
   }
 
   @Override
@@ -134,7 +147,7 @@ public class MainActivity extends AbstractAuthedActivity {
                 .equalTo("tokenVerified", true)
                 .isNull("error"))
         .setOnUpdateListener(session -> {
-          if (session == null) {
+          if (session == null && isForeground) {
             LaunchUtil.showServerConfigActivity(this, serverConfigId);
           }
         });

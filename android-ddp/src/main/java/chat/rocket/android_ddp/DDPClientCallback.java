@@ -36,6 +36,12 @@ public class DDPClientCallback {
         this.version = version;
       }
     }
+
+    public static class Timeout extends BaseException {
+      public Timeout(DDPClient client) {
+        super(client);
+      }
+    }
   }
 
   public static class Ping extends Base {
