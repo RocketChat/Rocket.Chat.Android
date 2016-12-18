@@ -67,6 +67,7 @@ public class DDPClientImpl {
           observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
+              .timeout(7, TimeUnit.SECONDS)
               .subscribe(response -> {
                 String msg = extractMsg(response);
                 if ("connected".equals(msg) && !response.isNull("session")) {
@@ -83,6 +84,7 @@ public class DDPClientImpl {
                   subscriptions.unsubscribe();
                 }
               }, err -> {
+                task.setError(new DDPClientCallback.Connect.Timeout(client));
               }));
 
       addErrorCallback(subscriptions, task);
@@ -336,7 +338,7 @@ public class DDPClientImpl {
   private void addErrorCallback(CompositeSubscription subscriptions, TaskCompletionSource<?> task) {
     subscriptions.add(observable.subscribe(base -> {
     }, err -> {
-      task.setError(new Exception(err));
+      task.trySetError(new Exception(err));
       subscriptions.unsubscribe();
     }));
   }

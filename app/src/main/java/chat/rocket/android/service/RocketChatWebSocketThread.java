@@ -205,7 +205,12 @@ public class RocketChatWebSocketThread extends HandlerThread {
       }
     }).continueWithTask(task -> {
       if (task.isFaulted()) {
-        ServerConfig.logConnectionError(serverConfigId, task.getError());
+        Exception error = task.getError();
+        if (error instanceof DDPClientCallback.Connect.Timeout) {
+          ServerConfig.logConnectionError(serverConfigId, new Exception("Connection Timeout"));
+        } else {
+          ServerConfig.logConnectionError(serverConfigId, task.getError());
+        }
       }
       return task;
     });
