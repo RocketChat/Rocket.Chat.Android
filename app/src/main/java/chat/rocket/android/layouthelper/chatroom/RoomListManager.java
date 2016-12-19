@@ -146,7 +146,7 @@ public class RoomListManager {
 
       String type = roomSubscription.getType();
 
-      if (unreadRoomMode && roomSubscription.getUnread() > 0) {
+      if (unreadRoomMode && roomSubscription.isAlert()) {
         insertOrUpdateItem(unreadRoomsContainer, roomSubscription);
         removeItemIfExists(channelsContainer, name);
         removeItemIfExists(dmContainer, name);
