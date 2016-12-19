@@ -65,7 +65,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    RocketChatService.keepalive(this);
+    RocketChatService.keepAlive(this);
     serverConfigErrorObserver.sub();
   }
 

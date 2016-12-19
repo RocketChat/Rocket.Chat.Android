@@ -28,7 +28,7 @@ public class RocketChatService extends Service {
   /**
    * ensure RocketChatService alive.
    */
-  public static void keepalive(Context context) {
+  public static void keepAlive(Context context) {
     context.startService(new Intent(context, RocketChatService.class));
   }
 
