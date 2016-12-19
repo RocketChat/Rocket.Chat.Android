@@ -313,7 +313,7 @@ public class RoomFragment extends AbstractChatRoomFragment
           .put("reset", true));
       return null;
     }).onSuccessTask(task -> {
-      RocketChatService.keepalive(getContext());
+      RocketChatService.keepAlive(getContext());
       return task;
     }).continueWith(new LogcatIfError());
   }
@@ -334,7 +334,7 @@ public class RoomFragment extends AbstractChatRoomFragment
       }
       return null;
     }).onSuccessTask(task -> {
-      RocketChatService.keepalive(getContext());
+      RocketChatService.keepAlive(getContext());
       return task;
     }).continueWith(new LogcatIfError());
   }

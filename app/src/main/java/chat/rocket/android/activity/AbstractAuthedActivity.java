@@ -128,7 +128,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    RocketChatService.keepalive(this);
+    RocketChatService.keepAlive(this);
     unconfiguredServersObserver.sub();
 
     SharedPreferences prefs = RocketChatCache.get(this);
