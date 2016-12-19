@@ -28,7 +28,7 @@ public class Linkify {
 
   public static void markup(TextView textview) {
     textview.setMovementMethod(LinkMovementMethodCompat.getInstance());
-    final CharSequence text = textview.getText().toString();
+    final CharSequence text = textview.getText();
     textview.setText(markupInner(text));
   }
 

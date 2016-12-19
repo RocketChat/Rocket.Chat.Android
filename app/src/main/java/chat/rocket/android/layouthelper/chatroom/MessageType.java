@@ -13,21 +13,21 @@ public enum MessageType {
     @Override
     public String getString(Context context, Message message) {
       return context.getString(R.string.message_room_name_changed,
-          message.getMessage(), message.getUser().getUsername());
+          message.getMessage(), getUsername(message));
     }
   },
   USER_ADDED("au") {
     @Override
     public String getString(Context context, Message message) {
       return context.getString(R.string.message_user_added_by,
-          message.getMessage(), message.getUser().getUsername());
+          message.getMessage(), getUsername(message));
     }
   },
   USER_REMOVED("ru") {
     @Override
     public String getString(Context context, Message message) {
       return context.getString(R.string.message_user_removed_by,
-          message.getMessage(), message.getUser().getUsername());
+          message.getMessage(), getUsername(message));
     }
   },
   USER_JOINED("uj") {
@@ -45,7 +45,7 @@ public enum MessageType {
   WELCOME("wm") {
     @Override
     public String getString(Context context, Message message) {
-      return context.getString(R.string.message_welcome, message.getUser().getUsername());
+      return context.getString(R.string.message_welcome, getUsername(message));
     }
   },
   MESSAGE_REMOVED("rm") {
@@ -76,5 +76,13 @@ public enum MessageType {
 
   public String getString(Context context, Message message) {
     return "";
+  }
+
+  private static String getUsername(Message message) {
+    if (message != null && message.getUser() != null) {
+      return message.getUser().getUsername();
+    } else {
+      return "";
+    }
   }
 }

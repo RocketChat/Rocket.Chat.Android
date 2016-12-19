@@ -164,7 +164,7 @@ public class MainActivity extends AbstractAuthedActivity {
   protected void onRoomIdUpdated() {
     super.onRoomIdUpdated();
 
-    if (roomId != null) {
+    if (roomId != null && RoomFragment.canCreate(RealmStore.get(serverConfigId))) {
       showFragment(RoomFragment.create(serverConfigId, roomId));
       closeSidebarIfNeeded();
     } else {
