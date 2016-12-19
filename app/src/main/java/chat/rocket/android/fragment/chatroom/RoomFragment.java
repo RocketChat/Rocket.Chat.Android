@@ -67,6 +67,14 @@ public class RoomFragment extends AbstractChatRoomFragment
   public RoomFragment() {
   }
 
+  public static boolean canCreate(RealmHelper realmHelper) {
+    User currentUser = realmHelper.executeTransactionForRead(realm ->
+        User.queryCurrentUser(realm).findFirst());
+    Session session = realmHelper.executeTransactionForRead(realm ->
+        Session.queryDefaultSession(realm).findFirst());
+    return currentUser != null && session != null;
+  }
+
   /**
    * create fragment with roomId.
    */
