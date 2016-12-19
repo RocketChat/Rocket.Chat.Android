@@ -14,6 +14,7 @@ public class LoadMessageProcedure extends RealmObject {
   private long timestamp;
   private int count;
 
+  @SuppressWarnings({"PMD.AvoidFieldNameMatchingMethodName"})
   private boolean hasNext;
 
   public String getRoomId() {

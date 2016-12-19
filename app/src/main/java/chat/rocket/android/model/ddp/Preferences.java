@@ -3,6 +3,7 @@ package chat.rocket.android.model.ddp;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+@SuppressWarnings({"PMD.ShortVariable"})
 public class Preferences extends RealmObject {
 
   @PrimaryKey private String id;
