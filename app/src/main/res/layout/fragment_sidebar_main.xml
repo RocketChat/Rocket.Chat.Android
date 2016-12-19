@@ -3,8 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:theme="@style/AppTheme.Dark"
-        >
+        android:theme="@style/AppTheme.Dark">
 
     <LinearLayout
             android:id="@+id/user_info_container"
@@ -16,26 +15,22 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="@dimen/margin_16"
-            >
+            android:padding="@dimen/margin_16">
 
         <ImageView
                 android:id="@+id/current_user_status"
                 android:layout_width="8dp"
                 android:layout_height="8dp"
-                android:src="@drawable/userstatus_online"
-                />
+                android:src="@drawable/userstatus_online" />
 
         <Space
                 android:layout_width="@dimen/margin_8"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
         <ImageView
                 android:id="@+id/current_user_avatar"
                 android:layout_width="48dp"
-                android:layout_height="48dp"
-                />
+                android:layout_height="48dp" />
 
         <TextView
                 android:id="@+id/current_user_name"
@@ -46,14 +41,12 @@
                 android:layout_marginRight="@dimen/margin_8"
                 android:layout_weight="1"
                 android:textSize="14sp"
-                tools:text="John Doe"
-                />
+                tools:text="John Doe" />
 
         <chat.rocket.android.widget.DownUpToggleView
                 android:id="@+id/toggle_user_action"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -62,21 +55,37 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_below="@+id/user_info_container"
-            android:background="?attr/colorPrimary"
-            >
+            android:background="?attr/colorPrimary">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="?attr/listPreferredItemPaddingLeft"
-                >
+                android:paddingStart="?attr/listPreferredItemPaddingLeft">
+
+            <TextView
+                    android:id="@+id/unread_title"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:alpha="0.62"
+                    android:text="@string/fragment_sidebar_main_unread_rooms_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textStyle="bold" />
+
+            <LinearLayout
+                    android:id="@+id/unread_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
+                    android:orientation="vertical" />
 
             <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_8"
-                    >
+                    android:layout_marginTop="@dimen/margin_8">
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -85,8 +94,7 @@
                         android:alpha="0.62"
                         android:text="@string/fragment_sidebar_main_channels_title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                 <chat.rocket.android.widget.FontAwesomeButton
                         android:id="@+id/btn_add_channel"
@@ -95,8 +103,7 @@
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
                         android:text="@string/fa_plus"
-                        android:textSize="12dp"
-                        />
+                        android:textSize="12dp" />
 
             </FrameLayout>
 
@@ -105,14 +112,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
-                    android:orientation="vertical"
-                    />
+                    android:orientation="vertical" />
 
             <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_8"
-                    >
+                    android:layout_marginTop="@dimen/margin_8">
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -121,8 +126,7 @@
                         android:alpha="0.62"
                         android:text="@string/fragment_sidebar_main_direct_messages_title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                 <chat.rocket.android.widget.FontAwesomeButton
                         android:id="@+id/btn_add_direct_message"
@@ -131,8 +135,7 @@
                         android:layout_height="48dp"
                         android:layout_gravity="end|center_vertical"
                         android:text="@string/fa_plus"
-                        android:textSize="12dp"
-                        />
+                        android:textSize="12dp" />
 
             </FrameLayout>
 
@@ -141,8 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
-                    android:orientation="vertical"
-                    />
+                    android:orientation="vertical" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -156,14 +158,12 @@
             android:background="?attr/colorPrimaryDark"
             android:elevation="2dp"
             android:visibility="gone"
-            tools:visibility="visible"
-            >
+            tools:visibility="gone">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
             <TextView
                     android:id="@+id/btn_status_online"
@@ -172,8 +172,7 @@
                     android:drawableLeft="@drawable/userstatus_online"
                     android:drawablePadding="16dp"
                     android:text="@string/user_status_online"
-                    android:textAppearance="?attr/textAppearanceListItemSmall"
-                    />
+                    android:textAppearance="?attr/textAppearanceListItemSmall" />
 
             <TextView
                     android:id="@+id/btn_status_away"
@@ -182,8 +181,7 @@
                     android:drawableLeft="@drawable/userstatus_away"
                     android:drawablePadding="16dp"
                     android:text="@string/user_status_away"
-                    android:textAppearance="?attr/textAppearanceListItemSmall"
-                    />
+                    android:textAppearance="?attr/textAppearanceListItemSmall" />
 
             <TextView
                     android:id="@+id/btn_status_busy"
@@ -192,8 +190,7 @@
                     android:drawableLeft="@drawable/userstatus_busy"
                     android:drawablePadding="16dp"
                     android:text="@string/user_status_busy"
-                    android:textAppearance="?attr/textAppearanceListItemSmall"
-                    />
+                    android:textAppearance="?attr/textAppearanceListItemSmall" />
 
             <TextView
                     android:id="@+id/btn_status_invisible"
@@ -202,24 +199,20 @@
                     android:drawableLeft="@drawable/userstatus_offline"
                     android:drawablePadding="16dp"
                     android:text="@string/user_status_invisible"
-                    android:textAppearance="?attr/textAppearanceListItemSmall"
-                    />
+                    android:textAppearance="?attr/textAppearanceListItemSmall" />
 
             <chat.rocket.android.widget.DividerView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
             <LinearLayout
                     android:id="@+id/btn_logout"
                     style="@style/sidebar_list_item"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                 <FrameLayout
                         android:layout_width="48dp"
-                        android:layout_height="match_parent"
-                        >
+                        android:layout_height="match_parent">
 
                     <chat.rocket.android.widget.FontAwesomeTextView
                             android:layout_width="16dp"
@@ -227,16 +220,14 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="@string/fa_sign_out"
-                            android:textSize="14dp"
-                            />
+                            android:textSize="14dp" />
                 </FrameLayout>
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/fragment_sidebar_main_logout_title"
-                        android:textAppearance="?attr/textAppearanceListItemSmall"
-                        />
+                        android:textAppearance="?attr/textAppearanceListItemSmall" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

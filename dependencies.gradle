@@ -1,46 +1,46 @@
 ext {
-    androidPlugin = 'com.android.tools.build:gradle:2.2.3'
-    realmPlugin = 'io.realm:realm-gradle-plugin:2.2.1'
-    retroLambdaPlugin = 'me.tatarka:gradle-retrolambda:3.3.1'
-    retroLambdaPatch = 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
-    compileSdkVersion = 25
-    buildToolsVersion = '25.0.1'
-    minSdkVersion = 21 //for accelerating multi-dex build. OVERRIDEN BY Circle CI to 17
+  androidPlugin = 'com.android.tools.build:gradle:2.2.3'
+  realmPlugin = 'io.realm:realm-gradle-plugin:2.2.1'
+  retroLambdaPlugin = 'me.tatarka:gradle-retrolambda:3.3.1'
+  retroLambdaPatch = 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+  compileSdkVersion = 25
+  buildToolsVersion = '25.0.1'
+  minSdkVersion = 16
 
-    supportVersion = '25.0.1'
-    supportAnnotations = "com.android.support:support-annotations:$supportVersion"
-    supportRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
-    supportAppCompat = "com.android.support:appcompat-v7:$supportVersion"
-    supportDesign = "com.android.support:design:$supportVersion"
+  supportVersion = '25.0.1'
+  supportAnnotations = "com.android.support:support-annotations:$supportVersion"
+  supportRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
+  supportAppCompat = "com.android.support:appcompat-v7:$supportVersion"
+  supportDesign = "com.android.support:design:$supportVersion"
 
-    rxJava = 'io.reactivex:rxjava:1.2.2'
-    boltsTask = 'com.parse.bolts:bolts-tasks:1.4.0'
-    okhttp3 = 'com.squareup.okhttp3:okhttp:3.4.1'
-    picasso = 'com.squareup.picasso:picasso:2.5.2'
-    picasso2Okhttp3Downloader = 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+  rxJava = 'io.reactivex:rxjava:1.2.2'
+  boltsTask = 'com.parse.bolts:bolts-tasks:1.4.0'
+  okhttp3 = 'com.squareup.okhttp3:okhttp:3.4.1'
+  picasso = 'com.squareup.picasso:picasso:2.5.2'
+  picasso2Okhttp3Downloader = 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 
-    preDexLibs = !"true".equals(System.getenv("CI"))
+  preDexLibs = !"true".equals(System.getenv("CI"))
 }
 
 subprojects { project ->
-    project.configurations.all {
-        resolutionStrategy {
-            eachDependency { details ->
-                if (details.requested.group == 'com.android.support'
-                        && details.requested.name.indexOf("multidex") == -1) {
-                    details.useVersion(rootProject.ext.supportVersion)
-                }
-            }
+  project.configurations.all {
+    resolutionStrategy {
+      eachDependency { details ->
+        if (details.requested.group == 'com.android.support'
+            && details.requested.name.indexOf("multidex") == -1) {
+          details.useVersion(rootProject.ext.supportVersion)
         }
+      }
     }
+  }
 }
 
 subprojects {
-    project.plugins.whenPluginAdded { plugin ->
-        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-        }
+  project.plugins.whenPluginAdded { plugin ->
+    if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+      project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+    } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+      project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
     }
+  }
 }

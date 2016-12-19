@@ -7,16 +7,14 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AbstractAddRoomDialogFragment;
-import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
+import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
@@ -28,6 +26,9 @@ import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.renderer.UserRenderer;
+
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 public class SidebarMainFragment extends AbstractFragment {
 
@@ -75,7 +76,7 @@ public class SidebarMainFragment extends AbstractFragment {
 
         currentUserObserver = realmHelper
             .createObjectObserver(User::queryCurrentUser)
-            .setOnUpdateListener(this::onRenderCurrentUser);
+            .setOnUpdateListener(this::onCurrentUser);
 
         methodCallHelper = new MethodCallHelper(getContext(), serverConfigId);
       }
@@ -103,6 +104,8 @@ public class SidebarMainFragment extends AbstractFragment {
     setupAddChannelButton();
 
     roomListManager = new RoomListManager(
+        rootView.findViewById(R.id.unread_title),
+        (LinearLayout) rootView.findViewById(R.id.unread_container),
         (LinearLayout) rootView.findViewById(R.id.channels_container),
         (LinearLayout) rootView.findViewById(R.id.direct_messages_container));
     roomListManager.setOnItemClickListener(view -> {
@@ -142,6 +145,11 @@ public class SidebarMainFragment extends AbstractFragment {
     }
   }
 
+  private void onCurrentUser(User user) {
+    onRenderCurrentUser(user);
+    updateRoomListMode(user);
+  }
+
   private void onRenderCurrentUser(User user) {
     if (user != null && !TextUtils.isEmpty(hostname)) {
       new UserRenderer(getContext(), user)
@@ -149,6 +157,13 @@ public class SidebarMainFragment extends AbstractFragment {
           .usernameInto((TextView) rootView.findViewById(R.id.current_user_name))
           .statusColorInto((ImageView) rootView.findViewById(R.id.current_user_status));
     }
+  }
+
+  private void updateRoomListMode(User user) {
+    if (user == null || user.getSettings() == null || user.getSettings().getPreferences() == null) {
+      return;
+    }
+    roomListManager.setUnreadRoomMode(user.getSettings().getPreferences().isUnreadRoomsMode());
   }
 
   private void setupLogoutButton() {

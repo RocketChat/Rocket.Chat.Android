@@ -140,7 +140,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
    * synchronize the state of the thread with ServerConfig.
    */
   @DebugLog
-  public void keepalive() {
+  public void keepAlive() {
     if (ddpClient == null || !ddpClient.isConnected()) {
       defaultRealm.executeTransaction(realm -> {
         ServerConfig config = realm.where(ServerConfig.class)
@@ -242,9 +242,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
         Object obj = ctor.newInstance(appContext, hostname, serverConfigRealm, ddpClient);
 
         if (obj instanceof Registrable) {
-          Registrable registerable = (Registrable) obj;
-          registerable.register();
-          listeners.add(registerable);
+          Registrable registrable = (Registrable) obj;
+          registrable.register();
+          listeners.add(registrable);
         }
       } catch (Exception exception) {
         RCLog.w(exception, "Failed to register listeners!!");
@@ -260,8 +260,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
     Iterator<Registrable> iterator = listeners.iterator();
     while (iterator.hasNext()) {
-      Registrable registerable = iterator.next();
-      registerable.unregister();
+      Registrable registrable = iterator.next();
+      registrable.unregister();
       iterator.remove();
     }
     if (ddpClient != null) {

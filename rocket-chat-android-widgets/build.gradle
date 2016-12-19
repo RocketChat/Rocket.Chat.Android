@@ -1,41 +1,41 @@
 apply plugin: 'com.android.library'
 
 buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath rootProject.ext.androidPlugin
-    }
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath rootProject.ext.androidPlugin
+  }
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
 
-    defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 1
-        versionName "1"
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.compileSdkVersion
+    versionCode 1
+    versionName "1"
 
-        vectorDrawables.useSupportLibrary = true
+    vectorDrawables.useSupportLibrary = true
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+  }
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
-    compile rootProject.ext.supportAnnotations
-    compile rootProject.ext.supportAppCompat
-    compile rootProject.ext.supportDesign
-    compile 'org.nibor.autolink:autolink:0.5.0'
-    compile rootProject.ext.okhttp3
-    compile rootProject.ext.picasso
-    compile rootProject.ext.picasso2Okhttp3Downloader
+  testCompile 'junit:junit:4.12'
+  compile rootProject.ext.supportAnnotations
+  compile rootProject.ext.supportAppCompat
+  compile rootProject.ext.supportDesign
+  compile 'org.nibor.autolink:autolink:0.5.0'
+  compile rootProject.ext.okhttp3
+  compile rootProject.ext.picasso
+  compile rootProject.ext.picasso2Okhttp3Downloader
 }

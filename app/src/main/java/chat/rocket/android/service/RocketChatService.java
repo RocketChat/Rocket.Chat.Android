@@ -71,7 +71,7 @@ public class RocketChatService extends Service {
       if (webSocketThreads.containsKey(serverConfigId)) {
         RocketChatWebSocketThread thread = webSocketThreads.get(serverConfigId);
         if (thread != null) {
-          thread.keepalive();
+          thread.keepAlive();
         }
       }
     }
@@ -110,7 +110,7 @@ public class RocketChatService extends Service {
         .onSuccessTask(task -> {
           RocketChatWebSocketThread thread = task.getResult();
           if (thread != null) {
-            thread.keepalive();
+            thread.keepAlive();
           }
           return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED);
         }).continueWith(new LogcatIfError());
