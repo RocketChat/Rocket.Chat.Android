@@ -21,10 +21,22 @@ public class MarkDown {
    */
   public static void apply(TextView textView) {
     SpannableString text = new SpannableString(textView.getText());
+    removeImage(text);
     bold(text);
     italic(text);
     strike(text);
     textView.setText(text);
+  }
+
+  private static void removeImage(SpannableString inputText) {
+    Pattern imagePattern = Pattern.compile(
+        "!\\[([^\\]]+)\\]\\(((?:http|https):\\/\\/[^\\)]+)\\)", Pattern.MULTILINE);
+    Matcher matcher = imagePattern.matcher(inputText);
+    while (matcher.find()) {
+      inputText.setSpan(new AbsoluteSizeSpan(0),
+          matcher.start(), matcher.end(),
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
   }
 
   private static void bold(SpannableString inputText) {
