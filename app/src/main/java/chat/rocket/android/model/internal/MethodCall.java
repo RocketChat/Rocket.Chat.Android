@@ -58,9 +58,9 @@ public class MethodCall extends RealmObject {
             return;
           }
 
-          int syncstate = methodCall.getSyncState();
-          RCLog.d("MethodCall[%s] syncstate=%d", methodCall.getMethodCallId(), syncstate);
-          if (syncstate == SyncState.SYNCED) {
+          int syncState = methodCall.getSyncState();
+          RCLog.d("MethodCall[%s] syncstate=%d", methodCall.getMethodCallId(), syncState);
+          if (syncState == SyncState.SYNCED) {
             String resultJson = methodCall.getResultJson();
             if (TextUtils.isEmpty(resultJson)) {
               task.setResult(null);
@@ -70,7 +70,7 @@ public class MethodCall extends RealmObject {
             observer.unsub();
             REF_MAP.remove(methodCall.getMethodCallId());
             remove(realmHelper, methodCall.getMethodCallId()).continueWith(new LogcatIfError());
-          } else if (syncstate == SyncState.FAILED) {
+          } else if (syncState == SyncState.FAILED) {
             task.setError(new Error(methodCall.getResultJson()));
             observer.unsub();
             REF_MAP.remove(methodCall.getMethodCallId());
@@ -81,7 +81,7 @@ public class MethodCall extends RealmObject {
         REF_MAP.put(newId, observer);
 
         if (context != null) {
-          RocketChatService.keepalive(context);
+          RocketChatService.keepAlive(context);
         }
       }
       return null;

@@ -91,7 +91,7 @@ public class UsersOfRoomDialogFragment extends AbstractChatroomDialogFragment {
           .put("showAll", true));
       return null;
     }).onSuccessTask(task -> {
-      RocketChatService.keepalive(getContext());
+      RocketChatService.keepAlive(getContext());
       return task;
     }).continueWith(new LogcatIfError());
   }

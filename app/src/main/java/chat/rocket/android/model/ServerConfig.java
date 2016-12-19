@@ -25,7 +25,7 @@ public class ServerConfig extends RealmObject {
   private String error;
 
   /**
-   * Log the server connection is lost due to soem exception.
+   * Log the server connection is lost due to some exception.
    */
   @DebugLog
   public static void logConnectionError(String serverConfigId, Exception exception) {
