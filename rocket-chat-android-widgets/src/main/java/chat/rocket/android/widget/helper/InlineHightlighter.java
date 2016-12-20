@@ -13,6 +13,8 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.widget.TextView;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import chat.rocket.android.widget.R;
 
 public class InlineHightlighter {
@@ -39,31 +41,45 @@ public class InlineHightlighter {
   }
 
   private static CharSequence highlightInner(final Context context, final CharSequence text) {
-    final SpannableString s = new SpannableString(text);
+    final SpannableString inputText = new SpannableString(text);
 
-    final int length = text.length();
-    int highlightStart = length;
-    for (int i = 0; i < length; i++) {
-      char chr = text.charAt(i);
-      if (chr == '`') {
-        if (i > highlightStart) {
-          final int highlightEnd = i;
-          if (highlightStart + 1 < highlightEnd) {
-            s.setSpan(createTransparentSpan(), highlightStart, highlightStart + 1,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            for (CharacterStyle span : createCharStyles(context)) {
-              s.setSpan(span, highlightStart + 1, highlightEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            s.setSpan(createTransparentSpan(), highlightEnd, highlightEnd + 1,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-          }
-          highlightStart = length;
-        } else {
-          highlightStart = i;
-        }
-      }
+    Pattern highlightPattern = Pattern.compile(
+        "(^|&gt;|[ >_*~])\\`([^`\\r\\n]+)\\`([<_*~]|\\B|\\b|$)", Pattern.MULTILINE);
+    Matcher matcher = highlightPattern.matcher(inputText);
+
+    while (matcher.find()) {
+      setSpan(inputText, context,
+          matcher.start() + matcher.group(1).length(),
+          matcher.end() - matcher.group(3).length(),
+          1, 1);
     }
 
-    return s;
+    return inputText;
+  }
+
+  private static void setSpan(SpannableString inputText, Context context,
+                              int start, int end, int markStartLen, int markEndLen) {
+    if (markStartLen > 0) {
+      inputText.setSpan(createTransparentSpan(),
+          start, start + markStartLen,
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    CharacterStyle[] spans =
+        inputText.getSpans(start + markStartLen, end - markEndLen, CharacterStyle.class);
+    for (CharacterStyle span : spans) {
+      inputText.removeSpan(span);
+    }
+    for (CharacterStyle span : createCharStyles(context)) {
+      inputText.setSpan(span,
+          start + markStartLen, end - markEndLen,
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    if (markEndLen > 0) {
+      inputText.setSpan(createTransparentSpan(),
+          end - markEndLen, end,
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
   }
 }
