@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
     <chat.rocket.android.widget.message.MessageComposer
             android:id="@+id/message_composer"
@@ -18,25 +14,5 @@
             android:layout_height="wrap_content"
             android:theme="@style/Theme.AppCompat.Light"
             android:layout_gravity="bottom"
-            android:background="@android:color/white"
-            />
-
-    <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_upload_file"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|bottom"
-            android:layout_margin="@dimen/margin_16"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/ic_insert_photo_white_24dp"
-            />
-
-    <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_compose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/margin_16"
-            app:srcCompat="@drawable/ic_compose_white_24dp"
-            />
+            android:background="@android:color/white" />
 </FrameLayout>

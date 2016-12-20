@@ -214,11 +214,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupMessageComposer() {
-    final FloatingActionButton fabCompose =
-        (FloatingActionButton) rootView.findViewById(R.id.fab_compose);
     final MessageComposer messageComposer =
         (MessageComposer) rootView.findViewById(R.id.message_composer);
-    messageComposerManager = new MessageComposerManager(fabCompose, messageComposer);
+    messageComposerManager = new MessageComposerManager(messageComposer);
     messageComposerManager.setSendMessageCallback(messageText ->
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
@@ -227,23 +225,18 @@ public class RoomFragment extends AbstractChatRoomFragment
                 .put("ts", System.currentTimeMillis())
                 .put("rid", roomId)
                 .put("msg", messageText))));
-    messageComposerManager.setVisibilityChangedListener(shown -> {
-      FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab_upload_file);
-      if (shown) {
-        fab.hide();
-      } else {
-        fab.show();
-      }
-    });
   }
 
   private void setupFileUploader() {
-    rootView.findViewById(R.id.fab_upload_file).setOnClickListener(view -> {
-      Intent intent = new Intent();
-      intent.setType("image/*");
-      intent.setAction(Intent.ACTION_GET_CONTENT);
-      startActivityForResult(Intent.createChooser(intent, "Select Picture to Upload"), RC_UPL);
-    });
+    // change this to a more actions chooser
+    // uses bottom sheet to list options
+    // starts with only file upload (we already have it)
+//    rootView.findViewById(R.id.fab_upload_file).setOnClickListener(view -> {
+//      Intent intent = new Intent();
+//      intent.setType("image/*");
+//      intent.setAction(Intent.ACTION_GET_CONTENT);
+//      startActivityForResult(Intent.createChooser(intent, "Select Picture to Upload"), RC_UPL);
+//    });
   }
 
   @Override
@@ -366,6 +359,6 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public boolean onBackPressed() {
-    return closeSideMenuIfNeeded() || messageComposerManager.hideMessageComposerIfNeeded();
+    return closeSideMenuIfNeeded();
   }
 }
