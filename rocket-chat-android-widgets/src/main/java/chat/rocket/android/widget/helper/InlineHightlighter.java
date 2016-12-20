@@ -40,12 +40,13 @@ public class InlineHightlighter {
     return new ForegroundColorSpan(Color.TRANSPARENT);
   }
 
+  private static final Pattern HIGHLIGHT_PATTERN = Pattern.compile(
+      "(^|&gt;|[ >_*~])\\`([^`\\r\\n]+)\\`([<_*~]|\\B|\\b|$)", Pattern.MULTILINE);
+
   private static CharSequence highlightInner(final Context context, final CharSequence text) {
     final SpannableString inputText = new SpannableString(text);
 
-    Pattern highlightPattern = Pattern.compile(
-        "(^|&gt;|[ >_*~])\\`([^`\\r\\n]+)\\`([<_*~]|\\B|\\b|$)", Pattern.MULTILINE);
-    Matcher matcher = highlightPattern.matcher(inputText);
+    Matcher matcher = HIGHLIGHT_PATTERN.matcher(inputText);
 
     while (matcher.find()) {
       setSpan(inputText, context,

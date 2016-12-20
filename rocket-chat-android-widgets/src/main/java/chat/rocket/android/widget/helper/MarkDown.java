@@ -38,10 +38,10 @@ public class MarkDown {
     textView.setText(text);
   }
 
+  private static final Pattern IMAGE_PATTERN = Pattern.compile(
+      "!\\[([^\\]]+)\\]\\(((?:http|https):\\/\\/[^\\)]+)\\)", Pattern.MULTILINE);
   private static void removeImage(SpannableString inputText) {
-    Pattern imagePattern = Pattern.compile(
-        "!\\[([^\\]]+)\\]\\(((?:http|https):\\/\\/[^\\)]+)\\)", Pattern.MULTILINE);
-    Matcher matcher = imagePattern.matcher(inputText);
+    Matcher matcher = IMAGE_PATTERN.matcher(inputText);
     while (matcher.find()) {
       inputText.setSpan(new AbsoluteSizeSpan(0),
           matcher.start(), matcher.end(),
@@ -49,10 +49,11 @@ public class MarkDown {
     }
   }
 
+
+  private static final Pattern LINK_PATTERN = Pattern.compile(
+      "\\[([^\\]]+)\\]\\(((?:http|https):\\/\\/[^\\)]+)\\)", Pattern.MULTILINE);
   private static void highlightLink1(SpannableString inputText) {
-    Pattern linkPattern = Pattern.compile(
-        "\\[([^\\]]+)\\]\\(((?:http|https):\\/\\/[^\\)]+)\\)", Pattern.MULTILINE);
-    final Matcher matcher = linkPattern.matcher(inputText);
+    final Matcher matcher = LINK_PATTERN.matcher(inputText);
     while (matcher.find()) {
       ClickableSpan span = createLinkSpan(matcher.group(2));
       setSpan(span, inputText,
@@ -61,10 +62,10 @@ public class MarkDown {
     }
   }
 
+  private static final Pattern LINK_PATTERN2 = Pattern.compile(
+      "((?:<|&lt;))((?:http|https):\\/\\/[^\\|]+)\\|(.+?)((?=>|&gt;)(?:>|&gt;))", Pattern.MULTILINE);
   private static void highlightLink2(SpannableString inputText) {
-    Pattern linkPattern = Pattern.compile(
-        "((?:<|&lt;))((?:http|https):\\/\\/[^\\|]+)\\|(.+?)((?=>|&gt;)(?:>|&gt;))", Pattern.MULTILINE);
-    Matcher matcher = linkPattern.matcher(inputText);
+    Matcher matcher = LINK_PATTERN2.matcher(inputText);
     while (matcher.find()) {
       ClickableSpan span = createLinkSpan(matcher.group(2));
       setSpan(span, inputText,
@@ -74,10 +75,10 @@ public class MarkDown {
     }
   }
 
+  private static final Pattern BOLD_PATTERN = Pattern.compile(
+      "(^|&gt;|[ >_~`])(\\*{1,2})[^\\*\\r\\n]+(\\*{1,2})([<_~`]|\\B|\\b|$)", Pattern.MULTILINE);
   private static void bold(SpannableString inputText) {
-    Pattern boldPattern = Pattern.compile(
-        "(^|&gt;|[ >_~`])(\\*{1,2})[^\\*\\r\\n]+(\\*{1,2})([<_~`]|\\B|\\b|$)", Pattern.MULTILINE);
-    Matcher matcher = boldPattern.matcher(inputText);
+    Matcher matcher = BOLD_PATTERN.matcher(inputText);
     while (matcher.find()) {
       setSpan(new StyleSpan(Typeface.BOLD), inputText,
           matcher.start() + matcher.group(1).length(),
@@ -87,10 +88,10 @@ public class MarkDown {
     }
   }
 
+  private static final Pattern ITALIC_PATTERN = Pattern.compile(
+      "(^|&gt;|[ >*~`])(\\_)[^\\_\\r\\n]+(\\_)([<*~`]|\\B|\\b|$)", Pattern.MULTILINE);
   private static void italic(SpannableString inputText) {
-    Pattern italicPattern = Pattern.compile(
-        "(^|&gt;|[ >*~`])(\\_)[^\\_\\r\\n]+(\\_)([<*~`]|\\B|\\b|$)", Pattern.MULTILINE);
-    Matcher matcher = italicPattern.matcher(inputText);
+    Matcher matcher = ITALIC_PATTERN.matcher(inputText);
     while (matcher.find()) {
       setSpan(new StyleSpan(Typeface.ITALIC), inputText,
           matcher.start() + matcher.group(1).length(),
@@ -100,10 +101,10 @@ public class MarkDown {
     }
   }
 
+  private static final Pattern STRIKE_PATTERN = Pattern.compile(
+      "(^|&gt;|[ >_*`])(\\~{1,2})[^~\\r\\n]+(\\~{1,2})([<_*`]|\\B|\\b|$)", Pattern.MULTILINE);
   private static void strike(SpannableString inputText) {
-    Pattern strikePattern = Pattern.compile(
-        "(^|&gt;|[ >_*`])(\\~{1,2})[^~\\r\\n]+(\\~{1,2})([<_*`]|\\B|\\b|$)", Pattern.MULTILINE);
-    Matcher matcher = strikePattern.matcher(inputText);
+    Matcher matcher = STRIKE_PATTERN.matcher(inputText);
     while (matcher.find()) {
       setSpan(new StrikethroughSpan(), inputText,
           matcher.start() + matcher.group(1).length(),
