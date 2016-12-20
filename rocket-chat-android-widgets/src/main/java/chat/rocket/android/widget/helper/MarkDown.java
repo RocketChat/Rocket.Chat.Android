@@ -63,14 +63,14 @@ public class MarkDown {
 
   private static void highlightLink2(SpannableString inputText) {
     Pattern linkPattern = Pattern.compile(
-        "(?:<|&lt;)((?:http|https):\\/\\/[^\\|]+)\\|(.+?)(?=>|&gt;)(?:>|&gt;)", Pattern.MULTILINE);
+        "((?:<|&lt;))((?:http|https):\\/\\/[^\\|]+)\\|(.+?)((?=>|&gt;)(?:>|&gt;))", Pattern.MULTILINE);
     Matcher matcher = linkPattern.matcher(inputText);
     while (matcher.find()) {
       ClickableSpan span = createLinkSpan(matcher.group(2));
       setSpan(span, inputText,
           matcher.start(), matcher.end(),
           matcher.group(1).length() + matcher.group(2).length() + 1,
-          matcher.group(5).length() + matcher.group(6).length());
+          matcher.group(4).length());
     }
   }
 
