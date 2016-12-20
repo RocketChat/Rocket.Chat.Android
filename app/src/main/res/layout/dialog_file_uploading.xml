@@ -6,22 +6,19 @@
         android:paddingStart="@dimen/margin_16"
         android:paddingEnd="@dimen/margin_16"
         android:paddingBottom="@dimen/margin_16"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
     <FrameLayout
             android:id="@+id/room_user_titlebar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            >
+            android:layout_height="?attr/actionBarSize">
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
                 android:text="@string/file_uploading_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                />
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     </FrameLayout>
 
@@ -33,8 +30,7 @@
             android:layout_marginTop="@dimen/margin_8"
             android:layout_marginBottom="@dimen/margin_8"
             tools:progress="12"
-            tools:max="120"
-            />
+            tools:max="120" />
 
     <LinearLayout
             android:layout_width="wrap_content"
@@ -42,25 +38,25 @@
             android:orientation="horizontal"
             android:layout_gravity="end"
             android:paddingEnd="2dp"
-            >
+            android:paddingRight="2dp">
+
         <TextView
                 android:id="@+id/txt_filesize_uploaded"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="12"
-                />
+                tools:text="12" />
+
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="/"
                 android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                />
+                android:layout_marginEnd="2dp" />
+
         <TextView
                 android:id="@+id/txt_filesize_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="120"
-                />
+                tools:text="120" />
     </LinearLayout>
 </LinearLayout>

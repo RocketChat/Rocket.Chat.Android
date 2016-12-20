@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
+
     <FrameLayout
             android:layout_width="32dp"
             android:layout_height="?attr/listPreferredItemHeightSmall"
             android:layout_marginEnd="16dp"
-            >
+            android:layout_marginRight="16dp">
+
         <chat.rocket.android.widget.FontAwesomeTextView
                 android:id="@+id/icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </FrameLayout>
 
     <TextView
@@ -23,8 +23,7 @@
             android:layout_height="?attr/listPreferredItemHeightSmall"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     <FrameLayout
             android:id="@+id/alert_count_container"
@@ -35,14 +34,14 @@
             android:padding="3dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/unread_count_background"
-            >
+            android:layout_marginLeft="8dp">
+
         <TextView
                 android:id="@+id/alert_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
                 android:layout_gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </FrameLayout>
 </merge>

@@ -154,8 +154,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void onItemClick(PairedMessage pairedMessage) {
     if (pairedMessage.target != null) {
-      final int syncstate = pairedMessage.target.getSyncState();
-      if (syncstate == SyncState.FAILED) {
+      final int syncState = pairedMessage.target.getSyncState();
+      if (syncState == SyncState.FAILED) {
         final String messageId = pairedMessage.target.getId();
         new AlertDialog.Builder(getContext())
             .setPositiveButton(R.string.resend, (dialog, which) -> {
@@ -171,7 +171,6 @@ public class RoomFragment extends AbstractChatRoomFragment
                   realm.where(Message.class)
                       .equalTo("_id", messageId).findAll().deleteAllFromRealm()
               ).continueWith(new LogcatIfError());
-              ;
             })
             .show();
       }
@@ -180,8 +179,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupSideMenu() {
-    View sidemenu = rootView.findViewById(R.id.room_side_menu);
-    sidemenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
+    View sideMenu = rootView.findViewById(R.id.room_side_menu);
+    sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
       UsersOfRoomDialogFragment.create(serverConfigId, roomId, hostname)
           .show(getFragmentManager(), UsersOfRoomDialogFragment.class.getSimpleName());
       closeSideMenuIfNeeded();
@@ -225,6 +224,13 @@ public class RoomFragment extends AbstractChatRoomFragment
                 .put("ts", System.currentTimeMillis())
                 .put("rid", roomId)
                 .put("msg", messageText))));
+    messageComposerManager.setExtrasPickerListener(() -> {
+      Intent intent = new Intent();
+      intent.setType("image/*");
+      intent.setAction(Intent.ACTION_GET_CONTENT);
+      startActivityForResult(Intent.createChooser(intent, "Select Picture to Upload"),
+          RC_UPL);
+    });
   }
 
   private void setupFileUploader() {
@@ -285,10 +291,10 @@ public class RoomFragment extends AbstractChatRoomFragment
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
     if (listView != null && listView.getAdapter() instanceof MessageListAdapter) {
       MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
-      final int syncstate = procedure.getSyncState();
+      final int syncState = procedure.getSyncState();
       final boolean hasNext = procedure.hasNext();
-      RCLog.d("hasNext: %s syncstate: %d", hasNext, syncstate);
-      if (syncstate == SyncState.SYNCED || syncstate == SyncState.FAILED) {
+      RCLog.d("hasNext: %s syncstate: %d", hasNext, syncState);
+      if (syncState == SyncState.SYNCED || syncState == SyncState.FAILED) {
         scrollListener.setLoadingDone();
         adapter.updateFooter(hasNext, true);
       } else {

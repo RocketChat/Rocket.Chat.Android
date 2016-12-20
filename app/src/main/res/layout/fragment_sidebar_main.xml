@@ -61,7 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="?attr/listPreferredItemPaddingLeft">
+                android:paddingStart="?attr/listPreferredItemPaddingLeft"
+                android:paddingLeft="?attr/listPreferredItemPaddingLeft">
 
             <TextView
                     android:id="@+id/unread_title"
@@ -80,7 +81,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"
+                    android:layout_marginRight="?attr/listPreferredItemPaddingRight" />
 
             <FrameLayout
                     android:layout_width="match_parent"
@@ -112,7 +114,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"
+                    android:layout_marginRight="?attr/listPreferredItemPaddingRight" />
 
             <FrameLayout
                     android:layout_width="match_parent"
@@ -144,7 +147,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"
+                    android:layout_marginRight="?attr/listPreferredItemPaddingRight" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
