@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import chat.rocket.android.R;
 
-public class VideoUploadMessageSpec extends FileUploadMessageSpec {
+public class VideoUploadMessageSpec extends AbstractUploadMessageSpec {
 
   @Override
   public ViewData getSpecificViewData() {
@@ -19,7 +19,7 @@ public class VideoUploadMessageSpec extends FileUploadMessageSpec {
     return Intent.createChooser(intent, "Select Video to Upload");
   }
 
-  private static class VideoUploadViewData implements MessageSpec.ViewData {
+  private static class VideoUploadViewData implements AbstractMessageSpec.ViewData {
     @Override
     public int getBackgroundTint() {
       return R.color.colorAccent;

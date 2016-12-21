@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 
 import chat.rocket.android.R;
 import chat.rocket.android.layouthelper.chatroom.dialog.MessageSelectionAdapter;
-import chat.rocket.android.message.MessageSpec;
+import chat.rocket.android.message.AbstractMessageSpec;
 
 public class MessageSelectionDialogFragment extends AbstractChatRoomDialogFragment {
 
@@ -27,8 +27,8 @@ public class MessageSelectionDialogFragment extends AbstractChatRoomDialogFragme
     });
   }
 
-  public void addMessageSpec(MessageSpec messageSpec) {
-    adapter.addMessageSpec(messageSpec);
+  public void addMessageSpec(AbstractMessageSpec abstractMessageSpec) {
+    adapter.addMessageSpec(abstractMessageSpec);
   }
 
   public void setListener(ClickListener listener) {
@@ -47,6 +47,6 @@ public class MessageSelectionDialogFragment extends AbstractChatRoomDialogFragme
   }
 
   public interface ClickListener {
-    void onClick(MessageSpec messageSpec);
+    void onClick(AbstractMessageSpec abstractMessageSpec);
   }
 }

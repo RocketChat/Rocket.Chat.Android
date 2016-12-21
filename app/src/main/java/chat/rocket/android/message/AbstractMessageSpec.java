@@ -6,7 +6,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
-public abstract class MessageSpec {
+public abstract class AbstractMessageSpec {
 
   public abstract ViewData getViewData();
 

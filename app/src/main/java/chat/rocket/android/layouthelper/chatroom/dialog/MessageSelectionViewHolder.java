@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import chat.rocket.android.R;
-import chat.rocket.android.message.MessageSpec;
+import chat.rocket.android.message.AbstractMessageSpec;
 
 public class MessageSelectionViewHolder extends RecyclerView.ViewHolder {
 
@@ -24,10 +24,10 @@ public class MessageSelectionViewHolder extends RecyclerView.ViewHolder {
     messageSpecTitle = (TextView) itemView.findViewById(R.id.message_spec_title);
   }
 
-  public void onBind(MessageSpec messageSpec) {
-    itemView.setTag(messageSpec);
+  public void onBind(AbstractMessageSpec abstractMessageSpec) {
+    itemView.setTag(abstractMessageSpec);
 
-    MessageSpec.ViewData viewData = messageSpec.getViewData();
+    AbstractMessageSpec.ViewData viewData = abstractMessageSpec.getViewData();
     setIconBackgroundColorTint(viewData.getBackgroundTint());
     setIcon(viewData.getIcon());
     setTitle(viewData.getTitle());

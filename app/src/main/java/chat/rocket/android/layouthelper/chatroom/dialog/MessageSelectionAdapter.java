@@ -8,20 +8,20 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 import chat.rocket.android.R;
-import chat.rocket.android.message.MessageSpec;
+import chat.rocket.android.message.AbstractMessageSpec;
 
 public class MessageSelectionAdapter
     extends RecyclerView.Adapter<MessageSelectionViewHolder> {
 
-  private List<MessageSpec> messageSpecs = new ArrayList<>();
+  private List<AbstractMessageSpec> abstractMessageSpecs = new ArrayList<>();
   private ClickListener listener;
 
   public void setListener(ClickListener listener) {
     this.listener = listener;
   }
 
-  public void addMessageSpec(MessageSpec messageSpec) {
-    messageSpecs.add(messageSpec);
+  public void addMessageSpec(AbstractMessageSpec abstractMessageSpec) {
+    abstractMessageSpecs.add(abstractMessageSpec);
     notifyDataSetChanged();
   }
 
@@ -31,9 +31,9 @@ public class MessageSelectionAdapter
     View itemView = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.dialog_message_selection_item, parent, false);
 
-    itemView.setOnClickListener(v -> {
+    itemView.setOnClickListener(view -> {
       if (listener != null) {
-        listener.onClick((MessageSpec) itemView.getTag());
+        listener.onClick((AbstractMessageSpec) itemView.getTag());
       }
     });
 
@@ -43,16 +43,16 @@ public class MessageSelectionAdapter
   @Override
   public void onBindViewHolder(MessageSelectionViewHolder holder,
                                int position) {
-    holder.onBind(messageSpecs.get(position));
+    holder.onBind(abstractMessageSpecs.get(position));
   }
 
   @Override
   public int getItemCount() {
-    return messageSpecs.size();
+    return abstractMessageSpecs.size();
   }
 
 
   public interface ClickListener {
-    void onClick(MessageSpec messageSpec);
+    void onClick(AbstractMessageSpec abstractMessageSpec);
   }
 }

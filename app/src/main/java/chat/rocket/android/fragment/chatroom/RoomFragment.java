@@ -32,7 +32,7 @@ import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.message.AudioUploadMessageSpec;
-import chat.rocket.android.message.FileUploadMessageSpec;
+import chat.rocket.android.message.AbstractUploadMessageSpec;
 import chat.rocket.android.message.ImageUploadMessageSpec;
 import chat.rocket.android.message.VideoUploadMessageSpec;
 import chat.rocket.android.model.ServerConfig;
@@ -246,7 +246,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode != FileUploadMessageSpec.RC_UPL || resultCode != Activity.RESULT_OK) {
+    if (requestCode != AbstractUploadMessageSpec.RC_UPL || resultCode != Activity.RESULT_OK) {
       return;
     }
 

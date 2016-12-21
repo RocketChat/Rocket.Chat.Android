@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 
-public abstract class FileUploadMessageSpec extends MessageSpec {
+public abstract class AbstractUploadMessageSpec extends AbstractMessageSpec {
 
   public static final int RC_UPL = 0x12;
 

@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import chat.rocket.android.R;
 
-public class AudioUploadMessageSpec extends FileUploadMessageSpec {
+public class AudioUploadMessageSpec extends AbstractUploadMessageSpec {
 
   @Override
   protected Intent getIntent() {
@@ -19,7 +19,7 @@ public class AudioUploadMessageSpec extends FileUploadMessageSpec {
     return new AudioUploadViewData();
   }
 
-  private static class AudioUploadViewData implements MessageSpec.ViewData {
+  private static class AudioUploadViewData implements AbstractMessageSpec.ViewData {
     @Override
     public int getBackgroundTint() {
       return R.color.colorAccent;
