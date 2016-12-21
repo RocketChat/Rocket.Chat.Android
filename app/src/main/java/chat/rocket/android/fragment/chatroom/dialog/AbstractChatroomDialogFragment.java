@@ -10,7 +10,7 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 
-abstract class AbstractChatroomDialogFragment extends BottomSheetDialogFragment {
+abstract class AbstractChatRoomDialogFragment extends BottomSheetDialogFragment {
 
   protected RealmHelper realmHelper;
   protected String roomId;

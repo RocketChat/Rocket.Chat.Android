@@ -11,7 +11,7 @@ import chat.rocket.android.fragment.oauth.GoogleOAuthFragment;
 import chat.rocket.android.fragment.oauth.TwitterOAuthFragment;
 
 /**
- * View model for OAuth login button.
+ * ViewData model for OAuth login button.
  */
 public class OAuthProviderInfo {
   private static final ArrayList<OAuthProviderInfo> _LIST = new ArrayList<OAuthProviderInfo>() {

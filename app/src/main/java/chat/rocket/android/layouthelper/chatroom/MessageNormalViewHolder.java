@@ -9,7 +9,7 @@ import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
 
 /**
- * View holder of NORMAL chat message.
+ * ViewData holder of NORMAL chat message.
  */
 public class MessageNormalViewHolder extends AbstractMessageViewHolder {
   private final RocketChatMessageLayout body;

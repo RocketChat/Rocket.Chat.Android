@@ -17,7 +17,7 @@ import chat.rocket.android.renderer.FileUploadingRenderer;
 /**
  * dialog fragment to display progress of file uploading.
  */
-public class FileUploadProgressDialogFragment extends AbstractChatroomDialogFragment {
+public class FileUploadProgressDialogFragment extends AbstractChatRoomDialogFragment {
 
   private String uplId;
   private RealmObjectObserver<FileUploading> fileUploadingObserver;

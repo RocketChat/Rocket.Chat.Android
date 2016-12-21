@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -21,6 +20,7 @@ import java.util.UUID;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
+import chat.rocket.android.fragment.chatroom.dialog.MessageSelectionDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
@@ -31,6 +31,10 @@ import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.message.AudioUploadMessageSpec;
+import chat.rocket.android.message.FileUploadMessageSpec;
+import chat.rocket.android.message.ImageUploadMessageSpec;
+import chat.rocket.android.message.VideoUploadMessageSpec;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
@@ -51,8 +55,6 @@ import chat.rocket.android.widget.message.MessageComposer;
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, RealmModelListAdapter.OnItemClickListener<PairedMessage> {
 
-  private static final int RC_UPL = 0x12;
-
   private String serverConfigId;
   private RealmHelper realmHelper;
   private String roomId;
@@ -63,6 +65,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageComposerManager messageComposerManager;
+
+  private MessageSelectionDialogFragment.ClickListener messageSelectionClickListener =
+      messageSpec -> messageSpec.onSelect(RoomFragment.this);
 
   public RoomFragment() {
   }
@@ -148,7 +153,6 @@ public class RoomFragment extends AbstractChatRoomFragment
 
     setupSideMenu();
     setupMessageComposer();
-    setupFileUploader();
   }
 
   @Override
@@ -225,30 +229,24 @@ public class RoomFragment extends AbstractChatRoomFragment
                 .put("rid", roomId)
                 .put("msg", messageText))));
     messageComposerManager.setExtrasPickerListener(() -> {
-      Intent intent = new Intent();
-      intent.setType("image/*");
-      intent.setAction(Intent.ACTION_GET_CONTENT);
-      startActivityForResult(Intent.createChooser(intent, "Select Picture to Upload"),
-          RC_UPL);
-    });
-  }
+      MessageSelectionDialogFragment fragment = MessageSelectionDialogFragment.create();
 
-  private void setupFileUploader() {
-    // change this to a more actions chooser
-    // uses bottom sheet to list options
-    // starts with only file upload (we already have it)
-//    rootView.findViewById(R.id.fab_upload_file).setOnClickListener(view -> {
-//      Intent intent = new Intent();
-//      intent.setType("image/*");
-//      intent.setAction(Intent.ACTION_GET_CONTENT);
-//      startActivityForResult(Intent.createChooser(intent, "Select Picture to Upload"), RC_UPL);
-//    });
+      fragment.addMessageSpec(new ImageUploadMessageSpec());
+      fragment.addMessageSpec(new AudioUploadMessageSpec());
+      fragment.addMessageSpec(new VideoUploadMessageSpec());
+
+      fragment.setListener(messageSelectionClickListener);
+
+      fragment.show(getFragmentManager(), MessageSelectionDialogFragment.TAG);
+
+      closeSideMenuIfNeeded();
+    });
   }
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode != RC_UPL || resultCode != Activity.RESULT_OK) {
+    if (requestCode != FileUploadMessageSpec.RC_UPL || resultCode != Activity.RESULT_OK) {
       return;
     }
 
