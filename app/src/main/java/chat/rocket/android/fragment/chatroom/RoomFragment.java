@@ -1,8 +1,10 @@
 package chat.rocket.android.fragment.chatroom;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,6 +33,7 @@ import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.message.AbstractMessageSpec;
 import chat.rocket.android.message.AudioUploadMessageSpec;
 import chat.rocket.android.message.AbstractUploadMessageSpec;
 import chat.rocket.android.message.ImageUploadMessageSpec;
@@ -48,10 +51,13 @@ import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
 import chat.rocket.android.widget.message.MessageComposer;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Chat room screen.
  */
+@RuntimePermissions
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, RealmModelListAdapter.OnItemClickListener<PairedMessage> {
 
@@ -67,7 +73,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   private MessageComposerManager messageComposerManager;
 
   private MessageSelectionDialogFragment.ClickListener messageSelectionClickListener =
-      messageSpec -> messageSpec.onSelect(RoomFragment.this);
+      messageSpec -> RoomFragmentPermissionsDispatcher
+          .onMessageSpecSelectedWithCheck(RoomFragment.this, messageSpec);
 
   public RoomFragment() {
   }
@@ -364,5 +371,17 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public boolean onBackPressed() {
     return closeSideMenuIfNeeded();
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    RoomFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+  }
+
+  @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+  protected void onMessageSpecSelected(AbstractMessageSpec messageSpec) {
+    messageSpec.onSelect(RoomFragment.this);
   }
 }
