@@ -40,7 +40,7 @@ public class ServerHelper {
 
     client.newCall(request).enqueue(new okhttp3.Callback() {
       @Override
-      public void onFailure(Call call, IOException e) {
+      public void onFailure(Call call, IOException exception) {
         // some connection error
         callback.isNotValid();
       }
