@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -132,8 +133,8 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
         .downloader(getDownloader())
         .build()
         .load(absolutize(imageURL))
-        .placeholder(R.drawable.image_dummy)
-        .error(R.drawable.image_error)
+        .placeholder(VectorDrawableCompat.create(getResources(), R.drawable.image_dummy, null))
+        .error(VectorDrawableCompat.create(getResources(), R.drawable.image_error, null))
         .into((ImageView) attachmentView.findViewById(R.id.image));
 
     TextView titleView = (TextView) attachmentView.findViewById(R.id.title);
