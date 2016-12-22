@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="chat.rocket.android">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
             android:name=".RocketChatApplication"
@@ -16,23 +17,23 @@
                 android:name=".activity.MainActivity"
                 android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
                 android:name=".activity.AddServerActivity"
-                android:windowSoftInputMode="adjustResize"/>
+                android:windowSoftInputMode="adjustResize" />
         <activity
                 android:name=".activity.ServerConfigActivity"
-                android:windowSoftInputMode="adjustResize"/>
+                android:windowSoftInputMode="adjustResize" />
 
-        <service android:name=".service.RocketChatService"/>
+        <service android:name=".service.RocketChatService" />
 
-        <service android:name=".service.notification.NotificationDismissalCallbackService"/>
+        <service android:name=".service.notification.NotificationDismissalCallbackService" />
     </application>
 
 </manifest>
