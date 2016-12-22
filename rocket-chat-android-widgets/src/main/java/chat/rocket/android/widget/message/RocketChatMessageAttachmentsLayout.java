@@ -134,7 +134,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
         .build()
         .load(absolutize(imageURL))
         .placeholder(VectorDrawableCompat.create(getResources(), R.drawable.image_dummy, null))
-        .error(R.drawable.image_error)
+        .error(VectorDrawableCompat.create(getResources(), R.drawable.image_error, null))
         .into((ImageView) attachmentView.findViewById(R.id.image));
 
     TextView titleView = (TextView) attachmentView.findViewById(R.id.title);
