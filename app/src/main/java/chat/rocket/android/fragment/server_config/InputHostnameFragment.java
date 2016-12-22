@@ -2,11 +2,14 @@ package chat.rocket.android.fragment.server_config;
 
 import android.support.design.widget.Snackbar;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.json.JSONObject;
 
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.OkHttpHelper;
+import chat.rocket.android.helper.ServerHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
@@ -37,22 +40,22 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   }
 
   private void handleConnect() {
-    final TextView editor = (TextView) rootView.findViewById(R.id.editor_hostname);
+    final String hostname = ServerHelper.enforceHostname(getHostname());
 
-    final String hostname =
-        TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
+    ServerHelper.isApiVersionValid(OkHttpHelper.getClientForUploadFile(), hostname,
+        new ServerHelper.Callback() {
+          @Override
+          public void isValid() {
+            getActivity().runOnUiThread(() -> onServerValid(hostname));
+          }
 
-    RocketChatCache.get(getContext()).edit()
-        .putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, serverConfigId)
-        .apply();
-
-    RealmStore.getDefault().executeTransaction(
-        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
-            new JSONObject().put("serverConfigId", serverConfigId)
-                .put("hostname", hostname)
-                .put("error", JSONObject.NULL)
-                .put("session", JSONObject.NULL)
-                .put("state", ServerConfig.STATE_READY))).continueWith(new LogcatIfError());
+          @Override
+          public void isNotValid() {
+            getActivity().runOnUiThread(() ->
+                Toast.makeText(getActivity(), R.string.input_hostname_invalid_server_message,
+                    Toast.LENGTH_SHORT).show());
+          }
+        });
   }
 
   @Override
@@ -64,6 +67,26 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   public void onDestroyView() {
     serverConfigObserver.unsub();
     super.onDestroyView();
+  }
+
+  private String getHostname() {
+    final TextView editor = (TextView) rootView.findViewById(R.id.editor_hostname);
+
+    return TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
+  }
+
+  private void onServerValid(String hostname) {
+    RocketChatCache.get(getContext()).edit()
+        .putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, serverConfigId)
+        .apply();
+
+    RealmStore.getDefault().executeTransaction(
+        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
+            new JSONObject().put("serverConfigId", serverConfigId)
+                .put("hostname", hostname)
+                .put("error", JSONObject.NULL)
+                .put("session", JSONObject.NULL)
+                .put("state", ServerConfig.STATE_READY))).continueWith(new LogcatIfError());
   }
 
   private void showError(String errString) {

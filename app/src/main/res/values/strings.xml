@@ -39,4 +39,6 @@
     <string name="image_upload_message_spec_title">Attach image</string>
     <string name="audio_upload_message_spec_title">Attach audio</string>
     <string name="video_upload_message_spec_title">Attach video</string>
+
+    <string name="input_hostname_invalid_server_message">Invalid server version</string>
 </resources>
