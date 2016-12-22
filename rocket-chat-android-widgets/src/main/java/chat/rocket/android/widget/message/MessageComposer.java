@@ -121,40 +121,6 @@ public class MessageComposer extends LinearLayout {
     composer.findViewById(R.id.btn_submit).setEnabled(enabled);
   }
 
-  protected final void focusToEditor() {
-    final TextView editor = getEditor();
-    editor.requestFocus();
-    InputMethodManager imm =
-        (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.showSoftInput(editor, InputMethodManager.SHOW_IMPLICIT);
-  }
-
-  protected final void unFocusEditor() {
-    InputMethodManager imm =
-        (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-  }
-
-  public void show(@Nullable Runnable callback) {
-    focusToEditor();
-    setVisibility(View.VISIBLE);
-    if (callback != null) {
-      callback.run();
-    }
-  }
-
-  public void hide(@Nullable Runnable callback) {
-    unFocusEditor();
-    setVisibility(View.GONE);
-    if (callback != null) {
-      callback.run();
-    }
-  }
-
-  public boolean isShown() {
-    return getVisibility() == View.VISIBLE;
-  }
-
   private void animateHide(final View view) {
     view.animate().scaleX(0).scaleY(0).setDuration(150).withEndAction(new Runnable() {
       @Override
