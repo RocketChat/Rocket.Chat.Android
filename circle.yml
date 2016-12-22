@@ -33,7 +33,7 @@ dependencies:
 
 test:
   override:
-    - ./gradlew assembleRelease --stacktrace -Pcom.android.build.threadPoolSize=1 -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs="-Xms512m -Xmx2048m" -Dorg.gradle.daemon=false
+    - ./gradlew assembleRelease --stacktrace
     - find . -name app-*-release.apk -exec mv {} $CIRCLE_ARTIFACTS/ \;
 
 deployment:
