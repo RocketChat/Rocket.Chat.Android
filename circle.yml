@@ -31,6 +31,11 @@ dependencies:
     - /usr/local/android-sdk-linux/tools
     - /usr/local/android-sdk-linux/build-tools/25.0.1
 
+test:
+  override:
+    - ./gradlew assembleRelease --stacktrace -Pcom.android.build.threadPoolSize=1 -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs="-Xms512m -Xmx2048m" -Dorg.gradle.daemon=false
+    - find . -name app-*-release.apk -exec mv {} $CIRCLE_ARTIFACTS/ \;
+
 deployment:
   beta:
     tag: /v\d+\.\d+\.\d+(?!.)/
