@@ -53,8 +53,8 @@ public class MainActivity extends AbstractAuthedActivity {
 
   @Override
   protected void onResume() {
-    super.onResume();
     isForeground = true;
+    super.onResume();
   }
 
   @Override
