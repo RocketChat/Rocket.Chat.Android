@@ -7,7 +7,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.renderer.MessageRenderer;
 
 /**
- * View holder of NORMAL chat message.
+ * ViewData holder of NORMAL chat message.
  */
 public class MessageSystemViewHolder extends AbstractMessageViewHolder {
   private final TextView body;

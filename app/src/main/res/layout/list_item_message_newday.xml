@@ -6,15 +6,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
     <View
             android:layout_width="0px"
             android:layout_height="1dp"
             android:layout_weight="1"
-            android:background="@color/newday_color"
-            />
+            android:background="@color/newday_color" />
 
     <TextView
             android:id="@+id/newday_text"
@@ -25,14 +23,12 @@
             android:textColor="@color/newday_text_color"
             android:textSize="8sp"
             android:textStyle="bold"
-            tools:text="2016/01/23"
-            />
+            tools:text="2016/01/23" />
 
     <View
             android:layout_width="0px"
             android:layout_height="1dp"
             android:layout_weight="1"
-            android:background="@color/newday_color"
-            />
+            android:background="@color/newday_color" />
 
 </LinearLayout>

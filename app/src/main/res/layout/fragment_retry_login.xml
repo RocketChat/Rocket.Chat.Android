@@ -3,8 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorPrimaryDark"
-        >
+        android:background="?attr/colorPrimaryDark">
 
     <LinearLayout
             android:layout_width="wrap_content"
@@ -13,15 +12,13 @@
             android:background="@color/white"
             android:minWidth="288dp"
             android:orientation="vertical"
-            android:padding="@dimen/margin_24"
-            >
+            android:padding="@dimen/margin_24">
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_retry_login_error_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                />
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <TextView
                 android:id="@+id/txt_error_description"
@@ -29,16 +26,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_8"
                 android:layout_marginTop="@dimen/margin_8"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1" />
 
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
                     android:id="@+id/btn_retry_login"
@@ -47,15 +42,13 @@
                     android:layout_margin="@dimen/margin_8"
                     app:elevation="2dp"
                     app:fabSize="normal"
-                    app:srcCompat="@drawable/ic_arrow_forward_white_24dp"
-                    />
+                    app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_retry_login_retry_title"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         </LinearLayout>
 
@@ -66,8 +59,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin_16"
                 app:dotCount="5"
-                app:dotSize="12dp"
-                />
+                app:dotSize="12dp" />
 
     </LinearLayout>
 </FrameLayout>

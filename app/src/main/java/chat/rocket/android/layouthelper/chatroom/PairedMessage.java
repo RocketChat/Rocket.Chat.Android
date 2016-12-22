@@ -4,7 +4,7 @@ import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.model.ddp.Message;
 
 /**
- * View Model for messages in chatroom.
+ * ViewData Model for messages in chatroom.
  */
 public class PairedMessage {
   public final Message target;

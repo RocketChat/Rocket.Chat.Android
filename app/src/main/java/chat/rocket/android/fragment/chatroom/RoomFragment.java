@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -21,6 +20,7 @@ import java.util.UUID;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
+import chat.rocket.android.fragment.chatroom.dialog.MessageSelectionDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
@@ -31,6 +31,10 @@ import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.message.AudioUploadMessageSpec;
+import chat.rocket.android.message.AbstractUploadMessageSpec;
+import chat.rocket.android.message.ImageUploadMessageSpec;
+import chat.rocket.android.message.VideoUploadMessageSpec;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
@@ -51,8 +55,6 @@ import chat.rocket.android.widget.message.MessageComposer;
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, RealmModelListAdapter.OnItemClickListener<PairedMessage> {
 
-  private static final int RC_UPL = 0x12;
-
   private String serverConfigId;
   private RealmHelper realmHelper;
   private String roomId;
@@ -63,6 +65,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageComposerManager messageComposerManager;
+
+  private MessageSelectionDialogFragment.ClickListener messageSelectionClickListener =
+      messageSpec -> messageSpec.onSelect(RoomFragment.this);
 
   public RoomFragment() {
   }
@@ -148,14 +153,13 @@ public class RoomFragment extends AbstractChatRoomFragment
 
     setupSideMenu();
     setupMessageComposer();
-    setupFileUploader();
   }
 
   @Override
   public void onItemClick(PairedMessage pairedMessage) {
     if (pairedMessage.target != null) {
-      final int syncstate = pairedMessage.target.getSyncState();
-      if (syncstate == SyncState.FAILED) {
+      final int syncState = pairedMessage.target.getSyncState();
+      if (syncState == SyncState.FAILED) {
         final String messageId = pairedMessage.target.getId();
         new AlertDialog.Builder(getContext())
             .setPositiveButton(R.string.resend, (dialog, which) -> {
@@ -171,7 +175,6 @@ public class RoomFragment extends AbstractChatRoomFragment
                   realm.where(Message.class)
                       .equalTo("_id", messageId).findAll().deleteAllFromRealm()
               ).continueWith(new LogcatIfError());
-              ;
             })
             .show();
       }
@@ -180,8 +183,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupSideMenu() {
-    View sidemenu = rootView.findViewById(R.id.room_side_menu);
-    sidemenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
+    View sideMenu = rootView.findViewById(R.id.room_side_menu);
+    sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
       UsersOfRoomDialogFragment.create(serverConfigId, roomId, hostname)
           .show(getFragmentManager(), UsersOfRoomDialogFragment.class.getSimpleName());
       closeSideMenuIfNeeded();
@@ -214,11 +217,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupMessageComposer() {
-    final FloatingActionButton fabCompose =
-        (FloatingActionButton) rootView.findViewById(R.id.fab_compose);
     final MessageComposer messageComposer =
         (MessageComposer) rootView.findViewById(R.id.message_composer);
-    messageComposerManager = new MessageComposerManager(fabCompose, messageComposer);
+    messageComposerManager = new MessageComposerManager(messageComposer);
     messageComposerManager.setSendMessageCallback(messageText ->
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
@@ -227,29 +228,25 @@ public class RoomFragment extends AbstractChatRoomFragment
                 .put("ts", System.currentTimeMillis())
                 .put("rid", roomId)
                 .put("msg", messageText))));
-    messageComposerManager.setVisibilityChangedListener(shown -> {
-      FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab_upload_file);
-      if (shown) {
-        fab.hide();
-      } else {
-        fab.show();
-      }
-    });
-  }
+    messageComposerManager.setExtrasPickerListener(() -> {
+      MessageSelectionDialogFragment fragment = MessageSelectionDialogFragment.create();
 
-  private void setupFileUploader() {
-    rootView.findViewById(R.id.fab_upload_file).setOnClickListener(view -> {
-      Intent intent = new Intent();
-      intent.setType("image/*");
-      intent.setAction(Intent.ACTION_GET_CONTENT);
-      startActivityForResult(Intent.createChooser(intent, "Select Picture to Upload"), RC_UPL);
+      fragment.addMessageSpec(new ImageUploadMessageSpec());
+      fragment.addMessageSpec(new AudioUploadMessageSpec());
+      fragment.addMessageSpec(new VideoUploadMessageSpec());
+
+      fragment.setListener(messageSelectionClickListener);
+
+      fragment.show(getFragmentManager(), MessageSelectionDialogFragment.TAG);
+
+      closeSideMenuIfNeeded();
     });
   }
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode != RC_UPL || resultCode != Activity.RESULT_OK) {
+    if (requestCode != AbstractUploadMessageSpec.RC_UPL || resultCode != Activity.RESULT_OK) {
       return;
     }
 
@@ -292,10 +289,10 @@ public class RoomFragment extends AbstractChatRoomFragment
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
     if (listView != null && listView.getAdapter() instanceof MessageListAdapter) {
       MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
-      final int syncstate = procedure.getSyncState();
+      final int syncState = procedure.getSyncState();
       final boolean hasNext = procedure.hasNext();
-      RCLog.d("hasNext: %s syncstate: %d", hasNext, syncstate);
-      if (syncstate == SyncState.SYNCED || syncstate == SyncState.FAILED) {
+      RCLog.d("hasNext: %s syncstate: %d", hasNext, syncState);
+      if (syncState == SyncState.SYNCED || syncState == SyncState.FAILED) {
         scrollListener.setLoadingDone();
         adapter.updateFooter(hasNext, true);
       } else {
@@ -366,6 +363,6 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public boolean onBackPressed() {
-    return closeSideMenuIfNeeded() || messageComposerManager.hideMessageComposerIfNeeded();
+    return closeSideMenuIfNeeded();
   }
 }

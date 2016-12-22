@@ -5,20 +5,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="288dp"
-        android:padding="@dimen/margin_24"
-        >
+        android:padding="@dimen/margin_24">
+
     <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_channel_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
+
         <android.support.design.widget.TextInputEditText
                 android:id="@+id/editor_channel_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textWebEmailAddress"
-                android:hint="@string/dialog_add_channel_name"
-                />
+                android:hint="@string/dialog_add_channel_name" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
@@ -27,29 +26,26 @@
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/margin_16"
             android:layout_marginStart="@dimen/margin_8"
-            android:layout_marginEnd="@dimen/margin_8"
-            >
+            android:layout_marginEnd="@dimen/margin_8">
+
         <CheckBox
                 android:id="@+id/checkbox_private"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dialog_add_channel_private"
-                />
+                android:text="@string/dialog_add_channel_private" />
 
         <CheckBox
                 android:id="@+id/checkbox_read_only"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dialog_add_channel_read_only"
-                />
+                android:text="@string/dialog_add_channel_read_only" />
     </LinearLayout>
 
     <Space
             android:layout_width="match_parent"
-            android:layout_height="@dimen/margin_16"
-            />
+            android:layout_height="@dimen/margin_16" />
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_add_channel"
@@ -58,8 +54,7 @@
             android:layout_gravity="end|bottom"
             app:elevation="2dp"
             app:fabSize="mini"
-            app:srcCompat="@drawable/ic_arrow_forward_white_24dp"
-            />
+            app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />
 
     <chat.rocket.android.widget.WaitingView
             android:id="@+id/waiting"
@@ -68,7 +63,6 @@
             android:layout_gravity="center"
             android:visibility="gone"
             app:dotCount="5"
-            app:dotSize="12dp"
-            />
+            app:dotSize="12dp" />
 
 </LinearLayout>

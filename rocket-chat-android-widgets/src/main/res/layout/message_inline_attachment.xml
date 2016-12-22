@@ -4,21 +4,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="4dp"
-        android:padding="4dp"
-        >
+        android:padding="4dp">
+
     <View
             android:layout_width="3dp"
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
-            android:background="@color/inline_attachment_quote_line"
-            />
+            android:background="@color/inline_attachment_quote_line" />
 
     <LinearLayout
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
         <TextView
                 android:id="@+id/title"
@@ -27,8 +25,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:textAppearance="@style/TextAppearance.RocketChat.MessageAttachment.Title"
-                android:background="?attr/selectableItemBackground"
-                />
+                android:background="?attr/selectableItemBackground" />
 
         <ImageView
                 android:id="@+id/image"
@@ -38,8 +35,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginRight="8dp"
                 android:adjustViewBounds="true"
-                android:scaleType="fitStart"
-                />
+                android:scaleType="fitStart" />
 
     </LinearLayout>
 </LinearLayout>

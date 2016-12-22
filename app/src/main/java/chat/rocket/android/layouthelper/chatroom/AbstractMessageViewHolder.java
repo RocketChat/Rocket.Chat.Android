@@ -45,8 +45,8 @@ public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<Pai
     bindMessage(pairedMessage);
 
     if (pairedMessage.target != null) {
-      int syncstate = pairedMessage.target.getSyncState();
-      if (syncstate == SyncState.NOT_SYNCED || syncstate == SyncState.SYNCING) {
+      int syncState = pairedMessage.target.getSyncState();
+      if (syncState == SyncState.NOT_SYNCED || syncState == SyncState.SYNCING) {
         itemView.setAlpha(0.6f);
       } else {
         itemView.setAlpha(1.0f);
@@ -76,7 +76,7 @@ public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<Pai
   private void setSequential(boolean sequential) {
     if (avatar != null) {
       if (sequential) {
-        avatar.setVisibility(View.INVISIBLE);
+        avatar.setVisibility(View.GONE);
       } else {
         avatar.setVisibility(View.VISIBLE);
       }
