@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -77,7 +78,8 @@ public class MessageComposer extends LinearLayout {
       }
     });
 
-    btnSubmit.animate().scaleX(0).scaleY(0).setDuration(0);
+    btnSubmit.setScaleX(0);
+    btnSubmit.setScaleY(0);
     btnSubmit.setVisibility(GONE);
 
     ((EditText) composer.findViewById(R.id.editor)).addTextChangedListener(new TextWatcher() {
@@ -91,7 +93,7 @@ public class MessageComposer extends LinearLayout {
 
       @Override
       public void afterTextChanged(Editable s) {
-        if (s.toString().trim().length() > 0) {
+        if (TextUtils.getTrimmedLength(s) > 0) {
           animateHide(btnExtra);
           animateShow(btnSubmit);
         } else {
