@@ -92,7 +92,7 @@ public class ServerHelper {
     }
 
     String[] versionParts = version.split("\\.");
-    return versionParts.length >= 3 && Integer.valueOf(versionParts[1]) >= 49;
+    return versionParts.length >= 3 && Integer.parseInt(versionParts[1]) >= 49;
   }
 
   public interface Callback {
