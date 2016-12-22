@@ -22,10 +22,15 @@
                     android:id="@+id/activity_main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    android:background="@color/white"
+                    android:titleTextColor="@color/titleTextColor"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:title="@string/app_name"
                     />
+            <View  android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/button_menu"
+                android:background="@color/borderColor"/>
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout

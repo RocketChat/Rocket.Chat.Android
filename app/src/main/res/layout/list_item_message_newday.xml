@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:textColor="@color/newday_color"
+            android:textColor="@color/newday_text_color"
             android:textSize="8sp"
             android:textStyle="bold"
             tools:text="2016/01/23"
