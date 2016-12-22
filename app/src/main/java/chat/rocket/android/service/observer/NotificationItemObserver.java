@@ -125,7 +125,7 @@ public class NotificationItemObserver extends AbstractModelObserver<Notification
         .setContentText(description)
         .setNumber(unreadCount)
         .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-        .setSmallIcon(R.drawable.rocket_chat_notification_24dp)
+        .setSmallIcon(R.drawable.rocket_chat_notification)
         .setContentIntent(getContentIntent(roomId))
         .setDeleteIntent(getDeleteIntent(roomId));
 

@@ -25,7 +25,7 @@ import chat.rocket.android.service.RocketChatService;
 /**
  * Dialog to show members in a room.
  */
-public class UsersOfRoomDialogFragment extends AbstractChatroomDialogFragment {
+public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
 
   private String hostname;
   private RealmObjectObserver<GetUsersOfRoomsProcedure> procedureObserver;
@@ -113,13 +113,13 @@ public class UsersOfRoomDialogFragment extends AbstractChatroomDialogFragment {
       return;
     }
 
-    int syncstate = procedure.getSyncState();
-    if (previousSyncState != syncstate) {
-      onSyncStateUpdated(syncstate);
-      previousSyncState = syncstate;
+    int syncState = procedure.getSyncState();
+    if (previousSyncState != syncState) {
+      onSyncStateUpdated(syncState);
+      previousSyncState = syncState;
     }
 
-    if (syncstate == SyncState.SYNCED) {
+    if (syncState == SyncState.SYNCED) {
       onRenderTotalCount(procedure.getTotal());
 
       try {
@@ -138,8 +138,8 @@ public class UsersOfRoomDialogFragment extends AbstractChatroomDialogFragment {
   /**
    * called only if prevSyncstate != newSyncstate.
    */
-  private void onSyncStateUpdated(int newSyncstate) {
-    boolean show = newSyncstate == SyncState.NOT_SYNCED || newSyncstate == SyncState.SYNCING;
+  private void onSyncStateUpdated(int newSyncState) {
+    boolean show = newSyncState == SyncState.NOT_SYNCED || newSyncState == SyncState.SYNCING;
     getDialog().findViewById(R.id.waiting).setVisibility(show ? View.VISIBLE : View.GONE);
   }
 

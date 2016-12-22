@@ -92,7 +92,6 @@ public class MessageListAdapter
         return new AbstractMessageViewHolder(itemView, hostname, userId, token) {
           @Override
           protected void bindMessage(PairedMessage pairedMessage) {
-
           }
         };
     }

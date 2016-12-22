@@ -4,7 +4,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * View model for notification.
+ * ViewData model for notification.
  */
 public class NotificationItem extends RealmObject {
   @PrimaryKey private String roomId;

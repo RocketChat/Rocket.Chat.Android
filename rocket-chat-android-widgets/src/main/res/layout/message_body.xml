@@ -3,5 +3,4 @@
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.RocketChat.MessageBody"
-        />
+        android:textAppearance="@style/TextAppearance.RocketChat.MessageBody" />
