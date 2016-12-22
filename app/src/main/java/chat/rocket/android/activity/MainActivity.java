@@ -59,8 +59,8 @@ public class MainActivity extends AbstractAuthedActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     isForeground = false;
+    super.onPause();
   }
 
   @Override
