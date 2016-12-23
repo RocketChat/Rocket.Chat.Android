@@ -11,7 +11,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class ServerHelper {
+public class ServerPolicyHelper {
 
   private static final String DEFAULT_HOST = ".rocket.chat";
   private static final String API_INFO_PATH = "/api/info";

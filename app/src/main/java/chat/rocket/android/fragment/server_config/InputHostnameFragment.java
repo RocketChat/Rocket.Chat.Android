@@ -9,7 +9,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OkHttpHelper;
-import chat.rocket.android.helper.ServerHelper;
+import chat.rocket.android.helper.ServerPolicyHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
@@ -40,10 +40,10 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   }
 
   private void handleConnect() {
-    final String hostname = ServerHelper.enforceHostname(getHostname());
+    final String hostname = ServerPolicyHelper.enforceHostname(getHostname());
 
-    ServerHelper.isApiVersionValid(OkHttpHelper.getClientForUploadFile(), hostname,
-        new ServerHelper.Callback() {
+    ServerPolicyHelper.isApiVersionValid(OkHttpHelper.getClientForUploadFile(), hostname,
+        new ServerPolicyHelper.Callback() {
           @Override
           public void isValid() {
             getActivity().runOnUiThread(() -> onServerValid(hostname));
