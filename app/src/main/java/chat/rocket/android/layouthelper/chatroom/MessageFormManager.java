@@ -1,23 +1,23 @@
 package chat.rocket.android.layouthelper.chatroom;
 
 import bolts.Task;
-import chat.rocket.android.widget.message.MessageComposer;
+import chat.rocket.android.widget.message.MessageFormLayout;
 
 /**
- * handling visibility of FAB-compose and MessageComposer.
+ * handling MessageForm.
  */
-public class MessageComposerManager {
-  private final MessageComposer messageComposer;
+public class MessageFormManager {
+  private final MessageFormLayout messageFormLayout;
   private SendMessageCallback sendMessageCallback;
   private ExtrasPickerListener extrasPickerListener;
 
-  public MessageComposerManager(MessageComposer messageComposer) {
-    this.messageComposer = messageComposer;
+  public MessageFormManager(MessageFormLayout messageFormLayout) {
+    this.messageFormLayout = messageFormLayout;
     init();
   }
 
   private void init() {
-    messageComposer.setOnActionListener(new MessageComposer.ActionListener() {
+    messageFormLayout.setOnActionListener(new MessageFormLayout.ActionListener() {
       @Override
       public void onSubmit(String message) {
         sendMessage(message);
@@ -43,7 +43,7 @@ public class MessageComposerManager {
   }
 
   public void clearComposingText() {
-    messageComposer.setText("");
+    messageFormLayout.setText("");
   }
 
   private void sendMessage(String message) {
@@ -51,12 +51,12 @@ public class MessageComposerManager {
       return;
     }
 
-    messageComposer.setEnabled(false);
+    messageFormLayout.setEnabled(false);
     sendMessageCallback.onSubmit(message).onSuccess(task -> {
       clearComposingText();
       return null;
     }).continueWith(task -> {
-      messageComposer.setEnabled(true);
+      messageFormLayout.setEnabled(true);
       return null;
     });
   }

@@ -9,7 +9,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/message_composer" />
 
-    <chat.rocket.android.widget.message.MessageComposer
+    <chat.rocket.android.widget.message.MessageFormLayout
             android:id="@+id/message_composer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

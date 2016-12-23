@@ -11,14 +11,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import chat.rocket.android.widget.R;
 
-public class MessageComposer extends LinearLayout {
+public class MessageFormLayout extends LinearLayout {
 
   protected ActionListener actionListener;
   protected ViewGroup composer;
@@ -26,23 +25,23 @@ public class MessageComposer extends LinearLayout {
   private View btnExtra;
   private View btnSubmit;
 
-  public MessageComposer(Context context) {
+  public MessageFormLayout(Context context) {
     super(context);
     init();
   }
 
-  public MessageComposer(Context context, AttributeSet attrs) {
+  public MessageFormLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
     init();
   }
 
-  public MessageComposer(Context context, AttributeSet attrs, int defStyleAttr) {
+  public MessageFormLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init();
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public MessageComposer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+  public MessageFormLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     init();
   }

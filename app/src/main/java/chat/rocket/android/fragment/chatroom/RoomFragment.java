@@ -29,7 +29,7 @@ import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
+import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.log.RCLog;
@@ -50,7 +50,7 @@ import chat.rocket.android.realm_helper.RealmModelListAdapter;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
-import chat.rocket.android.widget.message.MessageComposer;
+import chat.rocket.android.widget.message.MessageFormLayout;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -70,7 +70,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   private String token;
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
-  private MessageComposerManager messageComposerManager;
+  private MessageFormManager messageComposerManager;
 
   private MessageSelectionDialogFragment.ClickListener messageSelectionClickListener =
       messageSpec -> RoomFragmentPermissionsDispatcher
@@ -224,9 +224,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupMessageComposer() {
-    final MessageComposer messageComposer =
-        (MessageComposer) rootView.findViewById(R.id.message_composer);
-    messageComposerManager = new MessageComposerManager(messageComposer);
+    final MessageFormLayout messageFormLayout =
+        (MessageFormLayout) rootView.findViewById(R.id.message_composer);
+    messageComposerManager = new MessageFormManager(messageFormLayout);
     messageComposerManager.setSendMessageCallback(messageText ->
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
