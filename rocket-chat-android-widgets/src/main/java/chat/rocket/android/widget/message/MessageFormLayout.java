@@ -15,7 +15,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+import bolts.Continuation;
+import bolts.Task;
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.internal.ExtraActionPickerDialog;
 
 public class MessageFormLayout extends LinearLayout {
 
@@ -24,6 +29,7 @@ public class MessageFormLayout extends LinearLayout {
 
   private View btnExtra;
   private View btnSubmit;
+  private List<MessageExtraActionItemPresenter> extraActionItems;
 
   public MessageFormLayout(Context context) {
     super(context);
@@ -51,6 +57,7 @@ public class MessageFormLayout extends LinearLayout {
   }
 
   private void init() {
+    extraActionItems = new ArrayList<>();
     composer = (ViewGroup) LayoutInflater.from(getContext())
         .inflate(R.layout.message_composer, this, false);
 
@@ -58,10 +65,8 @@ public class MessageFormLayout extends LinearLayout {
 
     btnExtra.setOnClickListener(new OnClickListener() {
       @Override
-      public void onClick(View v) {
-        if (actionListener != null) {
-          actionListener.onExtra();
-        }
+      public void onClick(View view) {
+        showExtraActionSelectionDialog();
       }
     });
 
@@ -72,7 +77,7 @@ public class MessageFormLayout extends LinearLayout {
       public void onClick(View view) {
         String messageText = getText();
         if (messageText.length() > 0 && actionListener != null) {
-          actionListener.onSubmit(messageText);
+          actionListener.onSubmitText(messageText);
         }
       }
     });
@@ -103,6 +108,20 @@ public class MessageFormLayout extends LinearLayout {
     });
 
     addView(composer);
+  }
+
+  public void addExtraActionItem(MessageExtraActionItemPresenter itemPresenter) {
+    boolean found = false;
+    for (MessageExtraActionItemPresenter item : extraActionItems) {
+      if (item.getItemId() == itemPresenter.getItemId()) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      extraActionItems.add(itemPresenter);
+    }
   }
 
   private TextView getEditor() {
@@ -140,11 +159,23 @@ public class MessageFormLayout extends LinearLayout {
     });
   }
 
+  private void showExtraActionSelectionDialog() {
+    ExtraActionPickerDialog.showAsTask(getContext(), extraActionItems)
+        .onSuccess(new Continuation<Integer, Object>() {
+          @Override
+          public Object then(Task<Integer> task) throws Exception {
+            int which = task.getResult();
+            if (actionListener != null) {
+              actionListener.onExtraActionSelected(which);
+            }
+            return null;
+          }
+        });
+  }
+
   public interface ActionListener {
-    void onSubmit(String message);
+    void onSubmitText(String message);
 
-    void onExtra();
-
-    void onCancel();
+    void onExtraActionSelected(int itemId);
   }
 }

@@ -38,4 +38,5 @@ dependencies {
   compile rootProject.ext.okhttp3
   compile rootProject.ext.picasso
   compile rootProject.ext.picasso2Okhttp3Downloader
+  compile rootProject.ext.boltsTask
 }

@@ -1,6 +1,8 @@
 package chat.rocket.android.layouthelper.chatroom;
 
+import java.util.HashMap;
 import bolts.Task;
+import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
 import chat.rocket.android.widget.message.MessageFormLayout;
 
 /**
@@ -9,27 +11,30 @@ import chat.rocket.android.widget.message.MessageFormLayout;
 public class MessageFormManager {
   private final MessageFormLayout messageFormLayout;
   private SendMessageCallback sendMessageCallback;
-  private ExtrasPickerListener extrasPickerListener;
+  private ExtraActionPickerCallback extraActionPickerCallback;
+  private final HashMap<Integer, AbstractExtraActionItem> extraActionItemMap;
 
   public MessageFormManager(MessageFormLayout messageFormLayout) {
     this.messageFormLayout = messageFormLayout;
+    this.extraActionItemMap = new HashMap<>();
     init();
   }
 
   private void init() {
     messageFormLayout.setOnActionListener(new MessageFormLayout.ActionListener() {
       @Override
-      public void onSubmit(String message) {
+      public void onSubmitText(String message) {
         sendMessage(message);
       }
 
       @Override
-      public void onExtra() {
-        openExtras();
-      }
-
-      @Override
-      public void onCancel() {
+      public void onExtraActionSelected(int itemId) {
+        if (extraActionItemMap.containsKey(itemId)) {
+          AbstractExtraActionItem item = extraActionItemMap.get(itemId);
+          if (extraActionPickerCallback != null) {
+            extraActionPickerCallback.onExtraActionSelected(item);
+          }
+        }
       }
     });
   }
@@ -38,8 +43,8 @@ public class MessageFormManager {
     this.sendMessageCallback = sendMessageCallback;
   }
 
-  public void setExtrasPickerListener(ExtrasPickerListener listener) {
-    extrasPickerListener = listener;
+  public void setExtraActionPickerCallback(ExtraActionPickerCallback extraActionPickerCallback) {
+    this.extraActionPickerCallback = extraActionPickerCallback;
   }
 
   public void clearComposingText() {
@@ -52,7 +57,7 @@ public class MessageFormManager {
     }
 
     messageFormLayout.setEnabled(false);
-    sendMessageCallback.onSubmit(message).onSuccess(task -> {
+    sendMessageCallback.onSubmitText(message).onSuccess(task -> {
       clearComposingText();
       return null;
     }).continueWith(task -> {
@@ -61,19 +66,16 @@ public class MessageFormManager {
     });
   }
 
-  private void openExtras() {
-    if (extrasPickerListener == null) {
-      return;
-    }
-
-    extrasPickerListener.onOpen();
+  public void registerExtraActionItem(AbstractExtraActionItem actionItem) {
+    messageFormLayout.addExtraActionItem(actionItem);
+    extraActionItemMap.put(actionItem.getItemId(), actionItem);
   }
 
   public interface SendMessageCallback {
-    Task<Void> onSubmit(String messageText);
+    Task<Void> onSubmitText(String messageText);
   }
 
-  public interface ExtrasPickerListener {
-    void onOpen();
+  public interface ExtraActionPickerCallback {
+    void onExtraActionSelected(AbstractExtraActionItem item);
   }
 }
