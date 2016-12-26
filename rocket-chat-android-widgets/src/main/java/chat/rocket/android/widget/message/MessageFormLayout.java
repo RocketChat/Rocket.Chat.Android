@@ -5,43 +5,49 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+import bolts.Continuation;
+import bolts.Task;
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.internal.ExtraActionPickerDialog;
 
-public class MessageComposer extends LinearLayout {
+public class MessageFormLayout extends LinearLayout {
 
   protected ActionListener actionListener;
   protected ViewGroup composer;
 
   private View btnExtra;
   private View btnSubmit;
+  private List<MessageExtraActionItemPresenter> extraActionItems;
 
-  public MessageComposer(Context context) {
+  public MessageFormLayout(Context context) {
     super(context);
     init();
   }
 
-  public MessageComposer(Context context, AttributeSet attrs) {
+  public MessageFormLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
     init();
   }
 
-  public MessageComposer(Context context, AttributeSet attrs, int defStyleAttr) {
+  public MessageFormLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init();
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public MessageComposer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+  public MessageFormLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     init();
   }
@@ -51,6 +57,7 @@ public class MessageComposer extends LinearLayout {
   }
 
   private void init() {
+    extraActionItems = new ArrayList<>();
     composer = (ViewGroup) LayoutInflater.from(getContext())
         .inflate(R.layout.message_composer, this, false);
 
@@ -58,10 +65,8 @@ public class MessageComposer extends LinearLayout {
 
     btnExtra.setOnClickListener(new OnClickListener() {
       @Override
-      public void onClick(View v) {
-        if (actionListener != null) {
-          actionListener.onExtra();
-        }
+      public void onClick(View view) {
+        showExtraActionSelectionDialog();
       }
     });
 
@@ -72,12 +77,13 @@ public class MessageComposer extends LinearLayout {
       public void onClick(View view) {
         String messageText = getText();
         if (messageText.length() > 0 && actionListener != null) {
-          actionListener.onSubmit(messageText);
+          actionListener.onSubmitText(messageText);
         }
       }
     });
 
-    btnSubmit.animate().scaleX(0).scaleY(0).setDuration(0);
+    btnSubmit.setScaleX(0);
+    btnSubmit.setScaleY(0);
     btnSubmit.setVisibility(GONE);
 
     ((EditText) composer.findViewById(R.id.editor)).addTextChangedListener(new TextWatcher() {
@@ -91,7 +97,7 @@ public class MessageComposer extends LinearLayout {
 
       @Override
       public void afterTextChanged(Editable s) {
-        if (s.toString().trim().length() > 0) {
+        if (TextUtils.getTrimmedLength(s) > 0) {
           animateHide(btnExtra);
           animateShow(btnSubmit);
         } else {
@@ -102,6 +108,20 @@ public class MessageComposer extends LinearLayout {
     });
 
     addView(composer);
+  }
+
+  public void addExtraActionItem(MessageExtraActionItemPresenter itemPresenter) {
+    boolean found = false;
+    for (MessageExtraActionItemPresenter item : extraActionItems) {
+      if (item.getItemId() == itemPresenter.getItemId()) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      extraActionItems.add(itemPresenter);
+    }
   }
 
   private TextView getEditor() {
@@ -119,40 +139,6 @@ public class MessageComposer extends LinearLayout {
   public void setEnabled(boolean enabled) {
     getEditor().setEnabled(enabled);
     composer.findViewById(R.id.btn_submit).setEnabled(enabled);
-  }
-
-  protected final void focusToEditor() {
-    final TextView editor = getEditor();
-    editor.requestFocus();
-    InputMethodManager imm =
-        (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.showSoftInput(editor, InputMethodManager.SHOW_IMPLICIT);
-  }
-
-  protected final void unFocusEditor() {
-    InputMethodManager imm =
-        (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-  }
-
-  public void show(@Nullable Runnable callback) {
-    focusToEditor();
-    setVisibility(View.VISIBLE);
-    if (callback != null) {
-      callback.run();
-    }
-  }
-
-  public void hide(@Nullable Runnable callback) {
-    unFocusEditor();
-    setVisibility(View.GONE);
-    if (callback != null) {
-      callback.run();
-    }
-  }
-
-  public boolean isShown() {
-    return getVisibility() == View.VISIBLE;
   }
 
   private void animateHide(final View view) {
@@ -173,11 +159,23 @@ public class MessageComposer extends LinearLayout {
     });
   }
 
+  private void showExtraActionSelectionDialog() {
+    ExtraActionPickerDialog.showAsTask(getContext(), extraActionItems)
+        .onSuccess(new Continuation<Integer, Object>() {
+          @Override
+          public Object then(Task<Integer> task) throws Exception {
+            int which = task.getResult();
+            if (actionListener != null) {
+              actionListener.onExtraActionSelected(which);
+            }
+            return null;
+          }
+        });
+  }
+
   public interface ActionListener {
-    void onSubmit(String message);
+    void onSubmitText(String message);
 
-    void onExtra();
-
-    void onCancel();
+    void onExtraActionSelected(int itemId);
   }
 }

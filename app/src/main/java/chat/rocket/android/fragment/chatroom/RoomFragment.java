@@ -22,22 +22,21 @@ import java.util.UUID;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
-import chat.rocket.android.fragment.chatroom.dialog.MessageSelectionDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.layouthelper.chatroom.MessageComposerManager;
+import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
+import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.message.AbstractMessageSpec;
-import chat.rocket.android.message.AudioUploadMessageSpec;
-import chat.rocket.android.message.AbstractUploadMessageSpec;
-import chat.rocket.android.message.ImageUploadMessageSpec;
-import chat.rocket.android.message.VideoUploadMessageSpec;
+import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
+import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadActionItem;
+import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
+import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
@@ -50,7 +49,7 @@ import chat.rocket.android.realm_helper.RealmModelListAdapter;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
-import chat.rocket.android.widget.message.MessageComposer;
+import chat.rocket.android.widget.message.MessageFormLayout;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -70,11 +69,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   private String token;
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
-  private MessageComposerManager messageComposerManager;
-
-  private MessageSelectionDialogFragment.ClickListener messageSelectionClickListener =
-      messageSpec -> RoomFragmentPermissionsDispatcher
-          .onMessageSpecSelectedWithCheck(RoomFragment.this, messageSpec);
+  private MessageFormManager messageFormManager;
 
   public RoomFragment() {
   }
@@ -224,10 +219,10 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupMessageComposer() {
-    final MessageComposer messageComposer =
-        (MessageComposer) rootView.findViewById(R.id.message_composer);
-    messageComposerManager = new MessageComposerManager(messageComposer);
-    messageComposerManager.setSendMessageCallback(messageText ->
+    final MessageFormLayout messageFormLayout =
+        (MessageFormLayout) rootView.findViewById(R.id.message_composer);
+    messageFormManager = new MessageFormManager(messageFormLayout);
+    messageFormManager.setSendMessageCallback(messageText ->
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
                 .put("_id", UUID.randomUUID().toString())
@@ -235,25 +230,17 @@ public class RoomFragment extends AbstractChatRoomFragment
                 .put("ts", System.currentTimeMillis())
                 .put("rid", roomId)
                 .put("msg", messageText))));
-    messageComposerManager.setExtrasPickerListener(() -> {
-      MessageSelectionDialogFragment fragment = MessageSelectionDialogFragment.create();
-
-      fragment.addMessageSpec(new ImageUploadMessageSpec());
-      fragment.addMessageSpec(new AudioUploadMessageSpec());
-      fragment.addMessageSpec(new VideoUploadMessageSpec());
-
-      fragment.setListener(messageSelectionClickListener);
-
-      fragment.show(getFragmentManager(), MessageSelectionDialogFragment.TAG);
-
-      closeSideMenuIfNeeded();
-    });
+    messageFormManager.registerExtraActionItem(new ImageUploadActionItem());
+    messageFormManager.registerExtraActionItem(new AudioUploadActionItem());
+    messageFormManager.registerExtraActionItem(new VideoUploadActionItem());
+    messageFormManager.setExtraActionPickerCallback(item ->
+        RoomFragmentPermissionsDispatcher.onExtraActionSelectedWithCheck(RoomFragment.this, item));
   }
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode != AbstractUploadMessageSpec.RC_UPL || resultCode != Activity.RESULT_OK) {
+    if (requestCode != AbstractUploadActionItem.RC_UPL || resultCode != Activity.RESULT_OK) {
       return;
     }
 
@@ -381,7 +368,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-  protected void onMessageSpecSelected(AbstractMessageSpec messageSpec) {
-    messageSpec.onSelect(RoomFragment.this);
+  protected void onExtraActionSelected(MessageExtraActionBehavior action) {
+    action.handleItemSelectedOnFragment(RoomFragment.this);
   }
 }
