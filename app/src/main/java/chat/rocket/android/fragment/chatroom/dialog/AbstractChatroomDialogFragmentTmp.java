@@ -24,7 +24,6 @@ abstract class AbstractChatRoomDialogFragment extends BottomSheetDialogFragment 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     Bundle args = getArguments();
     if (args != null) {
       handleArgs(args);
