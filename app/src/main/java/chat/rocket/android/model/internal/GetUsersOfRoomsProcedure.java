@@ -8,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class GetUsersOfRoomsProcedure extends RealmObject {
 
+  @SuppressWarnings({"PMD.ShortVariable"})
   public static final String ID = "roomId";
   public static final String SYNC_STATE = "syncstate";
   public static final String SHOW_ALL = "showAll";

@@ -20,6 +20,7 @@ import chat.rocket.android.service.RocketChatService;
 
 public class MethodCall extends RealmObject {
 
+  @SuppressWarnings({"PMD.ShortVariable"})
   public static final String ID = "methodCallId";
   public static final String SYNC_STATE = "syncstate";
   public static final String NAME = "name";

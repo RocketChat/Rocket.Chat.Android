@@ -8,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class FileUploading extends RealmObject {
 
+  @SuppressWarnings({"PMD.ShortVariable"})
   public static final String ID = "uplId";
   public static final String SYNC_STATE = "syncstate";
   public static final String STORAGE_TYPE = "storageType";

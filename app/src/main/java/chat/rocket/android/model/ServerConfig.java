@@ -14,6 +14,7 @@ import hugo.weaving.DebugLog;
  */
 public class ServerConfig extends RealmObject {
 
+  @SuppressWarnings({"PMD.ShortVariable"})
   public static final String ID = "serverConfigId";
   public static final String HOSTNAME = "hostname";
   public static final String STATE = "state";

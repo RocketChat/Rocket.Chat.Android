@@ -16,6 +16,7 @@ import hugo.weaving.DebugLog;
  */
 public class Session extends RealmObject {
 
+  @SuppressWarnings({"PMD.ShortVariable"})
   public static final String ID = "sessionId";
   public static final String TOKEN = "token";
   public static final String TOKEN_VERIFIED = "tokenVerified";

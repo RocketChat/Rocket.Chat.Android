@@ -1,5 +1,6 @@
 package chat.rocket.android.model.ddp;
 
+@SuppressWarnings({"PMD.ShortClassName"})
 public interface PublicSettingsConstants {
   interface Message {
     String API_EMBED = "API_Embed";
@@ -97,8 +98,7 @@ public interface PublicSettingsConstants {
     String PASSWORD_RESET = "Accounts_PasswordReset";
     String REGISTRATION_FORM = "Accounts_RegistrationForm";
     String REGISTRATON_FORM_LINK_REPLACEMENT_TEXT = "Accounts_RegistrationForm_LinkReplacementText";
-    String
-        REGISTRATION_AUTH_SERVICES_ENABLED =
+    String REGISTRATION_AUTH_SERVICES_ENABLED =
         "Accounts_Registration_AuthenticationServices_Enabled";
     String REQUIRE_NAME_FOR_SIGN_UP = "Accounts_RequireNameForSignUp";
     String REQUIRE_PASSWORD_CONFIRMATION = "Accounts_RequirePasswordConfirmation";

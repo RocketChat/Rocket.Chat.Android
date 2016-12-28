@@ -23,14 +23,14 @@ public class RocketChatCache {
 
   public static String getPushId(Context context) {
     SharedPreferences preferences = get(context);
-    String id = null;
+    String pushId = null;
     if (!preferences.contains(PUSH_ID)) {
       // generates one and save
-      id = UUID.randomUUID().toString();
+      pushId = UUID.randomUUID().toString();
       SharedPreferences.Editor editor = preferences.edit();
-      editor.putString(PUSH_ID, id);
+      editor.putString(PUSH_ID, pushId);
       editor.apply();
     }
-    return preferences.getString(PUSH_ID, id);
+    return preferences.getString(PUSH_ID, pushId);
   }
 }

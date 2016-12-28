@@ -8,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class NotificationItem extends RealmObject {
 
+  @SuppressWarnings({"PMD.ShortVariable"})
   public static final String ID = "roomId";
   public static final String TITLE = "title";
   public static final String DESCRIPTION = "description";

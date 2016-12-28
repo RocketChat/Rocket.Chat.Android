@@ -21,6 +21,8 @@ public class Message extends RealmObject {
   public static final String ROOM_ID = "rid";
   public static final String SYNC_STATE = "syncstate";
   public static final String TIMESTAMP = "ts";
+
+  @SuppressWarnings({"PMD.AvoidFieldNameMatchingTypeName"})
   public static final String MESSAGE = "msg";
   public static final String USER = "u";
   public static final String GROUPABLE = "groupable";
