@@ -31,7 +31,7 @@ public class NotificationDismissalCallbackService extends IntentService {
 
     realmHelper.executeTransaction(realm -> {
       NotificationItem item =
-          realm.where(NotificationItem.class).equalTo("roomId", roomId).findFirst();
+          realm.where(NotificationItem.class).equalTo(NotificationItem.ID, roomId).findFirst();
       if (item != null) {
         long currentTime = System.currentTimeMillis();
         if (item.getLastSeenAt() <= currentTime) {

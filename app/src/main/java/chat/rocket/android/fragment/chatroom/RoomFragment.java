@@ -104,20 +104,21 @@ public class RoomFragment extends AbstractChatRoomFragment
     roomId = args.getString("roomId");
     hostname = RealmStore.getDefault().executeTransactionForRead(realm ->
         realm.where(ServerConfig.class)
-            .equalTo("serverConfigId", serverConfigId)
-            .isNotNull("hostname")
+            .equalTo(ServerConfig.ID, serverConfigId)
+            .isNotNull(ServerConfig.HOSTNAME)
             .findFirst()).getHostname();
     userId = realmHelper.executeTransactionForRead(realm ->
         User.queryCurrentUser(realm).findFirst()).getId();
     token = realmHelper.executeTransactionForRead(realm ->
         Session.queryDefaultSession(realm).findFirst()).getToken();
     roomObserver = realmHelper
-        .createObjectObserver(realm -> realm.where(RoomSubscription.class).equalTo("rid", roomId))
+        .createObjectObserver(
+            realm -> realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId))
         .setOnUpdateListener(this::onRenderRoom);
 
     procedureObserver = realmHelper
         .createObjectObserver(realm ->
-            realm.where(LoadMessageProcedure.class).equalTo("roomId", roomId))
+            realm.where(LoadMessageProcedure.class).equalTo(LoadMessageProcedure.ID, roomId))
         .setOnUpdateListener(this::onUpdateLoadMessageProcedure);
     if (savedInstanceState == null) {
       initialRequest();
@@ -134,8 +135,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
     MessageListAdapter adapter = (MessageListAdapter) realmHelper.createListAdapter(getContext(),
         realm -> realm.where(Message.class)
-            .equalTo("rid", roomId)
-            .findAllSorted("ts", Sort.DESCENDING),
+            .equalTo(Message.ROOM_ID, roomId)
+            .findAllSorted(Message.TIMESTAMP, Sort.DESCENDING),
         context -> new MessageListAdapter(context, hostname, userId, token)
     );
     listView.setAdapter(adapter);
@@ -167,15 +168,15 @@ public class RoomFragment extends AbstractChatRoomFragment
             .setPositiveButton(R.string.resend, (dialog, which) -> {
               realmHelper.executeTransaction(realm ->
                   realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-                      .put("_id", messageId)
-                      .put("syncstate", SyncState.NOT_SYNCED))
+                      .put(Message.ID, messageId)
+                      .put(Message.SYNC_STATE, SyncState.NOT_SYNCED))
               ).continueWith(new LogcatIfError());
             })
             .setNegativeButton(android.R.string.cancel, null)
             .setNeutralButton(R.string.discard, (dialog, which) -> {
               realmHelper.executeTransaction(realm ->
                   realm.where(Message.class)
-                      .equalTo("_id", messageId).findAll().deleteAllFromRealm()
+                      .equalTo(Message.ID, messageId).findAll().deleteAllFromRealm()
               ).continueWith(new LogcatIfError());
             })
             .show();
@@ -225,11 +226,11 @@ public class RoomFragment extends AbstractChatRoomFragment
     messageFormManager.setSendMessageCallback(messageText ->
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-                .put("_id", UUID.randomUUID().toString())
-                .put("syncstate", SyncState.NOT_SYNCED)
-                .put("ts", System.currentTimeMillis())
-                .put("rid", roomId)
-                .put("msg", messageText))));
+                .put(Message.ID, UUID.randomUUID().toString())
+                .put(Message.SYNC_STATE, SyncState.NOT_SYNCED)
+                .put(Message.TIMESTAMP, System.currentTimeMillis())
+                .put(Message.ROOM_ID, roomId)
+                .put(Message.MESSAGE, messageText))));
     messageFormManager.registerExtraActionItem(new ImageUploadActionItem());
     messageFormManager.registerExtraActionItem(new AudioUploadActionItem());
     messageFormManager.registerExtraActionItem(new VideoUploadActionItem());
@@ -298,10 +299,10 @@ public class RoomFragment extends AbstractChatRoomFragment
   private void initialRequest() {
     realmHelper.executeTransaction(realm -> {
       realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
-          .put("roomId", roomId)
-          .put("syncstate", SyncState.NOT_SYNCED)
-          .put("count", 100)
-          .put("reset", true));
+          .put(LoadMessageProcedure.ID, roomId)
+          .put(LoadMessageProcedure.SYNC_STATE, SyncState.NOT_SYNCED)
+          .put(LoadMessageProcedure.COUNT, 100)
+          .put(LoadMessageProcedure.RESET, true));
       return null;
     }).onSuccessTask(task -> {
       RocketChatService.keepAlive(getContext());
@@ -312,13 +313,13 @@ public class RoomFragment extends AbstractChatRoomFragment
   private void loadMoreRequest() {
     realmHelper.executeTransaction(realm -> {
       LoadMessageProcedure procedure = realm.where(LoadMessageProcedure.class)
-          .equalTo("roomId", roomId)
+          .equalTo(LoadMessageProcedure.ID, roomId)
           .beginGroup()
-          .equalTo("syncstate", SyncState.SYNCED)
+          .equalTo(LoadMessageProcedure.SYNC_STATE, SyncState.SYNCED)
           .or()
-          .equalTo("syncstate", SyncState.FAILED)
+          .equalTo(LoadMessageProcedure.SYNC_STATE, SyncState.FAILED)
           .endGroup()
-          .equalTo("hasNext", true)
+          .equalTo(LoadMessageProcedure.HAS_NEXT, true)
           .findFirst();
       if (procedure != null) {
         procedure.setSyncState(SyncState.NOT_SYNCED);
@@ -332,7 +333,7 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   private void markAsReadIfNeeded() {
     RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
-        realm.where(RoomSubscription.class).equalTo("rid", roomId).findFirst());
+        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
     if (room != null && room.isAlert()) {
       new MethodCallHelper(getContext(), serverConfigId).readMessages(roomId)
           .continueWith(new LogcatIfError());

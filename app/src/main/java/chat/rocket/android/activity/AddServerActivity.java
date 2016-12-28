@@ -19,7 +19,8 @@ public class AddServerActivity extends AbstractFragmentActivity {
   private String serverConfigId;
 
   private RealmListObserver<ServerConfig> configuredServersObserver = RealmStore.getDefault()
-      .createListObserver(realm -> realm.where(ServerConfig.class).isNotNull("session").findAll())
+      .createListObserver(
+          realm -> realm.where(ServerConfig.class).isNotNull(ServerConfig.SESSION).findAll())
       .setOnUpdateListener(results -> {
         if (!results.isEmpty()) {
           RocketChatCache.get(this).edit()
@@ -32,7 +33,7 @@ public class AddServerActivity extends AbstractFragmentActivity {
 
   private RealmObjectObserver<ServerConfig> targetServerConfigObserver = RealmStore.getDefault()
       .createObjectObserver(realm ->
-          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId))
+          realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId))
       .setOnUpdateListener(config -> {
         if (config == null || config.getState() == ServerConfig.STATE_CONNECTION_ERROR) {
           showFragment(new InputHostnameFragment());
@@ -52,7 +53,7 @@ public class AddServerActivity extends AbstractFragmentActivity {
 
   private void setupServerConfigId() {
     ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).isNull("hostname").findFirst());
+        realm.where(ServerConfig.class).isNull(ServerConfig.HOSTNAME).findFirst());
     if (config != null) {
       serverConfigId = config.getServerConfigId();
       return;
@@ -60,7 +61,7 @@ public class AddServerActivity extends AbstractFragmentActivity {
 
     config = RealmStore.getDefault().executeTransactionForRead(realm ->
         realm.where(ServerConfig.class)
-            .equalTo("state", ServerConfig.STATE_CONNECTION_ERROR).findFirst());
+            .equalTo(ServerConfig.STATE, ServerConfig.STATE_CONNECTION_ERROR).findFirst());
     if (config != null) {
       serverConfigId = config.getServerConfigId();
       return;
@@ -105,7 +106,7 @@ public class AddServerActivity extends AbstractFragmentActivity {
     if (args == null) {
       args = new Bundle();
     }
-    args.putString("serverConfigId", serverConfigId);
+    args.putString(ServerConfig.ID, serverConfigId);
     fragment.setArguments(args);
   }
 

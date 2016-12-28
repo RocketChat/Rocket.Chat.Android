@@ -33,8 +33,7 @@ public class FileUploadHelper {
   }
 
   /**
-   * requestUploading file.
-   * returns id for observing progress.
+   * requestUploading file. returns id for observing progress.
    */
   public
   @Nullable
@@ -64,15 +63,16 @@ public class FileUploadHelper {
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-            .put("uplId", uplId)
-            .put("syncstate", SyncState.NOT_SYNCED)
-            .put("storageType", TextUtils.isEmpty(storageType) ? JSONObject.NULL : storageType)
-            .put("uri", uri.toString())
-            .put("filename", filename)
-            .put("filesize", filesize)
-            .put("mimeType", mimeType)
-            .put("roomId", roomId)
-            .put("error", JSONObject.NULL)
+            .put(FileUploading.ID, uplId)
+            .put(FileUploading.SYNC_STATE, SyncState.NOT_SYNCED)
+            .put(FileUploading.STORAGE_TYPE,
+                TextUtils.isEmpty(storageType) ? JSONObject.NULL : storageType)
+            .put(FileUploading.URI, uri.toString())
+            .put(FileUploading.FILENAME, filename)
+            .put(FileUploading.FILE_SIZE, filesize)
+            .put(FileUploading.MIME_TYPE, mimeType)
+            .put(FileUploading.ROOM_ID, roomId)
+            .put(FileUploading.ERROR, JSONObject.NULL)
         )
     ).continueWith(new LogcatIfError());
     return uplId;

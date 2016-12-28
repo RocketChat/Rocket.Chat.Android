@@ -10,6 +10,13 @@ import io.realm.annotations.PrimaryKey;
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class MeteorLoginServiceConfiguration
     extends RealmObject {
+
+  public static final String ID = "_id";
+  public static final String SERVICE = "service";
+  public static final String CONSUMER_KEY = "consumerKey";
+  public static final String APP_ID = "appId";
+  public static final String CLIENT_ID = "clientId";
+
   @PrimaryKey private String _id;
   private String service;
   private String consumerKey; //for Twitter

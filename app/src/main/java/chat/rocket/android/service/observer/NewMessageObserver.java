@@ -29,7 +29,7 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
       RealmResults<Message> pendingMethodCalls = realm.where(Message.class)
-          .equalTo("syncstate", SyncState.SYNCING)
+          .equalTo(Message.SYNC_STATE, SyncState.SYNCING)
           .findAll();
       for (Message message : pendingMethodCalls) {
         message.setSyncState(SyncState.NOT_SYNCED);
@@ -42,8 +42,8 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
   @Override
   public RealmResults<Message> queryItems(Realm realm) {
     return realm.where(Message.class)
-        .equalTo("syncstate", SyncState.NOT_SYNCED)
-        .isNotNull("rid")
+        .equalTo(Message.SYNC_STATE, SyncState.NOT_SYNCED)
+        .isNotNull(Message.ROOM_ID)
         .findAll();
   }
 
@@ -60,8 +60,8 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-            .put("_id", messageId)
-            .put("syncstate", SyncState.SYNCING)
+            .put(Message.ID, messageId)
+            .put(Message.SYNC_STATE, SyncState.SYNCING)
         )
     ).onSuccessTask(task ->
         methodCall.sendMessage(messageId, roomId, msg).onSuccessTask(_task -> {
@@ -75,8 +75,8 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
         RCLog.w(task.getError());
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-                .put("_id", messageId)
-                .put("syncstate", SyncState.FAILED)));
+                .put(Message.ID, messageId)
+                .put(Message.SYNC_STATE, SyncState.FAILED)));
       }
       return null;
     });

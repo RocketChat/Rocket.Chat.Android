@@ -27,7 +27,7 @@ public class ReactiveNotificationManager extends AbstractModelObserver<RoomSubsc
   @Override
   public RealmResults<RoomSubscription> queryItems(Realm realm) {
     return realm.where(RoomSubscription.class)
-        .equalTo("open", true)
+        .equalTo(RoomSubscription.OPEN, true)
         .findAll();
   }
 
@@ -37,9 +37,10 @@ public class ReactiveNotificationManager extends AbstractModelObserver<RoomSubsc
     for (RoomSubscription roomSubscription : roomSubscriptions) {
       final String roomId = roomSubscription.getRoomId();
       NotificationItem item = realmHelper.executeTransactionForRead(realm ->
-          realm.where(NotificationItem.class).equalTo("roomId", roomId).findFirst());
+          realm.where(NotificationItem.class).equalTo(NotificationItem.ID, roomId).findFirst());
 
-      long lastSeenAt = Math.max(item != null ? item.getLastSeenAt() : 0, roomSubscription.getLastSeen());
+      long lastSeenAt = Math
+          .max(item != null ? item.getLastSeenAt() : 0, roomSubscription.getLastSeen());
       try {
         JSONObject notification = new JSONObject()
             .put("roomId", roomSubscription.getRoomId())

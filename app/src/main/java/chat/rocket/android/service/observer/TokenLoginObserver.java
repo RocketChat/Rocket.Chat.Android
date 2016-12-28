@@ -24,9 +24,9 @@ public class TokenLoginObserver extends AbstractModelObserver<Session> {
   @Override
   public RealmResults<Session> queryItems(Realm realm) {
     return realm.where(Session.class)
-        .isNotNull("token")
-        .equalTo("tokenVerified", false)
-        .isNull("error")
+        .isNotNull(Session.TOKEN)
+        .equalTo(Session.TOKEN_VERIFIED, false)
+        .isNull(Session.ERROR)
         .findAll();
   }
 

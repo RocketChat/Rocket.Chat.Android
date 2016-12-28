@@ -7,6 +7,18 @@ import io.realm.annotations.PrimaryKey;
  * holding statuses for uploading file.
  */
 public class FileUploading extends RealmObject {
+
+  public static final String ID = "uplId";
+  public static final String SYNC_STATE = "syncstate";
+  public static final String STORAGE_TYPE = "storageType";
+  public static final String URI = "uri";
+  public static final String FILENAME = "filename";
+  public static final String FILE_SIZE = "filesize";
+  public static final String MIME_TYPE = "mimeType";
+  public static final String ROOM_ID = "roomId";
+  public static final String UPLOADED_SIZE = "uploadedSize";
+  public static final String ERROR = "error";
+
   public static final String STORAGE_TYPE_S3 = "AmazonS3";
   public static final String STORAGE_TYPE_GRID_FS = "GridFS";
   public static final String STORAGE_TYPE_FILE_SYSTEM = "FileSystem";

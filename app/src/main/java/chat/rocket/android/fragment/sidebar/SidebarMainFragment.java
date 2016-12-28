@@ -62,7 +62,7 @@ public class SidebarMainFragment extends AbstractFragment {
     serverConfigId = args == null ? null : args.getString("serverConfigId");
     if (!TextUtils.isEmpty(serverConfigId)) {
       ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
-          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
+          realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
       if (config != null) {
         hostname = config.getHostname();
       }
@@ -71,7 +71,7 @@ public class SidebarMainFragment extends AbstractFragment {
       if (realmHelper != null) {
         roomsObserver = realmHelper
             .createListObserver(
-                realm -> realm.where(RoomSubscription.class).equalTo("open", true).findAll())
+                realm -> realm.where(RoomSubscription.class).equalTo(RoomSubscription.OPEN, true).findAll())
             .setOnUpdateListener(list -> roomListManager.setRooms(list));
 
         currentUserObserver = realmHelper

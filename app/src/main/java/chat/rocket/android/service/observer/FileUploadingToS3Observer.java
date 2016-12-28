@@ -42,8 +42,8 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
       RealmResults<FileUploading> pendingUploadRequests = realm.where(FileUploading.class)
-          .equalTo("syncstate", SyncState.SYNCING)
-          .equalTo("storageType", FileUploading.STORAGE_TYPE_S3)
+          .equalTo(FileUploading.SYNC_STATE, SyncState.SYNCING)
+          .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_S3)
           .findAll();
       for (FileUploading req : pendingUploadRequests) {
         req.setSyncState(SyncState.NOT_SYNCED);
@@ -52,11 +52,11 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
       // clean up records.
       realm.where(FileUploading.class)
           .beginGroup()
-          .equalTo("syncstate", SyncState.SYNCED)
+          .equalTo(FileUploading.SYNC_STATE, SyncState.SYNCED)
           .or()
-          .equalTo("syncstate", SyncState.FAILED)
+          .equalTo(FileUploading.SYNC_STATE, SyncState.FAILED)
           .endGroup()
-          .equalTo("storageType", FileUploading.STORAGE_TYPE_S3)
+          .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_S3)
           .findAll().deleteAllFromRealm();
       return null;
     }).continueWith(new LogcatIfError());
@@ -65,8 +65,8 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
   @Override
   public RealmResults<FileUploading> queryItems(Realm realm) {
     return realm.where(FileUploading.class)
-        .equalTo("syncstate", SyncState.NOT_SYNCED)
-        .equalTo("storageType", FileUploading.STORAGE_TYPE_S3)
+        .equalTo(FileUploading.SYNC_STATE, SyncState.NOT_SYNCED)
+        .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_S3)
         .findAll();
   }
 
@@ -77,7 +77,8 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
     }
 
     List<FileUploading> uploadingList = realmHelper.executeTransactionForReadResults(realm ->
-        realm.where(FileUploading.class).equalTo("syncstate", SyncState.SYNCING).findAll());
+        realm.where(FileUploading.class).equalTo(FileUploading.SYNC_STATE, SyncState.SYNCING)
+            .findAll());
     if (uploadingList.size() >= 3) {
       // do not upload more than 3 files simultaneously
       return;
@@ -93,8 +94,8 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-            .put("uplId", uplId)
-            .put("syncstate", SyncState.SYNCING)
+            .put(FileUploading.ID, uplId)
+            .put(FileUploading.SYNC_STATE, SyncState.SYNCING)
         )
     ).onSuccessTask(_task -> methodCall.uploadRequest(filename, filesize, mimeType, roomId)
     ).onSuccessTask(task -> {
@@ -134,8 +135,8 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
                   numBytes += readBytes;
                   realmHelper.executeTransaction(realm ->
                       realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-                          .put("uplId", uplId)
-                          .put("uploadedSize", numBytes)))
+                          .put(FileUploading.ID, uplId)
+                          .put(FileUploading.UPLOADED_SIZE, numBytes)))
                       .continueWith(new LogcatIfError());
                 }
               }
@@ -164,18 +165,18 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
       );
     }).onSuccessTask(task -> realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-            .put("uplId", uplId)
-            .put("syncstate", SyncState.SYNCED)
-            .put("error", JSONObject.NULL)
+            .put(FileUploading.ID, uplId)
+            .put(FileUploading.SYNC_STATE, SyncState.SYNCED)
+            .put(FileUploading.ERROR, JSONObject.NULL)
         )
     )).continueWithTask(task -> {
       if (task.isFaulted()) {
         RCLog.w(task.getError());
         return realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-                .put("uplId", uplId)
-                .put("syncstate", SyncState.FAILED)
-                .put("error", task.getError().getMessage())
+                .put(FileUploading.ID, uplId)
+                .put(FileUploading.SYNC_STATE, SyncState.FAILED)
+                .put(FileUploading.ERROR, task.getError().getMessage())
             ));
       } else {
         return Task.forResult(null);

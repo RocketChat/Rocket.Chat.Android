@@ -21,7 +21,7 @@ import chat.rocket.android.realm_helper.RealmStore;
 public class InputHostnameFragment extends AbstractServerConfigFragment {
   RealmObjectObserver<ServerConfig> serverConfigObserver = RealmStore.getDefault()
       .createObjectObserver(realm ->
-          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId))
+          realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId))
       .setOnUpdateListener(this::onRenderServerConfig);
 
   public InputHostnameFragment() {
@@ -82,11 +82,12 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
     RealmStore.getDefault().executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class,
-            new JSONObject().put("serverConfigId", serverConfigId)
-                .put("hostname", hostname)
-                .put("error", JSONObject.NULL)
-                .put("session", JSONObject.NULL)
-                .put("state", ServerConfig.STATE_READY))).continueWith(new LogcatIfError());
+            new JSONObject().put(ServerConfig.ID, serverConfigId)
+                .put(ServerConfig.HOSTNAME, hostname)
+                .put(ServerConfig.ERROR, JSONObject.NULL)
+                .put(ServerConfig.SESSION, JSONObject.NULL)
+                .put(ServerConfig.STATE, ServerConfig.STATE_READY)))
+        .continueWith(new LogcatIfError());
   }
 
   private void showError(String errString) {

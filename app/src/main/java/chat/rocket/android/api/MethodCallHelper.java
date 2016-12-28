@@ -1,6 +1,8 @@
 package chat.rocket.android.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Patterns;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +19,7 @@ import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.model.internal.Session;
+import chat.rocket.android.model.params.PushUpdate;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android_ddp.DDPClientCallback;
@@ -24,6 +27,7 @@ import hugo.weaving.DebugLog;
 
 /**
  * Utility class for creating/handling MethodCall or RPC.
+ *
  * TODO: separate method into several manager classes (SubscriptionManager, MessageManager, ...).
  */
 public class MethodCallHelper {
@@ -37,9 +41,8 @@ public class MethodCallHelper {
   protected final RealmHelper realmHelper;
   protected final DDPClientWrapper ddpClient;
 
-  @Deprecated
   /**
-   * Deprecated. use MethodCall(Context, String) instead.
+   * initialize with ServerConfigId.
    */
   public MethodCallHelper(String serverConfigId) {
     this(null, serverConfigId);
@@ -301,6 +304,19 @@ public class MethodCallHelper {
 
   public Task<Void> createDirectMessage(final String username) {
     return call("createDirectMessage", TIMEOUT_MS, () -> new JSONArray().put(username))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
+  public Task<Void> pushUpdate(@NonNull String pushId, @NonNull String token,
+                               @Nullable String userId) {
+    return call("raix:push-update", TIMEOUT_MS, () -> {
+      JSONObject param = new PushUpdate(pushId, token, userId).toJson();
+      return new JSONArray().put(param);
+    }).onSuccessTask(task -> Task.forResult(null));
+  }
+
+  public Task<Void> pushSetUser(String pushId) {
+    return call("raix:push-setuser", TIMEOUT_MS, () -> new JSONArray().put(pushId))
         .onSuccessTask(task -> Task.forResult(null));
   }
 

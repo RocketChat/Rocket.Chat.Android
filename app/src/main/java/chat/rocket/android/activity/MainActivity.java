@@ -143,9 +143,9 @@ public class MainActivity extends AbstractAuthedActivity {
     sessionObserver = realmHelper
         .createObjectObserver(realm ->
             Session.queryDefaultSession(realm)
-                .isNotNull("token")
-                .equalTo("tokenVerified", true)
-                .isNull("error"))
+                .isNotNull(Session.TOKEN)
+                .equalTo(Session.TOKEN_VERIFIED, true)
+                .isNull(Session.ERROR))
         .setOnUpdateListener(session -> {
           if (session == null && isForeground) {
             LaunchUtil.showServerConfigActivity(this, serverConfigId);

@@ -91,7 +91,7 @@ public class NotificationItemObserver extends AbstractModelObserver<Notification
     Intent intent = new Intent(context, MainActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo("hostname", hostname).findFirst());
+        realm.where(ServerConfig.class).equalTo(ServerConfig.HOSTNAME, hostname).findFirst());
     if (config != null) {
       intent.putExtra("serverConfigId", config.getServerConfigId());
       intent.putExtra("roomId", roomId);
@@ -105,7 +105,7 @@ public class NotificationItemObserver extends AbstractModelObserver<Notification
   private PendingIntent getDeleteIntent(String roomId) {
     Intent intent = new Intent(context, NotificationDismissalCallbackService.class);
     ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo("hostname", hostname).findFirst());
+        realm.where(ServerConfig.class).equalTo(ServerConfig.HOSTNAME, hostname).findFirst());
     if (config != null) {
       intent.putExtra("serverConfigId", config.getServerConfigId());
       intent.putExtra("roomId", roomId);

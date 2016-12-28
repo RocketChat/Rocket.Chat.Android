@@ -5,12 +5,25 @@ import io.realm.annotations.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import chat.rocket.android.model.JsonConstants;
+
 /**
  * Chat Room(Subscription).
  */
 @SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class RoomSubscription extends RealmObject {
+
+  public static final String ID = "_id";
+  public static final String ROOM_ID = "rid";
+  public static final String NAME = "name";
+  public static final String TYPE = "t";
+  public static final String OPEN = "open";
+  public static final String ALERT = "alert";
+  public static final String UNREAD = "unread";
+  public static final String UPDATED_AT = "_updatedAt";
+  public static final String LAST_SEEN = "ls";
+
   public static final String TYPE_CHANNEL = "c";
   public static final String TYPE_PRIVATE = "p";
   public static final String TYPE_DIRECT_MESSAGE = "d";
@@ -27,16 +40,16 @@ public class RoomSubscription extends RealmObject {
   private long ls; //last seen.
 
   public static JSONObject customizeJson(JSONObject roomSubscriptionJson) throws JSONException {
-    if (!roomSubscriptionJson.isNull("ls")) {
-      long ls = roomSubscriptionJson.getJSONObject("ls").getLong("$date");
-      roomSubscriptionJson.remove("ls");
-      roomSubscriptionJson.put("ls", ls);
+    if (!roomSubscriptionJson.isNull(LAST_SEEN)) {
+      long ls = roomSubscriptionJson.getJSONObject(LAST_SEEN).getLong(JsonConstants.DATE);
+      roomSubscriptionJson.remove(LAST_SEEN);
+      roomSubscriptionJson.put(LAST_SEEN, ls);
     }
 
-    if (!roomSubscriptionJson.isNull("_updatedAt")) {
-      long updatedAt = roomSubscriptionJson.getJSONObject("_updatedAt").getLong("$date");
-      roomSubscriptionJson.remove("_updatedAt");
-      roomSubscriptionJson.put("_updatedAt", updatedAt);
+    if (!roomSubscriptionJson.isNull(UPDATED_AT)) {
+      long updatedAt = roomSubscriptionJson.getJSONObject(UPDATED_AT).getLong(JsonConstants.DATE);
+      roomSubscriptionJson.remove(UPDATED_AT);
+      roomSubscriptionJson.put(UPDATED_AT, updatedAt);
     }
 
     return roomSubscriptionJson;

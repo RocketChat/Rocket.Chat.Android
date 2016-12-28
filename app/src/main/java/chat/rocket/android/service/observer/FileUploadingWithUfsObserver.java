@@ -38,11 +38,11 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
       RealmResults<FileUploading> pendingUploadRequests = realm.where(FileUploading.class)
-          .equalTo("syncstate", SyncState.SYNCING)
+          .equalTo(FileUploading.SYNC_STATE, SyncState.SYNCING)
           .beginGroup()
-          .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
+          .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_GRID_FS)
           .or()
-          .equalTo("storageType", FileUploading.STORAGE_TYPE_FILE_SYSTEM)
+          .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_FILE_SYSTEM)
           .endGroup()
           .findAll();
       for (FileUploading req : pendingUploadRequests) {
@@ -52,14 +52,14 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
       // clean up records.
       realm.where(FileUploading.class)
           .beginGroup()
-          .equalTo("syncstate", SyncState.SYNCED)
+          .equalTo(FileUploading.SYNC_STATE, SyncState.SYNCED)
           .or()
-          .equalTo("syncstate", SyncState.FAILED)
+          .equalTo(FileUploading.SYNC_STATE, SyncState.FAILED)
           .endGroup()
           .beginGroup()
-          .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
+          .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_GRID_FS)
           .or()
-          .equalTo("storageType", FileUploading.STORAGE_TYPE_FILE_SYSTEM)
+          .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_FILE_SYSTEM)
           .endGroup()
           .findAll().deleteAllFromRealm();
       return null;
@@ -69,11 +69,11 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
   @Override
   public RealmResults<FileUploading> queryItems(Realm realm) {
     return realm.where(FileUploading.class)
-        .equalTo("syncstate", SyncState.NOT_SYNCED)
+        .equalTo(FileUploading.SYNC_STATE, SyncState.NOT_SYNCED)
         .beginGroup()
-        .equalTo("storageType", FileUploading.STORAGE_TYPE_GRID_FS)
+        .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_GRID_FS)
         .or()
-        .equalTo("storageType", FileUploading.STORAGE_TYPE_FILE_SYSTEM)
+        .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_FILE_SYSTEM)
         .endGroup()
         .findAll();
   }
@@ -85,7 +85,8 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
     }
 
     List<FileUploading> uploadingList = realmHelper.executeTransactionForReadResults(realm ->
-        realm.where(FileUploading.class).equalTo("syncstate", SyncState.SYNCING).findAll());
+        realm.where(FileUploading.class).equalTo(FileUploading.SYNC_STATE, SyncState.SYNCING)
+            .findAll());
     if (uploadingList.size() >= 1) {
       // do not upload multiple files simultaneously
       return;
@@ -115,8 +116,8 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-            .put("uplId", uplId)
-            .put("syncstate", SyncState.SYNCING)
+            .put(FileUploading.ID, uplId)
+            .put(FileUploading.SYNC_STATE, SyncState.SYNCING)
         )
     ).onSuccessTask(_task -> methodCall.ufsCreate(filename, filesize, mimeType, store, roomId)
     ).onSuccessTask(task -> {
@@ -145,8 +146,8 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
           Response response = OkHttpHelper.getClientForUploadFile().newCall(request).execute();
           if (response.isSuccessful()) {
             final JSONObject obj = new JSONObject()
-                .put("uplId", uplId)
-                .put("uploadedSize", offset);
+                .put(FileUploading.ID, uplId)
+                .put(FileUploading.UPLOADED_SIZE, offset);
             realmHelper.executeTransaction(realm ->
                 realm.createOrUpdateObjectFromJson(FileUploading.class, obj));
           } else {
@@ -159,18 +160,18 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
     }).onSuccessTask(task -> methodCall.sendFileMessage(roomId, null, task.getResult())
     ).onSuccessTask(task -> realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-            .put("uplId", uplId)
-            .put("syncstate", SyncState.SYNCED)
-            .put("error", JSONObject.NULL)
+            .put(FileUploading.ID, uplId)
+            .put(FileUploading.SYNC_STATE, SyncState.SYNCED)
+            .put(FileUploading.ERROR, JSONObject.NULL)
         )
     )).continueWithTask(task -> {
       if (task.isFaulted()) {
         RCLog.w(task.getError());
         return realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
-                .put("uplId", uplId)
-                .put("syncstate", SyncState.FAILED)
-                .put("error", task.getError().getMessage())
+                .put(FileUploading.ID, uplId)
+                .put(FileUploading.SYNC_STATE, SyncState.FAILED)
+                .put(FileUploading.ERROR, task.getError().getMessage())
             ));
       } else {
         return Task.forResult(null);

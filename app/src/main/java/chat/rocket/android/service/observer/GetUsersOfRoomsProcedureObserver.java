@@ -31,7 +31,7 @@ public class GetUsersOfRoomsProcedureObserver
   @Override
   public RealmResults<GetUsersOfRoomsProcedure> queryItems(Realm realm) {
     return realm.where(GetUsersOfRoomsProcedure.class)
-        .equalTo("syncstate", SyncState.NOT_SYNCED)
+        .equalTo(GetUsersOfRoomsProcedure.SYNC_STATE, SyncState.NOT_SYNCED)
         .findAll();
   }
 
@@ -47,8 +47,8 @@ public class GetUsersOfRoomsProcedureObserver
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(GetUsersOfRoomsProcedure.class, new JSONObject()
-            .put("roomId", roomId)
-            .put("syncstate", SyncState.SYNCING))
+            .put(GetUsersOfRoomsProcedure.ID, roomId)
+            .put(GetUsersOfRoomsProcedure.SYNC_STATE, SyncState.SYNCING))
     ).onSuccessTask(task ->
         methodCall.getUsersOfRoom(roomId, showAll)
             .onSuccessTask(_task -> {
@@ -64,8 +64,8 @@ public class GetUsersOfRoomsProcedureObserver
         RCLog.w(task.getError());
         return realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(GetUsersOfRoomsProcedure.class, new JSONObject()
-                .put("roomId", roomId)
-                .put("syncstate", SyncState.FAILED)));
+                .put(GetUsersOfRoomsProcedure.ID, roomId)
+                .put(GetUsersOfRoomsProcedure.SYNC_STATE, SyncState.FAILED)));
       } else {
         return Task.forResult(null);
       }

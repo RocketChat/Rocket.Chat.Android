@@ -12,6 +12,14 @@ import io.realm.annotations.PrimaryKey;
 @SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class User extends RealmObject {
+
+  public static final String ID = "_id";
+  public static final String USERNAME = "username";
+  public static final String STATUS = "status";
+  public static final String UTC_OFFSET = "utcOffset";
+  public static final String EMAILS = "emails";
+  public static final String SETTINGS = "settings";
+
   public static final String STATUS_ONLINE = "online";
   public static final String STATUS_BUSY = "busy";
   public static final String STATUS_AWAY = "away";
@@ -25,7 +33,7 @@ public class User extends RealmObject {
   private Settings settings;
 
   public static RealmQuery<User> queryCurrentUser(Realm realm) {
-    return realm.where(User.class).isNotEmpty("emails");
+    return realm.where(User.class).isNotEmpty(EMAILS);
   }
 
   public String getId() {

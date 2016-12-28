@@ -20,6 +20,13 @@ import chat.rocket.android.service.RocketChatService;
 
 public class MethodCall extends RealmObject {
 
+  public static final String ID = "methodCallId";
+  public static final String SYNC_STATE = "syncstate";
+  public static final String NAME = "name";
+  public static final String PARAMS_JSON = "paramsJson";
+  public static final String RESULT_JSON = "resultJson";
+  public static final String TIMEOUT = "timeout";
+
   private static final HashMap<String, RealmObjectObserver<MethodCall>> REF_MAP = new HashMap<>();
   @PrimaryKey private String methodCallId;
   private int syncstate;
@@ -38,10 +45,10 @@ public class MethodCall extends RealmObject {
     TaskCompletionSource<String> task = new TaskCompletionSource<>();
     realmHelper.executeTransaction(realm -> {
       MethodCall call = realm.createObjectFromJson(MethodCall.class, new JSONObject()
-          .put("methodCallId", newId)
-          .put("syncstate", SyncState.NOT_SYNCED)
-          .put("timeout", timeout)
-          .put("name", name));
+          .put(ID, newId)
+          .put(SYNC_STATE, SyncState.NOT_SYNCED)
+          .put(TIMEOUT, timeout)
+          .put(NAME, name));
       call.setParamsJson(paramsJson);
       return null;
     }).continueWith(_task -> {
@@ -50,7 +57,7 @@ public class MethodCall extends RealmObject {
       } else {
         final RealmObjectObserver<MethodCall> observer =
             realmHelper.createObjectObserver(realm ->
-                realm.where(MethodCall.class).equalTo("methodCallId", newId));
+                realm.where(MethodCall.class).equalTo(ID, newId));
         observer.setOnUpdateListener(methodCall -> {
           if (methodCall == null) {
             observer.unsub();
@@ -95,7 +102,7 @@ public class MethodCall extends RealmObject {
   public static final Task<Void> remove(RealmHelper realmHelper, String methodCallId) {
     return realmHelper.executeTransaction(realm ->
         realm.where(MethodCall.class)
-            .equalTo("methodCallId", methodCallId)
+            .equalTo(ID, methodCallId)
             .findAll()
             .deleteAllFromRealm());
   }

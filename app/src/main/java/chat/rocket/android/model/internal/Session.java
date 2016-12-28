@@ -15,23 +15,31 @@ import hugo.weaving.DebugLog;
  * Login session info.
  */
 public class Session extends RealmObject {
+
+  public static final String ID = "sessionId";
+  public static final String TOKEN = "token";
+  public static final String TOKEN_VERIFIED = "tokenVerified";
+  public static final String ERROR = "error";
+
   public static final int DEFAULT_ID = 0;
+  public static final String AUTH_ERROR_CODE = "[403]";
+
   @PrimaryKey private int sessionId; //only 0 is used!
   private String token;
   private boolean tokenVerified;
   private String error;
 
   public static RealmQuery<Session> queryDefaultSession(Realm realm) {
-    return realm.where(Session.class).equalTo("sessionId", Session.DEFAULT_ID);
+    return realm.where(Session.class).equalTo(ID, Session.DEFAULT_ID);
   }
 
   /**
-   * Log the server connection is lost due to soem exception.
+   * Log the server connection is lost due to some exception.
    */
   @DebugLog
   public static void logError(RealmHelper realmHelper, Exception exception) {
     String errString = exception.getMessage();
-    if (!TextUtils.isEmpty(errString) && errString.contains("[403]")) {
+    if (!TextUtils.isEmpty(errString) && errString.contains(AUTH_ERROR_CODE)) {
       realmHelper.executeTransaction(realm -> {
         realm.delete(Session.class);
         return null;
@@ -39,9 +47,9 @@ public class Session extends RealmObject {
     } else {
       realmHelper.executeTransaction(
           realm -> realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
-              .put("sessionId", Session.DEFAULT_ID)
-              .put("tokenVerified", false)
-              .put("error", errString)))
+              .put(ID, Session.DEFAULT_ID)
+              .put(TOKEN_VERIFIED, false)
+              .put(ERROR, errString)))
           .continueWith(new LogcatIfError());
     }
   }

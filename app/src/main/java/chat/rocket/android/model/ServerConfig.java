@@ -13,6 +13,14 @@ import hugo.weaving.DebugLog;
  * Server configuration.
  */
 public class ServerConfig extends RealmObject {
+
+  public static final String ID = "serverConfigId";
+  public static final String HOSTNAME = "hostname";
+  public static final String STATE = "state";
+  public static final String SESSION = "session";
+  public static final String ERROR = "error";
+  public static final String SYNC_PUSH_TOKEN = "syncPushToken";
+
   public static final int STATE_READY = 0;
   public static final int STATE_CONNECTING = 1;
   public static final int STATE_CONNECTED = 2;
@@ -23,6 +31,7 @@ public class ServerConfig extends RealmObject {
   private int state;
   private String session;
   private String error;
+  private boolean syncPushToken;
 
   /**
    * Log the server connection is lost due to some exception.
@@ -31,9 +40,9 @@ public class ServerConfig extends RealmObject {
   public static void logConnectionError(String serverConfigId, Exception exception) {
     RealmStore.getDefault().executeTransaction(
         realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("serverConfigId", serverConfigId)
-            .put("state", STATE_CONNECTION_ERROR)
-            .put("error", exception.getMessage())))
+            .put(ID, serverConfigId)
+            .put(STATE, STATE_CONNECTION_ERROR)
+            .put(ERROR, exception.getMessage())))
         .continueWith(new LogcatIfError());
   }
 
@@ -43,11 +52,11 @@ public class ServerConfig extends RealmObject {
   public static Task<Void> updateState(final String serverConfigId, int state) {
     return RealmStore.getDefault().executeTransaction(realm -> {
       ServerConfig config =
-          realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst();
+          realm.where(ServerConfig.class).equalTo(ID, serverConfigId).findFirst();
       if (config == null || config.getState() != state) {
         realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put("serverConfigId", serverConfigId)
-            .put("state", state));
+            .put(ID, serverConfigId)
+            .put(STATE, state));
       }
       return null;
     });
@@ -91,5 +100,13 @@ public class ServerConfig extends RealmObject {
 
   public void setError(String error) {
     this.error = error;
+  }
+
+  public boolean shouldSyncPushToken() {
+    return syncPushToken;
+  }
+
+  public void setSyncPushToken(boolean syncPushToken) {
+    this.syncPushToken = syncPushToken;
   }
 }

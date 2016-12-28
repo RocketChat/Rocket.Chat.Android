@@ -7,9 +7,16 @@ import io.realm.annotations.PrimaryKey;
  * Load messages in the room.
  */
 public class LoadMessageProcedure extends RealmObject {
+
+  public static final String ID = "roomId";
+  public static final String SYNC_STATE = "syncstate";
+  public static final String RESET = "reset";
+  public static final String TIMESTAMP = "timestamp";
+  public static final String COUNT = "count";
+  public static final String HAS_NEXT = "hasNext";
+
   @PrimaryKey private String roomId;
   private int syncstate;
-
   private boolean reset;
   private long timestamp;
   private int count;
