@@ -7,6 +7,14 @@ import io.realm.annotations.PrimaryKey;
  * Get users in a Room.
  */
 public class GetUsersOfRoomsProcedure extends RealmObject {
+
+  @SuppressWarnings({"PMD.ShortVariable"})
+  public static final String ID = "roomId";
+  public static final String SYNC_STATE = "syncstate";
+  public static final String SHOW_ALL = "showAll";
+  public static final String TOTAL = "total";
+  public static final String RECORDS = "records";
+
   @PrimaryKey private String roomId;
   private int syncstate;
   private boolean showAll;

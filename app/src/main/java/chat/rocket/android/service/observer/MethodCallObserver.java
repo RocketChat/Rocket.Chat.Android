@@ -30,7 +30,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
       RealmResults<MethodCall> pendingMethodCalls = realm.where(MethodCall.class)
-          .equalTo("syncstate", SyncState.SYNCING)
+          .equalTo(MethodCall.SYNC_STATE, SyncState.SYNCING)
           .findAll();
       for (MethodCall call : pendingMethodCalls) {
         call.setSyncState(SyncState.NOT_SYNCED);
@@ -39,9 +39,9 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
       // clean up records.
       realm.where(MethodCall.class)
           .beginGroup()
-          .equalTo("syncstate", SyncState.SYNCED)
+          .equalTo(MethodCall.SYNC_STATE, SyncState.SYNCED)
           .or()
-          .equalTo("syncstate", SyncState.FAILED)
+          .equalTo(MethodCall.SYNC_STATE, SyncState.FAILED)
           .endGroup()
           .findAll().deleteAllFromRealm();
       return null;
@@ -51,8 +51,8 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
   @Override
   public RealmResults<MethodCall> queryItems(Realm realm) {
     return realm.where(MethodCall.class)
-        .isNotNull("name")
-        .equalTo("syncstate", SyncState.NOT_SYNCED)
+        .isNotNull(MethodCall.NAME)
+        .equalTo(MethodCall.SYNC_STATE, SyncState.NOT_SYNCED)
         .findAll();
   }
 
@@ -94,16 +94,16 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
     final long timeout = call.getTimeout();
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
-            .put("methodCallId", methodCallId)
-            .put("syncstate", SyncState.SYNCING))
+            .put(MethodCall.ID, methodCallId)
+            .put(MethodCall.SYNC_STATE, SyncState.SYNCING))
     ).onSuccessTask(task ->
         ddpClient.rpc(methodCallId, methodName, params, timeout)
             .onSuccessTask(_task -> realmHelper.executeTransaction(realm -> {
               String json = _task.getResult().result;
               return realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
-                  .put("methodCallId", methodCallId)
-                  .put("syncstate", SyncState.SYNCED)
-                  .put("resultJson", json));
+                  .put(MethodCall.ID, methodCallId)
+                  .put(MethodCall.SYNC_STATE, SyncState.SYNCED)
+                  .put(MethodCall.RESULT_JSON, json));
             }))
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
@@ -113,9 +113,9 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
               ? ((DDPClientCallback.RPC.Error) exception).error.toString()
               : exception.getMessage();
           realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
-              .put("methodCallId", methodCallId)
-              .put("syncstate", SyncState.FAILED)
-              .put("resultJson", errMessage));
+              .put(MethodCall.ID, methodCallId)
+              .put(MethodCall.SYNC_STATE, SyncState.FAILED)
+              .put(MethodCall.RESULT_JSON, errMessage));
           return null;
         });
       }

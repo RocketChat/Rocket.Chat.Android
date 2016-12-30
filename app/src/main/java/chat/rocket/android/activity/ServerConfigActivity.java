@@ -41,7 +41,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
       return;
     }
 
-    serverConfigId = intent.getStringExtra("serverConfigId");
+    serverConfigId = intent.getStringExtra(ServerConfig.ID);
     if (TextUtils.isEmpty(serverConfigId)) {
       finish();
       return;
@@ -50,8 +50,8 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     serverConfigErrorObserver = RealmStore.getDefault()
         .createObjectObserver(realm ->
             realm.where(ServerConfig.class)
-                .equalTo("serverConfigId", serverConfigId)
-                .equalTo("state", ServerConfig.STATE_CONNECTION_ERROR))
+                .equalTo(ServerConfig.ID, serverConfigId)
+                .equalTo(ServerConfig.STATE, ServerConfig.STATE_CONNECTION_ERROR))
         .setOnUpdateListener(this::onRenderServerConfigError);
 
     sessionObserver = RealmStore.get(serverConfigId)
@@ -128,7 +128,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     if (args == null) {
       args = new Bundle();
     }
-    args.putString("serverConfigId", serverConfigId);
+    args.putString(ServerConfig.ID, serverConfigId);
     fragment.setArguments(args);
   }
 

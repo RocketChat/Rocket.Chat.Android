@@ -24,7 +24,7 @@ public class RocketChatApplication extends MultiDexApplication {
         new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build());
 
     List<ServerConfig> configs = RealmStore.getDefault().executeTransactionForReadResults(realm ->
-        realm.where(ServerConfig.class).isNotNull("session").findAll());
+        realm.where(ServerConfig.class).isNotNull(ServerConfig.SESSION).findAll());
     for (ServerConfig config : configs) {
       RealmStore.put(config.getServerConfigId());
     }

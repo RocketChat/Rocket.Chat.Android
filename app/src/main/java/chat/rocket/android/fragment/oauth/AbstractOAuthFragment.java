@@ -57,11 +57,11 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
 
     serverConfigId = args.getString("serverConfigId");
     ServerConfig serverConfig = RealmStore.getDefault().executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
+        realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
     MeteorLoginServiceConfiguration oauthConfig =
         RealmStore.get(serverConfigId).executeTransactionForRead(realm ->
             realm.where(MeteorLoginServiceConfiguration.class)
-                .equalTo("service", getOAuthServiceName())
+                .equalTo(MeteorLoginServiceConfiguration.SERVICE, getOAuthServiceName())
                 .findFirst());
     if (serverConfig == null || oauthConfig == null) {
       throw new IllegalArgumentException(

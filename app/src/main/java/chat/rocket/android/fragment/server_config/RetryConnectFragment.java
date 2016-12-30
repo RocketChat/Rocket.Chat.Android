@@ -28,7 +28,7 @@ public class RetryConnectFragment extends AbstractServerConfigFragment {
     super.onCreate(savedInstanceState);
     serverConfigObserver = RealmStore.getDefault()
         .createObjectObserver(realm ->
-            realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId))
+            realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId))
         .setOnUpdateListener(this::onRenderServerConfig);
   }
 
@@ -41,7 +41,7 @@ public class RetryConnectFragment extends AbstractServerConfigFragment {
       RealmStore.getDefault()
           .executeTransaction(realm -> {
             ServerConfig config = realm.where(ServerConfig.class)
-                .equalTo("serverConfigId", serverConfigId).findFirst();
+                .equalTo(ServerConfig.ID, serverConfigId).findFirst();
             if (config != null && config.getState() == ServerConfig.STATE_CONNECTION_ERROR) {
               config.setState(ServerConfig.STATE_READY);
             }

@@ -12,7 +12,7 @@ public class CheckSum {
    * SHA-256.
    */
   public static String sha256(String orig) {
-    MessageDigest messageDigest = null;
+    MessageDigest messageDigest;
     try {
       messageDigest = MessageDigest.getInstance("SHA-256");
     } catch (NoSuchAlgorithmException exception) {

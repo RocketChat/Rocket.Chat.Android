@@ -5,6 +5,7 @@ import io.realm.annotations.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import chat.rocket.android.model.JsonConstants;
 import chat.rocket.android.model.SyncState;
 
 /**
@@ -14,6 +15,19 @@ import chat.rocket.android.model.SyncState;
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class Message extends RealmObject {
   //ref: Rocket.Chat:packages/rocketchat-lib/lib/MessageTypes.coffee
+
+  public static final String ID = "_id";
+  public static final String TYPE = "t";
+  public static final String ROOM_ID = "rid";
+  public static final String SYNC_STATE = "syncstate";
+  public static final String TIMESTAMP = "ts";
+
+  @SuppressWarnings({"PMD.AvoidFieldNameMatchingTypeName"})
+  public static final String MESSAGE = "msg";
+  public static final String USER = "u";
+  public static final String GROUPABLE = "groupable";
+  public static final String ATTACHMENTS = "attachments";
+  public static final String URLS = "urls";
 
   @PrimaryKey private String _id;
   private String t; //type:
@@ -27,12 +41,12 @@ public class Message extends RealmObject {
   private String urls; //JSONArray.
 
   public static JSONObject customizeJson(JSONObject messageJson) throws JSONException {
-    long ts = messageJson.getJSONObject("ts").getLong("$date");
-    messageJson.remove("ts");
-    messageJson.put("ts", ts).put("syncstate", SyncState.SYNCED);
+    long ts = messageJson.getJSONObject(TIMESTAMP).getLong(JsonConstants.DATE);
+    messageJson.remove(TIMESTAMP);
+    messageJson.put(TIMESTAMP, ts).put(SYNC_STATE, SyncState.SYNCED);
 
-    if (messageJson.isNull("groupable")) {
-      messageJson.put("groupable", true);
+    if (messageJson.isNull(GROUPABLE)) {
+      messageJson.put(GROUPABLE, true);
     }
 
     return messageJson;

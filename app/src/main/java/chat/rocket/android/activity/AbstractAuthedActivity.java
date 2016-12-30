@@ -28,7 +28,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private RealmListObserver<ServerConfig> unconfiguredServersObserver =
       RealmStore.getDefault()
           .createListObserver(realm ->
-              realm.where(ServerConfig.class).isNotNull("session").findAll())
+              realm.where(ServerConfig.class).isNotNull(ServerConfig.SESSION).findAll())
           .setOnUpdateListener(results -> {
             if (results.isEmpty()) {
               LaunchUtil.showAddServerActivity(this);
@@ -41,10 +41,10 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     if (savedInstanceState == null) {
       Intent intent = getIntent();
       if (intent != null) {
-        if (intent.hasExtra("serverConfigId")) {
+        if (intent.hasExtra(ServerConfig.ID)) {
           SharedPreferences.Editor editor = RocketChatCache.get(this).edit();
           editor.putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID,
-              intent.getStringExtra("serverConfigId"));
+              intent.getStringExtra(ServerConfig.ID));
 
           if (intent.hasExtra("roomId")) {
             editor.putString(RocketChatCache.KEY_SELECTED_ROOM_ID, intent.getStringExtra("roomId"));
@@ -104,7 +104,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     }
 
     RoomSubscription room = RealmStore.get(serverConfigId).executeTransactionForRead(realm ->
-        realm.where(RoomSubscription.class).equalTo("rid", roomId).findFirst());
+        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
     if (room == null) {
       prefs.edit()
           .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)

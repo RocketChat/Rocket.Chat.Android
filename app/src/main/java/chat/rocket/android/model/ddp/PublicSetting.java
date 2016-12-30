@@ -6,6 +6,7 @@ import io.realm.annotations.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import chat.rocket.android.model.JsonConstants;
 import chat.rocket.android.realm_helper.RealmHelper;
 
 /**
@@ -14,6 +15,14 @@ import chat.rocket.android.realm_helper.RealmHelper;
 @SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class PublicSetting extends RealmObject {
+
+  public static final String ID = "_id";
+  public static final String GROUP = "group";
+  public static final String TYPE = "type";
+  public static final String VALUE = "value";
+  public static final String UPDATED_AT = "_updatedAt";
+  public static final String META = "meta";
+
   @PrimaryKey private String _id;
   private String group;
   private String type;
@@ -22,26 +31,25 @@ public class PublicSetting extends RealmObject {
   private String meta; //JSON
 
   public static JSONObject customizeJson(JSONObject settingJson) throws JSONException {
-    if (!settingJson.isNull("_updatedAt")) {
-      long updatedAt = settingJson.getJSONObject("_updatedAt").getLong("$date");
-      settingJson.remove("_updatedAt");
-      settingJson.put("_updatedAt", updatedAt);
+    if (!settingJson.isNull(UPDATED_AT)) {
+      long updatedAt = settingJson.getJSONObject(UPDATED_AT)
+          .getLong(JsonConstants.DATE);
+      settingJson.remove(UPDATED_AT);
+      settingJson.put(UPDATED_AT, updatedAt);
     }
 
     return settingJson;
   }
 
-  private static
   @Nullable
-  PublicSetting get(RealmHelper realmHelper, String _id) {
+  private static PublicSetting get(RealmHelper realmHelper, String _id) {
     return realmHelper.executeTransactionForRead(realm ->
-        realm.where(PublicSetting.class).equalTo("_id", _id).findFirst());
+        realm.where(PublicSetting.class).equalTo(ID, _id).findFirst());
   }
 
-  public static
   @Nullable
-  String getString(RealmHelper realmHelper,
-                   String _id, String defaultValue) {
+  public static String getString(RealmHelper realmHelper,
+                                 String _id, String defaultValue) {
     PublicSetting setting = get(realmHelper, _id);
     if (setting != null) {
       return setting.getValue();
@@ -49,10 +57,8 @@ public class PublicSetting extends RealmObject {
     return defaultValue;
   }
 
-  public static
-  @Nullable
-  boolean getBoolean(RealmHelper realmHelper,
-                     String _id, boolean defaultValue) {
+  public static boolean getBoolean(RealmHelper realmHelper,
+                                   String _id, boolean defaultValue) {
     PublicSetting setting = get(realmHelper, _id);
     if (setting != null) {
       return Boolean.parseBoolean(setting.getValue());

@@ -7,6 +7,16 @@ import io.realm.annotations.PrimaryKey;
  * ViewData model for notification.
  */
 public class NotificationItem extends RealmObject {
+
+  @SuppressWarnings({"PMD.ShortVariable"})
+  public static final String ID = "roomId";
+  public static final String TITLE = "title";
+  public static final String DESCRIPTION = "description";
+  public static final String UNREAD_COUNT = "unreadCount";
+  public static final String SENDER_NAME = "senderName";
+  public static final String CONTENT_UPDATED_AT = "contentUpdatedAt";
+  public static final String LAST_SEEN_AT = "lastSeenAt";
+
   @PrimaryKey private String roomId;
   private String title;
   private String description;

@@ -39,8 +39,8 @@ public class RocketChatService extends Service {
     realmHelper = RealmStore.getDefault();
     connectionRequiredServerConfigObserver = realmHelper
         .createListObserver(realm -> realm.where(ServerConfig.class)
-            .isNotNull("hostname")
-            .equalTo("state", ServerConfig.STATE_READY)
+            .isNotNull(ServerConfig.HOSTNAME)
+            .equalTo(ServerConfig.STATE, ServerConfig.STATE_READY)
             .findAll())
         .setOnUpdateListener(this::connectToServerWithServerConfig);
 
@@ -50,7 +50,7 @@ public class RocketChatService extends Service {
   private void refreshServerConfigState() {
     realmHelper.executeTransaction(realm -> {
       RealmResults<ServerConfig> configs = realm.where(ServerConfig.class)
-          .notEqualTo("state", ServerConfig.STATE_READY)
+          .notEqualTo(ServerConfig.STATE, ServerConfig.STATE_READY)
           .findAll();
       for (ServerConfig config : configs) {
         config.setState(ServerConfig.STATE_READY);
@@ -64,7 +64,7 @@ public class RocketChatService extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     List<ServerConfig> configs = realmHelper.executeTransactionForReadResults(realm ->
         realm.where(ServerConfig.class)
-            .equalTo("state", ServerConfig.STATE_CONNECTED)
+            .equalTo(ServerConfig.STATE, ServerConfig.STATE_CONNECTED)
             .findAll());
     for (ServerConfig config : configs) {
       String serverConfigId = config.getServerConfigId();
@@ -80,11 +80,11 @@ public class RocketChatService extends Service {
       RealmResults<ServerConfig> targetConfigs = realm
           .where(ServerConfig.class)
           .beginGroup()
-          .equalTo("state", ServerConfig.STATE_CONNECTION_ERROR)
+          .equalTo(ServerConfig.STATE, ServerConfig.STATE_CONNECTION_ERROR)
           .or()
-          .isNotNull("error")
+          .isNotNull(ServerConfig.ERROR)
           .endGroup()
-          .isNotNull("session")
+          .isNotNull(ServerConfig.SESSION)
           .findAll();
       for (ServerConfig config : targetConfigs) {
         config.setState(ServerConfig.STATE_READY);

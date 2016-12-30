@@ -144,7 +144,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     if (ddpClient == null || !ddpClient.isConnected()) {
       defaultRealm.executeTransaction(realm -> {
         ServerConfig config = realm.where(ServerConfig.class)
-            .equalTo("serverConfigId", serverConfigId)
+            .equalTo(ServerConfig.ID, serverConfigId)
             .findFirst();
         if (config != null && config.getState() == ServerConfig.STATE_CONNECTED) {
           config.setState(ServerConfig.STATE_READY);
@@ -164,7 +164,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @DebugLog
   private Task<Void> connect() {
     final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
+        realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
 
     prepareWebSocket(config.getHostname());
     return ddpClient.connect(config.getSession()).onSuccessTask(task -> {
@@ -232,7 +232,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     listenersRegistered = true;
 
     final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo("serverConfigId", serverConfigId).findFirst());
+        realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
     final String hostname = config.getHostname();
 
     for (Class clazz : REGISTERABLE_CLASSES) {

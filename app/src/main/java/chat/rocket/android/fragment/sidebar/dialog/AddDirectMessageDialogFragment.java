@@ -34,8 +34,8 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
 
     RealmAutoCompleteAdapter<User> adapter = realmHelper.createAutoCompleteAdapter(getContext(),
         (realm, text) -> realm.where(User.class)
-            .contains("username", text, Case.INSENSITIVE)
-            .findAllSorted("username"),
+            .contains(User.USERNAME, text, Case.INSENSITIVE)
+            .findAllSorted(User.USERNAME),
         context -> new SuggestUserAdapter(context, hostname));
     autoCompleteTextView.setAdapter(adapter);
 

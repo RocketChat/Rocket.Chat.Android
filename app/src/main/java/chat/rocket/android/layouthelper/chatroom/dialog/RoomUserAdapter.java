@@ -48,7 +48,7 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
     }
 
     User user = realmHelper.executeTransactionForRead(realm ->
-        realm.where(User.class).equalTo("username", username).findFirst());
+        realm.where(User.class).equalTo(User.USERNAME, username).findFirst());
     if (user == null) {
       user = new User();
       user.setUsername(username);

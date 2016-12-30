@@ -32,7 +32,7 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
   @Override
   public RealmResults<LoadMessageProcedure> queryItems(Realm realm) {
     return realm.where(LoadMessageProcedure.class)
-        .equalTo("syncstate", SyncState.NOT_SYNCED)
+        .equalTo(LoadMessageProcedure.SYNC_STATE, SyncState.NOT_SYNCED)
         .findAll();
   }
 
@@ -51,33 +51,33 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
-            .put("roomId", roomId)
-            .put("syncstate", SyncState.SYNCING))
+            .put(LoadMessageProcedure.ID, roomId)
+            .put(LoadMessageProcedure.SYNC_STATE, SyncState.SYNCING))
     ).onSuccessTask(task ->
         methodCall.loadHistory(roomId, isReset ? 0 : timestamp, count, lastSeen)
             .onSuccessTask(_task -> {
               Message lastMessage = realmHelper.executeTransactionForRead(realm ->
                   realm.where(Message.class)
-                      .equalTo("rid", roomId)
-                      .equalTo("syncstate", SyncState.SYNCED)
-                      .findAllSorted("ts", Sort.ASCENDING).first(null));
+                      .equalTo(Message.ROOM_ID, roomId)
+                      .equalTo(Message.SYNC_STATE, SyncState.SYNCED)
+                      .findAllSorted(Message.TIMESTAMP, Sort.ASCENDING).first(null));
               long lastTs = lastMessage != null ? lastMessage.getTimestamp() : 0;
               int messageCount = _task.getResult().length();
               return realmHelper.executeTransaction(realm ->
                   realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
-                      .put("roomId", roomId)
-                      .put("syncstate", SyncState.SYNCED)
-                      .put("timestamp", lastTs)
-                      .put("reset", false)
-                      .put("hasNext", messageCount == count)));
+                      .put(LoadMessageProcedure.ID, roomId)
+                      .put(LoadMessageProcedure.SYNC_STATE, SyncState.SYNCED)
+                      .put(LoadMessageProcedure.TIMESTAMP, lastTs)
+                      .put(LoadMessageProcedure.RESET, false)
+                      .put(LoadMessageProcedure.HAS_NEXT, messageCount == count)));
             })
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
         RCLog.w(task.getError());
         return realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
-                .put("roomId", roomId)
-                .put("syncstate", SyncState.FAILED)));
+                .put(LoadMessageProcedure.ID, roomId)
+                .put(LoadMessageProcedure.SYNC_STATE, SyncState.FAILED)));
       } else {
         return Task.forResult(null);
       }
