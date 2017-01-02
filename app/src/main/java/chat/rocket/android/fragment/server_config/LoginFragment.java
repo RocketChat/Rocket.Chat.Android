@@ -62,11 +62,9 @@ public class LoginFragment extends AbstractServerConfigFragment {
     });
 
     final View btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
-    btnUserRegistration.setOnClickListener(view -> {
-      UserRegistrationDialogFragment.create(serverConfigId,
-          txtUsername.getText().toString(), txtPasswd.getText().toString())
-          .show(getFragmentManager(), UserRegistrationDialogFragment.class.getSimpleName());
-    });
+    btnUserRegistration.setOnClickListener(view -> UserRegistrationDialogFragment.create(serverConfigId,
+        txtUsername.getText().toString(), txtPasswd.getText().toString())
+        .show(getFragmentManager(), UserRegistrationDialogFragment.class.getSimpleName()));
   }
 
   private void showError(String errString) {

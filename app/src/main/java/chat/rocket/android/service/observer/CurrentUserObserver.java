@@ -6,6 +6,7 @@ import io.realm.RealmResults;
 
 import java.util.ArrayList;
 import java.util.List;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
@@ -57,6 +58,9 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
     listeners = new ArrayList<>();
 
     final String userId = user.getId();
+
+    // update push info
+    methodCall.pushSetUser(RocketChatCache.getPushId(context)).continueWith(new LogcatIfError());
 
     // get and observe Room subscriptions.
     methodCall.getRoomSubscriptions().onSuccess(task -> {

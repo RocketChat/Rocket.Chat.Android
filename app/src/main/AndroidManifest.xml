@@ -4,6 +4,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+            android:name="chat.rocket.android.permission.C2D_MESSAGE"
+            android:protectionLevel="signature" />
+    <uses-permission android:name="chat.rocket.android.permission.C2D_MESSAGE" />
 
     <application
             android:name=".RocketChatApplication"
@@ -34,6 +40,34 @@
         <service android:name=".service.RocketChatService" />
 
         <service android:name=".service.notification.NotificationDismissalCallbackService" />
+
+        <receiver
+                android:name="com.google.android.gms.gcm.GcmReceiver"
+                android:exported="true"
+                android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <service
+                android:name=".push.gcm.GCMIntentService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+                android:name=".push.gcm.PushInstanceIDListenerService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+                android:name=".push.gcm.RegistrationIntentService"
+                android:exported="false" />
     </application>
 
 </manifest>

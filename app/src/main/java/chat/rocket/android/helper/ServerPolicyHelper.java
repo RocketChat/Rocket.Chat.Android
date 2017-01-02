@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,7 +23,7 @@ public class ServerPolicyHelper {
       return "demo.rocket.chat";
     }
 
-    return removeProtocol(enforceDefaultHost(hostname));
+    return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
   }
 
   public static void isApiVersionValid(@NonNull OkHttpClient client, @NonNull String host,
@@ -69,6 +70,14 @@ public class ServerPolicyHelper {
   private static String removeProtocol(String hostname) {
     // yep. cheap.
     return hostname.replace("http://", "").replace("https://", "");
+  }
+
+  private static String removeTrailingSlash(String hostname) {
+    if (hostname.charAt(hostname.length() - 1) != '/') {
+      return hostname;
+    }
+
+    return hostname.replaceAll("/+$", "");
   }
 
   private static boolean isValid(ResponseBody body) {
