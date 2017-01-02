@@ -40,6 +40,8 @@ public class PushNotificationHandler implements PushConstants {
 
   private static SparseArrayCompat<ArrayList<String>> messageMap = new SparseArrayCompat<>();
 
+  private Random random = new Random();
+
   public void setNotification(int notId, String message) {
     ArrayList<String> messageList = messageMap.get(notId);
     if (messageList == null) {
@@ -108,7 +110,7 @@ public class PushNotificationHandler implements PushConstants {
     notificationIntent.putExtra(ROOM_ID, roomId);
     notificationIntent.putExtra(NOT_ID, notId);
 
-    int requestCode = new Random().nextInt();
+    int requestCode = random.nextInt();
     PendingIntent contentIntent = PendingIntent
         .getActivity(context, requestCode, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
