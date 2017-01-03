@@ -9,7 +9,7 @@ import com.google.android.gms.iid.InstanceID;
 import java.io.IOException;
 import java.util.List;
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.api.PushHelper;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.ddp.PublicSettingsConstants;
@@ -17,10 +17,10 @@ import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 
-public class RegistrationIntentService extends IntentService {
+public class GcmRegistrationIntentService extends IntentService {
 
-  public RegistrationIntentService() {
-    super("RegistrationIntentService");
+  public GcmRegistrationIntentService() {
+    super("GcmRegistrationIntentService");
   }
 
   @Override
@@ -59,7 +59,7 @@ public class RegistrationIntentService extends IntentService {
       final User currentUser = realmHelper.executeTransactionForRead(realm ->
           User.queryCurrentUser(realm).findFirst());
 
-      new MethodCallHelper(serverConfig.getServerConfigId()).pushUpdate(
+      new PushHelper(serverConfig.getServerConfigId()).pushUpdate(
           RocketChatCache.getPushId(this), token, currentUser != null ? currentUser.getId() : null)
           .onSuccess(task -> {
             markRefreshAsDone(serverConfig);

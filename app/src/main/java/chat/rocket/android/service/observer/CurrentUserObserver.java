@@ -9,6 +9,7 @@ import java.util.List;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.api.PushHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -21,6 +22,7 @@ import hugo.weaving.DebugLog;
  */
 public class CurrentUserObserver extends AbstractModelObserver<User> {
   private final MethodCallHelper methodCall;
+  private final PushHelper pushHelper;
   private boolean currentUserExists;
   private ArrayList<Registrable> listeners;
 
@@ -28,6 +30,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
                              RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
+    pushHelper = new PushHelper(realmHelper, ddpClient);
     currentUserExists = false;
   }
 
@@ -60,7 +63,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
     final String userId = user.getId();
 
     // update push info
-    methodCall.pushSetUser(RocketChatCache.getPushId(context)).continueWith(new LogcatIfError());
+    pushHelper.pushSetUser(RocketChatCache.getPushId(context)).continueWith(new LogcatIfError());
 
     // get and observe Room subscriptions.
     methodCall.getRoomSubscriptions().onSuccess(task -> {

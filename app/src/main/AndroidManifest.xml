@@ -59,14 +59,14 @@
             </intent-filter>
         </service>
         <service
-                android:name=".push.gcm.PushInstanceIDListenerService"
+                android:name=".push.gcm.GcmInstanceIDListenerService"
                 android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-                android:name=".push.gcm.RegistrationIntentService"
+                android:name=".push.gcm.GcmRegistrationIntentService"
                 android:exported="false" />
     </application>
 

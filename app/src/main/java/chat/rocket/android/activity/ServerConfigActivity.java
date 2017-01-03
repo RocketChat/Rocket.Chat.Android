@@ -18,7 +18,7 @@ import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.ddp.PublicSettingsConstants;
 import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.push.gcm.RegistrationIntentService;
+import chat.rocket.android.push.gcm.GcmRegistrationIntentService;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
@@ -168,7 +168,7 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
         .executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig))
         .continueWith(task -> {
           if (serverConfig.shouldSyncPushToken()) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
+            Intent intent = new Intent(this, GcmRegistrationIntentService.class);
             startService(intent);
           }
 

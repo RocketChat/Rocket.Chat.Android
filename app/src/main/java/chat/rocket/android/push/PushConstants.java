@@ -7,8 +7,6 @@ public interface PushConstants {
   String TITLE = "title";
   String NOT_ID = "notId";
   String PUSH_BUNDLE = "pushBundle";
-  String SERVER_CONFIG_ID = "serverConfigId";
-  String ROOM_ID = "roomId";
   String ICON = "icon";
   String ICON_COLOR = "iconColor";
   String SOUND = "sound";
@@ -70,4 +68,8 @@ public interface PushConstants {
   String TWILIO_SOUND = "twi_sound";
   String START_IN_BACKGROUND = "cdvStartInBackground";
   String FORCE_START = "force-start";
+
+  // RC specific constants
+  String SERVER_CONFIG_ID = "serverConfigId";
+  String ROOM_ID = "roomId";
 }

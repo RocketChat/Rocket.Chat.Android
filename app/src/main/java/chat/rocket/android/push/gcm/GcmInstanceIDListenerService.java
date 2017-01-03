@@ -11,19 +11,19 @@ import chat.rocket.android.model.ddp.PublicSettingsConstants;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 
-public class PushInstanceIDListenerService extends InstanceIDListenerService {
+public class GcmInstanceIDListenerService extends InstanceIDListenerService {
 
   @Override
   public void onTokenRefresh() {
     List<ServerConfig> serverConfigs = getServerConfigs();
 
-    flagForRefresh(serverConfigs);
+    updateSyncPushToken(serverConfigs);
 
     if (!shouldRefreshToken(serverConfigs)) {
       return;
     }
 
-    Intent intent = new Intent(this, RegistrationIntentService.class);
+    Intent intent = new Intent(this, GcmRegistrationIntentService.class);
     startService(intent);
   }
 
@@ -32,7 +32,7 @@ public class PushInstanceIDListenerService extends InstanceIDListenerService {
         realm -> realm.where(ServerConfig.class).findAll());
   }
 
-  private void flagForRefresh(List<ServerConfig> serverConfigs) {
+  private void updateSyncPushToken(List<ServerConfig> serverConfigs) {
     final RealmHelper realmHelper = RealmStore.getDefault();
 
     for (final ServerConfig serverConfig : serverConfigs) {
