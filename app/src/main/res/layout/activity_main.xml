@@ -20,14 +20,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:titleTextColor="@color/titleTextColor"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:title="@string/app_name" />
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <View  android:layout_width="match_parent"
+                <TextView
+                        android:id="@+id/toolbar_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textColor="@color/titleTextColor"
+                        android:drawablePadding="@dimen/margin_8"
+                        android:tag="phone"
+                        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+            </android.support.v7.widget.Toolbar>
+
+            <View
+                    android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_below="@+id/button_menu"
-                    android:background="@color/borderColor"/>
+                    android:background="@color/borderColor" />
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
