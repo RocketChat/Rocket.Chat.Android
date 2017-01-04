@@ -144,7 +144,6 @@ public class MainActivity extends AbstractAuthedActivity {
         .createObjectObserver(realm ->
             Session.queryDefaultSession(realm)
                 .isNotNull(Session.TOKEN)
-                .equalTo(Session.TOKEN_VERIFIED, true)
                 .isNull(Session.ERROR))
         .setOnUpdateListener(session -> {
           if (session == null && isForeground) {
