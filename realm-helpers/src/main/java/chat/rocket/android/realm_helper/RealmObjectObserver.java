@@ -37,7 +37,7 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
   protected final RealmChangeListener<RealmResults<T>> getListener() {
     return element -> {
       T currentResult = impl.extractObjectFromResults(element);
-      String currentResultString = currentResult != null ? currentResult.toString() : null;
+      String currentResultString = currentResult != null ? currentResult.toString() : "";
       if (previousResultString != null && previousResultString.equals(currentResultString)) {
         return;
       }
