@@ -60,20 +60,20 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
 
     setContentView(R.layout.simple_screen);
     showFragment(new WaitingFragment());
+    serverConfigErrorObserver.sub();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
     RocketChatService.keepAlive(this);
-    serverConfigErrorObserver.sub();
   }
 
   @Override
-  protected void onPause() {
+  protected void onDestroy() {
     sessionObserver.unsub();
     serverConfigErrorObserver.unsub();
-    super.onPause();
+    super.onDestroy();
   }
 
   private void onRenderServerConfigError(ServerConfig config) {
