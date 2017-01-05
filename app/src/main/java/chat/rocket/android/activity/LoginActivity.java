@@ -20,7 +20,7 @@ import chat.rocket.android.service.RocketChatService;
 /**
  * Activity for Login, Sign-up, and Retry connecting...
  */
-public class ServerConfigActivity extends AbstractFragmentActivity {
+public class LoginActivity extends AbstractFragmentActivity {
 
   private String serverConfigId;
   private RealmObjectObserver<ServerConfig> serverConfigErrorObserver;

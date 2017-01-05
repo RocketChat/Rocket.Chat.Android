@@ -2,6 +2,7 @@ package chat.rocket.android.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,6 +14,8 @@ import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -27,6 +30,7 @@ public class MainActivity extends AbstractAuthedActivity {
 
   private RealmObjectObserver<Session> sessionObserver;
   private boolean isForeground;
+  private StatusTicker tipViewManager;
 
   @Override
   protected int getLayoutContainerForFragment() {
@@ -38,6 +42,7 @@ public class MainActivity extends AbstractAuthedActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    tipViewManager = new StatusTicker();
     setupSidebar();
     if (roomId == null) {
       showFragment(new HomeFragment());
@@ -143,11 +148,35 @@ public class MainActivity extends AbstractAuthedActivity {
     sessionObserver = realmHelper
         .createObjectObserver(realm ->
             Session.queryDefaultSession(realm)
-                .isNotNull(Session.TOKEN)
-                .isNull(Session.ERROR))
+                .isNotNull(Session.TOKEN))
         .setOnUpdateListener(session -> {
-          if (session == null && isForeground) {
-            LaunchUtil.showServerConfigActivity(this, serverConfigId);
+          if (session == null) {
+            if (isForeground) {
+              LaunchUtil.showLoginActivity(this, serverConfigId);
+            }
+            tipViewManager.updateStatus(StatusTicker.STATUS_DISMISS, null);
+          } else if (!TextUtils.isEmpty(session.getError())) {
+            tipViewManager.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
+                Snackbar.make(findViewById(getLayoutContainerForFragment()),
+                    R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.fragment_retry_login_retry_title, view ->
+                        RealmStore.getDefault()
+                            .executeTransaction(realm -> {
+                              ServerConfig config = realm.where(ServerConfig.class)
+                                  .equalTo(ServerConfig.ID, serverConfigId).findFirst();
+
+                              if (config != null
+                                  && config.getState() == ServerConfig.STATE_CONNECTION_ERROR) {
+                                config.setState(ServerConfig.STATE_READY);
+                              }
+                              return null;
+                            }).continueWith(new LogcatIfError())));
+          } else if (!session.isTokenVerified()) {
+            tipViewManager.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
+                Snackbar.make(findViewById(getLayoutContainerForFragment()),
+                    R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
+          } else {
+            tipViewManager.updateStatus(StatusTicker.STATUS_DISMISS, null);
           }
         });
     sessionObserver.sub();
@@ -183,5 +212,35 @@ public class MainActivity extends AbstractAuthedActivity {
   @Override
   protected boolean onBackPress() {
     return closeSidebarIfNeeded() || super.onBackPress();
+  }
+
+  //TODO: consider this class to define in layouthelper for more complicated operation.
+  private static class StatusTicker {
+    public static final int STATUS_DISMISS = 0;
+    public static final int STATUS_CONNECTION_ERROR = 1;
+    public static final int STATUS_TOKEN_LOGIN = 2;
+
+    private int status;
+    private Snackbar snackbar;
+
+    public StatusTicker() {
+      status = STATUS_DISMISS;
+    }
+
+    public void updateStatus(int status, Snackbar snackbar) {
+      if (status == this.status) {
+        return;
+      }
+      this.status = status;
+      if (this.snackbar != null) {
+        this.snackbar.dismiss();
+      }
+      if (status != STATUS_DISMISS) {
+        this.snackbar = snackbar;
+        if (this.snackbar != null) {
+          this.snackbar.show();
+        }
+      }
+    }
   }
 }
