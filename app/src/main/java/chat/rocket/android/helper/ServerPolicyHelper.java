@@ -73,6 +73,7 @@ public class ServerPolicyHelper {
 
   private static String removeTrailingSlash(String hostname) {
     if (hostname.charAt(hostname.length() - 1) != '/') {
+      // no need for a regex - just return it
       return hostname;
     }
 

@@ -5,21 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import bolts.Task;
 import chat.rocket.android.R;
-import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.server_config.LoginFragment;
 import chat.rocket.android.fragment.server_config.RetryConnectFragment;
 import chat.rocket.android.fragment.server_config.RetryLoginFragment;
 import chat.rocket.android.fragment.server_config.WaitingFragment;
-import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
-import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.ddp.PublicSettingsConstants;
 import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.push.gcm.GcmRegistrationIntentService;
-import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
@@ -57,12 +50,13 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     serverConfigErrorObserver = RealmStore.getDefault()
         .createObjectObserver(realm ->
             realm.where(ServerConfig.class)
-                .equalTo(ServerConfig.ID, serverConfigId))
+                .equalTo(ServerConfig.ID, serverConfigId)
+                .equalTo(ServerConfig.STATE, ServerConfig.STATE_CONNECTION_ERROR))
         .setOnUpdateListener(this::onRenderServerConfigError);
 
     sessionObserver = RealmStore.get(serverConfigId)
         .createObjectObserver(Session::queryDefaultSession)
-        .setOnUpdateListener(this::continueWithServerConfigSession);
+        .setOnUpdateListener(this::onRenderServerConfigSession);
 
     setContentView(R.layout.simple_screen);
     showFragment(new WaitingFragment());
@@ -83,25 +77,12 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
   }
 
   private void onRenderServerConfigError(ServerConfig config) {
-    if (config.getState() == ServerConfig.STATE_CONNECTION_ERROR) {
+    if (config != null) {
       sessionObserver.unsub();
       showFragment(new RetryConnectFragment());
     } else {
       sessionObserver.sub();
     }
-  }
-
-  private void continueWithServerConfigSession(final Session session) {
-    fetchPublicSettings()
-        .continueWith(task -> {
-          registerForPush();
-          return task;
-        })
-        .continueWith(task -> {
-          onRenderServerConfigSession(session);
-          return task;
-        })
-        .continueWith(new LogcatIfError());
   }
 
   private void onRenderServerConfigSession(Session session) {
@@ -149,44 +130,6 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
     }
     args.putString(ServerConfig.ID, serverConfigId);
     fragment.setArguments(args);
-  }
-
-  private Task<Void> fetchPublicSettings() {
-    return new MethodCallHelper(this, serverConfigId).getPublicSettings();
-  }
-
-  private void registerForPush() {
-    RealmHelper realmHelper = RealmStore.getDefault();
-
-    final ServerConfig serverConfig = realmHelper.executeTransactionForRead(
-        realm -> realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId)
-            .findFirst());
-
-    serverConfig.setSyncPushToken(isPushEnabled());
-
-    realmHelper
-        .executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig))
-        .continueWith(task -> {
-          if (serverConfig.shouldSyncPushToken()) {
-            Intent intent = new Intent(this, GcmRegistrationIntentService.class);
-            startService(intent);
-          }
-
-          return task;
-        })
-        .continueWith(new LogcatIfError());
-
-  }
-
-  private boolean isPushEnabled() {
-    RealmHelper realmHelper = RealmStore.getOrCreate(serverConfigId);
-
-    boolean isPushEnable = PublicSetting
-        .getBoolean(realmHelper, PublicSettingsConstants.Push.ENABLE, false);
-    String senderId = PublicSetting
-        .getString(realmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
-
-    return isPushEnable && !"".equals(senderId);
   }
 
   @Override
