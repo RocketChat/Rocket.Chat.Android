@@ -149,37 +149,39 @@ public class MainActivity extends AbstractAuthedActivity {
         .createObjectObserver(realm ->
             Session.queryDefaultSession(realm)
                 .isNotNull(Session.TOKEN))
-        .setOnUpdateListener(session -> {
-          if (session == null) {
-            if (isForeground) {
-              LaunchUtil.showLoginActivity(this, serverConfigId);
-            }
-            tipViewManager.updateStatus(StatusTicker.STATUS_DISMISS, null);
-          } else if (!TextUtils.isEmpty(session.getError())) {
-            tipViewManager.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
-                Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                    R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.fragment_retry_login_retry_title, view ->
-                        RealmStore.getDefault()
-                            .executeTransaction(realm -> {
-                              ServerConfig config = realm.where(ServerConfig.class)
-                                  .equalTo(ServerConfig.ID, serverConfigId).findFirst();
-
-                              if (config != null
-                                  && config.getState() == ServerConfig.STATE_CONNECTION_ERROR) {
-                                config.setState(ServerConfig.STATE_READY);
-                              }
-                              return null;
-                            }).continueWith(new LogcatIfError())));
-          } else if (!session.isTokenVerified()) {
-            tipViewManager.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
-                Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                    R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
-          } else {
-            tipViewManager.updateStatus(StatusTicker.STATUS_DISMISS, null);
-          }
-        });
+        .setOnUpdateListener(this::onSessionChanged);
     sessionObserver.sub();
+  }
+
+  private void onSessionChanged(@Nullable Session session) {
+    if (session == null) {
+      if (isForeground) {
+        LaunchUtil.showLoginActivity(this, serverConfigId);
+      }
+      tipViewManager.updateStatus(StatusTicker.STATUS_DISMISS, null);
+    } else if (!TextUtils.isEmpty(session.getError())) {
+      tipViewManager.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
+          Snackbar.make(findViewById(getLayoutContainerForFragment()),
+              R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
+              .setAction(R.string.fragment_retry_login_retry_title, view ->
+                  RealmStore.getDefault()
+                      .executeTransaction(realm -> {
+                        ServerConfig config = realm.where(ServerConfig.class)
+                            .equalTo(ServerConfig.ID, serverConfigId).findFirst();
+
+                        if (config != null
+                            && config.getState() == ServerConfig.STATE_CONNECTION_ERROR) {
+                          config.setState(ServerConfig.STATE_READY);
+                        }
+                        return null;
+                      }).continueWith(new LogcatIfError())));
+    } else if (!session.isTokenVerified()) {
+      tipViewManager.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
+          Snackbar.make(findViewById(getLayoutContainerForFragment()),
+              R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
+    } else {
+      tipViewManager.updateStatus(StatusTicker.STATUS_DISMISS, null);
+    }
   }
 
   private void updateSidebarMainFragment() {
