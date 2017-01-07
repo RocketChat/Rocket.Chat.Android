@@ -30,7 +30,7 @@ public class MainActivity extends AbstractAuthedActivity {
 
   private RealmObjectObserver<Session> sessionObserver;
   private boolean isForeground;
-  private StatusTicker tipViewManager;
+  private StatusTicker statusTicker;
 
   @Override
   protected int getLayoutContainerForFragment() {
@@ -42,7 +42,7 @@ public class MainActivity extends AbstractAuthedActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    tipViewManager = new StatusTicker();
+    statusTicker = new StatusTicker();
     setupSidebar();
     if (roomId == null) {
       showFragment(new HomeFragment());
@@ -158,9 +158,9 @@ public class MainActivity extends AbstractAuthedActivity {
       if (isForeground) {
         LaunchUtil.showLoginActivity(this, serverConfigId);
       }
-      tipViewManager.updateStatus(StatusTicker.STATUS_DISMISS, null);
+      statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
     } else if (!TextUtils.isEmpty(session.getError())) {
-      tipViewManager.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
+      statusTicker.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
           Snackbar.make(findViewById(getLayoutContainerForFragment()),
               R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
               .setAction(R.string.fragment_retry_login_retry_title, view ->
@@ -176,11 +176,11 @@ public class MainActivity extends AbstractAuthedActivity {
                         return null;
                       }).continueWith(new LogcatIfError())));
     } else if (!session.isTokenVerified()) {
-      tipViewManager.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
+      statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
           Snackbar.make(findViewById(getLayoutContainerForFragment()),
               R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
     } else {
-      tipViewManager.updateStatus(StatusTicker.STATUS_DISMISS, null);
+      statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
     }
   }
 
