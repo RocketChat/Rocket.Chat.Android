@@ -9,6 +9,7 @@ import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
@@ -39,19 +40,31 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (savedInstanceState == null) {
-      Intent intent = getIntent();
-      if (intent != null) {
-        if (intent.hasExtra(ServerConfig.ID)) {
-          SharedPreferences.Editor editor = RocketChatCache.get(this).edit();
-          editor.putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID,
-              intent.getStringExtra(ServerConfig.ID));
+      onIntent(getIntent());
+    }
+  }
 
-          if (intent.hasExtra("roomId")) {
-            editor.putString(RocketChatCache.KEY_SELECTED_ROOM_ID, intent.getStringExtra("roomId"));
-          }
-          editor.apply();
-        }
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    onIntent(intent);
+  }
+
+  private void onIntent(Intent intent) {
+    if (intent == null) {
+      return;
+    }
+
+    if (intent.hasExtra(PushConstants.SERVER_CONFIG_ID)) {
+      SharedPreferences.Editor editor = RocketChatCache.get(this).edit();
+      editor.putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID,
+          intent.getStringExtra(PushConstants.SERVER_CONFIG_ID));
+
+      if (intent.hasExtra(PushConstants.ROOM_ID)) {
+        editor.putString(RocketChatCache.KEY_SELECTED_ROOM_ID,
+            intent.getStringExtra(PushConstants.ROOM_ID));
       }
+      editor.apply();
     }
   }
 
