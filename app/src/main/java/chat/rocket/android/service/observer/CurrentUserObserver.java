@@ -63,7 +63,9 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
     final String userId = user.getId();
 
     // update push info
-    pushHelper.pushSetUser(RocketChatCache.getPushId(context)).continueWith(new LogcatIfError());
+    pushHelper
+        .pushSetUser(RocketChatCache.getOrCreatePushId(context))
+        .continueWith(new LogcatIfError());
 
     // get and observe Room subscriptions.
     methodCall.getRoomSubscriptions().onSuccess(task -> {

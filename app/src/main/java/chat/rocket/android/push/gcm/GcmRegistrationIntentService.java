@@ -52,8 +52,10 @@ public class GcmRegistrationIntentService extends IntentService {
       final User currentUser = realmHelper.executeTransactionForRead(realm ->
           User.queryCurrentUser(realm).findFirst());
 
-      new RaixPushHelper(getBaseContext(), serverConfig.getServerConfigId()).pushUpdate(
-          RocketChatCache.getPushId(this), gcmToken, currentUser != null ? currentUser.getId() : null)
+      final String pushId = RocketChatCache.getOrCreatePushId(this);
+      final String userId = currentUser != null ? currentUser.getId() : null;
+      new RaixPushHelper(getBaseContext(), serverConfig.getServerConfigId())
+          .pushUpdate(pushId, gcmToken, userId)
           .onSuccess(task -> {
             markRefreshAsDone(serverConfig);
             return task;
