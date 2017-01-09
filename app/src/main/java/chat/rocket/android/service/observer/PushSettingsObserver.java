@@ -9,6 +9,7 @@ import java.util.List;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.ServerPolicyHelper;
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.ddp.PublicSettingsConstants;
@@ -25,27 +26,28 @@ public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
 
   @Override
   public void onUpdateResults(List<PublicSetting> results) {
-    RealmHelper realmHelper = RealmStore.getDefault();
-
-    final ServerConfig serverConfig = realmHelper.executeTransactionForRead(realm ->
+    final ServerConfig serverConfig = RealmStore.getDefault().executeTransactionForRead(realm ->
         realm.where(ServerConfig.class)
             .equalTo(ServerConfig.HOSTNAME, ServerPolicyHelper.enforceHostname(hostname))
             .findFirst());
 
-    serverConfig.setSyncPushToken(isPushEnabled(results));
+    boolean syncPushToken = shouldEnablePush(results);
+    if (serverConfig.shouldSyncPushToken() != syncPushToken) {
+      serverConfig.setSyncPushToken(syncPushToken);
 
-    realmHelper
-        .executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig))
-        .continueWith(task -> {
-          if (serverConfig.shouldSyncPushToken()) {
-            Intent intent = new Intent(
-                context.getApplicationContext(), GcmRegistrationIntentService.class);
-            context.getApplicationContext().startService(intent);
-          }
+      RealmStore.getDefault()
+          .executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig))
+          .continueWith(task -> {
+            if (serverConfig.shouldSyncPushToken()) {
+              Intent intent = new Intent(
+                  context.getApplicationContext(), GcmRegistrationIntentService.class);
+              context.getApplicationContext().startService(intent);
+            }
 
-          return task;
-        })
-        .continueWith(new LogcatIfError());
+            return task;
+          })
+          .continueWith(new LogcatIfError());
+    }
   }
 
   @Override
@@ -57,11 +59,11 @@ public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
         .findAll();
   }
 
-  private boolean isPushEnabled(List<PublicSetting> results) {
-    return isPushEnable(results) && isGcmValid(results);
+  private boolean shouldEnablePush(List<PublicSetting> results) {
+    return isPushEnabled(results) && hasValidGcmConfig(results);
   }
 
-  private boolean isPushEnable(List<PublicSetting> results) {
+  private boolean isPushEnabled(List<PublicSetting> results) {
     for (PublicSetting setting : results) {
       if (PublicSettingsConstants.Push.ENABLE.equals(setting.getId())) {
         return "true".equals(setting.getValue());
@@ -70,10 +72,10 @@ public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
     return false;
   }
 
-  private boolean isGcmValid(List<PublicSetting> results) {
+  private boolean hasValidGcmConfig(List<PublicSetting> results) {
     for (PublicSetting setting : results) {
       if (PublicSettingsConstants.Push.GCM_PROJECT_NUMBER.equals(setting.getId())) {
-        return setting.getValue() != null && !"".equals(setting.getValue());
+        return !TextUtils.isEmpty(setting.getValue());
       }
     }
     return false;
