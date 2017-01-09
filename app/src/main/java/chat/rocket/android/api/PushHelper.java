@@ -23,10 +23,9 @@ public class PushHelper extends MethodCallHelper {
 
   public Task<Void> pushUpdate(@NonNull String pushId, @NonNull String token,
                                @Nullable String userId) {
-    return call("raix:push-update", TIMEOUT_MS, () -> {
-      JSONObject param = new PushUpdate(pushId, token, userId).toJson();
-      return new JSONArray().put(param);
-    }).onSuccessTask(task -> Task.forResult(null));
+    return call("raix:push-update", TIMEOUT_MS,
+        () -> new JSONArray().put(new Params(pushId, token, userId).toJson()))
+        .onSuccessTask(task -> Task.forResult(null));
   }
 
   public Task<Void> pushSetUser(String pushId) {
@@ -34,19 +33,19 @@ public class PushHelper extends MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
-  private static class PushUpdate {
+  private static class Params {
 
     private String pushId;
     private String gcmToken;
     private String userId;
 
-    PushUpdate(@NonNull String pushId, @NonNull String gcmToken, @Nullable String userId) {
+    public Params(@NonNull String pushId, @NonNull String gcmToken, @Nullable String userId) {
       this.pushId = pushId;
       this.gcmToken = gcmToken;
       this.userId = userId;
     }
 
-    JSONObject toJson() throws JSONException {
+    public JSONObject toJson() throws JSONException {
       JSONObject param = new JSONObject();
       param.put("id", pushId);
       param.put("appName", "main");
