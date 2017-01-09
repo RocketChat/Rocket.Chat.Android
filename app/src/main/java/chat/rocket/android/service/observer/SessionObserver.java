@@ -6,9 +6,7 @@ import io.realm.RealmResults;
 
 import java.util.List;
 import chat.rocket.android.api.DDPClientWrapper;
-import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.internal.MethodCall;
@@ -67,8 +65,6 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   @DebugLog
   private void onLogin() {
     streamNotifyMessage.register();
-    new MethodCallHelper(realmHelper, ddpClient).getPublicSettings()
-        .continueWith(new LogcatIfError());
   }
 
   @DebugLog
@@ -77,7 +73,6 @@ public class SessionObserver extends AbstractModelObserver<Session> {
 
     realmHelper.executeTransaction(realm -> {
       // remove all tables. ONLY INTERNAL TABLES!.
-      realm.delete(PublicSetting.class);
       realm.delete(MethodCall.class);
       realm.delete(LoadMessageProcedure.class);
       realm.delete(GetUsersOfRoomsProcedure.class);

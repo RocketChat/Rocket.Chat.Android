@@ -20,6 +20,7 @@ public class ServerConfig extends RealmObject {
   public static final String STATE = "state";
   public static final String SESSION = "session";
   public static final String ERROR = "error";
+  public static final String SYNC_PUSH_TOKEN = "syncPushToken";
 
   public static final int STATE_READY = 0;
   public static final int STATE_CONNECTING = 1;
@@ -31,6 +32,7 @@ public class ServerConfig extends RealmObject {
   private int state;
   private String session;
   private String error;
+  private boolean syncPushToken;
 
   /**
    * Log the server connection is lost due to some exception.
@@ -99,5 +101,13 @@ public class ServerConfig extends RealmObject {
 
   public void setError(String error) {
     this.error = error;
+  }
+
+  public boolean shouldSyncPushToken() {
+    return syncPushToken;
+  }
+
+  public void setSyncPushToken(boolean syncPushToken) {
+    this.syncPushToken = syncPushToken;
   }
 }

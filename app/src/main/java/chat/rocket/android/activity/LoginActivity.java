@@ -18,9 +18,9 @@ import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
 
 /**
- * Activity for Login, Sign-up, and Connecting...
+ * Activity for Login, Sign-up, and Retry connecting...
  */
-public class ServerConfigActivity extends AbstractFragmentActivity {
+public class LoginActivity extends AbstractFragmentActivity {
 
   private String serverConfigId;
   private RealmObjectObserver<ServerConfig> serverConfigErrorObserver;
@@ -91,17 +91,11 @@ public class ServerConfigActivity extends AbstractFragmentActivity {
       return;
     }
 
-    if (session.isTokenVerified() && TextUtils.isEmpty(session.getError())) {
-      finish();
-      overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-      return;
-    }
-
     final String token = session.getToken();
     if (!TextUtils.isEmpty(token)) {
       if (TextUtils.isEmpty(session.getError())) {
-        showFragment(
-            WaitingFragment.create(getString(R.string.server_config_activity_authenticating)));
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
       } else {
         showFragment(new RetryLoginFragment());
       }

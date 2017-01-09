@@ -2,7 +2,6 @@ package chat.rocket.android.fragment.server_config;
 
 import android.support.design.widget.Snackbar;
 import android.widget.TextView;
-import android.widget.Toast;
 import org.json.JSONObject;
 
 import chat.rocket.android.R;
@@ -52,15 +51,9 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
           @Override
           public void isNotValid() {
             getActivity().runOnUiThread(() ->
-                Toast.makeText(getActivity(), R.string.input_hostname_invalid_server_message,
-                    Toast.LENGTH_SHORT).show());
+                showError(getString(R.string.input_hostname_invalid_server_message)));
           }
         });
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
   }
 
   @Override
@@ -75,7 +68,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
     return TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
   }
 
-  private void onServerValid(String hostname) {
+  private void onServerValid(final String hostname) {
     RocketChatCache.get(getContext()).edit()
         .putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, serverConfigId)
         .apply();

@@ -12,6 +12,7 @@ import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.api.DDPClientWrapper;
+import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
@@ -29,7 +30,7 @@ import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
 import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.NewMessageObserver;
-import chat.rocket.android.service.observer.NotificationItemObserver;
+import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.ReactiveNotificationManager;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
@@ -52,9 +53,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
       NewMessageObserver.class,
       CurrentUserObserver.class,
       ReactiveNotificationManager.class,
-      NotificationItemObserver.class,
       FileUploadingToS3Observer.class,
-      FileUploadingWithUfsObserver.class
+      FileUploadingWithUfsObserver.class,
+      PushSettingsObserver.class
   };
   private final Context appContext;
   private final String serverConfigId;
@@ -167,62 +168,68 @@ public class RocketChatWebSocketThread extends HandlerThread {
         realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
 
     prepareWebSocket(config.getHostname());
-    return ddpClient.connect(config.getSession()).onSuccessTask(task -> {
-      final String session = task.getResult().session;
-      defaultRealm.executeTransaction(realm ->
-          realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-              .put("serverConfigId", serverConfigId)
-              .put("session", session))
-      ).onSuccess(_task -> serverConfigRealm.executeTransaction(realm -> {
-        Session sessionObj = Session.queryDefaultSession(realm).findFirst();
+    return ddpClient.connect(config.getSession())
+        .onSuccessTask(task -> {
+          final String session = task.getResult().session;
+          defaultRealm.executeTransaction(realm ->
+              realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
+                  .put("serverConfigId", serverConfigId)
+                  .put("session", session))
+          ).onSuccess(_task -> serverConfigRealm.executeTransaction(realm -> {
+            Session sessionObj = Session.queryDefaultSession(realm).findFirst();
 
-        if (sessionObj == null) {
-          realm.createOrUpdateObjectFromJson(Session.class,
-              new JSONObject().put("sessionId", Session.DEFAULT_ID));
-        }
-        return null;
-      })).continueWith(new LogcatIfError());
-      return task;
-    }).onSuccess(new Continuation<DDPClientCallback.Connect, Void>() {
-      // TODO type detection doesn't work due to retrolambda's bug...
-      @Override
-      public Void then(Task<DDPClientCallback.Connect> task)
-          throws Exception {
-        registerListeners();
+            if (sessionObj == null) {
+              realm.createOrUpdateObjectFromJson(Session.class,
+                  new JSONObject().put("sessionId", Session.DEFAULT_ID));
+            }
+            return null;
+          })).continueWith(new LogcatIfError());
+          return task;
+        })
+        .onSuccess(new Continuation<DDPClientCallback.Connect, Void>() {
+          // TODO type detection doesn't work due to retrolambda's bug...
+          @Override
+          public Void then(Task<DDPClientCallback.Connect> task)
+              throws Exception {
+            fetchPublicSettings();
+            registerListeners();
 
-        // handling WebSocket#onClose() callback.
-        task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
-          quit();
-          return null;
-        }).continueWithTask(_task -> {
-          if (_task.isFaulted()) {
-            ServerConfig.logConnectionError(serverConfigId, _task.getError());
+            // handling WebSocket#onClose() callback.
+            task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
+              quit();
+              return null;
+            }).continueWithTask(_task -> {
+              if (_task.isFaulted()) {
+                ServerConfig.logConnectionError(serverConfigId, _task.getError());
+              }
+              return _task;
+            });
+
+            return null;
           }
-          return _task;
+        })
+        .continueWithTask(task -> {
+          if (task.isFaulted()) {
+            Exception error = task.getError();
+            if (error instanceof DDPClientCallback.Connect.Timeout) {
+              ServerConfig.logConnectionError(serverConfigId, new Exception("Connection Timeout"));
+            } else {
+              ServerConfig.logConnectionError(serverConfigId, task.getError());
+            }
+          }
+          return task;
         });
+  }
 
-        return null;
-      }
-    }).continueWithTask(task -> {
-      if (task.isFaulted()) {
-        Exception error = task.getError();
-        if (error instanceof DDPClientCallback.Connect.Timeout) {
-          ServerConfig.logConnectionError(serverConfigId, new Exception("Connection Timeout"));
-        } else {
-          ServerConfig.logConnectionError(serverConfigId, task.getError());
-        }
-      }
-      return task;
-    });
+  private Task<Void> fetchPublicSettings() {
+    return new MethodCallHelper(serverConfigRealm, ddpClient).getPublicSettings();
   }
 
   //@DebugLog
   private void registerListeners() {
     if (!Thread.currentThread().getName().equals("RC_thread_" + serverConfigId)) {
       // execute in Looper.
-      new Handler(getLooper()).post(() -> {
-        registerListeners();
-      });
+      new Handler(getLooper()).post(this::registerListeners);
       return;
     }
 

@@ -24,6 +24,7 @@ import hugo.weaving.DebugLog;
 
 /**
  * Utility class for creating/handling MethodCall or RPC.
+ *
  * TODO: separate method into several manager classes (SubscriptionManager, MessageManager, ...).
  */
 public class MethodCallHelper {
@@ -37,9 +38,8 @@ public class MethodCallHelper {
   protected final RealmHelper realmHelper;
   protected final DDPClientWrapper ddpClient;
 
-  @Deprecated
   /**
-   * Deprecated. use MethodCall(Context, String) instead.
+   * initialize with ServerConfigId.
    */
   public MethodCallHelper(String serverConfigId) {
     this(null, serverConfigId);

@@ -22,7 +22,7 @@ public class ServerPolicyHelper {
       return "demo.rocket.chat";
     }
 
-    return removeProtocol(enforceDefaultHost(hostname));
+    return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
   }
 
   public static void isApiVersionValid(@NonNull OkHttpClient client, @NonNull String host,
@@ -69,6 +69,15 @@ public class ServerPolicyHelper {
   private static String removeProtocol(String hostname) {
     // yep. cheap.
     return hostname.replace("http://", "").replace("https://", "");
+  }
+
+  private static String removeTrailingSlash(String hostname) {
+    if (hostname.charAt(hostname.length() - 1) != '/') {
+      // no need for a regex - just return it
+      return hostname;
+    }
+
+    return hostname.replaceAll("/+$", "");
   }
 
   private static boolean isValid(ResponseBody body) {
