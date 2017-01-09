@@ -31,9 +31,9 @@ public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
             .equalTo(ServerConfig.HOSTNAME, ServerPolicyHelper.enforceHostname(hostname))
             .findFirst());
 
-    boolean syncPushToken = shouldEnablePush(results);
-    if (serverConfig.shouldSyncPushToken() != syncPushToken) {
-      serverConfig.setSyncPushToken(syncPushToken);
+    boolean gcmPushAvailable = isGcmPushEnabled(results);
+    if (serverConfig.shouldSyncPushToken() != gcmPushAvailable) {
+      serverConfig.setSyncPushToken(gcmPushAvailable);
 
       RealmStore.getDefault()
           .executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig))
@@ -59,7 +59,7 @@ public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
         .findAll();
   }
 
-  private boolean shouldEnablePush(List<PublicSetting> results) {
+  private boolean isGcmPushEnabled(List<PublicSetting> results) {
     return isPushEnabled(results) && hasValidGcmConfig(results);
   }
 
