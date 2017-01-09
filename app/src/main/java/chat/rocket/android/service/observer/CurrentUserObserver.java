@@ -9,7 +9,7 @@ import java.util.List;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.api.PushHelper;
+import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -22,7 +22,7 @@ import hugo.weaving.DebugLog;
  */
 public class CurrentUserObserver extends AbstractModelObserver<User> {
   private final MethodCallHelper methodCall;
-  private final PushHelper pushHelper;
+  private final RaixPushHelper pushHelper;
   private boolean currentUserExists;
   private ArrayList<Registrable> listeners;
 
@@ -30,7 +30,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
                              RealmHelper realmHelper, DDPClientWrapper ddpClient) {
     super(context, hostname, realmHelper, ddpClient);
     methodCall = new MethodCallHelper(realmHelper, ddpClient);
-    pushHelper = new PushHelper(realmHelper, ddpClient);
+    pushHelper = new RaixPushHelper(realmHelper, ddpClient);
     currentUserExists = false;
   }
 
