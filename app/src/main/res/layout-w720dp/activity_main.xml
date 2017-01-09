@@ -14,23 +14,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <chat.rocket.android.widget.CustomToolbar
                     android:id="@+id/activity_main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-                <TextView
-                        android:id="@+id/toolbar_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:drawablePadding="@dimen/margin_8"
-                        android:tag="tablet"
-                        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
-
-            </android.support.v7.widget.Toolbar>
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:mode="tablet"
+                    app:titleText="@string/app_name"
+                    app:titleDrawablePadding="@dimen/margin_8" />
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout

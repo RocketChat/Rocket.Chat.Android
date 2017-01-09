@@ -34,9 +34,9 @@
                 android:name=".activity.AddServerActivity"
                 android:windowSoftInputMode="adjustResize" />
         <activity
-                android:name=".activity.ServerConfigActivity"
+                android:name=".activity.LoginActivity"
                 android:windowSoftInputMode="adjustResize"
-                android:configChanges="orientation|screenSize"/>
+                android:configChanges="orientation|screenSize" />
 
         <service android:name=".service.RocketChatService" />
 
