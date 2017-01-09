@@ -1,21 +1,15 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import android.content.Intent;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.util.List;
 import chat.rocket.android.api.DDPClientWrapper;
-import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.helper.ServerPolicyHelper;
-import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.helper.GcmPushSettingHelper;
 import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.ddp.PublicSettingsConstants;
-import chat.rocket.android.push.gcm.GcmRegistrationIntentService;
+import chat.rocket.android.model.internal.GcmPushRegistration;
 import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmStore;
 
 public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
 
@@ -25,59 +19,20 @@ public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
   }
 
   @Override
-  public void onUpdateResults(List<PublicSetting> results) {
-    final ServerConfig serverConfig = RealmStore.getDefault().executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class)
-            .equalTo(ServerConfig.HOSTNAME, ServerPolicyHelper.enforceHostname(hostname))
-            .findFirst());
-
-    boolean gcmPushAvailable = isGcmPushEnabled(results);
-    if (serverConfig.shouldSyncPushToken() != gcmPushAvailable) {
-      serverConfig.setSyncPushToken(gcmPushAvailable);
-
-      RealmStore.getDefault()
-          .executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig))
-          .continueWith(task -> {
-            if (serverConfig.shouldSyncPushToken()) {
-              Intent intent = new Intent(
-                  context.getApplicationContext(), GcmRegistrationIntentService.class);
-              context.getApplicationContext().startService(intent);
-            }
-
-            return task;
-          })
-          .continueWith(new LogcatIfError());
-    }
+  public RealmResults<PublicSetting> queryItems(Realm realm) {
+    return GcmPushSettingHelper.queryForGcmPushEnabled(realm);
   }
 
   @Override
-  public RealmResults<PublicSetting> queryItems(Realm realm) {
-    return realm.where(PublicSetting.class)
-        .equalTo(PublicSetting.ID, PublicSettingsConstants.Push.ENABLE)
-        .or()
-        .equalTo(PublicSetting.ID, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER)
-        .findAll();
-  }
+  public void onUpdateResults(List<PublicSetting> results) {
+    boolean gcmPushEnabled = GcmPushSettingHelper.isGcmPushEnabled(results);
 
-  private boolean isGcmPushEnabled(List<PublicSetting> results) {
-    return isPushEnabled(results) && hasValidGcmConfig(results);
-  }
+    GcmPushRegistration gcmPushRegistration = realmHelper.executeTransactionForRead(realm ->
+        GcmPushRegistration.queryDefault(realm).findFirst());
 
-  private boolean isPushEnabled(List<PublicSetting> results) {
-    for (PublicSetting setting : results) {
-      if (PublicSettingsConstants.Push.ENABLE.equals(setting.getId())) {
-        return "true".equals(setting.getValue());
-      }
+    if (gcmPushRegistration == null || gcmPushEnabled != gcmPushRegistration.isGcmPushEnabled()) {
+      realmHelper.executeTransaction(realm ->
+          GcmPushRegistration.updateGcmPushEnabled(realm, gcmPushEnabled));
     }
-    return false;
-  }
-
-  private boolean hasValidGcmConfig(List<PublicSetting> results) {
-    for (PublicSetting setting : results) {
-      if (PublicSettingsConstants.Push.GCM_PROJECT_NUMBER.equals(setting.getId())) {
-        return !TextUtils.isEmpty(setting.getValue());
-      }
-    }
-    return false;
   }
 }
