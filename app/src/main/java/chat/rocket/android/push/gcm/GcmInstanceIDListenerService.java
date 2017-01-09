@@ -1,8 +1,8 @@
 package chat.rocket.android.push.gcm;
 
-import android.content.Intent;
-
 import com.google.android.gms.iid.InstanceIDListenerService;
+
+import android.content.Intent;
 
 import java.util.List;
 import chat.rocket.android.model.ServerConfig;
@@ -15,11 +15,9 @@ public class GcmInstanceIDListenerService extends InstanceIDListenerService {
 
   @Override
   public void onTokenRefresh() {
-    List<ServerConfig> serverConfigs = getServerConfigs();
+    updateSyncPushTokenIfNeeded();
 
-    updateSyncPushToken(serverConfigs);
-
-    if (!shouldRefreshToken(serverConfigs)) {
+    if (!shouldRefreshToken()) {
       return;
     }
 
@@ -27,36 +25,33 @@ public class GcmInstanceIDListenerService extends InstanceIDListenerService {
     startService(intent);
   }
 
-  private List<ServerConfig> getServerConfigs() {
-    return RealmStore.getDefault().executeTransactionForReadResults(
-        realm -> realm.where(ServerConfig.class).findAll());
-  }
-
-  private void updateSyncPushToken(List<ServerConfig> serverConfigs) {
+  private void updateSyncPushTokenIfNeeded() {
     final RealmHelper realmHelper = RealmStore.getDefault();
+    List<ServerConfig> serverConfigs = realmHelper.executeTransactionForReadResults(
+        realm -> realm.where(ServerConfig.class).findAll());
 
     for (final ServerConfig serverConfig : serverConfigs) {
-      final RealmHelper serverRealmHelper = RealmStore
-          .getOrCreate(serverConfig.getServerConfigId());
+      final RealmHelper serverRealmHelper = RealmStore.get(serverConfig.getServerConfigId());
+      if (serverRealmHelper == null) {
+        continue;
+      }
 
       boolean isPushEnable = PublicSetting
           .getBoolean(serverRealmHelper, PublicSettingsConstants.Push.ENABLE, false);
       String senderId = PublicSetting
           .getString(serverRealmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
 
-      serverConfig.setSyncPushToken(isPushEnable && !"".equals(senderId));
+      boolean syncPushToken = isPushEnable && !"".equals(senderId);
 
-      realmHelper.executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig));
+      if (serverConfig.shouldSyncPushToken() != syncPushToken) {
+        serverConfig.setSyncPushToken(syncPushToken);
+        realmHelper.executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig));
+      }
     }
   }
 
-  private boolean shouldRefreshToken(List<ServerConfig> serverConfigs) {
-    for (ServerConfig serverConfig : serverConfigs) {
-      if (serverConfig.shouldSyncPushToken()) {
-        return true;
-      }
-    }
-
-    return false;
+  private boolean shouldRefreshToken() {
+    return RealmStore.getDefault().isObjectExists(realm ->
+        realm.where(ServerConfig.class).equalTo(ServerConfig.SYNC_PUSH_TOKEN, true));
   }
 }
