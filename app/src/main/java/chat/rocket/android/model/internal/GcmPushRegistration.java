@@ -13,6 +13,7 @@ import chat.rocket.android.model.SyncState;
  * just stores gcm registration status.
  */
 public class GcmPushRegistration extends RealmObject {
+  @SuppressWarnings({"PMD.ShortVariable"})
   private static final String ID = "dummyId";
   public static final String SYNC_STATE = "syncState";
   public static final String GCM_PUSH_ENABLED = "gcmPushEnabled";

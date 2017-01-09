@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
