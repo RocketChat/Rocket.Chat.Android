@@ -12,10 +12,6 @@ import bolts.Task;
 import chat.rocket.android.realm_helper.RealmHelper;
 
 public class PushHelper extends MethodCallHelper {
-  public PushHelper(String serverConfigId) {
-    super(serverConfigId);
-  }
-
   public PushHelper(Context context, String serverConfigId) {
     super(context, serverConfigId);
   }

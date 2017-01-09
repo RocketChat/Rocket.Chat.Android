@@ -1,10 +1,10 @@
 package chat.rocket.android.push.gcm;
 
-import android.app.IntentService;
-import android.content.Intent;
-
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+
+import android.app.IntentService;
+import android.content.Intent;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,7 +59,7 @@ public class GcmRegistrationIntentService extends IntentService {
       final User currentUser = realmHelper.executeTransactionForRead(realm ->
           User.queryCurrentUser(realm).findFirst());
 
-      new PushHelper(serverConfig.getServerConfigId()).pushUpdate(
+      new PushHelper(getBaseContext(), serverConfig.getServerConfigId()).pushUpdate(
           RocketChatCache.getPushId(this), token, currentUser != null ? currentUser.getId() : null)
           .onSuccess(task -> {
             markRefreshAsDone(serverConfig);

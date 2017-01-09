@@ -39,13 +39,6 @@ public class MethodCallHelper {
   protected final DDPClientWrapper ddpClient;
 
   /**
-   * initialize with ServerConfigId.
-   */
-  public MethodCallHelper(String serverConfigId) {
-    this(null, serverConfigId);
-  }
-
-  /**
    * initialize with Context and ServerConfigId.
    */
   public MethodCallHelper(Context context, String serverConfigId) {
