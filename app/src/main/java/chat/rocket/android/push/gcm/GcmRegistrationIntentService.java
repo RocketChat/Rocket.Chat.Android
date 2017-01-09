@@ -25,22 +25,15 @@ public class GcmRegistrationIntentService extends IntentService {
 
   @Override
   protected void onHandleIntent(Intent intent) {
-    final List<ServerConfig> serverConfigs = getServerConfigs();
+    final List<ServerConfig> serverConfigs = RealmStore.getDefault()
+        .executeTransactionForReadResults(realm ->
+            realm.where(ServerConfig.class).equalTo(ServerConfig.SYNC_PUSH_TOKEN, true).findAll());
     for (ServerConfig serverConfig : serverConfigs) {
-      sendTokenTo(serverConfig);
+      registerGcmTokenForServer(serverConfig);
     }
   }
 
-  private List<ServerConfig> getServerConfigs() {
-    return RealmStore.getDefault().executeTransactionForReadResults(
-        realm -> realm.where(ServerConfig.class).findAll());
-  }
-
-  private void sendTokenTo(final ServerConfig serverConfig) {
-    if (!serverConfig.shouldSyncPushToken()) {
-      return;
-    }
-
+  private void registerGcmTokenForServer(final ServerConfig serverConfig) {
     final RealmHelper realmHelper = RealmStore.get(serverConfig.getServerConfigId());
     if (realmHelper == null) {
       return;
@@ -54,13 +47,13 @@ public class GcmRegistrationIntentService extends IntentService {
     }
 
     try {
-      final String token = getToken(senderId);
+      final String gcmToken = getGcmToken(senderId);
 
       final User currentUser = realmHelper.executeTransactionForRead(realm ->
           User.queryCurrentUser(realm).findFirst());
 
       new PushHelper(getBaseContext(), serverConfig.getServerConfigId()).pushUpdate(
-          RocketChatCache.getPushId(this), token, currentUser != null ? currentUser.getId() : null)
+          RocketChatCache.getPushId(this), gcmToken, currentUser != null ? currentUser.getId() : null)
           .onSuccess(task -> {
             markRefreshAsDone(serverConfig);
             return task;
@@ -69,7 +62,7 @@ public class GcmRegistrationIntentService extends IntentService {
     }
   }
 
-  private String getToken(String senderId) throws IOException {
+  private String getGcmToken(String senderId) throws IOException {
     return InstanceID.getInstance(this)
         .getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
   }

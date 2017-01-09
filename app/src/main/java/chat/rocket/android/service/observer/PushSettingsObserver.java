@@ -8,12 +8,11 @@ import io.realm.RealmResults;
 import java.util.List;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.ServerPolicyHelper;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.ddp.PublicSettingsConstants;
 import chat.rocket.android.push.gcm.GcmRegistrationIntentService;
-import chat.rocket.android.push.interactors.DefaultPushInteractor;
-import chat.rocket.android.push.interactors.PushInteractor;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 
@@ -28,11 +27,9 @@ public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
   public void onUpdateResults(List<PublicSetting> results) {
     RealmHelper realmHelper = RealmStore.getDefault();
 
-    PushInteractor interactor = new DefaultPushInteractor();
-    String serverConfigId = interactor.getServerConfigId(hostname);
-
-    final ServerConfig serverConfig = realmHelper.executeTransactionForRead(
-        realm -> realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId)
+    final ServerConfig serverConfig = realmHelper.executeTransactionForRead(realm ->
+        realm.where(ServerConfig.class)
+            .equalTo(ServerConfig.HOSTNAME, ServerPolicyHelper.enforceHostname(hostname))
             .findFirst());
 
     serverConfig.setSyncPushToken(isPushEnabled(results));

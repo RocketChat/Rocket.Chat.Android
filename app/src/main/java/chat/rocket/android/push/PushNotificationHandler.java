@@ -20,7 +20,6 @@ import android.support.v4.util.SparseArrayCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +31,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import chat.rocket.android.activity.MainActivity;
-import chat.rocket.android.push.interactors.PushInteractor;
+import chat.rocket.android.helper.ServerPolicyHelper;
+import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.realm_helper.RealmStore;
 
 public class PushNotificationHandler implements PushConstants {
 
@@ -56,8 +57,7 @@ public class PushNotificationHandler implements PushConstants {
     }
   }
 
-  public void showNotificationIfPossible(Context context, PushInteractor pushInteractor,
-                                         Bundle extras) {
+  public void showNotificationIfPossible(Context context, Bundle extras) {
 
     // Send a notification if there is a message or title, otherwise just send data
     String message = extras.getString(MESSAGE);
@@ -79,11 +79,11 @@ public class PushNotificationHandler implements PushConstants {
         extras.putString(TITLE, getAppName(context));
       }
 
-      createNotification(context, pushInteractor, extras);
+      createNotification(context, extras);
     }
   }
 
-  public void createNotification(Context context, PushInteractor pushInteractor, Bundle extras) {
+  public void createNotification(Context context, Bundle extras) {
     NotificationManager mNotificationManager =
         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     String appName = getAppName(context);
@@ -97,8 +97,11 @@ public class PushNotificationHandler implements PushConstants {
       return;
     }
 
-    String serverConfigId = pushInteractor.getServerConfigId(serverUrl);
-    if (serverConfigId == null) {
+    ServerConfig serverConfig = RealmStore.getDefault().executeTransactionForRead(realm ->
+        realm.where(ServerConfig.class)
+            .equalTo(ServerConfig.HOSTNAME, ServerPolicyHelper.enforceHostname(serverUrl))
+            .findFirst());
+    if (serverConfig == null) {
       return;
     }
 
@@ -106,7 +109,7 @@ public class PushNotificationHandler implements PushConstants {
     Intent notificationIntent = new Intent(context, MainActivity.class);
     notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     notificationIntent.putExtra(PUSH_BUNDLE, extras);
-    notificationIntent.putExtra(SERVER_CONFIG_ID, serverConfigId);
+    notificationIntent.putExtra(SERVER_CONFIG_ID, serverConfig.getServerConfigId());
     notificationIntent.putExtra(ROOM_ID, roomId);
     notificationIntent.putExtra(NOT_ID, notId);
 
