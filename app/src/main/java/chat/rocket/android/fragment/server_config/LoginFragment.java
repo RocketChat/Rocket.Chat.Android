@@ -42,6 +42,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
     final View btnEmail = rootView.findViewById(R.id.btn_login_with_email);
     final TextView txtUsername = (TextView) rootView.findViewById(R.id.editor_username);
     final TextView txtPasswd = (TextView) rootView.findViewById(R.id.editor_passwd);
+    final View waitingView = rootView.findViewById(R.id.waiting);
     btnEmail.setOnClickListener(view -> {
       final CharSequence username = txtUsername.getText();
       final CharSequence passwd = txtPasswd.getText();
@@ -49,6 +50,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
         return;
       }
       view.setEnabled(false);
+      waitingView.setVisibility(View.VISIBLE);
 
       new MethodCallHelper(getContext(), serverConfigId)
           .loginWithEmail(username.toString(), passwd.toString())
@@ -56,6 +58,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
             if (task.isFaulted()) {
               showError(task.getError().getMessage());
               view.setEnabled(true);
+              waitingView.setVisibility(View.GONE);
             }
             return null;
           });
