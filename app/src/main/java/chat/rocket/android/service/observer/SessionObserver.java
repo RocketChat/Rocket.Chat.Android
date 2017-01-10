@@ -5,7 +5,9 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.util.List;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.DDPClientWrapper;
+import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
@@ -20,6 +22,7 @@ import hugo.weaving.DebugLog;
  */
 public class SessionObserver extends AbstractModelObserver<Session> {
   private final StreamRoomMessageManager streamNotifyMessage;
+  private final RaixPushHelper pushHelper;
   private int count;
 
   /**
@@ -31,6 +34,7 @@ public class SessionObserver extends AbstractModelObserver<Session> {
     count = 0;
 
     streamNotifyMessage = new StreamRoomMessageManager(context, hostname, realmHelper, ddpClient);
+    pushHelper = new RaixPushHelper(realmHelper, ddpClient);
   }
 
   @Override
@@ -65,6 +69,11 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   @DebugLog
   private void onLogin() {
     streamNotifyMessage.register();
+
+    // update push info
+    pushHelper
+        .pushSetUser(RocketChatCache.getOrCreatePushId(context))
+        .continueWith(new LogcatIfError());
   }
 
   @DebugLog

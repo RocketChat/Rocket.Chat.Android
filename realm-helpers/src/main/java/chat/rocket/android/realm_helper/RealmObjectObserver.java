@@ -3,17 +3,16 @@ package chat.rocket.android.realm_helper;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmObject;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmResultsObserver<T> {
 
-  private final Query<T> query;
+  private final RealmHelper.Query<T> query;
   private OnUpdateListener<T> onUpdateListener;
   private Impl<T> impl;
   private String previousResultString;
 
-  /*package*/ RealmObjectObserver(RealmHelper helper, Query<T> query) {
+  /*package*/ RealmObjectObserver(RealmHelper helper, RealmHelper.Query<T> query) {
     super(helper);
     this.query = query;
     setImpl(new Impl<T>());
@@ -52,10 +51,6 @@ public class RealmObjectObserver<T extends RealmObject> extends AbstractRealmRes
   public void sub() {
     previousResultString = null;
     super.sub();
-  }
-
-  public interface Query<T extends RealmObject> {
-    RealmQuery<T> query(Realm realm);
   }
 
   public interface OnUpdateListener<T extends RealmObject> {

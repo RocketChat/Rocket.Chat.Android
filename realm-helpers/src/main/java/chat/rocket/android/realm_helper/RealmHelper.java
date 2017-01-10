@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import org.json.JSONException;
 
@@ -70,6 +71,19 @@ public class RealmHelper {
     } catch (Exception exception) {
       RCLog.w(exception);
       return Collections.emptyList();
+    }
+  }
+
+  public interface Query<T extends RealmObject> {
+    RealmQuery<T> query(Realm realm);
+  }
+
+  public <T extends RealmObject> boolean isObjectExists(Query<T> query) {
+    try (Realm realm = instance()) {
+      return query.query(realm).count() > 0;
+    } catch (Exception exception) {
+      RCLog.w(exception);
+      return false;
     }
   }
 
@@ -140,7 +154,7 @@ public class RealmHelper {
   }
 
   public <T extends RealmObject> RealmObjectObserver<T> createObjectObserver(
-      RealmObjectObserver.Query<T> query) {
+      RealmHelper.Query<T> query) {
     return new RealmObjectObserver<T>(this, query);
   }
 
