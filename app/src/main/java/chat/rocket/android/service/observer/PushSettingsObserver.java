@@ -27,10 +27,7 @@ public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
   public void onUpdateResults(List<PublicSetting> results) {
     boolean gcmPushEnabled = GcmPushSettingHelper.isGcmPushEnabled(results);
 
-    GcmPushRegistration gcmPushRegistration = realmHelper.executeTransactionForRead(realm ->
-        GcmPushRegistration.queryDefault(realm).findFirst());
-
-    if (gcmPushRegistration == null || gcmPushEnabled != gcmPushRegistration.isGcmPushEnabled()) {
+    if (gcmPushEnabled) {
       realmHelper.executeTransaction(realm ->
           GcmPushRegistration.updateGcmPushEnabled(realm, gcmPushEnabled));
     }

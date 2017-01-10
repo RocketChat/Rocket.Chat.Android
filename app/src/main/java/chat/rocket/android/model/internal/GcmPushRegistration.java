@@ -41,6 +41,15 @@ public class GcmPushRegistration extends RealmObject {
 
   public static GcmPushRegistration updateGcmPushEnabled(Realm realm, boolean gcmPushEnabled)
       throws JSONException {
+    GcmPushRegistration gcmPushRegistration = GcmPushRegistration.queryDefault(realm).findFirst();
+    if (gcmPushRegistration != null
+        && (gcmPushRegistration.getSyncState() == SyncState.NOT_SYNCED
+         || gcmPushRegistration.getSyncState() == SyncState.SYNCING)
+        && gcmPushEnabled == gcmPushRegistration.isGcmPushEnabled()) {
+      // omit duplicated request.
+      return gcmPushRegistration;
+    }
+
     return realm.createOrUpdateObjectFromJson(GcmPushRegistration.class, new JSONObject()
         .put(ID, DEFAULT_ID)
         .put(SYNC_STATE, SyncState.NOT_SYNCED)
