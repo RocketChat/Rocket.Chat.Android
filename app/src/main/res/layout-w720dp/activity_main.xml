@@ -18,9 +18,8 @@
                     android:id="@+id/activity_main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    android:background="@color/white"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:mode="tablet"
                     app:titleText="@string/app_name"
                     app:titleDrawablePadding="@dimen/margin_8" />
         </android.support.design.widget.AppBarLayout>

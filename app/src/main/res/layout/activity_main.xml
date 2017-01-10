@@ -20,7 +20,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    app:mode="phone"
                     app:titleText="@string/app_name"
                     app:titleTextColor="@color/titleTextColor"
                     app:titleDrawablePadding="@dimen/margin_8"

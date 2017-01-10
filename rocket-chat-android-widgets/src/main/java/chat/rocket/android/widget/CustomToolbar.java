@@ -8,7 +8,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
@@ -16,10 +15,7 @@ import android.widget.TextView;
 
 public class CustomToolbar extends Toolbar {
 
-  private static final String TABLET = "tablet";
-
   private TextView titleTextView;
-  private int mode;
 
   public CustomToolbar(Context context) {
     super(context);
@@ -56,7 +52,6 @@ public class CustomToolbar extends Toolbar {
           .setTextColor(typedArray.getColor(R.styleable.CustomToolbar_titleTextColor, Color.BLACK));
       titleTextView.setCompoundDrawablePadding(
           typedArray.getLayoutDimension(R.styleable.CustomToolbar_titleDrawablePadding, 0));
-      mode = typedArray.getInt(R.styleable.CustomToolbar_mode, 0);
     } finally {
       typedArray.recycle();
     }
@@ -88,10 +83,6 @@ public class CustomToolbar extends Toolbar {
     Drawable drawable = drawableResId > 0
         ? VectorDrawableCompat.create(getResources(), drawableResId, null)
         : null;
-
-    if (drawable != null && mode == 1) {
-      DrawableCompat.setTint(drawable, Color.WHITE);
-    }
 
     titleTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
   }

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CustomToolbar">
-        <attr name="mode" format="enum">
-            <enum name="phone" value="0" />
-            <enum name="tablet" value="1" />
-        </attr>
         <attr name="titleText" format="string" />
         <attr name="titleTextColor" format="color" />
         <attr name="titleDrawablePadding" format="dimension" />
