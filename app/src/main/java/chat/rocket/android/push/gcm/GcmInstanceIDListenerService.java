@@ -1,13 +1,12 @@
 package chat.rocket.android.push.gcm;
 
-import android.content.Intent;
-
 import com.google.android.gms.iid.InstanceIDListenerService;
 
 import java.util.List;
+import chat.rocket.android.helper.GcmPushSettingHelper;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.ddp.PublicSettingsConstants;
+import chat.rocket.android.model.internal.GcmPushRegistration;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 
@@ -15,48 +14,28 @@ public class GcmInstanceIDListenerService extends InstanceIDListenerService {
 
   @Override
   public void onTokenRefresh() {
-    List<ServerConfig> serverConfigs = getServerConfigs();
-
-    updateSyncPushToken(serverConfigs);
-
-    if (!shouldRefreshToken(serverConfigs)) {
-      return;
-    }
-
-    Intent intent = new Intent(this, GcmRegistrationIntentService.class);
-    startService(intent);
-  }
-
-  private List<ServerConfig> getServerConfigs() {
-    return RealmStore.getDefault().executeTransactionForReadResults(
-        realm -> realm.where(ServerConfig.class).findAll());
-  }
-
-  private void updateSyncPushToken(List<ServerConfig> serverConfigs) {
-    final RealmHelper realmHelper = RealmStore.getDefault();
-
-    for (final ServerConfig serverConfig : serverConfigs) {
-      final RealmHelper serverRealmHelper = RealmStore
-          .getOrCreate(serverConfig.getServerConfigId());
-
-      boolean isPushEnable = PublicSetting
-          .getBoolean(serverRealmHelper, PublicSettingsConstants.Push.ENABLE, false);
-      String senderId = PublicSetting
-          .getString(serverRealmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
-
-      serverConfig.setSyncPushToken(isPushEnable && !"".equals(senderId));
-
-      realmHelper.executeTransaction(realm -> realm.copyToRealmOrUpdate(serverConfig));
-    }
-  }
-
-  private boolean shouldRefreshToken(List<ServerConfig> serverConfigs) {
+    List<ServerConfig> serverConfigs = RealmStore.getDefault()
+        .executeTransactionForReadResults(realm ->
+            realm.where(ServerConfig.class)
+                .isNotNull(ServerConfig.ID)
+                .isNotNull(ServerConfig.HOSTNAME)
+                .findAll());
     for (ServerConfig serverConfig : serverConfigs) {
-      if (serverConfig.shouldSyncPushToken()) {
-        return true;
+      RealmHelper realmHelper = RealmStore.get(serverConfig.getServerConfigId());
+      if (realmHelper != null) {
+        updateGcmToken(realmHelper);
       }
     }
+  }
 
-    return false;
+  private void updateGcmToken(RealmHelper realmHelper) {
+    final List<PublicSetting> results = realmHelper.executeTransactionForReadResults(
+        GcmPushSettingHelper::queryForGcmPushEnabled);
+    final boolean gcmPushEnabled = GcmPushSettingHelper.isGcmPushEnabled(results);
+
+    if (gcmPushEnabled) {
+      realmHelper.executeTransaction(realm ->
+          GcmPushRegistration.updateGcmPushEnabled(realm, gcmPushEnabled));
+    }
   }
 }

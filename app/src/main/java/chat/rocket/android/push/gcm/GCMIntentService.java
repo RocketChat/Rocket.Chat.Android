@@ -1,13 +1,12 @@
 package chat.rocket.android.push.gcm;
 
+import com.google.android.gms.gcm.GcmListenerService;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-
-import com.google.android.gms.gcm.GcmListenerService;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
