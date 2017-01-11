@@ -1,5 +1,6 @@
 package chat.rocket.android.widget.layouthelper;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
@@ -33,9 +34,11 @@ public class MessageExtraActionItemViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setIconBackgroundColorTint(@ColorRes int color) {
-//    Drawable background = DrawableCompat.wrap(messageSpecIcon.getBackground());
-    DrawableCompat.setTint(iconView.getBackground(),
+    Drawable background = DrawableCompat.wrap(iconView.getBackground());
+    DrawableCompat.setTint(background,
         ContextCompat.getColor(iconView.getContext(), color));
+
+    iconView.setBackground(background);
   }
 
   public void setIcon(@DrawableRes int icon) {
