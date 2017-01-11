@@ -10,41 +10,41 @@ import android.view.ViewGroup;
 
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.AbstractFragment;
-import chat.rocket.android.widget.CustomToolbar;
+import chat.rocket.android.widget.RoomToolbar;
 
 abstract class AbstractChatRoomFragment extends AbstractFragment {
 
-  private CustomToolbar customToolbar;
+  private RoomToolbar roomToolbar;
 
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    customToolbar = (CustomToolbar) getActivity().findViewById(R.id.activity_main_toolbar);
+    roomToolbar = (RoomToolbar) getActivity().findViewById(R.id.activity_main_toolbar);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   protected void setTitleText(@StringRes int stringResId) {
-    if (customToolbar == null) {
+    if (roomToolbar == null) {
       return;
     }
 
-    customToolbar.setTitle(stringResId);
+    roomToolbar.setTitle(stringResId);
   }
 
   protected void setTitleText(CharSequence title) {
-    if (customToolbar == null) {
+    if (roomToolbar == null) {
       return;
     }
 
-    customToolbar.setTitle(title);
+    roomToolbar.setTitle(title);
   }
 
   protected void setTitleDrawableLeft(@DrawableRes int drawableResId) {
-    if (customToolbar == null) {
+    if (roomToolbar == null) {
       return;
     }
 
-    customToolbar.setTitleDrawableLeft(drawableResId);
+    roomToolbar.setRoomIcon(drawableResId);
   }
 }

@@ -13,27 +13,27 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-public class CustomToolbar extends Toolbar {
+public class RoomToolbar extends Toolbar {
 
   private TextView titleTextView;
 
-  public CustomToolbar(Context context) {
+  public RoomToolbar(Context context) {
     super(context);
     initialize(context, null);
   }
 
-  public CustomToolbar(Context context, @Nullable AttributeSet attrs) {
+  public RoomToolbar(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     initialize(context, attrs);
   }
 
-  public CustomToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+  public RoomToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     initialize(context, attrs);
   }
 
   private void initialize(Context context, @Nullable AttributeSet attrs) {
-    View.inflate(context, R.layout.custom_toolbar, this);
+    View.inflate(context, R.layout.room_toolbar, this);
 
     titleTextView = (TextView) findViewById(R.id.toolbar_title);
 
@@ -43,15 +43,15 @@ public class CustomToolbar extends Toolbar {
 
     TypedArray typedArray = context.getTheme().obtainStyledAttributes(
         attrs,
-        R.styleable.CustomToolbar,
+        R.styleable.RoomToolbar,
         0, 0);
 
     try {
-      titleTextView.setText(typedArray.getText(R.styleable.CustomToolbar_titleText));
+      titleTextView.setText(typedArray.getText(R.styleable.RoomToolbar_titleText));
       titleTextView
-          .setTextColor(typedArray.getColor(R.styleable.CustomToolbar_titleTextColor, Color.BLACK));
+          .setTextColor(typedArray.getColor(R.styleable.RoomToolbar_titleTextColor, Color.BLACK));
       titleTextView.setCompoundDrawablePadding(
-          typedArray.getLayoutDimension(R.styleable.CustomToolbar_titleDrawablePadding, 0));
+          typedArray.getLayoutDimension(R.styleable.RoomToolbar_titleDrawablePadding, 0));
     } finally {
       typedArray.recycle();
     }
@@ -75,7 +75,7 @@ public class CustomToolbar extends Toolbar {
     super.setTitle(title);
   }
 
-  public void setTitleDrawableLeft(@DrawableRes int drawableResId) {
+  public void setRoomIcon(@DrawableRes int drawableResId) {
     if (titleTextView == null) {
       return;
     }
