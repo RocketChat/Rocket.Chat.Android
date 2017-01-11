@@ -266,15 +266,15 @@ public class RoomFragment extends AbstractChatRoomFragment
 
     String type = roomSubscription.getType();
     if (RoomSubscription.TYPE_CHANNEL.equals(type)) {
-      setTitleDrawableLeft(R.drawable.ic_hashtag_gray_24dp);
+      setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
     } else if (RoomSubscription.TYPE_PRIVATE.equals(type)) {
-      setTitleDrawableLeft(R.drawable.ic_lock_gray_24dp);
+      setToolbarRoomIcon(R.drawable.ic_lock_gray_24dp);
     } else if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(type)) {
-      setTitleDrawableLeft(R.drawable.ic_at_gray_24dp);
+      setToolbarRoomIcon(R.drawable.ic_at_gray_24dp);
     } else {
-      setTitleDrawableLeft(0);
+      setToolbarRoomIcon(0);
     }
-    setTitleText(roomSubscription.getName());
+    setToolbarTitle(roomSubscription.getName());
   }
 
   private void onUpdateLoadMessageProcedure(LoadMessageProcedure procedure) {
