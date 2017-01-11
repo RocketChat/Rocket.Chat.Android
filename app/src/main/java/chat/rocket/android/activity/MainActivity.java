@@ -3,9 +3,8 @@ package chat.rocket.android.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.widget.SlidingPaneLayout;
-import android.support.v7.app.ActionBar;
+import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -45,7 +44,6 @@ public class MainActivity extends AbstractAuthedActivity {
     setContentView(R.layout.activity_main);
 
     statusTicker = new StatusTicker();
-    setupToolbar();
     setupSidebar();
     if (roomId == null) {
       showFragment(new HomeFragment());
@@ -109,33 +107,32 @@ public class MainActivity extends AbstractAuthedActivity {
       }
     });
 
+    final DrawerArrowDrawable drawerArrowDrawable = new DrawerArrowDrawable(this);
     Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+    toolbar.setNavigationIcon(drawerArrowDrawable);
     toolbar.setNavigationOnClickListener(view -> {
       if (pane.isSlideable() && !pane.isOpen()) {
         pane.openPane();
       }
     });
-  }
 
-  private void setupToolbar() {
-    Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
-    setSupportActionBar(toolbar);
+    //ref: ActionBarDrawerToggle#setProgress
+    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+      @Override
+      public void onPanelSlide(View panel, float slideOffset) {
+        drawerArrowDrawable.setProgress(slideOffset);
+      }
 
-    ActionBar actionBar = getSupportActionBar();
-    if (actionBar == null) {
-      return;
-    }
+      @Override
+      public void onPanelOpened(View panel) {
+        drawerArrowDrawable.setVerticalMirror(true);
+      }
 
-    actionBar.setDisplayShowTitleEnabled(false);
-
-    if (findViewById(R.id.sliding_pane) == null) {
-      return;
-    }
-
-    actionBar.setDisplayShowHomeEnabled(true);
-    actionBar.setDisplayHomeAsUpEnabled(true);
-    actionBar.setHomeAsUpIndicator(
-        VectorDrawableCompat.create(getResources(), R.drawable.ic_menu_black_24dp, null));
+      @Override
+      public void onPanelClosed(View panel) {
+        drawerArrowDrawable.setVerticalMirror(false);
+      }
+    });
   }
 
   private boolean closeSidebarIfNeeded() {
