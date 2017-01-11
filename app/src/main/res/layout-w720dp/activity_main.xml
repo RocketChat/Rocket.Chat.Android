@@ -18,10 +18,9 @@
                     android:id="@+id/activity_main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    app:theme="@style/Widget.RocketChat.RoomToolbar"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:titleText="@string/app_name"
-                    app:titleTextColor="@color/titleTextColor"
                     app:titleDrawablePadding="@dimen/margin_8" />
         </android.support.design.widget.AppBarLayout>
 
