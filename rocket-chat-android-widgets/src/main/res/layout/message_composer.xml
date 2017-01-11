@@ -26,6 +26,7 @@
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:inputType="textCapSentences|textMultiLine"
                 android:background="@null"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
