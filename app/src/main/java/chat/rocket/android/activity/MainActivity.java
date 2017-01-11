@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -91,25 +92,47 @@ public class MainActivity extends AbstractAuthedActivity {
 
   private void setupSidebar() {
     SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-    if (pane != null) {
-      final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
-      pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
-        @Override
-        public void onPanelClosed(View panel) {
-          super.onPanelClosed(panel);
-          if (subPane != null) {
-            subPane.closePane();
-          }
-        }
-      });
-
-      Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
-      toolbar.setNavigationOnClickListener(view -> {
-        if (pane.isSlideable() && !pane.isOpen()) {
-          pane.openPane();
-        }
-      });
+    if (pane == null) {
+      return;
     }
+
+    final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
+    pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
+      @Override
+      public void onPanelClosed(View panel) {
+        super.onPanelClosed(panel);
+        if (subPane != null) {
+          subPane.closePane();
+        }
+      }
+    });
+
+    final DrawerArrowDrawable drawerArrowDrawable = new DrawerArrowDrawable(this);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+    toolbar.setNavigationIcon(drawerArrowDrawable);
+    toolbar.setNavigationOnClickListener(view -> {
+      if (pane.isSlideable() && !pane.isOpen()) {
+        pane.openPane();
+      }
+    });
+
+    //ref: ActionBarDrawerToggle#setProgress
+    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+      @Override
+      public void onPanelSlide(View panel, float slideOffset) {
+        drawerArrowDrawable.setProgress(slideOffset);
+      }
+
+      @Override
+      public void onPanelOpened(View panel) {
+        drawerArrowDrawable.setVerticalMirror(true);
+      }
+
+      @Override
+      public void onPanelClosed(View panel) {
+        drawerArrowDrawable.setVerticalMirror(false);
+      }
+    });
   }
 
   private boolean closeSidebarIfNeeded() {

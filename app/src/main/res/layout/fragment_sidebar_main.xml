@@ -8,14 +8,17 @@
     <LinearLayout
             android:id="@+id/user_info_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:layout_alignParentTop="true"
             android:background="?attr/colorPrimaryDark"
             android:elevation="2dp"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="@dimen/margin_16">
+            android:paddingBottom="@dimen/margin_8"
+            android:paddingTop="@dimen/margin_8"
+            android:paddingLeft="@dimen/margin_16"
+            android:paddingRight="@dimen/margin_16">
 
         <ImageView
                 android:id="@+id/current_user_status"
@@ -29,8 +32,8 @@
 
         <ImageView
                 android:id="@+id/current_user_avatar"
-                android:layout_width="48dp"
-                android:layout_height="48dp" />
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
 
         <TextView
                 android:id="@+id/current_user_name"

@@ -15,19 +15,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <chat.rocket.android.widget.RoomToolbar
                     android:id="@+id/activity_main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:titleTextColor="@color/titleTextColor"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:title="@string/app_name" />
+                    app:titleText="@string/app_name"
+                    app:titleTextColor="@color/titleTextColor"
+                    app:titleDrawablePadding="@dimen/margin_8"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            <View  android:layout_width="match_parent"
+            <View
+                    android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_below="@+id/button_menu"
-                    android:background="@color/borderColor"/>
+                    android:background="@color/borderColor" />
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout

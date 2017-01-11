@@ -14,12 +14,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <chat.rocket.android.widget.RoomToolbar
+                    android:id="@+id/activity_main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    android:background="@color/white"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:title="@string/app_name" />
+                    app:titleText="@string/app_name"
+                    app:titleTextColor="@color/titleTextColor"
+                    app:titleDrawablePadding="@dimen/margin_8" />
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
