@@ -95,7 +95,7 @@ public class RocketChatService extends Service {
       connectionRequiredServerConfigObserver.sub();
       return null;
     });
-    return START_STICKY;
+    return START_NOT_STICKY;
   }
 
   private void connectToServerWithServerConfig(List<ServerConfig> configList) {
