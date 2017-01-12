@@ -2,6 +2,8 @@ package chat.rocket.android.realm_helper;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,11 +91,19 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
       adapterData = mapResultsToViewModel(newData);
       notifyDataSetChanged();
     } else {
-      // TODO: use DillUtils!
-      adapterData = mapResultsToViewModel(newData);
-      notifyDataSetChanged();
+      final List<VM> newMappedData = mapResultsToViewModel(newData);
+      final DiffUtil.Callback diffCallback = getDiffCallback(adapterData, newMappedData);
+      final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+      adapterData = newMappedData;
+
+      diffResult.dispatchUpdatesTo(getListUpdateCallback());
     }
   }
+
+  protected abstract DiffUtil.Callback getDiffCallback(List<VM> oldData, List<VM> newData);
+
+  protected abstract ListUpdateCallback getListUpdateCallback();
 
   public void setOnItemClickListener(OnItemClickListener<VM> onItemClickListener) {
     this.onItemClickListener = onItemClickListener;

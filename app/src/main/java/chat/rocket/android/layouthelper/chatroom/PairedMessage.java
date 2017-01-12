@@ -32,4 +32,16 @@ public class PairedMessage {
         && nextSibling.getUser() != null && target.getUser() != null
         && nextSibling.getUser().getId().equals(target.getUser().getId());
   }
+
+  public String getId() {
+    return target.getId();
+  }
+
+  @Override
+  public String toString() {
+    return "PairedMessage{" +
+        "target=" + target +
+        ", nextSibling=" + nextSibling +
+        '}';
+  }
 }

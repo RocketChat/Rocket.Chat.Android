@@ -2,6 +2,8 @@ package chat.rocket.android.layouthelper;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v7.util.ListUpdateCallback;
+import android.support.v7.widget.RecyclerView;
 import io.realm.RealmObject;
 
 import chat.rocket.android.realm_helper.RealmModelListAdapter;
@@ -15,6 +17,8 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
     VH extends RealmModelViewHolder<VM>> extends RealmModelListAdapter<T, VM, VH> {
   protected static final int VIEW_TYPE_HEADER = -1;
   protected static final int VIEW_TYPE_FOOTER = -2;
+
+  private RecyclerView.LayoutManager layoutManager;
 
   protected ExtRealmModelListAdapter(Context context) {
     super(context);
@@ -36,6 +40,35 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
   protected void notifyRealmModelItemChanged(int position) {
     notifyItemChanged(position + 1);
   }
+
+  public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+    this.layoutManager = layoutManager;
+  }
+
+  protected ListUpdateCallback listUpdateCallback = new ListUpdateCallback() {
+    @Override
+    public void onInserted(int position, int count) {
+      notifyItemRangeInserted(position + 1, count);
+      if (layoutManager != null) {
+        layoutManager.scrollToPosition(0);
+      }
+    }
+
+    @Override
+    public void onRemoved(int position, int count) {
+      notifyItemRangeRemoved(position + 1, count);
+    }
+
+    @Override
+    public void onMoved(int fromPosition, int toPosition) {
+      notifyItemMoved(fromPosition + 1, toPosition + 1);
+    }
+
+    @Override
+    public void onChanged(int position, int count, Object payload) {
+      notifyItemRangeChanged(position + 1, count, payload);
+    }
+  };
 
   @Override
   public int getItemViewType(int position) {
@@ -82,5 +115,10 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
 
     // rely on VH.bind().
     super.onBindViewHolder(holder, position - 1);
+  }
+
+  @Override
+  public ListUpdateCallback getListUpdateCallback() {
+    return listUpdateCallback;
   }
 }

@@ -145,6 +145,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);
     listView.setLayoutManager(layoutManager);
+    adapter.setLayoutManager(layoutManager);
 
     scrollListener = new LoadMoreScrollListener(layoutManager, 40) {
       @Override
