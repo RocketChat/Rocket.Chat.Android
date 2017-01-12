@@ -2,7 +2,6 @@ package chat.rocket.android.layouthelper.chatroom;
 
 import android.content.Context;
 import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
