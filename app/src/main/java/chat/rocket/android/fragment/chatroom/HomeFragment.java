@@ -13,13 +13,13 @@ public class HomeFragment extends AbstractChatRoomFragment {
 
   @Override
   protected void onSetupView() {
-    setTitleText(R.string.home_fragment_title);
+    setToolbarTitle(R.string.home_fragment_title);
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    setTitleDrawableLeft(0);
-    setTitleText(R.string.home_fragment_title);
+    setToolbarRoomIcon(0);
+    setToolbarTitle(R.string.home_fragment_title);
   }
 }
