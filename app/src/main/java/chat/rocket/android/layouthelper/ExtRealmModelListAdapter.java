@@ -3,7 +3,6 @@ package chat.rocket.android.layouthelper;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.util.ListUpdateCallback;
-import android.support.v7.widget.RecyclerView;
 import io.realm.RealmObject;
 
 import chat.rocket.android.realm_helper.RealmModelListAdapter;
