@@ -2,12 +2,12 @@ package chat.rocket.android.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
@@ -41,6 +41,17 @@ public class RoomToolbar extends Toolbar {
       return;
     }
 
+    TypedArray typedArrayBase = context.getTheme().obtainStyledAttributes(new int[]{
+        R.attr.titleTextAppearance
+    });
+    try {
+      TextViewCompat.setTextAppearance(titleTextView,
+          typedArrayBase.getResourceId(0,
+              android.support.v7.appcompat.R.style.TextAppearance_Widget_AppCompat_Toolbar_Title));
+    } finally {
+      typedArrayBase.recycle();
+    }
+
     TypedArray typedArray = context.getTheme().obtainStyledAttributes(
         attrs,
         R.styleable.RoomToolbar,
@@ -48,8 +59,6 @@ public class RoomToolbar extends Toolbar {
 
     try {
       titleTextView.setText(typedArray.getText(R.styleable.RoomToolbar_titleText));
-      titleTextView
-          .setTextColor(typedArray.getColor(R.styleable.RoomToolbar_titleTextColor, Color.BLACK));
       titleTextView.setCompoundDrawablePadding(
           typedArray.getLayoutDimension(R.styleable.RoomToolbar_titleDrawablePadding, 0));
     } finally {

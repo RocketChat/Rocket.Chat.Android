@@ -24,7 +24,7 @@ abstract class AbstractChatRoomFragment extends AbstractFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  protected void setTitleText(@StringRes int stringResId) {
+  protected void setToolbarTitle(@StringRes int stringResId) {
     if (roomToolbar == null) {
       return;
     }
@@ -32,7 +32,7 @@ abstract class AbstractChatRoomFragment extends AbstractFragment {
     roomToolbar.setTitle(stringResId);
   }
 
-  protected void setTitleText(CharSequence title) {
+  protected void setToolbarTitle(CharSequence title) {
     if (roomToolbar == null) {
       return;
     }
@@ -40,7 +40,7 @@ abstract class AbstractChatRoomFragment extends AbstractFragment {
     roomToolbar.setTitle(title);
   }
 
-  protected void setTitleDrawableLeft(@DrawableRes int drawableResId) {
+  protected void setToolbarRoomIcon(@DrawableRes int drawableResId) {
     if (roomToolbar == null) {
       return;
     }
