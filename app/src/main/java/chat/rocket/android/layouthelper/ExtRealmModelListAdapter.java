@@ -17,8 +17,6 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
   protected static final int VIEW_TYPE_HEADER = -1;
   protected static final int VIEW_TYPE_FOOTER = -2;
 
-  private UpdateListener updateListener;
-
   protected ExtRealmModelListAdapter(Context context) {
     super(context);
   }
@@ -40,17 +38,10 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
     notifyItemChanged(position + 1);
   }
 
-  public void setUpdateListener(UpdateListener updateListener) {
-    this.updateListener = updateListener;
-  }
-
   protected ListUpdateCallback listUpdateCallback = new ListUpdateCallback() {
     @Override
     public void onInserted(int position, int count) {
       notifyItemRangeInserted(position + 1, count);
-      if (updateListener != null) {
-        updateListener.onInserted(count);
-      }
     }
 
     @Override
@@ -119,11 +110,5 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
   @Override
   public ListUpdateCallback getListUpdateCallback() {
     return listUpdateCallback;
-  }
-
-  // We'll be using the insert event only as of now
-  // Let's add more events when/if needed
-  public interface UpdateListener {
-    void onInserted(int count);
   }
 }
