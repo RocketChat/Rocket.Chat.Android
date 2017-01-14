@@ -46,6 +46,5 @@ abstract class AbstractChatRoomFragment extends AbstractFragment {
     }
 
     roomToolbar.setRoomIcon(drawableResId);
-    roomToolbar.setUnreadBudge((int) (System.currentTimeMillis() % 15)); //TODO: just example!
   }
 }
