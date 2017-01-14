@@ -79,4 +79,16 @@ public class User extends RealmObject {
   public Settings getSettings() {
     return settings;
   }
+
+  @Override
+  public String toString() {
+    return "User{" +
+        "_id='" + _id + '\'' +
+        ", username='" + username + '\'' +
+        ", status='" + status + '\'' +
+        ", utcOffset=" + utcOffset +
+        ", emails=" + emails +
+        ", settings=" + settings +
+        '}';
+  }
 }

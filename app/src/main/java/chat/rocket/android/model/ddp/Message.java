@@ -131,4 +131,20 @@ public class Message extends RealmObject {
   public void setUrls(String urls) {
     this.urls = urls;
   }
+
+  @Override
+  public String toString() {
+    return "Message{" +
+        "_id='" + _id + '\'' +
+        ", t='" + t + '\'' +
+        ", rid='" + rid + '\'' +
+        ", syncstate=" + syncstate +
+        ", ts=" + ts +
+        ", msg='" + msg + '\'' +
+        ", u=" + u +
+        ", groupable=" + groupable +
+        ", attachments='" + attachments + '\'' +
+        ", urls='" + urls + '\'' +
+        '}';
+  }
 }

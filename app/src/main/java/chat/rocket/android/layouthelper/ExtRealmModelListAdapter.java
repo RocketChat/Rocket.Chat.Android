@@ -2,6 +2,7 @@ package chat.rocket.android.layouthelper;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v7.util.ListUpdateCallback;
 import io.realm.RealmObject;
 
 import chat.rocket.android.realm_helper.RealmModelListAdapter;
@@ -36,6 +37,28 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
   protected void notifyRealmModelItemChanged(int position) {
     notifyItemChanged(position + 1);
   }
+
+  protected ListUpdateCallback listUpdateCallback = new ListUpdateCallback() {
+    @Override
+    public void onInserted(int position, int count) {
+      notifyItemRangeInserted(position + 1, count);
+    }
+
+    @Override
+    public void onRemoved(int position, int count) {
+      notifyItemRangeRemoved(position + 1, count);
+    }
+
+    @Override
+    public void onMoved(int fromPosition, int toPosition) {
+      notifyItemMoved(fromPosition + 1, toPosition + 1);
+    }
+
+    @Override
+    public void onChanged(int position, int count, Object payload) {
+      notifyItemRangeChanged(position + 1, count, payload);
+    }
+  };
 
   @Override
   public int getItemViewType(int position) {
@@ -82,5 +105,10 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
 
     // rely on VH.bind().
     super.onBindViewHolder(holder, position - 1);
+  }
+
+  @Override
+  public ListUpdateCallback getListUpdateCallback() {
+    return listUpdateCallback;
   }
 }

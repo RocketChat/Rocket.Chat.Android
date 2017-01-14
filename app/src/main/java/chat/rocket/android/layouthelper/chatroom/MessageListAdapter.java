@@ -1,6 +1,7 @@
 package chat.rocket.android.layouthelper.chatroom;
 
 import android.content.Context;
+import android.support.v7.util.DiffUtil;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -110,5 +111,54 @@ public class MessageListAdapter
     extMessages.add(new PairedMessage(results.get(results.size() - 1), null));
 
     return extMessages;
+  }
+
+  @Override
+  protected DiffUtil.Callback getDiffCallback(List<PairedMessage> oldData,
+                                              List<PairedMessage> newData) {
+    return new PairedMessageDiffCallback(oldData, newData);
+  }
+
+  private static class PairedMessageDiffCallback extends DiffUtil.Callback {
+
+    private final List<PairedMessage> oldList;
+    private final List<PairedMessage> newList;
+
+    public PairedMessageDiffCallback(List<PairedMessage> oldList, List<PairedMessage> newList) {
+      this.oldList = oldList;
+      this.newList = newList;
+    }
+
+    @Override
+    public int getOldListSize() {
+      if (oldList == null) {
+        return 0;
+      }
+      return oldList.size();
+    }
+
+    @Override
+    public int getNewListSize() {
+      if (newList == null) {
+        return 0;
+      }
+      return newList.size();
+    }
+
+    @Override
+    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+      PairedMessage oldMessage = oldList.get(oldItemPosition);
+      PairedMessage newMessage = newList.get(newItemPosition);
+
+      return oldMessage.getId().equals(newMessage.getId());
+    }
+
+    @Override
+    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+      PairedMessage oldMessage = oldList.get(oldItemPosition);
+      PairedMessage newMessage = newList.get(newItemPosition);
+
+      return oldMessage.toString().equals(newMessage.toString());
+    }
   }
 }
