@@ -2,20 +2,29 @@ package chat.rocket.android.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.amulyakhare.textdrawable.TextDrawable;
+
+import java.lang.reflect.Field;
 
 public class RoomToolbar extends Toolbar {
 
   private TextView titleTextView;
+  private ImageView budgeImageView;
 
   public RoomToolbar(Context context) {
     super(context);
@@ -95,4 +104,62 @@ public class RoomToolbar extends Toolbar {
 
     titleTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
   }
+
+  public void setUnreadBudge(int numUnread) {
+    if (getNavigationIcon() == null) {
+      return;
+    }
+
+    if (budgeImageView == null) {
+      budgeImageView = new AppCompatImageView(getContext());
+    }
+
+    if (budgeImageView.getParent() != this) { //ref: Toolbar#isChildOrHidden
+      addView(budgeImageView, generateDefaultLayoutParams());
+    }
+
+    if (numUnread > 0) {
+      budgeImageView.setImageDrawable(getBudgeDrawable(numUnread));
+      budgeImageView.setVisibility(View.VISIBLE);
+    } else {
+      budgeImageView.setVisibility(View.GONE);
+    }
+  }
+
+  private Drawable getBudgeDrawable(int numUnread) {
+    String icon = numUnread < 10 ? Integer.toString(numUnread) : "";
+    return TextDrawable.builder()
+        .beginConfig()
+        .useFont(Typeface.SANS_SERIF)
+        .endConfig()
+        .buildRound(icon, Color.RED);
+  }
+
+
+
+  @Override
+  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    super.onLayout(changed, left, top, right, bottom);
+
+    if (budgeImageView != null && budgeImageView.getVisibility() != View.GONE) {
+      try {
+        Field field = Toolbar.class.getDeclaredField("mNavButtonView");
+        field.setAccessible(true);
+        ImageButton navButtonView = (ImageButton) field.get(this);
+        int iconLeft = navButtonView.getLeft();
+        int iconTop = navButtonView.getTop();
+        int iconRight = navButtonView.getRight();
+        int iconBottom = navButtonView.getBottom();
+
+        int budgeLeft = iconLeft + (iconRight - iconLeft) * 5 / 8;
+        int budgeRight = iconLeft + (iconRight - iconLeft) * 7 / 8;
+        int budgeTop = iconTop + (iconBottom - iconTop) / 8;
+        int budgeBottom = iconTop + (iconBottom - iconTop) * 3 / 8;
+        budgeImageView.layout(budgeLeft, budgeTop, budgeRight, budgeBottom);
+      } catch (Exception exception) {
+        return;
+      }
+    }
+  }
+
 }
