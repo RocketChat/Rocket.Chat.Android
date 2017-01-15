@@ -27,17 +27,17 @@ import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
+import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
-import chat.rocket.android.log.RCLog;
-import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadActionItem;
+import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
@@ -71,17 +71,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageFormManager messageFormManager;
-  private LinearLayoutManager layoutManager;
-  private boolean userScrolledToEnd = true;
-
-  private ExtRealmModelListAdapter.UpdateListener updateListener =
-      count -> {
-        if (userScrolledToEnd) {
-          scrollToEnd();
-        } else {
-          // showNewMessagesAtEndIndicator();
-        }
-      };
+  private RecyclerViewAutoScrollManager autoScrollManager;
 
   public RoomFragment() {
   }
@@ -154,10 +144,11 @@ public class RoomFragment extends AbstractChatRoomFragment
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
 
-    layoutManager = new LinearLayoutManager(getContext(),
+    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);
     listView.setLayoutManager(layoutManager);
-    adapter.setUpdateListener(updateListener);
+    autoScrollManager = new RecyclerViewAutoScrollManager(layoutManager);
+    adapter.registerAdapterDataObserver(autoScrollManager);
 
     scrollListener = new LoadMoreScrollListener(layoutManager, 40) {
       @Override
@@ -166,16 +157,16 @@ public class RoomFragment extends AbstractChatRoomFragment
       }
     };
     listView.addOnScrollListener(scrollListener);
-    listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override
-      public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
-        setUserScrolledToEnd(newState);
-      }
-    });
 
     setupSideMenu();
     setupMessageComposer();
+  }
+
+  @Override
+  public void onDestroyView() {
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    listView.getAdapter().unregisterAdapterDataObserver(autoScrollManager);
+    super.onDestroyView();
   }
 
   @Override
@@ -391,19 +382,5 @@ public class RoomFragment extends AbstractChatRoomFragment
   @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
   protected void onExtraActionSelected(MessageExtraActionBehavior action) {
     action.handleItemSelectedOnFragment(RoomFragment.this);
-  }
-
-  private void setUserScrolledToEnd(int newState) {
-    if (newState == RecyclerView.SCROLL_STATE_DRAGGING
-        || newState == RecyclerView.SCROLL_STATE_IDLE) {
-      userScrolledToEnd = layoutManager.findFirstCompletelyVisibleItemPosition() == 1;
-    }
-  }
-
-  private void scrollToEnd() {
-    if (layoutManager == null) {
-      return;
-    }
-    layoutManager.scrollToPosition(0);
   }
 }
