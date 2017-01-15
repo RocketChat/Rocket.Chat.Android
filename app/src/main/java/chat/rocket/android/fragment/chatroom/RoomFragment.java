@@ -305,6 +305,8 @@ public class RoomFragment extends AbstractChatRoomFragment
                 .put(Message.SYNC_STATE, SyncState.NOT_SYNCED)
                 .put(Message.TIMESTAMP, System.currentTimeMillis())
                 .put(Message.ROOM_ID, roomId)
+                .put(Message.USER, new JSONObject()
+                    .put(User.ID, userId))
                 .put(Message.MESSAGE, messageText)))
             .onSuccess(_task -> {
               scrollToLatestMessage();
