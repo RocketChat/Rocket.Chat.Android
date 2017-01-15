@@ -198,7 +198,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   private void scrollToLatestMessage() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
     if (listView != null) {
-      listView.smoothScrollToPosition(0);
+      listView.scrollToPosition(0);
     }
   }
 
