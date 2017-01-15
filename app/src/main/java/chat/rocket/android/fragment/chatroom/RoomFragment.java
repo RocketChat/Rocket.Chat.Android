@@ -28,6 +28,7 @@ import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
@@ -70,6 +71,17 @@ public class RoomFragment extends AbstractChatRoomFragment
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageFormManager messageFormManager;
+  private LinearLayoutManager layoutManager;
+  private boolean userScrolledToEnd = true;
+
+  private ExtRealmModelListAdapter.UpdateListener updateListener =
+      count -> {
+        if (userScrolledToEnd) {
+          scrollToEnd();
+        } else {
+          // showNewMessagesAtEndIndicator();
+        }
+      };
 
   public RoomFragment() {
   }
@@ -142,9 +154,10 @@ public class RoomFragment extends AbstractChatRoomFragment
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
 
-    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+    layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);
     listView.setLayoutManager(layoutManager);
+    adapter.setUpdateListener(updateListener);
 
     scrollListener = new LoadMoreScrollListener(layoutManager, 40) {
       @Override
@@ -153,6 +166,13 @@ public class RoomFragment extends AbstractChatRoomFragment
       }
     };
     listView.addOnScrollListener(scrollListener);
+    listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override
+      public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        setUserScrolledToEnd(newState);
+      }
+    });
 
     setupSideMenu();
     setupMessageComposer();
@@ -371,5 +391,19 @@ public class RoomFragment extends AbstractChatRoomFragment
   @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
   protected void onExtraActionSelected(MessageExtraActionBehavior action) {
     action.handleItemSelectedOnFragment(RoomFragment.this);
+  }
+
+  private void setUserScrolledToEnd(int newState) {
+    if (newState == RecyclerView.SCROLL_STATE_DRAGGING
+        || newState == RecyclerView.SCROLL_STATE_IDLE) {
+      userScrolledToEnd = layoutManager.findFirstCompletelyVisibleItemPosition() == 1;
+    }
+  }
+
+  private void scrollToEnd() {
+    if (layoutManager == null) {
+      return;
+    }
+    layoutManager.scrollToPosition(0);
   }
 }
