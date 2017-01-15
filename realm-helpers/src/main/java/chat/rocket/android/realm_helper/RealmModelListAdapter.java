@@ -103,7 +103,31 @@ public abstract class RealmModelListAdapter<T extends RealmObject, VM,
 
   protected abstract DiffUtil.Callback getDiffCallback(List<VM> oldData, List<VM> newData);
 
-  protected abstract ListUpdateCallback getListUpdateCallback();
+  private final ListUpdateCallback listUpdateCallback = new ListUpdateCallback() {
+    @Override
+    public void onInserted(int position, int count) {
+      notifyItemRangeInserted(position, count);
+    }
+
+    @Override
+    public void onRemoved(int position, int count) {
+      notifyItemRangeRemoved(position, count);
+    }
+
+    @Override
+    public void onMoved(int fromPosition, int toPosition) {
+      notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public void onChanged(int position, int count, Object payload) {
+      notifyItemRangeChanged(position, count, payload);
+    }
+  };
+
+  protected ListUpdateCallback getListUpdateCallback() {
+    return listUpdateCallback;
+  }
 
   public void setOnItemClickListener(OnItemClickListener<VM> onItemClickListener) {
     this.onItemClickListener = onItemClickListener;

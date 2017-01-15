@@ -44,7 +44,7 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
     this.updateListener = updateListener;
   }
 
-  protected ListUpdateCallback listUpdateCallback = new ListUpdateCallback() {
+  private final ListUpdateCallback listUpdateCallback = new ListUpdateCallback() {
     @Override
     public void onInserted(int position, int count) {
       notifyItemRangeInserted(position + 1, count);
@@ -117,7 +117,7 @@ public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
   }
 
   @Override
-  public ListUpdateCallback getListUpdateCallback() {
+  protected ListUpdateCallback getListUpdateCallback() {
     return listUpdateCallback;
   }
 
