@@ -28,6 +28,7 @@ import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
+import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
@@ -157,6 +158,8 @@ public class RoomFragment extends AbstractChatRoomFragment
       }
     };
     listView.addOnScrollListener(scrollListener);
+    listView.addOnScrollListener(
+        new RecyclerViewScrolledToBottomListener(layoutManager, 1, this::markAsReadIfNeeded));
 
     setupSideMenu();
     setupMessageComposer();
