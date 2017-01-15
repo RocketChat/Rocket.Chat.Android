@@ -3,7 +3,7 @@ package chat.rocket.android.layouthelper.chatroom;
 /**
  * manager class for showing "You have XX messages" indicator.
  */
-public abstract class NewMessageIndicatorManager {
+public abstract class AbstractNewMessageIndicatorManager {
   private int count;
   private boolean onlyAlreadyShown;
 

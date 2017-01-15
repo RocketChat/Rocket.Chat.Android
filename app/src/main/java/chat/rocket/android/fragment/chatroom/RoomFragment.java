@@ -33,7 +33,7 @@ import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
-import chat.rocket.android.layouthelper.chatroom.NewMessageIndicatorManager;
+import chat.rocket.android.layouthelper.chatroom.AbstractNewMessageIndicatorManager;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
 import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadActionItem;
@@ -75,7 +75,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageFormManager messageFormManager;
   private RecyclerViewAutoScrollManager autoScrollManager;
-  private NewMessageIndicatorManager newMessageIndicatorManager;
+  private AbstractNewMessageIndicatorManager newMessageIndicatorManager;
   private Snackbar unreadIndicator;
   private boolean previousUnreadMessageExists;
 
@@ -173,7 +173,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     listView.addOnScrollListener(
         new RecyclerViewScrolledToBottomListener(layoutManager, 1, this::markAsReadIfNeeded));
 
-    newMessageIndicatorManager = new NewMessageIndicatorManager() {
+    newMessageIndicatorManager = new AbstractNewMessageIndicatorManager() {
       @Override
       protected void onShowIndicator(int count, boolean onlyAlreadyShown) {
         if ((onlyAlreadyShown && unreadIndicator != null && unreadIndicator.isShown())

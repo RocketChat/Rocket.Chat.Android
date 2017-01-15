@@ -40,8 +40,8 @@ public class RecyclerViewScrolledToBottomListener extends RecyclerView.OnScrollL
 
 
   @Override
-  public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-    super.onScrolled(recyclerView, dx, dy);
+  public void onScrolled(RecyclerView recyclerView, int deltaX, int deltaY) {
+    super.onScrolled(recyclerView, deltaX, deltaY);
     handler.removeMessages(0);
     handler.sendEmptyMessageDelayed(0, 120);
   }
