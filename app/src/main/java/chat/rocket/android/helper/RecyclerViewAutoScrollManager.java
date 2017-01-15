@@ -20,6 +20,12 @@ public class RecyclerViewAutoScrollManager extends RecyclerView.AdapterDataObser
 
     if (linearLayoutManager.findFirstVisibleItemPosition() <= positionStart) {
       linearLayoutManager.scrollToPosition(positionStart);
+    } else {
+      onAutoScrollMissed();
     }
+  }
+
+  protected void onAutoScrollMissed() {
+    //do nothing by default.
   }
 }
