@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
@@ -71,7 +72,8 @@ public class SidebarMainFragment extends AbstractFragment {
       if (realmHelper != null) {
         roomsObserver = realmHelper
             .createListObserver(
-                realm -> realm.where(RoomSubscription.class).equalTo(RoomSubscription.OPEN, true).findAll())
+                realm -> realm.where(RoomSubscription.class).equalTo(RoomSubscription.OPEN, true)
+                    .findAll())
             .setOnUpdateListener(list -> roomListManager.setRooms(list));
 
         currentUserObserver = realmHelper
@@ -102,6 +104,7 @@ public class SidebarMainFragment extends AbstractFragment {
     setupUserStatusButtons();
     setupLogoutButton();
     setupAddChannelButton();
+    setupVersionInfo();
 
     roomListManager = new RoomListManager(
         rootView.findViewById(R.id.unread_title),
@@ -191,6 +194,11 @@ public class SidebarMainFragment extends AbstractFragment {
     rootView.findViewById(R.id.btn_add_direct_message).setOnClickListener(view -> {
       showAddRoomDialog(new AddDirectMessageDialogFragment());
     });
+  }
+
+  private void setupVersionInfo() {
+    TextView versionInfoView = (TextView) rootView.findViewById(R.id.version_info);
+    versionInfoView.setText(getString(R.string.version_info_text, BuildConfig.VERSION_NAME));
   }
 
   private void showAddRoomDialog(DialogFragment dialog) {

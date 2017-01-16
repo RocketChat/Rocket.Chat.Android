@@ -236,6 +236,13 @@
                         android:text="@string/fragment_sidebar_main_logout_title"
                         android:textAppearance="?attr/textAppearanceListItemSmall" />
             </LinearLayout>
+
+            <TextView
+                    android:id="@+id/version_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="?attr/textAppearanceListItemSmall" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>
