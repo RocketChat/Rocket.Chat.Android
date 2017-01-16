@@ -21,22 +21,27 @@ public class ServerPolicyHelper {
 
   public static void isApiVersionValid(@NonNull ServerPolicyApi serverPolicyApi,
                                        @NonNull Callback callback) {
-    trySecureValidation(serverPolicyApi, new Callback() {
-      @Override
-      public void isValid(boolean usesSecureConnection) {
-        callback.isValid(usesSecureConnection);
-      }
+    ServerPolicyApiValidationHelper.getApiVersion(serverPolicyApi,
+        new ServerPolicyApiValidationHelper.Callback() {
+          @Override
+          public void onSuccess(boolean usesSecureConnection, JSONObject apiInfo) {
+            if (isValid(apiInfo)) {
+              callback.isValid(usesSecureConnection);
+              return;
+            }
+            callback.isNotValid();
+          }
 
-      @Override
-      public void isNotValid() {
-        callback.isNotValid();
-      }
+          @Override
+          public void onResponseError() {
+            callback.isNotValid();
+          }
 
-      @Override
-      public void onNetworkError() {
-        tryInsecureValidation(serverPolicyApi, callback);
-      }
-    });
+          @Override
+          public void onNetworkError() {
+            callback.onNetworkError();
+          }
+        });
   }
 
   @NonNull
@@ -82,40 +87,6 @@ public class ServerPolicyHelper {
 
     String[] versionParts = version.split("\\.");
     return versionParts.length >= 3 && Integer.parseInt(versionParts[1]) >= 49;
-  }
-
-  private static void trySecureValidation(@NonNull ServerPolicyApi serverPolicyApi,
-                                          @NonNull Callback callback) {
-    serverPolicyApi.getApiInfoSecurely(getServerPolicyApiCallback(true, callback));
-  }
-
-  private static void tryInsecureValidation(@NonNull ServerPolicyApi serverPolicyApi,
-                                            @NonNull Callback callback) {
-    serverPolicyApi.getApiInfoInsecurely(getServerPolicyApiCallback(false, callback));
-  }
-
-  private static ServerPolicyApi.Callback getServerPolicyApiCallback(boolean isSecureConnection,
-                                                                     @NonNull Callback callback) {
-    return new ServerPolicyApi.Callback() {
-      @Override
-      public void onSuccess(JSONObject jsonObject) {
-        if (isValid(jsonObject)) {
-          callback.isValid(isSecureConnection);
-          return;
-        }
-        callback.isNotValid();
-      }
-
-      @Override
-      public void onResponseError() {
-        callback.isNotValid();
-      }
-
-      @Override
-      public void onNetworkError() {
-        callback.onNetworkError();
-      }
-    };
   }
 
   public interface Callback {
