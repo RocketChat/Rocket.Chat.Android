@@ -105,7 +105,7 @@ public class RoomToolbar extends Toolbar {
     titleTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
   }
 
-  public void setUnreadBudge(int numUnread) {
+  public void setUnreadBudge(int numUnreadChannels, int numMentionsSum) {
     if (getNavigationIcon() == null) {
       return;
     }
@@ -118,16 +118,17 @@ public class RoomToolbar extends Toolbar {
       addView(budgeImageView, generateDefaultLayoutParams());
     }
 
-    if (numUnread > 0) {
-      budgeImageView.setImageDrawable(getBudgeDrawable(numUnread));
+    if (numUnreadChannels > 0) {
+      budgeImageView.setImageDrawable(getBudgeDrawable(numMentionsSum));
       budgeImageView.setVisibility(View.VISIBLE);
     } else {
       budgeImageView.setVisibility(View.GONE);
     }
   }
 
-  private Drawable getBudgeDrawable(int numUnread) {
-    String icon = numUnread < 10 ? Integer.toString(numUnread) : "";
+  private Drawable getBudgeDrawable(int number) {
+    String icon = number > 99 ? "99+" :
+        (number <= 0 ? "" : Integer.toString(number));
     return TextDrawable.builder()
         .beginConfig()
         .useFont(Typeface.SANS_SERIF)

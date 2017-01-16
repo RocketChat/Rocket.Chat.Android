@@ -8,6 +8,7 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.util.List;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -233,14 +234,20 @@ public class MainActivity extends AbstractAuthedActivity {
                 .equalTo(RoomSubscription.ALERT, true)
                 .equalTo(RoomSubscription.OPEN, true)
                 .findAll())
-        .setOnUpdateListener(results -> updateRoomToolbarUnreadCount(results.size()));
+        .setOnUpdateListener(this::updateRoomToolbarUnreadCount);
     unreadRoomSubscriptionObserver.sub();
   }
 
-  private void updateRoomToolbarUnreadCount(int unreadCount) {
+  private void updateRoomToolbarUnreadCount(List<RoomSubscription> unreadRooms) {
     RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
     if (toolbar != null) {
-      toolbar.setUnreadBudge(unreadCount);
+      //ref: Rocket.Chat:client/startup/unread.js
+      final int numUnreadChannels = unreadRooms.size();
+      int numMentionsSum = 0;
+      for (RoomSubscription room : unreadRooms) {
+        numMentionsSum += room.getUnread();
+      }
+      toolbar.setUnreadBudge(numUnreadChannels, numMentionsSum);
     }
   }
 
