@@ -170,7 +170,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
 
     prepareWebSocket(config.getHostname());
-    return ddpClient.connect(config.getSession())
+    return ddpClient.connect(config.getSession(), config.usesSecureConnection())
         .onSuccessTask(task -> {
           final String session = task.getResult().session;
           defaultRealm.executeTransaction(realm ->

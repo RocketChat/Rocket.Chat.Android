@@ -27,32 +27,20 @@ public class ServerPolicyHelper {
 
   public static void isApiVersionValid(@NonNull OkHttpClient client, @NonNull String host,
                                        @NonNull Callback callback) {
-    Request request;
-    try {
-      request = new Request.Builder()
-          .url("https://" + host + API_INFO_PATH)
-          .get()
-          .build();
-    } catch (Exception e) {
-      callback.isNotValid();
-      return;
-    }
-
-    client.newCall(request).enqueue(new okhttp3.Callback() {
+    trySecureValidation(client, host, new Callback() {
       @Override
-      public void onFailure(Call call, IOException exception) {
-        // some connection error
+      public void isValid(boolean usesSecureConnection) {
+        callback.isValid(usesSecureConnection);
+      }
+
+      @Override
+      public void isNotValid() {
         callback.isNotValid();
       }
 
       @Override
-      public void onResponse(Call call, Response response) throws IOException {
-        if (!response.isSuccessful() || !isValid(response.body())) {
-          callback.isNotValid();
-          return;
-        }
-
-        callback.isValid();
+      public void onNetworkError() {
+        tryInsecureValidation(client, host, callback);
       }
     });
   }
@@ -104,9 +92,64 @@ public class ServerPolicyHelper {
     return versionParts.length >= 3 && Integer.parseInt(versionParts[1]) >= 49;
   }
 
+  private static void trySecureValidation(@NonNull OkHttpClient client, @NonNull String host,
+                                          @NonNull Callback callback) {
+    Request request;
+    try {
+      request = createRequest("https://", host);
+    } catch (Exception e) {
+      callback.isNotValid();
+      return;
+    }
+
+    validate(request, client, callback, true);
+  }
+
+  private static void tryInsecureValidation(@NonNull OkHttpClient client, @NonNull String host,
+                                            @NonNull Callback callback) {
+    Request request;
+    try {
+      request = createRequest("http://", host);
+    } catch (Exception e) {
+      callback.isNotValid();
+      return;
+    }
+
+    validate(request, client, callback, false);
+  }
+
+  private static Request createRequest(@NonNull String protocol, @NonNull String host) {
+    return new Request.Builder()
+        .url(protocol + host + API_INFO_PATH)
+        .get()
+        .build();
+  }
+
+  private static void validate(@NonNull Request request, @NonNull OkHttpClient client,
+                               @NonNull Callback callback, boolean usesSecureConnection) {
+    client.newCall(request).enqueue(new okhttp3.Callback() {
+      @Override
+      public void onFailure(Call call, IOException exception) {
+        callback.onNetworkError();
+      }
+
+      @Override
+      public void onResponse(Call call, Response response) throws IOException {
+        if (!response.isSuccessful() || !isValid(response.body())) {
+          callback.isNotValid();
+          return;
+        }
+
+        callback.isValid(usesSecureConnection);
+      }
+    });
+  }
+
   public interface Callback {
-    void isValid();
+    void isValid(boolean usesSecureConnection);
 
     void isNotValid();
+
+    void onNetworkError();
   }
 }

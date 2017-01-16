@@ -44,14 +44,20 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
     ServerPolicyHelper.isApiVersionValid(OkHttpHelper.getClientForUploadFile(), hostname,
         new ServerPolicyHelper.Callback() {
           @Override
-          public void isValid() {
-            getActivity().runOnUiThread(() -> onServerValid(hostname));
+          public void isValid(boolean usesSecureConnection) {
+            getActivity().runOnUiThread(() -> onServerValid(hostname, usesSecureConnection));
           }
 
           @Override
           public void isNotValid() {
             getActivity().runOnUiThread(() ->
                 showError(getString(R.string.input_hostname_invalid_server_message)));
+          }
+
+          @Override
+          public void onNetworkError() {
+            getActivity().runOnUiThread(() ->
+                showError(getString(R.string.connection_error_try_later)));
           }
         });
   }
@@ -68,7 +74,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
     return TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
   }
 
-  private void onServerValid(final String hostname) {
+  private void onServerValid(final String hostname, boolean usesSecureConnection) {
     RocketChatCache.get(getContext()).edit()
         .putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, serverConfigId)
         .apply();
@@ -79,6 +85,7 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
                 .put(ServerConfig.HOSTNAME, hostname)
                 .put(ServerConfig.ERROR, JSONObject.NULL)
                 .put(ServerConfig.SESSION, JSONObject.NULL)
+                .put(ServerConfig.SECURE_CONNECTION, usesSecureConnection)
                 .put(ServerConfig.STATE, ServerConfig.STATE_READY)))
         .continueWith(new LogcatIfError());
   }
