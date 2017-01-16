@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
-import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
