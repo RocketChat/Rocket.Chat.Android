@@ -10,6 +10,7 @@ public class Email extends RealmObject {
   @PrimaryKey private String address;
   private boolean verified;
 
+  @SuppressWarnings({"PMD.ShortVariable"})
   @Override
   public boolean equals(Object o) {
     if (this == o) {

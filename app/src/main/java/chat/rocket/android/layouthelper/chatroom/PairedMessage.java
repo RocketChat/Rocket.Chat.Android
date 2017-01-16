@@ -45,6 +45,7 @@ public class PairedMessage {
         '}';
   }
 
+  @SuppressWarnings({"PMD.ShortVariable"})
   @Override
   public boolean equals(Object o) {
     if (this == o) {
