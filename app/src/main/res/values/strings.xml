@@ -18,6 +18,9 @@
     <string name="resend">Resend</string>
     <string name="discard">Discard</string>
 
+    <string name="fmt_dialog_view_latest_message_title">New %d messages</string>
+    <string name="dialog_view_latest_message_action">View</string>
+
     <string name="file_uploading_title">Uploading…</string>
 
     <string name="dialog_user_registration_email">Email</string>

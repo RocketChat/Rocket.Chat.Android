@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -27,16 +28,19 @@ import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
+import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
+import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
+import chat.rocket.android.layouthelper.chatroom.AbstractNewMessageIndicatorManager;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
-import chat.rocket.android.log.RCLog;
-import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadActionItem;
+import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
@@ -70,6 +74,10 @@ public class RoomFragment extends AbstractChatRoomFragment
   private LoadMoreScrollListener scrollListener;
   private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageFormManager messageFormManager;
+  private RecyclerViewAutoScrollManager autoScrollManager;
+  private AbstractNewMessageIndicatorManager newMessageIndicatorManager;
+  private Snackbar unreadIndicator;
+  private boolean previousUnreadMessageExists;
 
   public RoomFragment() {
   }
@@ -145,6 +153,15 @@ public class RoomFragment extends AbstractChatRoomFragment
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);
     listView.setLayoutManager(layoutManager);
+    autoScrollManager = new RecyclerViewAutoScrollManager(layoutManager) {
+      @Override
+      protected void onAutoScrollMissed() {
+        if (newMessageIndicatorManager != null) {
+          newMessageIndicatorManager.updateNewMessageCount(getUnreadMessageCount());
+        }
+      }
+    };
+    adapter.registerAdapterDataObserver(autoScrollManager);
 
     scrollListener = new LoadMoreScrollListener(layoutManager, 40) {
       @Override
@@ -153,9 +170,67 @@ public class RoomFragment extends AbstractChatRoomFragment
       }
     };
     listView.addOnScrollListener(scrollListener);
+    listView.addOnScrollListener(
+        new RecyclerViewScrolledToBottomListener(layoutManager, 1, this::markAsReadIfNeeded));
+
+    newMessageIndicatorManager = new AbstractNewMessageIndicatorManager() {
+      @Override
+      protected void onShowIndicator(int count, boolean onlyAlreadyShown) {
+        if ((onlyAlreadyShown && unreadIndicator != null && unreadIndicator.isShown())
+            || !onlyAlreadyShown) {
+          unreadIndicator = getUnreadCountIndicatorView(count);
+          unreadIndicator.show();
+        }
+      }
+
+      @Override
+      protected void onHideIndicator() {
+        if (unreadIndicator != null && unreadIndicator.isShown()) {
+          unreadIndicator.dismiss();
+        }
+      }
+    };
 
     setupSideMenu();
     setupMessageComposer();
+  }
+
+  private void scrollToLatestMessage() {
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    if (listView != null) {
+      listView.scrollToPosition(0);
+    }
+  }
+
+  private Snackbar getUnreadCountIndicatorView(int count) {
+    // TODO: replace with another custom View widget, not to hide message composer.
+    final String caption = getResources().getString(
+        R.string.fmt_dialog_view_latest_message_title, count);
+
+    return Snackbar.make(rootView, caption, Snackbar.LENGTH_LONG)
+        .setAction(R.string.dialog_view_latest_message_action, view -> scrollToLatestMessage());
+  }
+
+  private int getUnreadMessageCount() {
+    RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
+        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
+    if (room != null) {
+      return realmHelper.executeTransactionForReadResults(realm ->
+          realm.where(Message.class)
+              .equalTo(Message.ROOM_ID, roomId)
+              .greaterThanOrEqualTo(Message.TIMESTAMP, room.getLastSeen())
+              .notEqualTo(Message.USER_ID, userId)
+              .findAll()).size();
+    } else {
+      return 0;
+    }
+  }
+
+  @Override
+  public void onDestroyView() {
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    listView.getAdapter().unregisterAdapterDataObserver(autoScrollManager);
+    super.onDestroyView();
   }
 
   @Override
@@ -230,7 +305,13 @@ public class RoomFragment extends AbstractChatRoomFragment
                 .put(Message.SYNC_STATE, SyncState.NOT_SYNCED)
                 .put(Message.TIMESTAMP, System.currentTimeMillis())
                 .put(Message.ROOM_ID, roomId)
-                .put(Message.MESSAGE, messageText))));
+                .put(Message.USER, new JSONObject()
+                    .put(User.ID, userId))
+                .put(Message.MESSAGE, messageText)))
+            .onSuccess(_task -> {
+              scrollToLatestMessage();
+              return null;
+            }));
     messageFormManager.registerExtraActionItem(new ImageUploadActionItem());
     messageFormManager.registerExtraActionItem(new AudioUploadActionItem());
     messageFormManager.registerExtraActionItem(new VideoUploadActionItem());
@@ -275,6 +356,12 @@ public class RoomFragment extends AbstractChatRoomFragment
       setToolbarRoomIcon(0);
     }
     setToolbarTitle(roomSubscription.getName());
+
+    boolean unreadMessageExists = roomSubscription.isAlert();
+    if (newMessageIndicatorManager != null && previousUnreadMessageExists && !unreadMessageExists) {
+      newMessageIndicatorManager.reset();
+    }
+    previousUnreadMessageExists = unreadMessageExists;
   }
 
   private void onUpdateLoadMessageProcedure(LoadMessageProcedure procedure) {
@@ -346,7 +433,6 @@ public class RoomFragment extends AbstractChatRoomFragment
     roomObserver.sub();
     procedureObserver.sub();
     closeSideMenuIfNeeded();
-    markAsReadIfNeeded();
   }
 
   @Override
