@@ -25,6 +25,7 @@ public class Message extends RealmObject {
   @SuppressWarnings({"PMD.AvoidFieldNameMatchingTypeName"})
   public static final String MESSAGE = "msg";
   public static final String USER = "u";
+  public static final String USER_ID = "u._id";
   public static final String GROUPABLE = "groupable";
   public static final String ATTACHMENTS = "attachments";
   public static final String URLS = "urls";
