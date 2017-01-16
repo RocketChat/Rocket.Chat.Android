@@ -2,13 +2,13 @@ package chat.rocket.android.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
 public class RoomToolbar extends Toolbar {
 
   private TextView titleTextView;
-  private ImageView budgeImageView;
+  private ImageView badgeImageView;
 
   public RoomToolbar(Context context) {
     super(context);
@@ -110,30 +110,35 @@ public class RoomToolbar extends Toolbar {
       return;
     }
 
-    if (budgeImageView == null) {
-      budgeImageView = new AppCompatImageView(getContext());
+    if (badgeImageView == null) {
+      badgeImageView = new AppCompatImageView(getContext());
+      badgeImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
     }
 
-    if (budgeImageView.getParent() != this) { //ref: Toolbar#isChildOrHidden
-      addView(budgeImageView, generateDefaultLayoutParams());
+    if (badgeImageView.getParent() != this) { //ref: Toolbar#isChildOrHidden
+      addView(badgeImageView, generateDefaultLayoutParams());
     }
 
     if (numUnreadChannels > 0) {
-      budgeImageView.setImageDrawable(getBudgeDrawable(numMentionsSum));
-      budgeImageView.setVisibility(View.VISIBLE);
+      if (numMentionsSum > 0) {
+        badgeImageView.setImageDrawable(getBadgeDrawable(numMentionsSum));
+      } else {
+        badgeImageView.setScaleType(ImageView.ScaleType.CENTER);
+        badgeImageView.setImageResource(R.drawable.badge_without_number);
+      }
+      badgeImageView.setVisibility(View.VISIBLE);
     } else {
-      budgeImageView.setVisibility(View.GONE);
+      badgeImageView.setVisibility(View.GONE);
     }
   }
 
-  private Drawable getBudgeDrawable(int number) {
-    String icon = number > 99 ? "99+" :
-        (number <= 0 ? "" : Integer.toString(number));
+  private Drawable getBadgeDrawable(int number) {
+    String icon = number > 99 ? "99+" : Integer.toString(number);
     return TextDrawable.builder()
         .beginConfig()
         .useFont(Typeface.SANS_SERIF)
         .endConfig()
-        .buildRound(icon, Color.RED);
+        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.badge_color));
   }
 
 
@@ -142,7 +147,7 @@ public class RoomToolbar extends Toolbar {
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
     super.onLayout(changed, left, top, right, bottom);
 
-    if (budgeImageView != null && budgeImageView.getVisibility() != View.GONE) {
+    if (badgeImageView != null && badgeImageView.getVisibility() != View.GONE) {
       try {
         Field field = Toolbar.class.getDeclaredField("mNavButtonView");
         field.setAccessible(true);
@@ -156,7 +161,7 @@ public class RoomToolbar extends Toolbar {
         int budgeRight = iconLeft + (iconRight - iconLeft) * 7 / 8;
         int budgeTop = iconTop + (iconBottom - iconTop) / 8;
         int budgeBottom = iconTop + (iconBottom - iconTop) * 3 / 8;
-        budgeImageView.layout(budgeLeft, budgeTop, budgeRight, budgeBottom);
+        badgeImageView.layout(budgeLeft, budgeTop, budgeRight, budgeBottom);
       } catch (Exception exception) {
         return;
       }
