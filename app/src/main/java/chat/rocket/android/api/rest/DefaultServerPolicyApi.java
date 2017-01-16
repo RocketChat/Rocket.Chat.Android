@@ -45,7 +45,7 @@ public class DefaultServerPolicyApi implements ServerPolicyApi {
   private okhttp3.Callback getOkHttpCallback(@NonNull Callback callback) {
     return new okhttp3.Callback() {
       @Override
-      public void onFailure(Call call, IOException e) {
+      public void onFailure(Call call, IOException ioException) {
         callback.onNetworkError();
       }
 
