@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
+import chat.rocket.android.api.rest.DefaultServerPolicyApi;
+import chat.rocket.android.api.rest.ServerPolicyApi;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.ServerPolicyHelper;
@@ -41,7 +43,10 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   private void handleConnect() {
     final String hostname = ServerPolicyHelper.enforceHostname(getHostname());
 
-    ServerPolicyHelper.isApiVersionValid(OkHttpHelper.getClientForUploadFile(), hostname,
+    ServerPolicyApi serverPolicyApi =
+        new DefaultServerPolicyApi(OkHttpHelper.getClientForUploadFile(), hostname);
+
+    ServerPolicyHelper.isApiVersionValid(serverPolicyApi,
         new ServerPolicyHelper.Callback() {
           @Override
           public void isValid(boolean usesSecureConnection) {

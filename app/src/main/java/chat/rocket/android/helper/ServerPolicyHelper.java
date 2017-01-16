@@ -4,17 +4,11 @@ import android.support.annotation.NonNull;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import chat.rocket.android.api.rest.ServerPolicyApi;
 
 public class ServerPolicyHelper {
 
   private static final String DEFAULT_HOST = ".rocket.chat";
-  private static final String API_INFO_PATH = "/api/info";
   private static final String VERSION_PROPERTY = "version";
 
   public static String enforceHostname(String hostname) {
@@ -25,9 +19,9 @@ public class ServerPolicyHelper {
     return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
   }
 
-  public static void isApiVersionValid(@NonNull OkHttpClient client, @NonNull String host,
+  public static void isApiVersionValid(@NonNull ServerPolicyApi serverPolicyApi,
                                        @NonNull Callback callback) {
-    trySecureValidation(client, host, new Callback() {
+    trySecureValidation(serverPolicyApi, new Callback() {
       @Override
       public void isValid(boolean usesSecureConnection) {
         callback.isValid(usesSecureConnection);
@@ -40,7 +34,7 @@ public class ServerPolicyHelper {
 
       @Override
       public void onNetworkError() {
-        tryInsecureValidation(client, host, callback);
+        tryInsecureValidation(serverPolicyApi, callback);
       }
     });
   }
@@ -68,14 +62,12 @@ public class ServerPolicyHelper {
     return hostname.replaceAll("/+$", "");
   }
 
-  private static boolean isValid(ResponseBody body) {
-    if (body == null || body.contentLength() == 0) {
+  private static boolean isValid(JSONObject jsonObject) {
+    if (jsonObject == null) {
       return false;
     }
 
     try {
-      final JSONObject jsonObject = new JSONObject(body.string());
-
       return jsonObject.has(VERSION_PROPERTY)
           && isVersionValid(jsonObject.getString(VERSION_PROPERTY));
     } catch (Exception e) {
@@ -92,57 +84,38 @@ public class ServerPolicyHelper {
     return versionParts.length >= 3 && Integer.parseInt(versionParts[1]) >= 49;
   }
 
-  private static void trySecureValidation(@NonNull OkHttpClient client, @NonNull String host,
+  private static void trySecureValidation(@NonNull ServerPolicyApi serverPolicyApi,
                                           @NonNull Callback callback) {
-    Request request;
-    try {
-      request = createRequest("https://", host);
-    } catch (Exception e) {
-      callback.isNotValid();
-      return;
-    }
-
-    validate(request, client, callback, true);
+    serverPolicyApi.getApiInfoSecurely(getServerPolicyApiCallback(true, callback));
   }
 
-  private static void tryInsecureValidation(@NonNull OkHttpClient client, @NonNull String host,
+  private static void tryInsecureValidation(@NonNull ServerPolicyApi serverPolicyApi,
                                             @NonNull Callback callback) {
-    Request request;
-    try {
-      request = createRequest("http://", host);
-    } catch (Exception e) {
-      callback.isNotValid();
-      return;
-    }
-
-    validate(request, client, callback, false);
+    serverPolicyApi.getApiInfoInsecurely(getServerPolicyApiCallback(false, callback));
   }
 
-  private static Request createRequest(@NonNull String protocol, @NonNull String host) {
-    return new Request.Builder()
-        .url(protocol + host + API_INFO_PATH)
-        .get()
-        .build();
-  }
-
-  private static void validate(@NonNull Request request, @NonNull OkHttpClient client,
-                               @NonNull Callback callback, boolean usesSecureConnection) {
-    client.newCall(request).enqueue(new okhttp3.Callback() {
+  private static ServerPolicyApi.Callback getServerPolicyApiCallback(boolean isSecureConnection,
+                                                                     @NonNull Callback callback) {
+    return new ServerPolicyApi.Callback() {
       @Override
-      public void onFailure(Call call, IOException exception) {
-        callback.onNetworkError();
-      }
-
-      @Override
-      public void onResponse(Call call, Response response) throws IOException {
-        if (!response.isSuccessful() || !isValid(response.body())) {
-          callback.isNotValid();
+      public void onSuccess(JSONObject jsonObject) {
+        if (isValid(jsonObject)) {
+          callback.isValid(isSecureConnection);
           return;
         }
-
-        callback.isValid(usesSecureConnection);
+        callback.isNotValid();
       }
-    });
+
+      @Override
+      public void onResponseError() {
+        callback.isNotValid();
+      }
+
+      @Override
+      public void onNetworkError() {
+        callback.onNetworkError();
+      }
+    };
   }
 
   public interface Callback {
