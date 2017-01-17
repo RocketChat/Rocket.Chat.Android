@@ -165,7 +165,7 @@
             android:background="?attr/colorPrimaryDark"
             android:elevation="2dp"
             android:visibility="gone"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -237,12 +237,18 @@
                         android:textAppearance="?attr/textAppearanceListItemSmall" />
             </LinearLayout>
 
+            <chat.rocket.android.widget.DividerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
             <TextView
                     android:id="@+id/version_info"
                     android:layout_width="wrap_content"
-                    android:layout_height="?attr/listPreferredItemHeight"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textAppearance="?attr/textAppearanceListItemSmall" />
+                    android:layout_margin="@dimen/margin_8"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    tools:text="Version: 1.0" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>
