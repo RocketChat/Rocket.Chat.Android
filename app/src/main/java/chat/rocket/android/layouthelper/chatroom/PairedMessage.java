@@ -44,4 +44,30 @@ public class PairedMessage {
         ", nextSibling=" + nextSibling +
         '}';
   }
+
+  @SuppressWarnings({"PMD.ShortVariable"})
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    PairedMessage that = (PairedMessage) o;
+
+    if (!target.equals(that.target)) {
+      return false;
+    }
+    return nextSibling != null ? nextSibling.equals(that.nextSibling) : that.nextSibling == null;
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = target.hashCode();
+    result = 31 * result + (nextSibling != null ? nextSibling.hashCode() : 0);
+    return result;
+  }
 }
