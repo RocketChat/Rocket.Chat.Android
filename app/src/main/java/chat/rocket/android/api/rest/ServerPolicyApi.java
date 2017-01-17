@@ -1,19 +1,15 @@
 package chat.rocket.android.api.rest;
 
-import android.support.annotation.NonNull;
 import org.json.JSONObject;
+
+import rx.Observable;
 
 public interface ServerPolicyApi {
 
-  void getApiInfoSecurely(@NonNull Callback callback);
+  String SECURE_PROTOCOL = "https://";
+  String INSECURE_PROTOCOL = "http://";
 
-  void getApiInfoInsecurely(@NonNull Callback callback);
+  Observable<Response<JSONObject>> getApiInfoSecurely();
 
-  interface Callback {
-    void onSuccess(JSONObject jsonObject);
-
-    void onResponseError();
-
-    void onNetworkError();
-  }
+  Observable<Response<JSONObject>> getApiInfoInsecurely();
 }

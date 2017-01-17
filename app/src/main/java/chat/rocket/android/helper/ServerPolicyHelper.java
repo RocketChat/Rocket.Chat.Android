@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.json.JSONObject;
 
-import chat.rocket.android.api.rest.ServerPolicyApi;
+import rx.Observable;
 
 public class ServerPolicyHelper {
 
@@ -19,29 +19,12 @@ public class ServerPolicyHelper {
     return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
   }
 
-  public static void isApiVersionValid(@NonNull ServerPolicyApi serverPolicyApi,
-                                       @NonNull Callback callback) {
-    ServerPolicyApiValidationHelper.getApiVersion(serverPolicyApi,
-        new ServerPolicyApiValidationHelper.Callback() {
-          @Override
-          public void onSuccess(boolean usesSecureConnection, JSONObject apiInfo) {
-            if (isValid(apiInfo)) {
-              callback.isValid(usesSecureConnection);
-              return;
-            }
-            callback.isNotValid();
-          }
-
-          @Override
-          public void onResponseError() {
-            callback.isNotValid();
-          }
-
-          @Override
-          public void onNetworkError() {
-            callback.onNetworkError();
-          }
-        });
+  public static Observable<ServerValidation> isApiVersionValid(
+      @NonNull ServerPolicyApiValidationHelper serverPolicyApiValidationHelper) {
+    return serverPolicyApiValidationHelper.getApiVersion()
+        .map(serverInfo ->
+            new ServerValidation(isValid(serverInfo.getApiInfo()),
+                serverInfo.usesSecureConnection()));
   }
 
   @NonNull
@@ -89,11 +72,39 @@ public class ServerPolicyHelper {
     return versionParts.length >= 3 && Integer.parseInt(versionParts[1]) >= 49;
   }
 
-  public interface Callback {
-    void isValid(boolean usesSecureConnection);
+  public static class ServerInfo {
+    private final boolean secureConnection;
+    private final JSONObject apiInfo;
 
-    void isNotValid();
+    public ServerInfo(boolean secureConnection, JSONObject apiInfo) {
+      this.secureConnection = secureConnection;
+      this.apiInfo = apiInfo;
+    }
 
-    void onNetworkError();
+    public boolean usesSecureConnection() {
+      return secureConnection;
+    }
+
+    public JSONObject getApiInfo() {
+      return apiInfo;
+    }
+  }
+
+  public static class ServerValidation {
+    private final boolean valid;
+    private final boolean secureConnection;
+
+    public ServerValidation(boolean valid, boolean secureConnection) {
+      this.valid = valid;
+      this.secureConnection = secureConnection;
+    }
+
+    public boolean isValid() {
+      return valid;
+    }
+
+    public boolean usesSecureConnection() {
+      return secureConnection;
+    }
   }
 }

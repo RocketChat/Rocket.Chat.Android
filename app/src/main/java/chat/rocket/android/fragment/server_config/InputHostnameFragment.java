@@ -11,11 +11,14 @@ import chat.rocket.android.api.rest.DefaultServerPolicyApi;
 import chat.rocket.android.api.rest.ServerPolicyApi;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OkHttpHelper;
+import chat.rocket.android.helper.ServerPolicyApiValidationHelper;
 import chat.rocket.android.helper.ServerPolicyHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Input server host.
@@ -51,28 +54,26 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   private void handleConnect() {
     final String hostname = ServerPolicyHelper.enforceHostname(getHostname());
 
-    ServerPolicyApi serverPolicyApi =
+    final ServerPolicyApi serverPolicyApi =
         new DefaultServerPolicyApi(OkHttpHelper.getClientForUploadFile(), hostname);
 
-    ServerPolicyHelper.isApiVersionValid(serverPolicyApi,
-        new ServerPolicyHelper.Callback() {
-          @Override
-          public void isValid(boolean usesSecureConnection) {
-            getActivity().runOnUiThread(() -> onServerValid(hostname, usesSecureConnection));
-          }
+    final ServerPolicyApiValidationHelper validationHelper =
+        new ServerPolicyApiValidationHelper(serverPolicyApi);
 
-          @Override
-          public void isNotValid() {
-            getActivity().runOnUiThread(() ->
-                showError(getString(R.string.input_hostname_invalid_server_message)));
-          }
-
-          @Override
-          public void onNetworkError() {
-            getActivity().runOnUiThread(() ->
-                showError(getString(R.string.connection_error_try_later)));
-          }
-        });
+    ServerPolicyHelper.isApiVersionValid(validationHelper)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(
+            serverValidation -> {
+              if (serverValidation.isValid()) {
+                onServerValid(hostname, serverValidation.usesSecureConnection());
+              } else {
+                showError(getString(R.string.input_hostname_invalid_server_message));
+              }
+            },
+            throwable -> {
+              showError(getString(R.string.connection_error_try_later));
+            });
   }
 
   @Override
