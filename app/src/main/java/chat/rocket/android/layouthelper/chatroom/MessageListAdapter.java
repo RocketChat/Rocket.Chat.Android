@@ -158,7 +158,7 @@ public class MessageListAdapter
       PairedMessage oldMessage = oldList.get(oldItemPosition);
       PairedMessage newMessage = newList.get(newItemPosition);
 
-      return oldMessage.toString().equals(newMessage.toString());
+      return oldMessage.equals(newMessage);
     }
   }
 }
