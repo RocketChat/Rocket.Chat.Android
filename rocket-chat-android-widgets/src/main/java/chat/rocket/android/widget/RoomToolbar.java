@@ -157,11 +157,13 @@ public class RoomToolbar extends Toolbar {
         int iconRight = navButtonView.getRight();
         int iconBottom = navButtonView.getBottom();
 
-        int budgeLeft = iconLeft + (iconRight - iconLeft) * 5 / 8;
-        int budgeRight = iconLeft + (iconRight - iconLeft) * 7 / 8;
-        int budgeTop = iconTop + (iconBottom - iconTop) / 8;
-        int budgeBottom = iconTop + (iconBottom - iconTop) * 3 / 8;
-        badgeImageView.layout(budgeLeft, budgeTop, budgeRight, budgeBottom);
+        // put badge image at right-top side on the NavButtonView,
+        // with 1/8 margin and 1/4 scale.
+        int badgeLeft = iconLeft + (iconRight - iconLeft) * 5 / 8;
+        int badgeRight = iconLeft + (iconRight - iconLeft) * 7 / 8;
+        int badgeTop = iconTop + (iconBottom - iconTop) / 8;
+        int badgeBottom = iconTop + (iconBottom - iconTop) * 3 / 8;
+        badgeImageView.layout(badgeLeft, badgeTop, badgeRight, badgeBottom);
       } catch (Exception exception) {
         return;
       }
