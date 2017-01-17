@@ -8,6 +8,7 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.util.List;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -17,11 +18,14 @@ import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
+import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.widget.RoomToolbar;
 import hugo.weaving.DebugLog;
 
 /**
@@ -30,6 +34,7 @@ import hugo.weaving.DebugLog;
 public class MainActivity extends AbstractAuthedActivity {
 
   private RealmObjectObserver<Session> sessionObserver;
+  private RealmListObserver<RoomSubscription> unreadRoomSubscriptionObserver;
   private boolean isForeground;
   private StatusTicker statusTicker;
 
@@ -150,6 +155,7 @@ public class MainActivity extends AbstractAuthedActivity {
   protected void onServerConfigIdUpdated() {
     super.onServerConfigIdUpdated();
     updateSessionObserver();
+    updateUnreadRoomSubscriptionObserver();
     updateSidebarMainFragment();
   }
 
@@ -207,6 +213,44 @@ public class MainActivity extends AbstractAuthedActivity {
     }
   }
 
+  private void updateUnreadRoomSubscriptionObserver() {
+    if (unreadRoomSubscriptionObserver != null) {
+      unreadRoomSubscriptionObserver.unsub();
+      unreadRoomSubscriptionObserver = null;
+    }
+
+    if (serverConfigId == null) {
+      return;
+    }
+
+    RealmHelper realmHelper = RealmStore.get(serverConfigId);
+    if (realmHelper == null) {
+      return;
+    }
+
+    unreadRoomSubscriptionObserver = realmHelper
+        .createListObserver(realm ->
+            realm.where(RoomSubscription.class)
+                .equalTo(RoomSubscription.ALERT, true)
+                .equalTo(RoomSubscription.OPEN, true)
+                .findAll())
+        .setOnUpdateListener(this::updateRoomToolbarUnreadCount);
+    unreadRoomSubscriptionObserver.sub();
+  }
+
+  private void updateRoomToolbarUnreadCount(List<RoomSubscription> unreadRooms) {
+    RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
+    if (toolbar != null) {
+      //ref: Rocket.Chat:client/startup/unread.js
+      final int numUnreadChannels = unreadRooms.size();
+      int numMentionsSum = 0;
+      for (RoomSubscription room : unreadRooms) {
+        numMentionsSum += room.getUnread();
+      }
+      toolbar.setUnreadBudge(numUnreadChannels, numMentionsSum);
+    }
+  }
+
   private void updateSidebarMainFragment() {
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(serverConfigId))
@@ -230,6 +274,10 @@ public class MainActivity extends AbstractAuthedActivity {
     if (sessionObserver != null) {
       sessionObserver.unsub();
       sessionObserver = null;
+    }
+    if (unreadRoomSubscriptionObserver != null) {
+      unreadRoomSubscriptionObserver.unsub();
+      unreadRoomSubscriptionObserver = null;
     }
     super.onDestroy();
   }
