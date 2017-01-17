@@ -148,4 +148,62 @@ public class Message extends RealmObject {
         ", urls='" + urls + '\'' +
         '}';
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Message message = (Message) o;
+
+    if (syncstate != message.syncstate) {
+      return false;
+    }
+    if (ts != message.ts) {
+      return false;
+    }
+    if (groupable != message.groupable) {
+      return false;
+    }
+    if (_id != null ? !_id.equals(message._id) : message._id != null) {
+      return false;
+    }
+    if (t != null ? !t.equals(message.t) : message.t != null) {
+      return false;
+    }
+    if (rid != null ? !rid.equals(message.rid) : message.rid != null) {
+      return false;
+    }
+    if (msg != null ? !msg.equals(message.msg) : message.msg != null) {
+      return false;
+    }
+    if (u != null ? !u.equals(message.u) : message.u != null) {
+      return false;
+    }
+    if (attachments != null ? !attachments.equals(message.attachments)
+        : message.attachments != null) {
+      return false;
+    }
+    return urls != null ? urls.equals(message.urls) : message.urls == null;
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = _id != null ? _id.hashCode() : 0;
+    result = 31 * result + (t != null ? t.hashCode() : 0);
+    result = 31 * result + (rid != null ? rid.hashCode() : 0);
+    result = 31 * result + syncstate;
+    result = 31 * result + (int) (ts ^ (ts >>> 32));
+    result = 31 * result + (msg != null ? msg.hashCode() : 0);
+    result = 31 * result + (u != null ? u.hashCode() : 0);
+    result = 31 * result + (groupable ? 1 : 0);
+    result = 31 * result + (attachments != null ? attachments.hashCode() : 0);
+    result = 31 * result + (urls != null ? urls.hashCode() : 0);
+    return result;
+  }
 }
