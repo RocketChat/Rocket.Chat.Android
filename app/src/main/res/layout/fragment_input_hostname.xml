@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimaryDark">
@@ -49,4 +50,14 @@
                 app:fabSize="mini"
                 app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />
     </LinearLayout>
+
+    <TextView
+            android:id="@+id/version_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_margin="@dimen/margin_8"
+            android:textColor="@android:color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            tools:text="Version: 1.0" />
 </FrameLayout>

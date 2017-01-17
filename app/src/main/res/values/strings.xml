@@ -45,4 +45,6 @@
 
     <string name="input_hostname_invalid_server_message">Invalid server version</string>
     <string name="connection_error_try_later">There\'s a connection error. Please try later.</string>
+
+    <string name="version_info_text">Version: %s</string>
 </resources>

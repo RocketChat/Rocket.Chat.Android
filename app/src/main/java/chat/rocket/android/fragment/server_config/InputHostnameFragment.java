@@ -4,6 +4,7 @@ import android.support.design.widget.Snackbar;
 import android.widget.TextView;
 import org.json.JSONObject;
 
+import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.rest.DefaultServerPolicyApi;
@@ -35,9 +36,16 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
 
   @Override
   protected void onSetupView() {
+    setupVersionInfo();
+
     rootView.findViewById(R.id.btn_connect).setOnClickListener(view -> handleConnect());
 
     serverConfigObserver.sub();
+  }
+
+  private void setupVersionInfo() {
+    TextView versionInfoView = (TextView) rootView.findViewById(R.id.version_info);
+    versionInfoView.setText(getString(R.string.version_info_text, BuildConfig.VERSION_NAME));
   }
 
   private void handleConnect() {
