@@ -240,7 +240,7 @@
             <TextView
                     android:id="@+id/version_info"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="?attr/listPreferredItemHeight"
                     android:layout_gravity="center_horizontal"
                     android:textAppearance="?attr/textAppearanceListItemSmall" />
         </LinearLayout>
