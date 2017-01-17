@@ -121,7 +121,7 @@ dependencies {
     compile 'com.trello:rxlifecycle-android:1.0'
     compile 'com.trello:rxlifecycle-components:1.0'
 
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile rootProject.ext.textDrawable
 
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'
