@@ -4,17 +4,11 @@ import android.support.annotation.NonNull;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import rx.Observable;
 
 public class ServerPolicyHelper {
 
   private static final String DEFAULT_HOST = ".rocket.chat";
-  private static final String API_INFO_PATH = "/api/info";
   private static final String VERSION_PROPERTY = "version";
 
   public static String enforceHostname(String hostname) {
@@ -25,36 +19,12 @@ public class ServerPolicyHelper {
     return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
   }
 
-  public static void isApiVersionValid(@NonNull OkHttpClient client, @NonNull String host,
-                                       @NonNull Callback callback) {
-    Request request;
-    try {
-      request = new Request.Builder()
-          .url("https://" + host + API_INFO_PATH)
-          .get()
-          .build();
-    } catch (Exception e) {
-      callback.isNotValid();
-      return;
-    }
-
-    client.newCall(request).enqueue(new okhttp3.Callback() {
-      @Override
-      public void onFailure(Call call, IOException exception) {
-        // some connection error
-        callback.isNotValid();
-      }
-
-      @Override
-      public void onResponse(Call call, Response response) throws IOException {
-        if (!response.isSuccessful() || !isValid(response.body())) {
-          callback.isNotValid();
-          return;
-        }
-
-        callback.isValid();
-      }
-    });
+  public static Observable<ServerValidation> isApiVersionValid(
+      @NonNull ServerPolicyApiValidationHelper serverPolicyApiValidationHelper) {
+    return serverPolicyApiValidationHelper.getApiVersion()
+        .map(serverInfo ->
+            new ServerValidation(isValid(serverInfo.getApiInfo()),
+                serverInfo.usesSecureConnection()));
   }
 
   @NonNull
@@ -80,14 +50,12 @@ public class ServerPolicyHelper {
     return hostname.replaceAll("/+$", "");
   }
 
-  private static boolean isValid(ResponseBody body) {
-    if (body == null || body.contentLength() == 0) {
+  private static boolean isValid(JSONObject jsonObject) {
+    if (jsonObject == null) {
       return false;
     }
 
     try {
-      final JSONObject jsonObject = new JSONObject(body.string());
-
       return jsonObject.has(VERSION_PROPERTY)
           && isVersionValid(jsonObject.getString(VERSION_PROPERTY));
     } catch (Exception e) {
@@ -104,9 +72,39 @@ public class ServerPolicyHelper {
     return versionParts.length >= 3 && Integer.parseInt(versionParts[1]) >= 49;
   }
 
-  public interface Callback {
-    void isValid();
+  public static class ServerInfo {
+    private final boolean secureConnection;
+    private final JSONObject apiInfo;
 
-    void isNotValid();
+    public ServerInfo(boolean secureConnection, JSONObject apiInfo) {
+      this.secureConnection = secureConnection;
+      this.apiInfo = apiInfo;
+    }
+
+    public boolean usesSecureConnection() {
+      return secureConnection;
+    }
+
+    public JSONObject getApiInfo() {
+      return apiInfo;
+    }
+  }
+
+  public static class ServerValidation {
+    private final boolean valid;
+    private final boolean secureConnection;
+
+    public ServerValidation(boolean valid, boolean secureConnection) {
+      this.valid = valid;
+      this.secureConnection = secureConnection;
+    }
+
+    public boolean isValid() {
+      return valid;
+    }
+
+    public boolean usesSecureConnection() {
+      return secureConnection;
+    }
   }
 }

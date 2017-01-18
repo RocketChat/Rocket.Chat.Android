@@ -38,8 +38,10 @@ public class DDPClientWrapper {
   /**
    * Connect to WebSocket server with DDP client.
    */
-  public Task<DDPClientCallback.Connect> connect(@Nullable String session) {
-    return ddpClient.connect("wss://" + hostname + "/websocket", session);
+  public Task<DDPClientCallback.Connect> connect(@Nullable String session,
+                                                 boolean usesSecureConnection) {
+    final String protocol = usesSecureConnection ? "wss://" : "ws://";
+    return ddpClient.connect(protocol + hostname + "/websocket", session);
   }
 
   /**

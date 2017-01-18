@@ -19,6 +19,7 @@ public class ServerConfig extends RealmObject {
   public static final String HOSTNAME = "hostname";
   public static final String STATE = "state";
   public static final String SESSION = "session";
+  public static final String SECURE_CONNECTION = "secureConnection";
   public static final String ERROR = "error";
 
   public static final int STATE_READY = 0;
@@ -30,6 +31,7 @@ public class ServerConfig extends RealmObject {
   private String hostname;
   private int state;
   private String session;
+  private boolean secureConnection;
   private String error;
 
   /**
@@ -91,6 +93,14 @@ public class ServerConfig extends RealmObject {
 
   public void setSession(String session) {
     this.session = session;
+  }
+
+  public boolean usesSecureConnection() {
+    return secureConnection;
+  }
+
+  public void setSecureConnection(boolean usesSecureConnection) {
+    this.secureConnection = usesSecureConnection;
   }
 
   public String getError() {
