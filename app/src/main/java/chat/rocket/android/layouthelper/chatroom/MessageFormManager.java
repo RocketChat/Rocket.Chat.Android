@@ -1,8 +1,6 @@
 package chat.rocket.android.layouthelper.chatroom;
 
-import java.util.HashMap;
 import bolts.Task;
-import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
 import chat.rocket.android.widget.message.MessageFormLayout;
 
 /**
@@ -11,40 +9,20 @@ import chat.rocket.android.widget.message.MessageFormLayout;
 public class MessageFormManager {
   private final MessageFormLayout messageFormLayout;
   private SendMessageCallback sendMessageCallback;
-  private ExtraActionPickerCallback extraActionPickerCallback;
-  private final HashMap<Integer, AbstractExtraActionItem> extraActionItemMap;
 
-  public MessageFormManager(MessageFormLayout messageFormLayout) {
+  public MessageFormManager(MessageFormLayout messageFormLayout,
+                            MessageFormLayout.ShowExtraActionSelectionCallback callback) {
     this.messageFormLayout = messageFormLayout;
-    this.extraActionItemMap = new HashMap<>();
-    init();
+    init(callback);
   }
 
-  private void init() {
-    messageFormLayout.setOnActionListener(new MessageFormLayout.ActionListener() {
-      @Override
-      public void onSubmitText(String message) {
-        sendMessage(message);
-      }
-
-      @Override
-      public void onExtraActionSelected(int itemId) {
-        if (extraActionItemMap.containsKey(itemId)) {
-          AbstractExtraActionItem item = extraActionItemMap.get(itemId);
-          if (extraActionPickerCallback != null) {
-            extraActionPickerCallback.onExtraActionSelected(item);
-          }
-        }
-      }
-    });
+  private void init(MessageFormLayout.ShowExtraActionSelectionCallback callback) {
+    messageFormLayout.setShowExtraActionSelectionCallback(callback);
+    messageFormLayout.setTextListener(this::sendMessage);
   }
 
   public void setSendMessageCallback(SendMessageCallback sendMessageCallback) {
     this.sendMessageCallback = sendMessageCallback;
-  }
-
-  public void setExtraActionPickerCallback(ExtraActionPickerCallback extraActionPickerCallback) {
-    this.extraActionPickerCallback = extraActionPickerCallback;
   }
 
   public void clearComposingText() {
@@ -66,16 +44,7 @@ public class MessageFormManager {
     });
   }
 
-  public void registerExtraActionItem(AbstractExtraActionItem actionItem) {
-    messageFormLayout.addExtraActionItem(actionItem);
-    extraActionItemMap.put(actionItem.getItemId(), actionItem);
-  }
-
   public interface SendMessageCallback {
     Task<Void> onSubmitText(String messageText);
-  }
-
-  public interface ExtraActionPickerCallback {
-    void onExtraActionSelected(AbstractExtraActionItem item);
   }
 }

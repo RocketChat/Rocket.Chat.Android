@@ -19,6 +19,8 @@ import io.realm.Sort;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -35,6 +37,7 @@ import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
 import chat.rocket.android.layouthelper.chatroom.AbstractNewMessageIndicatorManager;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
+import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
 import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
 import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
@@ -53,6 +56,7 @@ import chat.rocket.android.realm_helper.RealmModelListAdapter;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
+import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -78,6 +82,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   private AbstractNewMessageIndicatorManager newMessageIndicatorManager;
   private Snackbar unreadIndicator;
   private boolean previousUnreadMessageExists;
+
+  private List<AbstractExtraActionItem> extraActionItems;
 
   public RoomFragment() {
   }
@@ -295,9 +301,15 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupMessageComposer() {
+    extraActionItems = new ArrayList<>(3); // fixed number as of now
+    extraActionItems.add(new ImageUploadActionItem());
+    extraActionItems.add(new AudioUploadActionItem());
+    extraActionItems.add(new VideoUploadActionItem());
+
     final MessageFormLayout messageFormLayout =
         (MessageFormLayout) rootView.findViewById(R.id.message_composer);
-    messageFormManager = new MessageFormManager(messageFormLayout);
+    messageFormManager =
+        new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
     messageFormManager.setSendMessageCallback(messageText ->
         realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
@@ -312,11 +324,6 @@ public class RoomFragment extends AbstractChatRoomFragment
               scrollToLatestMessage();
               return null;
             }));
-    messageFormManager.registerExtraActionItem(new ImageUploadActionItem());
-    messageFormManager.registerExtraActionItem(new AudioUploadActionItem());
-    messageFormManager.registerExtraActionItem(new VideoUploadActionItem());
-    messageFormManager.setExtraActionPickerCallback(item ->
-        RoomFragmentPermissionsDispatcher.onExtraActionSelectedWithCheck(RoomFragment.this, item));
   }
 
   @Override
@@ -440,6 +447,22 @@ public class RoomFragment extends AbstractChatRoomFragment
     procedureObserver.unsub();
     roomObserver.unsub();
     super.onPause();
+  }
+
+  private void showExtraActionSelectionDialog() {
+    ExtraActionPickerDialogFragment
+        .create(new ArrayList<>(extraActionItems), this::onExtraItemSelected)
+        .show(getFragmentManager(), "ExtraActionPickerDialogFragment");
+  }
+
+  private void onExtraItemSelected(int itemId) {
+    for (AbstractExtraActionItem extraActionItem : extraActionItems) {
+      if (extraActionItem.getItemId() == itemId) {
+        RoomFragmentPermissionsDispatcher
+            .onExtraActionSelectedWithCheck(RoomFragment.this, extraActionItem);
+        return;
+      }
+    }
   }
 
   @Override

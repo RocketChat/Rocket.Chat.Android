@@ -3,7 +3,6 @@ package chat.rocket.android.widget.message;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -16,20 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
-import bolts.Continuation;
-import bolts.Task;
 import chat.rocket.android.widget.R;
-import chat.rocket.android.widget.internal.ExtraActionPickerDialog;
 
 public class MessageFormLayout extends LinearLayout {
 
-  protected ActionListener actionListener;
   protected ViewGroup composer;
 
   private View btnExtra;
   private View btnSubmit;
-  private List<MessageExtraActionItemPresenter> extraActionItems;
+
+  private ShowExtraActionSelectionCallback showExtraActionSelectionCallback;
+  private TextListener textListener;
 
   public MessageFormLayout(Context context) {
     super(context);
@@ -52,12 +48,7 @@ public class MessageFormLayout extends LinearLayout {
     init();
   }
 
-  public final void setOnActionListener(@Nullable ActionListener listener) {
-    actionListener = listener;
-  }
-
   private void init() {
-    extraActionItems = new ArrayList<>();
     composer = (ViewGroup) LayoutInflater.from(getContext())
         .inflate(R.layout.message_composer, this, false);
 
@@ -76,8 +67,8 @@ public class MessageFormLayout extends LinearLayout {
       @Override
       public void onClick(View view) {
         String messageText = getText();
-        if (messageText.length() > 0 && actionListener != null) {
-          actionListener.onSubmitText(messageText);
+        if (messageText.length() > 0 && textListener != null) {
+          textListener.onSubmitText(messageText);
         }
       }
     });
@@ -110,17 +101,18 @@ public class MessageFormLayout extends LinearLayout {
     addView(composer);
   }
 
-  public void addExtraActionItem(MessageExtraActionItemPresenter itemPresenter) {
-    boolean found = false;
-    for (MessageExtraActionItemPresenter item : extraActionItems) {
-      if (item.getItemId() == itemPresenter.getItemId()) {
-        found = true;
-        break;
-      }
-    }
+  public void setShowExtraActionSelectionCallback(
+      ShowExtraActionSelectionCallback showExtraActionSelectionCallback) {
+    this.showExtraActionSelectionCallback = showExtraActionSelectionCallback;
+  }
 
-    if (!found) {
-      extraActionItems.add(itemPresenter);
+  public void setTextListener(TextListener textListener) {
+    this.textListener = textListener;
+  }
+
+  private void showExtraActionSelectionDialog() {
+    if (showExtraActionSelectionCallback != null) {
+      showExtraActionSelectionCallback.show();
     }
   }
 
@@ -159,23 +151,11 @@ public class MessageFormLayout extends LinearLayout {
     });
   }
 
-  private void showExtraActionSelectionDialog() {
-    ExtraActionPickerDialog.showAsTask(getContext(), extraActionItems)
-        .onSuccess(new Continuation<Integer, Object>() {
-          @Override
-          public Object then(Task<Integer> task) throws Exception {
-            int which = task.getResult();
-            if (actionListener != null) {
-              actionListener.onExtraActionSelected(which);
-            }
-            return null;
-          }
-        });
+  public interface ShowExtraActionSelectionCallback {
+    void show();
   }
 
-  public interface ActionListener {
+  public interface TextListener {
     void onSubmitText(String message);
-
-    void onExtraActionSelected(int itemId);
   }
 }
