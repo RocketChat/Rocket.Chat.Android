@@ -1,9 +1,13 @@
 package chat.rocket.android.helper;
 
+import android.os.Build;
+import android.text.format.DateFormat;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 import chat.rocket.android.log.RCLog;
 
@@ -11,13 +15,34 @@ import chat.rocket.android.log.RCLog;
  * Utility class for converting epoch ms and date-time string.
  */
 public class DateTime {
-  private static final String TAG = DateTime.class.getName();
+  private static final String TAG = "DateTime";
 
-  private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
-  private static final SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("MM/dd");
-  private static final SimpleDateFormat DAY_TIME_FORMAT = new SimpleDateFormat("MM/dd HH:mm");
-  private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+  private static final SimpleDateFormat TIME_FORMAT;
+  private static final SimpleDateFormat DATE_FORMAT;
+  private static final SimpleDateFormat DAY_FORMAT;
+  private static final SimpleDateFormat DAY_TIME_FORMAT;
+  private static final SimpleDateFormat DATE_TIME_FORMAT;
+
+  static {
+    Locale locale = Locale.getDefault();
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      TIME_FORMAT = new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "HHmm"), locale);
+      DATE_FORMAT =
+          new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "yyyyMMdd"), locale);
+      DAY_FORMAT = new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "MMdd"), locale);
+      DAY_TIME_FORMAT =
+          new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "MMddHHmm"), locale);
+      DATE_TIME_FORMAT =
+          new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "yyyyMMddHHmm"), locale);
+    } else {
+      TIME_FORMAT = new SimpleDateFormat("HH:mm", locale);
+      DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd", locale);
+      DAY_FORMAT = new SimpleDateFormat("MM/dd", locale);
+      DAY_TIME_FORMAT = new SimpleDateFormat("MM/dd HH:mm", locale);
+      DATE_TIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm", locale);
+    }
+  }
 
   /**
    * convert datetime ms to String.
