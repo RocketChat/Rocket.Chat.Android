@@ -17,6 +17,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -28,6 +29,8 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
       .createObjectObserver(realm ->
           realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId))
       .setOnUpdateListener(this::onRenderServerConfig);
+
+  Subscription serverPolicySubscription;
 
   public InputHostnameFragment() {
   }
@@ -60,7 +63,11 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
     final ServerPolicyApiValidationHelper validationHelper =
         new ServerPolicyApiValidationHelper(serverPolicyApi);
 
-    ServerPolicyHelper.isApiVersionValid(validationHelper)
+    if (serverPolicySubscription != null) {
+      serverPolicySubscription.unsubscribe();
+    }
+
+    serverPolicySubscription = ServerPolicyHelper.isApiVersionValid(validationHelper)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
@@ -79,6 +86,9 @@ public class InputHostnameFragment extends AbstractServerConfigFragment {
   @Override
   public void onDestroyView() {
     serverConfigObserver.unsub();
+    if (serverPolicySubscription != null) {
+      serverPolicySubscription.unsubscribe();
+    }
     super.onDestroyView();
   }
 
