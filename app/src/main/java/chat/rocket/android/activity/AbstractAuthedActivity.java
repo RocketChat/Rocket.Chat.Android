@@ -10,6 +10,7 @@ import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.push.PushConstants;
+import chat.rocket.android.push.PushNotificationHandler;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.RocketChatService;
@@ -63,6 +64,11 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       if (intent.hasExtra(PushConstants.ROOM_ID)) {
         editor.putString(RocketChatCache.KEY_SELECTED_ROOM_ID,
             intent.getStringExtra(PushConstants.ROOM_ID));
+      }
+
+      if (intent.hasExtra(PushConstants.NOT_ID)) {
+        PushNotificationHandler
+            .cleanUpNotificationStack(intent.getIntExtra(PushConstants.NOT_ID, 0));
       }
       editor.apply();
     }

@@ -42,7 +42,11 @@ public class PushNotificationHandler implements PushConstants {
 
   private Random random = new Random();
 
-  public void setNotification(int notId, String message) {
+  public static synchronized void cleanUpNotificationStack(int notId) {
+    messageMap.remove(notId);
+  }
+
+  private synchronized void setNotification(int notId, String message) {
     ArrayList<String> messageList = messageMap.get(notId);
     if (messageList == null) {
       messageList = new ArrayList<>();
@@ -54,6 +58,10 @@ public class PushNotificationHandler implements PushConstants {
     } else {
       messageList.add(message);
     }
+  }
+
+  private synchronized ArrayList<String> getMessageList(int notId) {
+    return messageMap.get(notId);
   }
 
   public void showNotificationIfPossible(Context context, PushInteractor pushInteractor,
@@ -369,7 +377,7 @@ public class PushNotificationHandler implements PushConstants {
 
       mBuilder.setContentText(fromHtml(message));
 
-      ArrayList<String> messageList = messageMap.get(notId);
+      ArrayList<String> messageList = getMessageList(notId);
       Integer sizeList = messageList.size();
       if (sizeList > 1) {
         String sizeListMessage = sizeList.toString();
