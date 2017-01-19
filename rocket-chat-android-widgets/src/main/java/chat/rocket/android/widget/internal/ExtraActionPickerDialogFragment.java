@@ -2,6 +2,7 @@ package chat.rocket.android.widget.internal;
 
 import android.app.Dialog;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
@@ -12,23 +13,17 @@ import chat.rocket.android.widget.message.MessageExtraActionItemPresenter;
 public class ExtraActionPickerDialogFragment extends BottomSheetDialogFragment {
 
   private List<MessageExtraActionItemPresenter> actionItems;
-  private Callback callback;
 
   public static ExtraActionPickerDialogFragment create(
-      List<MessageExtraActionItemPresenter> actionItems, Callback callback) {
+      List<MessageExtraActionItemPresenter> actionItems) {
     ExtraActionPickerDialogFragment fragment = new ExtraActionPickerDialogFragment();
     fragment.setActionItems(actionItems);
-    fragment.setCallback(callback);
 
     return fragment;
   }
 
   public void setActionItems(List<MessageExtraActionItemPresenter> actionItems) {
     this.actionItems = actionItems;
-  }
-
-  public void setCallback(Callback callback) {
-    this.callback = callback;
   }
 
   @Override
@@ -51,8 +46,9 @@ public class ExtraActionPickerDialogFragment extends BottomSheetDialogFragment {
   }
 
   private void callbackOnItemSelected(int itemId) {
-    if (callback != null) {
-      callback.onItemSelected(itemId);
+    final Fragment fragment = getTargetFragment();
+    if (fragment instanceof Callback) {
+      ((Callback) fragment).onItemSelected(itemId);
     }
   }
 

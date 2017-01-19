@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -66,7 +67,10 @@ import permissions.dispatcher.RuntimePermissions;
  */
 @RuntimePermissions
 public class RoomFragment extends AbstractChatRoomFragment
-    implements OnBackPressListener, RealmModelListAdapter.OnItemClickListener<PairedMessage> {
+    implements OnBackPressListener, ExtraActionPickerDialogFragment.Callback,
+    RealmModelListAdapter.OnItemClickListener<PairedMessage> {
+
+  private static final int DIALOG_ID = 1;
 
   private String serverConfigId;
   private RealmHelper realmHelper;
@@ -199,6 +203,14 @@ public class RoomFragment extends AbstractChatRoomFragment
 
     setupSideMenu();
     setupMessageComposer();
+    setupMessageActions();
+  }
+
+  private void setupMessageActions() {
+    extraActionItems = new ArrayList<>(3); // fixed number as of now
+    extraActionItems.add(new ImageUploadActionItem());
+    extraActionItems.add(new AudioUploadActionItem());
+    extraActionItems.add(new VideoUploadActionItem());
   }
 
   private void scrollToLatestMessage() {
@@ -301,11 +313,6 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupMessageComposer() {
-    extraActionItems = new ArrayList<>(3); // fixed number as of now
-    extraActionItems.add(new ImageUploadActionItem());
-    extraActionItems.add(new AudioUploadActionItem());
-    extraActionItems.add(new VideoUploadActionItem());
-
     final MessageFormLayout messageFormLayout =
         (MessageFormLayout) rootView.findViewById(R.id.message_composer);
     messageFormManager =
@@ -343,7 +350,7 @@ public class RoomFragment extends AbstractChatRoomFragment
       FileUploadProgressDialogFragment.create(serverConfigId, roomId, uplId)
           .show(getFragmentManager(), FileUploadProgressDialogFragment.class.getSimpleName());
     } else {
-      //show error.
+      //onClick error.
     }
   }
 
@@ -450,12 +457,14 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void showExtraActionSelectionDialog() {
-    ExtraActionPickerDialogFragment
-        .create(new ArrayList<>(extraActionItems), this::onExtraItemSelected)
-        .show(getFragmentManager(), "ExtraActionPickerDialogFragment");
+    final DialogFragment fragment = ExtraActionPickerDialogFragment
+        .create(new ArrayList<>(extraActionItems));
+    fragment.setTargetFragment(this, DIALOG_ID);
+    fragment.show(getFragmentManager(), "ExtraActionPickerDialogFragment");
   }
 
-  private void onExtraItemSelected(int itemId) {
+  @Override
+  public void onItemSelected(int itemId) {
     for (AbstractExtraActionItem extraActionItem : extraActionItems) {
       if (extraActionItem.getItemId() == itemId) {
         RoomFragmentPermissionsDispatcher

@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import chat.rocket.android.widget.R;
 
 public class MessageFormLayout extends LinearLayout {
@@ -24,8 +23,8 @@ public class MessageFormLayout extends LinearLayout {
   private View btnExtra;
   private View btnSubmit;
 
-  private ShowExtraActionSelectionCallback showExtraActionSelectionCallback;
-  private TextListener textListener;
+  private ExtraActionSelectionClickListener extraActionSelectionClickListener;
+  private SubmitTextListener submitTextListener;
 
   public MessageFormLayout(Context context) {
     super(context);
@@ -57,7 +56,7 @@ public class MessageFormLayout extends LinearLayout {
     btnExtra.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
-        showExtraActionSelectionDialog();
+        onExtraActionSelectionClick();
       }
     });
 
@@ -67,8 +66,8 @@ public class MessageFormLayout extends LinearLayout {
       @Override
       public void onClick(View view) {
         String messageText = getText();
-        if (messageText.length() > 0 && textListener != null) {
-          textListener.onSubmitText(messageText);
+        if (messageText.length() > 0 && submitTextListener != null) {
+          submitTextListener.onSubmitText(messageText);
         }
       }
     });
@@ -101,18 +100,18 @@ public class MessageFormLayout extends LinearLayout {
     addView(composer);
   }
 
-  public void setShowExtraActionSelectionCallback(
-      ShowExtraActionSelectionCallback showExtraActionSelectionCallback) {
-    this.showExtraActionSelectionCallback = showExtraActionSelectionCallback;
+  public void setExtraActionSelectionClickListener(
+      ExtraActionSelectionClickListener extraActionSelectionClickListener) {
+    this.extraActionSelectionClickListener = extraActionSelectionClickListener;
   }
 
-  public void setTextListener(TextListener textListener) {
-    this.textListener = textListener;
+  public void setSubmitTextListener(SubmitTextListener submitTextListener) {
+    this.submitTextListener = submitTextListener;
   }
 
-  private void showExtraActionSelectionDialog() {
-    if (showExtraActionSelectionCallback != null) {
-      showExtraActionSelectionCallback.show();
+  private void onExtraActionSelectionClick() {
+    if (extraActionSelectionClickListener != null) {
+      extraActionSelectionClickListener.onClick();
     }
   }
 
@@ -151,11 +150,11 @@ public class MessageFormLayout extends LinearLayout {
     });
   }
 
-  public interface ShowExtraActionSelectionCallback {
-    void show();
+  public interface ExtraActionSelectionClickListener {
+    void onClick();
   }
 
-  public interface TextListener {
+  public interface SubmitTextListener {
     void onSubmitText(String message);
   }
 }

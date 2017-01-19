@@ -11,14 +11,14 @@ public class MessageFormManager {
   private SendMessageCallback sendMessageCallback;
 
   public MessageFormManager(MessageFormLayout messageFormLayout,
-                            MessageFormLayout.ShowExtraActionSelectionCallback callback) {
+                            MessageFormLayout.ExtraActionSelectionClickListener callback) {
     this.messageFormLayout = messageFormLayout;
     init(callback);
   }
 
-  private void init(MessageFormLayout.ShowExtraActionSelectionCallback callback) {
-    messageFormLayout.setShowExtraActionSelectionCallback(callback);
-    messageFormLayout.setTextListener(this::sendMessage);
+  private void init(MessageFormLayout.ExtraActionSelectionClickListener listener) {
+    messageFormLayout.setExtraActionSelectionClickListener(listener);
+    messageFormLayout.setSubmitTextListener(this::sendMessage);
   }
 
   public void setSendMessageCallback(SendMessageCallback sendMessageCallback) {

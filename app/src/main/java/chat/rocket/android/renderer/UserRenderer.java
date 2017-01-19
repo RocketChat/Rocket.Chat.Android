@@ -19,7 +19,7 @@ public class UserRenderer extends AbstractRenderer<User> {
   }
 
   /**
-   * show Avatar image.
+   * onClick Avatar image.
    */
   public UserRenderer avatarInto(ImageView imageView, String hostname) {
     if (!shouldHandle(imageView)) {
@@ -33,7 +33,7 @@ public class UserRenderer extends AbstractRenderer<User> {
   }
 
   /**
-   * show Username in textView.
+   * onClick Username in textView.
    */
   public UserRenderer usernameInto(TextView textView) {
     if (!shouldHandle(textView)) {
@@ -45,7 +45,7 @@ public class UserRenderer extends AbstractRenderer<User> {
   }
 
   /**
-   * show user's status color into imageView.
+   * onClick user's status color into imageView.
    */
   public UserRenderer statusColorInto(ImageView imageView) {
     if (!shouldHandle(imageView)) {

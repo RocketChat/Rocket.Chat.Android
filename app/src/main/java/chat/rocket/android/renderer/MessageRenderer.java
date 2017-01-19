@@ -27,7 +27,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   }
 
   /**
-   * show Avatar image.
+   * onClick Avatar image.
    */
   public MessageRenderer avatarInto(ImageView imageView, String hostname) {
     switch (object.getSyncState()) {
@@ -42,7 +42,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   }
 
   /**
-   * show Username in textView.
+   * onClick Username in textView.
    */
   public MessageRenderer usernameInto(TextView textView) {
     userRenderer.usernameInto(textView);
@@ -50,7 +50,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   }
 
   /**
-   * show timestamp in textView.
+   * onClick timestamp in textView.
    */
   public MessageRenderer timestampInto(TextView textView) {
     if (!shouldHandle(textView)) {
@@ -71,7 +71,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   }
 
   /**
-   * show body in RocketChatMessageLayout.
+   * onClick body in RocketChatMessageLayout.
    */
   public MessageRenderer bodyInto(RocketChatMessageLayout rocketChatMessageLayout) {
     if (!shouldHandle(rocketChatMessageLayout)) {
@@ -84,7 +84,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   }
 
   /**
-   * show urls in RocketChatMessageUrlsLayout.
+   * onClick urls in RocketChatMessageUrlsLayout.
    */
   public MessageRenderer urlsInto(RocketChatMessageUrlsLayout urlsLayout) {
     if (!shouldHandle(urlsLayout)) {
@@ -103,7 +103,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   }
 
   /**
-   * show urls in RocketChatMessageUrlsLayout.
+   * onClick urls in RocketChatMessageUrlsLayout.
    */
   public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout,
                                          String hostname, String userId, String token) {
