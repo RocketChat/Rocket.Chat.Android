@@ -350,7 +350,7 @@ public class RoomFragment extends AbstractChatRoomFragment
       FileUploadProgressDialogFragment.create(serverConfigId, roomId, uplId)
           .show(getFragmentManager(), FileUploadProgressDialogFragment.class.getSimpleName());
     } else {
-      //onClick error.
+      // show error.
     }
   }
 

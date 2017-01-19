@@ -23,7 +23,7 @@ import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.service.RocketChatService;
 
 /**
- * Dialog to onClick members in a room.
+ * Dialog to show members in a room.
  */
 public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
 
