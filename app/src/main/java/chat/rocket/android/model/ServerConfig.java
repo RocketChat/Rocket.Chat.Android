@@ -2,16 +2,11 @@ package chat.rocket.android.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import org.json.JSONObject;
-
-import bolts.Task;
-import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.realm_helper.RealmStore;
-import hugo.weaving.DebugLog;
 
 /**
  * Server configuration.
  */
+@Deprecated
 public class ServerConfig extends RealmObject {
 
   @SuppressWarnings({"PMD.ShortVariable"})
@@ -33,35 +28,6 @@ public class ServerConfig extends RealmObject {
   private String session;
   private boolean secureConnection;
   private String error;
-
-  /**
-   * Log the server connection is lost due to some exception.
-   */
-  @DebugLog
-  public static void logConnectionError(String serverConfigId, Exception exception) {
-    RealmStore.getDefault().executeTransaction(
-        realm -> realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put(ID, serverConfigId)
-            .put(STATE, STATE_CONNECTION_ERROR)
-            .put(ERROR, exception.getMessage())))
-        .continueWith(new LogcatIfError());
-  }
-
-  /**
-   * Update the state of the ServerConfig with serverConfigId.
-   */
-  public static Task<Void> updateState(final String serverConfigId, int state) {
-    return RealmStore.getDefault().executeTransaction(realm -> {
-      ServerConfig config =
-          realm.where(ServerConfig.class).equalTo(ID, serverConfigId).findFirst();
-      if (config == null || config.getState() != state) {
-        realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-            .put(ID, serverConfigId)
-            .put(STATE, state));
-      }
-      return null;
-    });
-  }
 
   public String getServerConfigId() {
     return serverConfigId;
