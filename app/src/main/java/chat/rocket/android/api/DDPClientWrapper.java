@@ -1,7 +1,10 @@
 package chat.rocket.android.api;
 
 import android.support.annotation.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
 
+import java.util.UUID;
 import bolts.Task;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.TextUtils;
@@ -9,11 +12,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.android_ddp.DDPSubscription;
-import java.util.UUID;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import rx.Observable;
 
 /**
@@ -82,10 +80,6 @@ public class DDPClientWrapper {
     return ddpClient.getSubscriptionCallback();
   }
 
-  private String generateId(String method) {
-    return method + "-" + UUID.randomUUID().toString().replace("-", "");
-  }
-
   /**
    * Execute raw RPC.
    */
@@ -116,5 +110,23 @@ public class DDPClientWrapper {
     } catch (JSONException exception) {
       return Task.forError(exception);
     }
+  }
+
+  /**
+   * check WebSocket connectivity with ping.
+   */
+  public Task<Void> ping() {
+    final String pingId = UUID.randomUUID().toString();
+    RCLog.d("ping[%s] >", pingId);
+    return ddpClient.ping(pingId)
+        .continueWithTask(task -> {
+          if (task.isFaulted()) {
+            RCLog.d("ping[%s] xxx failed xxx", pingId);
+            return Task.forError(task.getError());
+          } else {
+            RCLog.d("pong[%s] <");
+            return Task.forResult(null);
+          }
+        });
   }
 }

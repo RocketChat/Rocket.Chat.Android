@@ -8,15 +8,12 @@ import org.json.JSONObject;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
-import bolts.Continuation;
 import bolts.Task;
-import bolts.TaskCompletionSource;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
@@ -34,8 +31,9 @@ import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
-import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
+import rx.Completable;
+import rx.Single;
 
 /**
  * Thread for handling WebSocket connection.
@@ -58,50 +56,40 @@ public class RocketChatWebSocketThread extends HandlerThread {
       GcmPushRegistrationObserver.class
   };
   private final Context appContext;
-  private final String serverConfigId;
-  private final RealmHelper defaultRealm;
+  private final String hostname;
   private final RealmHelper serverConfigRealm;
+  private final ConnectivityManagerInternal connectivityManager;
   private final ArrayList<Registrable> listeners = new ArrayList<>();
   private DDPClientWrapper ddpClient;
   private boolean listenersRegistered;
 
-  private RocketChatWebSocketThread(Context appContext, String serverConfigId) {
-    super("RC_thread_" + serverConfigId);
+  private RocketChatWebSocketThread(Context appContext, String hostname) {
+    super("RC_thread_" + hostname);
     this.appContext = appContext;
-    this.serverConfigId = serverConfigId;
-    defaultRealm = RealmStore.getDefault();
-    serverConfigRealm = RealmStore.getOrCreate(serverConfigId);
+    this.hostname = hostname;
+    this.serverConfigRealm = RealmStore.getOrCreate(hostname);
+    this.connectivityManager = ConnectivityManager.getInstanceForInternal(appContext);
   }
 
   /**
    * create new Thread.
    */
   @DebugLog
-  public static Task<RocketChatWebSocketThread> getStarted(Context appContext,
-                                                           ServerConfig config) {
-    TaskCompletionSource<RocketChatWebSocketThread> task = new TaskCompletionSource<>();
-    new RocketChatWebSocketThread(appContext, config.getServerConfigId()) {
-      @Override
-      protected void onLooperPrepared() {
-        try {
-          super.onLooperPrepared();
-          task.setResult(this);
-        } catch (Exception exception) {
-          task.setError(exception);
+  public static Single<RocketChatWebSocketThread> getStarted(Context appContext, String hostname) {
+    return Single.<RocketChatWebSocketThread>fromEmitter(objectSingleEmitter -> {
+      new RocketChatWebSocketThread(appContext, hostname) {
+        @Override
+        protected void onLooperPrepared() {
+          try {
+            super.onLooperPrepared();
+            objectSingleEmitter.onSuccess(this);
+          } catch (Exception exception) {
+            objectSingleEmitter.onError(exception);
+          }
         }
-      }
-    }.start();
-    return task.getTask()
-        .onSuccessTask(_task ->
-            _task.getResult().connect().onSuccessTask(__task -> _task));
-  }
-
-  /**
-   * destroy the thread.
-   */
-  @DebugLog
-  public static void destroy(RocketChatWebSocketThread thread) {
-    thread.quit();
+      }.start();
+    }).flatMap(webSocket ->
+        webSocket.connect().andThen(Single.just(webSocket)));
   }
 
   @Override
@@ -123,102 +111,115 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }).continueWith(new LogcatIfError());
   }
 
-  @Override
-  public boolean quit() {
+  /**
+   * terminate WebSocket thread.
+   */
+  @DebugLog
+  public Completable terminate() {
     if (isAlive()) {
-      new Handler(getLooper()).post(() -> {
-        RCLog.d("thread %s: quit()", Thread.currentThread().getId());
-        unregisterListeners();
-        RocketChatWebSocketThread.super.quit();
+      return Completable.fromEmitter(completableEmitter -> {
+        new Handler(getLooper()).post(() -> {
+          RCLog.d("thread %s: terminated()", Thread.currentThread().getId());
+          unregisterListeners();
+          connectivityManager.notifyConnectionLost(hostname,
+              ConnectivityManagerInternal.REASON_CLOSED_BY_USER);
+          RocketChatWebSocketThread.super.quit();
+          completableEmitter.onCompleted();
+        });
       });
-      return true;
     } else {
-      return super.quit();
+      connectivityManager.notifyConnectionLost(hostname,
+          ConnectivityManagerInternal.REASON_NETWORK_ERROR);
+      super.quit();
+      return Completable.complete();
     }
+  }
+
+  /**
+   * THIS METHOD THROWS EXCEPTION!!
+   * Use terminate() instead!!
+   */
+  @Deprecated public final boolean quit() {
+    throw new UnsupportedOperationException();
   }
 
   /**
    * synchronize the state of the thread with ServerConfig.
    */
   @DebugLog
-  public void keepAlive() {
-    if (ddpClient == null || !ddpClient.isConnected()) {
-      defaultRealm.executeTransaction(realm -> {
-        ServerConfig config = realm.where(ServerConfig.class)
-            .equalTo(ServerConfig.ID, serverConfigId)
-            .findFirst();
-        if (config != null && config.getState() == ServerConfig.STATE_CONNECTED) {
-          config.setState(ServerConfig.STATE_READY);
-          quit();
-        }
-        return null;
-      });
-    }
+  public Completable keepAlive() {
+    return checkIfConnectionAlive()
+        .flatMapCompletable(alive -> alive ? Completable.complete() : connect());
   }
 
-  private void prepareWebSocket(String hostname) {
+  private Single<Boolean> checkIfConnectionAlive() {
     if (ddpClient == null || !ddpClient.isConnected()) {
-      ddpClient = DDPClientWrapper.create(hostname);
+      return Single.just(false);
     }
+
+    return Single.fromEmitter(booleanSingleEmitter -> {
+      ddpClient.ping().continueWith(task -> {
+        booleanSingleEmitter.onSuccess(!task.isFaulted());
+        return null;
+      });
+    });
+  }
+
+  private Completable prepareDDPClient() {
+    return checkIfConnectionAlive()
+        .doOnSuccess(alive -> {
+          if (!alive) {
+            ddpClient = DDPClientWrapper.create(hostname);
+          }
+        })
+        .toCompletable();
+  }
+
+  private Completable connectDDPClient() {
+    return prepareDDPClient()
+        .andThen(Completable.fromEmitter(completableEmitter -> {
+          ServerInfo info = connectivityManager.getServerInfoForHost(hostname);
+          ddpClient.connect(info.session, !info.insecure)
+              .onSuccessTask(task -> {
+                final String newSession = task.getResult().session;
+                connectivityManager.notifyConnectionEstablished(hostname, newSession);
+
+                // handling WebSocket#onClose() callback.
+                task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
+                  if (listenersRegistered) {
+                    terminate();
+                  }
+                  return null;
+                });
+
+                return serverConfigRealm.executeTransaction(realm -> {
+                  Session sessionObj = Session.queryDefaultSession(realm).findFirst();
+                  if (sessionObj == null) {
+                    realm.createOrUpdateObjectFromJson(Session.class,
+                        new JSONObject().put(Session.ID, Session.DEFAULT_ID));
+                  }
+                  return null;
+                });
+              })
+              .continueWith(task -> {
+                if (task.isFaulted()) {
+                  completableEmitter.onError(task.getError());
+                } else {
+                  completableEmitter.onCompleted();
+                }
+                return null;
+              });
+        }));
   }
 
   @DebugLog
-  private Task<Void> connect() {
-    final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
-
-    prepareWebSocket(config.getHostname());
-    return ddpClient.connect(config.getSession(), config.usesSecureConnection())
-        .onSuccessTask(task -> {
-          final String session = task.getResult().session;
-          defaultRealm.executeTransaction(realm ->
-              realm.createOrUpdateObjectFromJson(ServerConfig.class, new JSONObject()
-                  .put("serverConfigId", serverConfigId)
-                  .put("session", session))
-          ).onSuccess(_task -> serverConfigRealm.executeTransaction(realm -> {
-            Session sessionObj = Session.queryDefaultSession(realm).findFirst();
-
-            if (sessionObj == null) {
-              realm.createOrUpdateObjectFromJson(Session.class,
-                  new JSONObject().put("sessionId", Session.DEFAULT_ID));
-            }
-            return null;
-          })).continueWith(new LogcatIfError());
-          return task;
-        })
-        .onSuccess(new Continuation<DDPClientCallback.Connect, Void>() {
-          // TODO type detection doesn't work due to retrolambda's bug...
-          @Override
-          public Void then(Task<DDPClientCallback.Connect> task)
-              throws Exception {
-            fetchPublicSettings();
-            registerListeners();
-
-            // handling WebSocket#onClose() callback.
-            task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
-              quit();
-              return null;
-            }).continueWithTask(_task -> {
-              if (_task.isFaulted()) {
-                ServerConfig.logConnectionError(serverConfigId, _task.getError());
-              }
-              return _task;
-            });
-
-            return null;
-          }
-        })
-        .continueWithTask(task -> {
-          if (task.isFaulted()) {
-            Exception error = task.getError();
-            if (error instanceof DDPClientCallback.Connect.Timeout) {
-              ServerConfig.logConnectionError(serverConfigId, new Exception("Connection Timeout"));
-            } else {
-              ServerConfig.logConnectionError(serverConfigId, task.getError());
-            }
-          }
-          return task;
-        });
+  private Completable connect() {
+    return connectDDPClient()
+        .andThen(Completable.fromEmitter(completableEmitter -> {
+          fetchPublicSettings();
+          registerListeners();
+          completableEmitter.onCompleted();
+        }));
   }
 
   private Task<Void> fetchPublicSettings() {
@@ -227,7 +228,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   //@DebugLog
   private void registerListeners() {
-    if (!Thread.currentThread().getName().equals("RC_thread_" + serverConfigId)) {
+    if (!Thread.currentThread().getName().equals("RC_thread_" + hostname)) {
       // execute in Looper.
       new Handler(getLooper()).post(this::registerListeners);
       return;
@@ -237,10 +238,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
       return;
     }
     listenersRegistered = true;
-
-    final ServerConfig config = defaultRealm.executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
-    final String hostname = config.getHostname();
 
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
@@ -261,20 +258,16 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   @DebugLog
   private void unregisterListeners() {
-    if (!listenersRegistered) {
-      return;
-    }
-
     Iterator<Registrable> iterator = listeners.iterator();
     while (iterator.hasNext()) {
       Registrable registrable = iterator.next();
       registrable.unregister();
       iterator.remove();
     }
+    listenersRegistered = false;
     if (ddpClient != null) {
       ddpClient.close();
       ddpClient = null;
     }
-    listenersRegistered = false;
   }
 }
