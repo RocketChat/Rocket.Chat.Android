@@ -7,14 +7,13 @@ import android.support.v4.app.Fragment;
 
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.LoginFragment;
-import chat.rocket.android.fragment.server_config.RetryConnectFragment;
 import chat.rocket.android.fragment.server_config.RetryLoginFragment;
 import chat.rocket.android.fragment.server_config.WaitingFragment;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.RocketChatService;
 
 /**
@@ -22,8 +21,7 @@ import chat.rocket.android.service.RocketChatService;
  */
 public class LoginActivity extends AbstractFragmentActivity {
 
-  private String serverConfigId;
-  private RealmObjectObserver<ServerConfig> serverConfigErrorObserver;
+  private String hostname;
   private RealmObjectObserver<Session> sessionObserver;
 
   @Override
@@ -41,48 +39,31 @@ public class LoginActivity extends AbstractFragmentActivity {
       return;
     }
 
-    serverConfigId = intent.getStringExtra(ServerConfig.ID);
-    if (TextUtils.isEmpty(serverConfigId)) {
+    hostname = intent.getStringExtra("hostname");
+    if (TextUtils.isEmpty(hostname)) {
       finish();
       return;
     }
 
-    serverConfigErrorObserver = RealmStore.getDefault()
-        .createObjectObserver(realm ->
-            realm.where(ServerConfig.class)
-                .equalTo(ServerConfig.ID, serverConfigId)
-                .equalTo(ServerConfig.STATE, ServerConfig.STATE_CONNECTION_ERROR))
-        .setOnUpdateListener(this::onRenderServerConfigError);
-
-    sessionObserver = RealmStore.get(serverConfigId)
+    sessionObserver = RealmStore.get(hostname)
         .createObjectObserver(Session::queryDefaultSession)
         .setOnUpdateListener(this::onRenderServerConfigSession);
 
     setContentView(R.layout.simple_screen);
     showFragment(new WaitingFragment());
-    serverConfigErrorObserver.sub();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    RocketChatService.keepAlive(this);
+    ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
+    sessionObserver.sub();
   }
 
   @Override
   protected void onDestroy() {
     sessionObserver.unsub();
-    serverConfigErrorObserver.unsub();
     super.onDestroy();
-  }
-
-  private void onRenderServerConfigError(ServerConfig config) {
-    if (config != null) {
-      sessionObserver.unsub();
-      showFragment(new RetryConnectFragment());
-    } else {
-      sessionObserver.sub();
-    }
   }
 
   private void onRenderServerConfigSession(Session session) {
@@ -107,22 +88,22 @@ public class LoginActivity extends AbstractFragmentActivity {
 
   @Override
   protected void showFragment(Fragment fragment) {
-    injectServerConfigIdArgTo(fragment);
+    injectHostnameArgTo(fragment);
     super.showFragment(fragment);
   }
 
   @Override
   protected void showFragmentWithBackStack(Fragment fragment) {
-    injectServerConfigIdArgTo(fragment);
+    injectHostnameArgTo(fragment);
     super.showFragmentWithBackStack(fragment);
   }
 
-  private void injectServerConfigIdArgTo(Fragment fragment) {
+  private void injectHostnameArgTo(Fragment fragment) {
     Bundle args = fragment.getArguments();
     if (args == null) {
       args = new Bundle();
     }
-    args.putString(ServerConfig.ID, serverConfigId);
+    args.putString("hostname", hostname);
     fragment.setArguments(args);
   }
 

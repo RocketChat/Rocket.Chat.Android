@@ -12,8 +12,8 @@ import chat.rocket.android.realm_helper.RealmHelper;
  * MethodCall for uploading file.
  */
 public class FileUploadingHelper extends MethodCallHelper {
-  public FileUploadingHelper(Context context, String serverConfigId) {
-    super(context, serverConfigId);
+  public FileUploadingHelper(Context context, String hostname) {
+    super(context, hostname);
   }
 
   public FileUploadingHelper(RealmHelper realmHelper, DDPClientWrapper ddpClient) {

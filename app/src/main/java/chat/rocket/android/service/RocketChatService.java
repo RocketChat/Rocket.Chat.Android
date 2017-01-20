@@ -10,7 +10,9 @@ import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import rx.Completable;
+import chat.rocket.android.helper.RxHelper;
+import hugo.weaving.DebugLog;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -32,7 +34,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
   /**
    * ensure RocketChatService alive.
    */
-  public static void keepAlive(Context context) {
+  /*package*/ static void keepAlive(Context context) {
     context.startService(new Intent(context, RocketChatService.class));
   }
 
@@ -61,43 +63,50 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
   }
 
   @Override
-  public Completable ensureConnectionToServer(String hostname) { //called via binder.
+  public Single<Boolean> ensureConnectionToServer(String hostname) { //called via binder.
     return getOrCreateWebSocketThread(hostname)
         .doOnError(err -> {
           webSocketThreads.remove(hostname);
           connectivityManager.notifyConnectionLost(hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR);
         })
-        .flatMapCompletable(webSocketThreads -> webSocketThreads.keepAlive());
+        .flatMap(webSocketThreads -> webSocketThreads.keepAlive());
   }
 
   @Override
-  public Completable disconnectFromServer(String hostname) { //called via binder.
-    if (!webSocketThreads.containsKey(hostname)) {
-      return Completable.complete();
-    }
+  public Single<Boolean> disconnectFromServer(String hostname) { //called via binder.
+    return RxHelper.lazy(() -> {
+      if (!webSocketThreads.containsKey(hostname)) {
+        return Single.just(true);
+      }
 
-    RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
-    if (thread != null) {
-      return thread.terminate();
-    } else {
-      return Completable.timer(1, TimeUnit.SECONDS).andThen(disconnectFromServer(hostname));
-    }
-  }
-
-  private Single<RocketChatWebSocketThread> getOrCreateWebSocketThread(String hostname) {
-    if (webSocketThreads.containsKey(hostname)) {
       RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
       if (thread != null) {
-        return Single.just(thread);
+        return thread.terminate();
       } else {
-        return Completable.timer(1, TimeUnit.SECONDS).andThen(getOrCreateWebSocketThread(hostname));
+        return Observable.timer(1, TimeUnit.SECONDS).toSingle()
+            .flatMap(_val -> disconnectFromServer(hostname));
       }
-    }
-    webSocketThreads.put(hostname, null);
-    return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
-        .doOnSuccess(thread -> {
-          webSocketThreads.put(hostname, thread);
-        });
+    });
+  }
+
+  @DebugLog
+  private Single<RocketChatWebSocketThread> getOrCreateWebSocketThread(String hostname) {
+    return RxHelper.lazy(() -> {
+      if (webSocketThreads.containsKey(hostname)) {
+        RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
+        if (thread != null) {
+          return Single.just(thread);
+        } else {
+          return Observable.timer(1, TimeUnit.SECONDS).toSingle()
+              .flatMap(_val -> getOrCreateWebSocketThread(hostname));
+        }
+      }
+      webSocketThreads.put(hostname, null);
+      return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
+          .doOnSuccess(thread -> {
+            webSocketThreads.put(hostname, thread);
+          });
+    });
   }
 
   @Nullable

@@ -1,9 +1,9 @@
 package chat.rocket.android.service;
 
-import rx.Completable;
+import rx.Single;
 
 public interface ConnectivityServiceInterface {
-  Completable ensureConnectionToServer(String hostname);
+  Single<Boolean> ensureConnectionToServer(String hostname);
 
-  Completable disconnectFromServer(String hostname);
+  Single<Boolean> disconnectFromServer(String hostname);
 }

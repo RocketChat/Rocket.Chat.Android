@@ -20,7 +20,6 @@ import android.support.v4.util.SparseArrayCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +31,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import chat.rocket.android.activity.MainActivity;
-import chat.rocket.android.push.interactors.PushInteractor;
 
 public class PushNotificationHandler implements PushConstants {
 
@@ -64,8 +62,7 @@ public class PushNotificationHandler implements PushConstants {
     return messageMap.get(notId);
   }
 
-  public void showNotificationIfPossible(Context context, PushInteractor pushInteractor,
-                                         Bundle extras) {
+  public void showNotificationIfPossible(Context context, Bundle extras) {
 
     // Send a notification if there is a message or title, otherwise just send data
     String message = extras.getString(MESSAGE);
@@ -87,26 +84,21 @@ public class PushNotificationHandler implements PushConstants {
         extras.putString(TITLE, getAppName(context));
       }
 
-      createNotification(context, pushInteractor, extras);
+      createNotification(context, extras);
     }
   }
 
-  public void createNotification(Context context, PushInteractor pushInteractor, Bundle extras) {
+  public void createNotification(Context context, Bundle extras) {
     NotificationManager mNotificationManager =
         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     String appName = getAppName(context);
     String packageName = context.getPackageName();
     Resources resources = context.getResources();
 
-    String serverUrl = getServerUrl(extras);
+    String hostname = getHostname(extras);
     String roomId = getRoomId(extras);
 
-    if (serverUrl == null || roomId == null) {
-      return;
-    }
-
-    String serverConfigId = pushInteractor.getServerConfigId(serverUrl);
-    if (serverConfigId == null) {
+    if (hostname == null || roomId == null) {
       return;
     }
 
@@ -114,7 +106,7 @@ public class PushNotificationHandler implements PushConstants {
     Intent notificationIntent = new Intent(context, MainActivity.class);
     notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     notificationIntent.putExtra(PUSH_BUNDLE, extras);
-    notificationIntent.putExtra(SERVER_CONFIG_ID, serverConfigId);
+    notificationIntent.putExtra(HOSTNAME, hostname);
     notificationIntent.putExtra(ROOM_ID, roomId);
     notificationIntent.putExtra(NOT_ID, notId);
 
@@ -634,7 +626,7 @@ public class PushNotificationHandler implements PushConstants {
     return count;
   }
 
-  private String getServerUrl(Bundle extras) {
+  private String getHostname(Bundle extras) {
     try {
       JSONObject jsonObject = new JSONObject(extras.getString("ejson", "[]"));
       if (!jsonObject.has("host")) {

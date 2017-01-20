@@ -32,8 +32,9 @@ import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
 import hugo.weaving.DebugLog;
-import rx.Completable;
 import rx.Single;
+import rx.SingleEmitter;
+import rx.functions.Action1;
 
 /**
  * Thread for handling WebSocket connection.
@@ -89,7 +90,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         }
       }.start();
     }).flatMap(webSocket ->
-        webSocket.connect().andThen(Single.just(webSocket)));
+        webSocket.connect().map(_val -> webSocket));
   }
 
   @Override
@@ -115,23 +116,23 @@ public class RocketChatWebSocketThread extends HandlerThread {
    * terminate WebSocket thread.
    */
   @DebugLog
-  public Completable terminate() {
+  public Single<Boolean> terminate() {
     if (isAlive()) {
-      return Completable.fromEmitter(completableEmitter -> {
+      return Single.fromEmitter(emitter -> {
         new Handler(getLooper()).post(() -> {
           RCLog.d("thread %s: terminated()", Thread.currentThread().getId());
           unregisterListeners();
           connectivityManager.notifyConnectionLost(hostname,
               ConnectivityManagerInternal.REASON_CLOSED_BY_USER);
           RocketChatWebSocketThread.super.quit();
-          completableEmitter.onCompleted();
+          emitter.onSuccess(true);
         });
       });
     } else {
       connectivityManager.notifyConnectionLost(hostname,
           ConnectivityManagerInternal.REASON_NETWORK_ERROR);
       super.quit();
-      return Completable.complete();
+      return Single.just(true);
     }
   }
 
@@ -147,9 +148,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
    * synchronize the state of the thread with ServerConfig.
    */
   @DebugLog
-  public Completable keepAlive() {
+  public Single<Boolean> keepAlive() {
     return checkIfConnectionAlive()
-        .flatMapCompletable(alive -> alive ? Completable.complete() : connect());
+        .flatMap(alive -> alive ? Single.just(true) : connect());
   }
 
   private Single<Boolean> checkIfConnectionAlive() {
@@ -157,27 +158,37 @@ public class RocketChatWebSocketThread extends HandlerThread {
       return Single.just(false);
     }
 
-    return Single.fromEmitter(booleanSingleEmitter -> {
-      ddpClient.ping().continueWith(task -> {
-        booleanSingleEmitter.onSuccess(!task.isFaulted());
-        return null;
-      });
+    return Single.fromEmitter(emitter -> {
+      new Thread() {
+        @Override
+        public void run() {
+          ddpClient.ping().continueWith(task -> {
+            if (task.isFaulted()) {
+              RCLog.e(task.getError());
+              emitter.onSuccess(false);
+              ddpClient.close();
+            } else {
+              emitter.onSuccess(true);
+            }
+            return null;
+          });
+        }
+      }.start();
     });
   }
 
-  private Completable prepareDDPClient() {
+  private Single<Boolean> prepareDDPClient() {
     return checkIfConnectionAlive()
         .doOnSuccess(alive -> {
           if (!alive) {
             ddpClient = DDPClientWrapper.create(hostname);
           }
-        })
-        .toCompletable();
+        });
   }
 
-  private Completable connectDDPClient() {
+  private Single<Boolean> connectDDPClient() {
     return prepareDDPClient()
-        .andThen(Completable.fromEmitter(completableEmitter -> {
+        .flatMap(_val -> Single.fromEmitter(emitter -> {
           ServerInfo info = connectivityManager.getServerInfoForHost(hostname);
           ddpClient.connect(info.session, !info.insecure)
               .onSuccessTask(task -> {
@@ -203,9 +214,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
               })
               .continueWith(task -> {
                 if (task.isFaulted()) {
-                  completableEmitter.onError(task.getError());
+                  emitter.onError(task.getError());
                 } else {
-                  completableEmitter.onCompleted();
+                  emitter.onSuccess(true);
                 }
                 return null;
               });
@@ -213,12 +224,15 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   @DebugLog
-  private Completable connect() {
+  private Single<Boolean> connect() {
     return connectDDPClient()
-        .andThen(Completable.fromEmitter(completableEmitter -> {
-          fetchPublicSettings();
-          registerListeners();
-          completableEmitter.onCompleted();
+        .flatMap(_val -> Single.fromEmitter(new Action1<SingleEmitter<Boolean>>() {
+          @Override
+          public void call(SingleEmitter<Boolean> emitter) {
+            fetchPublicSettings();
+            registerListeners();
+            emitter.onSuccess(true);
+          }
         }));
   }
 

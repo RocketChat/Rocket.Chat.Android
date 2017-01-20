@@ -20,7 +20,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
-import chat.rocket.android.service.RocketChatService;
+import chat.rocket.android.service.ConnectivityManager;
 
 /**
  * Dialog to show members in a room.
@@ -37,12 +37,10 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
   /**
    * create UsersOfRoomDialogFragment with required parameters.
    */
-  public static UsersOfRoomDialogFragment create(String serverConfigId,
-                                                 String roomId, String hostname) {
+  public static UsersOfRoomDialogFragment create(String roomId, String hostname) {
     Bundle args = new Bundle();
-    args.putString("serverConfigId", serverConfigId);
-    args.putString("roomId", roomId);
     args.putString("hostname", hostname);
+    args.putString("roomId", roomId);
 
     UsersOfRoomDialogFragment fragment = new UsersOfRoomDialogFragment();
     fragment.setArguments(args);
@@ -91,7 +89,8 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
           .put("showAll", true));
       return null;
     }).onSuccessTask(task -> {
-      RocketChatService.keepAlive(getContext());
+      ConnectivityManager.getInstance(getContext().getApplicationContext())
+          .keepAliveServer();
       return task;
     }).continueWith(new LogcatIfError());
   }

@@ -38,10 +38,9 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
   }
 
   protected void handleArgs(@NonNull Bundle args) {
-    String serverConfigId = args.getString("serverConfigId");
-    realmHelper = RealmStore.get(serverConfigId);
-    methodCall = new MethodCallHelper(getContext(), serverConfigId);
     hostname = args.getString("hostname");
+    realmHelper = RealmStore.get(hostname);
+    methodCall = new MethodCallHelper(getContext(), hostname);
   }
 
   @Override

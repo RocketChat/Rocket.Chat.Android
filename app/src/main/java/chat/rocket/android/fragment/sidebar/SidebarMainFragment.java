@@ -7,6 +7,8 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
@@ -14,12 +16,11 @@ import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AbstractAddRoomDialogFragment;
-import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
+import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
@@ -28,14 +29,10 @@ import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.renderer.UserRenderer;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
-
 public class SidebarMainFragment extends AbstractFragment {
 
-  private String serverConfigId;
-  private RoomListManager roomListManager;
   private String hostname;
+  private RoomListManager roomListManager;
   private RealmListObserver<RoomSubscription> roomsObserver;
   private RealmObjectObserver<User> currentUserObserver;
   private MethodCallHelper methodCallHelper;
@@ -44,11 +41,11 @@ public class SidebarMainFragment extends AbstractFragment {
   }
 
   /**
-   * create SidebarMainFragment with serverConfigId.
+   * create SidebarMainFragment with hostname.
    */
-  public static SidebarMainFragment create(String serverConfigId) {
+  public static SidebarMainFragment create(String hostname) {
     Bundle args = new Bundle();
-    args.putString("serverConfigId", serverConfigId);
+    args.putString("hostname", hostname);
 
     SidebarMainFragment fragment = new SidebarMainFragment();
     fragment.setArguments(args);
@@ -60,15 +57,9 @@ public class SidebarMainFragment extends AbstractFragment {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
-    serverConfigId = args == null ? null : args.getString("serverConfigId");
-    if (!TextUtils.isEmpty(serverConfigId)) {
-      ServerConfig config = RealmStore.getDefault().executeTransactionForRead(realm ->
-          realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
-      if (config != null) {
-        hostname = config.getHostname();
-      }
-
-      RealmHelper realmHelper = RealmStore.get(serverConfigId);
+    hostname = args == null ? null : args.getString("hostname");
+    if (!TextUtils.isEmpty(hostname)) {
+      RealmHelper realmHelper = RealmStore.get(hostname);
       if (realmHelper != null) {
         roomsObserver = realmHelper
             .createListObserver(
@@ -80,14 +71,14 @@ public class SidebarMainFragment extends AbstractFragment {
             .createObjectObserver(User::queryCurrentUser)
             .setOnUpdateListener(this::onCurrentUser);
 
-        methodCallHelper = new MethodCallHelper(getContext(), serverConfigId);
+        methodCallHelper = new MethodCallHelper(getContext(), hostname);
       }
     }
   }
 
   @Override
   protected int getLayout() {
-    if (serverConfigId == null) {
+    if (hostname == null) {
       return R.layout.simple_screen;
     } else {
       return R.layout.fragment_sidebar_main;
@@ -96,7 +87,7 @@ public class SidebarMainFragment extends AbstractFragment {
 
   @Override
   protected void onSetupView() {
-    if (serverConfigId == null) {
+    if (hostname == null) {
       return;
     }
 
@@ -203,7 +194,6 @@ public class SidebarMainFragment extends AbstractFragment {
 
   private void showAddRoomDialog(DialogFragment dialog) {
     Bundle args = new Bundle();
-    args.putString("serverConfigId", serverConfigId);
     args.putString("hostname", hostname);
     dialog.setArguments(args);
     dialog.show(getFragmentManager(), AbstractAddRoomDialogFragment.class.getSimpleName());

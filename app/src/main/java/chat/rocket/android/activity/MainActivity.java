@@ -17,7 +17,6 @@ import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.model.internal.Session;
@@ -25,6 +24,7 @@ import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
 import hugo.weaving.DebugLog;
 
@@ -52,6 +52,10 @@ public class MainActivity extends AbstractAuthedActivity {
     setupSidebar();
     if (roomId == null) {
       showFragment(new HomeFragment());
+    }
+
+    if (shouldLaunchAddServerActivity()) {
+      LaunchUtil.showAddServerActivity(this);
     }
   }
 
@@ -82,15 +86,15 @@ public class MainActivity extends AbstractAuthedActivity {
   }
 
   private void setUserOnlineIfServerAvailable() {
-    if (serverConfigId != null) {
-      new MethodCallHelper(this, serverConfigId).setUserPresence(User.STATUS_ONLINE)
+    if (hostname != null) {
+      new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_ONLINE)
           .continueWith(new LogcatIfError());
     }
   }
 
   private void setUserAwayIfServerAvailable() {
-    if (serverConfigId != null) {
-      new MethodCallHelper(this, serverConfigId).setUserPresence(User.STATUS_AWAY)
+    if (hostname != null) {
+      new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_AWAY)
           .continueWith(new LogcatIfError());
     }
   }
@@ -150,10 +154,14 @@ public class MainActivity extends AbstractAuthedActivity {
     return false;
   }
 
+  private boolean shouldLaunchAddServerActivity() {
+    return ConnectivityManager.getInstance(getApplicationContext()).getServerList().isEmpty();
+  }
+
   @DebugLog
   @Override
-  protected void onServerConfigIdUpdated() {
-    super.onServerConfigIdUpdated();
+  protected void onHostnameUpdated() {
+    super.onHostnameUpdated();
     updateSessionObserver();
     updateUnreadRoomSubscriptionObserver();
     updateSidebarMainFragment();
@@ -165,11 +173,11 @@ public class MainActivity extends AbstractAuthedActivity {
       sessionObserver = null;
     }
 
-    if (serverConfigId == null) {
+    if (hostname == null) {
       return;
     }
 
-    RealmHelper realmHelper = RealmStore.get(serverConfigId);
+    RealmHelper realmHelper = RealmStore.get(hostname);
     if (realmHelper == null) {
       return;
     }
@@ -185,7 +193,7 @@ public class MainActivity extends AbstractAuthedActivity {
   private void onSessionChanged(@Nullable Session session) {
     if (session == null) {
       if (isForeground) {
-        LaunchUtil.showLoginActivity(this, serverConfigId);
+        LaunchUtil.showLoginActivity(this, hostname);
       }
       statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
     } else if (!TextUtils.isEmpty(session.getError())) {
@@ -193,17 +201,8 @@ public class MainActivity extends AbstractAuthedActivity {
           Snackbar.make(findViewById(getLayoutContainerForFragment()),
               R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
               .setAction(R.string.fragment_retry_login_retry_title, view ->
-                  RealmStore.getDefault()
-                      .executeTransaction(realm -> {
-                        ServerConfig config = realm.where(ServerConfig.class)
-                            .equalTo(ServerConfig.ID, serverConfigId).findFirst();
-
-                        if (config != null
-                            && config.getState() == ServerConfig.STATE_CONNECTION_ERROR) {
-                          config.setState(ServerConfig.STATE_READY);
-                        }
-                        return null;
-                      }).continueWith(new LogcatIfError())));
+                  ConnectivityManager.getInstance(getApplicationContext())
+                      .connect(hostname).subscribe()));
     } else if (!session.isTokenVerified()) {
       statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
           Snackbar.make(findViewById(getLayoutContainerForFragment()),
@@ -219,11 +218,11 @@ public class MainActivity extends AbstractAuthedActivity {
       unreadRoomSubscriptionObserver = null;
     }
 
-    if (serverConfigId == null) {
+    if (hostname == null) {
       return;
     }
 
-    RealmHelper realmHelper = RealmStore.get(serverConfigId);
+    RealmHelper realmHelper = RealmStore.get(hostname);
     if (realmHelper == null) {
       return;
     }
@@ -253,7 +252,7 @@ public class MainActivity extends AbstractAuthedActivity {
 
   private void updateSidebarMainFragment() {
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(serverConfigId))
+        .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
         .commit();
   }
 
@@ -261,8 +260,8 @@ public class MainActivity extends AbstractAuthedActivity {
   protected void onRoomIdUpdated() {
     super.onRoomIdUpdated();
 
-    if (roomId != null && RoomFragment.canCreate(RealmStore.get(serverConfigId))) {
-      showFragment(RoomFragment.create(serverConfigId, roomId));
+    if (roomId != null && RoomFragment.canCreate(RealmStore.get(hostname))) {
+      showFragment(RoomFragment.create(hostname, roomId));
       closeSidebarIfNeeded();
     } else {
       showFragment(new HomeFragment());

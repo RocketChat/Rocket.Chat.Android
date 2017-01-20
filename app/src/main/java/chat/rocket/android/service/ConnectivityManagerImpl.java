@@ -10,15 +10,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import rx.Completable;
+import java.util.concurrent.TimeUnit;
+import chat.rocket.android.helper.RxHelper;
+import chat.rocket.android.log.RCLog;
+import hugo.weaving.DebugLog;
 import rx.Observable;
+import rx.Single;
 import rx.subjects.PublishSubject;
 
 /**
  * Connectivity management implementation.
  */
 /*package*/ class ConnectivityManagerImpl implements ConnectivityManagerApi, ConnectivityManagerInternal {
-
   private final HashMap<String, Integer> serverConnectivityList = new HashMap<>();
   private final PublishSubject<ServerConnectivity> connectivitySubject = PublishSubject.create();
   private Context appContext;
@@ -60,29 +63,35 @@ import rx.subjects.PublishSubject;
   @Override
   public void ensureConnections() {
     for (String hostname : serverConnectivityList.keySet()) {
-      connectToServer(hostname); //force connect.
+      connectToServer(hostname) //force connect.
+          //.doOnError(RCLog::e)
+          .retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS))
+          .subscribe(_val -> { }, RCLog::e);
     }
   }
 
   @Override
-  public void addOrUpdateServer(String hostname, @Nullable String name) {
+  public void addOrUpdateServer(String hostname, @Nullable String name, boolean insecure) {
     ServerInfoImpl.addOrUpdate(hostname, name);
+    ServerInfoImpl.setInsecure(hostname, insecure);
     if (!serverConnectivityList.containsKey(hostname)) {
       serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
     }
-    connectToServerIfNeeded(hostname);
+    connectToServerIfNeeded(hostname)
+        .subscribe(_val -> { }, RCLog::e);
   }
 
   @Override
   public void removeServer(String hostname) {
     ServerInfoImpl.remove(hostname);
     if (serverConnectivityList.containsKey(hostname)) {
-      disconnectFromServerIfNeeded(hostname);
+      disconnectFromServerIfNeeded(hostname)
+          .subscribe(_val -> { }, RCLog::e);
     }
   }
 
   @Override
-  public Completable connect(String hostname) {
+  public Single<Boolean> connect(String hostname) {
     return connectToServerIfNeeded(hostname);
   }
 
@@ -104,6 +113,7 @@ import rx.subjects.PublishSubject;
     return list;
   }
 
+  @DebugLog
   @Override
   public void notifyConnectionEstablished(String hostname, String session) {
     ServerInfoImpl.updateSession(hostname, session);
@@ -112,6 +122,7 @@ import rx.subjects.PublishSubject;
         new ServerConnectivity(hostname, ServerConnectivity.STATE_CONNECTED));
   }
 
+  @DebugLog
   @Override
   public void notifyConnectionLost(String hostname, int reason) {
     serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
@@ -124,80 +135,96 @@ import rx.subjects.PublishSubject;
     return Observable.concat(Observable.from(getCurrentConnectivityList()), connectivitySubject);
   }
 
-  private Completable connectToServerIfNeeded(String hostname) {
-    final int connectivity = serverConnectivityList.get(hostname);
-    if (connectivity == ServerConnectivity.STATE_CONNECTED) {
-      return Completable.complete();
-    }
+  private Single<Boolean> connectToServerIfNeeded(String hostname) {
+    return RxHelper.lazy(() -> {
+      final int connectivity = serverConnectivityList.get(hostname);
+      if (connectivity == ServerConnectivity.STATE_CONNECTED) {
+        return Single.just(true);
+      }
 
-    if (connectivity == ServerConnectivity.STATE_DISCONNECTING) {
-      return waitForDisconnected(hostname).andThen(connectToServerIfNeeded(hostname));
-    }
+      if (connectivity == ServerConnectivity.STATE_DISCONNECTING) {
+        return waitForDisconnected(hostname)
+            .flatMap(_val -> connectToServerIfNeeded(hostname));
+      }
 
-    if (connectivity == ServerConnectivity.STATE_CONNECTING) {
-      return waitForConnected(hostname);
-    }
+      if (connectivity == ServerConnectivity.STATE_CONNECTING) {
+        return waitForConnected(hostname);
+      }
 
-    return connectToServer(hostname).retry(2);
+      return connectToServer(hostname)
+          //.doOnError(RCLog::e)
+          .retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
+    });
   }
 
-  private Completable disconnectFromServerIfNeeded(String hostname) {
-    final int connectivity = serverConnectivityList.get(hostname);
-    if (connectivity == ServerConnectivity.STATE_DISCONNECTED) {
-      return Completable.complete();
-    }
+  private Single<Boolean> disconnectFromServerIfNeeded(String hostname) {
+    return RxHelper.lazy(() -> {
+      final int connectivity = serverConnectivityList.get(hostname);
+      if (connectivity == ServerConnectivity.STATE_DISCONNECTED) {
+        return Single.just(true);
+      }
 
-    if (connectivity == ServerConnectivity.STATE_CONNECTING) {
-      return waitForConnected(hostname).andThen(disconnectFromServerIfNeeded(hostname));
-    }
+      if (connectivity == ServerConnectivity.STATE_CONNECTING) {
+        return waitForConnected(hostname)
+            .flatMap(_val -> disconnectFromServerIfNeeded(hostname));
+      }
 
-    if (connectivity == ServerConnectivity.STATE_DISCONNECTING) {
-      return waitForDisconnected(hostname);
-    }
+      if (connectivity == ServerConnectivity.STATE_DISCONNECTING) {
+        return waitForDisconnected(hostname);
+      }
 
-    return disconnectFromServer(hostname).retry(2);
+      return disconnectFromServer(hostname)
+          //.doOnError(RCLog::e)
+          .retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
+    });
   }
 
 
-  private Completable waitForConnected(String hostname) {
+  private Single<Boolean> waitForConnected(String hostname) {
     return connectivitySubject
         .filter(serverConnectivity -> (hostname.equals(serverConnectivity.hostname)
             && serverConnectivity.state == ServerConnectivity.STATE_CONNECTED))
         .first()
-        .toCompletable();
+        .map(serverConnectivity -> true)
+        .toSingle();
   }
 
-  private Completable waitForDisconnected(String hostname) {
+  private Single<Boolean> waitForDisconnected(String hostname) {
     return connectivitySubject
         .filter(serverConnectivity -> (hostname.equals(serverConnectivity.hostname)
             && serverConnectivity.state == ServerConnectivity.STATE_DISCONNECTED))
         .first()
-        .toCompletable();
+        .map(serverConnectivity -> true)
+        .toSingle();
   }
 
-  private Completable connectToServer(String hostname) {
-    if (!serverConnectivityList.containsKey(hostname)) {
-      throw new IllegalArgumentException("hostname not found");
-    }
-    serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTING);
+  private Single<Boolean> connectToServer(String hostname) {
+    return RxHelper.lazy(() -> {
+      if (!serverConnectivityList.containsKey(hostname)) {
+        return Single.error(new IllegalArgumentException("hostname not found"));
+      }
+      serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTING);
 
-    if (serviceInterface != null) {
-      return serviceInterface.ensureConnectionToServer(hostname);
-    } else {
-      return Completable.error(new IllegalStateException("not prepared"));
-    }
+      if (serviceInterface != null) {
+        return serviceInterface.ensureConnectionToServer(hostname);
+      } else {
+        return Single.error(new IllegalStateException("not prepared"));
+      }
+    });
   }
 
-  private Completable disconnectFromServer(String hostname) {
-    if (!serverConnectivityList.containsKey(hostname)) {
-      throw new IllegalArgumentException("hostname not found");
-    }
-    serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTING);
+  private Single<Boolean> disconnectFromServer(String hostname) {
+    return RxHelper.lazy(() -> {
+      if (!serverConnectivityList.containsKey(hostname)) {
+        return Single.error(new IllegalArgumentException("hostname not found"));
+      }
+      serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTING);
 
-    if (serviceInterface != null) {
-      return serviceInterface.disconnectFromServer(hostname);
-    } else {
-      return Completable.error(new IllegalStateException("not prepared"));
-    }
+      if (serviceInterface != null) {
+        return serviceInterface.disconnectFromServer(hostname);
+      } else {
+        return Single.error(new IllegalStateException("not prepared"));
+      }
+    });
   }
 }

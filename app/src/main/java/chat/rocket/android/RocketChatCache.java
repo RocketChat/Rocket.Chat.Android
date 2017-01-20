@@ -9,7 +9,7 @@ import java.util.UUID;
  * sharedpreference-based cache.
  */
 public class RocketChatCache {
-  public static final String KEY_SELECTED_SERVER_CONFIG_ID = "selectedServerConfigId";
+  public static final String KEY_SELECTED_SERVER_HOSTNAME = "selectedServerHostname";
   public static final String KEY_SELECTED_ROOM_ID = "selectedRoomId";
 
   private static final String KEY_PUSH_ID = "pushId";

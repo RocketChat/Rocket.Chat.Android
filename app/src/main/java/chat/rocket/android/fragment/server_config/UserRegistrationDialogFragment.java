@@ -20,7 +20,7 @@ import chat.rocket.android.helper.TextUtils;
  * Dialog for user registration.
  */
 public class UserRegistrationDialogFragment extends DialogFragment {
-  private String serverConfigId;
+  private String hostname;
   private String username;
   private String email;
   private String password;
@@ -32,23 +32,23 @@ public class UserRegistrationDialogFragment extends DialogFragment {
   /**
    * create UserRegistrationDialogFragment with auto-detect email/username.
    */
-  public static UserRegistrationDialogFragment create(String serverConfigId,
+  public static UserRegistrationDialogFragment create(String hostname,
                                                       String usernameOrEmail, String password) {
     if (Patterns.EMAIL_ADDRESS.matcher(usernameOrEmail).matches()) {
-      return create(serverConfigId, null, usernameOrEmail, password);
+      return create(hostname, null, usernameOrEmail, password);
     } else {
-      return create(serverConfigId, usernameOrEmail, null, password);
+      return create(hostname, usernameOrEmail, null, password);
     }
   }
 
   /**
    * create UserRegistrationDialogFragment.
    */
-  public static UserRegistrationDialogFragment create(String serverConfigId,
+  public static UserRegistrationDialogFragment create(String hostname,
                                                       String username, String email,
                                                       String password) {
     Bundle args = new Bundle();
-    args.putString("serverConfigId", serverConfigId);
+    args.putString("hostname", hostname);
     if (!TextUtils.isEmpty(username)) {
       args.putString("username", username);
     }
@@ -69,7 +69,7 @@ public class UserRegistrationDialogFragment extends DialogFragment {
 
     Bundle args = getArguments();
     if (args != null) {
-      serverConfigId = args.getString("serverConfigId");
+      hostname = args.getString("hostname");
       username = args.getString("username");
       email = args.getString("email");
       password = args.getString("password");
@@ -113,7 +113,7 @@ public class UserRegistrationDialogFragment extends DialogFragment {
       email = txtEmail.getText().toString();
       password = txtPasswd.getText().toString();
 
-      MethodCallHelper methodCallHelper = new MethodCallHelper(getContext(), serverConfigId);
+      MethodCallHelper methodCallHelper = new MethodCallHelper(getContext(), hostname);
       methodCallHelper.registerUser(username, email, password, password)
           .onSuccessTask(task -> methodCallHelper.loginWithEmail(email, password))
           .onSuccessTask(task -> methodCallHelper.setUsername(username)) //TODO: should prompt!

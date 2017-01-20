@@ -121,10 +121,10 @@ public class DDPClientWrapper {
     return ddpClient.ping(pingId)
         .continueWithTask(task -> {
           if (task.isFaulted()) {
-            RCLog.d("ping[%s] xxx failed xxx", pingId);
+            RCLog.d(task.getError(), "ping[%s] xxx failed xxx", pingId);
             return Task.forError(task.getError());
           } else {
-            RCLog.d("pong[%s] <");
+            RCLog.d("pong[%s] <", pingId);
             return Task.forResult(null);
           }
         });

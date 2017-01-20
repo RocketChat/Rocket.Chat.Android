@@ -39,11 +39,11 @@ public class MethodCallHelper {
   protected final DDPClientWrapper ddpClient;
 
   /**
-   * initialize with Context and ServerConfigId.
+   * initialize with Context and hostname.
    */
-  public MethodCallHelper(Context context, String serverConfigId) {
+  public MethodCallHelper(Context context, String hostname) {
     this.context = context;
-    this.realmHelper = RealmStore.get(serverConfigId);
+    this.realmHelper = RealmStore.get(hostname);
     ddpClient = null;
   }
 

@@ -32,7 +32,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    authProvidersObserver = RealmStore.get(serverConfigId)
+    authProvidersObserver = RealmStore.get(hostname)
         .createListObserver(realm -> realm.where(MeteorLoginServiceConfiguration.class).findAll())
         .setOnUpdateListener(this::onRenderAuthProviders);
   }
@@ -52,7 +52,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
       view.setEnabled(false);
       waitingView.setVisibility(View.VISIBLE);
 
-      new MethodCallHelper(getContext(), serverConfigId)
+      new MethodCallHelper(getContext(), hostname)
           .loginWithEmail(username.toString(), passwd.toString())
           .continueWith(task -> {
             if (task.isFaulted()) {
@@ -65,7 +65,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
     });
 
     final View btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
-    btnUserRegistration.setOnClickListener(view -> UserRegistrationDialogFragment.create(serverConfigId,
+    btnUserRegistration.setOnClickListener(view -> UserRegistrationDialogFragment.create(hostname,
         txtUsername.getText().toString(), txtPasswd.getText().toString())
         .show(getFragmentManager(), UserRegistrationDialogFragment.class.getSimpleName()));
   }
@@ -96,7 +96,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
             }
             if (fragment != null) {
               Bundle args = new Bundle();
-              args.putString("serverConfigId", serverConfigId);
+              args.putString("hostname", hostname);
               fragment.setArguments(args);
               showFragmentWithBackStack(fragment);
             }
