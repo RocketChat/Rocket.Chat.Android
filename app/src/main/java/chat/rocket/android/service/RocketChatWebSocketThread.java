@@ -64,6 +64,27 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private DDPClientWrapper ddpClient;
   private boolean listenersRegistered;
 
+
+  private static class KeepAliveTimer {
+    private long lastTime;
+    private final long thresholdMs;
+
+    public KeepAliveTimer(long thresholdMs) {
+      this.thresholdMs = thresholdMs;
+      lastTime = System.currentTimeMillis();
+    }
+
+    public boolean shouldCheckPrecisely() {
+      return lastTime + thresholdMs < System.currentTimeMillis();
+    }
+
+    public void update() {
+      lastTime = System.currentTimeMillis();
+    }
+  }
+
+  private final KeepAliveTimer keepAliveTimer = new KeepAliveTimer(20000);
+
   private RocketChatWebSocketThread(Context appContext, String hostname) {
     super("RC_thread_" + hostname);
     this.appContext = appContext;
@@ -158,6 +179,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
       return Single.just(false);
     }
 
+    if (!keepAliveTimer.shouldCheckPrecisely()) {
+      return Single.just(true);
+    }
+    keepAliveTimer.update();
+
     return Single.fromEmitter(emitter -> {
       new Thread() {
         @Override
@@ -168,6 +194,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
               emitter.onSuccess(false);
               ddpClient.close();
             } else {
+              keepAliveTimer.update();
               emitter.onSuccess(true);
             }
             return null;
