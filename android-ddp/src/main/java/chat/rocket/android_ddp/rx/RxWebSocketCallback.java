@@ -2,12 +2,9 @@ package chat.rocket.android_ddp.rx;
 
 import static android.R.attr.type;
 
-import java.io.IOException;
 import chat.rocket.android.log.RCLog;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okhttp3.ws.WebSocket;
-import okio.Buffer;
+import okhttp3.WebSocket;
 
 public class RxWebSocketCallback {
   public static abstract class Base {
@@ -38,8 +35,8 @@ public class RxWebSocketCallback {
     public WebSocket ws;
     public Response response;
 
-    public Failure(WebSocket websocket, IOException e, Response response) {
-      super(e);
+    public Failure(WebSocket websocket, Throwable err, Response response) {
+      super(err);
       this.ws = websocket;
       this.response = response;
     }
@@ -57,10 +54,10 @@ public class RxWebSocketCallback {
   public static class Message extends Base {
     public String responseBodyString;
 
-    public Message(WebSocket websocket, ResponseBody responseBody) {
+    public Message(WebSocket websocket, String responseBody) {
       super("Message", websocket);
       try {
-        this.responseBodyString = responseBody.string();
+        this.responseBodyString = responseBody;
       } catch (Exception e) {
         RCLog.e(e, "error in reading response(Message)");
       }
@@ -69,15 +66,6 @@ public class RxWebSocketCallback {
     @Override
     public String toString() {
       return "[" + type + "] " + responseBodyString;
-    }
-  }
-
-  public static class Pong extends Base {
-    public Buffer payload;
-
-    public Pong(WebSocket websocket, Buffer payload) {
-      super("Pong", websocket);
-      this.payload = payload;
     }
   }
 

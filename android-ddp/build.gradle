@@ -37,7 +37,7 @@ android {
 dependencies {
   compile project(':log-wrapper')
   compile rootProject.ext.supportAnnotations
-  compile 'com.squareup.okhttp3:okhttp-ws:3.4.1'
+  compile rootProject.ext.okhttp3
   compile rootProject.ext.rxJava
   compile rootProject.ext.boltsTask
 }
