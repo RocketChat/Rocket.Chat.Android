@@ -57,7 +57,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   };
   private final Context appContext;
   private final String hostname;
-  private final RealmHelper serverConfigRealm;
+  private final RealmHelper realmHelper;
   private final ConnectivityManagerInternal connectivityManager;
   private final ArrayList<Registrable> listeners = new ArrayList<>();
   private DDPClientWrapper ddpClient;
@@ -67,7 +67,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     super("RC_thread_" + hostname);
     this.appContext = appContext;
     this.hostname = hostname;
-    this.serverConfigRealm = RealmStore.getOrCreate(hostname);
+    this.realmHelper = RealmStore.getOrCreate(hostname);
     this.connectivityManager = ConnectivityManager.getInstanceForInternal(appContext);
   }
 
@@ -99,7 +99,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private void forceInvalidateTokens() {
-    serverConfigRealm.executeTransaction(realm -> {
+    realmHelper.executeTransaction(realm -> {
       Session session = Session.queryDefaultSession(realm).findFirst();
       if (session != null
           && !TextUtils.isEmpty(session.getToken())
@@ -192,7 +192,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
                   return null;
                 });
 
-                return serverConfigRealm.executeTransaction(realm -> {
+                return realmHelper.executeTransaction(realm -> {
                   Session sessionObj = Session.queryDefaultSession(realm).findFirst();
                   if (sessionObj == null) {
                     realm.createOrUpdateObjectFromJson(Session.class,
@@ -223,7 +223,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Task<Void> fetchPublicSettings() {
-    return new MethodCallHelper(serverConfigRealm, ddpClient).getPublicSettings();
+    return new MethodCallHelper(realmHelper, ddpClient).getPublicSettings();
   }
 
   //@DebugLog
@@ -243,7 +243,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
       try {
         Constructor ctor = clazz.getConstructor(Context.class, String.class, RealmHelper.class,
             DDPClientWrapper.class);
-        Object obj = ctor.newInstance(appContext, hostname, serverConfigRealm, ddpClient);
+        Object obj = ctor.newInstance(appContext, hostname, realmHelper, ddpClient);
 
         if (obj instanceof Registrable) {
           Registrable registrable = (Registrable) obj;
