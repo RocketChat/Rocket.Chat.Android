@@ -63,6 +63,12 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final ArrayList<Registrable> listeners = new ArrayList<>();
   private DDPClientWrapper ddpClient;
   private boolean listenersRegistered;
+  private final DDPClientRef ddpClientRef = new DDPClientRef() {
+    @Override
+    public DDPClientWrapper get() {
+      return ddpClient;
+    }
+  };
 
 
   private static class KeepAliveTimer {
@@ -235,6 +241,13 @@ public class RocketChatWebSocketThread extends HandlerThread {
                   if (sessionObj == null) {
                     realm.createOrUpdateObjectFromJson(Session.class,
                         new JSONObject().put(Session.ID, Session.DEFAULT_ID));
+                  } else {
+                    // invalidate login token.
+                    if (!TextUtils.isEmpty(sessionObj.getToken()) && sessionObj.isTokenVerified()) {
+                      sessionObj.setTokenVerified(false);
+                      sessionObj.setError(null);
+                    }
+
                   }
                   return null;
                 });
@@ -264,7 +277,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Task<Void> fetchPublicSettings() {
-    return new MethodCallHelper(realmHelper, ddpClient).getPublicSettings();
+    return new MethodCallHelper(realmHelper, ddpClientRef).getPublicSettings();
   }
 
   //@DebugLog
@@ -283,8 +296,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
         Constructor ctor = clazz.getConstructor(Context.class, String.class, RealmHelper.class,
-            DDPClientWrapper.class);
-        Object obj = ctor.newInstance(appContext, hostname, realmHelper, ddpClient);
+            DDPClientRef.class);
+        Object obj = ctor.newInstance(appContext, hostname, realmHelper, ddpClientRef);
 
         if (obj instanceof Registrable) {
           Registrable registrable = (Registrable) obj;
