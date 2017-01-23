@@ -212,6 +212,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     return checkIfConnectionAlive()
         .doOnSuccess(alive -> {
           if (!alive) {
+            RCLog.d("DDPClient#create");
             ddpClient = DDPClientWrapper.create(hostname);
           }
         });
@@ -221,6 +222,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     return prepareDDPClient()
         .flatMap(_val -> Single.fromEmitter(emitter -> {
           ServerInfo info = connectivityManager.getServerInfoForHost(hostname);
+          RCLog.d("DDPClient#connect");
           ddpClient.connect(info.session, !info.insecure)
               .onSuccessTask(task -> {
                 final String newSession = task.getResult().session;
