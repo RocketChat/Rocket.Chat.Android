@@ -8,13 +8,11 @@ import android.support.v4.app.Fragment;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.LoginFragment;
 import chat.rocket.android.fragment.server_config.RetryLoginFragment;
-import chat.rocket.android.fragment.server_config.WaitingFragment;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.RocketChatService;
 
 /**
  * Activity for Login, Sign-up, and Retry connecting...
@@ -50,7 +48,7 @@ public class LoginActivity extends AbstractFragmentActivity {
         .setOnUpdateListener(this::onRenderServerConfigSession);
 
     setContentView(R.layout.simple_screen);
-    showFragment(new WaitingFragment());
+    showFragment(new LoginFragment());
   }
 
   @Override
@@ -68,7 +66,6 @@ public class LoginActivity extends AbstractFragmentActivity {
 
   private void onRenderServerConfigSession(Session session) {
     if (session == null) {
-      showFragment(new LoginFragment());
       return;
     }
 
@@ -82,8 +79,6 @@ public class LoginActivity extends AbstractFragmentActivity {
       }
       return;
     }
-
-    showFragment(new LoginFragment());
   }
 
   @Override
