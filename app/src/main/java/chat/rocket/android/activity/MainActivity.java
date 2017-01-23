@@ -201,8 +201,7 @@ public class MainActivity extends AbstractAuthedActivity {
           Snackbar.make(findViewById(getLayoutContainerForFragment()),
               R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
               .setAction(R.string.fragment_retry_login_retry_title, view ->
-                  ConnectivityManager.getInstance(getApplicationContext())
-                      .connect(hostname).subscribe()));
+                  Session.retryLogin(RealmStore.get(hostname))));
     } else if (!session.isTokenVerified()) {
       statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
           Snackbar.make(findViewById(getLayoutContainerForFragment()),

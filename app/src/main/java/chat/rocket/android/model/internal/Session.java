@@ -55,6 +55,24 @@ public class Session extends RealmObject {
     }
   }
 
+  /**
+   * retry authentication.
+   */
+  @DebugLog
+  public static void retryLogin(RealmHelper realmHelper) {
+    final Session session = realmHelper.executeTransactionForRead(realm ->
+        queryDefaultSession(realm).isNotNull(TOKEN).findFirst());
+
+    if (!session.isTokenVerified() || !TextUtils.isEmpty(session.getError())) {
+      realmHelper.executeTransaction(
+          realm -> realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
+              .put(ID, Session.DEFAULT_ID)
+              .put(TOKEN_VERIFIED, false)
+              .put(ERROR, JSONObject.NULL)))
+          .continueWith(new LogcatIfError());
+    }
+  }
+
   public int getSessionId() {
     return sessionId;
   }
