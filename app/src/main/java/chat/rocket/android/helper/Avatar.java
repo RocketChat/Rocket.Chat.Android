@@ -30,16 +30,16 @@ public class Avatar {
   };
   private final String hostname;
   private final String username;
-  private final String avatar;
+  private final String avatarUrl;
 
   public Avatar(String hostname, String username) {
     this(hostname, username, null);
   }
 
-  public Avatar(String hostname, String username, String avatar) {
+  public Avatar(String hostname, String username, String avatarUrl) {
     this.hostname = hostname;
     this.username = username;
-    this.avatar = avatar;
+    this.avatarUrl = avatarUrl;
   }
 
   private static int getColorForUser(String username) {
@@ -82,7 +82,7 @@ public class Avatar {
   private String getImageUrl() {
     //from Rocket.Chat:packages/rocketchat-ui/lib/avatar.coffee
     //REMARK! this is often SVG image! (see: Rocket.Chat:server/startup/avatar.coffee)
-    if (TextUtils.isEmpty(avatar)) {
+    if (TextUtils.isEmpty(avatarUrl)) {
       try {
         return "https://" + hostname + "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
       } catch (UnsupportedEncodingException exception) {
@@ -90,7 +90,7 @@ public class Avatar {
         return null;
       }
     } else {
-      return avatar;
+      return avatarUrl;
     }
   }
 
