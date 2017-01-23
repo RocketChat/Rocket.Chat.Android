@@ -35,7 +35,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
         imageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
         break;
       default:
-        userRenderer.avatarInto(imageView, hostname);
+        userRenderer.avatarInto(imageView, hostname, object.getAvatar());
         break;
     }
     return this;
@@ -45,7 +45,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show Username in textView.
    */
   public MessageRenderer usernameInto(TextView textView) {
-    userRenderer.usernameInto(textView);
+    userRenderer.usernameInto(textView, object.getAlias());
     return this;
   }
 

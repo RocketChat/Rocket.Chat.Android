@@ -30,10 +30,16 @@ public class Avatar {
   };
   private final String hostname;
   private final String username;
+  private final String avatar;
 
   public Avatar(String hostname, String username) {
+    this(hostname, username, null);
+  }
+
+  public Avatar(String hostname, String username, String avatar) {
     this.hostname = hostname;
     this.username = username;
+    this.avatar = avatar;
   }
 
   private static int getColorForUser(String username) {
@@ -76,11 +82,15 @@ public class Avatar {
   private String getImageUrl() {
     //from Rocket.Chat:packages/rocketchat-ui/lib/avatar.coffee
     //REMARK! this is often SVG image! (see: Rocket.Chat:server/startup/avatar.coffee)
-    try {
-      return "https://" + hostname + "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
-    } catch (UnsupportedEncodingException exception) {
-      RCLog.e(exception, "failed to get URL for user: %s", username);
-      return null;
+    if (TextUtils.isEmpty(avatar)) {
+      try {
+        return "https://" + hostname + "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
+      } catch (UnsupportedEncodingException exception) {
+        RCLog.e(exception, "failed to get URL for user: %s", username);
+        return null;
+      }
+    } else {
+      return avatar;
     }
   }
 
@@ -100,6 +110,10 @@ public class Avatar {
   }
 
   private Drawable getTextDrawable(Context context) {
+    if (username == null) {
+      return null;
+    }
+
     int round = (int) (4 * context.getResources().getDisplayMetrics().density);
 
     return TextDrawable.builder()
@@ -114,16 +128,16 @@ public class Avatar {
 
     // Picasso can be triggered only on Main Thread.
     if (Looper.myLooper() != Looper.getMainLooper()) {
-      new Handler(Looper.getMainLooper()).post(() -> {
-        getBitmap(context, size).continueWith(_task -> {
-          if (_task.isFaulted()) {
-            task.setError(_task.getError());
-          } else {
-            task.setResult(_task.getResult());
-          }
-          return null;
-        });
-      });
+      new Handler(Looper.getMainLooper()).post(() ->
+          getBitmap(context, size)
+              .continueWith(_task -> {
+                if (_task.isFaulted()) {
+                  task.setError(_task.getError());
+                } else {
+                  task.setResult(_task.getResult());
+                }
+                return null;
+              }));
       return task.getTask();
     }
 

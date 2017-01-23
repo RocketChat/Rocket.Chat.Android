@@ -17,6 +17,9 @@
 
     <style name="TextAppearance.RocketChat.MessageAttachment.Title" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.RocketChat.MessageAttachment.Title.Link" parent="TextAppearance.RocketChat.MessageAttachment.Title">
         <item name="android:textColor">?android:attr/textColorLink</item>
     </style>
 
