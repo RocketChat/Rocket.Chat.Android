@@ -63,15 +63,15 @@ public class RxWebSocket {
     }).publish();
   }
 
-  public void sendText(String message) throws IOException {
-    webSocket.send(message);
+  public boolean sendText(String message) throws IOException {
+    return webSocket.send(message);
   }
 
   public boolean isConnected() {
     return isConnected;
   }
 
-  public void close(int code, String reason) throws IOException {
-    webSocket.close(code, reason);
+  public boolean close(int code, String reason) throws IOException {
+    return webSocket.close(code, reason);
   }
 }

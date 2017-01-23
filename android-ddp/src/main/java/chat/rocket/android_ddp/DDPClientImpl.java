@@ -59,7 +59,8 @@ public class DDPClientImpl {
           .subscribe(callback -> {
             sendMessage("connect",
                 json -> (TextUtils.isEmpty(session) ? json : json.put("session", session)).put(
-                    "version", "pre2").put("support", new JSONArray().put("pre2").put("pre1")));
+                    "version", "pre2").put("support", new JSONArray().put("pre2").put("pre1")),
+                task);
           }, err -> {
           }));
 
@@ -71,20 +72,20 @@ public class DDPClientImpl {
               .subscribe(response -> {
                 String msg = extractMsg(response);
                 if ("connected".equals(msg) && !response.isNull("session")) {
-                  task.setResult(
+                  task.trySetResult(
                       new DDPClientCallback.Connect(client, response.optString("session")));
                   subscriptions.unsubscribe();
                 } else if ("error".equals(msg) && "Already connected".equals(
                     response.optString("reason"))) {
-                  task.setResult(new DDPClientCallback.Connect(client, null));
+                  task.trySetResult(new DDPClientCallback.Connect(client, null));
                   subscriptions.unsubscribe();
                 } else if ("failed".equals(msg)) {
-                  task.setError(
+                  task.trySetError(
                       new DDPClientCallback.Connect.Failed(client, response.optString("version")));
                   subscriptions.unsubscribe();
                 }
               }, err -> {
-                task.setError(new DDPClientCallback.Connect.Timeout(client));
+                task.trySetError(new DDPClientCallback.Connect.Timeout(client));
               }));
 
       addErrorCallback(subscriptions, task);
@@ -101,135 +102,146 @@ public class DDPClientImpl {
 
   public void ping(final TaskCompletionSource<DDPClientCallback.Ping> task,
                    @Nullable final String id) {
-    CompositeSubscription subscriptions = new CompositeSubscription();
 
-    subscriptions.add(
-        observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
-            .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
-            .map(DDPClientImpl::toJson)
-            .timeout(4, TimeUnit.SECONDS)
-            .subscribe(response -> {
-              String msg = extractMsg(response);
-              if ("pong".equals(msg)) {
-                if (response.isNull("id")) {
-                  task.setResult(new DDPClientCallback.Ping(client, null));
-                  subscriptions.unsubscribe();
-                } else {
-                  String _id = response.optString("id");
-                  if (id.equals(_id)) {
-                    task.setResult(new DDPClientCallback.Ping(client, id));
+    final boolean requested = (TextUtils.isEmpty(id)) ?
+        sendMessage("ping", null) :
+        sendMessage("ping", json -> json.put("id", id));
+
+    if (requested) {
+      CompositeSubscription subscriptions = new CompositeSubscription();
+
+      subscriptions.add(
+          observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+              .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+              .map(DDPClientImpl::toJson)
+              .timeout(4, TimeUnit.SECONDS)
+              .subscribe(response -> {
+                String msg = extractMsg(response);
+                if ("pong".equals(msg)) {
+                  if (response.isNull("id")) {
+                    task.setResult(new DDPClientCallback.Ping(client, null));
                     subscriptions.unsubscribe();
+                  } else {
+                    String _id = response.optString("id");
+                    if (id.equals(_id)) {
+                      task.setResult(new DDPClientCallback.Ping(client, id));
+                      subscriptions.unsubscribe();
+                    }
                   }
                 }
-              }
-            }, err -> {
-              task.setError(new DDPClientCallback.Ping.Timeout(client));
-            }));
+              }, err -> {
+                task.setError(new DDPClientCallback.Ping.Timeout(client));
+              }));
 
-    addErrorCallback(subscriptions, task);
-
-    if (TextUtils.isEmpty(id)) {
-      sendMessage("ping", null);
-    } else {
-      sendMessage("ping", json -> json.put("id", id));
+      addErrorCallback(subscriptions, task);
     }
   }
 
   public void sub(final TaskCompletionSource<DDPSubscription.Ready> task, String name,
                   JSONArray params, String id) {
-    CompositeSubscription subscriptions = new CompositeSubscription();
+    final boolean requested =
+        sendMessage("sub", json -> json.put("id", id).put("name", name).put("params", params));
 
-    subscriptions.add(
-        observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
-            .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
-            .map(DDPClientImpl::toJson)
-            .subscribe(response -> {
-              String msg = extractMsg(response);
-              if ("ready".equals(msg) && !response.isNull("subs")) {
-                JSONArray ids = response.optJSONArray("subs");
-                for (int i = 0; i < ids.length(); i++) {
-                  String _id = ids.optString(i);
+    if (requested) {
+      CompositeSubscription subscriptions = new CompositeSubscription();
+
+      subscriptions.add(
+          observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+              .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+              .map(DDPClientImpl::toJson)
+              .subscribe(response -> {
+                String msg = extractMsg(response);
+                if ("ready".equals(msg) && !response.isNull("subs")) {
+                  JSONArray ids = response.optJSONArray("subs");
+                  for (int i = 0; i < ids.length(); i++) {
+                    String _id = ids.optString(i);
+                    if (id.equals(_id)) {
+                      task.setResult(new DDPSubscription.Ready(client, id));
+                      subscriptions.unsubscribe();
+                      break;
+                    }
+                  }
+                } else if ("nosub".equals(msg) && !response.isNull("id") && !response.isNull(
+                    "error")) {
+                  String _id = response.optString("id");
                   if (id.equals(_id)) {
-                    task.setResult(new DDPSubscription.Ready(client, id));
+                    task.setError(new DDPSubscription.NoSub.Error(client, id,
+                        response.optJSONObject("error")));
                     subscriptions.unsubscribe();
-                    break;
                   }
                 }
-              } else if ("nosub".equals(msg) && !response.isNull("id") && !response.isNull(
-                  "error")) {
-                String _id = response.optString("id");
-                if (id.equals(_id)) {
-                  task.setError(new DDPSubscription.NoSub.Error(client, id,
-                      response.optJSONObject("error")));
-                  subscriptions.unsubscribe();
-                }
-              }
-            }, err -> {
-            }));
+              }, err -> {
+              }));
 
-    addErrorCallback(subscriptions, task);
-
-    sendMessage("sub", json -> json.put("id", id).put("name", name).put("params", params));
+      addErrorCallback(subscriptions, task);
+    }
   }
 
   public void unsub(final TaskCompletionSource<DDPSubscription.NoSub> task,
                     @Nullable final String id) {
-    CompositeSubscription subscriptions = new CompositeSubscription();
 
-    subscriptions.add(
-        observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
-            .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
-            .map(DDPClientImpl::toJson)
-            .subscribe(response -> {
-              String msg = extractMsg(response);
-              if ("nosub".equals(msg) && response.isNull("error") && !response.isNull("id")) {
-                String _id = response.optString("id");
-                if (id.equals(_id)) {
-                  task.setResult(new DDPSubscription.NoSub(client, id));
-                  subscriptions.unsubscribe();
+    final boolean requested = sendMessage("unsub", json -> json.put("id", id));
+
+    if (requested) {
+      CompositeSubscription subscriptions = new CompositeSubscription();
+
+      subscriptions.add(
+          observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+              .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+              .map(DDPClientImpl::toJson)
+              .subscribe(response -> {
+                String msg = extractMsg(response);
+                if ("nosub".equals(msg) && response.isNull("error") && !response.isNull("id")) {
+                  String _id = response.optString("id");
+                  if (id.equals(_id)) {
+                    task.setResult(new DDPSubscription.NoSub(client, id));
+                    subscriptions.unsubscribe();
+                  }
                 }
-              }
-            }, err -> {
-            }));
+              }, err -> {
+              }));
 
-    addErrorCallback(subscriptions, task);
-
-    sendMessage("unsub", json -> json.put("id", id));
+      addErrorCallback(subscriptions, task);
+    }
   }
 
   public void rpc(final TaskCompletionSource<DDPClientCallback.RPC> task, String method,
                   JSONArray params, String id, long timeoutMs) {
-    CompositeSubscription subscriptions = new CompositeSubscription();
+    final boolean requested =
+        sendMessage("method",
+            json -> json.put("method", method).put("params", params).put("id", id));
 
-    subscriptions.add(
-        observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
-            .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
-            .map(DDPClientImpl::toJson)
-            .timeout(timeoutMs, TimeUnit.MILLISECONDS)
-            .subscribe(response -> {
-              String msg = extractMsg(response);
-              if ("result".equals(msg)) {
-                String _id = response.optString("id");
-                if (id.equals(_id)) {
-                  if (!response.isNull("error")) {
-                    task.setError(new DDPClientCallback.RPC.Error(client, id,
-                        response.optJSONObject("error")));
-                  } else {
-                    String result = response.optString("result");
-                    task.setResult(new DDPClientCallback.RPC(client, id, result));
+    if (requested) {
+      CompositeSubscription subscriptions = new CompositeSubscription();
+
+      subscriptions.add(
+          observable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+              .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+              .map(DDPClientImpl::toJson)
+              .timeout(timeoutMs, TimeUnit.MILLISECONDS)
+              .subscribe(response -> {
+                String msg = extractMsg(response);
+                if ("result".equals(msg)) {
+                  String _id = response.optString("id");
+                  if (id.equals(_id)) {
+                    if (!response.isNull("error")) {
+                      task.setError(new DDPClientCallback.RPC.Error(client, id,
+                          response.optJSONObject("error")));
+                    } else {
+                      String result = response.optString("result");
+                      task.setResult(new DDPClientCallback.RPC(client, id, result));
+                    }
+                    subscriptions.unsubscribe();
                   }
-                  subscriptions.unsubscribe();
                 }
-              }
-            }, err -> {
-              if (err instanceof TimeoutException) {
-                task.setError(new DDPClientCallback.RPC.Timeout(client));
-              }
-            }));
+              }, err -> {
+                if (err instanceof TimeoutException) {
+                  task.setError(new DDPClientCallback.RPC.Timeout(client));
+                }
+              }));
 
-    addErrorCallback(subscriptions, task);
-
-    sendMessage("method", json -> json.put("method", method).put("params", params).put("id", id));
+      addErrorCallback(subscriptions, task);
+    }
   }
 
   private void subscribeBaseListeners() {
@@ -325,13 +337,21 @@ public class DDPClientImpl {
     });
   }
 
-  private void sendMessage(String msg, @Nullable JSONBuilder json) {
+  private boolean sendMessage(String msg, @Nullable JSONBuilder json) {
     try {
       JSONObject origJson = new JSONObject().put("msg", msg);
       String msg2 = (json == null ? origJson : json.create(origJson)).toString();
-      websocket.sendText(msg2);
+      return websocket.sendText(msg2);
     } catch (Exception e) {
       RCLog.e(e);
+    }
+    return true; // ignore exception here.
+  }
+
+  private void sendMessage(String msg, @Nullable JSONBuilder json,
+                              TaskCompletionSource<?> taskForSetError) {
+    if (!sendMessage(msg, json)) {
+      taskForSetError.trySetError(new DDPClientCallback.Closed(client));
     }
   }
 

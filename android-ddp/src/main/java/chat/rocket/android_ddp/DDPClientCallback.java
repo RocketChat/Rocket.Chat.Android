@@ -15,7 +15,8 @@ public class DDPClientCallback {
   public static abstract class BaseException extends Exception {
     public DDPClient client;
 
-    public BaseException(DDPClient client) {
+    public BaseException(Class<? extends BaseException> clazz, DDPClient client) {
+      super(clazz.getName());
       this.client = client;
     }
   }
@@ -32,14 +33,14 @@ public class DDPClientCallback {
       public String version;
 
       public Failed(DDPClient client, String version) {
-        super(client);
+        super(Failed.class, client);
         this.version = version;
       }
     }
 
     public static class Timeout extends BaseException {
       public Timeout(DDPClient client) {
-        super(client);
+        super(Timeout.class, client);
       }
     }
   }
@@ -54,7 +55,7 @@ public class DDPClientCallback {
 
     public static class Timeout extends BaseException {
       public Timeout(DDPClient client) {
-        super(client);
+        super(Timeout.class, client);
       }
     }
   }
@@ -74,7 +75,7 @@ public class DDPClientCallback {
       public JSONObject error;
 
       public Error(DDPClient client, String id, JSONObject error) {
-        super(client);
+        super(Error.class, client);
         this.id = id;
         this.error = error;
       }
@@ -82,8 +83,14 @@ public class DDPClientCallback {
 
     public static class Timeout extends BaseException {
       public Timeout(DDPClient client) {
-        super(client);
+        super(Timeout.class, client);
       }
+    }
+  }
+
+  public static class Closed extends BaseException {
+    public Closed(DDPClient client) {
+      super(Closed.class, client);
     }
   }
 }
