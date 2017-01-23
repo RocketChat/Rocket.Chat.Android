@@ -33,8 +33,6 @@ import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
 import hugo.weaving.DebugLog;
 import rx.Single;
-import rx.SingleEmitter;
-import rx.functions.Action1;
 
 /**
  * Thread for handling WebSocket connection.
@@ -266,13 +264,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @DebugLog
   private Single<Boolean> connect() {
     return connectDDPClient()
-        .flatMap(_val -> Single.fromEmitter(new Action1<SingleEmitter<Boolean>>() {
-          @Override
-          public void call(SingleEmitter<Boolean> emitter) {
-            fetchPublicSettings();
-            registerListeners();
-            emitter.onSuccess(true);
-          }
+        .flatMap(_val -> Single.fromEmitter(emitter -> {
+          fetchPublicSettings();
+          registerListeners();
+          emitter.onSuccess(true);
         }));
   }
 

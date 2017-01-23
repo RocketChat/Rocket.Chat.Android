@@ -103,9 +103,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
       }
       webSocketThreads.put(hostname, null);
       return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
-          .doOnSuccess(thread -> {
-            webSocketThreads.put(hostname, thread);
-          });
+          .doOnSuccess(thread -> webSocketThreads.put(hostname, thread));
     });
   }
 
