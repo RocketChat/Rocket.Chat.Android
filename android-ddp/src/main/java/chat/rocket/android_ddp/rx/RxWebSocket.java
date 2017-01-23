@@ -4,13 +4,9 @@ import java.io.IOException;
 import chat.rocket.android.log.RCLog;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okhttp3.ws.WebSocket;
-import okhttp3.ws.WebSocketCall;
-import okhttp3.ws.WebSocketListener;
-import okio.Buffer;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 import rx.Observable;
 import rx.Subscriber;
 import rx.exceptions.OnErrorNotImplementedException;
@@ -28,12 +24,11 @@ public class RxWebSocket {
 
   public ConnectableObservable<RxWebSocketCallback.Base> connect(String url) {
     final Request request = new Request.Builder().url(url).build();
-    WebSocketCall call = WebSocketCall.create(httpClient, request);
 
     return Observable.create(new Observable.OnSubscribe<RxWebSocketCallback.Base>() {
       @Override
       public void call(Subscriber<? super RxWebSocketCallback.Base> subscriber) {
-        call.enqueue(new WebSocketListener() {
+        httpClient.newWebSocket(request, new WebSocketListener() {
           @Override
           public void onOpen(WebSocket webSocket, Response response) {
             isConnected = true;
@@ -42,29 +37,23 @@ public class RxWebSocket {
           }
 
           @Override
-          public void onFailure(IOException e, Response response) {
+          public void onFailure(WebSocket webSocket, Throwable err, Response response) {
             try {
               isConnected = false;
-              subscriber.onError(new RxWebSocketCallback.Failure(webSocket, e, response));
+              subscriber.onError(new RxWebSocketCallback.Failure(webSocket, err, response));
             } catch (OnErrorNotImplementedException ex) {
               RCLog.w(ex, "OnErrorNotImplementedException ignored");
             }
           }
 
           @Override
-          public void onMessage(ResponseBody responseBody) throws IOException {
+          public void onMessage(WebSocket webSocket, String text) {
             isConnected = true;
-            subscriber.onNext(new RxWebSocketCallback.Message(webSocket, responseBody));
+            subscriber.onNext(new RxWebSocketCallback.Message(webSocket, text));
           }
 
           @Override
-          public void onPong(Buffer payload) {
-            isConnected = true;
-            subscriber.onNext(new RxWebSocketCallback.Pong(webSocket, payload));
-          }
-
-          @Override
-          public void onClose(int code, String reason) {
+          public void onClosed(WebSocket webSocket, int code, String reason) {
             isConnected = false;
             subscriber.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
             subscriber.onCompleted();
@@ -74,15 +63,15 @@ public class RxWebSocket {
     }).publish();
   }
 
-  public void sendText(String message) throws IOException {
-    webSocket.sendMessage(RequestBody.create(WebSocket.TEXT, message));
+  public boolean sendText(String message) throws IOException {
+    return webSocket.send(message);
   }
 
   public boolean isConnected() {
     return isConnected;
   }
 
-  public void close(int code, String reason) throws IOException {
-    webSocket.close(code, reason);
+  public boolean close(int code, String reason) throws IOException {
+    return webSocket.close(code, reason);
   }
 }
