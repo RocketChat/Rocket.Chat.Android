@@ -6,7 +6,7 @@ import android.content.Context;
  * Connectivity Manager API Factory.
  */
 public class ConnectivityManager {
-  private static ConnectivityManagerImpl IMPL = new ConnectivityManagerImpl();
+  private static final ConnectivityManagerImpl IMPL = new ConnectivityManagerImpl();
 
   public static ConnectivityManagerApi getInstance(Context appContext) {
     return IMPL.setContext(appContext);
