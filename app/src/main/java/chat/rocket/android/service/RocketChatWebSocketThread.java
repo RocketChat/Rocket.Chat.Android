@@ -179,7 +179,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Single<Boolean> checkIfConnectionAlive() {
-    if (ddpClient == null || !ddpClient.isConnected()) {
+    if (ddpClient == null) {
       return Single.just(false);
     }
 

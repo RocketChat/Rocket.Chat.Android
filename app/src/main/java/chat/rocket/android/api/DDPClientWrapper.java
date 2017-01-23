@@ -43,13 +43,6 @@ public class DDPClientWrapper {
   }
 
   /**
-   * Returns whether DDP client is connected to WebSocket server.
-   */
-  public boolean isConnected() {
-    return ddpClient.isConnected();
-  }
-
-  /**
    * close connection.
    */
   public void close() {
