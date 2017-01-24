@@ -75,6 +75,10 @@ public class RocketChatMessageLayout extends LinearLayout {
   }
 
   private void appendTextView(String text) {
+    if (TextUtils.isEmpty(text)) {
+      return;
+    }
+
     TextView textView = (TextView) inflater.inflate(R.layout.message_body, this, false);
     textView.setText(Emojione.shortnameToUnicode(text, false));
 
