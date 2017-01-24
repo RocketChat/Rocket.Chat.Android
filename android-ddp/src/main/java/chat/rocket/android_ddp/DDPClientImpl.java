@@ -134,6 +134,8 @@ public class DDPClientImpl {
               }));
 
       addErrorCallback(subscriptions, task);
+    } else {
+      task.trySetError(new DDPClientCallback.Closed(client));
     }
   }
 
@@ -174,6 +176,8 @@ public class DDPClientImpl {
               }));
 
       addErrorCallback(subscriptions, task);
+    } else {
+      task.trySetError(new DDPClientCallback.Closed(client));
     }
   }
 
@@ -202,6 +206,8 @@ public class DDPClientImpl {
               }));
 
       addErrorCallback(subscriptions, task);
+    } else {
+      task.trySetError(new DDPClientCallback.Closed(client));
     }
   }
 
@@ -241,6 +247,8 @@ public class DDPClientImpl {
               }));
 
       addErrorCallback(subscriptions, task);
+    } else {
+      task.trySetError(new DDPClientCallback.Closed(client));
     }
   }
 
