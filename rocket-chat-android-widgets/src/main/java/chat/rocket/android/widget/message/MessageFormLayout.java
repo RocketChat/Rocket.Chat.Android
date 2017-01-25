@@ -12,7 +12,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,7 +26,7 @@ public class MessageFormLayout extends LinearLayout {
 
   private ExtraActionSelectionClickListener extraActionSelectionClickListener;
   private SubmitTextListener submitTextListener;
-  private RocketChatEditText.ContentListener listener;
+  private ImageKeyboardEditText.OnCommitContentListener listener;
 
   public MessageFormLayout(Context context) {
     super(context);
@@ -79,7 +78,7 @@ public class MessageFormLayout extends LinearLayout {
     btnSubmit.setScaleY(0);
     btnSubmit.setVisibility(GONE);
 
-    RocketChatEditText editText = (RocketChatEditText) composer.findViewById(R.id.editor);
+    ImageKeyboardEditText editText = (ImageKeyboardEditText) composer.findViewById(R.id.editor);
 
     editText.addTextChangedListener(new TextWatcher() {
       @Override
@@ -102,7 +101,7 @@ public class MessageFormLayout extends LinearLayout {
       }
     });
 
-    editText.setContentListener(new RocketChatEditText.ContentListener() {
+    editText.setContentListener(new ImageKeyboardEditText.OnCommitContentListener() {
       @Override
       public boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags,
                                      Bundle opts, String[] supportedMimeTypes) {
@@ -154,7 +153,7 @@ public class MessageFormLayout extends LinearLayout {
     composer.findViewById(R.id.btn_submit).setEnabled(enabled);
   }
 
-  public void setEditTextContentListener(RocketChatEditText.ContentListener listener) {
+  public void setEditTextContentListener(ImageKeyboardEditText.OnCommitContentListener listener) {
     this.listener = listener;
   }
 

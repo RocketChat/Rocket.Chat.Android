@@ -12,7 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 
-public class RocketChatEditText extends EditText {
+public class ImageKeyboardEditText extends EditText {
 
   private final String[] mimeTypes = {"image/gif"};
 
@@ -29,23 +29,23 @@ public class RocketChatEditText extends EditText {
         }
       };
 
-  private ContentListener listener;
+  private OnCommitContentListener listener;
 
-  public RocketChatEditText(Context context) {
+  public ImageKeyboardEditText(Context context) {
     super(context);
   }
 
-  public RocketChatEditText(Context context, AttributeSet attrs) {
+  public ImageKeyboardEditText(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public RocketChatEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+  public ImageKeyboardEditText(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public RocketChatEditText(Context context, AttributeSet attrs, int defStyleAttr,
-                            int defStyleRes) {
+  public ImageKeyboardEditText(Context context, AttributeSet attrs, int defStyleAttr,
+                               int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
@@ -59,11 +59,11 @@ public class RocketChatEditText extends EditText {
         .createWrapper(inputConnection, editorInfo, inputConnectionListener);
   }
 
-  public void setContentListener(ContentListener listener) {
+  public void setContentListener(OnCommitContentListener listener) {
     this.listener = listener;
   }
 
-  public interface ContentListener {
+  public interface OnCommitContentListener {
     boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags,
                             Bundle opts, String[] supportedMimeTypes);
   }
