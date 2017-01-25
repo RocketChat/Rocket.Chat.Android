@@ -39,9 +39,9 @@ import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
 import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.layouthelper.chatroom.AbstractNewMessageIndicatorManager;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
-import chat.rocket.android.layouthelper.chatroom.AbstractNewMessageIndicatorManager;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
 import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
@@ -50,7 +50,6 @@ import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.RoomSubscription;
@@ -61,7 +60,7 @@ import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmModelListAdapter;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
-import chat.rocket.android.service.RocketChatService;
+import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
 import permissions.dispatcher.NeedsPermission;
@@ -77,11 +76,10 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   private static final int DIALOG_ID = 1;
 
-  private String serverConfigId;
+  private String hostname;
   private RealmHelper realmHelper;
   private String roomId;
   private RealmObjectObserver<RoomSubscription> roomObserver;
-  private String hostname;
   private String userId;
   private String token;
   private LoadMoreScrollListener scrollListener;
@@ -108,9 +106,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   /**
    * create fragment with roomId.
    */
-  public static RoomFragment create(String serverConfigId, String roomId) {
+  public static RoomFragment create(String hostname, String roomId) {
     Bundle args = new Bundle();
-    args.putString("serverConfigId", serverConfigId);
+    args.putString("hostname", hostname);
     args.putString("roomId", roomId);
     RoomFragment fragment = new RoomFragment();
     fragment.setArguments(args);
@@ -122,14 +120,9 @@ public class RoomFragment extends AbstractChatRoomFragment
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
-    serverConfigId = args.getString("serverConfigId");
-    realmHelper = RealmStore.get(serverConfigId);
+    hostname = args.getString("hostname");
+    realmHelper = RealmStore.get(hostname);
     roomId = args.getString("roomId");
-    hostname = RealmStore.getDefault().executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class)
-            .equalTo(ServerConfig.ID, serverConfigId)
-            .isNotNull(ServerConfig.HOSTNAME)
-            .findFirst()).getHostname();
     userId = realmHelper.executeTransactionForRead(realm ->
         User.queryCurrentUser(realm).findFirst()).getId();
     token = realmHelper.executeTransactionForRead(realm ->
@@ -287,7 +280,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   private void setupSideMenu() {
     View sideMenu = rootView.findViewById(R.id.room_side_menu);
     sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
-      UsersOfRoomDialogFragment.create(serverConfigId, roomId, hostname)
+      UsersOfRoomDialogFragment.create(roomId, hostname)
           .show(getFragmentManager(), UsersOfRoomDialogFragment.class.getSimpleName());
       closeSideMenuIfNeeded();
     });
@@ -345,7 +338,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     String uplId = new FileUploadHelper(getContext(), realmHelper)
         .requestUploading(roomId, uri);
     if (!TextUtils.isEmpty(uplId)) {
-      FileUploadProgressDialogFragment.create(serverConfigId, roomId, uplId)
+      FileUploadProgressDialogFragment.create(hostname, roomId, uplId)
           .show(getFragmentManager(), FileUploadProgressDialogFragment.class.getSimpleName());
     } else {
       // show error.
@@ -404,7 +397,8 @@ public class RoomFragment extends AbstractChatRoomFragment
           .put(LoadMessageProcedure.RESET, true));
       return null;
     }).onSuccessTask(task -> {
-      RocketChatService.keepAlive(getContext());
+      ConnectivityManager.getInstance(getContext().getApplicationContext())
+          .keepAliveServer();
       return task;
     }).continueWith(new LogcatIfError());
   }
@@ -425,7 +419,8 @@ public class RoomFragment extends AbstractChatRoomFragment
       }
       return null;
     }).onSuccessTask(task -> {
-      RocketChatService.keepAlive(getContext());
+      ConnectivityManager.getInstance(getContext().getApplicationContext())
+          .keepAliveServer();
       return task;
     }).continueWith(new LogcatIfError());
   }
@@ -434,7 +429,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
         realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
     if (room != null && room.isAlert()) {
-      new MethodCallHelper(getContext(), serverConfigId).readMessages(roomId)
+      new MethodCallHelper(getContext(), hostname).readMessages(roomId)
           .continueWith(new LogcatIfError());
     }
   }

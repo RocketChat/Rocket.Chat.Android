@@ -9,10 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android_ddp.DDPSubscription;
 import rx.Subscription;
@@ -21,17 +21,17 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   protected final Context context;
   protected final String hostname;
   protected final RealmHelper realmHelper;
-  protected final DDPClientWrapper ddpClient;
+  protected final DDPClientRef ddpClientRef;
   private boolean isUnsubscribed;
   private String subscriptionId;
   private Subscription rxSubscription;
 
   protected AbstractDDPDocEventSubscriber(Context context, String hostname,
-                                          RealmHelper realmHelper, DDPClientWrapper ddpClient) {
+                                          RealmHelper realmHelper, DDPClientRef ddpClientRef) {
     this.context = context;
     this.hostname = hostname;
     this.realmHelper = realmHelper;
-    this.ddpClient = ddpClient;
+    this.ddpClientRef = ddpClientRef;
   }
 
   protected abstract String getSubscriptionName();
@@ -66,9 +66,9 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
       // just ignore.
     }
 
-    ddpClient.subscribe(getSubscriptionName(), params).onSuccess(task -> {
+    ddpClientRef.get().subscribe(getSubscriptionName(), params).onSuccess(task -> {
       if (isUnsubscribed) {
-        ddpClient.unsubscribe(task.getResult().id).continueWith(new LogcatIfError());
+        ddpClientRef.get().unsubscribe(task.getResult().id).continueWith(new LogcatIfError());
       } else {
         subscriptionId = task.getResult().id;
       }
@@ -95,7 +95,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   }
 
   protected Subscription subscribe() {
-    return ddpClient.getSubscriptionCallback()
+    return ddpClientRef.get().getSubscriptionCallback()
         .filter(event -> event instanceof DDPSubscription.DocEvent)
         .cast(DDPSubscription.DocEvent.class)
         .filter(event -> isTarget(event.collection))
@@ -182,7 +182,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
       rxSubscription.unsubscribe();
     }
     if (!TextUtils.isEmpty(subscriptionId)) {
-      ddpClient.unsubscribe(subscriptionId).continueWith(new LogcatIfError());
+      ddpClientRef.get().unsubscribe(subscriptionId).continueWith(new LogcatIfError());
     }
   }
 }

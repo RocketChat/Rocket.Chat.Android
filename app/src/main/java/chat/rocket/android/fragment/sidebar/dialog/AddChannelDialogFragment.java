@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.sidebar.dialog;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -15,6 +16,15 @@ import chat.rocket.android.helper.TextUtils;
  */
 public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
   public AddChannelDialogFragment() {
+  }
+
+  public static AddChannelDialogFragment create(String hostname) {
+    Bundle args = new Bundle();
+    args.putString("hostname", hostname);
+
+    AddChannelDialogFragment fragment = new AddChannelDialogFragment();
+    fragment.setArguments(args);
+    return fragment;
   }
 
   @Override

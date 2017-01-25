@@ -31,8 +31,8 @@ abstract class AbstractChatRoomDialogFragment extends BottomSheetDialogFragment 
   }
 
   protected void handleArgs(@NonNull Bundle args) {
-    String serverConfigId = args.getString("serverConfigId");
-    realmHelper = RealmStore.get(serverConfigId);
+    String hostname = args.getString("hostname");
+    realmHelper = RealmStore.get(hostname);
     roomId = args.getString("roomId");
   }
 

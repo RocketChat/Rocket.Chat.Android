@@ -5,61 +5,50 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.push.PushNotificationHandler;
 import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
-import chat.rocket.android.service.RocketChatService;
+import chat.rocket.android.service.ConnectivityManager;
 import icepick.State;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
-  @State protected String serverConfigId;
+  @State protected String hostname;
   @State protected String roomId;
   SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
       (sharedPreferences, key) -> {
-        if (RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID.equals(key)) {
-          updateServerConfigIdIfNeeded(sharedPreferences);
+        if (RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME.equals(key)) {
+          updateHostnameIfNeeded(sharedPreferences);
         } else if (RocketChatCache.KEY_SELECTED_ROOM_ID.equals(key)) {
           updateRoomIdIfNeeded(sharedPreferences);
         }
       };
-  private RealmListObserver<ServerConfig> unconfiguredServersObserver =
-      RealmStore.getDefault()
-          .createListObserver(realm ->
-              realm.where(ServerConfig.class).isNotNull(ServerConfig.SESSION).findAll())
-          .setOnUpdateListener(results -> {
-            if (results.isEmpty()) {
-              LaunchUtil.showAddServerActivity(this);
-            }
-          });
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (savedInstanceState == null) {
-      onIntent(getIntent());
+      handleIntent(getIntent());
     }
   }
 
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    onIntent(intent);
+    handleIntent(intent);
   }
 
-  private void onIntent(Intent intent) {
+  private void handleIntent(Intent intent) {
     if (intent == null) {
       return;
     }
 
-    if (intent.hasExtra(PushConstants.SERVER_CONFIG_ID)) {
+    if (intent.hasExtra(PushConstants.HOSTNAME)) {
       SharedPreferences.Editor editor = RocketChatCache.get(this).edit();
-      editor.putString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID,
-          intent.getStringExtra(PushConstants.SERVER_CONFIG_ID));
+      editor.putString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME,
+          intent.getStringExtra(PushConstants.HOSTNAME));
 
       if (intent.hasExtra(PushConstants.ROOM_ID)) {
         editor.putString(RocketChatCache.KEY_SELECTED_ROOM_ID,
@@ -74,24 +63,23 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     }
   }
 
-  private void updateServerConfigIdIfNeeded(SharedPreferences prefs) {
-    String newServerConfigId = prefs.getString(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID, null);
-    if (serverConfigId == null) {
-      if (newServerConfigId != null && assertServerConfigExists(newServerConfigId, prefs)) {
-        updateServerConfigId(newServerConfigId);
+  private void updateHostnameIfNeeded(SharedPreferences prefs) {
+    String newHostname = prefs.getString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME, null);
+    if (hostname == null) {
+      if (newHostname != null && assertServerRealmStoreExists(newHostname, prefs)) {
+        updateHostname(newHostname);
       }
     } else {
-      if (!serverConfigId.equals(newServerConfigId)
-          && assertServerConfigExists(newServerConfigId, prefs)) {
-        updateServerConfigId(newServerConfigId);
+      if (!hostname.equals(newHostname) && assertServerRealmStoreExists(newHostname, prefs)) {
+        updateHostname(newHostname);
       }
     }
   }
 
-  private boolean assertServerConfigExists(String serverConfigId, SharedPreferences prefs) {
-    if (RealmStore.get(serverConfigId) == null) {
+  private boolean assertServerRealmStoreExists(String hostname, SharedPreferences prefs) {
+    if (RealmStore.get(hostname) == null) {
       prefs.edit()
-          .remove(RocketChatCache.KEY_SELECTED_SERVER_CONFIG_ID)
+          .remove(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME)
           .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
           .apply();
       return false;
@@ -99,9 +87,9 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     return true;
   }
 
-  private void updateServerConfigId(String serverConfigId) {
-    this.serverConfigId = serverConfigId;
-    onServerConfigIdUpdated();
+  private void updateHostname(String hostname) {
+    this.hostname = hostname;
+    onHostnameUpdated();
   }
 
   private void updateRoomIdIfNeeded(SharedPreferences prefs) {
@@ -118,11 +106,11 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   }
 
   private boolean assertRoomSubscriptionExists(String roomId, SharedPreferences prefs) {
-    if (!assertServerConfigExists(serverConfigId, prefs)) {
+    if (!assertServerRealmStoreExists(hostname, prefs)) {
       return false;
     }
 
-    RoomSubscription room = RealmStore.get(serverConfigId).executeTransactionForRead(realm ->
+    RoomSubscription room = RealmStore.get(hostname).executeTransactionForRead(realm ->
         realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
     if (room == null) {
       prefs.edit()
@@ -138,7 +126,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     onRoomIdUpdated();
   }
 
-  protected void onServerConfigIdUpdated() {
+  protected void onHostnameUpdated() {
   }
 
   protected void onRoomIdUpdated() {
@@ -147,11 +135,10 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    RocketChatService.keepAlive(this);
-    unconfiguredServersObserver.sub();
+    ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
 
     SharedPreferences prefs = RocketChatCache.get(this);
-    updateServerConfigIdIfNeeded(prefs);
+    updateHostnameIfNeeded(prefs);
     updateRoomIdIfNeeded(prefs);
     prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
   }
@@ -161,7 +148,6 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     SharedPreferences prefs = RocketChatCache.get(this);
     prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
 
-    unconfiguredServersObserver.unsub();
     super.onPause();
   }
 

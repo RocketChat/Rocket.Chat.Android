@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import bolts.Task;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.FileUploadingHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OkHttpHelper;
@@ -19,6 +18,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.FileUploading;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
@@ -35,9 +35,9 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
   private FileUploadingHelper methodCall;
 
   public FileUploadingToS3Observer(Context context, String hostname,
-                                   RealmHelper realmHelper, DDPClientWrapper ddpClient) {
-    super(context, hostname, realmHelper, ddpClient);
-    methodCall = new FileUploadingHelper(realmHelper, ddpClient);
+                                   RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    super(context, hostname, realmHelper, ddpClientRef);
+    methodCall = new FileUploadingHelper(realmHelper, ddpClientRef);
 
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.

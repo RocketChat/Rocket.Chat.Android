@@ -33,7 +33,6 @@
     <string name="fragment_login_password">Password</string>
     <string name="fragment_retry_login_retry_title">RETRY</string>
     <string name="fragment_retry_login_error_title">Connection Error</string>
-    <string name="add_server_activity_waiting_server">Connecting to server…</string>
     <string name="server_config_activity_authenticating">Authenticating…</string>
     <string name="home_fragment_title">Rocket.Chat - Home</string>
     <string name="fragment_sidebar_main_unread_rooms_title">UNREAD ROOMS</string>

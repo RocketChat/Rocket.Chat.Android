@@ -7,8 +7,9 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 import java.util.List;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.android.service.ServerInfo;
 import chat.rocket.android.wrappers.InstabugWrapper;
 
 /**
@@ -23,10 +24,9 @@ public class RocketChatApplication extends MultiDexApplication {
     Realm.setDefaultConfiguration(
         new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build());
 
-    List<ServerConfig> configs = RealmStore.getDefault().executeTransactionForReadResults(realm ->
-        realm.where(ServerConfig.class).isNotNull(ServerConfig.SESSION).findAll());
-    for (ServerConfig config : configs) {
-      RealmStore.put(config.getServerConfigId());
+    List<ServerInfo> serverInfoList = ConnectivityManager.getInstance(this).getServerList();
+    for (ServerInfo serverInfo : serverInfoList) {
+      RealmStore.put(serverInfo.hostname);
     }
 
     Stetho.initialize(Stetho.newInitializerBuilder(this)

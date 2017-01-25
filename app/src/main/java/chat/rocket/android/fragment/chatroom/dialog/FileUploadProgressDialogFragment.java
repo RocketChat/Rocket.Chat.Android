@@ -25,10 +25,10 @@ public class FileUploadProgressDialogFragment extends AbstractChatRoomDialogFrag
   public FileUploadProgressDialogFragment() {
   }
 
-  public static FileUploadProgressDialogFragment create(String serverConfigId,
+  public static FileUploadProgressDialogFragment create(String hostname,
                                                         String roomId, String uplId) {
     Bundle args = new Bundle();
-    args.putString("serverConfigId", serverConfigId);
+    args.putString("hostname", hostname);
     args.putString("roomId", roomId);
     args.putString("uplId", uplId);
 

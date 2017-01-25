@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.sidebar.dialog;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
@@ -18,7 +19,13 @@ import chat.rocket.android.realm_helper.RealmAutoCompleteAdapter;
  * add Direct Message.
  */
 public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragment {
-  public AddDirectMessageDialogFragment() {
+  public static AddDirectMessageDialogFragment create(String hostname) {
+    Bundle args = new Bundle();
+    args.putString("hostname", hostname);
+
+    AddDirectMessageDialogFragment fragment = new AddDirectMessageDialogFragment();
+    fragment.setArguments(args);
+    return fragment;
   }
 
   @Override

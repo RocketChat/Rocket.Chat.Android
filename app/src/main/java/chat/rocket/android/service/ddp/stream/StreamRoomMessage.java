@@ -5,9 +5,9 @@ import io.realm.RealmObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 
 /**
  * stream-room-message subscriber.
@@ -16,8 +16,8 @@ public class StreamRoomMessage extends AbstractStreamNotifyEventSubscriber {
   private String roomId;
 
   public StreamRoomMessage(Context context, String hostname,
-                           RealmHelper realmHelper, DDPClientWrapper ddpClient, String roomId) {
-    super(context, hostname, realmHelper, ddpClient);
+                           RealmHelper realmHelper, DDPClientRef ddpClientRef, String roomId) {
+    super(context, hostname, realmHelper, ddpClientRef);
     this.roomId = roomId;
   }
 

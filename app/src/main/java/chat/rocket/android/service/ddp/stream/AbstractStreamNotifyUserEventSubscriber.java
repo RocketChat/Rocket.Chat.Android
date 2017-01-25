@@ -2,16 +2,16 @@ package chat.rocket.android.service.ddp.stream;
 
 import android.content.Context;
 
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 
 abstract class AbstractStreamNotifyUserEventSubscriber extends AbstractStreamNotifyEventSubscriber {
   protected final String userId;
 
   protected AbstractStreamNotifyUserEventSubscriber(Context context, String hostname,
                                                     RealmHelper realmHelper,
-                                                    DDPClientWrapper ddpClient, String userId) {
-    super(context, hostname, realmHelper, ddpClient);
+                                                    DDPClientRef ddpClientRef, String userId) {
+    super(context, hostname, realmHelper, ddpClientRef);
     this.userId = userId;
   }
 
