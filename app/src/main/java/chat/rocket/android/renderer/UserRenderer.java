@@ -19,7 +19,7 @@ public class UserRenderer extends AbstractRenderer<User> {
   }
 
   /**
-   * show Avatar image.
+   * show Avatar image
    */
   public UserRenderer avatarInto(ImageView imageView, String hostname) {
     if (!shouldHandle(imageView)) {
@@ -33,7 +33,7 @@ public class UserRenderer extends AbstractRenderer<User> {
   }
 
   /**
-   * show Username in textView.
+   * show Username in textView
    */
   public UserRenderer usernameInto(TextView textView) {
     if (!shouldHandle(textView)) {
@@ -41,6 +41,7 @@ public class UserRenderer extends AbstractRenderer<User> {
     }
 
     textView.setText(object.getUsername());
+
     return this;
   }
 

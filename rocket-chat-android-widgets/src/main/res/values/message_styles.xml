@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="TextAppearance.RocketChat" parent="TextAppearance.AppCompat"/>
+    <style name="TextAppearance.RocketChat" parent="TextAppearance.AppCompat" />
 
     <style name="TextAppearance.RocketChat.MessageBody" parent="TextAppearance.AppCompat.Body1">
 
@@ -13,10 +13,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.RocketChat.MessageAttachment" parent="TextAppearance.AppCompat.Body1"/>
+    <style name="TextAppearance.RocketChat.MessageAttachment" parent="TextAppearance.AppCompat.Body1" />
 
     <style name="TextAppearance.RocketChat.MessageAttachment.Title" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.RocketChat.MessageAttachment.Title.Link">
         <item name="android:textColor">?android:attr/textColorLink</item>
     </style>
 
@@ -24,9 +27,13 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="TextAppearance.RocketChat.MessageAttachment.Hostname"
-            parent="TextAppearance.AppCompat.Caption">
+    <style name="TextAppearance.RocketChat.MessageAttachment.Hostname" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textSize">8sp</item>
+    </style>
+
+    <style name="TextAppearance.RocketChat.MessageAttachment.Field.Title" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <color name="highlight_text_color">#333</color>

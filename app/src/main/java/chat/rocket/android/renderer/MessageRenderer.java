@@ -4,12 +4,15 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 
 import chat.rocket.android.R;
+import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
@@ -30,13 +33,14 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show Avatar image.
    */
   public MessageRenderer avatarInto(ImageView imageView, String hostname) {
-    switch (object.getSyncState()) {
-      case SyncState.FAILED:
-        imageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
-        break;
-      default:
-        userRenderer.avatarInto(imageView, hostname);
-        break;
+    if (object.getSyncState() == SyncState.FAILED) {
+      imageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
+    } else if (TextUtils.isEmpty(object.getAvatar())) {
+      userRenderer.avatarInto(imageView, hostname);
+    } else {
+      final User user = object.getUser();
+      setAvatarInto(object.getAvatar(), hostname, user == null ? null : user.getUsername(),
+          imageView);
     }
     return this;
   }
@@ -44,8 +48,15 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   /**
    * show Username in textView.
    */
-  public MessageRenderer usernameInto(TextView textView) {
-    userRenderer.usernameInto(textView);
+  public MessageRenderer usernameInto(TextView usernameTextView, TextView subUsernameTextView) {
+    if (TextUtils.isEmpty(object.getAlias())) {
+      userRenderer.usernameInto(usernameTextView);
+      if (subUsernameTextView != null) {
+        subUsernameTextView.setVisibility(View.GONE);
+      }
+    } else {
+      aliasAndUsernameInto(usernameTextView, subUsernameTextView);
+    }
     return this;
   }
 
@@ -122,6 +133,29 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     }
 
     return this;
+  }
+
+  private void setAvatarInto(String avatar, String hostname, String username, ImageView imageView) {
+    Picasso.with(context)
+        .load(avatar)
+        .placeholder(
+            new Avatar(hostname, username).getTextDrawable(context))
+        .into(imageView);
+  }
+
+  private void aliasAndUsernameInto(TextView aliasTextView, TextView usernameTextView) {
+    if (shouldHandle(aliasTextView)) {
+      aliasTextView.setText(object.getAlias());
+    }
+
+    if (shouldHandle(usernameTextView)) {
+      if (object.getUser() != null) {
+        usernameTextView.setText("@" + object.getUser().getUsername());
+        usernameTextView.setVisibility(View.VISIBLE);
+      } else {
+        usernameTextView.setVisibility(View.GONE);
+      }
+    }
   }
 
 }
