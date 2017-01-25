@@ -165,7 +165,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
    * THIS METHOD THROWS EXCEPTION!!
    * Use terminate() instead!!
    */
-  @Deprecated public final boolean quit() {
+  @Deprecated
+  @Override
+  public final boolean quit() {
     throw new UnsupportedOperationException();
   }
 
