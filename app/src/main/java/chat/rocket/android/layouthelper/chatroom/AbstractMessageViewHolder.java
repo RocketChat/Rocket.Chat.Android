@@ -14,6 +14,7 @@ import chat.rocket.android.realm_helper.RealmModelViewHolder;
 public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<PairedMessage> {
   protected final ImageView avatar;
   protected final TextView username;
+  protected final TextView subUsername;
   protected final TextView timestamp;
   protected final View userAndTimeContainer;
   protected final String hostname;
@@ -29,6 +30,7 @@ public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<Pai
     super(itemView);
     avatar = (ImageView) itemView.findViewById(R.id.user_avatar);
     username = (TextView) itemView.findViewById(R.id.username);
+    subUsername = (TextView) itemView.findViewById(R.id.sub_username);
     timestamp = (TextView) itemView.findViewById(R.id.timestamp);
     userAndTimeContainer = itemView.findViewById(R.id.user_and_timestamp_container);
     newDayContainer = itemView.findViewById(R.id.newday_container);

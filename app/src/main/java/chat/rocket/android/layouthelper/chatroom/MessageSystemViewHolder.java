@@ -24,7 +24,7 @@ public class MessageSystemViewHolder extends AbstractMessageViewHolder {
   protected void bindMessage(PairedMessage pairedMessage) {
     new MessageRenderer(itemView.getContext(), pairedMessage.target)
         .avatarInto(avatar, hostname)
-        .usernameInto(username)
+        .usernameInto(username, subUsername)
         .timestampInto(timestamp);
 
     if (pairedMessage.target != null) {
