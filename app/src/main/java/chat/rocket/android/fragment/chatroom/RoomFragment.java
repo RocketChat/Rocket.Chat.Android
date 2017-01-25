@@ -3,11 +3,15 @@ package chat.rocket.android.fragment.chatroom;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v13.view.inputmethod.InputConnectionCompat;
+import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.os.BuildCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -138,6 +142,7 @@ public class RoomFragment extends AbstractChatRoomFragment
         .createObjectObserver(realm ->
             realm.where(LoadMessageProcedure.class).equalTo(LoadMessageProcedure.ID, roomId))
         .setOnUpdateListener(this::onUpdateLoadMessageProcedure);
+
     if (savedInstanceState == null) {
       initialRequest();
     }
@@ -317,20 +322,11 @@ public class RoomFragment extends AbstractChatRoomFragment
         (MessageFormLayout) rootView.findViewById(R.id.message_composer);
     messageFormManager =
         new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
-    messageFormManager.setSendMessageCallback(messageText ->
-        realmHelper.executeTransaction(realm ->
-            realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-                .put(Message.ID, UUID.randomUUID().toString())
-                .put(Message.SYNC_STATE, SyncState.NOT_SYNCED)
-                .put(Message.TIMESTAMP, System.currentTimeMillis())
-                .put(Message.ROOM_ID, roomId)
-                .put(Message.USER, new JSONObject()
-                    .put(User.ID, userId))
-                .put(Message.MESSAGE, messageText)))
-            .onSuccess(_task -> {
-              scrollToLatestMessage();
-              return null;
-            }));
+    messageFormManager.setSendMessageCallback(messageText -> {
+      sendMessage(messageText);
+      return null;
+    });
+    messageFormLayout.setEditTextContentListener(this::onCommitContent);
   }
 
   @Override
@@ -344,8 +340,12 @@ public class RoomFragment extends AbstractChatRoomFragment
       return;
     }
 
+    uploadFile(data.getData());
+  }
+
+  private void uploadFile(Uri uri) {
     String uplId = new FileUploadHelper(getContext(), realmHelper)
-        .requestUploading(roomId, data.getData());
+        .requestUploading(roomId, uri);
     if (!TextUtils.isEmpty(uplId)) {
       FileUploadProgressDialogFragment.create(serverConfigId, roomId, uplId)
           .show(getFragmentManager(), FileUploadProgressDialogFragment.class.getSimpleName());
@@ -489,5 +489,59 @@ public class RoomFragment extends AbstractChatRoomFragment
   @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
   protected void onExtraActionSelected(MessageExtraActionBehavior action) {
     action.handleItemSelectedOnFragment(RoomFragment.this);
+  }
+
+  private boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags,
+                                  Bundle opts, String[] supportedMimeTypes) {
+    boolean supported = false;
+    for (final String mimeType : supportedMimeTypes) {
+      if (inputContentInfo.getDescription().hasMimeType(mimeType)) {
+        supported = true;
+        break;
+      }
+    }
+
+    if (!supported) {
+      return false;
+    }
+
+    if (BuildCompat.isAtLeastNMR1()
+        && (flags & InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0) {
+      try {
+        inputContentInfo.requestPermission();
+      } catch (Exception e) {
+        return false;
+      }
+    }
+
+    Uri linkUri = inputContentInfo.getLinkUri();
+    if (linkUri == null) {
+      return false;
+    }
+
+    sendMessage(linkUri.toString());
+
+    try {
+      inputContentInfo.releasePermission();
+    } catch (Exception e) {
+    }
+
+    return true;
+  }
+
+  private void sendMessage(String messageText) {
+    realmHelper.executeTransaction(realm ->
+        realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
+            .put(Message.ID, UUID.randomUUID().toString())
+            .put(Message.SYNC_STATE, SyncState.NOT_SYNCED)
+            .put(Message.TIMESTAMP, System.currentTimeMillis())
+            .put(Message.ROOM_ID, roomId)
+            .put(Message.USER, new JSONObject()
+                .put(User.ID, userId))
+            .put(Message.MESSAGE, messageText)))
+        .onSuccess(_task -> {
+          scrollToLatestMessage();
+          return null;
+        });
   }
 }

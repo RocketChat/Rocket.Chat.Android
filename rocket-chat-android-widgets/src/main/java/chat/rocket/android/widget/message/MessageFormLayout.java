@@ -3,6 +3,8 @@ package chat.rocket.android.widget.message;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -25,6 +27,7 @@ public class MessageFormLayout extends LinearLayout {
 
   private ExtraActionSelectionClickListener extraActionSelectionClickListener;
   private SubmitTextListener submitTextListener;
+  private RocketChatEditText.ContentListener listener;
 
   public MessageFormLayout(Context context) {
     super(context);
@@ -76,7 +79,9 @@ public class MessageFormLayout extends LinearLayout {
     btnSubmit.setScaleY(0);
     btnSubmit.setVisibility(GONE);
 
-    ((EditText) composer.findViewById(R.id.editor)).addTextChangedListener(new TextWatcher() {
+    RocketChatEditText editText = (RocketChatEditText) composer.findViewById(R.id.editor);
+
+    editText.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
       }
@@ -94,6 +99,17 @@ public class MessageFormLayout extends LinearLayout {
           animateShow(btnExtra);
           animateHide(btnSubmit);
         }
+      }
+    });
+
+    editText.setContentListener(new RocketChatEditText.ContentListener() {
+      @Override
+      public boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags,
+                                     Bundle opts, String[] supportedMimeTypes) {
+        if (listener != null) {
+          return listener.onCommitContent(inputContentInfo, flags, opts, supportedMimeTypes);
+        }
+        return false;
       }
     });
 
@@ -130,6 +146,10 @@ public class MessageFormLayout extends LinearLayout {
   public void setEnabled(boolean enabled) {
     getEditor().setEnabled(enabled);
     composer.findViewById(R.id.btn_submit).setEnabled(enabled);
+  }
+
+  public void setEditTextContentListener(RocketChatEditText.ContentListener listener) {
+    this.listener = listener;
   }
 
   private void animateHide(final View view) {
