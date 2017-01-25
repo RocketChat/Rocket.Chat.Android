@@ -1,10 +1,6 @@
 package chat.rocket.android.renderer;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,14 +40,7 @@ public class UserRenderer extends AbstractRenderer<User> {
       return this;
     }
 
-    final SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-    final ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.BLACK);
-
-    spannableStringBuilder.append(object.getUsername());
-    spannableStringBuilder.setSpan(foregroundColorSpan, 0, object.getUsername().length(),
-        Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-
-    textView.setText(spannableStringBuilder);
+    textView.setText(object.getUsername());
 
     return this;
   }
