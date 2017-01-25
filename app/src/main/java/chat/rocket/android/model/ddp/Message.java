@@ -38,6 +38,8 @@ public class Message extends RealmObject {
   private String msg;
   private User u;
   private boolean groupable;
+  private String alias;
+  private String avatar;
   private String attachments; //JSONArray.
   private String urls; //JSONArray.
 
@@ -133,6 +135,22 @@ public class Message extends RealmObject {
     this.urls = urls;
   }
 
+  public String getAlias() {
+    return alias;
+  }
+
+  public void setAlias(String alias) {
+    this.alias = alias;
+  }
+
+  public String getAvatar() {
+    return avatar;
+  }
+
+  public void setAvatar(String avatar) {
+    this.avatar = avatar;
+  }
+
   @Override
   public String toString() {
     return "Message{" +
@@ -144,6 +162,8 @@ public class Message extends RealmObject {
         ", msg='" + msg + '\'' +
         ", u=" + u +
         ", groupable=" + groupable +
+        ", alias='" + alias + '\'' +
+        ", avatar='" + avatar + '\'' +
         ", attachments='" + attachments + '\'' +
         ", urls='" + urls + '\'' +
         '}';
@@ -184,6 +204,12 @@ public class Message extends RealmObject {
     if (u != null ? !u.equals(message.u) : message.u != null) {
       return false;
     }
+    if (alias != null ? !alias.equals(message.alias) : message.alias != null) {
+      return false;
+    }
+    if (avatar != null ? !avatar.equals(message.avatar) : message.avatar != null) {
+      return false;
+    }
     if (attachments != null ? !attachments.equals(message.attachments)
         : message.attachments != null) {
       return false;
@@ -202,6 +228,8 @@ public class Message extends RealmObject {
     result = 31 * result + (msg != null ? msg.hashCode() : 0);
     result = 31 * result + (u != null ? u.hashCode() : 0);
     result = 31 * result + (groupable ? 1 : 0);
+    result = 31 * result + (alias != null ? alias.hashCode() : 0);
+    result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
     result = 31 * result + (attachments != null ? attachments.hashCode() : 0);
     result = 31 * result + (urls != null ? urls.hashCode() : 0);
     return result;

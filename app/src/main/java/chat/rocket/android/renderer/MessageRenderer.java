@@ -1,15 +1,23 @@
 package chat.rocket.android.renderer;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import chat.rocket.android.R;
+import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
@@ -30,13 +38,14 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show Avatar image.
    */
   public MessageRenderer avatarInto(ImageView imageView, String hostname) {
-    switch (object.getSyncState()) {
-      case SyncState.FAILED:
-        imageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
-        break;
-      default:
-        userRenderer.avatarInto(imageView, hostname);
-        break;
+    if (object.getSyncState() == SyncState.FAILED) {
+      imageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
+    } else if (TextUtils.isEmpty(object.getAvatar())) {
+      userRenderer.avatarInto(imageView, hostname);
+    } else {
+      final User user = object.getUser();
+      setAvatarInto(object.getAvatar(), hostname, user == null ? null : user.getUsername(),
+          imageView);
     }
     return this;
   }
@@ -45,7 +54,12 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show Username in textView.
    */
   public MessageRenderer usernameInto(TextView textView) {
-    userRenderer.usernameInto(textView);
+    if (TextUtils.isEmpty(object.getAlias())) {
+      userRenderer.usernameInto(textView);
+    } else {
+      final User user = object.getUser();
+      setAliasInto(object.getAlias(), user == null ? null : user.getUsername(), textView);
+    }
     return this;
   }
 
@@ -122,6 +136,31 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     }
 
     return this;
+  }
+
+  private void setAvatarInto(String avatar, String hostname, String username, ImageView imageView) {
+    Picasso.with(context)
+        .load(avatar)
+        .placeholder(
+            new Avatar(hostname, username).getTextDrawable(context))
+        .into(imageView);
+  }
+
+  private void setAliasInto(String alias, String username, TextView textView) {
+    final SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+    final ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.BLACK);
+
+    spannableStringBuilder.append(alias);
+
+    if (username != null) {
+      spannableStringBuilder.append(" @");
+      spannableStringBuilder.append(username);
+    }
+
+    spannableStringBuilder
+        .setSpan(foregroundColorSpan, 0, alias.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+    textView.setText(spannableStringBuilder);
   }
 
 }
