@@ -3,6 +3,8 @@ package chat.rocket.android.widget.message;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -10,7 +12,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class MessageFormLayout extends LinearLayout {
 
   private ExtraActionSelectionClickListener extraActionSelectionClickListener;
   private SubmitTextListener submitTextListener;
+  private ImageKeyboardEditText.OnCommitContentListener listener;
 
   public MessageFormLayout(Context context) {
     super(context);
@@ -76,7 +78,9 @@ public class MessageFormLayout extends LinearLayout {
     btnSubmit.setScaleY(0);
     btnSubmit.setVisibility(GONE);
 
-    ((EditText) composer.findViewById(R.id.editor)).addTextChangedListener(new TextWatcher() {
+    ImageKeyboardEditText editText = (ImageKeyboardEditText) composer.findViewById(R.id.editor);
+
+    editText.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
       }
@@ -94,6 +98,17 @@ public class MessageFormLayout extends LinearLayout {
           animateShow(btnExtra);
           animateHide(btnSubmit);
         }
+      }
+    });
+
+    editText.setContentListener(new ImageKeyboardEditText.OnCommitContentListener() {
+      @Override
+      public boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags,
+                                     Bundle opts, String[] supportedMimeTypes) {
+        if (listener != null) {
+          return listener.onCommitContent(inputContentInfo, flags, opts, supportedMimeTypes);
+        }
+        return false;
       }
     });
 
@@ -123,13 +138,23 @@ public class MessageFormLayout extends LinearLayout {
     return getEditor().getText().toString().trim();
   }
 
-  public final void setText(CharSequence text) {
-    getEditor().setText(text);
+  public final void setText(final CharSequence text) {
+    final TextView editor = getEditor();
+    editor.post(new Runnable() {
+      @Override
+      public void run() {
+        editor.setText(text);
+      }
+    });
   }
 
   public void setEnabled(boolean enabled) {
     getEditor().setEnabled(enabled);
     composer.findViewById(R.id.btn_submit).setEnabled(enabled);
+  }
+
+  public void setEditTextContentListener(ImageKeyboardEditText.OnCommitContentListener listener) {
+    this.listener = listener;
   }
 
   private void animateHide(final View view) {
