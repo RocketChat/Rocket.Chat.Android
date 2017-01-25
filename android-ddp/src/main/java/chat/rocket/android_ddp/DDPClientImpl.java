@@ -96,10 +96,6 @@ public class DDPClientImpl {
     }
   }
 
-  public boolean isConnected() {
-    return websocket != null && websocket.isConnected();
-  }
-
   public void ping(final TaskCompletionSource<DDPClientCallback.Ping> task,
                    @Nullable final String id) {
 

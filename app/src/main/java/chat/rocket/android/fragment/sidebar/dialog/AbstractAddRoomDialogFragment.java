@@ -21,9 +21,7 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
   protected MethodCallHelper methodCall;
   protected String hostname;
 
-  protected
-  @LayoutRes
-  abstract int getLayout();
+  protected @LayoutRes abstract int getLayout();
 
   protected abstract void onSetupDialog();
 
@@ -38,10 +36,9 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
   }
 
   protected void handleArgs(@NonNull Bundle args) {
-    String serverConfigId = args.getString("serverConfigId");
-    realmHelper = RealmStore.get(serverConfigId);
-    methodCall = new MethodCallHelper(getContext(), serverConfigId);
     hostname = args.getString("hostname");
+    realmHelper = RealmStore.get(hostname);
+    methodCall = new MethodCallHelper(getContext(), hostname);
   }
 
   @Override

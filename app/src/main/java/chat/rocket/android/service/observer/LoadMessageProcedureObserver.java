@@ -8,13 +8,13 @@ import org.json.JSONObject;
 
 import java.util.List;
 import bolts.Task;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 
 /**
  * Background process for loading messages.
@@ -24,9 +24,9 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
   private final MethodCallHelper methodCall;
 
   public LoadMessageProcedureObserver(Context context, String hostname,
-                                      RealmHelper realmHelper, DDPClientWrapper ddpClient) {
-    super(context, hostname, realmHelper, ddpClient);
-    methodCall = new MethodCallHelper(realmHelper, ddpClient);
+                                      RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    super(context, hostname, realmHelper, ddpClientRef);
+    methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
   }
 
   @Override

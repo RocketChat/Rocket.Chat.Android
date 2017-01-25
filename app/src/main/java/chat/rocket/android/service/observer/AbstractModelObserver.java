@@ -3,9 +3,9 @@ package chat.rocket.android.service.observer;
 import android.content.Context;
 import io.realm.RealmObject;
 
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmListObserver;
+import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 
 abstract class AbstractModelObserver<T extends RealmObject>
@@ -14,15 +14,15 @@ abstract class AbstractModelObserver<T extends RealmObject>
   protected final Context context;
   protected final String hostname;
   protected final RealmHelper realmHelper;
-  protected final DDPClientWrapper ddpClient;
+  protected final DDPClientRef ddpClientRef;
   private final RealmListObserver observer;
 
   protected AbstractModelObserver(Context context, String hostname,
-                                  RealmHelper realmHelper, DDPClientWrapper ddpClient) {
+                                  RealmHelper realmHelper, DDPClientRef ddpClientRef) {
     this.context = context;
     this.hostname = hostname;
     this.realmHelper = realmHelper;
-    this.ddpClient = ddpClient;
+    this.ddpClientRef = ddpClientRef;
     observer = realmHelper.createListObserver(this).setOnUpdateListener(this);
   }
 

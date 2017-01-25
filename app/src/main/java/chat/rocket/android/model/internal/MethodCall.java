@@ -16,7 +16,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
-import chat.rocket.android.service.RocketChatService;
+import chat.rocket.android.service.ConnectivityManager;
 
 public class MethodCall extends RealmObject {
 
@@ -89,7 +89,8 @@ public class MethodCall extends RealmObject {
         REF_MAP.put(newId, observer);
 
         if (context != null) {
-          RocketChatService.keepAlive(context);
+          ConnectivityManager.getInstance(context.getApplicationContext())
+              .keepAliveServer();
         }
       }
       return null;

@@ -5,11 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import chat.rocket.android.R;
+import chat.rocket.android.activity.LoginActivity;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.helper.TextUtils;
 
 abstract class AbstractServerConfigFragment extends AbstractFragment {
-  protected String serverConfigId;
+  protected String hostname;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,8 +22,8 @@ abstract class AbstractServerConfigFragment extends AbstractFragment {
       return;
     }
 
-    serverConfigId = args.getString("serverConfigId");
-    if (TextUtils.isEmpty(serverConfigId)) {
+    hostname = args.getString(LoginActivity.KEY_HOSTNAME);
+    if (TextUtils.isEmpty(hostname)) {
       finish();
       return;
     }

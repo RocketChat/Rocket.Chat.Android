@@ -5,17 +5,17 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.util.List;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.GcmPushSettingHelper;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.internal.GcmPushRegistration;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 
 public class PushSettingsObserver extends AbstractModelObserver<PublicSetting> {
 
   public PushSettingsObserver(Context context, String hostname,
-                              RealmHelper realmHelper, DDPClientWrapper ddpClient) {
-    super(context, hostname, realmHelper, ddpClient);
+                              RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    super(context, hostname, realmHelper, ddpClientRef);
   }
 
   @Override

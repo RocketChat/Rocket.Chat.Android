@@ -6,12 +6,12 @@ import io.realm.RealmResults;
 import org.json.JSONObject;
 
 import java.util.List;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
 
 /**
@@ -25,8 +25,8 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
    * constructor.
    */
   public MethodCallObserver(Context context, String hostname,
-                            RealmHelper realmHelper, DDPClientWrapper ddpClient) {
-    super(context, hostname, realmHelper, ddpClient);
+                            RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    super(context, hostname, realmHelper, ddpClientRef);
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
       RealmResults<MethodCall> pendingMethodCalls = realm.where(MethodCall.class)
@@ -97,7 +97,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
             .put(MethodCall.ID, methodCallId)
             .put(MethodCall.SYNC_STATE, SyncState.SYNCING))
     ).onSuccessTask(task ->
-        ddpClient.rpc(methodCallId, methodName, params, timeout)
+        ddpClientRef.get().rpc(methodCallId, methodName, params, timeout)
             .onSuccessTask(_task -> realmHelper.executeTransaction(realm -> {
               String json = _task.getResult().result;
               return realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()

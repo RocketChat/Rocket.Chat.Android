@@ -26,7 +26,7 @@ public class RetryLoginFragment extends AbstractServerConfigFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    sessionObserver = RealmStore.get(serverConfigId)
+    sessionObserver = RealmStore.get(hostname)
         .createObjectObserver(Session::queryDefaultSession)
         .setOnUpdateListener(this::onRenderServerConfigSession);
   }
@@ -49,7 +49,7 @@ public class RetryLoginFragment extends AbstractServerConfigFragment {
         view.setEnabled(false);
         waitingView.setVisibility(View.VISIBLE);
 
-        new MethodCallHelper(getContext(), serverConfigId).loginWithToken(token)
+        new MethodCallHelper(getContext(), hostname).loginWithToken(token)
             .continueWith(task -> {
               if (task.isFaulted()) {
                 view.setEnabled(true);

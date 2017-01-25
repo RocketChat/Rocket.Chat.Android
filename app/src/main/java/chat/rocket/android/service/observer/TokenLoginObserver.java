@@ -5,20 +5,20 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 import java.util.List;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 
 public class TokenLoginObserver extends AbstractModelObserver<Session> {
 
   private final MethodCallHelper methodCall;
 
   public TokenLoginObserver(Context context, String hostname,
-                            RealmHelper realmHelper, DDPClientWrapper ddpClient) {
-    super(context, hostname, realmHelper, ddpClient);
-    methodCall = new MethodCallHelper(realmHelper, ddpClient);
+                            RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    super(context, hostname, realmHelper, ddpClientRef);
+    methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
   }
 
   @Override

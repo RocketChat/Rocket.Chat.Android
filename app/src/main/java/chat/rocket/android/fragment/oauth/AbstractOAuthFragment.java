@@ -14,13 +14,11 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
 import chat.rocket.android.realm_helper.RealmStore;
 
 public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
 
-  protected String serverConfigId;
   protected String hostname;
   private String url;
   private boolean resultOK;
@@ -31,7 +29,7 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
 
   private boolean hasValidArgs(Bundle args) {
     return args != null
-        && args.containsKey("serverConfigId");
+        && args.containsKey("hostname");
   }
 
   protected final String getStateString() {
@@ -52,22 +50,19 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
     Bundle args = getArguments();
     if (!hasValidArgs(args)) {
       throw new IllegalArgumentException(
-          "serverConfigId required");
+          "hostname required");
     }
 
-    serverConfigId = args.getString("serverConfigId");
-    ServerConfig serverConfig = RealmStore.getDefault().executeTransactionForRead(realm ->
-        realm.where(ServerConfig.class).equalTo(ServerConfig.ID, serverConfigId).findFirst());
+    hostname = args.getString("hostname");
     MeteorLoginServiceConfiguration oauthConfig =
-        RealmStore.get(serverConfigId).executeTransactionForRead(realm ->
+        RealmStore.get(hostname).executeTransactionForRead(realm ->
             realm.where(MeteorLoginServiceConfiguration.class)
                 .equalTo(MeteorLoginServiceConfiguration.SERVICE, getOAuthServiceName())
                 .findFirst());
-    if (serverConfig == null || oauthConfig == null) {
+    if (oauthConfig == null) {
       throw new IllegalArgumentException(
-          "Invalid serverConfigId given,");
+          "Invalid hostname given,");
     }
-    hostname = serverConfig.getHostname();
     url = generateURL(oauthConfig);
   }
 
@@ -114,7 +109,7 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
   }
 
   private void handleOAuthCallback(final String credentialToken, final String credentialSecret) {
-    new MethodCallHelper(getContext(), serverConfigId)
+    new MethodCallHelper(getContext(), hostname)
         .loginWithOAuth(credentialToken, credentialSecret)
         .continueWith(new LogcatIfError());
   }

@@ -72,11 +72,11 @@ public class ServerPolicyHelper {
     return versionParts.length >= 3 && Integer.parseInt(versionParts[1]) >= 49;
   }
 
-  public static class ServerInfo {
+  public static class ServerInfoResponse {
     private final boolean secureConnection;
     private final JSONObject apiInfo;
 
-    public ServerInfo(boolean secureConnection, JSONObject apiInfo) {
+    public ServerInfoResponse(boolean secureConnection, JSONObject apiInfo) {
       this.secureConnection = secureConnection;
       this.apiInfo = apiInfo;
     }
