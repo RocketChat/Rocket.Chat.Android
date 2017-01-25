@@ -139,8 +139,14 @@ public class MessageFormLayout extends LinearLayout {
     return getEditor().getText().toString().trim();
   }
 
-  public final void setText(CharSequence text) {
-    getEditor().setText(text);
+  public final void setText(final CharSequence text) {
+    final TextView editor = getEditor();
+    editor.post(new Runnable() {
+      @Override
+      public void run() {
+        editor.setText(text);
+      }
+    });
   }
 
   public void setEnabled(boolean enabled) {

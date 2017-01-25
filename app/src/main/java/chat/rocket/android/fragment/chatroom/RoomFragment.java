@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
@@ -322,10 +323,7 @@ public class RoomFragment extends AbstractChatRoomFragment
         (MessageFormLayout) rootView.findViewById(R.id.message_composer);
     messageFormManager =
         new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
-    messageFormManager.setSendMessageCallback(messageText -> {
-      sendMessage(messageText);
-      return null;
-    });
+    messageFormManager.setSendMessageCallback(this::sendMessage);
     messageFormLayout.setEditTextContentListener(this::onCommitContent);
   }
 
@@ -529,8 +527,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     return true;
   }
 
-  private void sendMessage(String messageText) {
-    realmHelper.executeTransaction(realm ->
+  private Task<Void> sendMessage(String messageText) {
+    return realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
             .put(Message.ID, UUID.randomUUID().toString())
             .put(Message.SYNC_STATE, SyncState.NOT_SYNCED)
