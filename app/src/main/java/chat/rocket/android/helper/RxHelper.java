@@ -2,8 +2,6 @@ package chat.rocket.android.helper;
 
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
-import rx.Single;
-import rx.functions.Func0;
 import rx.functions.Func1;
 
 /**
@@ -15,9 +13,5 @@ public class RxHelper {
     return errors -> errors
         .zipWith(Observable.range(0, maxRetryCount), (error, retryCount) -> retryCount)
         .flatMap(retryCount -> Observable.timer(base * (long) Math.pow(2, retryCount), unit));
-  }
-
-  public static <T> Single<T> lazy(Func0<Single<T>> func) {
-    return Single.just(true).flatMap(_junk -> func.call());
   }
 }

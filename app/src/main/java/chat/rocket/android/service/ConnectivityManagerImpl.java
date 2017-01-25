@@ -136,7 +136,7 @@ import rx.subjects.PublishSubject;
   }
 
   private Single<Boolean> connectToServerIfNeeded(String hostname) {
-    return RxHelper.lazy(() -> {
+    return Single.defer(() -> {
       final int connectivity = serverConnectivityList.get(hostname);
       if (connectivity == ServerConnectivity.STATE_CONNECTED) {
         return Single.just(true);
@@ -158,7 +158,7 @@ import rx.subjects.PublishSubject;
   }
 
   private Single<Boolean> disconnectFromServerIfNeeded(String hostname) {
-    return RxHelper.lazy(() -> {
+    return Single.defer(() -> {
       final int connectivity = serverConnectivityList.get(hostname);
       if (connectivity == ServerConnectivity.STATE_DISCONNECTED) {
         return Single.just(true);
@@ -199,7 +199,7 @@ import rx.subjects.PublishSubject;
   }
 
   private Single<Boolean> connectToServer(String hostname) {
-    return RxHelper.lazy(() -> {
+    return Single.defer(() -> {
       if (!serverConnectivityList.containsKey(hostname)) {
         return Single.error(new IllegalArgumentException("hostname not found"));
       }
@@ -214,7 +214,7 @@ import rx.subjects.PublishSubject;
   }
 
   private Single<Boolean> disconnectFromServer(String hostname) {
-    return RxHelper.lazy(() -> {
+    return Single.defer(() -> {
       if (!serverConnectivityList.containsKey(hostname)) {
         return Single.error(new IllegalArgumentException("hostname not found"));
       }

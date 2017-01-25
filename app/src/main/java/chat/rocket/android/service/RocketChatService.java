@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import chat.rocket.android.helper.RxHelper;
 import hugo.weaving.DebugLog;
 import rx.Observable;
 import rx.Single;
@@ -74,7 +73,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
 
   @Override
   public Single<Boolean> disconnectFromServer(String hostname) { //called via binder.
-    return RxHelper.lazy(() -> {
+    return Single.defer(() -> {
       if (!webSocketThreads.containsKey(hostname)) {
         return Single.just(true);
       }
@@ -91,7 +90,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
 
   @DebugLog
   private Single<RocketChatWebSocketThread> getOrCreateWebSocketThread(String hostname) {
-    return RxHelper.lazy(() -> {
+    return Single.defer(() -> {
       if (webSocketThreads.containsKey(hostname)) {
         RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
         if (thread != null) {
