@@ -21,7 +21,8 @@ import rx.subjects.PublishSubject;
 /**
  * Connectivity management implementation.
  */
-/*package*/ class ConnectivityManagerImpl implements ConnectivityManagerApi, ConnectivityManagerInternal {
+/*package*/ class RealmBasedConnectivityManager
+    implements ConnectivityManagerApi, ConnectivityManagerInternal {
   private final HashMap<String, Integer> serverConnectivityList = new HashMap<>();
   private final PublishSubject<ServerConnectivity> connectivitySubject = PublishSubject.create();
   private Context appContext;
@@ -39,7 +40,7 @@ import rx.subjects.PublishSubject;
   private ConnectivityServiceInterface serviceInterface;
 
 
-  /*package*/ ConnectivityManagerImpl setContext(Context appContext) {
+  /*package*/ RealmBasedConnectivityManager setContext(Context appContext) {
     this.appContext = appContext;
     return this;
   }
@@ -47,7 +48,7 @@ import rx.subjects.PublishSubject;
   @Override
   public void resetConnectivityStateList() {
     serverConnectivityList.clear();
-    for (ServerInfo serverInfo : ServerInfoImpl.getAllFromRealm()) {
+    for (ServerInfo serverInfo : RealmBasedServerInfo.getServerInfoList()) {
       serverConnectivityList.put(serverInfo.hostname, ServerConnectivity.STATE_DISCONNECTED);
     }
   }
@@ -72,8 +73,8 @@ import rx.subjects.PublishSubject;
 
   @Override
   public void addOrUpdateServer(String hostname, @Nullable String name, boolean insecure) {
-    ServerInfoImpl.addOrUpdate(hostname, name);
-    ServerInfoImpl.setInsecure(hostname, insecure);
+    RealmBasedServerInfo.addOrUpdate(hostname, name);
+    RealmBasedServerInfo.setInsecure(hostname, insecure);
     if (!serverConnectivityList.containsKey(hostname)) {
       serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
     }
@@ -83,7 +84,7 @@ import rx.subjects.PublishSubject;
 
   @Override
   public void removeServer(String hostname) {
-    ServerInfoImpl.remove(hostname);
+    RealmBasedServerInfo.remove(hostname);
     if (serverConnectivityList.containsKey(hostname)) {
       disconnectFromServerIfNeeded(hostname)
           .subscribe(_val -> { }, RCLog::e);
@@ -97,12 +98,12 @@ import rx.subjects.PublishSubject;
 
   @Override
   public List<ServerInfo> getServerList() {
-    return ServerInfoImpl.getAllFromRealm();
+    return RealmBasedServerInfo.getServerInfoList();
   }
 
   @Override
   public ServerInfo getServerInfoForHost(String hostname) {
-    return ServerInfoImpl.getServerInfoForHost(hostname);
+    return RealmBasedServerInfo.getServerInfoForHost(hostname);
   }
 
   private List<ServerConnectivity> getCurrentConnectivityList() {
@@ -116,7 +117,7 @@ import rx.subjects.PublishSubject;
   @DebugLog
   @Override
   public void notifyConnectionEstablished(String hostname, String session) {
-    ServerInfoImpl.updateSession(hostname, session);
+    RealmBasedServerInfo.updateSession(hostname, session);
     serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTED);
     connectivitySubject.onNext(
         new ServerConnectivity(hostname, ServerConnectivity.STATE_CONNECTED));
