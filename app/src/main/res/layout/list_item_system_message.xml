@@ -38,7 +38,7 @@
                         android:id="@+id/username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.RocketChat.Message.Username"
                         tools:text="John Doe" />
 
                 <Space

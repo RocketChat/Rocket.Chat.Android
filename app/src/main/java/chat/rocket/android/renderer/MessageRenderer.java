@@ -1,14 +1,9 @@
 package chat.rocket.android.renderer;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
 
 import chat.rocket.android.R;
@@ -53,12 +48,14 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   /**
    * show Username in textView.
    */
-  public MessageRenderer usernameInto(TextView textView) {
+  public MessageRenderer usernameInto(TextView usernameTextView, TextView subUsernameTextView) {
     if (TextUtils.isEmpty(object.getAlias())) {
-      userRenderer.usernameInto(textView);
+      userRenderer.usernameInto(usernameTextView);
+      if (subUsernameTextView != null) {
+        subUsernameTextView.setVisibility(View.GONE);
+      }
     } else {
-      final User user = object.getUser();
-      setAliasInto(object.getAlias(), user == null ? null : user.getUsername(), textView);
+      aliasAndUsernameInto(usernameTextView, subUsernameTextView);
     }
     return this;
   }
@@ -146,21 +143,19 @@ public class MessageRenderer extends AbstractRenderer<Message> {
         .into(imageView);
   }
 
-  private void setAliasInto(String alias, String username, TextView textView) {
-    final SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-    final ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.BLACK);
-
-    spannableStringBuilder.append(alias);
-
-    if (username != null) {
-      spannableStringBuilder.append(" @");
-      spannableStringBuilder.append(username);
+  private void aliasAndUsernameInto(TextView aliasTextView, TextView usernameTextView) {
+    if (shouldHandle(aliasTextView)) {
+      aliasTextView.setText(object.getAlias());
     }
 
-    spannableStringBuilder
-        .setSpan(foregroundColorSpan, 0, alias.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-
-    textView.setText(spannableStringBuilder);
+    if (shouldHandle(usernameTextView)) {
+      if (object.getUser() != null) {
+        usernameTextView.setText("@" + object.getUser().getUsername());
+        usernameTextView.setVisibility(View.VISIBLE);
+      } else {
+        usernameTextView.setVisibility(View.GONE);
+      }
+    }
   }
 
 }
