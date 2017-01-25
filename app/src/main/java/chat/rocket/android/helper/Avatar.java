@@ -99,7 +99,11 @@ public class Avatar {
         .into(imageView);
   }
 
-  private Drawable getTextDrawable(Context context) {
+  public Drawable getTextDrawable(Context context) {
+    if (username == null) {
+      return null;
+    }
+
     int round = (int) (4 * context.getResources().getDisplayMetrics().density);
 
     return TextDrawable.builder()
@@ -114,16 +118,16 @@ public class Avatar {
 
     // Picasso can be triggered only on Main Thread.
     if (Looper.myLooper() != Looper.getMainLooper()) {
-      new Handler(Looper.getMainLooper()).post(() -> {
-        getBitmap(context, size).continueWith(_task -> {
-          if (_task.isFaulted()) {
-            task.setError(_task.getError());
-          } else {
-            task.setResult(_task.getResult());
-          }
-          return null;
-        });
-      });
+      new Handler(Looper.getMainLooper()).post(() ->
+          getBitmap(context, size)
+              .continueWith(_task -> {
+                if (_task.isFaulted()) {
+                  task.setError(_task.getError());
+                } else {
+                  task.setResult(_task.getResult());
+                }
+                return null;
+              }));
       return task.getTask();
     }
 

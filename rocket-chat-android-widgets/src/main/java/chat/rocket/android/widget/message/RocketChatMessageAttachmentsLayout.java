@@ -3,13 +3,16 @@ package chat.rocket.android.widget.message;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,7 +24,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import chat.rocket.android.widget.R;
-import chat.rocket.android.widget.helper.ImageFormat;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -81,10 +83,15 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
         public Response intercept(Chain chain) throws IOException {
           // uid/token is required to download attachment files.
           // see: RocketChat:lib/fileUpload.coffee
-          Request newRequest = chain.request().newBuilder()
-              .header("Cookie", "rc_uid=" + userId + ";rc_token=" + token)
-              .build();
-          return chain.proceed(newRequest);
+
+          if (chain.request().url().host().equals(hostname)) {
+            Request newRequest = chain.request().newBuilder()
+                .header("Cookie", "rc_uid=" + userId + ";rc_token=" + token)
+                .build();
+            return chain.proceed(newRequest);
+          }
+
+          return chain.proceed(chain.request());
         }
       };
       OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -114,56 +121,178 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   }
 
   private void appendAttachmentView(JSONObject attachmentObj) throws JSONException {
-    if (attachmentObj.isNull("image_url")) {
-      return;
-    }
-
-    String imageURL = attachmentObj.getString("image_url");
-    String imageType = attachmentObj.getString("image_type");
-
-    if (TextUtils.isEmpty(imageURL)
-        || !imageType.startsWith("image/")
-        || !ImageFormat.SUPPORTED_LIST.contains(imageType)) {
+    if (attachmentObj == null) {
       return;
     }
 
     View attachmentView = inflater.inflate(R.layout.message_inline_attachment, this, false);
 
-    new Picasso.Builder(getContext())
-        .downloader(getDownloader())
-        .build()
-        .load(absolutize(imageURL))
-        .placeholder(VectorDrawableCompat.create(getResources(), R.drawable.image_dummy, null))
-        .error(VectorDrawableCompat.create(getResources(), R.drawable.image_error, null))
-        .into((ImageView) attachmentView.findViewById(R.id.image));
-
-    TextView titleView = (TextView) attachmentView.findViewById(R.id.title);
-    if (attachmentObj.isNull("title")) {
-      titleView.setVisibility(View.GONE);
-    } else {
-      titleView.setVisibility(View.VISIBLE);
-      titleView.setText(attachmentObj.getString("title"));
-
-      if (attachmentObj.isNull("title_link")) {
-        titleView.setOnClickListener(null);
-        titleView.setClickable(false);
-      } else {
-        final String link = absolutize(attachmentObj.getString("title_link"));
-        titleView.setOnClickListener(new OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            view.getContext().startActivity(intent);
-          }
-        });
-      }
-    }
+    colorizeAttachmentBar(attachmentObj, attachmentView);
+    showAuthorAttachment(attachmentObj, attachmentView);
+    showTitleAttachment(attachmentObj, attachmentView);
+    showReferenceAttachment(attachmentObj, attachmentView);
+    showImageAttachment(attachmentObj, attachmentView);
+    // audio
+    // video
+    showFieldsAttachment(attachmentObj, attachmentView);
 
     addView(attachmentView);
   }
 
+  private void colorizeAttachmentBar(JSONObject attachmentObj, View attachmentView)
+      throws JSONException {
+    final View attachmentStrip = attachmentView.findViewById(R.id.attachment_strip);
+
+    final String colorString = attachmentObj.optString("color");
+    if (TextUtils.isEmpty(colorString)) {
+      attachmentStrip.setBackgroundResource(R.color.inline_attachment_quote_line);
+      return;
+    }
+
+    try {
+      attachmentStrip.setBackgroundColor(Color.parseColor(colorString));
+    } catch (Exception e) {
+      attachmentStrip.setBackgroundResource(R.color.inline_attachment_quote_line);
+    }
+  }
+
+  private void showAuthorAttachment(JSONObject attachmentObj, View attachmentView)
+      throws JSONException {
+    final View authorBox = attachmentView.findViewById(R.id.author_box);
+    if (attachmentObj.isNull("author_name") || attachmentObj.isNull("author_link")
+        || attachmentObj.isNull("author_icon")) {
+      authorBox.setVisibility(GONE);
+      return;
+    }
+
+    authorBox.setVisibility(VISIBLE);
+
+    loadImage(attachmentObj.getString("author_icon"),
+        (ImageView) attachmentView.findViewById(R.id.author_icon));
+
+    final TextView authorName = (TextView) attachmentView.findViewById(R.id.author_name);
+    authorName.setText(attachmentObj.getString("author_name"));
+
+    final String link = absolutize(attachmentObj.getString("author_link"));
+    authorName.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        view.getContext().startActivity(intent);
+      }
+    });
+
+    // timestamp and link - need to format time
+  }
+
+  private void showTitleAttachment(JSONObject attachmentObj, View attachmentView)
+      throws JSONException {
+    TextView titleView = (TextView) attachmentView.findViewById(R.id.title);
+    if (attachmentObj.isNull("title")) {
+      titleView.setVisibility(View.GONE);
+      return;
+    }
+
+    titleView.setVisibility(View.VISIBLE);
+    titleView.setText(attachmentObj.getString("title"));
+
+    if (attachmentObj.isNull("title_link")) {
+      titleView.setOnClickListener(null);
+      titleView.setClickable(false);
+    } else {
+      final String link = absolutize(attachmentObj.getString("title_link"));
+      titleView.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          view.getContext().startActivity(intent);
+        }
+      });
+      TextViewCompat.setTextAppearance(titleView,
+          R.style.TextAppearance_RocketChat_MessageAttachment_Title_Link);
+    }
+  }
+
+  private void showReferenceAttachment(JSONObject attachmentObj, View attachmentView)
+      throws JSONException {
+    final View refBox = attachmentView.findViewById(R.id.ref_box);
+    if (attachmentObj.isNull("thumb_url") && attachmentObj.isNull("text")) {
+      refBox.setVisibility(GONE);
+      return;
+    }
+
+    refBox.setVisibility(VISIBLE);
+
+    final ImageView thumbImage = (ImageView) refBox.findViewById(R.id.thumb);
+
+    final String thumbUrl = attachmentObj.optString("thumb_url");
+    if (TextUtils.isEmpty(thumbUrl)) {
+      thumbImage.setVisibility(GONE);
+    } else {
+      thumbImage.setVisibility(VISIBLE);
+      loadImage(thumbUrl, thumbImage);
+    }
+
+    final TextView refText = (TextView) refBox.findViewById(R.id.text);
+
+    final String refString = attachmentObj.optString("text");
+    if (TextUtils.isEmpty(refString)) {
+      refText.setVisibility(GONE);
+    } else {
+      refText.setVisibility(VISIBLE);
+      refText.setText(refString);
+    }
+  }
+
+  private void showImageAttachment(JSONObject attachmentObj, View attachmentView)
+      throws JSONException {
+    final ImageView attachedImage = (ImageView) attachmentView.findViewById(R.id.image);
+    if (attachmentObj.isNull("image_url")) {
+      attachedImage.setVisibility(GONE);
+      return;
+    }
+
+    attachedImage.setVisibility(VISIBLE);
+
+    loadImage(attachmentObj.getString("image_url"), attachedImage);
+  }
+
+  private void showFieldsAttachment(JSONObject attachmentObj, View attachmentView)
+      throws JSONException {
+    if (attachmentObj.isNull("fields")) {
+      return;
+    }
+
+    final ViewGroup attachmentContent =
+        (ViewGroup) attachmentView.findViewById(R.id.attachment_content);
+
+    final JSONArray fields = attachmentObj.getJSONArray("fields");
+    for (int i = 0, size = fields.length(); i < size; i++) {
+      final JSONObject fieldObject = fields.getJSONObject(i);
+      if (fieldObject.isNull("title") || fieldObject.isNull("value")) {
+        return;
+      }
+      MessageAttachmentFieldLayout fieldLayout = new MessageAttachmentFieldLayout(getContext());
+      fieldLayout.setTitle(fieldObject.getString("title"));
+      fieldLayout.setValue(fieldObject.getString("value"));
+
+      attachmentContent.addView(fieldLayout);
+    }
+  }
+
   private String absolutize(String url) {
     return url.startsWith("/") ? "https://" + hostname + url : url;
+  }
+
+  private void loadImage(String url, ImageView imageView) {
+    new Picasso.Builder(getContext())
+        .downloader(getDownloader())
+        .build()
+        .load(absolutize(url))
+        .placeholder(VectorDrawableCompat.create(getResources(), R.drawable.image_dummy, null))
+        .error(VectorDrawableCompat.create(getResources(), R.drawable.image_error, null))
+        .into(imageView);
   }
 }
