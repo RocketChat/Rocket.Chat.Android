@@ -36,7 +36,7 @@ public class LaunchUtil {
   public static void showLoginActivity(Context context, String hostname) {
     Intent intent = new Intent(context, LoginActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    intent.putExtra("hostname", hostname);
+    intent.putExtra(LoginActivity.KEY_HOSTNAME, hostname);
     context.startActivity(intent);
   }
 }

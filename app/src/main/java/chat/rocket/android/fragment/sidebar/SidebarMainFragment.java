@@ -179,11 +179,11 @@ public class SidebarMainFragment extends AbstractFragment {
 
   private void setupAddChannelButton() {
     rootView.findViewById(R.id.btn_add_channel).setOnClickListener(view -> {
-      showAddRoomDialog(new AddChannelDialogFragment());
+      showAddRoomDialog(AddChannelDialogFragment.create(hostname));
     });
 
     rootView.findViewById(R.id.btn_add_direct_message).setOnClickListener(view -> {
-      showAddRoomDialog(new AddDirectMessageDialogFragment());
+      showAddRoomDialog(AddDirectMessageDialogFragment.create(hostname));
     });
   }
 
@@ -193,9 +193,6 @@ public class SidebarMainFragment extends AbstractFragment {
   }
 
   private void showAddRoomDialog(DialogFragment dialog) {
-    Bundle args = new Bundle();
-    args.putString("hostname", hostname);
-    dialog.setArguments(args);
     dialog.show(getFragmentManager(), AbstractAddRoomDialogFragment.class.getSimpleName());
   }
 

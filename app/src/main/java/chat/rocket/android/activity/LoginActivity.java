@@ -18,6 +18,7 @@ import chat.rocket.android.service.ConnectivityManager;
  * Activity for Login, Sign-up, and Retry connecting...
  */
 public class LoginActivity extends AbstractFragmentActivity {
+  public static final String KEY_HOSTNAME = "hostname";
 
   private String hostname;
   private RealmObjectObserver<Session> sessionObserver;
@@ -37,7 +38,7 @@ public class LoginActivity extends AbstractFragmentActivity {
       return;
     }
 
-    hostname = intent.getStringExtra("hostname");
+    hostname = intent.getStringExtra(KEY_HOSTNAME);
     if (TextUtils.isEmpty(hostname)) {
       finish();
       return;
@@ -98,7 +99,7 @@ public class LoginActivity extends AbstractFragmentActivity {
     if (args == null) {
       args = new Bundle();
     }
-    args.putString("hostname", hostname);
+    args.putString(LoginActivity.KEY_HOSTNAME, hostname);
     fragment.setArguments(args);
   }
 

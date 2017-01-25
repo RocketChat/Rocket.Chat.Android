@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import chat.rocket.android.R;
+import chat.rocket.android.activity.LoginActivity;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.helper.TextUtils;
 
@@ -21,7 +22,7 @@ abstract class AbstractServerConfigFragment extends AbstractFragment {
       return;
     }
 
-    hostname = args.getString("hostname");
+    hostname = args.getString(LoginActivity.KEY_HOSTNAME);
     if (TextUtils.isEmpty(hostname)) {
       finish();
       return;

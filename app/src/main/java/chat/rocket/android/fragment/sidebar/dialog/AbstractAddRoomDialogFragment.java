@@ -21,9 +21,7 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
   protected MethodCallHelper methodCall;
   protected String hostname;
 
-  protected
-  @LayoutRes
-  abstract int getLayout();
+  protected @LayoutRes abstract int getLayout();
 
   protected abstract void onSetupDialog();
 
