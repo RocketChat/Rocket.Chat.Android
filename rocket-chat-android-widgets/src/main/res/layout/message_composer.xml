@@ -21,7 +21,7 @@
                 android:layout_height="32dp"
                 android:layout_margin="8dp" />
 
-        <EditText
+        <chat.rocket.android.widget.message.ImageKeyboardEditText
                 android:id="@+id/editor"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
