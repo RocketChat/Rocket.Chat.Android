@@ -70,6 +70,6 @@ public interface PushConstants {
   String FORCE_START = "force-start";
 
   // RC specific constants
-  String SERVER_CONFIG_ID = "serverConfigId";
+  String HOSTNAME = "hostname";
   String ROOM_ID = "roomId";
 }

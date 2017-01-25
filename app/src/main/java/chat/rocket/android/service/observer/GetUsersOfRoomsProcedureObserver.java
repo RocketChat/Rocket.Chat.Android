@@ -7,12 +7,12 @@ import org.json.JSONObject;
 
 import java.util.List;
 import bolts.Task;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 
 /**
  * Model observer for executing getUsersOfRooms.
@@ -23,9 +23,9 @@ public class GetUsersOfRoomsProcedureObserver
   private final MethodCallHelper methodCall;
 
   public GetUsersOfRoomsProcedureObserver(Context context, String hostname,
-                                          RealmHelper realmHelper, DDPClientWrapper ddpClient) {
-    super(context, hostname, realmHelper, ddpClient);
-    methodCall = new MethodCallHelper(realmHelper, ddpClient);
+                                          RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    super(context, hostname, realmHelper, ddpClientRef);
+    methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
   }
 
   @Override

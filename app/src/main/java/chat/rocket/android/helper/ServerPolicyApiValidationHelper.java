@@ -13,10 +13,10 @@ public class ServerPolicyApiValidationHelper {
     this.serverPolicyApi = serverPolicyApi;
   }
 
-  public Observable<ServerPolicyHelper.ServerInfo> getApiVersion() {
+  public Observable<ServerPolicyHelper.ServerInfoResponse> getApiVersion() {
     return serverPolicyApi.getApiInfoSecurely()
         .onErrorResumeNext(serverPolicyApi.getApiInfoInsecurely())
-        .map(response -> new ServerPolicyHelper.ServerInfo(
+        .map(response -> new ServerPolicyHelper.ServerInfoResponse(
             response.getProtocol().equals(ServerPolicyApi.SECURE_PROTOCOL),
             response.getData()
         ));

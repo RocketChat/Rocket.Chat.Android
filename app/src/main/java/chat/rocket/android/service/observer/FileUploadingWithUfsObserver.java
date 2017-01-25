@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.List;
 import bolts.Task;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.FileUploadingHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OkHttpHelper;
@@ -19,6 +18,7 @@ import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.model.internal.FileUploading;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -31,9 +31,9 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
   private FileUploadingHelper methodCall;
 
   public FileUploadingWithUfsObserver(Context context, String hostname,
-                                      RealmHelper realmHelper, DDPClientWrapper ddpClient) {
-    super(context, hostname, realmHelper, ddpClient);
-    methodCall = new FileUploadingHelper(realmHelper, ddpClient);
+                                      RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    super(context, hostname, realmHelper, ddpClientRef);
+    methodCall = new FileUploadingHelper(realmHelper, ddpClientRef);
 
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.

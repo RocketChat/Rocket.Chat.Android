@@ -6,11 +6,11 @@ import io.realm.RealmResults;
 
 import java.util.ArrayList;
 import java.util.List;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android.service.ddp.stream.StreamNotifyUserSubscriptionsChanged;
 import hugo.weaving.DebugLog;
@@ -24,9 +24,9 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
   private ArrayList<Registrable> listeners;
 
   public CurrentUserObserver(Context context, String hostname,
-                             RealmHelper realmHelper, DDPClientWrapper ddpClient) {
-    super(context, hostname, realmHelper, ddpClient);
-    methodCall = new MethodCallHelper(realmHelper, ddpClient);
+                             RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    super(context, hostname, realmHelper, ddpClientRef);
+    methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
     currentUserExists = false;
   }
 
@@ -62,7 +62,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
     methodCall.getRoomSubscriptions().onSuccess(task -> {
       if (listeners != null) {
         Registrable listener = new StreamNotifyUserSubscriptionsChanged(
-            context, hostname, realmHelper, ddpClient, userId);
+            context, hostname, realmHelper, ddpClientRef, userId);
         listener.register();
         listeners.add(listener);
       }

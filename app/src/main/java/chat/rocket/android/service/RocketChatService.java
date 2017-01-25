@@ -3,140 +3,112 @@ package chat.rocket.android.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import io.realm.RealmResults;
 
 import java.util.HashMap;
-import java.util.List;
-import bolts.Task;
-import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.ServerConfig;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmListObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import java.util.concurrent.TimeUnit;
+import hugo.weaving.DebugLog;
+import rx.Observable;
+import rx.Single;
 
 /**
  * Background service for Rocket.Chat.Application class.
  */
-public class RocketChatService extends Service {
+public class RocketChatService extends Service implements ConnectivityServiceInterface {
 
-  private RealmHelper realmHelper;
+  private ConnectivityManagerInternal connectivityManager;
   private HashMap<String, RocketChatWebSocketThread> webSocketThreads;
-  private RealmListObserver<ServerConfig> connectionRequiredServerConfigObserver;
+
+  public class LocalBinder extends Binder {
+    ConnectivityServiceInterface getServiceInterface() {
+      return RocketChatService.this;
+    }
+  }
+
+  private final LocalBinder localBinder = new LocalBinder();
 
   /**
    * ensure RocketChatService alive.
    */
-  public static void keepAlive(Context context) {
+  /*package*/ static void keepAlive(Context context) {
     context.startService(new Intent(context, RocketChatService.class));
+  }
+
+  public static void bind(Context context, ServiceConnection serviceConnection) {
+    context.bindService(
+        new Intent(context, RocketChatService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+  }
+
+  public static void unbind(Context context, ServiceConnection serviceConnection) {
+    context.unbindService(serviceConnection);
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
+
+    connectivityManager = ConnectivityManager.getInstanceForInternal(getApplicationContext());
+    connectivityManager.resetConnectivityStateList();
     webSocketThreads = new HashMap<>();
-    realmHelper = RealmStore.getDefault();
-    connectionRequiredServerConfigObserver = realmHelper
-        .createListObserver(realm -> realm.where(ServerConfig.class)
-            .isNotNull(ServerConfig.HOSTNAME)
-            .equalTo(ServerConfig.STATE, ServerConfig.STATE_READY)
-            .findAll())
-        .setOnUpdateListener(this::connectToServerWithServerConfig);
-
-    refreshServerConfigState();
-  }
-
-  private void refreshServerConfigState() {
-    realmHelper.executeTransaction(realm -> {
-      RealmResults<ServerConfig> configs = realm.where(ServerConfig.class)
-          .notEqualTo(ServerConfig.STATE, ServerConfig.STATE_READY)
-          .findAll();
-      for (ServerConfig config : configs) {
-        config.setState(ServerConfig.STATE_READY);
-      }
-      return null;
-    }).continueWith(new LogcatIfError());
-    ;
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    List<ServerConfig> configs = realmHelper.executeTransactionForReadResults(realm ->
-        realm.where(ServerConfig.class)
-            .equalTo(ServerConfig.STATE, ServerConfig.STATE_CONNECTED)
-            .findAll());
-    for (ServerConfig config : configs) {
-      String serverConfigId = config.getServerConfigId();
-      if (webSocketThreads.containsKey(serverConfigId)) {
-        RocketChatWebSocketThread thread = webSocketThreads.get(serverConfigId);
-        if (thread != null) {
-          thread.keepAlive();
-        }
-      }
-    }
-
-    realmHelper.executeTransaction(realm -> {
-      RealmResults<ServerConfig> targetConfigs = realm
-          .where(ServerConfig.class)
-          .beginGroup()
-          .equalTo(ServerConfig.STATE, ServerConfig.STATE_CONNECTION_ERROR)
-          .or()
-          .isNotNull(ServerConfig.ERROR)
-          .endGroup()
-          .isNotNull(ServerConfig.SESSION)
-          .findAll();
-      for (ServerConfig config : targetConfigs) {
-        config.setState(ServerConfig.STATE_READY);
-        config.setError(null);
-      }
-      return null;
-    }).onSuccessTask(task -> {
-      connectionRequiredServerConfigObserver.sub();
-      return null;
-    });
+    connectivityManager.ensureConnections();
     return START_NOT_STICKY;
   }
 
-  private void connectToServerWithServerConfig(List<ServerConfig> configList) {
-    if (configList.isEmpty()) {
-      return;
-    }
-
-    ServerConfig config = configList.get(0);
-    final String serverConfigId = config.getServerConfigId();
-    ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTING)
-        .onSuccessTask(task -> createWebSocketThread(config))
-        .onSuccessTask(task -> {
-          RocketChatWebSocketThread thread = task.getResult();
-          if (thread != null) {
-            thread.keepAlive();
-          }
-          return ServerConfig.updateState(serverConfigId, ServerConfig.STATE_CONNECTED);
-        }).continueWith(new LogcatIfError());
-  }
-
-  private Task<RocketChatWebSocketThread> createWebSocketThread(final ServerConfig config) {
-    final String serverConfigId = config.getServerConfigId();
-    webSocketThreads.put(serverConfigId, null);
-    return RocketChatWebSocketThread.getStarted(getApplicationContext(), config)
-        .onSuccessTask(task -> {
-          webSocketThreads.put(serverConfigId, task.getResult());
-          return task;
-        });
+  @Override
+  public Single<Boolean> ensureConnectionToServer(String hostname) { //called via binder.
+    return getOrCreateWebSocketThread(hostname)
+        .doOnError(err -> {
+          webSocketThreads.remove(hostname);
+          connectivityManager.notifyConnectionLost(hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR);
+        })
+        .flatMap(webSocketThreads -> webSocketThreads.keepAlive());
   }
 
   @Override
-  public void onDestroy() {
-    if (connectionRequiredServerConfigObserver != null) {
-      connectionRequiredServerConfigObserver.unsub();
-    }
-    super.onDestroy();
+  public Single<Boolean> disconnectFromServer(String hostname) { //called via binder.
+    return Single.defer(() -> {
+      if (!webSocketThreads.containsKey(hostname)) {
+        return Single.just(true);
+      }
+
+      RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
+      if (thread != null) {
+        return thread.terminate();
+      } else {
+        return Observable.timer(1, TimeUnit.SECONDS).toSingle()
+            .flatMap(_val -> disconnectFromServer(hostname));
+      }
+    });
+  }
+
+  @DebugLog
+  private Single<RocketChatWebSocketThread> getOrCreateWebSocketThread(String hostname) {
+    return Single.defer(() -> {
+      if (webSocketThreads.containsKey(hostname)) {
+        RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
+        if (thread != null) {
+          return Single.just(thread);
+        } else {
+          return Observable.timer(1, TimeUnit.SECONDS).toSingle()
+              .flatMap(_val -> getOrCreateWebSocketThread(hostname));
+        }
+      }
+      webSocketThreads.put(hostname, null);
+      return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
+          .doOnSuccess(thread -> webSocketThreads.put(hostname, thread));
+    });
   }
 
   @Nullable
   @Override
   public IBinder onBind(Intent intent) {
-    return null;
+    return localBinder;
   }
 }

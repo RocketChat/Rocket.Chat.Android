@@ -8,15 +8,16 @@ import org.json.JSONObject;
 
 import bolts.Task;
 import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.service.DDPClientRef;
 
 public class RaixPushHelper extends MethodCallHelper {
-  public RaixPushHelper(Context context, String serverConfigId) {
-    super(context, serverConfigId);
+  public RaixPushHelper(Context context, String hostname) {
+    super(context, hostname);
   }
 
   public RaixPushHelper(RealmHelper realmHelper,
-                        DDPClientWrapper ddpClient) {
-    super(realmHelper, ddpClient);
+                        DDPClientRef ddpClientRef) {
+    super(realmHelper, ddpClientRef);
   }
 
   public Task<Void> pushUpdate(@NonNull String pushId, @NonNull String gcmToken,

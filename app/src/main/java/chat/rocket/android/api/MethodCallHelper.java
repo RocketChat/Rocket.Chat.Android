@@ -19,6 +19,7 @@ import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.model.internal.Session;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
 
@@ -36,30 +37,30 @@ public class MethodCallHelper {
       task -> Task.forResult(new JSONArray(task.getResult()));
   protected final Context context;
   protected final RealmHelper realmHelper;
-  protected final DDPClientWrapper ddpClient;
+  protected final DDPClientRef ddpClientRef;
 
   /**
-   * initialize with Context and ServerConfigId.
+   * initialize with Context and hostname.
    */
-  public MethodCallHelper(Context context, String serverConfigId) {
+  public MethodCallHelper(Context context, String hostname) {
     this.context = context;
-    this.realmHelper = RealmStore.get(serverConfigId);
-    ddpClient = null;
+    this.realmHelper = RealmStore.get(hostname);
+    ddpClientRef = null;
   }
 
   /**
    * initialize with RealmHelper and DDPClient.
    */
-  public MethodCallHelper(RealmHelper realmHelper, DDPClientWrapper ddpClient) {
+  public MethodCallHelper(RealmHelper realmHelper, DDPClientRef ddpClientRef) {
     this.context = null;
     this.realmHelper = realmHelper;
-    this.ddpClient = ddpClient;
+    this.ddpClientRef = ddpClientRef;
   }
 
   @DebugLog
   private Task<String> executeMethodCall(String methodName, String param, long timeout) {
-    if (ddpClient != null) {
-      return ddpClient.rpc(UUID.randomUUID().toString(), methodName, param, timeout)
+    if (ddpClientRef != null) {
+      return ddpClientRef.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
       return MethodCall.execute(context, realmHelper, methodName, param, timeout);

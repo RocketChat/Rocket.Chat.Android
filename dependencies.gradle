@@ -13,7 +13,7 @@ ext {
   supportAppCompat = "com.android.support:appcompat-v7:$supportVersion"
   supportDesign = "com.android.support:design:$supportVersion"
 
-  rxJava = 'io.reactivex:rxjava:1.2.2'
+  rxJava = 'io.reactivex:rxjava:1.2.3'
   boltsTask = 'com.parse.bolts:bolts-tasks:1.4.0'
   okhttp3 = 'com.squareup.okhttp3:okhttp:3.5.0'
   picasso = 'com.squareup.picasso:picasso:2.5.2'

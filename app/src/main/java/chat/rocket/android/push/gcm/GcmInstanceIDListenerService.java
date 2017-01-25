@@ -4,24 +4,21 @@ import com.google.android.gms.iid.InstanceIDListenerService;
 
 import java.util.List;
 import chat.rocket.android.helper.GcmPushSettingHelper;
-import chat.rocket.android.model.ServerConfig;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.internal.GcmPushRegistration;
 import chat.rocket.android.realm_helper.RealmHelper;
 import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.android.service.ServerInfo;
 
 public class GcmInstanceIDListenerService extends InstanceIDListenerService {
 
   @Override
   public void onTokenRefresh() {
-    List<ServerConfig> serverConfigs = RealmStore.getDefault()
-        .executeTransactionForReadResults(realm ->
-            realm.where(ServerConfig.class)
-                .isNotNull(ServerConfig.ID)
-                .isNotNull(ServerConfig.HOSTNAME)
-                .findAll());
-    for (ServerConfig serverConfig : serverConfigs) {
-      RealmHelper realmHelper = RealmStore.get(serverConfig.getServerConfigId());
+    List<ServerInfo> serverInfoList = ConnectivityManager.getInstance(getApplicationContext())
+        .getServerList();
+    for (ServerInfo serverInfo : serverInfoList) {
+      RealmHelper realmHelper = RealmStore.get(serverInfo.hostname);
       if (realmHelper != null) {
         updateGcmToken(realmHelper);
       }
