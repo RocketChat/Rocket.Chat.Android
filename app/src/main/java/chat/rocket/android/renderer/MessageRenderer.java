@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
@@ -136,8 +136,9 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   }
 
   private void setAvatarInto(String avatar, String hostname, String username, ImageView imageView) {
-    Picasso.with(context)
+    Glide.with(context)
         .load(avatar)
+        .asBitmap()
         .placeholder(
             new Avatar(hostname, username).getTextDrawable(context))
         .into(imageView);

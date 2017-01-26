@@ -16,18 +16,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.jakewharton.picasso.OkHttp3Downloader;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import chat.rocket.android.widget.R;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  */
@@ -38,7 +34,6 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
   private String userId;
   private String token;
-  private OkHttp3Downloader downloader;
 
   public RocketChatMessageAttachmentsLayout(Context context) {
     super(context);
@@ -74,32 +69,6 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   public void setCredential(String userId, String token) {
     this.userId = userId;
     this.token = token;
-  }
-
-  private OkHttp3Downloader getDownloader() {
-    if (downloader == null) {
-      Interceptor interceptor = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-          // uid/token is required to download attachment files.
-          // see: RocketChat:lib/fileUpload.coffee
-
-          if (chain.request().url().host().equals(hostname)) {
-            Request newRequest = chain.request().newBuilder()
-                .header("Cookie", "rc_uid=" + userId + ";rc_token=" + token)
-                .build();
-            return chain.proceed(newRequest);
-          }
-
-          return chain.proceed(chain.request());
-        }
-      };
-      OkHttpClient okHttpClient = new OkHttpClient.Builder()
-          .addInterceptor(interceptor)
-          .build();
-      downloader = new OkHttp3Downloader(okHttpClient);
-    }
-    return downloader;
   }
 
   public void setAttachments(String attachmentsString) {
@@ -286,11 +255,25 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     return url.startsWith("/") ? "https://" + hostname + url : url;
   }
 
+  private GlideUrl getGlideUrl(String url) {
+    final String absoluteUrl = absolutize(url);
+
+    try {
+      if (hostname.equals(Uri.parse(absoluteUrl).getHost())) {
+        return new GlideUrl(absoluteUrl, new LazyHeaders.Builder()
+            .addHeader("Cookie", "rc_uid=" + userId + ";rc_token=" + token)
+            .build());
+      }
+    } catch (Exception exception) {
+    }
+
+    return new GlideUrl(absoluteUrl);
+  }
+
   private void loadImage(String url, ImageView imageView) {
-    new Picasso.Builder(getContext())
-        .downloader(getDownloader())
-        .build()
-        .load(absolutize(url))
+    Glide.with(getContext())
+        .load(getGlideUrl(url))
+        .thumbnail(Glide.with(getContext()).load(url).dontAnimate())
         .placeholder(VectorDrawableCompat.create(getResources(), R.drawable.image_dummy, null))
         .error(VectorDrawableCompat.create(getResources(), R.drawable.image_error, null))
         .into(imageView);

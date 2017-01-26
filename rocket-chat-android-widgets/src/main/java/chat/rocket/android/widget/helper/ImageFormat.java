@@ -10,14 +10,14 @@ public interface ImageFormat {
   String PNG = "image/png";
   String JPG = "image/jpg";
   String JPEG = "image/jpeg";
-  String WEBP = "image/webp";
+  String GIF = "image/gif";
 
   List<String> SUPPORTED_LIST = Collections.unmodifiableList(new ArrayList<String>() {
     {
       add(PNG);
       add(JPG);
       add(JPEG);
-      add(WEBP);
+      add(GIF);
     }
   });
 }

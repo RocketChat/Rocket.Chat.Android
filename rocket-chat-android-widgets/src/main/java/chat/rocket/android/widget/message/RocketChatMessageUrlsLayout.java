@@ -1,5 +1,7 @@
 package chat.rocket.android.widget.message;
 
+import static com.bumptech.glide.Glide.with;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,8 +79,9 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
 
     if (contentType.startsWith("image/") && ImageFormat.SUPPORTED_LIST.contains(contentType)) {
       View inlineImage = inflater.inflate(R.layout.message_inline_image, this, false);
-      Picasso.with(getContext())
+      Glide.with(getContext())
           .load(url)
+          .thumbnail(Glide.with(getContext()).load(url).dontAnimate())
           .placeholder(R.drawable.image_dummy)
           .error(R.drawable.image_error)
           .into((ImageView) inlineImage.findViewById(R.id.message_inline_image));
@@ -135,8 +138,9 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
       if (TextUtils.isEmpty(imageURL)) {
         image.setVisibility(View.GONE);
       } else {
-        Picasso.with(getContext())
+        with(getContext())
             .load(imageURL)
+            .asBitmap()
             .placeholder(R.drawable.image_dummy)
             .error(R.drawable.image_error)
             .into(image);
