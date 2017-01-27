@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rocket.Chat.Android</string>
+    <string name="app_name">Rocket.Chat+</string>
     <string name="fragment_sidebar_main_channels_title">CHANNELS</string>
     <string name="fragment_sidebar_main_direct_messages_title">DIRECT MESSAGES</string>
     <string name="user_status_online">Online</string>

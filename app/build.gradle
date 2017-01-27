@@ -34,8 +34,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 6
-        versionName "1.0-beta6"
+        versionCode 7
+        versionName "1.0-beta7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
