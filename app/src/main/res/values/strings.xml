@@ -41,10 +41,6 @@
     <string name="image_upload_message_spec_title">Attach image</string>
     <string name="audio_upload_message_spec_title">Attach audio</string>
     <string name="video_upload_message_spec_title">Attach video</string>
-    <string name="title_pick_file">Select file</string>
-    <string name="title_take_picture">Take picture</string>
-    <string name="title_record_audio">Record audio</string>
-    <string name="title_record_video">Record video</string>
 
     <string name="input_hostname_invalid_server_message">Invalid server version</string>
     <string name="connection_error_try_later">There\'s a connection error. Please try later.</string>
