@@ -38,7 +38,6 @@ dependencies {
   compile 'org.nibor.autolink:autolink:0.5.0'
   compile rootProject.ext.textDrawable
   compile rootProject.ext.okhttp3
-  compile rootProject.ext.picasso
-  compile rootProject.ext.picasso2Okhttp3Downloader
+  compile rootProject.ext.glide
   compile rootProject.ext.boltsTask
 }
