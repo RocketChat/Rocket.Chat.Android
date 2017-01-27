@@ -33,12 +33,12 @@ public class FileUploadingHelper extends MethodCallHelper {
         .onSuccessTask(CONVERT_TO_JSON_OBJECT);
   }
 
-  public Task<JSONObject> sendFileMessage(String roomId, String storageType, JSONObject fileObj) {
+  public Task<Void> sendFileMessage(String roomId, String storageType, JSONObject fileObj) {
     return call("sendFileMessage", TIMEOUT_MS, () -> new JSONArray()
         .put(roomId)
         .put(TextUtils.isEmpty(storageType) ? JSONObject.NULL : storageType)
         .put(fileObj))
-        .onSuccessTask(CONVERT_TO_JSON_OBJECT);
+        .onSuccessTask(task -> Task.forResult(null));
   }
 
   public Task<JSONObject> ufsCreate(String filename, long filesize, String mimeType, String store,
