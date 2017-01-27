@@ -82,10 +82,6 @@ public class Avatar {
    * render avatar into RocketChatAvatar.
    */
   public void into(final RocketChatAvatar rocketChatAvatar) {
-    if (ViewDataCache.isStored(username, rocketChatAvatar)) {
-      return;
-    }
-
     final Context context = rocketChatAvatar.getContext();
     rocketChatAvatar.loadImage(getImageUrl(), getTextDrawable(context));
   }
