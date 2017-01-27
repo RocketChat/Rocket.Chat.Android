@@ -11,7 +11,7 @@
             android:layout_height="8dp"
             android:layout_margin="@dimen/margin_8" />
 
-    <chat.rocket.android.widget.message.RocketChatAvatar
+    <chat.rocket.android.widget.RocketChatAvatar
             android:id="@+id/room_user_avatar"
             android:layout_width="24dp"
             android:layout_height="24dp" />

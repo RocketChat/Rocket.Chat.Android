@@ -28,7 +28,7 @@ import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.renderer.UserRenderer;
-import chat.rocket.android.widget.message.RocketChatAvatar;
+import chat.rocket.android.widget.RocketChatAvatar;
 
 public class SidebarMainFragment extends AbstractFragment {
 

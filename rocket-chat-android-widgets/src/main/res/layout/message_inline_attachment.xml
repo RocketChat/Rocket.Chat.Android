@@ -99,9 +99,9 @@
         <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="150dp"
                 android:layout_marginBottom="8dp"
-                fresco:actualImageScaleType="fitCenter" />
+                fresco:actualImageScaleType="fitStart" />
 
         <!-- audio -->
         <!-- video -->

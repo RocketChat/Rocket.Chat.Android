@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import chat.rocket.android.R;
-import chat.rocket.android.widget.message.RocketChatAvatar;
+import chat.rocket.android.widget.RocketChatAvatar;
 
 /**
  * ViewHolder for UsersOfRoom.

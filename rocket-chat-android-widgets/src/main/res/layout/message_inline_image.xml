@@ -9,6 +9,6 @@
     <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/message_inline_image"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            fresco:actualImageScaleType="fitCenter" />
+            android:layout_height="150dp"
+            fresco:actualImageScaleType="fitStart" />
 </FrameLayout>

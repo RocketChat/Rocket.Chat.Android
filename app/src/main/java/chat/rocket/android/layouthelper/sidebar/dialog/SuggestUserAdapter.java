@@ -10,7 +10,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmAutoCompleteAdapter;
 import chat.rocket.android.renderer.UserRenderer;
-import chat.rocket.android.widget.message.RocketChatAvatar;
+import chat.rocket.android.widget.RocketChatAvatar;
 
 /**
  * adapter to suggest user names.

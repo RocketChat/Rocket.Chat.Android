@@ -1,4 +1,4 @@
-package chat.rocket.android.widget.message;
+package chat.rocket.android.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;

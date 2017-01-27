@@ -12,7 +12,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.widget.message.RocketChatAvatar;
+import chat.rocket.android.widget.RocketChatAvatar;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;

@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <chat.rocket.android.widget.message.RocketChatAvatar
+        <chat.rocket.android.widget.RocketChatAvatar
                 android:id="@+id/user_avatar"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
