@@ -2,7 +2,6 @@ package chat.rocket.android.layouthelper.chatroom;
 
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import chat.rocket.android.R;
