@@ -5,14 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,11 +80,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
 
     if (contentType.startsWith("image/") && ImageFormat.SUPPORTED_LIST.contains(contentType)) {
       View inlineImage = inflater.inflate(R.layout.message_inline_image, this, false);
-      Picasso.with(getContext())
-          .load(url)
-          .placeholder(R.drawable.image_dummy)
-          .error(R.drawable.image_error)
-          .into((ImageView) inlineImage.findViewById(R.id.message_inline_image));
+      loadImage(url, (SimpleDraweeView) inlineImage.findViewById(R.id.message_inline_image));
       addView(inlineImage);
     }
 
@@ -131,15 +130,11 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
       ((TextView) embedUrl.findViewById(R.id.title)).setText(title);
       ((TextView) embedUrl.findViewById(R.id.description)).setText(description);
 
-      ImageView image = (ImageView) embedUrl.findViewById(R.id.image);
+      final SimpleDraweeView image = (SimpleDraweeView) embedUrl.findViewById(R.id.image);
       if (TextUtils.isEmpty(imageURL)) {
         image.setVisibility(View.GONE);
       } else {
-        Picasso.with(getContext())
-            .load(imageURL)
-            .placeholder(R.drawable.image_dummy)
-            .error(R.drawable.image_error)
-            .into(image);
+        loadImage(imageURL, image);
         image.setVisibility(View.VISIBLE);
       }
 
@@ -154,5 +149,19 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
 
       addView(embedUrl);
     }
+  }
+
+  private void loadImage(String imageUrl, SimpleDraweeView draweeView) {
+    final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
+    hierarchy.setPlaceholderImage(
+        VectorDrawableCompat.create(getResources(), R.drawable.image_dummy, null));
+    hierarchy.setFailureImage(
+        VectorDrawableCompat.create(getResources(), R.drawable.image_error, null));
+
+    final DraweeController controller = Fresco.newDraweeControllerBuilder()
+        .setUri(Uri.parse(imageUrl))
+        .setAutoPlayAnimations(true)
+        .build();
+    draweeView.setController(controller);
   }
 }

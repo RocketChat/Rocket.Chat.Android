@@ -14,6 +14,13 @@ ext {
   supportV13 = "com.android.support:support-v13:$supportVersion"
   supportDesign = "com.android.support:design:$supportVersion"
 
+  frescoVersion = '1.0.1'
+  frescoBase = "com.facebook.fresco:fresco:$frescoVersion"
+  frescoAnimatedGif = "com.facebook.fresco:animated-gif:$frescoVersion"
+  frescoAnimatedWebp = "com.facebook.fresco:animated-webp:$frescoVersion"
+  frescoWebp = "com.facebook.fresco:webpsupport:$frescoVersion"
+  frescoImagePipelineOkHttp3 = "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
+
   rxJava = 'io.reactivex:rxjava:1.2.3'
   boltsTask = 'com.parse.bolts:bolts-tasks:1.4.0'
   okhttp3 = 'com.squareup.okhttp3:okhttp:3.5.0'

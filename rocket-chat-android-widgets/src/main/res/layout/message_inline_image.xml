@@ -1,15 +1,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/inline_attachment_background"
         android:layout_margin="4dp"
         android:padding="4dp">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/message_inline_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxHeight="200dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitStart" />
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            fresco:actualImageScaleType="fitCenter" />
 </FrameLayout>

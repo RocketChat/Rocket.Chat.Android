@@ -7,9 +7,11 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 import java.util.List;
+import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.ServerInfo;
+import chat.rocket.android.widget.RocketChatWidgets;
 import chat.rocket.android.wrappers.InstabugWrapper;
 
 /**
@@ -37,5 +39,7 @@ public class RocketChatApplication extends MultiDexApplication {
     InstabugWrapper.build(this, getString(R.string.instabug_api_key));
 
     //TODO: add periodic trigger for RocketChatService.keepAlive(this) here!
+
+    RocketChatWidgets.initialize(this, OkHttpHelper.getClientForDownloadFile(this));
   }
 }
