@@ -21,6 +21,10 @@ public class RocketChatCache {
     return context.getSharedPreferences("cache", Context.MODE_PRIVATE);
   }
 
+  public static String getSelectedServerHostname(Context context) {
+    return get(context).getString(KEY_SELECTED_SERVER_HOSTNAME, null);
+  }
+
   public static String getOrCreatePushId(Context context) {
     SharedPreferences preferences = get(context);
     if (!preferences.contains(KEY_PUSH_ID)) {

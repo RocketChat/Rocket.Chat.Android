@@ -38,7 +38,12 @@ dependencies {
   compile 'org.nibor.autolink:autolink:0.5.0'
   compile rootProject.ext.textDrawable
   compile rootProject.ext.okhttp3
-  compile rootProject.ext.picasso
-  compile rootProject.ext.picasso2Okhttp3Downloader
   compile rootProject.ext.boltsTask
+
+  compile rootProject.ext.frescoBase
+  compile rootProject.ext.frescoAnimatedGif
+  compile rootProject.ext.frescoAnimatedWebp
+  compile rootProject.ext.frescoWebp
+  compile rootProject.ext.frescoImagePipelineOkHttp3
+  compile 'com.caverock:androidsvg:1.2.1'
 }

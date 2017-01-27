@@ -28,6 +28,7 @@ import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmObjectObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.renderer.UserRenderer;
+import chat.rocket.android.widget.RocketChatAvatar;
 
 public class SidebarMainFragment extends AbstractFragment {
 
@@ -147,7 +148,7 @@ public class SidebarMainFragment extends AbstractFragment {
   private void onRenderCurrentUser(User user) {
     if (user != null && !TextUtils.isEmpty(hostname)) {
       new UserRenderer(getContext(), user)
-          .avatarInto((ImageView) rootView.findViewById(R.id.current_user_avatar), hostname)
+          .avatarInto((RocketChatAvatar) rootView.findViewById(R.id.current_user_avatar), hostname)
           .usernameInto((TextView) rootView.findViewById(R.id.current_user_name))
           .statusColorInto((ImageView) rootView.findViewById(R.id.current_user_status));
     }

@@ -11,6 +11,8 @@ public interface ImageFormat {
   String JPG = "image/jpg";
   String JPEG = "image/jpeg";
   String WEBP = "image/webp";
+  String GIF = "image/gif";
+  String SVG = "image/svg+xml";
 
   List<String> SUPPORTED_LIST = Collections.unmodifiableList(new ArrayList<String>() {
     {
@@ -18,6 +20,8 @@ public interface ImageFormat {
       add(JPG);
       add(JPEG);
       add(WEBP);
+      add(GIF);
+      add(SVG);
     }
   });
 }

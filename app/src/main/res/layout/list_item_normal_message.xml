@@ -13,12 +13,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp">
 
-        <ImageView
+        <chat.rocket.android.widget.RocketChatAvatar
                 android:id="@+id/user_avatar"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_margin="8dp"
-                tools:src="@drawable/ic_default_avatar" />
+                android:layout_margin="8dp" />
 
         <LinearLayout
                 android:layout_width="match_parent"

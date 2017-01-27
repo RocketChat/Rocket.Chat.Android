@@ -1,10 +1,9 @@
 package chat.rocket.android.renderer;
 
 import android.content.Context;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
@@ -13,6 +12,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.Message;
 import chat.rocket.android.model.ddp.User;
+import chat.rocket.android.widget.RocketChatAvatar;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
@@ -32,15 +32,16 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   /**
    * show Avatar image.
    */
-  public MessageRenderer avatarInto(ImageView imageView, String hostname) {
+  public MessageRenderer avatarInto(RocketChatAvatar rocketChatAvatar, String hostname) {
     if (object.getSyncState() == SyncState.FAILED) {
-      imageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
+      rocketChatAvatar.loadImage(VectorDrawableCompat
+          .create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
     } else if (TextUtils.isEmpty(object.getAvatar())) {
-      userRenderer.avatarInto(imageView, hostname);
+      userRenderer.avatarInto(rocketChatAvatar, hostname);
     } else {
       final User user = object.getUser();
       setAvatarInto(object.getAvatar(), hostname, user == null ? null : user.getUsername(),
-          imageView);
+          rocketChatAvatar);
     }
     return this;
   }
@@ -128,19 +129,15 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     } else {
       attachmentsLayout.setVisibility(View.VISIBLE);
       attachmentsLayout.setHostname(hostname);
-      attachmentsLayout.setCredential(userId, token);
       attachmentsLayout.setAttachments(attachments);
     }
 
     return this;
   }
 
-  private void setAvatarInto(String avatar, String hostname, String username, ImageView imageView) {
-    Picasso.with(context)
-        .load(avatar)
-        .placeholder(
-            new Avatar(hostname, username).getTextDrawable(context))
-        .into(imageView);
+  private void setAvatarInto(String avatar, String hostname, String username,
+                             RocketChatAvatar imageView) {
+    imageView.loadImage(avatar, new Avatar(hostname, username).getTextDrawable(context));
   }
 
   private void aliasAndUsernameInto(TextView aliasTextView, TextView usernameTextView) {

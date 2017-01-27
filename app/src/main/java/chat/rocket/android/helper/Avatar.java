@@ -6,18 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.ImageView;
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import bolts.Task;
-import bolts.TaskCompletionSource;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.widget.RocketChatAvatar;
 
 /**
  * Helper for rendering user avatar image.
@@ -85,18 +79,11 @@ public class Avatar {
   }
 
   /**
-   * render avatar into imageView.
+   * render avatar into RocketChatAvatar.
    */
-  public void into(final ImageView imageView) {
-    if (ViewDataCache.isStored(username, imageView)) {
-      return;
-    }
-
-    final Context context = imageView.getContext();
-    Picasso.with(context)
-        .load(getImageUrl())
-        .placeholder(getTextDrawable(context))
-        .into(imageView);
+  public void into(final RocketChatAvatar rocketChatAvatar) {
+    final Context context = rocketChatAvatar.getContext();
+    rocketChatAvatar.loadImage(getImageUrl(), getTextDrawable(context));
   }
 
   public Drawable getTextDrawable(Context context) {
@@ -111,47 +98,6 @@ public class Avatar {
         .useFont(Typeface.SANS_SERIF)
         .endConfig()
         .buildRoundRect(getInitialsForUser(username), getColorForUser(username), round);
-  }
-
-  public Task<Bitmap> getBitmap(Context context, int size) {
-    TaskCompletionSource<Bitmap> task = new TaskCompletionSource<>();
-
-    // Picasso can be triggered only on Main Thread.
-    if (Looper.myLooper() != Looper.getMainLooper()) {
-      new Handler(Looper.getMainLooper()).post(() ->
-          getBitmap(context, size)
-              .continueWith(_task -> {
-                if (_task.isFaulted()) {
-                  task.setError(_task.getError());
-                } else {
-                  task.setResult(_task.getResult());
-                }
-                return null;
-              }));
-      return task.getTask();
-    }
-
-    Picasso.with(context)
-        .load(getImageUrl())
-        .error(getTextDrawable(context))
-        .into(new Target() {
-          @Override
-          public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            if (bitmap != null) {
-              task.trySetResult(bitmap);
-            }
-          }
-
-          @Override
-          public void onBitmapFailed(Drawable errorDrawable) {
-            task.trySetResult(drawableToBitmap(errorDrawable, size));
-          }
-
-          @Override
-          public void onPrepareLoad(Drawable placeHolderDrawable) {
-          }
-        });
-    return task.getTask();
   }
 
 }

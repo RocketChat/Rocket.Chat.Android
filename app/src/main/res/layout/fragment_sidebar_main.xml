@@ -30,7 +30,7 @@
                 android:layout_width="@dimen/margin_8"
                 android:layout_height="wrap_content" />
 
-        <ImageView
+        <chat.rocket.android.widget.RocketChatAvatar
                 android:id="@+id/current_user_avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />

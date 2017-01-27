@@ -6,13 +6,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import chat.rocket.android.R;
+import chat.rocket.android.widget.RocketChatAvatar;
 
 /**
  * ViewHolder for UsersOfRoom.
  */
 public class RoomUserViewHolder extends RecyclerView.ViewHolder {
   ImageView status;
-  ImageView avatar;
+  RocketChatAvatar avatar;
   TextView username;
 
   /**
@@ -21,7 +22,7 @@ public class RoomUserViewHolder extends RecyclerView.ViewHolder {
   public RoomUserViewHolder(View itemView) {
     super(itemView);
     status = (ImageView) itemView.findViewById(R.id.room_user_status);
-    avatar = (ImageView) itemView.findViewById(R.id.room_user_avatar);
+    avatar = (RocketChatAvatar) itemView.findViewById(R.id.room_user_avatar);
     username = (TextView) itemView.findViewById(R.id.room_user_name);
   }
 }
