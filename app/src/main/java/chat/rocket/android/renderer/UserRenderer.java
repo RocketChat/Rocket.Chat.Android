@@ -8,6 +8,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.User;
+import chat.rocket.android.widget.message.RocketChatAvatar;
 
 /**
  * Renderer for User model.
@@ -21,13 +22,13 @@ public class UserRenderer extends AbstractRenderer<User> {
   /**
    * show Avatar image
    */
-  public UserRenderer avatarInto(ImageView imageView, String hostname) {
-    if (!shouldHandle(imageView)) {
+  public UserRenderer avatarInto(RocketChatAvatar rocketChatAvatar, String hostname) {
+    if (!shouldHandle(rocketChatAvatar)) {
       return this;
     }
 
     if (!TextUtils.isEmpty(object.getUsername())) {
-      new Avatar(hostname, object.getUsername()).into(imageView);
+      new Avatar(hostname, object.getUsername()).into(rocketChatAvatar);
     }
     return this;
   }

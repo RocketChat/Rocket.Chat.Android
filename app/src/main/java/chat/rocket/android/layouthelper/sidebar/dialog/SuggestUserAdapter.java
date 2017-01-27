@@ -10,6 +10,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.model.ddp.User;
 import chat.rocket.android.realm_helper.RealmAutoCompleteAdapter;
 import chat.rocket.android.renderer.UserRenderer;
+import chat.rocket.android.widget.message.RocketChatAvatar;
 
 /**
  * adapter to suggest user names.
@@ -26,7 +27,7 @@ public class SuggestUserAdapter extends RealmAutoCompleteAdapter<User> {
   protected void onBindItemView(View itemView, User user) {
     new UserRenderer(itemView.getContext(), user)
         .statusColorInto((ImageView) itemView.findViewById(R.id.room_user_status))
-        .avatarInto((ImageView) itemView.findViewById(R.id.room_user_avatar), hostname);
+        .avatarInto((RocketChatAvatar) itemView.findViewById(R.id.room_user_avatar), hostname);
   }
 
   @Override

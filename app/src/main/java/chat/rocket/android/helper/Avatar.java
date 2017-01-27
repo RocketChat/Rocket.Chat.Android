@@ -6,13 +6,12 @@ import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.widget.message.RocketChatAvatar;
 
 /**
  * Helper for rendering user avatar image.
@@ -80,18 +79,15 @@ public class Avatar {
   }
 
   /**
-   * render avatar into imageView.
+   * render avatar into RocketChatAvatar.
    */
-  public void into(final ImageView imageView) {
-    if (ViewDataCache.isStored(username, imageView)) {
+  public void into(final RocketChatAvatar rocketChatAvatar) {
+    if (ViewDataCache.isStored(username, rocketChatAvatar)) {
       return;
     }
 
-    final Context context = imageView.getContext();
-    Picasso.with(context)
-        .load(getImageUrl())
-        .placeholder(getTextDrawable(context))
-        .into(imageView);
+    final Context context = rocketChatAvatar.getContext();
+    rocketChatAvatar.loadImage(getImageUrl(), getTextDrawable(context));
   }
 
   public Drawable getTextDrawable(Context context) {

@@ -10,9 +10,10 @@ import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.realm_helper.RealmModelViewHolder;
+import chat.rocket.android.widget.message.RocketChatAvatar;
 
 public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<PairedMessage> {
-  protected final ImageView avatar;
+  protected final RocketChatAvatar avatar;
   protected final TextView username;
   protected final TextView subUsername;
   protected final TextView timestamp;
@@ -28,7 +29,7 @@ public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<Pai
    */
   public AbstractMessageViewHolder(View itemView, String hostname, String userId, String token) {
     super(itemView);
-    avatar = (ImageView) itemView.findViewById(R.id.user_avatar);
+    avatar = (RocketChatAvatar) itemView.findViewById(R.id.user_avatar);
     username = (TextView) itemView.findViewById(R.id.username);
     subUsername = (TextView) itemView.findViewById(R.id.sub_username);
     timestamp = (TextView) itemView.findViewById(R.id.timestamp);
