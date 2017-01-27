@@ -12,11 +12,28 @@ public class ImageUploadActionItem extends AbstractUploadActionItem {
   }
 
   @Override
-  protected Intent getIntentForPickFile() {
-    Intent intent = new Intent();
-    intent.setType("image/*");
-    intent.setAction(Intent.ACTION_GET_CONTENT);
-    return Intent.createChooser(intent, "Select Picture to Upload");
+  protected DetailItemInfo[] getDetailItemList() {
+    return new DetailItemInfo[] {
+      new DetailItemInfo() {
+        @Override
+        public Intent getIntent() {
+          Intent intent = new Intent();
+          intent.setType("image/*");
+          intent.setAction(Intent.ACTION_GET_CONTENT);
+          return Intent.createChooser(intent, "Select Picture to Upload");
+        }
+
+        @Override
+        public int getCaption() {
+          return R.string.title_pick_file;
+        }
+
+        @Override
+        public int getReturnCode() {
+          return RC_UPL;
+        }
+      }
+    };
   }
 
   @Override
