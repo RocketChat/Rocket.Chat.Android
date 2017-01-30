@@ -29,9 +29,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.helper.ServerPolicyHelper;
+import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.android.service.ServerInfo;
 
 public class PushNotificationHandler implements PushConstants {
 
@@ -99,7 +102,7 @@ public class PushNotificationHandler implements PushConstants {
     String hostname = getHostname(extras);
     String roomId = getRoomId(extras);
 
-    if (hostname == null || roomId == null) {
+    if (hostname == null || roomId == null || !isValidHostname(context, hostname)) {
       return;
     }
 
@@ -651,5 +654,18 @@ public class PushNotificationHandler implements PushConstants {
     } catch (Exception e) {
       return null;
     }
+  }
+
+  private boolean isValidHostname(Context context, String hostname) {
+    final List<ServerInfo> serverInfoList =
+        ConnectivityManager.getInstance(context.getApplicationContext()).getServerList();
+
+    for (ServerInfo serverInfo : serverInfoList) {
+      if (serverInfo.hostname.equals(hostname)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
