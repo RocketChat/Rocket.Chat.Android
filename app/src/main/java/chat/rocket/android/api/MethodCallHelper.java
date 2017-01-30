@@ -317,8 +317,17 @@ public class MethodCallHelper {
    */
   private Task<JSONObject> sendMessage(final JSONObject messageJson) {
     return call("sendMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
-        .onSuccessTask(CONVERT_TO_JSON_OBJECT)
-        .onSuccessTask(task -> Task.forResult(Message.customizeJson(task.getResult())));
+        .onSuccessTask(task -> {
+          final String result = task.getResult();
+          if (result.equals("")) {
+            // valid success result
+            return Task.forResult(new JSONObject());
+          }
+
+          // should validate any other response
+          final JSONObject jsonObject = new JSONObject(result);
+          return Task.forResult(Message.customizeJson(jsonObject));
+        });
   }
 
   /**
