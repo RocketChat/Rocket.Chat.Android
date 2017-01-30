@@ -66,25 +66,18 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private void updateHostnameIfNeeded(SharedPreferences prefs) {
     String newHostname = prefs.getString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME, null);
     if (hostname == null) {
-      if (newHostname != null && assertServerRealmStoreExists(newHostname, prefs)) {
+      if (newHostname != null && assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
       }
     } else {
-      if (!hostname.equals(newHostname) && assertServerRealmStoreExists(newHostname, prefs)) {
+      if (!hostname.equals(newHostname) && assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
       }
     }
   }
 
-  private boolean assertServerRealmStoreExists(String hostname, SharedPreferences prefs) {
-    if (RealmStore.get(hostname) == null) {
-      prefs.edit()
-          .remove(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME)
-          .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
-          .apply();
-      return false;
-    }
-    return true;
+  private boolean assertServerRealmStoreExists(String hostname) {
+    return RealmStore.get(hostname) != null;
   }
 
   private void updateHostname(String hostname) {
@@ -106,7 +99,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   }
 
   private boolean assertRoomSubscriptionExists(String roomId, SharedPreferences prefs) {
-    if (!assertServerRealmStoreExists(hostname, prefs)) {
+    if (!assertServerRealmStoreExists(hostname)) {
       return false;
     }
 
