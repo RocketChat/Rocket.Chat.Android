@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import chat.rocket.android.activity.MainActivity;
+import chat.rocket.android.helper.ServerPolicyHelper;
 
 public class PushNotificationHandler implements PushConstants {
 
@@ -633,7 +634,7 @@ public class PushNotificationHandler implements PushConstants {
         return null;
       }
 
-      return jsonObject.getString("host");
+      return ServerPolicyHelper.enforceHostname(jsonObject.getString("host"));
     } catch (Exception e) {
       return null;
     }
