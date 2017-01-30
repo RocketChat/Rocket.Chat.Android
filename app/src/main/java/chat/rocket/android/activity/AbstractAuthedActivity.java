@@ -5,13 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.push.PushNotificationHandler;
-import chat.rocket.android.realm_helper.RealmListObserver;
 import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.android.service.ServerInfo;
 import icepick.State;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
@@ -68,10 +70,14 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     if (hostname == null) {
       if (newHostname != null && assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
+      } else {
+        recoverFromHostnameError(prefs);
       }
     } else {
       if (!hostname.equals(newHostname) && assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
+      } else {
+        recoverFromHostnameError(prefs);
       }
     }
   }
@@ -83,6 +89,22 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private void updateHostname(String hostname) {
     this.hostname = hostname;
     onHostnameUpdated();
+  }
+
+  private void recoverFromHostnameError(SharedPreferences prefs) {
+    final List<ServerInfo> serverInfoList =
+        ConnectivityManager.getInstance(getApplicationContext()).getServerList();
+    if (serverInfoList == null || serverInfoList.size() == 0) {
+      LaunchUtil.showAddServerActivity(this);
+      return;
+    }
+
+    // just connect to the first available
+    final ServerInfo serverInfo = serverInfoList.get(0);
+    prefs.edit()
+        .putString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME, serverInfo.hostname)
+        .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
+        .apply();
   }
 
   private void updateRoomIdIfNeeded(SharedPreferences prefs) {
