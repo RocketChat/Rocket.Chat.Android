@@ -301,7 +301,7 @@ public class MethodCallHelper {
   /**
    * send message.
    */
-  public Task<JSONObject> sendMessage(String messageId, String roomId, String msg) {
+  public Task<Void> sendMessage(String messageId, String roomId, String msg) {
     try {
       return sendMessage(new JSONObject()
           .put("_id", messageId)
@@ -315,10 +315,9 @@ public class MethodCallHelper {
   /**
    * Send message object.
    */
-  private Task<JSONObject> sendMessage(final JSONObject messageJson) {
+  private Task<Void> sendMessage(final JSONObject messageJson) {
     return call("sendMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
-        .onSuccessTask(CONVERT_TO_JSON_OBJECT)
-        .onSuccessTask(task -> Task.forResult(Message.customizeJson(task.getResult())));
+        .onSuccessTask(task -> Task.forResult(null));
   }
 
   /**

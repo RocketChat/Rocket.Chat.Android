@@ -53,7 +53,7 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
       return;
     }
 
-    Message message = results.get(0);
+    final Message message = results.get(0);
     final String messageId = message.getId();
     final String roomId = message.getRoomId();
     final String msg = message.getMessage();
@@ -63,13 +63,7 @@ public class NewMessageObserver extends AbstractModelObserver<Message> {
             .put(Message.ID, messageId)
             .put(Message.SYNC_STATE, SyncState.SYNCING)
         )
-    ).onSuccessTask(task ->
-        methodCall.sendMessage(messageId, roomId, msg).onSuccessTask(_task -> {
-          JSONObject messageJson = _task.getResult();
-          messageJson.put("syncstate", SyncState.SYNCED);
-          return realmHelper.executeTransaction(realm ->
-              realm.createOrUpdateObjectFromJson(Message.class, messageJson));
-        })
+    ).onSuccessTask(task -> methodCall.sendMessage(messageId, roomId, msg)
     ).continueWith(task -> {
       if (task.isFaulted()) {
         RCLog.w(task.getError());
