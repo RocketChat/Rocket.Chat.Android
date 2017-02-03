@@ -129,6 +129,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     } else {
       attachmentsLayout.setVisibility(View.VISIBLE);
       attachmentsLayout.setHostname(hostname);
+      attachmentsLayout.setCredential(userId, token);
       attachmentsLayout.setAttachments(attachments);
     }
 

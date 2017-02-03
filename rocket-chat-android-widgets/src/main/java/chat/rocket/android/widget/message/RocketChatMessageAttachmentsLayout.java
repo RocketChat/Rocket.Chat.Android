@@ -19,6 +19,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.klinker.android.simple_videoview.SimpleVideoView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,8 +29,12 @@ import chat.rocket.android.widget.R;
 /**
  */
 public class RocketChatMessageAttachmentsLayout extends LinearLayout {
+  private static final String TAG = RocketChatMessageAttachmentsLayout.class.getSimpleName();
+
   private LayoutInflater inflater;
   private String hostname;
+  private String userId;
+  private String token;
   private String attachmentsString;
 
   public RocketChatMessageAttachmentsLayout(Context context) {
@@ -61,6 +66,11 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
   public void setHostname(String hostname) {
     this.hostname = hostname;
+  }
+
+  public void setCredential(String userId, String token) {
+    this.userId = userId;
+    this.token = token;
   }
 
   public void setAttachments(String attachmentsString) {
@@ -95,6 +105,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     showImageAttachment(attachmentObj, attachmentView);
     // audio
     // video
+    showVideoAttachment(attachmentObj, attachmentView);
     showFieldsAttachment(attachmentObj, attachmentView);
 
     addView(attachmentView);
@@ -219,6 +230,21 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     attachedImage.setVisibility(VISIBLE);
 
     loadImage(attachmentObj.getString("image_url"), attachedImage);
+  }
+
+  private void showVideoAttachment(JSONObject attachmentObj, View attachmentView)
+      throws JSONException {
+    final SimpleVideoView videoView =
+        (SimpleVideoView) attachmentView.findViewById(R.id.video);
+    if (attachmentObj.isNull("video_url")) {
+      videoView.setVisibility(View.GONE);
+      return;
+    }
+
+    videoView.setVisibility(View.VISIBLE);
+
+    String cookie = "rc_uid=" + userId + ";rc_token=" + token;
+    videoView.start(absolutize(attachmentObj.getString("video_url")), cookie);
   }
 
   private void showFieldsAttachment(JSONObject attachmentObj, View attachmentView)

@@ -105,6 +105,11 @@
 
         <!-- audio -->
         <!-- video -->
-
+        <com.klinker.android.simple_videoview.SimpleVideoView
+                android:id="@+id/video"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginBottom="8dp"
+                />
     </LinearLayout>
 </LinearLayout>
