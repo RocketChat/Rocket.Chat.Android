@@ -105,11 +105,26 @@
 
         <!-- audio -->
         <!-- video -->
-        <com.klinker.android.simple_videoview.SimpleVideoView
-                android:id="@+id/video"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginBottom="8dp"
-                />
+        <FrameLayout
+                android:id="@+id/video_thumbnail_container"
+                android:layout_width="200dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackground">
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#22000000"
+                    />
+
+            <chat.rocket.android.widget.FontAwesomeTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fa_play_circle_o"
+                    android:textSize="18dp"
+                    android:textColor="?attr/colorControlNormal"
+                    android:layout_gravity="center"
+                    />
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

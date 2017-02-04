@@ -19,12 +19,12 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.klinker.android.simple_videoview.SimpleVideoView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.SimpleVideoViewActivity;
 
 /**
  */
@@ -234,17 +234,24 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
   private void showVideoAttachment(JSONObject attachmentObj, View attachmentView)
       throws JSONException {
-    final SimpleVideoView videoView =
-        (SimpleVideoView) attachmentView.findViewById(R.id.video);
+    final View videoView = attachmentView.findViewById(R.id.video_thumbnail_container);
     if (attachmentObj.isNull("video_url")) {
       videoView.setVisibility(View.GONE);
       return;
     }
 
+    final String url = attachmentObj.getString("video_url");
     videoView.setVisibility(View.VISIBLE);
-
-    String cookie = "rc_uid=" + userId + ";rc_token=" + token;
-    videoView.start(absolutize(attachmentObj.getString("video_url")), cookie);
+    videoView.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(context, SimpleVideoViewActivity.class);
+        intent.putExtra(SimpleVideoViewActivity.KEY_URL, absolutize(url));
+        intent.putExtra(SimpleVideoViewActivity.KEY_COOKIE, "rc_uid=" + userId + ";rc_token=" + token);
+        context.startActivity(intent);
+      }
+    });
   }
 
   private void showFieldsAttachment(JSONObject attachmentObj, View attachmentView)

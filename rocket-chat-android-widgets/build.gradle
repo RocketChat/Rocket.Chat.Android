@@ -46,4 +46,5 @@ dependencies {
   compile rootProject.ext.frescoWebp
   compile rootProject.ext.frescoImagePipelineOkHttp3
   compile 'com.caverock:androidsvg:1.2.1'
+  compile 'com.klinkerapps:sliding-activity:1.4.4'
 }
