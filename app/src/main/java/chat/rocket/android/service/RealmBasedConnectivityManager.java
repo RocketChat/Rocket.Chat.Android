@@ -213,7 +213,7 @@ import rx.subjects.PublishSubject;
 
       if (serverConnectivityList.get(hostname) != ServerConnectivity.STATE_CONNECTED) {
         // Mark as CONNECTING except for the case [forceConnect && connected] because
-        // webSocketThread#keepAlive doesn't notify ConnectionEstablished/Lost on reconnecting.
+        // ensureConnectionToServer doesn't notify ConnectionEstablished/Lost is already connected.
         serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTING);
       }
 
