@@ -16,4 +16,10 @@ public class ServerConnectivity {
     this.hostname = hostname;
     this.state = state;
   }
+
+  public static class Disconnected extends Exception {
+    public Disconnected() {
+      super("Disconnected");
+    }
+  }
 }

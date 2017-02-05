@@ -93,14 +93,8 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
     return Single.defer(() -> {
       if (webSocketThreads.containsKey(hostname)) {
         RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
-        if (thread != null) {
-          return Single.just(thread);
-        } else {
-          return Observable.timer(1, TimeUnit.SECONDS).toSingle()
-              .flatMap(_val -> getOrCreateWebSocketThread(hostname));
-        }
+        return Single.just(thread);
       }
-      webSocketThreads.put(hostname, null);
       return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
           .doOnSuccess(thread -> webSocketThreads.put(hostname, thread));
     });
