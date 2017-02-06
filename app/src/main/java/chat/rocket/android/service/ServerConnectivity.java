@@ -16,4 +16,13 @@ public class ServerConnectivity {
     this.hostname = hostname;
     this.state = state;
   }
+
+  /**
+   * This exception should be thrown when connection is lost during waiting for CONNECTED.
+   */
+  public static class DisconnectedException extends Exception {
+    public DisconnectedException() {
+      super("Disconnected");
+    }
+  }
 }
