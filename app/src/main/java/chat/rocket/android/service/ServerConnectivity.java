@@ -17,8 +17,11 @@ public class ServerConnectivity {
     this.state = state;
   }
 
-  public static class Disconnected extends Exception {
-    public Disconnected() {
+  /**
+   * This exception should be thrown when connection is lost during waiting for CONNECTED.
+   */
+  public static class DisconnectedException extends Exception {
+    public DisconnectedException() {
       super("Disconnected");
     }
   }

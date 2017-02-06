@@ -191,7 +191,7 @@ import rx.subjects.PublishSubject;
         .flatMap(state ->
             state == ServerConnectivity.STATE_CONNECTED
                 ? Single.just(true)
-                : Single.error(new ServerConnectivity.Disconnected()));
+                : Single.error(new ServerConnectivity.DisconnectedException()));
   }
 
   private Single<Boolean> waitForDisconnected(String hostname) {
