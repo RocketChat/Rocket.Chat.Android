@@ -33,12 +33,16 @@ public class DefaultCookieProvider implements CookieProvider {
       return "";
     }
 
-    final String userId = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst()).getId();
-    final String token = realmHelper.executeTransactionForRead(realm ->
-        Session.queryDefaultSession(realm).findFirst()).getToken();
+    final User user = realmHelper.executeTransactionForRead(realm ->
+        User.queryCurrentUser(realm).findFirst());
+    final Session session = realmHelper.executeTransactionForRead(realm ->
+        Session.queryDefaultSession(realm).findFirst());
 
-    return "rc_uid=" + userId + ";rc_token=" + token;
+    if (user == null || session == null) {
+      return "";
+    }
+
+    return "rc_uid=" + user.getId() + ";rc_token=" + session.getToken();
   }
 
   private String getHostnameFromCache() {
