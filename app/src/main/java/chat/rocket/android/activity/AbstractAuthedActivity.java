@@ -74,7 +74,12 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
         recoverFromHostnameError(prefs);
       }
     } else {
-      if (!hostname.equals(newHostname) && assertServerRealmStoreExists(newHostname)) {
+      if (hostname.equals(newHostname)) {
+        // we are good
+        return;
+      }
+
+      if (assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
       } else {
         recoverFromHostnameError(prefs);
