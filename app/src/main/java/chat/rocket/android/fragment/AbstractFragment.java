@@ -14,9 +14,8 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 public abstract class AbstractFragment extends RxFragment {
   protected View rootView;
 
-  protected abstract
   @LayoutRes
-  int getLayout();
+  protected abstract int getLayout();
 
   protected abstract void onSetupView();
 

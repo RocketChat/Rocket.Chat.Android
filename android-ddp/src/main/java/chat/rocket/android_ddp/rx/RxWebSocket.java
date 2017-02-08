@@ -7,9 +7,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import rx.Emitter;
 import rx.Observable;
-import rx.Subscriber;
 import rx.exceptions.OnErrorNotImplementedException;
+import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
 
 public class RxWebSocket {
@@ -23,38 +24,41 @@ public class RxWebSocket {
   public ConnectableObservable<RxWebSocketCallback.Base> connect(String url) {
     final Request request = new Request.Builder().url(url).build();
 
-    return Observable.create(new Observable.OnSubscribe<RxWebSocketCallback.Base>() {
-      @Override
-      public void call(Subscriber<? super RxWebSocketCallback.Base> subscriber) {
-        httpClient.newWebSocket(request, new WebSocketListener() {
+    return Observable.fromEmitter(
+        new Action1<Emitter<RxWebSocketCallback.Base>>() {
           @Override
-          public void onOpen(WebSocket webSocket, Response response) {
-            RxWebSocket.this.webSocket = webSocket;
-            subscriber.onNext(new RxWebSocketCallback.Open(RxWebSocket.this.webSocket, response));
-          }
+          public void call(Emitter<RxWebSocketCallback.Base> emitter) {
+            httpClient.newWebSocket(request, new WebSocketListener() {
+              @Override
+              public void onOpen(WebSocket webSocket, Response response) {
+                RxWebSocket.this.webSocket = webSocket;
+                emitter.onNext(new RxWebSocketCallback.Open(RxWebSocket.this.webSocket, response));
+              }
 
-          @Override
-          public void onFailure(WebSocket webSocket, Throwable err, Response response) {
-            try {
-              subscriber.onError(new RxWebSocketCallback.Failure(webSocket, err, response));
-            } catch (OnErrorNotImplementedException ex) {
-              RCLog.w(ex, "OnErrorNotImplementedException ignored");
-            }
-          }
+              @Override
+              public void onFailure(WebSocket webSocket, Throwable err, Response response) {
+                try {
+                  emitter.onError(new RxWebSocketCallback.Failure(webSocket, err, response));
+                } catch (OnErrorNotImplementedException ex) {
+                  RCLog.w(ex, "OnErrorNotImplementedException ignored");
+                }
+              }
 
-          @Override
-          public void onMessage(WebSocket webSocket, String text) {
-            subscriber.onNext(new RxWebSocketCallback.Message(webSocket, text));
-          }
+              @Override
+              public void onMessage(WebSocket webSocket, String text) {
+                emitter.onNext(new RxWebSocketCallback.Message(webSocket, text));
+              }
 
-          @Override
-          public void onClosed(WebSocket webSocket, int code, String reason) {
-            subscriber.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
-            subscriber.onCompleted();
+              @Override
+              public void onClosed(WebSocket webSocket, int code, String reason) {
+                emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
+                emitter.onCompleted();
+              }
+            });
           }
-        });
-      }
-    }).publish();
+        },
+        Emitter.BackpressureMode.BUFFER
+    ).publish();
   }
 
   public boolean sendText(String message) throws IOException {
