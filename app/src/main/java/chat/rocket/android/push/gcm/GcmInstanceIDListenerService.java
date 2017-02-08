@@ -6,8 +6,8 @@ import java.util.List;
 import chat.rocket.android.helper.GcmPushSettingHelper;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.internal.GcmPushRegistration;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.ServerInfo;
 

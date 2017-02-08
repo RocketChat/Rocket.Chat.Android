@@ -1,5 +1,6 @@
-package chat.rocket.android.realm_helper;
+package chat.rocket.persistence.realm;
 
+import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 import java.util.HashMap;
@@ -34,5 +35,15 @@ public class RealmStore {
       put(name);
     }
     return new RealmHelper(sStore.get(name));
+  }
+
+  public static Realm getRealm(String name) {
+    RealmHelper realmHelper = get(name);
+
+    if (realmHelper == null) {
+      return null;
+    }
+
+    return realmHelper.instance();
   }
 }

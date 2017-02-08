@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.Registrable;
 
 public abstract class AbstractRocketChatCacheObserver implements Registrable {

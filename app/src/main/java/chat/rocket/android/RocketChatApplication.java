@@ -8,7 +8,7 @@ import io.realm.RealmConfiguration;
 
 import java.util.List;
 import chat.rocket.android.helper.OkHttpHelper;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.ServerInfo;
 import chat.rocket.android.widget.RocketChatWidgets;

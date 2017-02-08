@@ -4,7 +4,7 @@ import android.content.Context;
 import io.realm.RealmObject;
 
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 /**

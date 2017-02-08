@@ -3,8 +3,8 @@ package chat.rocket.android.service.observer;
 import android.content.Context;
 import io.realm.RealmObject;
 
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmListObserver;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmListObserver;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 

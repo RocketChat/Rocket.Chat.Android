@@ -18,12 +18,12 @@ import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.ddp.User;
+import chat.rocket.android.model.ddp.RealmUser;
 import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmListObserver;
-import chat.rocket.android.realm_helper.RealmObjectObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmListObserver;
+import chat.rocket.persistence.realm.RealmObjectObserver;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
 import hugo.weaving.DebugLog;
@@ -87,14 +87,14 @@ public class MainActivity extends AbstractAuthedActivity {
 
   private void setUserOnlineIfServerAvailable() {
     if (hostname != null) {
-      new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_ONLINE)
+      new MethodCallHelper(this, hostname).setUserPresence(RealmUser.STATUS_ONLINE)
           .continueWith(new LogcatIfError());
     }
   }
 
   private void setUserAwayIfServerAvailable() {
     if (hostname != null) {
-      new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_AWAY)
+      new MethodCallHelper(this, hostname).setUserPresence(RealmUser.STATUS_AWAY)
           .continueWith(new LogcatIfError());
     }
   }

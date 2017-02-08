@@ -15,8 +15,8 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.oauth.OAuthProviderInfo;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
-import chat.rocket.android.realm_helper.RealmListObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.RealmListObserver;
+import chat.rocket.persistence.realm.RealmStore;
 
 /**
  * Login screen.

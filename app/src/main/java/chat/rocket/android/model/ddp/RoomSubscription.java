@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import chat.rocket.android.model.JsonConstants;
+import chat.rocket.android.model.core.Room;
 
 /**
  * Chat Room(Subscription).
@@ -31,7 +32,7 @@ public class RoomSubscription extends RealmObject {
   private String _id; //subscriptionId
   @PrimaryKey private String rid; //roomId
   private String name;
-  //private User u; // REMARK: do not save u, because it is just me.
+  //private RealmUser u; // REMARK: do not save u, because it is just me.
   private String t; //type { c: channel, d: direct message, p: private }
   private boolean open;
   private boolean alert;
@@ -125,5 +126,19 @@ public class RoomSubscription extends RealmObject {
 
   public void setLastSeen(long ls) {
     this.ls = ls;
+  }
+
+  public Room asRoom() {
+    return Room.builder()
+        .setId(_id)
+        .setRoomId(rid)
+        .setName(name)
+        .setType(t)
+        .setOpen(open)
+        .setAlert(alert)
+        .setUnread(unread)
+        .setUpdatedAt(_updatedAt)
+        .setLastSeen(ls)
+        .build();
   }
 }

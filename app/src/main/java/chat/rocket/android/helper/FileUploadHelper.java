@@ -17,7 +17,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.internal.FileUploading;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 
 /**
  * utility class for uploading file.

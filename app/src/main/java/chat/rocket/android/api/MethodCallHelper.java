@@ -12,13 +12,13 @@ import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.model.ddp.RealmMessage;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
@@ -107,7 +107,7 @@ public class MethodCallHelper {
   }
 
   /**
-   * Register User.
+   * Register RealmUser.
    */
   public Task<String> registerUser(final String name, final String email,
                                    final String password, final String confirmPassword) {
@@ -241,18 +241,18 @@ public class MethodCallHelper {
           JSONObject result = task.getResult();
           final JSONArray messages = result.getJSONArray("messages");
           for (int i = 0; i < messages.length(); i++) {
-            Message.customizeJson(messages.getJSONObject(i));
+            RealmMessage.customizeJson(messages.getJSONObject(i));
           }
 
           return realmHelper.executeTransaction(realm -> {
             if (timestamp == 0) {
-              realm.where(Message.class)
+              realm.where(RealmMessage.class)
                   .equalTo("rid", roomId)
                   .equalTo("syncstate", SyncState.SYNCED)
                   .findAll().deleteAllFromRealm();
             }
             if (messages.length() > 0) {
-              realm.createOrUpdateAllFromJson(Message.class, messages);
+              realm.createOrUpdateAllFromJson(RealmMessage.class, messages);
             }
             return null;
           }).onSuccessTask(_task -> Task.forResult(messages));

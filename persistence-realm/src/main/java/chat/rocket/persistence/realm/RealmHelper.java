@@ -1,4 +1,4 @@
-package chat.rocket.android.realm_helper;
+package chat.rocket.persistence.realm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

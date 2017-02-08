@@ -1,4 +1,4 @@
-package chat.rocket.android.realm_helper;
+package chat.rocket.persistence.realm;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

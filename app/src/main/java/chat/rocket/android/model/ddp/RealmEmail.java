@@ -3,12 +3,21 @@ package chat.rocket.android.model.ddp;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+import chat.rocket.android.model.core.Email;
+
 /**
- * Login-User's email.
+ * Login-RealmUser's email.
  */
-public class Email extends RealmObject {
+public class RealmEmail extends RealmObject {
   @PrimaryKey private String address;
   private boolean verified;
+
+  public Email asEmail() {
+    return Email.builder()
+        .setAddress(address)
+        .setVerified(verified)
+        .build();
+  }
 
   @SuppressWarnings({"PMD.ShortVariable"})
   @Override
@@ -20,7 +29,7 @@ public class Email extends RealmObject {
       return false;
     }
 
-    Email email = (Email) o;
+    RealmEmail email = (RealmEmail) o;
 
     if (verified != email.verified) {
       return false;

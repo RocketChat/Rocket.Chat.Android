@@ -14,8 +14,8 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmObjectObserver;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.android.service.ConnectivityManager;
 
 public class MethodCall extends RealmObject {

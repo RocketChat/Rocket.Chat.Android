@@ -3,8 +3,10 @@ package chat.rocket.android.model.ddp;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+import chat.rocket.android.model.core.Preferences;
+
 @SuppressWarnings({"PMD.ShortVariable"})
-public class Preferences extends RealmObject {
+public class RealmPreferences extends RealmObject {
 
   @PrimaryKey private String id;
 
@@ -24,6 +26,27 @@ public class Preferences extends RealmObject {
   private boolean hideAvatars;
   private boolean hideFlexTab;
 //  private List<String> highlights; // Realm does not support this yet
+
+  public Preferences asPreferences() {
+    return Preferences.builder()
+        .setId(id)
+        .setNewRoomNotification(newRoomNotification)
+        .setNewMessageNotification(newMessageNotification)
+        .setUseEmojis(useEmojis)
+        .setConvertAsciiEmoji(convertAsciiEmoji)
+        .setSaveMobileBandwidth(saveMobileBandwidth)
+        .setCollapseMediaByDefault(collapseMediaByDefault)
+        .setUnreadRoomsMode(unreadRoomsMode)
+        .setAutoImageLoad(autoImageLoad)
+        .setEmailNotificationMode(emailNotificationMode)
+        .setUnreadAlert(unreadAlert)
+        .setDesktopNotificationDuration(desktopNotificationDuration)
+        .setViewMode(viewMode)
+        .setHideUsernames(hideUsernames)
+        .setHideAvatars(hideAvatars)
+        .setHideFlexTab(hideFlexTab)
+        .build();
+  }
 
   public boolean isNewRoomNotification() {
     return newRoomNotification;
@@ -94,7 +117,7 @@ public class Preferences extends RealmObject {
       return false;
     }
 
-    Preferences that = (Preferences) o;
+    RealmPreferences that = (RealmPreferences) o;
 
     if (newRoomNotification != that.newRoomNotification) {
       return false;

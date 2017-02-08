@@ -5,8 +5,8 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.util.ListUpdateCallback;
 import io.realm.RealmObject;
 
-import chat.rocket.android.realm_helper.RealmModelListAdapter;
-import chat.rocket.android.realm_helper.RealmModelViewHolder;
+import chat.rocket.persistence.realm.RealmModelListAdapter;
+import chat.rocket.persistence.realm.RealmModelViewHolder;
 
 @SuppressWarnings({"PMD.AbstractNaming", "PMD.GenericsNaming"})
 /**

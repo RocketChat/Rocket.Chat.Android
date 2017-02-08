@@ -1,16 +1,16 @@
 package chat.rocket.android.layouthelper.chatroom;
 
 import chat.rocket.android.helper.DateTime;
-import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.model.ddp.RealmMessage;
 
 /**
  * ViewData Model for messages in chatroom.
  */
 public class PairedMessage {
-  public final Message target;
-  final Message nextSibling;
+  public final RealmMessage target;
+  final RealmMessage nextSibling;
 
-  public PairedMessage(Message target, Message nextSibling) {
+  public PairedMessage(RealmMessage target, RealmMessage nextSibling) {
     this.target = target;
     this.nextSibling = nextSibling;
   }

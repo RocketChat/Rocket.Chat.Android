@@ -2,18 +2,27 @@ package chat.rocket.android.model.ddp;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import chat.rocket.android.model.JsonConstants;
 import chat.rocket.android.model.SyncState;
+import chat.rocket.android.model.core.Attachment;
+import chat.rocket.android.model.core.AttachmentAuthor;
+import chat.rocket.android.model.core.AttachmentField;
+import chat.rocket.android.model.core.AttachmentTitle;
+import chat.rocket.android.model.core.Message;
+import chat.rocket.android.model.core.WebContent;
 
 /**
- * Message.
+ * RealmMessage.
  */
 @SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
-public class Message extends RealmObject {
+public class RealmMessage extends RealmObject {
   //ref: Rocket.Chat:packages/rocketchat-lib/lib/MessageTypes.coffee
 
   public static final String ID = "_id";
@@ -36,7 +45,7 @@ public class Message extends RealmObject {
   private int syncstate;
   private long ts;
   private String msg;
-  private User u;
+  private RealmUser u;
   private boolean groupable;
   private String alias;
   private String avatar;
@@ -103,11 +112,11 @@ public class Message extends RealmObject {
     this.msg = msg;
   }
 
-  public User getUser() {
+  public RealmUser getUser() {
     return u;
   }
 
-  public void setUser(User u) {
+  public void setUser(RealmUser u) {
     this.u = u;
   }
 
@@ -151,9 +160,141 @@ public class Message extends RealmObject {
     this.avatar = avatar;
   }
 
+  public Message asMessage() {
+    return Message.builder()
+        .setId(_id)
+        .setType(t)
+        .setRoomId(rid)
+        .setSyncState(syncstate)
+        .setTimestamp(ts)
+        .setMessage(msg)
+        .setUser(u.asUser())
+        .setGroupable(groupable)
+        .setAlias(alias)
+        .setAvatar(avatar)
+        .setAttachments(getCoreAttachments())
+        .setWebContents(getWebContents())
+        .build();
+  }
+
+  private List<Attachment> getCoreAttachments() {
+    if (attachments == null || attachments.length() == 0) {
+      return null;
+    }
+
+    final List<Attachment> coreAttachments = new ArrayList<>();
+
+    try {
+      final JSONArray jsonArray = new JSONArray(urls);
+      for (int i = 0, size = jsonArray.length(); i < size; i++) {
+        final Attachment coreAttachment = getCoreAttachment(jsonArray.getJSONObject(i));
+        if (coreAttachment != null) {
+          coreAttachments.add(coreAttachment);
+        }
+      }
+    } catch (JSONException ignored) {
+    }
+
+    return coreAttachments;
+  }
+
+  private Attachment getCoreAttachment(JSONObject jsonCoreAttachment) {
+    return Attachment.builder()
+        .setColor(jsonCoreAttachment.optString("color", null))
+        .setText(jsonCoreAttachment.optString("text", null))
+        .setTimestamp(jsonCoreAttachment.optString("ts", null))
+        .setThumbUrl(jsonCoreAttachment.optString("thumb_url", null))
+        .setMessageLink(jsonCoreAttachment.optString("message_link", null))
+        .setCollapsed(jsonCoreAttachment.optBoolean("collapsed"))
+        .setImageUrl(jsonCoreAttachment.optString("image_url", null))
+        .setAudioUrl(jsonCoreAttachment.optString("audio_url", null))
+        .setVideoUrl(jsonCoreAttachment.optString("video_url", null))
+        .setAttachmentAuthor(getAttachmentAuthor(jsonCoreAttachment))
+        .setAttachmentTitle(getAttachmentTitle(jsonCoreAttachment))
+        .setAttachmentFields(getAttachmentFields(jsonCoreAttachment))
+        .build();
+  }
+
+  private AttachmentAuthor getAttachmentAuthor(JSONObject jsonCoreAttachment) {
+    if (jsonCoreAttachment.isNull("author_name") || jsonCoreAttachment.isNull("author_link")
+        || jsonCoreAttachment.isNull("author_icon")) {
+      return null;
+    }
+
+    return AttachmentAuthor.builder()
+        .setName(jsonCoreAttachment.optString("author_name"))
+        .setLink(jsonCoreAttachment.optString("author_link"))
+        .setIconUrl(jsonCoreAttachment.optString("author_icon"))
+        .build();
+  }
+
+  private AttachmentTitle getAttachmentTitle(JSONObject jsonCoreAttachment) {
+    if (jsonCoreAttachment.isNull("title")) {
+      return null;
+    }
+
+    return AttachmentTitle.builder()
+        .setTitle(jsonCoreAttachment.optString("title"))
+        .setLink(jsonCoreAttachment.optString("title_link", null))
+        .setDownloadLink(jsonCoreAttachment.optString("title_link_download", null))
+        .build();
+  }
+
+  private List<AttachmentField> getAttachmentFields(JSONObject jsonCoreAttachment) {
+    final JSONArray jsonFields = jsonCoreAttachment.optJSONArray("fields");
+    if (jsonFields == null) {
+      return null;
+    }
+
+    final List<AttachmentField> attachmentFields = new ArrayList<>();
+    for (int i = 0, size = jsonFields.length(); i < size; i++) {
+      final JSONObject fieldObject = jsonFields.optJSONObject(i);
+      if (fieldObject == null || fieldObject.isNull("title") || fieldObject.isNull("value")) {
+        continue;
+      }
+
+      attachmentFields.add(AttachmentField.builder()
+          .setShort(fieldObject.optBoolean("short"))
+          .setTitle(fieldObject.optString("title"))
+          .setText(fieldObject.optString("value"))
+          .build());
+    }
+
+    return attachmentFields;
+  }
+
+  private List<WebContent> getWebContents() {
+    if (urls == null || urls.length() == 0) {
+      return null;
+    }
+
+    final List<WebContent> webContents = new ArrayList<>();
+
+    try {
+      final JSONArray jsonArray = new JSONArray(urls);
+      for (int i = 0, size = jsonArray.length(); i < size; i++) {
+        final WebContent webContent = getWebContent(jsonArray.getJSONObject(i));
+        if (webContent != null) {
+          webContents.add(webContent);
+        }
+      }
+    } catch (JSONException ignored) {
+    }
+
+    return webContents;
+  }
+
+  private WebContent getWebContent(JSONObject jsonWebContent) {
+    return WebContent.builder()
+        .setUrl(jsonWebContent.optString("url"))
+        .setMeta(jsonWebContent.optString("meta", null))
+        .setHeaders(jsonWebContent.optString("headers", null))
+        .build();
+  }
+
   @Override
   public String toString() {
-    return "Message{" +
+    return "RealmMessage{" +
         "_id='" + _id + '\'' +
         ", t='" + t + '\'' +
         ", rid='" + rid + '\'' +
@@ -178,7 +319,7 @@ public class Message extends RealmObject {
       return false;
     }
 
-    Message message = (Message) o;
+    RealmMessage message = (RealmMessage) o;
 
     if (syncstate != message.syncstate) {
       return false;

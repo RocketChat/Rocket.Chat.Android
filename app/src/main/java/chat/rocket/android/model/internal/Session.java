@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import hugo.weaving.DebugLog;
 
 /**

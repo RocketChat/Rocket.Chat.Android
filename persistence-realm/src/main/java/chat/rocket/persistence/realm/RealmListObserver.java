@@ -1,4 +1,4 @@
-package chat.rocket.android.realm_helper;
+package chat.rocket.persistence.realm;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;

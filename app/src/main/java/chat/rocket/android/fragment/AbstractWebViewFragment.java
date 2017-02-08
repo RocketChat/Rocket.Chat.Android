@@ -104,6 +104,4 @@ public abstract class AbstractWebViewFragment extends AbstractFragment
   protected boolean onHandleCallback(WebView webview, String url) {
     return false;
   }
-
-  ;
 }

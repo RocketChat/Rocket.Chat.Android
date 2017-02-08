@@ -3,7 +3,7 @@ package chat.rocket.android.service.ddp.base;
 import android.content.Context;
 import org.json.JSONArray;
 
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.ddp.AbstractDDPDocEventSubscriber;
 

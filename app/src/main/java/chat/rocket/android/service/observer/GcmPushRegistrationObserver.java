@@ -16,9 +16,9 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.model.SyncState;
 import chat.rocket.android.model.ddp.PublicSetting;
 import chat.rocket.android.model.ddp.PublicSettingsConstants;
-import chat.rocket.android.model.ddp.User;
+import chat.rocket.android.model.ddp.RealmUser;
 import chat.rocket.android.model.internal.GcmPushRegistration;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 /**
@@ -70,8 +70,8 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
         .getString(realmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
 
     final String gcmToken = getGcmToken(senderId);
-    final User currentUser = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst());
+    final RealmUser currentUser = realmHelper.executeTransactionForRead(realm ->
+        RealmUser.queryCurrentUser(realm).findFirst());
     final String userId = currentUser != null ? currentUser.getId() : null;
     final String pushId = RocketChatCache.getOrCreatePushId(context);
 

@@ -10,23 +10,24 @@ import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.Message;
-import chat.rocket.android.model.ddp.User;
+import chat.rocket.android.model.ddp.RealmMessage;
+import chat.rocket.android.model.ddp.RealmUser;
 import chat.rocket.android.widget.RocketChatAvatar;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
 
 /**
- * Renderer for Message model.
+ * Renderer for RealmMessage model.
  */
-public class MessageRenderer extends AbstractRenderer<Message> {
+public class MessageRenderer extends AbstractRenderer<RealmMessage> {
 
   private final UserRenderer userRenderer;
 
-  public MessageRenderer(Context context, Message message) {
+  public MessageRenderer(Context context, RealmMessage message) {
     super(context, message);
-    userRenderer = new UserRenderer(context, message.getUser());
+    RealmUser realmUser = message.getUser();
+    userRenderer = new UserRenderer(context, realmUser == null ? null : realmUser.asUser());
   }
 
   /**
@@ -39,7 +40,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     } else if (TextUtils.isEmpty(object.getAvatar())) {
       userRenderer.avatarInto(rocketChatAvatar, hostname);
     } else {
-      final User user = object.getUser();
+      final RealmUser user = object.getUser();
       setAvatarInto(object.getAvatar(), hostname, user == null ? null : user.getUsername(),
           rocketChatAvatar);
     }

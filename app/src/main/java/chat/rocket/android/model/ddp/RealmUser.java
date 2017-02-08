@@ -6,12 +6,17 @@ import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
 
+import java.util.ArrayList;
+import java.util.List;
+import chat.rocket.android.model.core.Email;
+import chat.rocket.android.model.core.User;
+
 /**
- * User.
+ * RealmUser.
  */
 @SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
     "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
-public class User extends RealmObject {
+public class RealmUser extends RealmObject {
 
   public static final String ID = "_id";
   public static final String USERNAME = "username";
@@ -29,11 +34,11 @@ public class User extends RealmObject {
   private String username;
   private String status;
   private double utcOffset;
-  private RealmList<Email> emails;
-  private Settings settings;
+  private RealmList<RealmEmail> emails;
+  private RealmSettings settings;
 
-  public static RealmQuery<User> queryCurrentUser(Realm realm) {
-    return realm.where(User.class).isNotEmpty(EMAILS);
+  public static RealmQuery<RealmUser> queryCurrentUser(Realm realm) {
+    return realm.where(RealmUser.class).isNotEmpty(EMAILS);
   }
 
   public String getId() {
@@ -68,21 +73,40 @@ public class User extends RealmObject {
     this.utcOffset = utcOffset;
   }
 
-  public RealmList<Email> getEmails() {
+  public RealmList<RealmEmail> getEmails() {
     return emails;
   }
 
-  public void setEmails(RealmList<Email> emails) {
+  public void setEmails(RealmList<RealmEmail> emails) {
     this.emails = emails;
   }
 
-  public Settings getSettings() {
+  public RealmSettings getSettings() {
     return settings;
+  }
+
+  public User asUser() {
+    // convert email list
+    final int total = emails.size();
+    final List<Email> coreEmails = new ArrayList<>(total);
+
+    for (int i = 0; i < total; i++) {
+      coreEmails.add(emails.get(i).asEmail());
+    }
+
+    return User.builder()
+        .setId(_id)
+        .setUsername(username)
+        .setStatus(status)
+        .setUtcOffset(utcOffset)
+        .setEmails(coreEmails)
+        .setSettings(settings != null ? settings.asSettings() : null)
+        .build();
   }
 
   @Override
   public String toString() {
-    return "User{" +
+    return "RealmUser{" +
         "_id='" + _id + '\'' +
         ", username='" + username + '\'' +
         ", status='" + status + '\'' +
@@ -101,7 +125,7 @@ public class User extends RealmObject {
       return false;
     }
 
-    User user = (User) o;
+    RealmUser user = (RealmUser) o;
 
     if (Double.compare(user.utcOffset, utcOffset) != 0) {
       return false;

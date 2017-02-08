@@ -51,15 +51,15 @@ import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.model.ddp.RealmMessage;
 import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.ddp.User;
+import chat.rocket.android.model.ddp.RealmUser;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmModelListAdapter;
-import chat.rocket.android.realm_helper.RealmObjectObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmModelListAdapter;
+import chat.rocket.persistence.realm.RealmObjectObserver;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
@@ -75,6 +75,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     RealmModelListAdapter.OnItemClickListener<PairedMessage> {
 
   private static final int DIALOG_ID = 1;
+  private static final String HOSTNAME = "hostname";
+  private static final String ROOM_ID = "roomId";
 
   private String hostname;
   private RealmHelper realmHelper;
@@ -96,8 +98,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   public static boolean canCreate(RealmHelper realmHelper) {
-    User currentUser = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst());
+    RealmUser currentUser = realmHelper.executeTransactionForRead(realm ->
+        RealmUser.queryCurrentUser(realm).findFirst());
     Session session = realmHelper.executeTransactionForRead(realm ->
         Session.queryDefaultSession(realm).findFirst());
     return currentUser != null && session != null;
@@ -108,8 +110,8 @@ public class RoomFragment extends AbstractChatRoomFragment
    */
   public static RoomFragment create(String hostname, String roomId) {
     Bundle args = new Bundle();
-    args.putString("hostname", hostname);
-    args.putString("roomId", roomId);
+    args.putString(HOSTNAME, hostname);
+    args.putString(ROOM_ID, roomId);
     RoomFragment fragment = new RoomFragment();
     fragment.setArguments(args);
     return fragment;
@@ -120,11 +122,11 @@ public class RoomFragment extends AbstractChatRoomFragment
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
-    hostname = args.getString("hostname");
+    hostname = args.getString(HOSTNAME);
     realmHelper = RealmStore.get(hostname);
-    roomId = args.getString("roomId");
+    roomId = args.getString(ROOM_ID);
     userId = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst()).getId();
+        RealmUser.queryCurrentUser(realm).findFirst()).getId();
     token = realmHelper.executeTransactionForRead(realm ->
         Session.queryDefaultSession(realm).findFirst()).getToken();
     roomObserver = realmHelper
@@ -151,9 +153,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   protected void onSetupView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
     MessageListAdapter adapter = (MessageListAdapter) realmHelper.createListAdapter(getContext(),
-        realm -> realm.where(Message.class)
-            .equalTo(Message.ROOM_ID, roomId)
-            .findAllSorted(Message.TIMESTAMP, Sort.DESCENDING),
+        realm -> realm.where(RealmMessage.class)
+            .equalTo(RealmMessage.ROOM_ID, roomId)
+            .findAllSorted(RealmMessage.TIMESTAMP, Sort.DESCENDING),
         context -> new MessageListAdapter(context, hostname, userId, token)
     );
     listView.setAdapter(adapter);
@@ -233,10 +235,10 @@ public class RoomFragment extends AbstractChatRoomFragment
         realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
     if (room != null) {
       return realmHelper.executeTransactionForReadResults(realm ->
-          realm.where(Message.class)
-              .equalTo(Message.ROOM_ID, roomId)
-              .greaterThanOrEqualTo(Message.TIMESTAMP, room.getLastSeen())
-              .notEqualTo(Message.USER_ID, userId)
+          realm.where(RealmMessage.class)
+              .equalTo(RealmMessage.ROOM_ID, roomId)
+              .greaterThanOrEqualTo(RealmMessage.TIMESTAMP, room.getLastSeen())
+              .notEqualTo(RealmMessage.USER_ID, userId)
               .findAll()).size();
     } else {
       return 0;
@@ -259,16 +261,16 @@ public class RoomFragment extends AbstractChatRoomFragment
         new AlertDialog.Builder(getContext())
             .setPositiveButton(R.string.resend, (dialog, which) -> {
               realmHelper.executeTransaction(realm ->
-                  realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-                      .put(Message.ID, messageId)
-                      .put(Message.SYNC_STATE, SyncState.NOT_SYNCED))
+                  realm.createOrUpdateObjectFromJson(RealmMessage.class, new JSONObject()
+                      .put(RealmMessage.ID, messageId)
+                      .put(RealmMessage.SYNC_STATE, SyncState.NOT_SYNCED))
               ).continueWith(new LogcatIfError());
             })
             .setNegativeButton(android.R.string.cancel, null)
             .setNeutralButton(R.string.discard, (dialog, which) -> {
               realmHelper.executeTransaction(realm ->
-                  realm.where(Message.class)
-                      .equalTo(Message.ID, messageId).findAll().deleteAllFromRealm()
+                  realm.where(RealmMessage.class)
+                      .equalTo(RealmMessage.ID, messageId).findAll().deleteAllFromRealm()
               ).continueWith(new LogcatIfError());
             })
             .show();
@@ -524,14 +526,14 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   private Task<Void> sendMessage(String messageText) {
     return realmHelper.executeTransaction(realm ->
-        realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-            .put(Message.ID, UUID.randomUUID().toString())
-            .put(Message.SYNC_STATE, SyncState.NOT_SYNCED)
-            .put(Message.TIMESTAMP, System.currentTimeMillis())
-            .put(Message.ROOM_ID, roomId)
-            .put(Message.USER, new JSONObject()
-                .put(User.ID, userId))
-            .put(Message.MESSAGE, messageText)))
+        realm.createOrUpdateObjectFromJson(RealmMessage.class, new JSONObject()
+            .put(RealmMessage.ID, UUID.randomUUID().toString())
+            .put(RealmMessage.SYNC_STATE, SyncState.NOT_SYNCED)
+            .put(RealmMessage.TIMESTAMP, System.currentTimeMillis())
+            .put(RealmMessage.ROOM_ID, roomId)
+            .put(RealmMessage.USER, new JSONObject()
+                .put(RealmUser.ID, userId))
+            .put(RealmMessage.MESSAGE, messageText)))
         .onSuccess(_task -> {
           scrollToLatestMessage();
           return null;

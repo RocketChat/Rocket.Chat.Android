@@ -3,15 +3,24 @@ package chat.rocket.android.model.ddp;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+import chat.rocket.android.model.core.Settings;
+
 @SuppressWarnings({"PMD.ShortVariable"})
-public class Settings extends RealmObject {
+public class RealmSettings extends RealmObject {
 
   @PrimaryKey private String id;
 
-  private Preferences preferences;
+  private RealmPreferences preferences;
 
-  public Preferences getPreferences() {
+  public RealmPreferences getPreferences() {
     return preferences;
+  }
+
+  public Settings asSettings() {
+    return Settings.builder()
+        .setId(id)
+        .setPreferences(preferences.asPreferences())
+        .build();
   }
 
   @Override
@@ -23,7 +32,7 @@ public class Settings extends RealmObject {
       return false;
     }
 
-    Settings settings = (Settings) o;
+    RealmSettings settings = (RealmSettings) o;
 
     if (id != null ? !id.equals(settings.id) : settings.id != null) {
       return false;

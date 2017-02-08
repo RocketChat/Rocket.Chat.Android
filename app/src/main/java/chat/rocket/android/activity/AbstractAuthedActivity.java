@@ -11,7 +11,7 @@ import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.push.PushNotificationHandler;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.ServerInfo;
 import icepick.State;

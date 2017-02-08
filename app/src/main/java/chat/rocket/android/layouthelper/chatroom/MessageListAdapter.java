@@ -10,13 +10,13 @@ import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
-import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.model.ddp.RealmMessage;
 
 /**
  * target list adapter for chat room.
  */
 public class MessageListAdapter
-    extends ExtRealmModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
+    extends ExtRealmModelListAdapter<RealmMessage, PairedMessage, AbstractMessageViewHolder> {
 
   private static final int VIEW_TYPE_UNKNOWN = 0;
   private static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
@@ -99,7 +99,7 @@ public class MessageListAdapter
   }
 
   @Override
-  protected List<PairedMessage> mapResultsToViewModel(List<Message> results) {
+  protected List<PairedMessage> mapResultsToViewModel(List<RealmMessage> results) {
     if (results.isEmpty()) {
       return Collections.emptyList();
     }

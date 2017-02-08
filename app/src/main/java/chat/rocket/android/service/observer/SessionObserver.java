@@ -12,7 +12,7 @@ import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.internal.MethodCall;
 import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.internal.StreamRoomMessageManager;
 import hugo.weaving.DebugLog;
