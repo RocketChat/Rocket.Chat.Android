@@ -1,13 +1,15 @@
 package chat.rocket.android.repositories;
 
+import android.os.Looper;
 import io.realm.Realm;
 
 import chat.rocket.android.model.core.User;
 import chat.rocket.android.model.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmStore;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
-public class RealmUserRepository implements UserRepository {
+public class RealmUserRepository extends RealmRepository implements UserRepository {
 
   private final String hostname;
 
@@ -19,6 +21,7 @@ public class RealmUserRepository implements UserRepository {
   public Observable<User> getCurrentUser() {
     return Observable.defer(() -> {
       final Realm realm = RealmStore.getRealm(hostname);
+      final Looper looper = Looper.myLooper();
 
       if (realm == null) {
         return Observable.just(null);
@@ -29,11 +32,14 @@ public class RealmUserRepository implements UserRepository {
           .findFirst();
 
       if (realmUser == null) {
+        realm.close();
         return Observable.just(null);
       }
 
       return realmUser
           .<RealmUser>asObservable()
+          .unsubscribeOn(AndroidSchedulers.from(looper))
+          .doOnUnsubscribe(() -> close(realm, looper))
           .filter(it -> it != null && it.isLoaded() && it.isValid())
           .map(it -> it.asUser());
     });
