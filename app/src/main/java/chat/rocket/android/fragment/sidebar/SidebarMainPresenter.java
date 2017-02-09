@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 
+import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
@@ -9,6 +10,8 @@ import chat.rocket.android.model.core.User;
 import chat.rocket.android.repositories.RoomRepository;
 import chat.rocket.android.repositories.UserRepository;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class SidebarMainPresenter implements SidebarMainContract.Presenter {
@@ -81,6 +84,8 @@ public class SidebarMainPresenter implements SidebarMainContract.Presenter {
   private void subscribeToRooms() {
     final Subscription subscription = roomRepository.getOpenRooms()
         .distinctUntilChanged()
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             rooms -> view.showRoomList(rooms)
         );
@@ -91,6 +96,8 @@ public class SidebarMainPresenter implements SidebarMainContract.Presenter {
   private void subscribeToUser() {
     final Subscription subscription = userRepository.getCurrentUser()
         .distinctUntilChanged()
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(user -> view.showUser(user));
 
     compositeSubscription.add(subscription);

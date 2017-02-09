@@ -28,7 +28,6 @@ import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.android.repositories.RealmRoomRepository;
 import chat.rocket.android.repositories.RealmUserRepository;
 import chat.rocket.android.widget.RocketChatAvatar;
-import chat.rocket.persistence.realm.RealmStore;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
 
@@ -65,22 +64,22 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
     presenter = new SidebarMainPresenter(
         hostname,
-        new RealmRoomRepository(RealmStore.getRealm(hostname)),
-        new RealmUserRepository(RealmStore.getRealm(hostname)),
+        new RealmRoomRepository(hostname),
+        new RealmUserRepository(hostname),
         TextUtils.isEmpty(hostname) ? null : new MethodCallHelper(getContext(), hostname)
     );
   }
 
   @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+  public void onResume() {
+    super.onResume();
     presenter.bindView(this);
   }
 
   @Override
-  public void onDestroyView() {
+  public void onPause() {
     presenter.release();
-    super.onDestroyView();
+    super.onPause();
   }
 
   @Override

@@ -51,14 +51,15 @@ import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.model.SyncState;
+import chat.rocket.android.model.core.Room;
 import chat.rocket.android.model.ddp.RealmMessage;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ddp.RealmUser;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.internal.Session;
+import chat.rocket.android.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmModelListAdapter;
-import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
@@ -72,7 +73,7 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, ExtraActionPickerDialogFragment.Callback,
-    RealmModelListAdapter.OnItemClickListener<PairedMessage> {
+    RealmModelListAdapter.OnItemClickListener<PairedMessage>, RoomContract.View {
 
   private static final int DIALOG_ID = 1;
   private static final String HOSTNAME = "hostname";
@@ -81,11 +82,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   private String hostname;
   private RealmHelper realmHelper;
   private String roomId;
-  private RealmObjectObserver<RoomSubscription> roomObserver;
   private String userId;
   private String token;
   private LoadMoreScrollListener scrollListener;
-  private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageFormManager messageFormManager;
   private RecyclerViewAutoScrollManager autoScrollManager;
   private AbstractNewMessageIndicatorManager newMessageIndicatorManager;
@@ -93,6 +92,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   private boolean previousUnreadMessageExists;
 
   private List<AbstractExtraActionItem> extraActionItems;
+
+  private RoomContract.Presenter presenter;
 
   public RoomFragment() {
   }
@@ -112,8 +113,10 @@ public class RoomFragment extends AbstractChatRoomFragment
     Bundle args = new Bundle();
     args.putString(HOSTNAME, hostname);
     args.putString(ROOM_ID, roomId);
+
     RoomFragment fragment = new RoomFragment();
     fragment.setArguments(args);
+
     return fragment;
   }
 
@@ -123,21 +126,20 @@ public class RoomFragment extends AbstractChatRoomFragment
 
     Bundle args = getArguments();
     hostname = args.getString(HOSTNAME);
-    realmHelper = RealmStore.get(hostname);
     roomId = args.getString(ROOM_ID);
+
+    presenter = new RoomPresenter(
+        roomId,
+        new RealmRoomRepository(hostname)
+    );
+
+    realmHelper = RealmStore.get(hostname);
+
     userId = realmHelper.executeTransactionForRead(realm ->
         RealmUser.queryCurrentUser(realm).findFirst()).getId();
+
     token = realmHelper.executeTransactionForRead(realm ->
         Session.queryDefaultSession(realm).findFirst()).getToken();
-    roomObserver = realmHelper
-        .createObjectObserver(
-            realm -> realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId))
-        .setOnUpdateListener(this::onRenderRoom);
-
-    procedureObserver = realmHelper
-        .createObjectObserver(realm ->
-            realm.where(LoadMessageProcedure.class).equalTo(LoadMessageProcedure.ID, roomId))
-        .setOnUpdateListener(this::onUpdateLoadMessageProcedure);
 
     if (savedInstanceState == null) {
       initialRequest();
@@ -347,12 +349,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     }
   }
 
-  private void onRenderRoom(RoomSubscription roomSubscription) {
-    if (roomSubscription == null) {
-      return;
-    }
-
-    String type = roomSubscription.getType();
+  private void onRenderRoom(Room room) {
+    String type = room.getType();
     if (RoomSubscription.TYPE_CHANNEL.equals(type)) {
       setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
     } else if (RoomSubscription.TYPE_PRIVATE.equals(type)) {
@@ -362,32 +360,13 @@ public class RoomFragment extends AbstractChatRoomFragment
     } else {
       setToolbarRoomIcon(0);
     }
-    setToolbarTitle(roomSubscription.getName());
+    setToolbarTitle(room.getName());
 
-    boolean unreadMessageExists = roomSubscription.isAlert();
+    boolean unreadMessageExists = room.isAlert();
     if (newMessageIndicatorManager != null && previousUnreadMessageExists && !unreadMessageExists) {
       newMessageIndicatorManager.reset();
     }
     previousUnreadMessageExists = unreadMessageExists;
-  }
-
-  private void onUpdateLoadMessageProcedure(LoadMessageProcedure procedure) {
-    if (procedure == null) {
-      return;
-    }
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    if (listView != null && listView.getAdapter() instanceof MessageListAdapter) {
-      MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
-      final int syncState = procedure.getSyncState();
-      final boolean hasNext = procedure.hasNext();
-      RCLog.d("hasNext: %s syncstate: %d", hasNext, syncState);
-      if (syncState == SyncState.SYNCED || syncState == SyncState.FAILED) {
-        scrollListener.setLoadingDone();
-        adapter.updateFooter(hasNext, true);
-      } else {
-        adapter.updateFooter(hasNext, false);
-      }
-    }
   }
 
   private void initialRequest() {
@@ -439,15 +418,13 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void onResume() {
     super.onResume();
-    roomObserver.sub();
-    procedureObserver.sub();
+    presenter.bindView(this);
     closeSideMenuIfNeeded();
   }
 
   @Override
   public void onPause() {
-    procedureObserver.unsub();
-    roomObserver.unsub();
+    presenter.release();
     super.onPause();
   }
 
@@ -538,5 +515,24 @@ public class RoomFragment extends AbstractChatRoomFragment
           scrollToLatestMessage();
           return null;
         });
+  }
+
+  @Override
+  public void render(Room room) {
+    onRenderRoom(room);
+  }
+
+  @Override
+  public void updateHistoryState(boolean hasNext, boolean isLoaded) {
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    if (listView == null || !(listView.getAdapter() instanceof MessageListAdapter)) {
+      return;
+    }
+
+    MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
+    if (isLoaded) {
+      scrollListener.setLoadingDone();
+    }
+    adapter.updateFooter(hasNext, isLoaded);
   }
 }

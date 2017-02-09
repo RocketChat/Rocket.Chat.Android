@@ -3,6 +3,8 @@ package chat.rocket.android.model.internal;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+import chat.rocket.android.model.core.RoomHistoryState;
+
 /**
  * Load messages in the room.
  */
@@ -71,5 +73,16 @@ public class LoadMessageProcedure extends RealmObject {
 
   public void setHasNext(boolean hasNext) {
     this.hasNext = hasNext;
+  }
+
+  public RoomHistoryState asRoomHistoryState() {
+    return RoomHistoryState.builder()
+        .setRoomId(roomId)
+        .setSyncState(syncstate)
+        .setReset(reset)
+        .setTimestamp(timestamp)
+        .setCount(count)
+        .setComplete(!hasNext)
+        .build();
   }
 }
