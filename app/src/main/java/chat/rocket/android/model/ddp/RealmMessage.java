@@ -168,7 +168,7 @@ public class RealmMessage extends RealmObject {
         .setSyncState(syncstate)
         .setTimestamp(ts)
         .setMessage(msg)
-        .setUser(u.asUser())
+        .setUser(u != null ? u.asUser() : null)
         .setGroupable(groupable)
         .setAlias(alias)
         .setAvatar(avatar)

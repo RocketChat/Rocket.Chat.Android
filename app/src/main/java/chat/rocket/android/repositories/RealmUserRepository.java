@@ -5,6 +5,7 @@ import io.realm.Realm;
 
 import chat.rocket.android.model.core.User;
 import chat.rocket.android.model.ddp.RealmUser;
+import chat.rocket.android.repositories.core.UserRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

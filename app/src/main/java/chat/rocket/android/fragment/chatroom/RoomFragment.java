@@ -21,13 +21,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.jakewharton.rxbinding.support.v4.widget.RxDrawerLayout;
 import io.realm.Sort;
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
@@ -55,9 +52,10 @@ import chat.rocket.android.model.core.Room;
 import chat.rocket.android.model.ddp.RealmMessage;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.ddp.RealmUser;
-import chat.rocket.android.model.internal.LoadMessageProcedure;
 import chat.rocket.android.model.internal.Session;
+import chat.rocket.android.repositories.RealmMessageRepository;
 import chat.rocket.android.repositories.RealmRoomRepository;
+import chat.rocket.android.repositories.RealmUserRepository;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmModelListAdapter;
 import chat.rocket.persistence.realm.RealmStore;
@@ -130,7 +128,10 @@ public class RoomFragment extends AbstractChatRoomFragment
 
     presenter = new RoomPresenter(
         roomId,
-        new RealmRoomRepository(hostname)
+        new RealmUserRepository(hostname),
+        new RealmRoomRepository(hostname),
+        new RealmMessageRepository(hostname),
+        ConnectivityManager.getInstance(getContext().getApplicationContext())
     );
 
     realmHelper = RealmStore.get(hostname);
@@ -261,20 +262,11 @@ public class RoomFragment extends AbstractChatRoomFragment
       if (syncState == SyncState.FAILED) {
         final String messageId = pairedMessage.target.getId();
         new AlertDialog.Builder(getContext())
-            .setPositiveButton(R.string.resend, (dialog, which) -> {
-              realmHelper.executeTransaction(realm ->
-                  realm.createOrUpdateObjectFromJson(RealmMessage.class, new JSONObject()
-                      .put(RealmMessage.ID, messageId)
-                      .put(RealmMessage.SYNC_STATE, SyncState.NOT_SYNCED))
-              ).continueWith(new LogcatIfError());
-            })
+            .setPositiveButton(R.string.resend,
+                (dialog, which) -> presenter.resendMessage(messageId))
             .setNegativeButton(android.R.string.cancel, null)
-            .setNeutralButton(R.string.discard, (dialog, which) -> {
-              realmHelper.executeTransaction(realm ->
-                  realm.where(RealmMessage.class)
-                      .equalTo(RealmMessage.ID, messageId).findAll().deleteAllFromRealm()
-              ).continueWith(new LogcatIfError());
-            })
+            .setNeutralButton(R.string.discard,
+                (dialog, which) -> presenter.deleteMessage(messageId))
             .show();
       }
     }
@@ -370,40 +362,11 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void initialRequest() {
-    realmHelper.executeTransaction(realm -> {
-      realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
-          .put(LoadMessageProcedure.ID, roomId)
-          .put(LoadMessageProcedure.SYNC_STATE, SyncState.NOT_SYNCED)
-          .put(LoadMessageProcedure.COUNT, 100)
-          .put(LoadMessageProcedure.RESET, true));
-      return null;
-    }).onSuccessTask(task -> {
-      ConnectivityManager.getInstance(getContext().getApplicationContext())
-          .keepAliveServer();
-      return task;
-    }).continueWith(new LogcatIfError());
+    presenter.loadMessages();
   }
 
   private void loadMoreRequest() {
-    realmHelper.executeTransaction(realm -> {
-      LoadMessageProcedure procedure = realm.where(LoadMessageProcedure.class)
-          .equalTo(LoadMessageProcedure.ID, roomId)
-          .beginGroup()
-          .equalTo(LoadMessageProcedure.SYNC_STATE, SyncState.SYNCED)
-          .or()
-          .equalTo(LoadMessageProcedure.SYNC_STATE, SyncState.FAILED)
-          .endGroup()
-          .equalTo(LoadMessageProcedure.HAS_NEXT, true)
-          .findFirst();
-      if (procedure != null) {
-        procedure.setSyncState(SyncState.NOT_SYNCED);
-      }
-      return null;
-    }).onSuccessTask(task -> {
-      ConnectivityManager.getInstance(getContext().getApplicationContext())
-          .keepAliveServer();
-      return task;
-    }).continueWith(new LogcatIfError());
+    presenter.loadMoreMessages();
   }
 
   private void markAsReadIfNeeded() {
@@ -501,20 +464,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     return true;
   }
 
-  private Task<Void> sendMessage(String messageText) {
-    return realmHelper.executeTransaction(realm ->
-        realm.createOrUpdateObjectFromJson(RealmMessage.class, new JSONObject()
-            .put(RealmMessage.ID, UUID.randomUUID().toString())
-            .put(RealmMessage.SYNC_STATE, SyncState.NOT_SYNCED)
-            .put(RealmMessage.TIMESTAMP, System.currentTimeMillis())
-            .put(RealmMessage.ROOM_ID, roomId)
-            .put(RealmMessage.USER, new JSONObject()
-                .put(RealmUser.ID, userId))
-            .put(RealmMessage.MESSAGE, messageText)))
-        .onSuccess(_task -> {
-          scrollToLatestMessage();
-          return null;
-        });
+  private void sendMessage(String messageText) {
+    presenter.sendMessage(messageText);
   }
 
   @Override
@@ -534,5 +485,11 @@ public class RoomFragment extends AbstractChatRoomFragment
       scrollListener.setLoadingDone();
     }
     adapter.updateFooter(hasNext, isLoaded);
+  }
+
+  @Override
+  public void onMessageSendSuccessfully() {
+    scrollToLatestMessage();
+    messageFormManager.onMessageSend();
   }
 }

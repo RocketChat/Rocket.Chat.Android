@@ -22,6 +22,7 @@ public abstract class Message {
 
   public abstract String getMessage();
 
+  @Nullable
   public abstract User getUser();
 
   public abstract boolean isGroupable();
@@ -37,6 +38,8 @@ public abstract class Message {
 
   @Nullable
   public abstract String getAvatar();
+
+  public abstract Message withSyncState(int syncState);
 
   public static Builder builder() {
     return new AutoValue_Message.Builder();

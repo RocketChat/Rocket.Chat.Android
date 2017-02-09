@@ -7,11 +7,10 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.model.core.User;
-import chat.rocket.android.repositories.RoomRepository;
-import chat.rocket.android.repositories.UserRepository;
+import chat.rocket.android.repositories.core.RoomRepository;
+import chat.rocket.android.repositories.core.UserRepository;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class SidebarMainPresenter implements SidebarMainContract.Presenter {
@@ -50,7 +49,7 @@ public class SidebarMainPresenter implements SidebarMainContract.Presenter {
 
   @Override
   public void release() {
-    compositeSubscription.unsubscribe();
+    compositeSubscription.clear();
     view = null;
   }
 

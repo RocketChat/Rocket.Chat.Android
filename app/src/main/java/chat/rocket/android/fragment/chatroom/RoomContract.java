@@ -11,11 +11,23 @@ public interface RoomContract {
     void render(Room room);
 
     void updateHistoryState(boolean hasNext, boolean isLoaded);
+
+    void onMessageSendSuccessfully();
   }
 
   interface Presenter {
     void bindView(@NonNull View view);
 
     void release();
+
+    void loadMessages();
+
+    void loadMoreMessages();
+
+    void sendMessage(String messageText);
+
+    void resendMessage(String messageId);
+
+    void deleteMessage(String messageId);
   }
 }

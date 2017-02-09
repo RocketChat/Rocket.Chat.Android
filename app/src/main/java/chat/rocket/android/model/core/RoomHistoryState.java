@@ -17,6 +17,8 @@ public abstract class RoomHistoryState {
 
   public abstract boolean isComplete();
 
+  public abstract RoomHistoryState withSyncState(int syncState);
+
   public static Builder builder() {
     return new AutoValue_RoomHistoryState.Builder();
   }

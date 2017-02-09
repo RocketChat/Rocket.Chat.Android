@@ -10,8 +10,10 @@ import chat.rocket.android.model.core.Room;
 import chat.rocket.android.model.core.RoomHistoryState;
 import chat.rocket.android.model.ddp.RoomSubscription;
 import chat.rocket.android.model.internal.LoadMessageProcedure;
+import chat.rocket.android.repositories.core.RoomRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class RealmRoomRepository extends RealmRepository implements RoomRepository {
@@ -56,7 +58,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
 
       return realm.where(RoomSubscription.class)
           .equalTo(RoomSubscription.ROOM_ID, roomId)
-          .findFirstAsync()
+          .findFirst()
           .<RoomSubscription>asObservable()
           .unsubscribeOn(AndroidSchedulers.from(looper))
           .doOnUnsubscribe(() -> close(realm, looper))
@@ -78,13 +80,46 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
 
       return realm.where(LoadMessageProcedure.class)
           .equalTo(LoadMessageProcedure.ID, roomId)
-          .findFirstAsync()
+          .findFirst()
           .<LoadMessageProcedure>asObservable()
           .unsubscribeOn(AndroidSchedulers.from(looper))
           .doOnUnsubscribe(() -> close(realm, looper))
           .filter(loadMessageProcedure -> loadMessageProcedure != null
               && loadMessageProcedure.isLoaded() && loadMessageProcedure.isValid())
           .map(loadMessageProcedure -> loadMessageProcedure.asRoomHistoryState());
+    });
+  }
+
+  @Override
+  public Single<Boolean> setHistoryState(RoomHistoryState roomHistoryState) {
+    return Single.defer(() -> {
+      final Realm realm = RealmStore.getRealm(hostname);
+      final Looper looper = Looper.myLooper();
+
+      if (realm == null) {
+        return Single.just(false);
+      }
+
+      LoadMessageProcedure loadMessage = new LoadMessageProcedure();
+      loadMessage.setRoomId(roomHistoryState.getRoomId());
+      loadMessage.setSyncState(roomHistoryState.getSyncState());
+      loadMessage.setCount(roomHistoryState.getCount());
+      loadMessage.setReset(roomHistoryState.isReset());
+      loadMessage.setHasNext(!roomHistoryState.isComplete());
+      loadMessage.setTimestamp(roomHistoryState.getTimestamp());
+
+      realm.beginTransaction();
+
+      return realm.copyToRealmOrUpdate(loadMessage)
+          .asObservable()
+          .unsubscribeOn(AndroidSchedulers.from(looper))
+          .doOnUnsubscribe(() -> close(realm, looper))
+          .filter(realmObject -> realmObject != null
+              && realmObject.isLoaded() && realmObject.isValid())
+          .first()
+          .doOnNext(realmObject -> realm.commitTransaction())
+          .toSingle()
+          .map(realmObject -> true);
     });
   }
 
