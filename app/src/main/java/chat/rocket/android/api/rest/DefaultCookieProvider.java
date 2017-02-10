@@ -3,8 +3,8 @@ package chat.rocket.android.api.rest;
 import android.content.Context;
 
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.android.model.ddp.RealmUser;
-import chat.rocket.android.model.internal.Session;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.internal.Session;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 

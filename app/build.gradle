@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'realm-android'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.github.triplet.play'
 apply from: '../config/quality/quality.gradle'
@@ -76,6 +75,9 @@ android {
         //avoiding okio error: https://github.com/square/okhttp/issues/896
         lintConfig file("lint.xml")
     }
+    dexOptions {
+        javaMaxHeapSize '4g'
+    }
 }
 play {
     jsonFile = file('rocket-chat.json')
@@ -92,6 +94,7 @@ repositories {
 dependencies {
     compile project(':log-wrapper')
     compile project(':android-ddp')
+    compile project(':rocket-chat-core')
     compile project(':rocket-chat-android-widgets')
     compile project(':persistence-realm')
     compile rootProject.ext.supportAppCompat
@@ -127,10 +130,6 @@ dependencies {
 
     compile 'com.github.hotchemi:permissionsdispatcher:2.3.0'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.0'
-
-    provided "com.google.auto.value:auto-value:1.3"
-    annotationProcessor "com.google.auto.value:auto-value:1.3"
-    annotationProcessor 'com.gabrielittner.auto.value:auto-value-with:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

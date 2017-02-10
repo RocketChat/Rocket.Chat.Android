@@ -3,7 +3,7 @@ package chat.rocket.android.layouthelper.chatroom;
 import android.content.Context;
 
 import chat.rocket.android.R;
-import chat.rocket.android.model.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 
 /**
  * message type.

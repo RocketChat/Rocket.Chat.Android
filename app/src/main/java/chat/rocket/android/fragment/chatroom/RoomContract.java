@@ -2,7 +2,7 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.support.annotation.NonNull;
 
-import chat.rocket.android.model.core.Room;
+import chat.rocket.core.models.Room;
 
 public interface RoomContract {
 

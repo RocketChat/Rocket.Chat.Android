@@ -7,7 +7,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.SyncState;
+import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.RealmModelViewHolder;
 import chat.rocket.android.widget.RocketChatAvatar;
 

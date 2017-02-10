@@ -3,8 +3,8 @@ package chat.rocket.android.fragment.sidebar;
 import android.support.annotation.NonNull;
 
 import java.util.List;
-import chat.rocket.android.model.core.Room;
-import chat.rocket.android.model.core.User;
+import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 
 public interface SidebarMainContract {
 

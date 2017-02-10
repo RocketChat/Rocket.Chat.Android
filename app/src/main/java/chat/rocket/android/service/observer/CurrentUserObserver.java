@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;

@@ -7,7 +7,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.core.User;
+import chat.rocket.core.models.User;
 import chat.rocket.android.widget.RocketChatAvatar;
 
 /**

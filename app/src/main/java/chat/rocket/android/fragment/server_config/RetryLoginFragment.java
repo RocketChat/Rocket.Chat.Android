@@ -8,7 +8,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.internal.Session;
+import chat.rocket.persistence.realm.models.internal.Session;
 import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.persistence.realm.RealmStore;
 

@@ -11,12 +11,13 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.RealmMessage;
-import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.internal.MethodCall;
-import chat.rocket.android.model.internal.Session;
+import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.models.internal.MethodCall;
+import chat.rocket.persistence.realm.models.internal.Session;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.DDPClientRef;
@@ -63,7 +64,12 @@ public class MethodCallHelper {
       return ddpClientRef.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
-      return MethodCall.execute(context, realmHelper, methodName, param, timeout);
+      return MethodCall.execute(realmHelper, methodName, param, timeout)
+          .onSuccessTask(task -> {
+            ConnectivityManager.getInstance(context.getApplicationContext())
+                .keepAliveServer();
+            return task;
+          });
     }
   }
 
@@ -211,13 +217,13 @@ public class MethodCallHelper {
           final JSONArray result = task.getResult();
           try {
             for (int i = 0; i < result.length(); i++) {
-              RoomSubscription.customizeJson(result.getJSONObject(i));
+              RealmRoom.customizeJson(result.getJSONObject(i));
             }
 
             return realmHelper.executeTransaction(realm -> {
-              realm.delete(RoomSubscription.class);
+              realm.delete(RealmRoom.class);
               realm.createOrUpdateAllFromJson(
-                  RoomSubscription.class, result);
+                  RealmRoom.class, result);
               return null;
             });
           } catch (JSONException exception) {
@@ -334,12 +340,12 @@ public class MethodCallHelper {
         .onSuccessTask(task -> {
           final JSONArray settings = task.getResult();
           for (int i = 0; i < settings.length(); i++) {
-            PublicSetting.customizeJson(settings.getJSONObject(i));
+            RealmPublicSetting.customizeJson(settings.getJSONObject(i));
           }
 
           return realmHelper.executeTransaction(realm -> {
-            realm.delete(PublicSetting.class);
-            realm.createOrUpdateAllFromJson(PublicSetting.class, settings);
+            realm.delete(RealmPublicSetting.class);
+            realm.createOrUpdateAllFromJson(RealmPublicSetting.class, settings);
             return null;
           });
         });

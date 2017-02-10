@@ -12,7 +12,7 @@ import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.sidebar.dialog.SuggestUserAdapter;
-import chat.rocket.android.model.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmAutoCompleteAdapter;
 
 /**

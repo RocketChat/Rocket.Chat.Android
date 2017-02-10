@@ -10,7 +10,7 @@ import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
-import chat.rocket.android.model.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 
 /**
  * target list adapter for chat room.

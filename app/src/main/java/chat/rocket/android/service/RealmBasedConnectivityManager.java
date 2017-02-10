@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.models.RealmBasedServerInfo;
 import hugo.weaving.DebugLog;
 import rx.Observable;
 import rx.Single;
@@ -49,7 +51,7 @@ import rx.subjects.PublishSubject;
   public void resetConnectivityStateList() {
     serverConnectivityList.clear();
     for (ServerInfo serverInfo : RealmBasedServerInfo.getServerInfoList()) {
-      serverConnectivityList.put(serverInfo.hostname, ServerConnectivity.STATE_DISCONNECTED);
+      serverConnectivityList.put(serverInfo.getHostname(), ServerConnectivity.STATE_DISCONNECTED);
     }
   }
 

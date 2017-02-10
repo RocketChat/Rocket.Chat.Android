@@ -17,8 +17,8 @@ import chat.rocket.android.R;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.layouthelper.chatroom.dialog.RoomUserAdapter;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.android.service.ConnectivityManager;
 

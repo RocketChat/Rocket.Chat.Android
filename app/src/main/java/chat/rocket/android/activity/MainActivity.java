@@ -17,9 +17,9 @@ import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.ddp.RealmUser;
-import chat.rocket.android.model.internal.Session;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.internal.Session;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmListObserver;
 import chat.rocket.persistence.realm.RealmObjectObserver;
@@ -34,7 +34,7 @@ import hugo.weaving.DebugLog;
 public class MainActivity extends AbstractAuthedActivity {
 
   private RealmObjectObserver<Session> sessionObserver;
-  private RealmListObserver<RoomSubscription> unreadRoomSubscriptionObserver;
+  private RealmListObserver<RealmRoom> unreadRoomSubscriptionObserver;
   private boolean isForeground;
   private StatusTicker statusTicker;
 
@@ -228,21 +228,21 @@ public class MainActivity extends AbstractAuthedActivity {
 
     unreadRoomSubscriptionObserver = realmHelper
         .createListObserver(realm ->
-            realm.where(RoomSubscription.class)
-                .equalTo(RoomSubscription.ALERT, true)
-                .equalTo(RoomSubscription.OPEN, true)
+            realm.where(RealmRoom.class)
+                .equalTo(RealmRoom.ALERT, true)
+                .equalTo(RealmRoom.OPEN, true)
                 .findAll())
         .setOnUpdateListener(this::updateRoomToolbarUnreadCount);
     unreadRoomSubscriptionObserver.sub();
   }
 
-  private void updateRoomToolbarUnreadCount(List<RoomSubscription> unreadRooms) {
+  private void updateRoomToolbarUnreadCount(List<RealmRoom> unreadRooms) {
     RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
     if (toolbar != null) {
       //ref: Rocket.Chat:client/startup/unread.js
       final int numUnreadChannels = unreadRooms.size();
       int numMentionsSum = 0;
-      for (RoomSubscription room : unreadRooms) {
+      for (RealmRoom room : unreadRooms) {
         numMentionsSum += room.getUnread();
       }
       toolbar.setUnreadBudge(numUnreadChannels, numMentionsSum);

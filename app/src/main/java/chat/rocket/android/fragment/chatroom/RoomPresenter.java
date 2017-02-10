@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 
 import java.util.UUID;
 import chat.rocket.android.BackgroundLooper;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.core.Message;
-import chat.rocket.android.model.core.RoomHistoryState;
-import chat.rocket.android.repositories.core.MessageRepository;
-import chat.rocket.android.repositories.core.RoomRepository;
-import chat.rocket.android.repositories.core.UserRepository;
+import chat.rocket.core.SyncState;
+import chat.rocket.core.models.Message;
+import chat.rocket.core.models.RoomHistoryState;
+import chat.rocket.core.repositories.MessageRepository;
+import chat.rocket.core.repositories.RoomRepository;
+import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;

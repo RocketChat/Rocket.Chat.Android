@@ -14,7 +14,8 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.internal.Session;
+import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.models.internal.Session;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
@@ -225,7 +226,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         .flatMap(_val -> Single.fromEmitter(emitter -> {
           ServerInfo info = connectivityManager.getServerInfoForHost(hostname);
           RCLog.d("DDPClient#connect");
-          ddpClient.connect(info.session, !info.insecure)
+          ddpClient.connect(info.getSession(), info.isSecure())
               .onSuccessTask(task -> {
                 final String newSession = task.getResult().session;
                 connectivityManager.notifyConnectionEstablished(hostname, newSession);

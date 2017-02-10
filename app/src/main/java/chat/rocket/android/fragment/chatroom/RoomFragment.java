@@ -47,15 +47,15 @@ import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.core.Room;
-import chat.rocket.android.model.ddp.RealmMessage;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.ddp.RealmUser;
-import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.repositories.RealmMessageRepository;
-import chat.rocket.android.repositories.RealmRoomRepository;
-import chat.rocket.android.repositories.RealmUserRepository;
+import chat.rocket.core.SyncState;
+import chat.rocket.core.models.Room;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.internal.Session;
+import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
+import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmModelListAdapter;
 import chat.rocket.persistence.realm.RealmStore;
@@ -234,8 +234,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private int getUnreadMessageCount() {
-    RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
-        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
+    RealmRoom room = realmHelper.executeTransactionForRead(realm ->
+        realm.where(RealmRoom.class).equalTo(RealmRoom.ROOM_ID, roomId).findFirst());
     if (room != null) {
       return realmHelper.executeTransactionForReadResults(realm ->
           realm.where(RealmMessage.class)
@@ -343,11 +343,11 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   private void onRenderRoom(Room room) {
     String type = room.getType();
-    if (RoomSubscription.TYPE_CHANNEL.equals(type)) {
+    if (RealmRoom.TYPE_CHANNEL.equals(type)) {
       setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
-    } else if (RoomSubscription.TYPE_PRIVATE.equals(type)) {
+    } else if (RealmRoom.TYPE_PRIVATE.equals(type)) {
       setToolbarRoomIcon(R.drawable.ic_lock_gray_24dp);
-    } else if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(type)) {
+    } else if (RealmRoom.TYPE_DIRECT_MESSAGE.equals(type)) {
       setToolbarRoomIcon(R.drawable.ic_at_gray_24dp);
     } else {
       setToolbarRoomIcon(0);
@@ -370,8 +370,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void markAsReadIfNeeded() {
-    RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
-        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
+    RealmRoom room = realmHelper.executeTransactionForRead(realm ->
+        realm.where(RealmRoom.class).equalTo(RealmRoom.ROOM_ID, roomId).findFirst());
     if (room != null && room.isAlert()) {
       new MethodCallHelper(getContext(), hostname).readMessages(roomId)
           .continueWith(new LogcatIfError());

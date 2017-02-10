@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import java.util.Iterator;
 import java.util.List;
 import chat.rocket.android.R;
-import chat.rocket.android.model.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmAutoCompleteAdapter;
 import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.android.widget.RocketChatAvatar;

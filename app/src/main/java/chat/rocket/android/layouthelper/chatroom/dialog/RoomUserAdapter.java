@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.renderer.UserRenderer;
 

@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.core.Room;
+import chat.rocket.core.models.Room;
 import chat.rocket.android.widget.internal.RoomListItemView;
 import java.util.List;
 

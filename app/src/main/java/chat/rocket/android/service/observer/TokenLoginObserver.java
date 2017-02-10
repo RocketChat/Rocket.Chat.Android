@@ -7,7 +7,7 @@ import io.realm.RealmResults;
 import java.util.List;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.internal.Session;
+import chat.rocket.persistence.realm.models.internal.Session;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 

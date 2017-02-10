@@ -22,11 +22,11 @@ import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
-import chat.rocket.android.model.core.Room;
-import chat.rocket.android.model.core.User;
+import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 import chat.rocket.android.renderer.UserRenderer;
-import chat.rocket.android.repositories.RealmRoomRepository;
-import chat.rocket.android.repositories.RealmUserRepository;
+import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.android.widget.RocketChatAvatar;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {

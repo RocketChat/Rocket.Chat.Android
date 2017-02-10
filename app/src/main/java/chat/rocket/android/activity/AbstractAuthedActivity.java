@@ -8,12 +8,12 @@ import android.support.annotation.Nullable;
 import java.util.List;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.push.PushNotificationHandler;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.ServerInfo;
+import chat.rocket.core.models.ServerInfo;
 import icepick.State;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
@@ -107,7 +107,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     // just connect to the first available
     final ServerInfo serverInfo = serverInfoList.get(0);
     prefs.edit()
-        .putString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME, serverInfo.hostname)
+        .putString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME, serverInfo.getHostname())
         .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
         .apply();
   }
@@ -130,8 +130,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       return false;
     }
 
-    RoomSubscription room = RealmStore.get(hostname).executeTransactionForRead(realm ->
-        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
+    RealmRoom room = RealmStore.get(hostname).executeTransactionForRead(realm ->
+        realm.where(RealmRoom.class).equalTo(RealmRoom.ROOM_ID, roomId).findFirst());
     if (room == null) {
       prefs.edit()
           .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)

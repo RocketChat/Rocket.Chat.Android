@@ -13,11 +13,11 @@ import bolts.Task;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.ddp.PublicSettingsConstants;
-import chat.rocket.android.model.ddp.RealmUser;
-import chat.rocket.android.model.internal.GcmPushRegistration;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
+import chat.rocket.core.PublicSettingsConstants;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.internal.GcmPushRegistration;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
@@ -66,7 +66,7 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
   }
 
   private Task<Void> registerGcmTokenForServer() throws IOException {
-    final String senderId = PublicSetting
+    final String senderId = RealmPublicSetting
         .getString(realmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
 
     final String gcmToken = getGcmToken(senderId);
