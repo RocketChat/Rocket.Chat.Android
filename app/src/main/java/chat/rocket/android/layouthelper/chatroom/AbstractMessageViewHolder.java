@@ -8,10 +8,9 @@ import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.RealmModelViewHolder;
 import chat.rocket.android.widget.RocketChatAvatar;
 
-public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<PairedMessage> {
+public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMessage> {
   protected final RocketChatAvatar avatar;
   protected final TextView username;
   protected final TextView subUsername;

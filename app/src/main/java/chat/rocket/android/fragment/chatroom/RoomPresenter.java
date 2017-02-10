@@ -1,9 +1,12 @@
 package chat.rocket.android.fragment.chatroom;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import java.util.UUID;
 import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.RoomHistoryState;
@@ -11,6 +14,7 @@ import chat.rocket.core.repositories.MessageRepository;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.android.service.ConnectivityManagerApi;
+import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -21,6 +25,7 @@ public class RoomPresenter implements RoomContract.Presenter {
   private final UserRepository userRepository;
   private final RoomRepository roomRepository;
   private final MessageRepository messageRepository;
+  private final MethodCallHelper methodCallHelper;
   private final ConnectivityManagerApi connectivityManagerApi;
 
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
@@ -29,11 +34,13 @@ public class RoomPresenter implements RoomContract.Presenter {
   public RoomPresenter(String roomId, UserRepository userRepository,
                        RoomRepository roomRepository,
                        MessageRepository messageRepository,
+                       MethodCallHelper methodCallHelper,
                        ConnectivityManagerApi connectivityManagerApi) {
     this.roomId = roomId;
     this.userRepository = userRepository;
     this.roomRepository = roomRepository;
     this.messageRepository = messageRepository;
+    this.methodCallHelper = methodCallHelper;
     this.connectivityManagerApi = connectivityManagerApi;
   }
 
@@ -43,6 +50,7 @@ public class RoomPresenter implements RoomContract.Presenter {
 
     getRoomInfo();
     getRoomHistoryStateInfo();
+    getMessages();
   }
 
   @Override
@@ -151,6 +159,44 @@ public class RoomPresenter implements RoomContract.Presenter {
     compositeSubscription.add(subscription);
   }
 
+  @Override
+  public void onUnreadCount() {
+    final Subscription subscription = Single.zip(
+        userRepository.getCurrentUser()
+            .filter(user -> user != null)
+            .first()
+            .toSingle(),
+        roomRepository.getById(roomId)
+            .first()
+            .toSingle(),
+        (user, room) -> new Pair<>(room, user)
+    )
+        .flatMap(roomUserPair -> messageRepository
+            .unreadCountFor(roomUserPair.first, roomUserPair.second))
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(
+            count -> view.showUnreadCount(count)
+        );
+
+    compositeSubscription.add(subscription);
+  }
+
+  @Override
+  public void onMarkAsRead() {
+    final Subscription subscription = roomRepository.getById(roomId)
+        .first()
+        .filter(room -> room != null && room.isAlert())
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(
+            room -> methodCallHelper.readMessages(room.getRoomId())
+                .continueWith(new LogcatIfError())
+        );
+
+    compositeSubscription.add(subscription);
+  }
+
   private void getRoomInfo() {
     final Subscription subscription = roomRepository.getById(roomId)
         .distinctUntilChanged()
@@ -177,6 +223,17 @@ public class RoomPresenter implements RoomContract.Presenter {
               );
             }
         );
+
+    compositeSubscription.add(subscription);
+  }
+
+  private void getMessages() {
+    final Subscription subscription = roomRepository.getById(roomId)
+        .first()
+        .flatMap(messageRepository::getAllFrom)
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(messages -> view.showMessages(messages));
 
     compositeSubscription.add(subscription);
   }

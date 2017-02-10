@@ -3,7 +3,6 @@ package chat.rocket.persistence.realm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Looper;
-import android.support.v7.widget.RecyclerView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
@@ -156,12 +155,6 @@ public class RealmHelper {
   public <T extends RealmObject> RealmObjectObserver<T> createObjectObserver(
       RealmHelper.Query<T> query) {
     return new RealmObjectObserver<T>(this, query);
-  }
-
-  public <T extends RealmObject, VM, VH extends RealmModelViewHolder<VM>>
-  RecyclerView.Adapter<VH> createListAdapter(Context context, RealmListObserver.Query<T> query,
-                                             RealmModelListAdapter.Constructor<T, VM, VH> constructor) {
-    return constructor.getNewInstance(context).initializeWith(this, query);
   }
 
   public <T extends RealmObject> RealmAutoCompleteAdapter<T> createAutoCompleteAdapter(

@@ -2,6 +2,8 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.support.annotation.NonNull;
 
+import java.util.List;
+import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 
 public interface RoomContract {
@@ -13,6 +15,10 @@ public interface RoomContract {
     void updateHistoryState(boolean hasNext, boolean isLoaded);
 
     void onMessageSendSuccessfully();
+
+    void showUnreadCount(int count);
+
+    void showMessages(List<Message> messages);
   }
 
   interface Presenter {
@@ -29,5 +35,9 @@ public interface RoomContract {
     void resendMessage(String messageId);
 
     void deleteMessage(String messageId);
+
+    void onUnreadCount();
+
+    void onMarkAsRead();
   }
 }

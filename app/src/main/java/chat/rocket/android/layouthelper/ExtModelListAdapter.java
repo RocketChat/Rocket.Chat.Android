@@ -3,21 +3,20 @@ package chat.rocket.android.layouthelper;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.util.ListUpdateCallback;
-import io.realm.RealmObject;
 
-import chat.rocket.persistence.realm.RealmModelListAdapter;
-import chat.rocket.persistence.realm.RealmModelViewHolder;
+import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
+import chat.rocket.android.layouthelper.chatroom.ModelViewHolder;
 
 @SuppressWarnings({"PMD.AbstractNaming", "PMD.GenericsNaming"})
 /**
- * RealmModelListAdapter with header and footer.
+ * ModelListAdapter with header and footer.
  */
-public abstract class ExtRealmModelListAdapter<T extends RealmObject, VM,
-    VH extends RealmModelViewHolder<VM>> extends RealmModelListAdapter<T, VM, VH> {
+public abstract class ExtModelListAdapter<T, VM,
+    VH extends ModelViewHolder<VM>> extends ModelListAdapter<T, VM, VH> {
   protected static final int VIEW_TYPE_HEADER = -1;
   protected static final int VIEW_TYPE_FOOTER = -2;
 
-  protected ExtRealmModelListAdapter(Context context) {
+  protected ExtModelListAdapter(Context context) {
     super(context);
   }
 

@@ -3,11 +3,15 @@ package chat.rocket.persistence.realm.repositories;
 import android.os.Looper;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.MessageRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
@@ -51,7 +55,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
               && it.isValid())
           .first()
           .toSingle()
-          .map(it -> it.asMessage());
+          .map(RealmMessage::asMessage);
     });
   }
 
@@ -151,12 +155,59 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
   }
 
   @Override
-  public Observable<Message> getAllFrom(Room room) {
-    return null;
+  public Observable<List<Message>> getAllFrom(Room room) {
+    return Observable.defer(() -> {
+      final Realm realm = RealmStore.getRealm(hostname);
+      final Looper looper = Looper.myLooper();
+
+      if (realm == null) {
+        return Observable.just(null);
+      }
+
+      return realm.where(RealmMessage.class)
+          .equalTo(RealmMessage.ROOM_ID, room.getRoomId())
+          .findAllSorted(RealmMessage.TIMESTAMP, Sort.DESCENDING)
+          .asObservable()
+          .unsubscribeOn(AndroidSchedulers.from(looper))
+          .doOnUnsubscribe(() -> close(realm, looper))
+          .filter(it -> it != null
+              && it.isLoaded() && it.isValid())
+          .map(this::toList);
+    });
   }
 
   @Override
-  public Single<Integer> unreadCountFrom(Room room) {
-    return null;
+  public Single<Integer> unreadCountFor(Room room, User user) {
+    return Single.defer(() -> {
+      final Realm realm = RealmStore.getRealm(hostname);
+      final Looper looper = Looper.myLooper();
+
+      if (realm == null) {
+        return Single.just(0);
+      }
+
+      return realm.where(RealmMessage.class)
+          .equalTo(RealmMessage.ROOM_ID, room.getId())
+          .greaterThanOrEqualTo(RealmMessage.TIMESTAMP, room.getLastSeen())
+          .notEqualTo(RealmMessage.USER_ID, user.getId())
+          .findAll()
+          .asObservable()
+          .unsubscribeOn(AndroidSchedulers.from(looper))
+          .doOnUnsubscribe(() -> close(realm, looper))
+          .map(RealmResults::size)
+          .first()
+          .toSingle();
+    });
+  }
+
+  private List<Message> toList(RealmResults<RealmMessage> realmMessages) {
+    final int total = realmMessages.size();
+    final List<Message> messages = new ArrayList<>(total);
+
+    for (int i = 0; i < total; i++) {
+      messages.add(realmMessages.get(i).asMessage());
+    }
+
+    return messages;
   }
 }

@@ -5,29 +5,31 @@ import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.models.ddp.RealmMessage;
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.core.models.Attachment;
+import chat.rocket.core.models.Message;
 import chat.rocket.android.widget.RocketChatAvatar;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
+import chat.rocket.core.models.User;
+import chat.rocket.core.models.WebContent;
 
 /**
  * Renderer for RealmMessage model.
  */
-public class MessageRenderer extends AbstractRenderer<RealmMessage> {
+public class MessageRenderer extends AbstractRenderer<Message> {
 
   private final UserRenderer userRenderer;
 
-  public MessageRenderer(Context context, RealmMessage message) {
+  public MessageRenderer(Context context, Message message) {
     super(context, message);
-    RealmUser realmUser = message.getUser();
-    userRenderer = new UserRenderer(context, realmUser == null ? null : realmUser.asUser());
+    userRenderer = new UserRenderer(context, message.getUser());
   }
 
   /**
@@ -40,7 +42,7 @@ public class MessageRenderer extends AbstractRenderer<RealmMessage> {
     } else if (TextUtils.isEmpty(object.getAvatar())) {
       userRenderer.avatarInto(rocketChatAvatar, hostname);
     } else {
-      final RealmUser user = object.getUser();
+      final User user = object.getUser();
       setAvatarInto(object.getAvatar(), hostname, user == null ? null : user.getUsername(),
           rocketChatAvatar);
     }
@@ -104,12 +106,12 @@ public class MessageRenderer extends AbstractRenderer<RealmMessage> {
       return this;
     }
 
-    String urls = object.getUrls();
-    if (TextUtils.isEmpty(urls)) {
+    List<WebContent> webContents = object.getWebContents();
+    if (webContents == null || webContents.size() == 0) {
       urlsLayout.setVisibility(View.GONE);
     } else {
       urlsLayout.setVisibility(View.VISIBLE);
-      urlsLayout.setUrls(urls);
+      urlsLayout.setUrls(webContents);
     }
 
     return this;
@@ -124,8 +126,8 @@ public class MessageRenderer extends AbstractRenderer<RealmMessage> {
       return this;
     }
 
-    String attachments = object.getAttachments();
-    if (TextUtils.isEmpty(attachments)) {
+    List<Attachment> attachments = object.getAttachments();
+    if (attachments == null || attachments.size() == 0) {
       attachmentsLayout.setVisibility(View.GONE);
     } else {
       attachmentsLayout.setVisibility(View.VISIBLE);

@@ -7,7 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import chat.rocket.core.JsonConstants;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.models.Attachment;
@@ -16,6 +18,9 @@ import chat.rocket.core.models.AttachmentField;
 import chat.rocket.core.models.AttachmentTitle;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.WebContent;
+import chat.rocket.core.models.WebContentHeaders;
+import chat.rocket.core.models.WebContentMeta;
+import chat.rocket.core.models.WebContentParsedUrl;
 
 /**
  * RealmMessage.
@@ -287,8 +292,80 @@ public class RealmMessage extends RealmObject {
   private WebContent getWebContent(JSONObject jsonWebContent) {
     return WebContent.builder()
         .setUrl(jsonWebContent.optString("url"))
-        .setMeta(jsonWebContent.optString("meta", null))
-        .setHeaders(jsonWebContent.optString("headers", null))
+        .setMetaMap(getWebContentMetaMap(jsonWebContent.optJSONObject("meta")))
+        .setHeaders(getWebContentHeaders(jsonWebContent.optJSONObject("headers")))
+        .setParsedUrl(getWebContentParsedUrl(jsonWebContent.optJSONObject("parsedUrl")))
+        .build();
+  }
+
+  private Map<WebContentMeta.Type, WebContentMeta> getWebContentMetaMap(
+      JSONObject jsonWebContentMeta) {
+    if (jsonWebContentMeta == null) {
+      return null;
+    }
+
+    Map<WebContentMeta.Type, WebContentMeta> metaMap = new HashMap<>(3);
+
+    if (!jsonWebContentMeta.isNull("ogTitle")
+        || !jsonWebContentMeta.isNull("ogDescription")
+        || !jsonWebContentMeta.isNull("ogImage")) {
+      metaMap.put(
+          WebContentMeta.Type.OPEN_GRAPH,
+          WebContentMeta.builder()
+              .setType(WebContentMeta.Type.OPEN_GRAPH)
+              .setTitle(jsonWebContentMeta.optString("ogTitle", null))
+              .setDescription(jsonWebContentMeta.optString("ogDescription", null))
+              .setImage(jsonWebContentMeta.optString("ogImage", null))
+              .build()
+      );
+    }
+
+    if (!jsonWebContentMeta.isNull("twitterTitle")
+        || !jsonWebContentMeta.isNull("twitterDescription")
+        || !jsonWebContentMeta.isNull("twitterImage")) {
+      metaMap.put(
+          WebContentMeta.Type.TWITTER,
+          WebContentMeta.builder()
+              .setType(WebContentMeta.Type.TWITTER)
+              .setTitle(jsonWebContentMeta.optString("twitterTitle", null))
+              .setDescription(jsonWebContentMeta.optString("twitterDescription", null))
+              .setImage(jsonWebContentMeta.optString("twitterImage", null))
+              .build()
+      );
+    }
+
+    if (!jsonWebContentMeta.isNull("pageTitle")
+        || !jsonWebContentMeta.isNull("description")) {
+      metaMap.put(
+          WebContentMeta.Type.OTHER,
+          WebContentMeta.builder()
+              .setType(WebContentMeta.Type.OTHER)
+              .setTitle(jsonWebContentMeta.optString("pageTitle", null))
+              .setDescription(jsonWebContentMeta.optString("description", null))
+              .build()
+      );
+    }
+
+    return metaMap;
+  }
+
+  private WebContentHeaders getWebContentHeaders(JSONObject jsonWebContentHeaders) {
+    if (jsonWebContentHeaders == null || jsonWebContentHeaders.isNull("contentType")) {
+      return null;
+    }
+
+    return WebContentHeaders.builder()
+        .setContentType(jsonWebContentHeaders.optString("contentType"))
+        .build();
+  }
+
+  private WebContentParsedUrl getWebContentParsedUrl(JSONObject jsonWebContentParsedUrl) {
+    if (jsonWebContentParsedUrl == null || jsonWebContentParsedUrl.isNull("host")) {
+      return null;
+    }
+
+    return WebContentParsedUrl.builder()
+        .setHost(jsonWebContentParsedUrl.optString("host"))
         .build();
   }
 

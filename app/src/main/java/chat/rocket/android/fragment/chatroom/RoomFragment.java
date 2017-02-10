@@ -20,7 +20,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.jakewharton.rxbinding.support.v4.widget.RxDrawerLayout;
-import io.realm.Sort;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFrag
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
-import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
 import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
@@ -48,8 +46,8 @@ import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
+import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
-import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.models.internal.Session;
@@ -57,7 +55,7 @@ import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.persistence.realm.RealmModelListAdapter;
+import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
@@ -71,7 +69,7 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, ExtraActionPickerDialogFragment.Callback,
-    RealmModelListAdapter.OnItemClickListener<PairedMessage>, RoomContract.View {
+    ModelListAdapter.OnItemClickListener<PairedMessage>, RoomContract.View {
 
   private static final int DIALOG_ID = 1;
   private static final String HOSTNAME = "hostname";
@@ -88,6 +86,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   private AbstractNewMessageIndicatorManager newMessageIndicatorManager;
   private Snackbar unreadIndicator;
   private boolean previousUnreadMessageExists;
+  private MessageListAdapter adapter;
 
   private List<AbstractExtraActionItem> extraActionItems;
 
@@ -131,6 +130,7 @@ public class RoomFragment extends AbstractChatRoomFragment
         new RealmUserRepository(hostname),
         new RealmRoomRepository(hostname),
         new RealmMessageRepository(hostname),
+        new MethodCallHelper(getContext(), hostname),
         ConnectivityManager.getInstance(getContext().getApplicationContext())
     );
 
@@ -155,12 +155,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   protected void onSetupView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    MessageListAdapter adapter = (MessageListAdapter) realmHelper.createListAdapter(getContext(),
-        realm -> realm.where(RealmMessage.class)
-            .equalTo(RealmMessage.ROOM_ID, roomId)
-            .findAllSorted(RealmMessage.TIMESTAMP, Sort.DESCENDING),
-        context -> new MessageListAdapter(context, hostname, userId, token)
-    );
+    adapter = new MessageListAdapter(getContext(), hostname, userId, token);
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
 
@@ -171,7 +166,7 @@ public class RoomFragment extends AbstractChatRoomFragment
       @Override
       protected void onAutoScrollMissed() {
         if (newMessageIndicatorManager != null) {
-          newMessageIndicatorManager.updateNewMessageCount(getUnreadMessageCount());
+          presenter.onUnreadCount();
         }
       }
     };
@@ -233,21 +228,6 @@ public class RoomFragment extends AbstractChatRoomFragment
         .setAction(R.string.dialog_view_latest_message_action, view -> scrollToLatestMessage());
   }
 
-  private int getUnreadMessageCount() {
-    RealmRoom room = realmHelper.executeTransactionForRead(realm ->
-        realm.where(RealmRoom.class).equalTo(RealmRoom.ROOM_ID, roomId).findFirst());
-    if (room != null) {
-      return realmHelper.executeTransactionForReadResults(realm ->
-          realm.where(RealmMessage.class)
-              .equalTo(RealmMessage.ROOM_ID, roomId)
-              .greaterThanOrEqualTo(RealmMessage.TIMESTAMP, room.getLastSeen())
-              .notEqualTo(RealmMessage.USER_ID, userId)
-              .findAll()).size();
-    } else {
-      return 0;
-    }
-  }
-
   @Override
   public void onDestroyView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
@@ -277,7 +257,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     View sideMenu = rootView.findViewById(R.id.room_side_menu);
     sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
       UsersOfRoomDialogFragment.create(roomId, hostname)
-          .show(getFragmentManager(), UsersOfRoomDialogFragment.class.getSimpleName());
+          .show(getFragmentManager(), "UsersOfRoomDialogFragment");
       closeSideMenuIfNeeded();
     });
 
@@ -370,12 +350,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void markAsReadIfNeeded() {
-    RealmRoom room = realmHelper.executeTransactionForRead(realm ->
-        realm.where(RealmRoom.class).equalTo(RealmRoom.ROOM_ID, roomId).findFirst());
-    if (room != null && room.isAlert()) {
-      new MethodCallHelper(getContext(), hostname).readMessages(roomId)
-          .continueWith(new LogcatIfError());
-    }
+    presenter.onMarkAsRead();
   }
 
   @Override
@@ -491,5 +466,15 @@ public class RoomFragment extends AbstractChatRoomFragment
   public void onMessageSendSuccessfully() {
     scrollToLatestMessage();
     messageFormManager.onMessageSend();
+  }
+
+  @Override
+  public void showUnreadCount(int count) {
+    newMessageIndicatorManager.updateNewMessageCount(count);
+  }
+
+  @Override
+  public void showMessages(List<Message> messages) {
+    adapter.updateData(messages);
   }
 }

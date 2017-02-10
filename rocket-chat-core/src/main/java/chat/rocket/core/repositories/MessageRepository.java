@@ -1,7 +1,9 @@
 package chat.rocket.core.repositories;
 
+import java.util.List;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 import rx.Observable;
 import rx.Single;
 
@@ -15,7 +17,7 @@ public interface MessageRepository {
 
   Single<Boolean> delete(Message message);
 
-  Observable<Message> getAllFrom(Room room);
+  Observable<List<Message>> getAllFrom(Room room);
 
-  Single<Integer> unreadCountFrom(Room room);
+  Single<Integer> unreadCountFor(Room room, User user);
 }
