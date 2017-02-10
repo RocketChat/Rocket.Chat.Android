@@ -190,7 +190,7 @@ public class RealmMessage extends RealmObject {
     final List<Attachment> coreAttachments = new ArrayList<>();
 
     try {
-      final JSONArray jsonArray = new JSONArray(urls);
+      final JSONArray jsonArray = new JSONArray(attachments);
       for (int i = 0, size = jsonArray.length(); i < size; i++) {
         final Attachment coreAttachment = getCoreAttachment(jsonArray.getJSONObject(i));
         if (coreAttachment != null) {
