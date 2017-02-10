@@ -197,7 +197,7 @@ public class RealmMessage extends RealmObject {
           coreAttachments.add(coreAttachment);
         }
       }
-    } catch (JSONException ignored) {
+    } catch (Exception ignored) {
     }
 
     return coreAttachments;
