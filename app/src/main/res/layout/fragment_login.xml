@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-            <chat.rocket.android.widget.FontAwesomeButton
+            <io.github.yusukeiwaki.android.widget.FontAwesomeButton
                     android:id="@+id/btn_login_with_twitter"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -28,7 +28,7 @@
                     android:textSize="16dp"
                     android:layout_marginRight="@dimen/margin_8" />
 
-            <chat.rocket.android.widget.FontAwesomeButton
+            <io.github.yusukeiwaki.android.widget.FontAwesomeButton
                     android:id="@+id/btn_login_with_facebook"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -37,7 +37,7 @@
                     android:textSize="16dp"
                     android:layout_marginRight="@dimen/margin_8" />
 
-            <chat.rocket.android.widget.FontAwesomeButton
+            <io.github.yusukeiwaki.android.widget.FontAwesomeButton
                     android:id="@+id/btn_login_with_github"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -46,7 +46,7 @@
                     android:textSize="16dp"
                     android:layout_marginRight="@dimen/margin_8" />
 
-            <chat.rocket.android.widget.FontAwesomeButton
+            <io.github.yusukeiwaki.android.widget.FontAwesomeButton
                     android:id="@+id/btn_login_with_google"
                     android:layout_width="48dp"
                     android:layout_height="48dp"

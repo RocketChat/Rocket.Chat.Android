@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string translatable="false" name="fa_hashtag">&#xf292;</string> <!-- for public rooms -->
-    <string translatable="false" name="fa_lock">&#xf023;</string> <!-- for private rooms -->
-    <string translatable="false" name="fa_at">&#xf1fa;</string> <!-- for direct message -->
-</resources>
