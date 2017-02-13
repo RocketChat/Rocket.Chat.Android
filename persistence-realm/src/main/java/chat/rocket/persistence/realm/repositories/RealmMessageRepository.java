@@ -5,8 +5,6 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import chat.rocket.core.models.Message;
