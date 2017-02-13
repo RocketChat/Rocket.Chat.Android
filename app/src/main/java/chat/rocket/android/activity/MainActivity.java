@@ -75,13 +75,20 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   protected void onResume() {
     isForeground = true;
     super.onResume();
-    presenter.bindView(this);
+
+    if (presenter != null) {
+      presenter.bindView(this);
+    }
   }
 
   @Override
   protected void onPause() {
     isForeground = false;
-    presenter.release();
+
+    if (presenter != null) {
+      presenter.release();
+    }
+
     super.onPause();
   }
 
