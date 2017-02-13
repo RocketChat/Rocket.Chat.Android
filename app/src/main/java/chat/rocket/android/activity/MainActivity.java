@@ -18,9 +18,7 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import chat.rocket.persistence.realm.models.internal.RealmSession;
-import chat.rocket.persistence.realm.RealmObjectObserver;
+import chat.rocket.core.models.User;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
@@ -33,7 +31,6 @@ import hugo.weaving.DebugLog;
  */
 public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
 
-  private RealmObjectObserver<RealmSession> sessionObserver;
   private StatusTicker statusTicker;
 
   private MainContract.Presenter presenter;
@@ -93,14 +90,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   private void setUserOnlineIfServerAvailable() {
     if (hostname != null) {
-      new MethodCallHelper(this, hostname).setUserPresence(RealmUser.STATUS_ONLINE)
+      new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_ONLINE)
           .continueWith(new LogcatIfError());
     }
   }
 
   private void setUserAwayIfServerAvailable() {
     if (hostname != null) {
-      new MethodCallHelper(this, hostname).setUserPresence(RealmUser.STATUS_AWAY)
+      new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_AWAY)
           .continueWith(new LogcatIfError());
     }
   }
@@ -203,15 +200,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   protected void onRoomIdUpdated() {
     super.onRoomIdUpdated();
     presenter.onOpenRoom(hostname, roomId);
-  }
-
-  @Override
-  protected void onDestroy() {
-    if (sessionObserver != null) {
-      sessionObserver.unsub();
-      sessionObserver = null;
-    }
-    super.onDestroy();
   }
 
   @Override
