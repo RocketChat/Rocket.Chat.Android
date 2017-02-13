@@ -6,14 +6,20 @@ import rx.Observable;
 
 public class SessionInteractor {
 
+  private static final int DEFAULT_ID = 0;
+
   private final SessionRepository sessionRepository;
 
   public SessionInteractor(SessionRepository sessionRepository) {
     this.sessionRepository = sessionRepository;
   }
 
+  public Observable<Session> getDefault() {
+    return sessionRepository.getById(DEFAULT_ID);
+  }
+
   public Observable<Session.State> getSessionState() {
-    return sessionRepository.getDefault()
+    return getDefault()
         .map(this::getStateFrom);
   }
 

@@ -25,24 +25,23 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
   }
 
   @Override
-  public Observable<List<Room>> getOpenRooms() {
+  public Observable<List<Room>> getAll() {
     return Observable.defer(() -> {
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Observable.just(null);
       }
 
       return realm.where(RealmRoom.class)
-          .equalTo(RealmRoom.OPEN, true)
           .findAll()
           .asObservable()
           .unsubscribeOn(AndroidSchedulers.from(looper))
           .doOnUnsubscribe(() -> close(realm, looper))
           .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
               && roomSubscriptions.isValid())
-          .map(roomSubscriptions -> toList(roomSubscriptions));
+          .map(this::toList);
     });
   }
 
@@ -52,7 +51,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Observable.just(null);
       }
 
@@ -64,7 +63,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
           .doOnUnsubscribe(() -> close(realm, looper))
           .filter(roomSubscription -> roomSubscription != null && roomSubscription.isLoaded()
               && roomSubscription.isValid())
-          .map(roomSubscription -> roomSubscription.asRoom());
+          .map(RealmRoom::asRoom);
     });
   }
 
@@ -74,7 +73,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Observable.just(null);
       }
 
@@ -86,7 +85,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
           .doOnUnsubscribe(() -> close(realm, looper))
           .filter(loadMessageProcedure -> loadMessageProcedure != null
               && loadMessageProcedure.isLoaded() && loadMessageProcedure.isValid())
-          .map(loadMessageProcedure -> loadMessageProcedure.asRoomHistoryState());
+          .map(LoadMessageProcedure::asRoomHistoryState);
     });
   }
 
@@ -96,7 +95,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Single.just(false);
       }
 

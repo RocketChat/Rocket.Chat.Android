@@ -8,7 +8,6 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import java.util.List;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -18,15 +17,16 @@ import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
-import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.core.interactors.RoomInteractor;
+import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.persistence.realm.RealmListObserver;
 import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
+import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import hugo.weaving.DebugLog;
@@ -37,7 +37,6 @@ import hugo.weaving.DebugLog;
 public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
 
   private RealmObjectObserver<RealmSession> sessionObserver;
-  private RealmListObserver<RealmRoom> unreadRoomSubscriptionObserver;
   private boolean isForeground;
   private StatusTicker statusTicker;
 
@@ -180,14 +179,19 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     if (presenter != null) {
       presenter.release();
     }
-    CanCreateRoomInteractor interactor = new CanCreateRoomInteractor(
+
+    RoomInteractor roomInteractor = new RoomInteractor(new RealmRoomRepository(hostname));
+
+    CanCreateRoomInteractor createRoomInteractor = new CanCreateRoomInteractor(
         new RealmUserRepository(hostname),
-        new RealmSessionRepository(hostname)
+        new SessionInteractor(new RealmSessionRepository(hostname))
     );
-    presenter = new MainPresenter(interactor);
+
+    presenter = new MainPresenter(
+        roomInteractor,
+        createRoomInteractor);
 
     updateSessionObserver();
-    updateUnreadRoomSubscriptionObserver();
     updateSidebarMainFragment();
   }
 
@@ -235,44 +239,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     }
   }
 
-  private void updateUnreadRoomSubscriptionObserver() {
-    if (unreadRoomSubscriptionObserver != null) {
-      unreadRoomSubscriptionObserver.unsub();
-      unreadRoomSubscriptionObserver = null;
-    }
-
-    if (hostname == null) {
-      return;
-    }
-
-    RealmHelper realmHelper = RealmStore.get(hostname);
-    if (realmHelper == null) {
-      return;
-    }
-
-    unreadRoomSubscriptionObserver = realmHelper
-        .createListObserver(realm ->
-            realm.where(RealmRoom.class)
-                .equalTo(RealmRoom.ALERT, true)
-                .equalTo(RealmRoom.OPEN, true)
-                .findAll())
-        .setOnUpdateListener(this::updateRoomToolbarUnreadCount);
-    unreadRoomSubscriptionObserver.sub();
-  }
-
-  private void updateRoomToolbarUnreadCount(List<RealmRoom> unreadRooms) {
-    RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
-    if (toolbar != null) {
-      //ref: Rocket.Chat:client/startup/unread.js
-      final int numUnreadChannels = unreadRooms.size();
-      int numMentionsSum = 0;
-      for (RealmRoom room : unreadRooms) {
-        numMentionsSum += room.getUnread();
-      }
-      toolbar.setUnreadBudge(numUnreadChannels, numMentionsSum);
-    }
-  }
-
   private void updateSidebarMainFragment() {
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
@@ -291,10 +257,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       sessionObserver.unsub();
       sessionObserver = null;
     }
-    if (unreadRoomSubscriptionObserver != null) {
-      unreadRoomSubscriptionObserver.unsub();
-      unreadRoomSubscriptionObserver = null;
-    }
     super.onDestroy();
   }
 
@@ -312,6 +274,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   public void showRoom(String hostname, String roomId) {
     showFragment(RoomFragment.create(hostname, roomId));
     closeSidebarIfNeeded();
+  }
+
+  @Override
+  public void showUnreadCount(int roomsCount, int mentionsCount) {
+    RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
+    if (toolbar != null) {
+      toolbar.setUnreadBudge(roomsCount, mentionsCount);
+    }
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.

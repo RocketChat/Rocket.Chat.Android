@@ -7,8 +7,8 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
+import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.User;
-import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -17,14 +17,14 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     implements SidebarMainContract.Presenter {
 
   private final String hostname;
-  private final RoomRepository roomRepository;
+  private final RoomInteractor roomInteractor;
   private final UserRepository userRepository;
   private final MethodCallHelper methodCallHelper;
 
-  public SidebarMainPresenter(String hostname, RoomRepository roomRepository,
+  public SidebarMainPresenter(String hostname, RoomInteractor roomInteractor,
                               UserRepository userRepository, MethodCallHelper methodCallHelper) {
     this.hostname = hostname;
-    this.roomRepository = roomRepository;
+    this.roomInteractor = roomInteractor;
     this.userRepository = userRepository;
     this.methodCallHelper = methodCallHelper;
   }
@@ -72,7 +72,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   }
 
   private void subscribeToRooms() {
-    final Subscription subscription = roomRepository.getOpenRooms()
+    final Subscription subscription = roomInteractor.getOpenRooms()
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())

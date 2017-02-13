@@ -5,5 +5,5 @@ import rx.Observable;
 
 public interface SessionRepository {
 
-  Observable<Session> getDefault();
+  Observable<Session> getById(int id);
 }

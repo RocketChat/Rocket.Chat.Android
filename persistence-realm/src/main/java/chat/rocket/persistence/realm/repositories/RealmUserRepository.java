@@ -24,7 +24,7 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Observable.just(null);
       }
 
@@ -42,7 +42,7 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
           .unsubscribeOn(AndroidSchedulers.from(looper))
           .doOnUnsubscribe(() -> close(realm, looper))
           .filter(it -> it != null && it.isLoaded() && it.isValid())
-          .map(it -> it.asUser());
+          .map(RealmUser::asUser);
     });
   }
 }

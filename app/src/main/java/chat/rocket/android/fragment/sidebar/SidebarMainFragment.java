@@ -22,6 +22,7 @@ import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
+import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
 import chat.rocket.android.renderer.UserRenderer;
@@ -64,7 +65,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
     presenter = new SidebarMainPresenter(
         hostname,
-        new RealmRoomRepository(hostname),
+        new RoomInteractor(new RealmRoomRepository(hostname)),
         new RealmUserRepository(hostname),
         TextUtils.isEmpty(hostname) ? null : new MethodCallHelper(getContext(), hostname)
     );

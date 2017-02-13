@@ -7,11 +7,6 @@ import io.realm.Realm;
 public class RealmRepository {
 
   protected void close(Realm realm, Looper looper) {
-    new Handler(looper).post(new Runnable() {
-      @Override
-      public void run() {
-        realm.close();
-      }
-    });
+    new Handler(looper).post(realm::close);
   }
 }

@@ -8,7 +8,7 @@ import rx.Single;
 
 public interface RoomRepository {
 
-  Observable<List<Room>> getOpenRooms();
+  Observable<List<Room>> getAll();
 
   Observable<Room> getById(String roomId);
 

@@ -19,17 +19,17 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
   }
 
   @Override
-  public Observable<Session> getDefault() {
+  public Observable<Session> getById(int id) {
     return Observable.defer(() -> {
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Observable.just(null);
       }
 
       return realm.where(RealmSession.class)
-          .equalTo(RealmSession.ID, RealmSession.DEFAULT_ID)
+          .equalTo(RealmSession.ID, id)
           .findAll()
           .<RealmSession>asObservable()
           .unsubscribeOn(AndroidSchedulers.from(looper))

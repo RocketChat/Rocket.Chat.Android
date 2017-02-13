@@ -9,6 +9,8 @@ public interface MainContract {
     void showHome();
 
     void showRoom(String hostname, String roomId);
+
+    void showUnreadCount(int roomsCount, int mentionsCount);
   }
 
   interface Presenter extends BaseContract.Presenter<View> {

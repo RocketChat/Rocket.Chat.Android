@@ -32,7 +32,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Single.just(null);
       }
 
@@ -63,7 +63,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Single.just(false);
       }
 
@@ -110,7 +110,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Single.just(false);
       }
 
@@ -143,7 +143,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Observable.just(null);
       }
 
@@ -165,7 +165,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
       final Realm realm = RealmStore.getRealm(hostname);
       final Looper looper = Looper.myLooper();
 
-      if (realm == null) {
+      if (realm == null || looper == null) {
         return Single.just(0);
       }
 
