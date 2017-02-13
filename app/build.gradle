@@ -75,9 +75,6 @@ android {
         //avoiding okio error: https://github.com/square/okhttp/issues/896
         lintConfig file("lint.xml")
     }
-    dexOptions {
-        javaMaxHeapSize '4g'
-    }
 }
 play {
     jsonFile = file('rocket-chat.json')
