@@ -40,6 +40,8 @@ dependencies {
   compile rootProject.ext.okhttp3
   compile rootProject.ext.boltsTask
 
+  compile 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
+
   compile rootProject.ext.frescoBase
   compile rootProject.ext.frescoAnimatedGif
   compile rootProject.ext.frescoAnimatedWebp
