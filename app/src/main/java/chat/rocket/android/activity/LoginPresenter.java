@@ -35,10 +35,10 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
       return;
     }
 
-    loadDefaultSession();
+    loadSessionState();
   }
 
-  private void loadDefaultSession() {
+  private void loadSessionState() {
     final Subscription subscription = sessionInteractor.getSessionState()
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
