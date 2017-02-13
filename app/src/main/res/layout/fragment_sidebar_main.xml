@@ -103,7 +103,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textStyle="bold" />
 
-                <chat.rocket.android.widget.FontAwesomeButton
+                <io.github.yusukeiwaki.android.widget.FontAwesomeButton
                         android:id="@+id/btn_add_channel"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="48dp"
@@ -136,7 +136,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textStyle="bold" />
 
-                <chat.rocket.android.widget.FontAwesomeButton
+                <io.github.yusukeiwaki.android.widget.FontAwesomeButton
                         android:id="@+id/btn_add_direct_message"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="48dp"
@@ -223,7 +223,7 @@
                         android:layout_width="48dp"
                         android:layout_height="match_parent">
 
-                    <chat.rocket.android.widget.FontAwesomeTextView
+                    <io.github.yusukeiwaki.android.widget.FontAwesomeTextView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:layout_gravity="center"

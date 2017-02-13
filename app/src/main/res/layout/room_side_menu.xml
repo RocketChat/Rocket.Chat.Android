@@ -6,21 +6,21 @@
         android:layout_gravity="end"
         android:orientation="vertical">
 
-    <chat.rocket.android.widget.FontAwesomeButton
+    <io.github.yusukeiwaki.android.widget.FontAwesomeButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:enabled="false"
             android:text="@string/fa_search"
             android:textSize="24dp" />
 
-    <chat.rocket.android.widget.FontAwesomeButton
+    <io.github.yusukeiwaki.android.widget.FontAwesomeButton
             android:id="@+id/btn_users"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:text="@string/fa_users"
             android:textSize="24dp" />
 
-    <chat.rocket.android.widget.FontAwesomeButton
+    <io.github.yusukeiwaki.android.widget.FontAwesomeButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:enabled="false"

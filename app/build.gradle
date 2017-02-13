@@ -81,13 +81,6 @@ play {
     track = "${track}"
 }
 
-repositories {
-    mavenCentral()
-    maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
-    maven { url 'http://dl.bintray.com/amulyakhare/maven' }
-    maven { url "https://clojars.org/repo/" } //for icepick.
-}
-
 dependencies {
     compile project(':log-wrapper')
     compile project(':android-ddp')

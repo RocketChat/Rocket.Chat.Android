@@ -9,7 +9,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp">
 
-        <chat.rocket.android.widget.FontAwesomeTextView
+        <io.github.yusukeiwaki.android.widget.FontAwesomeTextView
                 android:id="@+id/icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
