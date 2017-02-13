@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 @AutoValue
 public abstract class Session {
 
+  public enum State {UNAVAILABLE, INVALID, VALID}
+
   public abstract int getSessionId();
 
   @Nullable

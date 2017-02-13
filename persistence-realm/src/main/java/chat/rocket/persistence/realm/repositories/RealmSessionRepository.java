@@ -28,21 +28,19 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
         return Observable.just(null);
       }
 
-      final RealmSession realmSession =
-          realm.where(RealmSession.class).equalTo(RealmSession.ID, RealmSession.DEFAULT_ID)
-              .findFirst();
-
-      if (realmSession == null) {
-        realm.close();
-        return Observable.just(null);
-      }
-
-      return realmSession
+      return realm.where(RealmSession.class)
+          .equalTo(RealmSession.ID, RealmSession.DEFAULT_ID)
+          .findAll()
           .<RealmSession>asObservable()
           .unsubscribeOn(AndroidSchedulers.from(looper))
           .doOnUnsubscribe(() -> close(realm, looper))
           .filter(it -> it != null && it.isLoaded() && it.isValid())
-          .map(RealmSession::asSession);
+          .map(realmSessions -> {
+            if (realmSessions.size() == 0) {
+              return null;
+            }
+            return realmSessions.get(0).asSession();
+          });
     });
   }
 }
