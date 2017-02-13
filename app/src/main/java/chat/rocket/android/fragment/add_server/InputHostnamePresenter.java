@@ -1,7 +1,6 @@
 package chat.rocket.android.fragment.add_server;
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.rest.DefaultServerPolicyApi;
@@ -10,11 +9,13 @@ import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.ServerPolicyApiValidationHelper;
 import chat.rocket.android.helper.ServerPolicyHelper;
 import chat.rocket.android.service.ConnectivityManagerApi;
+import chat.rocket.android.shared.BasePresenter;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class InputHostnamePresenter implements InputHostnameContract.Presenter {
+public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.View>
+    implements InputHostnameContract.Presenter {
 
   private final SharedPreferences rocketChatCache;
   private final ConnectivityManagerApi connectivityManager;
@@ -23,24 +24,6 @@ public class InputHostnamePresenter implements InputHostnameContract.Presenter {
                                 ConnectivityManagerApi connectivityManager) {
     this.rocketChatCache = rocketChatCache;
     this.connectivityManager = connectivityManager;
-  }
-
-  private InputHostnameContract.View view;
-
-  private Subscription serverPolicySubscription;
-
-  @Override
-  public void bindView(@NonNull InputHostnameContract.View view) {
-    this.view = view;
-  }
-
-  @Override
-  public void release() {
-    if (serverPolicySubscription != null) {
-      serverPolicySubscription.unsubscribe();
-    }
-
-    view = null;
   }
 
   @Override
@@ -57,11 +40,9 @@ public class InputHostnamePresenter implements InputHostnameContract.Presenter {
     final ServerPolicyApiValidationHelper validationHelper =
         new ServerPolicyApiValidationHelper(serverPolicyApi);
 
-    if (serverPolicySubscription != null) {
-      serverPolicySubscription.unsubscribe();
-    }
+    clearSubscripions();
 
-    serverPolicySubscription = ServerPolicyHelper.isApiVersionValid(validationHelper)
+    final Subscription subscription = ServerPolicyHelper.isApiVersionValid(validationHelper)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(() -> view.hideLoader())
@@ -76,6 +57,8 @@ public class InputHostnamePresenter implements InputHostnameContract.Presenter {
             throwable -> {
               view.showConnectionError();
             });
+
+    addSubscription(subscription);
   }
 
   private void onServerValid(final String hostname, boolean usesSecureConnection) {

@@ -25,4 +25,8 @@ public abstract class BasePresenter<T extends BaseContract.View>
   protected void addSubscription(Subscription subscription) {
     compositeSubscription.add(subscription);
   }
+
+  protected void clearSubscripions() {
+    compositeSubscription.clear();
+  }
 }

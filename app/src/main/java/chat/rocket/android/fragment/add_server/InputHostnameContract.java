@@ -1,10 +1,10 @@
 package chat.rocket.android.fragment.add_server;
 
-import android.support.annotation.NonNull;
+import chat.rocket.android.shared.BaseContract;
 
 public interface InputHostnameContract {
 
-  interface View {
+  interface View extends BaseContract.View {
     void showLoader();
 
     void hideLoader();
@@ -16,11 +16,7 @@ public interface InputHostnameContract {
     void showHome();
   }
 
-  interface Presenter {
-
-    void bindView(@NonNull View view);
-
-    void release();
+  interface Presenter extends BaseContract.Presenter<View> {
 
     void connectTo(String hostname);
   }
