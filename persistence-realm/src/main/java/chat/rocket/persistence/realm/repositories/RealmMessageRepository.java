@@ -69,47 +69,32 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
         return Single.just(false);
       }
 
-      // need to improve this for real
-      final JSONObject messageToSend = new JSONObject()
-          .put(RealmMessage.ID, message.getId())
-          .put(RealmMessage.SYNC_STATE, message.getSyncState())
-          .put(RealmMessage.TIMESTAMP, message.getTimestamp())
-          .put(RealmMessage.ROOM_ID, message.getRoomId())
-          .put(RealmMessage.USER, new JSONObject()
-              .put(RealmUser.ID, message.getUser().getId()))
-          .put(RealmMessage.MESSAGE, message.getMessage());
+      RealmMessage realmMessage = realm.where(RealmMessage.class)
+          .equalTo(RealmMessage.ID, message.getId())
+          .findFirst();
 
-      realm.beginTransaction();
-
-      return realm.createOrUpdateObjectFromJson(RealmMessage.class, messageToSend)
-          .asObservable()
-          .unsubscribeOn(AndroidSchedulers.from(looper))
-          .doOnUnsubscribe(() -> close(realm, looper))
-          .filter(it -> it != null && it.isLoaded() && it.isValid())
-          .first()
-          .doOnNext(it -> realm.commitTransaction())
-          .toSingle()
-          .map(realmObject -> true);
-    });
-  }
-
-  @Override
-  public Single<Boolean> resend(Message message) {
-    return Single.defer(() -> {
-      final Realm realm = RealmStore.getRealm(hostname);
-      final Looper looper = Looper.myLooper();
-
-      if (realm == null) {
-        return Single.just(false);
+      if (realmMessage == null) {
+        realmMessage = new RealmMessage();
+      } else {
+        realmMessage = realm.copyFromRealm(realmMessage);
       }
 
-      final JSONObject messageToSend = new JSONObject()
-          .put(RealmMessage.ID, message.getId())
-          .put(RealmMessage.SYNC_STATE, message.getSyncState());
+      realmMessage.setId(message.getId());
+      realmMessage.setSyncState(message.getSyncState());
+      realmMessage.setTimestamp(message.getTimestamp());
+      realmMessage.setRoomId(message.getRoomId());
+      realmMessage.setMessage(message.getMessage());
+
+      RealmUser realmUser = realmMessage.getUser();
+      if (realmUser == null) {
+        realmUser = new RealmUser();
+      }
+
+      realmUser.setId(message.getUser().getId());
 
       realm.beginTransaction();
 
-      return realm.createOrUpdateObjectFromJson(RealmMessage.class, messageToSend)
+      return realm.copyToRealmOrUpdate(realmMessage)
           .asObservable()
           .unsubscribeOn(AndroidSchedulers.from(looper))
           .doOnUnsubscribe(() -> close(realm, looper))

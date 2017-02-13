@@ -25,9 +25,8 @@ public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
 
   protected abstract int getRealmModelViewType(VM model);
 
-  protected abstract
   @LayoutRes
-  int getLayout(int viewType);
+  protected abstract int getLayout(int viewType);
 
   protected abstract VH onCreateRealmModelViewHolder(int viewType, View itemView);
 

@@ -13,8 +13,6 @@ public interface MessageRepository {
 
   Single<Boolean> save(Message message);
 
-  Single<Boolean> resend(Message message);
-
   Single<Boolean> delete(Message message);
 
   Observable<List<Message>> getAllFrom(Room room);

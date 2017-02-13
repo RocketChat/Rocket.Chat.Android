@@ -4,15 +4,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
-import java.util.UUID;
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.SyncState;
+import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.models.Message;
-import chat.rocket.core.models.RoomHistoryState;
-import chat.rocket.core.repositories.MessageRepository;
+import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.android.service.ConnectivityManagerApi;
@@ -24,21 +24,22 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
     implements RoomContract.Presenter {
 
   private final String roomId;
+  private final MessageInteractor messageInteractor;
   private final UserRepository userRepository;
   private final RoomRepository roomRepository;
-  private final MessageRepository messageRepository;
   private final MethodCallHelper methodCallHelper;
   private final ConnectivityManagerApi connectivityManagerApi;
 
-  public RoomPresenter(String roomId, UserRepository userRepository,
+  public RoomPresenter(String roomId,
+                       UserRepository userRepository,
+                       MessageInteractor messageInteractor,
                        RoomRepository roomRepository,
-                       MessageRepository messageRepository,
                        MethodCallHelper methodCallHelper,
                        ConnectivityManagerApi connectivityManagerApi) {
     this.roomId = roomId;
     this.userRepository = userRepository;
+    this.messageInteractor = messageInteractor;
     this.roomRepository = roomRepository;
-    this.messageRepository = messageRepository;
     this.methodCallHelper = methodCallHelper;
     this.connectivityManagerApi = connectivityManagerApi;
   }
@@ -54,16 +55,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void loadMessages() {
-    RoomHistoryState roomHistoryState = RoomHistoryState.builder()
-        .setRoomId(roomId)
-        .setSyncState(SyncState.NOT_SYNCED)
-        .setCount(100)
-        .setReset(true)
-        .setComplete(false)
-        .setTimestamp(0)
-        .build();
-
-    final Subscription subscription = roomRepository.setHistoryState(roomHistoryState)
+    final Subscription subscription = getSingleRoom()
+        .flatMap(messageInteractor::loadMessages)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(success -> {
@@ -78,16 +71,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   @Override
   public void loadMoreMessages() {
 
-    final Subscription subscription = roomRepository.getHistoryStateByRoomId(roomId)
-        .filter(roomHistoryState -> {
-          int syncState = roomHistoryState.getSyncState();
-          return !roomHistoryState.isComplete()
-              && (syncState == SyncState.SYNCED || syncState == SyncState.FAILED);
-        })
-        .first()
-        .toSingle()
-        .flatMap(roomHistoryState -> roomRepository
-            .setHistoryState(roomHistoryState.withSyncState(SyncState.NOT_SYNCED)))
+    final Subscription subscription = getSingleRoom()
+        .flatMap(messageInteractor::loadMoreMessages)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(success -> {
@@ -112,23 +97,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void sendMessage(String messageText) {
-    final Subscription subscription = userRepository.getCurrent()
-        .filter(user -> user != null)
-        .first()
-        .toSingle()
-        .flatMap(user -> {
-          Message message = Message.builder()
-              .setId(UUID.randomUUID().toString())
-              .setSyncState(SyncState.NOT_SYNCED)
-              .setTimestamp(System.currentTimeMillis())
-              .setRoomId(roomId)
-              .setMessage(messageText)
-              .setGroupable(false)
-              .setUser(user)
-              .build();
-
-          return messageRepository.save(message);
-        })
+    final Subscription subscription = getRoomUserPair()
+        .flatMap(pair -> messageInteractor.send(pair.first, pair.second, messageText))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(success -> {
@@ -142,8 +112,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void resendMessage(Message message) {
-    final Subscription subscription = messageRepository.resend(
-        message.withSyncState(SyncState.NOT_SYNCED))
+    final Subscription subscription = messageInteractor.resend(message)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
@@ -153,7 +122,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void deleteMessage(Message message) {
-    final Subscription subscription = messageRepository.delete(message)
+    final Subscription subscription = messageInteractor.delete(message)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
@@ -163,17 +132,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void onUnreadCount() {
-    final Subscription subscription = Single.zip(
-        userRepository.getCurrent()
-            .filter(user -> user != null)
-            .first()
-            .toSingle(),
-        roomRepository.getById(roomId)
-            .first()
-            .toSingle(),
-        (user, room) -> new Pair<>(room, user)
-    )
-        .flatMap(roomUserPair -> messageRepository
+    final Subscription subscription = getRoomUserPair()
+        .flatMap(roomUserPair -> messageInteractor
             .unreadCountFor(roomUserPair.first, roomUserPair.second))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -232,11 +192,28 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   private void getMessages() {
     final Subscription subscription = roomRepository.getById(roomId)
         .first()
-        .flatMap(messageRepository::getAllFrom)
+        .flatMap(messageInteractor::getAllFrom)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(messages -> view.showMessages(messages));
 
     addSubscription(subscription);
+  }
+
+  private Single<Pair<Room, User>> getRoomUserPair() {
+    return Single.zip(
+        getSingleRoom(),
+        userRepository.getCurrent()
+            .filter(user -> user != null)
+            .first()
+            .toSingle(),
+        Pair::new
+    );
+  }
+
+  private Single<Room> getSingleRoom() {
+    return roomRepository.getById(roomId)
+        .first()
+        .toSingle();
   }
 }

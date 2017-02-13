@@ -45,6 +45,7 @@ import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
@@ -109,11 +110,16 @@ public class RoomFragment extends AbstractChatRoomFragment
     hostname = args.getString(HOSTNAME);
     roomId = args.getString(ROOM_ID);
 
+    MessageInteractor messageInteractor = new MessageInteractor(
+        new RealmMessageRepository(hostname),
+        new RealmRoomRepository(hostname)
+    );
+
     presenter = new RoomPresenter(
         roomId,
         new RealmUserRepository(hostname),
+        messageInteractor,
         new RealmRoomRepository(hostname),
-        new RealmMessageRepository(hostname),
         new MethodCallHelper(getContext(), hostname),
         ConnectivityManager.getInstance(getContext())
     );
