@@ -17,26 +17,31 @@ import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import chat.rocket.persistence.realm.models.internal.Session;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmListObserver;
 import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
+import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
+import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import hugo.weaving.DebugLog;
 
 /**
  * Entry-point for Rocket.Chat.Android application.
  */
-public class MainActivity extends AbstractAuthedActivity {
+public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
 
-  private RealmObjectObserver<Session> sessionObserver;
+  private RealmObjectObserver<RealmSession> sessionObserver;
   private RealmListObserver<RealmRoom> unreadRoomSubscriptionObserver;
   private boolean isForeground;
   private StatusTicker statusTicker;
+
+  private MainContract.Presenter presenter;
 
   @Override
   protected int getLayoutContainerForFragment() {
@@ -70,11 +75,13 @@ public class MainActivity extends AbstractAuthedActivity {
   protected void onResume() {
     isForeground = true;
     super.onResume();
+    presenter.bindView(this);
   }
 
   @Override
   protected void onPause() {
     isForeground = false;
+    presenter.release();
     super.onPause();
   }
 
@@ -162,6 +169,16 @@ public class MainActivity extends AbstractAuthedActivity {
   @Override
   protected void onHostnameUpdated() {
     super.onHostnameUpdated();
+
+    if (presenter != null) {
+      presenter.release();
+    }
+    CanCreateRoomInteractor interactor = new CanCreateRoomInteractor(
+        new RealmUserRepository(hostname),
+        new RealmSessionRepository(hostname)
+    );
+    presenter = new MainPresenter(interactor);
+
     updateSessionObserver();
     updateUnreadRoomSubscriptionObserver();
     updateSidebarMainFragment();
@@ -184,13 +201,13 @@ public class MainActivity extends AbstractAuthedActivity {
 
     sessionObserver = realmHelper
         .createObjectObserver(realm ->
-            Session.queryDefaultSession(realm)
-                .isNotNull(Session.TOKEN))
+            RealmSession.queryDefaultSession(realm)
+                .isNotNull(RealmSession.TOKEN))
         .setOnUpdateListener(this::onSessionChanged);
     sessionObserver.sub();
   }
 
-  private void onSessionChanged(@Nullable Session session) {
+  private void onSessionChanged(@Nullable RealmSession session) {
     if (session == null) {
       if (isForeground) {
         LaunchUtil.showLoginActivity(this, hostname);
@@ -201,7 +218,7 @@ public class MainActivity extends AbstractAuthedActivity {
           Snackbar.make(findViewById(getLayoutContainerForFragment()),
               R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
               .setAction(R.string.fragment_retry_login_retry_title, view ->
-                  Session.retryLogin(RealmStore.get(hostname))));
+                  RealmSession.retryLogin(RealmStore.get(hostname))));
     } else if (!session.isTokenVerified()) {
       statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
           Snackbar.make(findViewById(getLayoutContainerForFragment()),
@@ -258,13 +275,7 @@ public class MainActivity extends AbstractAuthedActivity {
   @Override
   protected void onRoomIdUpdated() {
     super.onRoomIdUpdated();
-
-    if (roomId != null && RoomFragment.canCreate(RealmStore.get(hostname))) {
-      showFragment(RoomFragment.create(hostname, roomId));
-      closeSidebarIfNeeded();
-    } else {
-      showFragment(new HomeFragment());
-    }
+    presenter.onOpenRoom(hostname, roomId);
   }
 
   @Override
@@ -283,6 +294,17 @@ public class MainActivity extends AbstractAuthedActivity {
   @Override
   protected boolean onBackPress() {
     return closeSidebarIfNeeded() || super.onBackPress();
+  }
+
+  @Override
+  public void showHome() {
+    showFragment(new HomeFragment());
+  }
+
+  @Override
+  public void showRoom(String hostname, String roomId) {
+    showFragment(RoomFragment.create(hostname, roomId));
+    closeSidebarIfNeeded();
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.

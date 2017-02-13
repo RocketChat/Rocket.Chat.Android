@@ -1,14 +1,13 @@
 package chat.rocket.android.fragment.sidebar;
 
-import android.support.annotation.NonNull;
-
 import java.util.List;
+import chat.rocket.android.shared.BaseContract;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
 
 public interface SidebarMainContract {
 
-  interface View {
+  interface View extends BaseContract.View {
 
     void showScreen();
 
@@ -19,10 +18,7 @@ public interface SidebarMainContract {
     void showUser(User user);
   }
 
-  interface Presenter {
-    void bindView(@NonNull View view);
-
-    void release();
+  interface Presenter extends BaseContract.Presenter<View> {
 
     void onUserOnline();
 

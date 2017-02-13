@@ -5,5 +5,5 @@ import rx.Observable;
 
 public interface UserRepository {
 
-  Observable<User> getCurrentUser();
+  Observable<User> getCurrent();
 }

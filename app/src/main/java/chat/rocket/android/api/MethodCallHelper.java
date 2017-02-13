@@ -17,7 +17,7 @@ import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
-import chat.rocket.persistence.realm.models.internal.Session;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.DDPClientRef;
@@ -44,7 +44,7 @@ public class MethodCallHelper {
    * initialize with Context and hostname.
    */
   public MethodCallHelper(Context context, String hostname) {
-    this.context = context;
+    this.context = context.getApplicationContext();
     this.realmHelper = RealmStore.get(hostname);
     ddpClientRef = null;
   }
@@ -126,8 +126,8 @@ public class MethodCallHelper {
 
   private Task<Void> saveToken(Task<String> task) {
     return realmHelper.executeTransaction(realm ->
-        realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
-            .put("sessionId", Session.DEFAULT_ID)
+        realm.createOrUpdateObjectFromJson(RealmSession.class, new JSONObject()
+            .put("sessionId", RealmSession.DEFAULT_ID)
             .put("token", task.getResult())
             .put("tokenVerified", true)
             .put("error", JSONObject.NULL)
@@ -191,7 +191,7 @@ public class MethodCallHelper {
         .onSuccessTask(this::saveToken)
         .continueWithTask(task -> {
           if (task.isFaulted()) {
-            Session.logError(realmHelper, task.getError());
+            RealmSession.logError(realmHelper, task.getError());
           }
           return task;
         });
@@ -203,7 +203,7 @@ public class MethodCallHelper {
   public Task<Void> logout() {
     return call("logout", TIMEOUT_MS).onSuccessTask(task ->
         realmHelper.executeTransaction(realm -> {
-          realm.delete(Session.class);
+          realm.delete(RealmSession.class);
           return null;
         }));
   }

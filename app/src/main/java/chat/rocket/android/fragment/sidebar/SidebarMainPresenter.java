@@ -6,23 +6,20 @@ import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
-public class SidebarMainPresenter implements SidebarMainContract.Presenter {
+public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View>
+    implements SidebarMainContract.Presenter {
 
   private final String hostname;
   private final RoomRepository roomRepository;
   private final UserRepository userRepository;
   private final MethodCallHelper methodCallHelper;
-
-  private SidebarMainContract.View view;
-
-  private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
   public SidebarMainPresenter(String hostname, RoomRepository roomRepository,
                               UserRepository userRepository, MethodCallHelper methodCallHelper) {
@@ -34,7 +31,7 @@ public class SidebarMainPresenter implements SidebarMainContract.Presenter {
 
   @Override
   public void bindView(@NonNull SidebarMainContract.View view) {
-    this.view = view;
+    super.bindView(view);
 
     if (TextUtils.isEmpty(hostname)) {
       view.showEmptyScreen();
@@ -45,12 +42,6 @@ public class SidebarMainPresenter implements SidebarMainContract.Presenter {
 
     subscribeToRooms();
     subscribeToUser();
-  }
-
-  @Override
-  public void release() {
-    compositeSubscription.clear();
-    view = null;
   }
 
   @Override
@@ -89,17 +80,17 @@ public class SidebarMainPresenter implements SidebarMainContract.Presenter {
             rooms -> view.showRoomList(rooms)
         );
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   private void subscribeToUser() {
-    final Subscription subscription = userRepository.getCurrentUser()
+    final Subscription subscription = userRepository.getCurrent()
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(user -> view.showUser(user));
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   private void updateCurrentUserStatus(String status) {

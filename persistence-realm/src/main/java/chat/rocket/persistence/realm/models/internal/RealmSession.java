@@ -7,6 +7,7 @@ import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
 import org.json.JSONObject;
 
+import chat.rocket.core.models.Session;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.helpers.LogcatIfError;
 import hugo.weaving.DebugLog;
@@ -14,7 +15,7 @@ import hugo.weaving.DebugLog;
 /**
  * Login session info.
  */
-public class Session extends RealmObject {
+public class RealmSession extends RealmObject {
 
   @SuppressWarnings({"PMD.ShortVariable"})
   public static final String ID = "sessionId";
@@ -30,8 +31,8 @@ public class Session extends RealmObject {
   private boolean tokenVerified;
   private String error;
 
-  public static RealmQuery<Session> queryDefaultSession(Realm realm) {
-    return realm.where(Session.class).equalTo(ID, Session.DEFAULT_ID);
+  public static RealmQuery<RealmSession> queryDefaultSession(Realm realm) {
+    return realm.where(RealmSession.class).equalTo(ID, RealmSession.DEFAULT_ID);
   }
 
   /**
@@ -42,13 +43,13 @@ public class Session extends RealmObject {
     String errString = exception.getMessage();
     if (!TextUtils.isEmpty(errString) && errString.contains(AUTH_ERROR_CODE)) {
       realmHelper.executeTransaction(realm -> {
-        realm.delete(Session.class);
+        realm.delete(RealmSession.class);
         return null;
       }).continueWith(new LogcatIfError());
     } else {
       realmHelper.executeTransaction(
-          realm -> realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
-              .put(ID, Session.DEFAULT_ID)
+          realm -> realm.createOrUpdateObjectFromJson(RealmSession.class, new JSONObject()
+              .put(ID, RealmSession.DEFAULT_ID)
               .put(TOKEN_VERIFIED, false)
               .put(ERROR, errString)))
           .continueWith(new LogcatIfError());
@@ -60,13 +61,13 @@ public class Session extends RealmObject {
    */
   @DebugLog
   public static void retryLogin(RealmHelper realmHelper) {
-    final Session session = realmHelper.executeTransactionForRead(realm ->
+    final RealmSession session = realmHelper.executeTransactionForRead(realm ->
         queryDefaultSession(realm).isNotNull(TOKEN).findFirst());
 
     if (!session.isTokenVerified() || !TextUtils.isEmpty(session.getError())) {
       realmHelper.executeTransaction(
-          realm -> realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
-              .put(ID, Session.DEFAULT_ID)
+          realm -> realm.createOrUpdateObjectFromJson(RealmSession.class, new JSONObject()
+              .put(ID, RealmSession.DEFAULT_ID)
               .put(TOKEN_VERIFIED, false)
               .put(ERROR, JSONObject.NULL)))
           .continueWith(new LogcatIfError());
@@ -103,5 +104,14 @@ public class Session extends RealmObject {
 
   public void setError(String error) {
     this.error = error;
+  }
+
+  public Session asSession() {
+    return Session.builder()
+        .setSessionId(sessionId)
+        .setToken(token)
+        .setTokenVerified(tokenVerified)
+        .setError(error)
+        .build();
   }
 }

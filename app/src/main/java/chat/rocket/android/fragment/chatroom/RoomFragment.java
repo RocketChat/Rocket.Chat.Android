@@ -45,16 +45,11 @@ import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.core.SyncState;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
-import chat.rocket.persistence.realm.models.ddp.RealmRoom;
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import chat.rocket.persistence.realm.models.internal.Session;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
-import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
@@ -76,10 +71,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   private static final String ROOM_ID = "roomId";
 
   private String hostname;
-  private RealmHelper realmHelper;
   private String roomId;
-  private String userId;
-  private String token;
   private LoadMoreScrollListener scrollListener;
   private MessageFormManager messageFormManager;
   private RecyclerViewAutoScrollManager autoScrollManager;
@@ -93,14 +85,6 @@ public class RoomFragment extends AbstractChatRoomFragment
   private RoomContract.Presenter presenter;
 
   public RoomFragment() {
-  }
-
-  public static boolean canCreate(RealmHelper realmHelper) {
-    RealmUser currentUser = realmHelper.executeTransactionForRead(realm ->
-        RealmUser.queryCurrentUser(realm).findFirst());
-    Session session = realmHelper.executeTransactionForRead(realm ->
-        Session.queryDefaultSession(realm).findFirst());
-    return currentUser != null && session != null;
   }
 
   /**
@@ -131,19 +115,11 @@ public class RoomFragment extends AbstractChatRoomFragment
         new RealmRoomRepository(hostname),
         new RealmMessageRepository(hostname),
         new MethodCallHelper(getContext(), hostname),
-        ConnectivityManager.getInstance(getContext().getApplicationContext())
+        ConnectivityManager.getInstance(getContext())
     );
 
-    realmHelper = RealmStore.get(hostname);
-
-    userId = realmHelper.executeTransactionForRead(realm ->
-        RealmUser.queryCurrentUser(realm).findFirst()).getId();
-
-    token = realmHelper.executeTransactionForRead(realm ->
-        Session.queryDefaultSession(realm).findFirst()).getToken();
-
     if (savedInstanceState == null) {
-      initialRequest();
+      presenter.loadMessages();
     }
   }
 
@@ -155,7 +131,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   protected void onSetupView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    adapter = new MessageListAdapter(getContext(), hostname, userId, token);
+    adapter = new MessageListAdapter(getContext(), hostname);
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
 
@@ -175,7 +151,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     scrollListener = new LoadMoreScrollListener(layoutManager, 40) {
       @Override
       public void requestMoreItem() {
-        loadMoreRequest();
+        presenter.loadMoreMessages();
       }
     };
     listView.addOnScrollListener(scrollListener);
@@ -237,20 +213,7 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void onItemClick(PairedMessage pairedMessage) {
-    if (pairedMessage.target != null) {
-      final int syncState = pairedMessage.target.getSyncState();
-      if (syncState == SyncState.FAILED) {
-        final String messageId = pairedMessage.target.getId();
-        new AlertDialog.Builder(getContext())
-            .setPositiveButton(R.string.resend,
-                (dialog, which) -> presenter.resendMessage(messageId))
-            .setNegativeButton(android.R.string.cancel, null)
-            .setNeutralButton(R.string.discard,
-                (dialog, which) -> presenter.deleteMessage(messageId))
-            .show();
-      }
-    }
-
+    presenter.onMessageSelected(pairedMessage.target);
   }
 
   private void setupSideMenu() {
@@ -311,42 +274,14 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void uploadFile(Uri uri) {
-    String uplId = new FileUploadHelper(getContext(), realmHelper)
+    String uplId = new FileUploadHelper(getContext(), RealmStore.get(hostname))
         .requestUploading(roomId, uri);
     if (!TextUtils.isEmpty(uplId)) {
       FileUploadProgressDialogFragment.create(hostname, roomId, uplId)
-          .show(getFragmentManager(), FileUploadProgressDialogFragment.class.getSimpleName());
+          .show(getFragmentManager(), "FileUploadProgressDialogFragment");
     } else {
       // show error.
     }
-  }
-
-  private void onRenderRoom(Room room) {
-    String type = room.getType();
-    if (RealmRoom.TYPE_CHANNEL.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
-    } else if (RealmRoom.TYPE_PRIVATE.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_lock_gray_24dp);
-    } else if (RealmRoom.TYPE_DIRECT_MESSAGE.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_at_gray_24dp);
-    } else {
-      setToolbarRoomIcon(0);
-    }
-    setToolbarTitle(room.getName());
-
-    boolean unreadMessageExists = room.isAlert();
-    if (newMessageIndicatorManager != null && previousUnreadMessageExists && !unreadMessageExists) {
-      newMessageIndicatorManager.reset();
-    }
-    previousUnreadMessageExists = unreadMessageExists;
-  }
-
-  private void initialRequest() {
-    presenter.loadMessages();
-  }
-
-  private void loadMoreRequest() {
-    presenter.loadMoreMessages();
   }
 
   private void markAsReadIfNeeded() {
@@ -445,7 +380,23 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void render(Room room) {
-    onRenderRoom(room);
+    String type = room.getType();
+    if (Room.TYPE_CHANNEL.equals(type)) {
+      setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
+    } else if (Room.TYPE_PRIVATE.equals(type)) {
+      setToolbarRoomIcon(R.drawable.ic_lock_gray_24dp);
+    } else if (Room.TYPE_DIRECT_MESSAGE.equals(type)) {
+      setToolbarRoomIcon(R.drawable.ic_at_gray_24dp);
+    } else {
+      setToolbarRoomIcon(0);
+    }
+    setToolbarTitle(room.getName());
+
+    boolean unreadMessageExists = room.isAlert();
+    if (newMessageIndicatorManager != null && previousUnreadMessageExists && !unreadMessageExists) {
+      newMessageIndicatorManager.reset();
+    }
+    previousUnreadMessageExists = unreadMessageExists;
   }
 
   @Override
@@ -476,5 +427,16 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void showMessages(List<Message> messages) {
     adapter.updateData(messages);
+  }
+
+  @Override
+  public void showMessageSendFailure(Message message) {
+    new AlertDialog.Builder(getContext())
+        .setPositiveButton(R.string.resend,
+            (dialog, which) -> presenter.resendMessage(message))
+        .setNegativeButton(android.R.string.cancel, null)
+        .setNeutralButton(R.string.discard,
+            (dialog, which) -> presenter.deleteMessage(message))
+        .show();
   }
 }

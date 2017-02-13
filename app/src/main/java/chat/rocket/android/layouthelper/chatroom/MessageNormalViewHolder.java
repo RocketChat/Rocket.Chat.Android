@@ -19,8 +19,8 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
   /**
    * constructor WITH hostname.
    */
-  public MessageNormalViewHolder(View itemView, String hostname, String userId, String token) {
-    super(itemView, hostname, userId, token);
+  public MessageNormalViewHolder(View itemView, String hostname) {
+    super(itemView, hostname);
     body = (RocketChatMessageLayout) itemView.findViewById(R.id.message_body);
     urls = (RocketChatMessageUrlsLayout) itemView.findViewById(R.id.message_urls);
     attachments =
@@ -35,6 +35,6 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
         .timestampInto(timestamp)
         .bodyInto(body)
         .urlsInto(urls)
-        .attachmentsInto(attachments, hostname, userId, token);
+        .attachmentsInto(attachments, hostname);
   }
 }

@@ -15,7 +15,7 @@ import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.models.ServerInfo;
-import chat.rocket.persistence.realm.models.internal.Session;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
@@ -127,7 +127,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private void forceInvalidateTokens() {
     realmHelper.executeTransaction(realm -> {
-      Session session = Session.queryDefaultSession(realm).findFirst();
+      RealmSession session = RealmSession.queryDefaultSession(realm).findFirst();
       if (session != null
           && !TextUtils.isEmpty(session.getToken())
           && (session.isTokenVerified() || !TextUtils.isEmpty(session.getError()))) {
@@ -240,10 +240,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 });
 
                 return realmHelper.executeTransaction(realm -> {
-                  Session sessionObj = Session.queryDefaultSession(realm).findFirst();
+                  RealmSession sessionObj = RealmSession.queryDefaultSession(realm).findFirst();
                   if (sessionObj == null) {
-                    realm.createOrUpdateObjectFromJson(Session.class,
-                        new JSONObject().put(Session.ID, Session.DEFAULT_ID));
+                    realm.createOrUpdateObjectFromJson(RealmSession.class,
+                        new JSONObject().put(RealmSession.ID, RealmSession.DEFAULT_ID));
                   } else {
                     // invalidate login token.
                     if (!TextUtils.isEmpty(sessionObj.getToken()) && sessionObj.isTokenVerified()) {

@@ -7,11 +7,11 @@ import io.realm.RealmResults;
 import java.util.List;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.persistence.realm.models.internal.Session;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
-public class TokenLoginObserver extends AbstractModelObserver<Session> {
+public class TokenLoginObserver extends AbstractModelObserver<RealmSession> {
 
   private final MethodCallHelper methodCall;
 
@@ -22,21 +22,21 @@ public class TokenLoginObserver extends AbstractModelObserver<Session> {
   }
 
   @Override
-  public RealmResults<Session> queryItems(Realm realm) {
-    return realm.where(Session.class)
-        .isNotNull(Session.TOKEN)
-        .equalTo(Session.TOKEN_VERIFIED, false)
-        .isNull(Session.ERROR)
+  public RealmResults<RealmSession> queryItems(Realm realm) {
+    return realm.where(RealmSession.class)
+        .isNotNull(RealmSession.TOKEN)
+        .equalTo(RealmSession.TOKEN_VERIFIED, false)
+        .isNull(RealmSession.ERROR)
         .findAll();
   }
 
   @Override
-  public void onUpdateResults(List<Session> results) {
+  public void onUpdateResults(List<RealmSession> results) {
     if (results.isEmpty()) {
       return;
     }
 
-    Session session = results.get(0);
+    RealmSession session = results.get(0);
     methodCall.loginWithToken(session.getToken()).continueWith(new LogcatIfError());
   }
 }

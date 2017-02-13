@@ -16,7 +16,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.models.internal.FileUploading;
-import chat.rocket.persistence.realm.models.internal.Session;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import okhttp3.MediaType;
@@ -94,8 +94,8 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
 
     RealmUser currentUser = realmHelper.executeTransactionForRead(realm ->
         RealmUser.queryCurrentUser(realm).findFirst());
-    Session session = realmHelper.executeTransactionForRead(realm ->
-        Session.queryDefaultSession(realm).findFirst());
+    RealmSession session = realmHelper.executeTransactionForRead(realm ->
+        RealmSession.queryDefaultSession(realm).findFirst());
     if (currentUser == null || session == null) {
       return;
     }

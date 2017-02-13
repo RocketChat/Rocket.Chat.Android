@@ -4,7 +4,7 @@ import android.content.Context;
 
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import chat.rocket.persistence.realm.models.internal.Session;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 
@@ -35,8 +35,8 @@ public class DefaultCookieProvider implements CookieProvider {
 
     final RealmUser user = realmHelper.executeTransactionForRead(realm ->
         RealmUser.queryCurrentUser(realm).findFirst());
-    final Session session = realmHelper.executeTransactionForRead(realm ->
-        Session.queryDefaultSession(realm).findFirst());
+    final RealmSession session = realmHelper.executeTransactionForRead(realm ->
+        RealmSession.queryDefaultSession(realm).findFirst());
 
     if (user == null || session == null) {
       return "";

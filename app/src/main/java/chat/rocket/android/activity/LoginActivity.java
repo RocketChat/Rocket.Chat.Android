@@ -9,7 +9,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.LoginFragment;
 import chat.rocket.android.fragment.server_config.RetryLoginFragment;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.persistence.realm.models.internal.Session;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
@@ -21,7 +21,7 @@ public class LoginActivity extends AbstractFragmentActivity {
   public static final String KEY_HOSTNAME = "hostname";
 
   private String hostname;
-  private RealmObjectObserver<Session> sessionObserver;
+  private RealmObjectObserver<RealmSession> sessionObserver;
 
   @Override
   protected int getLayoutContainerForFragment() {
@@ -45,7 +45,7 @@ public class LoginActivity extends AbstractFragmentActivity {
     }
 
     sessionObserver = RealmStore.get(hostname)
-        .createObjectObserver(Session::queryDefaultSession)
+        .createObjectObserver(RealmSession::queryDefaultSession)
         .setOnUpdateListener(this::onRenderServerConfigSession);
 
     setContentView(R.layout.simple_screen);
@@ -65,7 +65,7 @@ public class LoginActivity extends AbstractFragmentActivity {
     super.onDestroy();
   }
 
-  private void onRenderServerConfigSession(Session session) {
+  private void onRenderServerConfigSession(RealmSession session) {
     if (session == null) {
       return;
     }

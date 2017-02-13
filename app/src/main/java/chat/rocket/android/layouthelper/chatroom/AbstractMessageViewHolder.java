@@ -17,15 +17,13 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
   protected final TextView timestamp;
   protected final View userAndTimeContainer;
   protected final String hostname;
-  protected final String userId;
-  protected final String token;
   protected final View newDayContainer;
   protected final TextView newDayText;
 
   /**
    * constructor WITH hostname.
    */
-  public AbstractMessageViewHolder(View itemView, String hostname, String userId, String token) {
+  public AbstractMessageViewHolder(View itemView, String hostname) {
     super(itemView);
     avatar = (RocketChatAvatar) itemView.findViewById(R.id.user_avatar);
     username = (TextView) itemView.findViewById(R.id.username);
@@ -35,8 +33,6 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
     newDayContainer = itemView.findViewById(R.id.newday_container);
     newDayText = (TextView) itemView.findViewById(R.id.newday_text);
     this.hostname = hostname;
-    this.userId = userId;
-    this.token = token;
   }
 
   /**

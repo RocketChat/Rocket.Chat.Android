@@ -43,7 +43,7 @@ import rx.subjects.PublishSubject;
 
 
   /*package*/ RealmBasedConnectivityManager setContext(Context appContext) {
-    this.appContext = appContext;
+    this.appContext = appContext.getApplicationContext();
     return this;
   }
 
@@ -67,7 +67,8 @@ import rx.subjects.PublishSubject;
   public void ensureConnections() {
     for (String hostname : serverConnectivityList.keySet()) {
       connectToServerIfNeeded(hostname, true/* force connect */)
-          .subscribe(_val -> { }, RCLog::e);
+          .subscribe(_val -> {
+          }, RCLog::e);
     }
   }
 
@@ -79,7 +80,8 @@ import rx.subjects.PublishSubject;
       serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
     }
     connectToServerIfNeeded(hostname, false)
-        .subscribe(_val -> { }, RCLog::e);
+        .subscribe(_val -> {
+        }, RCLog::e);
   }
 
   @Override
@@ -87,7 +89,8 @@ import rx.subjects.PublishSubject;
     RealmBasedServerInfo.remove(hostname);
     if (serverConnectivityList.containsKey(hostname)) {
       disconnectFromServerIfNeeded(hostname)
-          .subscribe(_val -> { }, RCLog::e);
+          .subscribe(_val -> {
+          }, RCLog::e);
     }
   }
 
@@ -187,7 +190,8 @@ import rx.subjects.PublishSubject;
         .filter(serverConnectivity -> hostname.equals(serverConnectivity.hostname))
         .map(serverConnectivity -> serverConnectivity.state)
         .filter(state ->
-            state == ServerConnectivity.STATE_CONNECTED || state == ServerConnectivity.STATE_DISCONNECTED)
+            state == ServerConnectivity.STATE_CONNECTED
+                || state == ServerConnectivity.STATE_DISCONNECTED)
         .first()
         .toSingle()
         .flatMap(state ->

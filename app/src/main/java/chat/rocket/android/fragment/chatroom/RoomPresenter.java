@@ -1,12 +1,14 @@
 package chat.rocket.android.fragment.chatroom;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import java.util.UUID;
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.RoomHistoryState;
@@ -17,9 +19,9 @@ import chat.rocket.android.service.ConnectivityManagerApi;
 import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
-public class RoomPresenter implements RoomContract.Presenter {
+public class RoomPresenter extends BasePresenter<RoomContract.View>
+    implements RoomContract.Presenter {
 
   private final String roomId;
   private final UserRepository userRepository;
@@ -27,9 +29,6 @@ public class RoomPresenter implements RoomContract.Presenter {
   private final MessageRepository messageRepository;
   private final MethodCallHelper methodCallHelper;
   private final ConnectivityManagerApi connectivityManagerApi;
-
-  private CompositeSubscription compositeSubscription = new CompositeSubscription();
-  private RoomContract.View view;
 
   public RoomPresenter(String roomId, UserRepository userRepository,
                        RoomRepository roomRepository,
@@ -46,17 +45,11 @@ public class RoomPresenter implements RoomContract.Presenter {
 
   @Override
   public void bindView(@NonNull RoomContract.View view) {
-    this.view = view;
+    super.bindView(view);
 
     getRoomInfo();
     getRoomHistoryStateInfo();
     getMessages();
-  }
-
-  @Override
-  public void release() {
-    compositeSubscription.clear();
-    this.view = null;
   }
 
   @Override
@@ -79,7 +72,7 @@ public class RoomPresenter implements RoomContract.Presenter {
           }
         });
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   @Override
@@ -103,12 +96,23 @@ public class RoomPresenter implements RoomContract.Presenter {
           }
         });
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
+  }
+
+  @Override
+  public void onMessageSelected(@Nullable Message message) {
+    if (message == null) {
+      return;
+    }
+
+    if (message.getSyncState() == SyncState.FAILED) {
+      view.showMessageSendFailure(message);
+    }
   }
 
   @Override
   public void sendMessage(String messageText) {
-    final Subscription subscription = userRepository.getCurrentUser()
+    final Subscription subscription = userRepository.getCurrent()
         .filter(user -> user != null)
         .first()
         .toSingle()
@@ -133,36 +137,34 @@ public class RoomPresenter implements RoomContract.Presenter {
           }
         });
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   @Override
-  public void resendMessage(String messageId) {
-    final Subscription subscription = messageRepository.getById(messageId)
-        .map(message -> message.withSyncState(SyncState.NOT_SYNCED))
-        .flatMap(message -> messageRepository.resend(message))
+  public void resendMessage(Message message) {
+    final Subscription subscription = messageRepository.resend(
+        message.withSyncState(SyncState.NOT_SYNCED))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   @Override
-  public void deleteMessage(String messageId) {
-    final Subscription subscription = messageRepository.getById(messageId)
-        .flatMap(message -> messageRepository.delete(message))
+  public void deleteMessage(Message message) {
+    final Subscription subscription = messageRepository.delete(message)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   @Override
   public void onUnreadCount() {
     final Subscription subscription = Single.zip(
-        userRepository.getCurrentUser()
+        userRepository.getCurrent()
             .filter(user -> user != null)
             .first()
             .toSingle(),
@@ -179,7 +181,7 @@ public class RoomPresenter implements RoomContract.Presenter {
             count -> view.showUnreadCount(count)
         );
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   @Override
@@ -194,7 +196,7 @@ public class RoomPresenter implements RoomContract.Presenter {
                 .continueWith(new LogcatIfError())
         );
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   private void getRoomInfo() {
@@ -206,7 +208,7 @@ public class RoomPresenter implements RoomContract.Presenter {
             room -> view.render(room)
         );
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   private void getRoomHistoryStateInfo() {
@@ -224,7 +226,7 @@ public class RoomPresenter implements RoomContract.Presenter {
             }
         );
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 
   private void getMessages() {
@@ -235,6 +237,6 @@ public class RoomPresenter implements RoomContract.Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(messages -> view.showMessages(messages));
 
-    compositeSubscription.add(subscription);
+    addSubscription(subscription);
   }
 }
