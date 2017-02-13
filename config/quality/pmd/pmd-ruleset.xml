@@ -9,20 +9,20 @@
     <exclude-pattern>.*/R.java</exclude-pattern>
     <exclude-pattern>.*/gen/.*</exclude-pattern>
 
-    <rule ref="rulesets/java/android.xml"/>
-    <rule ref="rulesets/java/clone.xml"/>
-    <rule ref="rulesets/java/finalizers.xml"/>
+    <rule ref="rulesets/java/android.xml" />
+    <rule ref="rulesets/java/clone.xml" />
+    <rule ref="rulesets/java/finalizers.xml" />
     <rule ref="rulesets/java/imports.xml">
         <!-- Espresso is designed this way !-->
-        <exclude name="TooManyStaticImports"/>
+        <exclude name="TooManyStaticImports" />
     </rule>
-    <rule ref="rulesets/java/basic.xml"/>
+    <rule ref="rulesets/java/basic.xml" />
     <rule ref="rulesets/java/naming.xml">
-        <!--<exclude name="AbstractNaming" />-->
-        <exclude name="LongVariable"/>
+        <exclude name="AbstractNaming" />
+        <exclude name="LongVariable" />
         <!--exclude name="ShortMethodName" /-->
         <!--exclude name="ShortVariable" /-->
-        <!--<exclude name="ShortClassName" />-->
+        <exclude name="ShortClassName" />
         <!--<exclude name="VariableNamingConventions" />-->
     </rule>
 </ruleset>
