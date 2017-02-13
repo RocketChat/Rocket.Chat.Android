@@ -15,15 +15,12 @@ import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.helper.TextUtils;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
-import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmObjectObserver;
-import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
@@ -37,7 +34,6 @@ import hugo.weaving.DebugLog;
 public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
 
   private RealmObjectObserver<RealmSession> sessionObserver;
-  private boolean isForeground;
   private StatusTicker statusTicker;
 
   private MainContract.Presenter presenter;
@@ -72,7 +68,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   @Override
   protected void onResume() {
-    isForeground = true;
     super.onResume();
 
     if (presenter != null) {
@@ -82,8 +77,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   @Override
   protected void onPause() {
-    isForeground = false;
-
     if (presenter != null) {
       presenter.release();
     }
@@ -187,56 +180,17 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         new SessionInteractor(new RealmSessionRepository(hostname))
     );
 
+    SessionInteractor sessionInteractor = new SessionInteractor(
+        new RealmSessionRepository(hostname)
+    );
+
     presenter = new MainPresenter(
         roomInteractor,
-        createRoomInteractor);
+        createRoomInteractor,
+        sessionInteractor
+    );
 
-    updateSessionObserver();
     updateSidebarMainFragment();
-  }
-
-  private void updateSessionObserver() {
-    if (sessionObserver != null) {
-      sessionObserver.unsub();
-      sessionObserver = null;
-    }
-
-    if (hostname == null) {
-      return;
-    }
-
-    RealmHelper realmHelper = RealmStore.get(hostname);
-    if (realmHelper == null) {
-      return;
-    }
-
-    sessionObserver = realmHelper
-        .createObjectObserver(realm ->
-            RealmSession.queryDefaultSession(realm)
-                .isNotNull(RealmSession.TOKEN))
-        .setOnUpdateListener(this::onSessionChanged);
-    sessionObserver.sub();
-  }
-
-  private void onSessionChanged(@Nullable RealmSession session) {
-    if (session == null) {
-      if (isForeground) {
-        LaunchUtil.showLoginActivity(this, hostname);
-      }
-      statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
-    } else if (!TextUtils.isEmpty(session.getError())) {
-      statusTicker.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
-          Snackbar.make(findViewById(getLayoutContainerForFragment()),
-              R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
-              .setAction(R.string.fragment_retry_login_retry_title, view ->
-                  RealmSession.retryLogin(RealmStore.get(hostname))));
-    } else if (!session.isTokenVerified()) {
-      statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
-          Snackbar.make(findViewById(getLayoutContainerForFragment()),
-              R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
-    } else {
-      statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
-    }
   }
 
   private void updateSidebarMainFragment() {
@@ -282,6 +236,33 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     if (toolbar != null) {
       toolbar.setUnreadBudge(roomsCount, mentionsCount);
     }
+  }
+
+  @Override
+  public void showLoginScreen() {
+    LaunchUtil.showLoginActivity(this, hostname);
+    statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
+  }
+
+  @Override
+  public void showConnectionError() {
+    statusTicker.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
+        Snackbar.make(findViewById(getLayoutContainerForFragment()),
+            R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.fragment_retry_login_retry_title, view ->
+                presenter.onRetryLogin()));
+  }
+
+  @Override
+  public void showConnecting() {
+    statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
+        Snackbar.make(findViewById(getLayoutContainerForFragment()),
+            R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
+  }
+
+  @Override
+  public void showConnectionOk() {
+    statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.

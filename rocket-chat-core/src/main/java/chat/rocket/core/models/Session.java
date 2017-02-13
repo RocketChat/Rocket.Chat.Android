@@ -19,6 +19,10 @@ public abstract class Session {
   @Nullable
   public abstract String getError();
 
+  public abstract Session withTokenVerified(boolean tokenVerified);
+
+  public abstract Session withError(String error);
+
   public static Builder builder() {
     return new AutoValue_Session.Builder();
   }

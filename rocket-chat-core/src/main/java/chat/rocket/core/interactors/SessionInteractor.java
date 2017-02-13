@@ -3,6 +3,7 @@ package chat.rocket.core.interactors;
 import chat.rocket.core.models.Session;
 import chat.rocket.core.repositories.SessionRepository;
 import rx.Observable;
+import rx.Single;
 
 public class SessionInteractor {
 
@@ -21,6 +22,15 @@ public class SessionInteractor {
   public Observable<Session.State> getSessionState() {
     return getDefault()
         .map(this::getStateFrom);
+  }
+
+  public Single<Boolean> retryLogin() {
+    return getDefault()
+        .filter(session -> session.getToken() != null
+            && (!session.isTokenVerified() || session.getError() != null))
+        .map(session -> session.withTokenVerified(false).withError(null))
+        .toSingle()
+        .flatMap(sessionRepository::save);
   }
 
   private Session.State getStateFrom(Session session) {

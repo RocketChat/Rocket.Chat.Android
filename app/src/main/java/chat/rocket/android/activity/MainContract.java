@@ -11,10 +11,20 @@ public interface MainContract {
     void showRoom(String hostname, String roomId);
 
     void showUnreadCount(int roomsCount, int mentionsCount);
+
+    void showLoginScreen();
+
+    void showConnectionError();
+
+    void showConnecting();
+
+    void showConnectionOk();
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
 
     void onOpenRoom(String hostname, String roomId);
+
+    void onRetryLogin();
   }
 }

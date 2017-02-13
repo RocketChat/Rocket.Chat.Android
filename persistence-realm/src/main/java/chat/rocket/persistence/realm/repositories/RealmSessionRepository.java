@@ -8,6 +8,7 @@ import chat.rocket.core.repositories.SessionRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class RealmSessionRepository extends RealmRepository implements SessionRepository {
@@ -41,6 +42,45 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
             }
             return realmSessions.get(0).asSession();
           });
+    });
+  }
+
+  @Override
+  public Single<Boolean> save(Session session) {
+    return Single.defer(() -> {
+      final Realm realm = RealmStore.getRealm(hostname);
+      final Looper looper = Looper.myLooper();
+
+      if (realm == null || looper == null) {
+        return Single.just(null);
+      }
+
+      RealmSession realmSession = realm.where(RealmSession.class)
+          .equalTo(RealmSession.ID, session.getSessionId())
+          .findFirst();
+
+      if (realmSession == null) {
+        realmSession = new RealmSession();
+      } else {
+        realmSession = realm.copyFromRealm(realmSession);
+      }
+
+      realmSession.setSessionId(session.getSessionId());
+      realmSession.setToken(session.getToken());
+      realmSession.setTokenVerified(session.isTokenVerified());
+      realmSession.setError(session.getError());
+
+      realm.beginTransaction();
+
+      return realm.copyToRealmOrUpdate(realmSession)
+          .asObservable()
+          .unsubscribeOn(AndroidSchedulers.from(looper))
+          .doOnUnsubscribe(() -> close(realm, looper))
+          .filter(it -> it != null && it.isLoaded() && it.isValid())
+          .first()
+          .doOnNext(it -> realm.commitTransaction())
+          .toSingle()
+          .map(realmObject -> true);
     });
   }
 }
