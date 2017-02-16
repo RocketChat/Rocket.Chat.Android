@@ -31,7 +31,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
     connectivityManagerApi.keepAliveServer();
 
     if (hostname == null || hostname.length() == 0) {
-      view.close();
+      view.closeView();
       return;
     }
 
@@ -52,7 +52,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
               view.showRetryLogin(hostname);
               break;
             case VALID:
-              view.close();
+              view.closeView();
           }
         });
 

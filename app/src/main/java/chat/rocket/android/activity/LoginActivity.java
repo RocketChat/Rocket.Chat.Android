@@ -85,7 +85,7 @@ public class LoginActivity extends AbstractFragmentActivity implements LoginCont
   }
 
   @Override
-  public void close() {
+  public void closeView() {
     finish();
     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
   }

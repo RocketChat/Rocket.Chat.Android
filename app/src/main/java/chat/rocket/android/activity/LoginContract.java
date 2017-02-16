@@ -9,7 +9,7 @@ public interface LoginContract {
 
     void showRetryLogin(String hostname);
 
-    void close();
+    void closeView();
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
