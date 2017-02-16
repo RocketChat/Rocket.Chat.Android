@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.FileUploadingHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
@@ -59,7 +59,7 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
           .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_S3)
           .findAll().deleteAllFromRealm();
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   @Override
@@ -137,7 +137,7 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
                       realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
                           .put(FileUploading.ID, uplId)
                           .put(FileUploading.UPLOADED_SIZE, numBytes)))
-                      .continueWith(new LogcatIfError());
+                      .continueWith(new LogIfError());
                 }
               }
             }

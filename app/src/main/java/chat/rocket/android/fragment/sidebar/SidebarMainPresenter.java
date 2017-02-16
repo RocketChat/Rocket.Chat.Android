@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
@@ -67,7 +67,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   @Override
   public void onLogout() {
     if (methodCallHelper != null) {
-      methodCallHelper.logout().continueWith(new LogcatIfError());
+      methodCallHelper.logout().continueWith(new LogIfError());
     }
   }
 
@@ -95,7 +95,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
 
   private void updateCurrentUserStatus(String status) {
     if (methodCallHelper != null) {
-      methodCallHelper.setUserStatus(status).continueWith(new LogcatIfError());
+      methodCallHelper.setUserStatus(status).continueWith(new LogIfError());
     }
   }
 }

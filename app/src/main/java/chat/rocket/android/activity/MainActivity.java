@@ -14,7 +14,7 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -91,14 +91,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   private void setUserOnlineIfServerAvailable() {
     if (hostname != null) {
       new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_ONLINE)
-          .continueWith(new LogcatIfError());
+          .continueWith(new LogIfError());
     }
   }
 
   private void setUserAwayIfServerAvailable() {
     if (hostname != null) {
       new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_AWAY)
-          .continueWith(new LogcatIfError());
+          .continueWith(new LogIfError());
     }
   }
 

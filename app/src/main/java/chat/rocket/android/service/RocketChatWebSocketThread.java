@@ -11,7 +11,7 @@ import java.util.Iterator;
 import bolts.Task;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.models.ServerInfo;
@@ -135,7 +135,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         session.setError(null);
       }
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   /**

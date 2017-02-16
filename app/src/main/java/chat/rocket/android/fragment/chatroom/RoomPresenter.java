@@ -6,7 +6,7 @@ import android.support.v4.util.Pair;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.interactors.MessageInteractor;
@@ -153,7 +153,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             room -> methodCallHelper.readMessages(room.getRoomId())
-                .continueWith(new LogcatIfError())
+                .continueWith(new LogIfError())
         );
 
     addSubscription(subscription);

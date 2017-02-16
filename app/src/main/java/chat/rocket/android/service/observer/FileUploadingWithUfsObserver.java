@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.FileUploadingHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
@@ -63,7 +63,7 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
           .endGroup()
           .findAll().deleteAllFromRealm();
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   @Override

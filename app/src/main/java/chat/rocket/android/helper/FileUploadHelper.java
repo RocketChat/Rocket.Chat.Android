@@ -74,7 +74,7 @@ public class FileUploadHelper {
             .put(FileUploading.ROOM_ID, roomId)
             .put(FileUploading.ERROR, JSONObject.NULL)
         )
-    ).continueWith(new LogcatIfError());
+    ).continueWith(new LogIfError());
     return uplId;
   }
 

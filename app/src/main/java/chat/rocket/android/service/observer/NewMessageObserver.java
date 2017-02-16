@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
@@ -36,7 +36,7 @@ public class NewMessageObserver extends AbstractModelObserver<RealmMessage> {
       }
 
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   @Override

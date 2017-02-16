@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import java.nio.charset.Charset;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.persistence.realm.models.ddp.RealmMeteorLoginServiceConfiguration;
 import chat.rocket.persistence.realm.RealmStore;
@@ -111,7 +111,7 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
   private void handleOAuthCallback(final String credentialToken, final String credentialSecret) {
     new MethodCallHelper(getContext(), hostname)
         .loginWithOAuth(credentialToken, credentialSecret)
-        .continueWith(new LogcatIfError());
+        .continueWith(new LogIfError());
   }
 
   protected void onOAuthCompleted() {

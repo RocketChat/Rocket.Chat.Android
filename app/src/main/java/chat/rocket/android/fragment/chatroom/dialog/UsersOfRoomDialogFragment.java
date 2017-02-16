@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import chat.rocket.android.R;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.layouthelper.chatroom.dialog.RoomUserAdapter;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
@@ -92,7 +92,7 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
       ConnectivityManager.getInstance(getContext().getApplicationContext())
           .keepAliveServer();
       return task;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   @Override

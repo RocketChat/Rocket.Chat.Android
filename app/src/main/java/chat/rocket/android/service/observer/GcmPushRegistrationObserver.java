@@ -12,7 +12,7 @@ import java.util.List;
 import bolts.Task;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
 import chat.rocket.core.PublicSettingsConstants;
@@ -59,7 +59,7 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
         realmHelper.executeTransaction(realm -> {
           GcmPushRegistration.queryDefault(realm).findFirst().setSyncState(SyncState.FAILED);
           return null;
-        }).continueWith(new LogcatIfError());
+        }).continueWith(new LogIfError());
       }
       return null;
     });

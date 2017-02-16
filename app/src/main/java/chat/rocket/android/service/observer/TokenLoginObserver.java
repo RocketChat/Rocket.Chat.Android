@@ -6,7 +6,7 @@ import io.realm.RealmResults;
 
 import java.util.List;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
@@ -37,6 +37,6 @@ public class TokenLoginObserver extends AbstractModelObserver<RealmSession> {
     }
 
     RealmSession session = results.get(0);
-    methodCall.loginWithToken(session.getToken()).continueWith(new LogcatIfError());
+    methodCall.loginWithToken(session.getToken()).continueWith(new LogIfError());
   }
 }

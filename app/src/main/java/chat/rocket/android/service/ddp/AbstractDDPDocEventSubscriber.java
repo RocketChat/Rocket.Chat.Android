@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
@@ -68,7 +68,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
 
     ddpClientRef.get().subscribe(getSubscriptionName(), params).onSuccess(task -> {
       if (isUnsubscribed) {
-        ddpClientRef.get().unsubscribe(task.getResult().id).continueWith(new LogcatIfError());
+        ddpClientRef.get().unsubscribe(task.getResult().id).continueWith(new LogIfError());
       } else {
         subscriptionId = task.getResult().id;
       }
@@ -87,7 +87,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
       }).onSuccess(task -> {
         rxSubscription = subscribe();
         return null;
-      }).continueWith(new LogcatIfError());
+      }).continueWith(new LogIfError());
     } else {
       rxSubscription = subscribe();
     }
@@ -122,7 +122,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     realmHelper.executeTransaction(realm -> {
       onDocumentAdded(realm, docEvent);
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   private void onDocumentAdded(Realm realm, DDPSubscription.Added docEvent) throws JSONException {
@@ -136,7 +136,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     realmHelper.executeTransaction(realm -> {
       onDocumentChanged(realm, docEvent);
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   private void onDocumentChanged(Realm realm, DDPSubscription.Changed docEvent)
@@ -157,7 +157,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     realmHelper.executeTransaction(realm -> {
       onDocumentRemoved(realm, docEvent);
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   private void onDocumentRemoved(Realm realm, DDPSubscription.Removed docEvent)
@@ -182,7 +182,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
       rxSubscription.unsubscribe();
     }
     if (!TextUtils.isEmpty(subscriptionId)) {
-      ddpClientRef.get().unsubscribe(subscriptionId).continueWith(new LogcatIfError());
+      ddpClientRef.get().unsubscribe(subscriptionId).continueWith(new LogIfError());
     }
   }
 }

@@ -7,7 +7,7 @@ import io.realm.RealmResults;
 import java.util.List;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
@@ -73,7 +73,7 @@ public class SessionObserver extends AbstractModelObserver<RealmSession> {
     // update push info
     pushHelper
         .pushSetUser(RocketChatCache.getOrCreatePushId(context))
-        .continueWith(new LogcatIfError());
+        .continueWith(new LogIfError());
   }
 
   @DebugLog
@@ -86,6 +86,6 @@ public class SessionObserver extends AbstractModelObserver<RealmSession> {
       realm.delete(LoadMessageProcedure.class);
       realm.delete(GetUsersOfRoomsProcedure.class);
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 }
