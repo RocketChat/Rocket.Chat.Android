@@ -10,10 +10,10 @@ import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.Message;
-import chat.rocket.android.model.internal.LoadMessageProcedure;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 /**
@@ -56,11 +56,11 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
     ).onSuccessTask(task ->
         methodCall.loadHistory(roomId, isReset ? 0 : timestamp, count, lastSeen)
             .onSuccessTask(_task -> {
-              Message lastMessage = realmHelper.executeTransactionForRead(realm ->
-                  realm.where(Message.class)
-                      .equalTo(Message.ROOM_ID, roomId)
-                      .equalTo(Message.SYNC_STATE, SyncState.SYNCED)
-                      .findAllSorted(Message.TIMESTAMP, Sort.ASCENDING).first(null));
+              RealmMessage lastMessage = realmHelper.executeTransactionForRead(realm ->
+                  realm.where(RealmMessage.class)
+                      .equalTo(RealmMessage.ROOM_ID, roomId)
+                      .equalTo(RealmMessage.SYNC_STATE, SyncState.SYNCED)
+                      .findAllSorted(RealmMessage.TIMESTAMP, Sort.ASCENDING).first(null));
               long lastTs = lastMessage != null ? lastMessage.getTimestamp() : 0;
               int messageCount = _task.getResult().length();
               return realmHelper.executeTransaction(realm ->

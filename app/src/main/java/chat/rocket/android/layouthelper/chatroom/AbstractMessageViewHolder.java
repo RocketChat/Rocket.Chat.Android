@@ -7,26 +7,23 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.realm_helper.RealmModelViewHolder;
+import chat.rocket.core.SyncState;
 import chat.rocket.android.widget.RocketChatAvatar;
 
-public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<PairedMessage> {
+public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMessage> {
   protected final RocketChatAvatar avatar;
   protected final TextView username;
   protected final TextView subUsername;
   protected final TextView timestamp;
   protected final View userAndTimeContainer;
   protected final String hostname;
-  protected final String userId;
-  protected final String token;
   protected final View newDayContainer;
   protected final TextView newDayText;
 
   /**
    * constructor WITH hostname.
    */
-  public AbstractMessageViewHolder(View itemView, String hostname, String userId, String token) {
+  public AbstractMessageViewHolder(View itemView, String hostname) {
     super(itemView);
     avatar = (RocketChatAvatar) itemView.findViewById(R.id.user_avatar);
     username = (TextView) itemView.findViewById(R.id.username);
@@ -36,8 +33,6 @@ public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<Pai
     newDayContainer = itemView.findViewById(R.id.newday_container);
     newDayText = (TextView) itemView.findViewById(R.id.newday_text);
     this.hostname = hostname;
-    this.userId = userId;
-    this.token = token;
   }
 
   /**

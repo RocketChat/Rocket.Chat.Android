@@ -2,7 +2,7 @@ package chat.rocket.android.service.ddp.stream;
 
 import android.content.Context;
 
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 abstract class AbstractStreamNotifyUserEventSubscriber extends AbstractStreamNotifyEventSubscriber {

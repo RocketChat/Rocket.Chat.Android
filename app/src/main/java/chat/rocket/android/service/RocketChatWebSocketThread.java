@@ -14,9 +14,10 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
 import chat.rocket.android.service.ddp.base.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.service.ddp.base.UserDataSubscriber;
@@ -126,7 +127,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private void forceInvalidateTokens() {
     realmHelper.executeTransaction(realm -> {
-      Session session = Session.queryDefaultSession(realm).findFirst();
+      RealmSession session = RealmSession.queryDefaultSession(realm).findFirst();
       if (session != null
           && !TextUtils.isEmpty(session.getToken())
           && (session.isTokenVerified() || !TextUtils.isEmpty(session.getError()))) {
@@ -225,7 +226,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         .flatMap(_val -> Single.fromEmitter(emitter -> {
           ServerInfo info = connectivityManager.getServerInfoForHost(hostname);
           RCLog.d("DDPClient#connect");
-          ddpClient.connect(info.session, !info.insecure)
+          ddpClient.connect(info.getSession(), info.isSecure())
               .onSuccessTask(task -> {
                 final String newSession = task.getResult().session;
                 connectivityManager.notifyConnectionEstablished(hostname, newSession);
@@ -239,10 +240,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 });
 
                 return realmHelper.executeTransaction(realm -> {
-                  Session sessionObj = Session.queryDefaultSession(realm).findFirst();
+                  RealmSession sessionObj = RealmSession.queryDefaultSession(realm).findFirst();
                   if (sessionObj == null) {
-                    realm.createOrUpdateObjectFromJson(Session.class,
-                        new JSONObject().put(Session.ID, Session.DEFAULT_ID));
+                    realm.createOrUpdateObjectFromJson(RealmSession.class,
+                        new JSONObject().put(RealmSession.ID, RealmSession.DEFAULT_ID));
                   } else {
                     // invalidate login token.
                     if (!TextUtils.isEmpty(sessionObj.getToken()) && sessionObj.isTokenVerified()) {

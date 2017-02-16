@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import chat.rocket.android.model.internal.FileUploading;
+import chat.rocket.persistence.realm.models.internal.FileUploading;
 
 /**
  * rendering FileUploading status.

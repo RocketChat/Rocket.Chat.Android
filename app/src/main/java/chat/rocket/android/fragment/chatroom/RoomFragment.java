@@ -20,21 +20,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.jakewharton.rxbinding.support.v4.widget.RxDrawerLayout;
-import io.realm.Sort;
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
-import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
 import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
@@ -50,16 +45,14 @@ import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.Message;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.model.internal.LoadMessageProcedure;
-import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmModelListAdapter;
-import chat.rocket.android.realm_helper.RealmObjectObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.core.interactors.MessageInteractor;
+import chat.rocket.core.models.Message;
+import chat.rocket.core.models.Room;
+import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
+import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmUserRepository;
+import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
@@ -72,35 +65,27 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, ExtraActionPickerDialogFragment.Callback,
-    RealmModelListAdapter.OnItemClickListener<PairedMessage> {
+    ModelListAdapter.OnItemClickListener<PairedMessage>, RoomContract.View {
 
   private static final int DIALOG_ID = 1;
+  private static final String HOSTNAME = "hostname";
+  private static final String ROOM_ID = "roomId";
 
   private String hostname;
-  private RealmHelper realmHelper;
   private String roomId;
-  private RealmObjectObserver<RoomSubscription> roomObserver;
-  private String userId;
-  private String token;
   private LoadMoreScrollListener scrollListener;
-  private RealmObjectObserver<LoadMessageProcedure> procedureObserver;
   private MessageFormManager messageFormManager;
   private RecyclerViewAutoScrollManager autoScrollManager;
   private AbstractNewMessageIndicatorManager newMessageIndicatorManager;
   private Snackbar unreadIndicator;
   private boolean previousUnreadMessageExists;
+  private MessageListAdapter adapter;
 
   private List<AbstractExtraActionItem> extraActionItems;
 
-  public RoomFragment() {
-  }
+  private RoomContract.Presenter presenter;
 
-  public static boolean canCreate(RealmHelper realmHelper) {
-    User currentUser = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst());
-    Session session = realmHelper.executeTransactionForRead(realm ->
-        Session.queryDefaultSession(realm).findFirst());
-    return currentUser != null && session != null;
+  public RoomFragment() {
   }
 
   /**
@@ -108,10 +93,12 @@ public class RoomFragment extends AbstractChatRoomFragment
    */
   public static RoomFragment create(String hostname, String roomId) {
     Bundle args = new Bundle();
-    args.putString("hostname", hostname);
-    args.putString("roomId", roomId);
+    args.putString(HOSTNAME, hostname);
+    args.putString(ROOM_ID, roomId);
+
     RoomFragment fragment = new RoomFragment();
     fragment.setArguments(args);
+
     return fragment;
   }
 
@@ -120,25 +107,25 @@ public class RoomFragment extends AbstractChatRoomFragment
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
-    hostname = args.getString("hostname");
-    realmHelper = RealmStore.get(hostname);
-    roomId = args.getString("roomId");
-    userId = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst()).getId();
-    token = realmHelper.executeTransactionForRead(realm ->
-        Session.queryDefaultSession(realm).findFirst()).getToken();
-    roomObserver = realmHelper
-        .createObjectObserver(
-            realm -> realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId))
-        .setOnUpdateListener(this::onRenderRoom);
+    hostname = args.getString(HOSTNAME);
+    roomId = args.getString(ROOM_ID);
 
-    procedureObserver = realmHelper
-        .createObjectObserver(realm ->
-            realm.where(LoadMessageProcedure.class).equalTo(LoadMessageProcedure.ID, roomId))
-        .setOnUpdateListener(this::onUpdateLoadMessageProcedure);
+    MessageInteractor messageInteractor = new MessageInteractor(
+        new RealmMessageRepository(hostname),
+        new RealmRoomRepository(hostname)
+    );
+
+    presenter = new RoomPresenter(
+        roomId,
+        new RealmUserRepository(hostname),
+        messageInteractor,
+        new RealmRoomRepository(hostname),
+        new MethodCallHelper(getContext(), hostname),
+        ConnectivityManager.getInstance(getContext())
+    );
 
     if (savedInstanceState == null) {
-      initialRequest();
+      presenter.loadMessages();
     }
   }
 
@@ -150,12 +137,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   protected void onSetupView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    MessageListAdapter adapter = (MessageListAdapter) realmHelper.createListAdapter(getContext(),
-        realm -> realm.where(Message.class)
-            .equalTo(Message.ROOM_ID, roomId)
-            .findAllSorted(Message.TIMESTAMP, Sort.DESCENDING),
-        context -> new MessageListAdapter(context, hostname, userId, token)
-    );
+    adapter = new MessageListAdapter(getContext(), hostname);
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
 
@@ -166,7 +148,7 @@ public class RoomFragment extends AbstractChatRoomFragment
       @Override
       protected void onAutoScrollMissed() {
         if (newMessageIndicatorManager != null) {
-          newMessageIndicatorManager.updateNewMessageCount(getUnreadMessageCount());
+          presenter.onUnreadCount();
         }
       }
     };
@@ -175,7 +157,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     scrollListener = new LoadMoreScrollListener(layoutManager, 40) {
       @Override
       public void requestMoreItem() {
-        loadMoreRequest();
+        presenter.loadMoreMessages();
       }
     };
     listView.addOnScrollListener(scrollListener);
@@ -228,21 +210,6 @@ public class RoomFragment extends AbstractChatRoomFragment
         .setAction(R.string.dialog_view_latest_message_action, view -> scrollToLatestMessage());
   }
 
-  private int getUnreadMessageCount() {
-    RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
-        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
-    if (room != null) {
-      return realmHelper.executeTransactionForReadResults(realm ->
-          realm.where(Message.class)
-              .equalTo(Message.ROOM_ID, roomId)
-              .greaterThanOrEqualTo(Message.TIMESTAMP, room.getLastSeen())
-              .notEqualTo(Message.USER_ID, userId)
-              .findAll()).size();
-    } else {
-      return 0;
-    }
-  }
-
   @Override
   public void onDestroyView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
@@ -252,36 +219,14 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void onItemClick(PairedMessage pairedMessage) {
-    if (pairedMessage.target != null) {
-      final int syncState = pairedMessage.target.getSyncState();
-      if (syncState == SyncState.FAILED) {
-        final String messageId = pairedMessage.target.getId();
-        new AlertDialog.Builder(getContext())
-            .setPositiveButton(R.string.resend, (dialog, which) -> {
-              realmHelper.executeTransaction(realm ->
-                  realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-                      .put(Message.ID, messageId)
-                      .put(Message.SYNC_STATE, SyncState.NOT_SYNCED))
-              ).continueWith(new LogcatIfError());
-            })
-            .setNegativeButton(android.R.string.cancel, null)
-            .setNeutralButton(R.string.discard, (dialog, which) -> {
-              realmHelper.executeTransaction(realm ->
-                  realm.where(Message.class)
-                      .equalTo(Message.ID, messageId).findAll().deleteAllFromRealm()
-              ).continueWith(new LogcatIfError());
-            })
-            .show();
-      }
-    }
-
+    presenter.onMessageSelected(pairedMessage.target);
   }
 
   private void setupSideMenu() {
     View sideMenu = rootView.findViewById(R.id.room_side_menu);
     sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
       UsersOfRoomDialogFragment.create(roomId, hostname)
-          .show(getFragmentManager(), UsersOfRoomDialogFragment.class.getSimpleName());
+          .show(getFragmentManager(), "UsersOfRoomDialogFragment");
       closeSideMenuIfNeeded();
     });
 
@@ -335,117 +280,30 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void uploadFile(Uri uri) {
-    String uplId = new FileUploadHelper(getContext(), realmHelper)
+    String uplId = new FileUploadHelper(getContext(), RealmStore.get(hostname))
         .requestUploading(roomId, uri);
     if (!TextUtils.isEmpty(uplId)) {
       FileUploadProgressDialogFragment.create(hostname, roomId, uplId)
-          .show(getFragmentManager(), FileUploadProgressDialogFragment.class.getSimpleName());
+          .show(getFragmentManager(), "FileUploadProgressDialogFragment");
     } else {
       // show error.
     }
   }
 
-  private void onRenderRoom(RoomSubscription roomSubscription) {
-    if (roomSubscription == null) {
-      return;
-    }
-
-    String type = roomSubscription.getType();
-    if (RoomSubscription.TYPE_CHANNEL.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
-    } else if (RoomSubscription.TYPE_PRIVATE.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_lock_gray_24dp);
-    } else if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_at_gray_24dp);
-    } else {
-      setToolbarRoomIcon(0);
-    }
-    setToolbarTitle(roomSubscription.getName());
-
-    boolean unreadMessageExists = roomSubscription.isAlert();
-    if (newMessageIndicatorManager != null && previousUnreadMessageExists && !unreadMessageExists) {
-      newMessageIndicatorManager.reset();
-    }
-    previousUnreadMessageExists = unreadMessageExists;
-  }
-
-  private void onUpdateLoadMessageProcedure(LoadMessageProcedure procedure) {
-    if (procedure == null) {
-      return;
-    }
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    if (listView != null && listView.getAdapter() instanceof MessageListAdapter) {
-      MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
-      final int syncState = procedure.getSyncState();
-      final boolean hasNext = procedure.hasNext();
-      RCLog.d("hasNext: %s syncstate: %d", hasNext, syncState);
-      if (syncState == SyncState.SYNCED || syncState == SyncState.FAILED) {
-        scrollListener.setLoadingDone();
-        adapter.updateFooter(hasNext, true);
-      } else {
-        adapter.updateFooter(hasNext, false);
-      }
-    }
-  }
-
-  private void initialRequest() {
-    realmHelper.executeTransaction(realm -> {
-      realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
-          .put(LoadMessageProcedure.ID, roomId)
-          .put(LoadMessageProcedure.SYNC_STATE, SyncState.NOT_SYNCED)
-          .put(LoadMessageProcedure.COUNT, 100)
-          .put(LoadMessageProcedure.RESET, true));
-      return null;
-    }).onSuccessTask(task -> {
-      ConnectivityManager.getInstance(getContext().getApplicationContext())
-          .keepAliveServer();
-      return task;
-    }).continueWith(new LogcatIfError());
-  }
-
-  private void loadMoreRequest() {
-    realmHelper.executeTransaction(realm -> {
-      LoadMessageProcedure procedure = realm.where(LoadMessageProcedure.class)
-          .equalTo(LoadMessageProcedure.ID, roomId)
-          .beginGroup()
-          .equalTo(LoadMessageProcedure.SYNC_STATE, SyncState.SYNCED)
-          .or()
-          .equalTo(LoadMessageProcedure.SYNC_STATE, SyncState.FAILED)
-          .endGroup()
-          .equalTo(LoadMessageProcedure.HAS_NEXT, true)
-          .findFirst();
-      if (procedure != null) {
-        procedure.setSyncState(SyncState.NOT_SYNCED);
-      }
-      return null;
-    }).onSuccessTask(task -> {
-      ConnectivityManager.getInstance(getContext().getApplicationContext())
-          .keepAliveServer();
-      return task;
-    }).continueWith(new LogcatIfError());
-  }
-
   private void markAsReadIfNeeded() {
-    RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
-        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
-    if (room != null && room.isAlert()) {
-      new MethodCallHelper(getContext(), hostname).readMessages(roomId)
-          .continueWith(new LogcatIfError());
-    }
+    presenter.onMarkAsRead();
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    roomObserver.sub();
-    procedureObserver.sub();
+    presenter.bindView(this);
     closeSideMenuIfNeeded();
   }
 
   @Override
   public void onPause() {
-    procedureObserver.unsub();
-    roomObserver.unsub();
+    presenter.release();
     super.onPause();
   }
 
@@ -522,19 +380,69 @@ public class RoomFragment extends AbstractChatRoomFragment
     return true;
   }
 
-  private Task<Void> sendMessage(String messageText) {
-    return realmHelper.executeTransaction(realm ->
-        realm.createOrUpdateObjectFromJson(Message.class, new JSONObject()
-            .put(Message.ID, UUID.randomUUID().toString())
-            .put(Message.SYNC_STATE, SyncState.NOT_SYNCED)
-            .put(Message.TIMESTAMP, System.currentTimeMillis())
-            .put(Message.ROOM_ID, roomId)
-            .put(Message.USER, new JSONObject()
-                .put(User.ID, userId))
-            .put(Message.MESSAGE, messageText)))
-        .onSuccess(_task -> {
-          scrollToLatestMessage();
-          return null;
-        });
+  private void sendMessage(String messageText) {
+    presenter.sendMessage(messageText);
+  }
+
+  @Override
+  public void render(Room room) {
+    String type = room.getType();
+    if (Room.TYPE_CHANNEL.equals(type)) {
+      setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
+    } else if (Room.TYPE_PRIVATE.equals(type)) {
+      setToolbarRoomIcon(R.drawable.ic_lock_gray_24dp);
+    } else if (Room.TYPE_DIRECT_MESSAGE.equals(type)) {
+      setToolbarRoomIcon(R.drawable.ic_at_gray_24dp);
+    } else {
+      setToolbarRoomIcon(0);
+    }
+    setToolbarTitle(room.getName());
+
+    boolean unreadMessageExists = room.isAlert();
+    if (newMessageIndicatorManager != null && previousUnreadMessageExists && !unreadMessageExists) {
+      newMessageIndicatorManager.reset();
+    }
+    previousUnreadMessageExists = unreadMessageExists;
+  }
+
+  @Override
+  public void updateHistoryState(boolean hasNext, boolean isLoaded) {
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    if (listView == null || !(listView.getAdapter() instanceof MessageListAdapter)) {
+      return;
+    }
+
+    MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
+    if (isLoaded) {
+      scrollListener.setLoadingDone();
+    }
+    adapter.updateFooter(hasNext, isLoaded);
+  }
+
+  @Override
+  public void onMessageSendSuccessfully() {
+    scrollToLatestMessage();
+    messageFormManager.onMessageSend();
+  }
+
+  @Override
+  public void showUnreadCount(int count) {
+    newMessageIndicatorManager.updateNewMessageCount(count);
+  }
+
+  @Override
+  public void showMessages(List<Message> messages) {
+    adapter.updateData(messages);
+  }
+
+  @Override
+  public void showMessageSendFailure(Message message) {
+    new AlertDialog.Builder(getContext())
+        .setPositiveButton(R.string.resend,
+            (dialog, which) -> presenter.resendMessage(message))
+        .setNegativeButton(android.R.string.cancel, null)
+        .setNeutralButton(R.string.discard,
+            (dialog, which) -> presenter.deleteMessage(message))
+        .show();
   }
 }

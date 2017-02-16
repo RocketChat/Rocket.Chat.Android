@@ -9,9 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import chat.rocket.android.R;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.internal.FileUploading;
-import chat.rocket.android.realm_helper.RealmObjectObserver;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.models.internal.FileUploading;
+import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.android.renderer.FileUploadingRenderer;
 
 /**

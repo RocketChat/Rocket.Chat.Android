@@ -12,11 +12,11 @@ import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.sidebar.dialog.SuggestUserAdapter;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.realm_helper.RealmAutoCompleteAdapter;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.RealmAutoCompleteAdapter;
 
 /**
- * add Direct Message.
+ * add Direct RealmMessage.
  */
 public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragment {
   public static AddDirectMessageDialogFragment create(String hostname) {
@@ -39,10 +39,10 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
     AutoCompleteTextView autoCompleteTextView =
         (AutoCompleteTextView) getDialog().findViewById(R.id.editor_username);
 
-    RealmAutoCompleteAdapter<User> adapter = realmHelper.createAutoCompleteAdapter(getContext(),
-        (realm, text) -> realm.where(User.class)
-            .contains(User.USERNAME, text, Case.INSENSITIVE)
-            .findAllSorted(User.USERNAME),
+    RealmAutoCompleteAdapter<RealmUser> adapter = realmHelper.createAutoCompleteAdapter(getContext(),
+        (realm, text) -> realm.where(RealmUser.class)
+            .contains(RealmUser.USERNAME, text, Case.INSENSITIVE)
+            .findAllSorted(RealmUser.USERNAME),
         context -> new SuggestUserAdapter(context, hostname));
     autoCompleteTextView.setAdapter(adapter);
 

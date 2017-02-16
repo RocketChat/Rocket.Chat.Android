@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.ddp.AbstractDDPDocEventSubscriber;
 import chat.rocket.android_ddp.DDPSubscription;

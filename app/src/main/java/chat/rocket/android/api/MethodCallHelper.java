@@ -11,14 +11,15 @@ import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.Message;
-import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.internal.MethodCall;
-import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.models.internal.MethodCall;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
@@ -43,7 +44,7 @@ public class MethodCallHelper {
    * initialize with Context and hostname.
    */
   public MethodCallHelper(Context context, String hostname) {
-    this.context = context;
+    this.context = context.getApplicationContext();
     this.realmHelper = RealmStore.get(hostname);
     ddpClientRef = null;
   }
@@ -63,7 +64,12 @@ public class MethodCallHelper {
       return ddpClientRef.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
-      return MethodCall.execute(context, realmHelper, methodName, param, timeout);
+      return MethodCall.execute(realmHelper, methodName, param, timeout)
+          .onSuccessTask(task -> {
+            ConnectivityManager.getInstance(context.getApplicationContext())
+                .keepAliveServer();
+            return task;
+          });
     }
   }
 
@@ -107,7 +113,7 @@ public class MethodCallHelper {
   }
 
   /**
-   * Register User.
+   * Register RealmUser.
    */
   public Task<String> registerUser(final String name, final String email,
                                    final String password, final String confirmPassword) {
@@ -120,8 +126,8 @@ public class MethodCallHelper {
 
   private Task<Void> saveToken(Task<String> task) {
     return realmHelper.executeTransaction(realm ->
-        realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
-            .put("sessionId", Session.DEFAULT_ID)
+        realm.createOrUpdateObjectFromJson(RealmSession.class, new JSONObject()
+            .put("sessionId", RealmSession.DEFAULT_ID)
             .put("token", task.getResult())
             .put("tokenVerified", true)
             .put("error", JSONObject.NULL)
@@ -185,7 +191,7 @@ public class MethodCallHelper {
         .onSuccessTask(this::saveToken)
         .continueWithTask(task -> {
           if (task.isFaulted()) {
-            Session.logError(realmHelper, task.getError());
+            RealmSession.logError(realmHelper, task.getError());
           }
           return task;
         });
@@ -197,7 +203,7 @@ public class MethodCallHelper {
   public Task<Void> logout() {
     return call("logout", TIMEOUT_MS).onSuccessTask(task ->
         realmHelper.executeTransaction(realm -> {
-          realm.delete(Session.class);
+          realm.delete(RealmSession.class);
           return null;
         }));
   }
@@ -211,13 +217,13 @@ public class MethodCallHelper {
           final JSONArray result = task.getResult();
           try {
             for (int i = 0; i < result.length(); i++) {
-              RoomSubscription.customizeJson(result.getJSONObject(i));
+              RealmRoom.customizeJson(result.getJSONObject(i));
             }
 
             return realmHelper.executeTransaction(realm -> {
-              realm.delete(RoomSubscription.class);
+              realm.delete(RealmRoom.class);
               realm.createOrUpdateAllFromJson(
-                  RoomSubscription.class, result);
+                  RealmRoom.class, result);
               return null;
             });
           } catch (JSONException exception) {
@@ -241,18 +247,18 @@ public class MethodCallHelper {
           JSONObject result = task.getResult();
           final JSONArray messages = result.getJSONArray("messages");
           for (int i = 0; i < messages.length(); i++) {
-            Message.customizeJson(messages.getJSONObject(i));
+            RealmMessage.customizeJson(messages.getJSONObject(i));
           }
 
           return realmHelper.executeTransaction(realm -> {
             if (timestamp == 0) {
-              realm.where(Message.class)
+              realm.where(RealmMessage.class)
                   .equalTo("rid", roomId)
                   .equalTo("syncstate", SyncState.SYNCED)
                   .findAll().deleteAllFromRealm();
             }
             if (messages.length() > 0) {
-              realm.createOrUpdateAllFromJson(Message.class, messages);
+              realm.createOrUpdateAllFromJson(RealmMessage.class, messages);
             }
             return null;
           }).onSuccessTask(_task -> Task.forResult(messages));
@@ -334,12 +340,12 @@ public class MethodCallHelper {
         .onSuccessTask(task -> {
           final JSONArray settings = task.getResult();
           for (int i = 0; i < settings.length(); i++) {
-            PublicSetting.customizeJson(settings.getJSONObject(i));
+            RealmPublicSetting.customizeJson(settings.getJSONObject(i));
           }
 
           return realmHelper.executeTransaction(realm -> {
-            realm.delete(PublicSetting.class);
-            realm.createOrUpdateAllFromJson(PublicSetting.class, settings);
+            realm.delete(RealmPublicSetting.class);
+            realm.createOrUpdateAllFromJson(RealmPublicSetting.class, settings);
             return null;
           });
         });

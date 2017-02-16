@@ -34,7 +34,7 @@ import java.util.Random;
 import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.helper.ServerPolicyHelper;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.ServerInfo;
+import chat.rocket.core.models.ServerInfo;
 
 public class PushNotificationHandler implements PushConstants {
 
@@ -661,7 +661,7 @@ public class PushNotificationHandler implements PushConstants {
         ConnectivityManager.getInstance(context.getApplicationContext()).getServerList();
 
     for (ServerInfo serverInfo : serverInfoList) {
-      if (serverInfo.hostname.equals(hostname)) {
+      if (serverInfo.getHostname().equals(hostname)) {
         return true;
       }
     }

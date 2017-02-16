@@ -14,15 +14,15 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.oauth.OAuthProviderInfo;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
-import chat.rocket.android.realm_helper.RealmListObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmMeteorLoginServiceConfiguration;
+import chat.rocket.persistence.realm.RealmListObserver;
+import chat.rocket.persistence.realm.RealmStore;
 
 /**
  * Login screen.
  */
 public class LoginFragment extends AbstractServerConfigFragment {
-  private RealmListObserver<MeteorLoginServiceConfiguration> authProvidersObserver;
+  private RealmListObserver<RealmMeteorLoginServiceConfiguration> authProvidersObserver;
 
   @Override
   protected int getLayout() {
@@ -33,7 +33,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     authProvidersObserver = RealmStore.get(hostname)
-        .createListObserver(realm -> realm.where(MeteorLoginServiceConfiguration.class).findAll())
+        .createListObserver(realm -> realm.where(RealmMeteorLoginServiceConfiguration.class).findAll())
         .setOnUpdateListener(this::onRenderAuthProviders);
   }
 
@@ -74,7 +74,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
     Snackbar.make(rootView, errString, Snackbar.LENGTH_SHORT).show();
   }
 
-  private void onRenderAuthProviders(List<MeteorLoginServiceConfiguration> authProviders) {
+  private void onRenderAuthProviders(List<RealmMeteorLoginServiceConfiguration> authProviders) {
     HashMap<String, View> viewMap = new HashMap<>();
     HashMap<String, Boolean> supportedMap = new HashMap<>();
     for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
@@ -82,7 +82,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
       supportedMap.put(info.serviceName, false);
     }
 
-    for (MeteorLoginServiceConfiguration authProvider : authProviders) {
+    for (RealmMeteorLoginServiceConfiguration authProvider : authProviders) {
       for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
         if (!supportedMap.get(info.serviceName)
             && info.serviceName.equals(authProvider.getService())) {

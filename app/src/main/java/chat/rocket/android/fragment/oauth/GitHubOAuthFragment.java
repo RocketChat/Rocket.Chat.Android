@@ -1,6 +1,6 @@
 package chat.rocket.android.fragment.oauth;
 
-import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
+import chat.rocket.persistence.realm.models.ddp.RealmMeteorLoginServiceConfiguration;
 import okhttp3.HttpUrl;
 
 public class GitHubOAuthFragment extends AbstractOAuthFragment {
@@ -11,7 +11,7 @@ public class GitHubOAuthFragment extends AbstractOAuthFragment {
   }
 
   @Override
-  protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
+  protected String generateURL(RealmMeteorLoginServiceConfiguration oauthConfig) {
     return new HttpUrl.Builder().scheme("https")
         .host("github.com")
         .addPathSegment("login")

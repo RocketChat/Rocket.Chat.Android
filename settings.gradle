@@ -1,2 +1,2 @@
-include ':app', ':android-ddp', ':rocket-chat-android-widgets', ':realm-helpers',
+include ':app', ':android-ddp', ':rocket-chat-android-widgets', ':persistence-realm', ':rocket-chat-core',
         ':log-wrapper'

@@ -5,8 +5,8 @@ import io.realm.RealmObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 /**
@@ -30,7 +30,7 @@ public class UserDataSubscriber extends AbstractBaseSubscriber {
 
   @Override
   protected Class<? extends RealmObject> getModelClass() {
-    return User.class;
+    return RealmUser.class;
   }
 
   @Override

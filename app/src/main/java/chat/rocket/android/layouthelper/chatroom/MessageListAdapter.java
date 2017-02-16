@@ -9,30 +9,26 @@ import java.util.Collections;
 import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
-import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.layouthelper.ExtModelListAdapter;
+import chat.rocket.core.models.Message;
 
 /**
  * target list adapter for chat room.
  */
 public class MessageListAdapter
-    extends ExtRealmModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
+    extends ExtModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
 
   private static final int VIEW_TYPE_UNKNOWN = 0;
   private static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
   private static final int VIEW_TYPE_SYSTEM_MESSAGE = 2;
 
   private final String hostname;
-  private final String userId;
-  private final String token;
   private boolean hasNext;
   private boolean isLoaded;
 
-  public MessageListAdapter(Context context, String hostname, String userId, String token) {
+  public MessageListAdapter(Context context, String hostname) {
     super(context);
     this.hostname = hostname;
-    this.userId = userId;
-    this.token = token;
   }
 
   /**
@@ -86,11 +82,11 @@ public class MessageListAdapter
   protected AbstractMessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
     switch (viewType) {
       case VIEW_TYPE_NORMAL_MESSAGE:
-        return new MessageNormalViewHolder(itemView, hostname, userId, token);
+        return new MessageNormalViewHolder(itemView, hostname);
       case VIEW_TYPE_SYSTEM_MESSAGE:
-        return new MessageSystemViewHolder(itemView, hostname, userId, token);
+        return new MessageSystemViewHolder(itemView, hostname);
       default:
-        return new AbstractMessageViewHolder(itemView, hostname, userId, token) {
+        return new AbstractMessageViewHolder(itemView, hostname) {
           @Override
           protected void bindMessage(PairedMessage pairedMessage) {
           }

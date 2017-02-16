@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.Registrable;
 
 public abstract class AbstractRocketChatCacheObserver implements Registrable {
@@ -28,8 +28,8 @@ public abstract class AbstractRocketChatCacheObserver implements Registrable {
   private void updateRoomIdWith(SharedPreferences prefs) {
     String roomId = prefs.getString(RocketChatCache.KEY_SELECTED_ROOM_ID, null);
     if (!TextUtils.isEmpty(roomId)) {
-      RoomSubscription room = realmHelper.executeTransactionForRead(realm ->
-          realm.where(RoomSubscription.class).equalTo("rid", roomId).findFirst());
+      RealmRoom room = realmHelper.executeTransactionForRead(realm ->
+          realm.where(RealmRoom.class).equalTo("rid", roomId).findFirst());
       if (room != null) {
         if (this.roomId == null || !this.roomId.equals(roomId)) {
           this.roomId = roomId;

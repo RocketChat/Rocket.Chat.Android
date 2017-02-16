@@ -3,10 +3,10 @@ package chat.rocket.android.api.rest;
 import android.content.Context;
 
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
 
 public class DefaultCookieProvider implements CookieProvider {
 
@@ -33,10 +33,10 @@ public class DefaultCookieProvider implements CookieProvider {
       return "";
     }
 
-    final User user = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst());
-    final Session session = realmHelper.executeTransactionForRead(realm ->
-        Session.queryDefaultSession(realm).findFirst());
+    final RealmUser user = realmHelper.executeTransactionForRead(realm ->
+        RealmUser.queryCurrentUser(realm).findFirst());
+    final RealmSession session = realmHelper.executeTransactionForRead(realm ->
+        RealmSession.queryDefaultSession(realm).findFirst());
 
     if (user == null || session == null) {
       return "";

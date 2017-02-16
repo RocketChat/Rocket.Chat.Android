@@ -3,7 +3,7 @@ package chat.rocket.android.layouthelper.chatroom;
 import android.content.Context;
 
 import chat.rocket.android.R;
-import chat.rocket.android.model.ddp.Message;
+import chat.rocket.core.models.Message;
 
 /**
  * message type.
@@ -69,7 +69,9 @@ public enum MessageType {
 
   public static MessageType parse(String value) {
     for (MessageType type : MessageType.values()) {
-      if (type.value.equals(value)) return type;
+      if (type.value.equals(value)) {
+        return type;
+      }
     }
     return UNSPECIFIED;
   }

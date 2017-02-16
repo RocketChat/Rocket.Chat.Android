@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import bolts.Task;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 /**

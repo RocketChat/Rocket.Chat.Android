@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.core.models.Room;
 import chat.rocket.android.widget.internal.RoomListItemView;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class RoomListManager {
 
   private boolean unreadRoomMode = false;
 
-  private List<RoomSubscription> roomSubscriptionList;
+  private List<Room> roomList;
 
   /**
    * Callback interface for List item clicked.
@@ -54,8 +54,8 @@ public class RoomListManager {
   /**
    * update ViewGroups with room list.
    */
-  public void setRooms(List<RoomSubscription> roomSubscriptionList) {
-    this.roomSubscriptionList = roomSubscriptionList;
+  public void setRooms(List<Room> roomList) {
+    this.roomList = roomList;
     updateRoomsList();
   }
 
@@ -66,14 +66,14 @@ public class RoomListManager {
     this.listener = listener;
   }
 
-  private void removeDeletedItem(ViewGroup parent, List<RoomSubscription> roomSubscriptionList) {
+  private void removeDeletedItem(ViewGroup parent, List<Room> roomList) {
     for (int index = parent.getChildCount() - 1; index >= 0; index--) {
       RoomListItemView roomListItemView = (RoomListItemView) parent.getChildAt(index);
       final String targetRoomName = roomListItemView.getRoomName();
       if (!TextUtils.isEmpty(targetRoomName)) {
         boolean found = false;
-        for (RoomSubscription roomSubscription : roomSubscriptionList) {
-          if (targetRoomName.equals(roomSubscription.getName())) {
+        for (Room room : roomList) {
+          if (targetRoomName.equals(room.getName())) {
             found = true;
             break;
           }
@@ -90,15 +90,15 @@ public class RoomListManager {
     updateRoomsList();
   }
 
-  private void insertOrUpdateItem(ViewGroup parent, RoomSubscription roomSubscription) {
-    final String roomName = roomSubscription.getName();
+  private void insertOrUpdateItem(ViewGroup parent, Room room) {
+    final String roomName = room.getName();
 
     int index;
     for (index = 0; index < parent.getChildCount(); index++) {
       RoomListItemView roomListItemView = (RoomListItemView) parent.getChildAt(index);
       final String targetRoomName = roomListItemView.getRoomName();
       if (roomName.equals(targetRoomName)) {
-        updateRoomItemView(roomListItemView, roomSubscription);
+        updateRoomItemView(roomListItemView, room);
         return;
       }
       if (roomName.compareToIgnoreCase(targetRoomName) < 0) {
@@ -107,7 +107,7 @@ public class RoomListManager {
     }
 
     RoomListItemView roomListItemView = new RoomListItemView(parent.getContext());
-    updateRoomItemView(roomListItemView, roomSubscription);
+    updateRoomItemView(roomListItemView, room);
     if (index == parent.getChildCount()) {
       parent.addView(roomListItemView);
     } else {
@@ -116,13 +116,13 @@ public class RoomListManager {
   }
 
   private void updateRoomItemView(RoomListItemView roomListItemView,
-                                  RoomSubscription roomSubscription) {
+                                  Room room) {
     roomListItemView
-        .setRoomId(roomSubscription.getRoomId())
-        .setRoomName(roomSubscription.getName())
-        .setRoomType(roomSubscription.getType())
-        .setAlert(roomSubscription.isAlert())
-        .setUnreadCount(roomSubscription.getUnread());
+        .setRoomId(room.getRoomId())
+        .setRoomName(room.getName())
+        .setRoomType(room.getType())
+        .setAlert(room.isAlert())
+        .setUnreadCount(room.getUnread());
 
     roomListItemView.setOnClickListener(this::onItemClick);
   }
@@ -134,31 +134,35 @@ public class RoomListManager {
   }
 
   private void updateRoomsList() {
-    removeDeletedItem(unreadRoomsContainer, roomSubscriptionList);
-    removeDeletedItem(channelsContainer, roomSubscriptionList);
-    removeDeletedItem(dmContainer, roomSubscriptionList);
+    if (roomList == null) {
+      return;
+    }
 
-    for (RoomSubscription roomSubscription : roomSubscriptionList) {
-      String name = roomSubscription.getName();
+    removeDeletedItem(unreadRoomsContainer, roomList);
+    removeDeletedItem(channelsContainer, roomList);
+    removeDeletedItem(dmContainer, roomList);
+
+    for (Room room : roomList) {
+      String name = room.getName();
       if (TextUtils.isEmpty(name)) {
         continue;
       }
 
-      String type = roomSubscription.getType();
+      String type = room.getType();
 
-      if (unreadRoomMode && roomSubscription.isAlert()) {
-        insertOrUpdateItem(unreadRoomsContainer, roomSubscription);
+      if (unreadRoomMode && room.isAlert()) {
+        insertOrUpdateItem(unreadRoomsContainer, room);
         removeItemIfExists(channelsContainer, name);
         removeItemIfExists(dmContainer, name);
-      } else if (RoomSubscription.TYPE_CHANNEL.equals(type)
-          || RoomSubscription.TYPE_PRIVATE.equals(type)) {
+      } else if (Room.TYPE_CHANNEL.equals(type)
+          || Room.TYPE_PRIVATE.equals(type)) {
         removeItemIfExists(unreadRoomsContainer, name);
-        insertOrUpdateItem(channelsContainer, roomSubscription);
+        insertOrUpdateItem(channelsContainer, room);
         removeItemIfExists(dmContainer, name);
-      } else if (RoomSubscription.TYPE_DIRECT_MESSAGE.equals(type)) {
+      } else if (Room.TYPE_DIRECT_MESSAGE.equals(type)) {
         removeItemIfExists(unreadRoomsContainer, name);
         removeItemIfExists(channelsContainer, name);
-        insertOrUpdateItem(dmContainer, roomSubscription);
+        insertOrUpdateItem(dmContainer, room);
       }
     }
 

@@ -5,8 +5,8 @@ import io.realm.RealmObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 public class StreamNotifyUserSubscriptionsChanged extends AbstractStreamNotifyUserEventSubscriber {
@@ -23,12 +23,12 @@ public class StreamNotifyUserSubscriptionsChanged extends AbstractStreamNotifyUs
 
   @Override
   protected Class<? extends RealmObject> getModelClass() {
-    return RoomSubscription.class;
+    return RealmRoom.class;
   }
 
   @Override
   protected JSONObject customizeFieldJson(JSONObject json) throws JSONException {
-    return RoomSubscription.customizeJson(super.customizeFieldJson(json));
+    return RealmRoom.customizeJson(super.customizeFieldJson(json));
   }
 
   @Override

@@ -8,7 +8,6 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import java.util.List;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -16,27 +15,25 @@ import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmListObserver;
-import chat.rocket.android.realm_helper.RealmObjectObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.core.interactors.CanCreateRoomInteractor;
+import chat.rocket.core.interactors.RoomInteractor;
+import chat.rocket.core.interactors.SessionInteractor;
+import chat.rocket.core.models.User;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
+import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
+import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import hugo.weaving.DebugLog;
 
 /**
  * Entry-point for Rocket.Chat.Android application.
  */
-public class MainActivity extends AbstractAuthedActivity {
+public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
 
-  private RealmObjectObserver<Session> sessionObserver;
-  private RealmListObserver<RoomSubscription> unreadRoomSubscriptionObserver;
-  private boolean isForeground;
   private StatusTicker statusTicker;
+
+  private MainContract.Presenter presenter;
 
   @Override
   protected int getLayoutContainerForFragment() {
@@ -68,13 +65,19 @@ public class MainActivity extends AbstractAuthedActivity {
 
   @Override
   protected void onResume() {
-    isForeground = true;
     super.onResume();
+
+    if (presenter != null) {
+      presenter.bindView(this);
+    }
   }
 
   @Override
   protected void onPause() {
-    isForeground = false;
+    if (presenter != null) {
+      presenter.release();
+    }
+
     super.onPause();
   }
 
@@ -162,91 +165,29 @@ public class MainActivity extends AbstractAuthedActivity {
   @Override
   protected void onHostnameUpdated() {
     super.onHostnameUpdated();
-    updateSessionObserver();
-    updateUnreadRoomSubscriptionObserver();
+
+    if (presenter != null) {
+      presenter.release();
+    }
+
+    RoomInteractor roomInteractor = new RoomInteractor(new RealmRoomRepository(hostname));
+
+    CanCreateRoomInteractor createRoomInteractor = new CanCreateRoomInteractor(
+        new RealmUserRepository(hostname),
+        new SessionInteractor(new RealmSessionRepository(hostname))
+    );
+
+    SessionInteractor sessionInteractor = new SessionInteractor(
+        new RealmSessionRepository(hostname)
+    );
+
+    presenter = new MainPresenter(
+        roomInteractor,
+        createRoomInteractor,
+        sessionInteractor
+    );
+
     updateSidebarMainFragment();
-  }
-
-  private void updateSessionObserver() {
-    if (sessionObserver != null) {
-      sessionObserver.unsub();
-      sessionObserver = null;
-    }
-
-    if (hostname == null) {
-      return;
-    }
-
-    RealmHelper realmHelper = RealmStore.get(hostname);
-    if (realmHelper == null) {
-      return;
-    }
-
-    sessionObserver = realmHelper
-        .createObjectObserver(realm ->
-            Session.queryDefaultSession(realm)
-                .isNotNull(Session.TOKEN))
-        .setOnUpdateListener(this::onSessionChanged);
-    sessionObserver.sub();
-  }
-
-  private void onSessionChanged(@Nullable Session session) {
-    if (session == null) {
-      if (isForeground) {
-        LaunchUtil.showLoginActivity(this, hostname);
-      }
-      statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
-    } else if (!TextUtils.isEmpty(session.getError())) {
-      statusTicker.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
-          Snackbar.make(findViewById(getLayoutContainerForFragment()),
-              R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
-              .setAction(R.string.fragment_retry_login_retry_title, view ->
-                  Session.retryLogin(RealmStore.get(hostname))));
-    } else if (!session.isTokenVerified()) {
-      statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
-          Snackbar.make(findViewById(getLayoutContainerForFragment()),
-              R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
-    } else {
-      statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
-    }
-  }
-
-  private void updateUnreadRoomSubscriptionObserver() {
-    if (unreadRoomSubscriptionObserver != null) {
-      unreadRoomSubscriptionObserver.unsub();
-      unreadRoomSubscriptionObserver = null;
-    }
-
-    if (hostname == null) {
-      return;
-    }
-
-    RealmHelper realmHelper = RealmStore.get(hostname);
-    if (realmHelper == null) {
-      return;
-    }
-
-    unreadRoomSubscriptionObserver = realmHelper
-        .createListObserver(realm ->
-            realm.where(RoomSubscription.class)
-                .equalTo(RoomSubscription.ALERT, true)
-                .equalTo(RoomSubscription.OPEN, true)
-                .findAll())
-        .setOnUpdateListener(this::updateRoomToolbarUnreadCount);
-    unreadRoomSubscriptionObserver.sub();
-  }
-
-  private void updateRoomToolbarUnreadCount(List<RoomSubscription> unreadRooms) {
-    RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
-    if (toolbar != null) {
-      //ref: Rocket.Chat:client/startup/unread.js
-      final int numUnreadChannels = unreadRooms.size();
-      int numMentionsSum = 0;
-      for (RoomSubscription room : unreadRooms) {
-        numMentionsSum += room.getUnread();
-      }
-      toolbar.setUnreadBudge(numUnreadChannels, numMentionsSum);
-    }
   }
 
   private void updateSidebarMainFragment() {
@@ -258,31 +199,58 @@ public class MainActivity extends AbstractAuthedActivity {
   @Override
   protected void onRoomIdUpdated() {
     super.onRoomIdUpdated();
-
-    if (roomId != null && RoomFragment.canCreate(RealmStore.get(hostname))) {
-      showFragment(RoomFragment.create(hostname, roomId));
-      closeSidebarIfNeeded();
-    } else {
-      showFragment(new HomeFragment());
-    }
-  }
-
-  @Override
-  protected void onDestroy() {
-    if (sessionObserver != null) {
-      sessionObserver.unsub();
-      sessionObserver = null;
-    }
-    if (unreadRoomSubscriptionObserver != null) {
-      unreadRoomSubscriptionObserver.unsub();
-      unreadRoomSubscriptionObserver = null;
-    }
-    super.onDestroy();
+    presenter.onOpenRoom(hostname, roomId);
   }
 
   @Override
   protected boolean onBackPress() {
     return closeSidebarIfNeeded() || super.onBackPress();
+  }
+
+  @Override
+  public void showHome() {
+    showFragment(new HomeFragment());
+  }
+
+  @Override
+  public void showRoom(String hostname, String roomId) {
+    showFragment(RoomFragment.create(hostname, roomId));
+    closeSidebarIfNeeded();
+  }
+
+  @Override
+  public void showUnreadCount(int roomsCount, int mentionsCount) {
+    RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
+    if (toolbar != null) {
+      toolbar.setUnreadBudge(roomsCount, mentionsCount);
+    }
+  }
+
+  @Override
+  public void showLoginScreen() {
+    LaunchUtil.showLoginActivity(this, hostname);
+    statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
+  }
+
+  @Override
+  public void showConnectionError() {
+    statusTicker.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
+        Snackbar.make(findViewById(getLayoutContainerForFragment()),
+            R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.fragment_retry_login_retry_title, view ->
+                presenter.onRetryLogin()));
+  }
+
+  @Override
+  public void showConnecting() {
+    statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
+        Snackbar.make(findViewById(getLayoutContainerForFragment()),
+            R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
+  }
+
+  @Override
+  public void showConnectionOk() {
+    statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.

@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.renderer.UserRenderer;
 
 /**
@@ -47,16 +47,16 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
       return;
     }
 
-    User user = realmHelper.executeTransactionForRead(realm ->
-        realm.where(User.class).equalTo(User.USERNAME, username).findFirst());
+    RealmUser user = realmHelper.executeTransactionForRead(realm ->
+        realm.where(RealmUser.class).equalTo(RealmUser.USERNAME, username).findFirst());
     if (user == null) {
-      user = new User();
+      user = new RealmUser();
       user.setUsername(username);
-      new UserRenderer(context, user)
+      new UserRenderer(context, user.asUser())
           .avatarInto(holder.avatar, hostname)
           .usernameInto(holder.username);
     } else {
-      new UserRenderer(context, user)
+      new UserRenderer(context, user.asUser())
           .statusColorInto(holder.status)
           .avatarInto(holder.avatar, hostname)
           .usernameInto(holder.username);

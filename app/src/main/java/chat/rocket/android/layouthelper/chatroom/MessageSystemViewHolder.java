@@ -15,8 +15,8 @@ public class MessageSystemViewHolder extends AbstractMessageViewHolder {
   /**
    * constructor WITH hostname.
    */
-  public MessageSystemViewHolder(View itemView, String hostname, String userId, String token) {
-    super(itemView, hostname, userId, token);
+  public MessageSystemViewHolder(View itemView, String hostname) {
+    super(itemView, hostname);
     body = (TextView) itemView.findViewById(R.id.message_body);
   }
 

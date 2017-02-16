@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'realm-android'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.github.triplet.play'
 apply from: '../config/quality/quality.gradle'
@@ -85,8 +84,9 @@ play {
 dependencies {
     compile project(':log-wrapper')
     compile project(':android-ddp')
+    compile project(':rocket-chat-core')
     compile project(':rocket-chat-android-widgets')
-    compile project(':realm-helpers')
+    compile project(':persistence-realm')
     compile rootProject.ext.supportAppCompat
     compile rootProject.ext.supportDesign
 

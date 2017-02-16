@@ -7,11 +7,11 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ddp.User;
+import chat.rocket.core.models.User;
 import chat.rocket.android.widget.RocketChatAvatar;
 
 /**
- * Renderer for User model.
+ * Renderer for RealmUser model.
  */
 public class UserRenderer extends AbstractRenderer<User> {
 

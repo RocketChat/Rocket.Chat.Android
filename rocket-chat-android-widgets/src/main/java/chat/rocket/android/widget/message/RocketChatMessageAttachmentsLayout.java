@@ -19,18 +19,20 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.util.List;
 import chat.rocket.android.widget.R;
+import chat.rocket.core.models.Attachment;
+import chat.rocket.core.models.AttachmentAuthor;
+import chat.rocket.core.models.AttachmentField;
+import chat.rocket.core.models.AttachmentTitle;
 
 /**
  */
 public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   private LayoutInflater inflater;
   private String hostname;
-  private String attachmentsString;
+  private List<Attachment> attachments;
 
   public RocketChatMessageAttachmentsLayout(Context context) {
     super(context);
@@ -63,48 +65,41 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     this.hostname = hostname;
   }
 
-  public void setAttachments(String attachmentsString) {
-    if (this.attachmentsString != null && this.attachmentsString.equals(attachmentsString)) {
+  public void setAttachments(List<Attachment> attachments) {
+    if (this.attachments != null && this.attachments.equals(attachments)) {
       return;
     }
-    this.attachmentsString = attachmentsString;
+    this.attachments = attachments;
     removeAllViews();
 
-    try {
-      JSONArray attachments = new JSONArray(attachmentsString);
-      for (int i = 0; i < attachments.length(); i++) {
-        JSONObject attachment = attachments.getJSONObject(i);
-        appendAttachmentView(attachment);
-      }
-    } catch (JSONException exception) {
-      return;
+    for (int i = 0, size = attachments.size(); i < size; i++) {
+      appendAttachmentView(attachments.get(i));
     }
   }
 
-  private void appendAttachmentView(JSONObject attachmentObj) throws JSONException {
-    if (attachmentObj == null) {
+  private void appendAttachmentView(Attachment attachment) {
+    if (attachment == null) {
       return;
     }
 
     View attachmentView = inflater.inflate(R.layout.message_inline_attachment, this, false);
 
-    colorizeAttachmentBar(attachmentObj, attachmentView);
-    showAuthorAttachment(attachmentObj, attachmentView);
-    showTitleAttachment(attachmentObj, attachmentView);
-    showReferenceAttachment(attachmentObj, attachmentView);
-    showImageAttachment(attachmentObj, attachmentView);
+    colorizeAttachmentBar(attachment, attachmentView);
+    showAuthorAttachment(attachment, attachmentView);
+    showTitleAttachment(attachment, attachmentView);
+    showReferenceAttachment(attachment, attachmentView);
+    showImageAttachment(attachment, attachmentView);
     // audio
     // video
-    showFieldsAttachment(attachmentObj, attachmentView);
+    showFieldsAttachment(attachment, attachmentView);
 
     addView(attachmentView);
   }
 
-  private void colorizeAttachmentBar(JSONObject attachmentObj, View attachmentView)
-      throws JSONException {
+  private void colorizeAttachmentBar(Attachment attachment, View attachmentView) {
     final View attachmentStrip = attachmentView.findViewById(R.id.attachment_strip);
 
-    final String colorString = attachmentObj.optString("color");
+    final String colorString = attachment.getColor();
     if (TextUtils.isEmpty(colorString)) {
       attachmentStrip.setBackgroundResource(R.color.inline_attachment_quote_line);
       return;
@@ -117,24 +112,23 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     }
   }
 
-  private void showAuthorAttachment(JSONObject attachmentObj, View attachmentView)
-      throws JSONException {
+  private void showAuthorAttachment(Attachment attachment, View attachmentView) {
     final View authorBox = attachmentView.findViewById(R.id.author_box);
-    if (attachmentObj.isNull("author_name") || attachmentObj.isNull("author_link")
-        || attachmentObj.isNull("author_icon")) {
+    AttachmentAuthor author = attachment.getAttachmentAuthor();
+    if (author == null) {
       authorBox.setVisibility(GONE);
       return;
     }
 
     authorBox.setVisibility(VISIBLE);
 
-    loadImage(attachmentObj.getString("author_icon"),
+    loadImage(author.getIconUrl(),
         (SimpleDraweeView) attachmentView.findViewById(R.id.author_icon));
 
     final TextView authorName = (TextView) attachmentView.findViewById(R.id.author_name);
-    authorName.setText(attachmentObj.getString("author_name"));
+    authorName.setText(author.getName());
 
-    final String link = absolutize(attachmentObj.getString("author_link"));
+    final String link = absolutize(author.getLink());
     authorName.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -147,22 +141,22 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     // timestamp and link - need to format time
   }
 
-  private void showTitleAttachment(JSONObject attachmentObj, View attachmentView)
-      throws JSONException {
+  private void showTitleAttachment(Attachment attachment, View attachmentView) {
     TextView titleView = (TextView) attachmentView.findViewById(R.id.title);
-    if (attachmentObj.isNull("title")) {
+    AttachmentTitle title = attachment.getAttachmentTitle();
+    if (title == null || title.getTitle() == null) {
       titleView.setVisibility(View.GONE);
       return;
     }
 
     titleView.setVisibility(View.VISIBLE);
-    titleView.setText(attachmentObj.getString("title"));
+    titleView.setText(title.getTitle());
 
-    if (attachmentObj.isNull("title_link")) {
+    if (title.getLink() == null) {
       titleView.setOnClickListener(null);
       titleView.setClickable(false);
     } else {
-      final String link = absolutize(attachmentObj.getString("title_link"));
+      final String link = absolutize(title.getLink());
       titleView.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -176,10 +170,9 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     }
   }
 
-  private void showReferenceAttachment(JSONObject attachmentObj, View attachmentView)
-      throws JSONException {
+  private void showReferenceAttachment(Attachment attachment, View attachmentView) {
     final View refBox = attachmentView.findViewById(R.id.ref_box);
-    if (attachmentObj.isNull("thumb_url") && attachmentObj.isNull("text")) {
+    if (attachment.getThumbUrl() == null && attachment.getText() == null) {
       refBox.setVisibility(GONE);
       return;
     }
@@ -188,7 +181,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     final SimpleDraweeView thumbImage = (SimpleDraweeView) refBox.findViewById(R.id.thumb);
 
-    final String thumbUrl = attachmentObj.optString("thumb_url");
+    final String thumbUrl = attachment.getThumbUrl();
     if (TextUtils.isEmpty(thumbUrl)) {
       thumbImage.setVisibility(GONE);
     } else {
@@ -198,7 +191,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     final TextView refText = (TextView) refBox.findViewById(R.id.text);
 
-    final String refString = attachmentObj.optString("text");
+    final String refString = attachment.getText();
     if (TextUtils.isEmpty(refString)) {
       refText.setVisibility(GONE);
     } else {
@@ -207,38 +200,37 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     }
   }
 
-  private void showImageAttachment(JSONObject attachmentObj, View attachmentView)
-      throws JSONException {
+  private void showImageAttachment(Attachment attachment, View attachmentView) {
     final SimpleDraweeView attachedImage =
         (SimpleDraweeView) attachmentView.findViewById(R.id.image);
-    if (attachmentObj.isNull("image_url")) {
+    if (attachment.getImageUrl() == null) {
       attachedImage.setVisibility(GONE);
       return;
     }
 
     attachedImage.setVisibility(VISIBLE);
 
-    loadImage(attachmentObj.getString("image_url"), attachedImage);
+    loadImage(attachment.getImageUrl(), attachedImage);
   }
 
-  private void showFieldsAttachment(JSONObject attachmentObj, View attachmentView)
-      throws JSONException {
-    if (attachmentObj.isNull("fields")) {
+  private void showFieldsAttachment(Attachment attachment, View attachmentView) {
+    List<AttachmentField> fields = attachment.getAttachmentFields();
+    if (fields == null || fields.size() == 0) {
       return;
     }
 
     final ViewGroup attachmentContent =
         (ViewGroup) attachmentView.findViewById(R.id.attachment_content);
 
-    final JSONArray fields = attachmentObj.getJSONArray("fields");
-    for (int i = 0, size = fields.length(); i < size; i++) {
-      final JSONObject fieldObject = fields.getJSONObject(i);
-      if (fieldObject.isNull("title") || fieldObject.isNull("value")) {
+    for (int i = 0, size = fields.size(); i < size; i++) {
+      final AttachmentField attachmentField = fields.get(i);
+      if (attachmentField.getTitle() == null
+          || attachmentField.getText() == null) {
         return;
       }
       MessageAttachmentFieldLayout fieldLayout = new MessageAttachmentFieldLayout(getContext());
-      fieldLayout.setTitle(fieldObject.getString("title"));
-      fieldLayout.setValue(fieldObject.getString("value"));
+      fieldLayout.setTitle(attachmentField.getTitle());
+      fieldLayout.setValue(attachmentField.getText());
 
       attachmentContent.addView(fieldLayout);
     }

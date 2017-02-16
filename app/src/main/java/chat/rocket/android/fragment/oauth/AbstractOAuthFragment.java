@@ -14,8 +14,8 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmMeteorLoginServiceConfiguration;
+import chat.rocket.persistence.realm.RealmStore;
 
 public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
 
@@ -25,7 +25,7 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
 
   protected abstract String getOAuthServiceName();
 
-  protected abstract String generateURL(MeteorLoginServiceConfiguration oauthConfig);
+  protected abstract String generateURL(RealmMeteorLoginServiceConfiguration oauthConfig);
 
   private boolean hasValidArgs(Bundle args) {
     return args != null
@@ -54,10 +54,10 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
     }
 
     hostname = args.getString("hostname");
-    MeteorLoginServiceConfiguration oauthConfig =
+    RealmMeteorLoginServiceConfiguration oauthConfig =
         RealmStore.get(hostname).executeTransactionForRead(realm ->
-            realm.where(MeteorLoginServiceConfiguration.class)
-                .equalTo(MeteorLoginServiceConfiguration.SERVICE, getOAuthServiceName())
+            realm.where(RealmMeteorLoginServiceConfiguration.class)
+                .equalTo(RealmMeteorLoginServiceConfiguration.SERVICE, getOAuthServiceName())
                 .findFirst());
     if (oauthConfig == null) {
       throw new IllegalArgumentException(

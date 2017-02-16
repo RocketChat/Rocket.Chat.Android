@@ -1,7 +1,7 @@
 package chat.rocket.android.layouthelper.chatroom;
 
 import chat.rocket.android.helper.DateTime;
-import chat.rocket.android.model.ddp.Message;
+import chat.rocket.core.models.Message;
 
 /**
  * ViewData Model for messages in chatroom.

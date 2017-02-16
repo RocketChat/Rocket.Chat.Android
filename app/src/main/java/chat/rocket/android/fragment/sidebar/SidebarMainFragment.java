@@ -3,6 +3,7 @@ package chat.rocket.android.fragment.sidebar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
+import java.util.List;
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -18,25 +20,25 @@ import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AbstractAddRoomDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
-import chat.rocket.android.helper.LogcatIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.RoomListManager;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmListObserver;
-import chat.rocket.android.realm_helper.RealmObjectObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.core.interactors.RoomInteractor;
+import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 import chat.rocket.android.renderer.UserRenderer;
+import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.android.widget.RocketChatAvatar;
 
-public class SidebarMainFragment extends AbstractFragment {
+public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
+
+  private static final String HOSTNAME = "hostname";
+
+  private SidebarMainContract.Presenter presenter;
+
+  private RoomListManager roomListManager;
 
   private String hostname;
-  private RoomListManager roomListManager;
-  private RealmListObserver<RoomSubscription> roomsObserver;
-  private RealmObjectObserver<User> currentUserObserver;
-  private MethodCallHelper methodCallHelper;
 
   public SidebarMainFragment() {
   }
@@ -46,10 +48,11 @@ public class SidebarMainFragment extends AbstractFragment {
    */
   public static SidebarMainFragment create(String hostname) {
     Bundle args = new Bundle();
-    args.putString("hostname", hostname);
+    args.putString(HOSTNAME, hostname);
 
     SidebarMainFragment fragment = new SidebarMainFragment();
     fragment.setArguments(args);
+
     return fragment;
   }
 
@@ -58,40 +61,35 @@ public class SidebarMainFragment extends AbstractFragment {
     super.onCreate(savedInstanceState);
 
     Bundle args = getArguments();
-    hostname = args == null ? null : args.getString("hostname");
-    if (!TextUtils.isEmpty(hostname)) {
-      RealmHelper realmHelper = RealmStore.get(hostname);
-      if (realmHelper != null) {
-        roomsObserver = realmHelper
-            .createListObserver(
-                realm -> realm.where(RoomSubscription.class).equalTo(RoomSubscription.OPEN, true)
-                    .findAll())
-            .setOnUpdateListener(list -> roomListManager.setRooms(list));
+    hostname = args == null ? null : args.getString(HOSTNAME);
 
-        currentUserObserver = realmHelper
-            .createObjectObserver(User::queryCurrentUser)
-            .setOnUpdateListener(this::onCurrentUser);
+    presenter = new SidebarMainPresenter(
+        hostname,
+        new RoomInteractor(new RealmRoomRepository(hostname)),
+        new RealmUserRepository(hostname),
+        TextUtils.isEmpty(hostname) ? null : new MethodCallHelper(getContext(), hostname)
+    );
+  }
 
-        methodCallHelper = new MethodCallHelper(getContext(), hostname);
-      }
-    }
+  @Override
+  public void onResume() {
+    super.onResume();
+    presenter.bindView(this);
+  }
+
+  @Override
+  public void onPause() {
+    presenter.release();
+    super.onPause();
   }
 
   @Override
   protected int getLayout() {
-    if (hostname == null) {
-      return R.layout.simple_screen;
-    } else {
-      return R.layout.fragment_sidebar_main;
-    }
+    return R.layout.fragment_sidebar_main;
   }
 
   @Override
   protected void onSetupView() {
-    if (hostname == null) {
-      return;
-    }
-
     setupUserActionToggle();
     setupUserStatusButtons();
     setupLogoutButton();
@@ -123,26 +121,22 @@ public class SidebarMainFragment extends AbstractFragment {
   }
 
   private void setupUserStatusButtons() {
-    rootView.findViewById(R.id.btn_status_online).setOnClickListener(view ->
-        updateCurrentUserStatus(User.STATUS_ONLINE));
-    rootView.findViewById(R.id.btn_status_away).setOnClickListener(view ->
-        updateCurrentUserStatus(User.STATUS_AWAY));
-    rootView.findViewById(R.id.btn_status_busy).setOnClickListener(view ->
-        updateCurrentUserStatus(User.STATUS_BUSY));
-    rootView.findViewById(R.id.btn_status_invisible).setOnClickListener(view ->
-        updateCurrentUserStatus(User.STATUS_OFFLINE));
-  }
-
-  private void updateCurrentUserStatus(String status) {
-    if (methodCallHelper != null) {
-      methodCallHelper.setUserStatus(status).continueWith(new LogcatIfError());
+    rootView.findViewById(R.id.btn_status_online).setOnClickListener(view -> {
+      presenter.onUserOnline();
       closeUserActionContainer();
-    }
-  }
-
-  private void onCurrentUser(User user) {
-    onRenderCurrentUser(user);
-    updateRoomListMode(user);
+    });
+    rootView.findViewById(R.id.btn_status_away).setOnClickListener(view -> {
+      presenter.onUserAway();
+      closeUserActionContainer();
+    });
+    rootView.findViewById(R.id.btn_status_busy).setOnClickListener(view -> {
+      presenter.onUserBusy();
+      closeUserActionContainer();
+    });
+    rootView.findViewById(R.id.btn_status_invisible).setOnClickListener(view -> {
+      presenter.onUserOffline();
+      closeUserActionContainer();
+    });
   }
 
   private void onRenderCurrentUser(User user) {
@@ -163,10 +157,8 @@ public class SidebarMainFragment extends AbstractFragment {
 
   private void setupLogoutButton() {
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
-      if (methodCallHelper != null) {
-        methodCallHelper.logout().continueWith(new LogcatIfError());
-        closeUserActionContainer();
-      }
+      presenter.onLogout();
+      closeUserActionContainer();
     });
   }
 
@@ -198,20 +190,23 @@ public class SidebarMainFragment extends AbstractFragment {
   }
 
   @Override
-  public void onResume() {
-    super.onResume();
-    if (roomsObserver != null) {
-      roomsObserver.sub();
-      currentUserObserver.sub();
-    }
+  public void showScreen() {
+    rootView.setVisibility(View.VISIBLE);
   }
 
   @Override
-  public void onPause() {
-    if (roomsObserver != null) {
-      currentUserObserver.unsub();
-      roomsObserver.unsub();
-    }
-    super.onPause();
+  public void showEmptyScreen() {
+    rootView.setVisibility(View.INVISIBLE);
+  }
+
+  @Override
+  public void showRoomList(List<Room> roomList) {
+    roomListManager.setRooms(roomList);
+  }
+
+  @Override
+  public void showUser(User user) {
+    onRenderCurrentUser(user);
+    updateRoomListMode(user);
   }
 }

@@ -3,8 +3,8 @@ package chat.rocket.android.service.ddp.base;
 import android.content.Context;
 import io.realm.RealmObject;
 
-import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.models.ddp.RealmMeteorLoginServiceConfiguration;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 /**
@@ -28,6 +28,6 @@ public class LoginServiceConfigurationSubscriber extends AbstractBaseSubscriber 
 
   @Override
   protected Class<? extends RealmObject> getModelClass() {
-    return MeteorLoginServiceConfiguration.class;
+    return RealmMeteorLoginServiceConfiguration.class;
   }
 }

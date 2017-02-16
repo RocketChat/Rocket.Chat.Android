@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android.service.ddp.stream.StreamRoomMessage;

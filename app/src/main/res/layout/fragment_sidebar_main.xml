@@ -3,7 +3,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:theme="@style/AppTheme.Dark">
+        android:theme="@style/AppTheme.Dark"
+        android:visibility="invisible"
+        tools:visibility="visible">
 
     <LinearLayout
             android:id="@+id/user_info_container"

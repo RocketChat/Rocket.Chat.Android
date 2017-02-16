@@ -3,16 +3,15 @@ package chat.rocket.android;
 import android.support.multidex.MultiDexApplication;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 import java.util.List;
 import chat.rocket.android.helper.OkHttpHelper;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.ServerInfo;
+import chat.rocket.core.models.ServerInfo;
 import chat.rocket.android.widget.RocketChatWidgets;
 import chat.rocket.android.wrappers.InstabugWrapper;
+import chat.rocket.persistence.realm.RocketChatPersistenceRealm;
 
 /**
  * Customized Application-class for Rocket.Chat
@@ -22,13 +21,11 @@ public class RocketChatApplication extends MultiDexApplication {
   public void onCreate() {
     super.onCreate();
 
-    Realm.init(this);
-    Realm.setDefaultConfiguration(
-        new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build());
+    RocketChatPersistenceRealm.init(this);
 
     List<ServerInfo> serverInfoList = ConnectivityManager.getInstance(this).getServerList();
     for (ServerInfo serverInfo : serverInfoList) {
-      RealmStore.put(serverInfo.hostname);
+      RealmStore.put(serverInfo.getHostname());
     }
 
     Stetho.initialize(Stetho.newInitializerBuilder(this)

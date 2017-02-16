@@ -8,11 +8,11 @@ import java.util.List;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.internal.GetUsersOfRoomsProcedure;
-import chat.rocket.android.model.internal.LoadMessageProcedure;
-import chat.rocket.android.model.internal.MethodCall;
-import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
+import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
+import chat.rocket.persistence.realm.models.internal.MethodCall;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.internal.StreamRoomMessageManager;
 import hugo.weaving.DebugLog;
@@ -20,7 +20,7 @@ import hugo.weaving.DebugLog;
 /**
  * Observes user is logged into server.
  */
-public class SessionObserver extends AbstractModelObserver<Session> {
+public class SessionObserver extends AbstractModelObserver<RealmSession> {
   private final StreamRoomMessageManager streamNotifyMessage;
   private final RaixPushHelper pushHelper;
   private int count;
@@ -38,16 +38,16 @@ public class SessionObserver extends AbstractModelObserver<Session> {
   }
 
   @Override
-  public RealmResults<Session> queryItems(Realm realm) {
-    return realm.where(Session.class)
-        .isNotNull(Session.TOKEN)
-        .equalTo(Session.TOKEN_VERIFIED, true)
-        .isNull(Session.ERROR)
+  public RealmResults<RealmSession> queryItems(Realm realm) {
+    return realm.where(RealmSession.class)
+        .isNotNull(RealmSession.TOKEN)
+        .equalTo(RealmSession.TOKEN_VERIFIED, true)
+        .isNull(RealmSession.ERROR)
         .findAll();
   }
 
   @Override
-  public void onUpdateResults(List<Session> results) {
+  public void onUpdateResults(List<RealmSession> results) {
     int origCount = count;
     count = results.size();
     if (origCount > 0 && count > 0) {

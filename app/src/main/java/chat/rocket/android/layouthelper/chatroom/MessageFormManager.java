@@ -1,6 +1,5 @@
 package chat.rocket.android.layouthelper.chatroom;
 
-import bolts.Task;
 import chat.rocket.android.widget.message.MessageFormLayout;
 
 /**
@@ -29,22 +28,21 @@ public class MessageFormManager {
     messageFormLayout.setText("");
   }
 
+  public void onMessageSend() {
+    clearComposingText();
+    messageFormLayout.setEnabled(true);
+  }
+
   private void sendMessage(String message) {
     if (sendMessageCallback == null) {
       return;
     }
 
     messageFormLayout.setEnabled(false);
-    sendMessageCallback.onSubmitText(message).onSuccess(task -> {
-      clearComposingText();
-      return null;
-    }).continueWith(task -> {
-      messageFormLayout.setEnabled(true);
-      return null;
-    });
+    sendMessageCallback.onSubmitText(message);
   }
 
   public interface SendMessageCallback {
-    Task<Void> onSubmitText(String messageText);
+    void onSubmitText(String messageText);
   }
 }

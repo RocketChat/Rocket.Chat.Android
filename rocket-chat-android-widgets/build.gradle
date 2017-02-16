@@ -1,51 +1,55 @@
 apply plugin: 'com.android.library'
 
 buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath rootProject.ext.androidPlugin
-  }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath rootProject.ext.androidPlugin
+    }
 }
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.compileSdkVersion
-    versionCode 1
-    versionName "1"
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.compileSdkVersion
+        versionCode 1
+        versionName "1"
 
-    vectorDrawables.useSupportLibrary = true
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        vectorDrawables.useSupportLibrary = true
     }
-  }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 dependencies {
-  testCompile 'junit:junit:4.12'
-  compile rootProject.ext.supportAnnotations
-  compile rootProject.ext.supportAppCompat
-  compile rootProject.ext.supportV13
-  compile rootProject.ext.supportDesign
-  compile 'org.nibor.autolink:autolink:0.5.0'
-  compile rootProject.ext.textDrawable
-  compile rootProject.ext.okhttp3
-  compile rootProject.ext.boltsTask
+    testCompile 'junit:junit:4.12'
+    compile rootProject.ext.supportAnnotations
+    compile rootProject.ext.supportAppCompat
+    compile rootProject.ext.supportV13
+    compile rootProject.ext.supportDesign
 
-  compile 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
+    compile project(':rocket-chat-core')
 
-  compile rootProject.ext.frescoBase
-  compile rootProject.ext.frescoAnimatedGif
-  compile rootProject.ext.frescoAnimatedWebp
-  compile rootProject.ext.frescoWebp
-  compile rootProject.ext.frescoImagePipelineOkHttp3
-  compile 'com.caverock:androidsvg:1.2.1'
+    compile 'org.nibor.autolink:autolink:0.5.0'
+
+    compile rootProject.ext.textDrawable
+    compile rootProject.ext.okhttp3
+    compile rootProject.ext.boltsTask
+
+    compile 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
+
+    compile rootProject.ext.frescoBase
+    compile rootProject.ext.frescoAnimatedGif
+    compile rootProject.ext.frescoAnimatedWebp
+    compile rootProject.ext.frescoWebp
+    compile rootProject.ext.frescoImagePipelineOkHttp3
+    compile 'com.caverock:androidsvg:1.2.1'
 }
