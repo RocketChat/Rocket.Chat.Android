@@ -51,6 +51,9 @@ public class MessageExtraActionListAdapter
 
   @Override
   public int getItemCount() {
+    if (actionItems == null) {
+      return 0;
+    }
     return actionItems.size();
   }
 

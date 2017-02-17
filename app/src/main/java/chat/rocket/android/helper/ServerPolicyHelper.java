@@ -49,6 +49,10 @@ public class ServerPolicyHelper {
     return hostname.replaceAll("/+$", "");
   }
 
+  private static String removeExtraInvalidChars(String hostname) {
+    return hostname.replaceAll("[^\\w|\\.|\\-|/]", "");
+  }
+
   private static boolean isValid(JSONObject jsonObject) {
     if (jsonObject == null) {
       return false;
