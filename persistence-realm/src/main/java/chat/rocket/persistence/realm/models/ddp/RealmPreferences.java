@@ -10,7 +10,7 @@ public class RealmPreferences extends RealmObject {
 
   @PrimaryKey private String id;
 
-  private boolean newRoomNotification;
+  private String newRoomNotification;
   private boolean newMessageNotification;
   private boolean useEmojis;
   private boolean convertAsciiEmoji;
@@ -48,7 +48,7 @@ public class RealmPreferences extends RealmObject {
         .build();
   }
 
-  public boolean isNewRoomNotification() {
+  public String getNewRoomNotification() {
     return newRoomNotification;
   }
 
@@ -119,7 +119,8 @@ public class RealmPreferences extends RealmObject {
 
     RealmPreferences that = (RealmPreferences) o;
 
-    if (newRoomNotification != that.newRoomNotification) {
+    if (newRoomNotification != null ? newRoomNotification.equals(that.newRoomNotification)
+        : that.newRoomNotification == null) {
       return false;
     }
     if (newMessageNotification != that.newMessageNotification) {
@@ -172,7 +173,7 @@ public class RealmPreferences extends RealmObject {
   @Override
   public int hashCode() {
     int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (newRoomNotification ? 1 : 0);
+    result = 31 * result + (newRoomNotification != null ? newRoomNotification.hashCode() : 0);
     result = 31 * result + (newMessageNotification ? 1 : 0);
     result = 31 * result + (useEmojis ? 1 : 0);
     result = 31 * result + (convertAsciiEmoji ? 1 : 0);
