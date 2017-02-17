@@ -2,12 +2,15 @@ package chat.rocket.core.models;
 
 import com.google.auto.value.AutoValue;
 
+import javax.annotation.Nullable;
+
 @AutoValue
 public abstract class Preferences {
 
   public abstract String getId();
 
-  public abstract boolean isNewRoomNotification();
+  @Nullable
+  public abstract String getNewRoomNotification();
 
   public abstract boolean isNewMessageNotification();
 
@@ -46,7 +49,7 @@ public abstract class Preferences {
 
     public abstract Builder setId(String id);
 
-    public abstract Builder setNewRoomNotification(boolean newRoomNotification);
+    public abstract Builder setNewRoomNotification(String newRoomNotification);
 
     public abstract Builder setNewMessageNotification(boolean newMessageNotification);
 
