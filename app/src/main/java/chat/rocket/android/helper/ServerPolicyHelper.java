@@ -16,7 +16,8 @@ public class ServerPolicyHelper {
       return "demo.rocket.chat";
     }
 
-    return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
+    return removeExtraInvalidChars(
+        removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname))));
   }
 
   public static Observable<ServerValidation> isApiVersionValid(
@@ -48,6 +49,10 @@ public class ServerPolicyHelper {
     }
 
     return hostname.replaceAll("/+$", "");
+  }
+
+  private static String removeExtraInvalidChars(String hostname) {
+    return hostname.replaceAll("[^\\w|\\.|\\-|/]", "");
   }
 
   private static boolean isValid(JSONObject jsonObject) {
