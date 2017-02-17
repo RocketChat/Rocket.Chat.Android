@@ -1,6 +1,10 @@
 package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
+import android.support.v4.util.Pair;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -12,9 +16,7 @@ import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
-import rx.Observable;
-import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 public class RealmRoomRepository extends RealmRepository implements RoomRepository {
 
@@ -25,68 +27,53 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
   }
 
   @Override
-  public Observable<List<Room>> getAll() {
-    return Observable.defer(() -> {
-      final Realm realm = RealmStore.getRealm(hostname);
-      final Looper looper = Looper.myLooper();
-
-      if (realm == null || looper == null) {
-        return Observable.just(null);
-      }
-
-      return realm.where(RealmRoom.class)
-          .findAll()
-          .asObservable()
-          .unsubscribeOn(AndroidSchedulers.from(looper))
-          .doOnUnsubscribe(() -> close(realm, looper))
-          .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
-              && roomSubscriptions.isValid())
-          .map(this::toList);
-    });
+  public Flowable<List<Room>> getAll() {
+    return Flowable.defer(() -> Flowable.using(
+        () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+        pair -> RxJavaInterop.toV2Flowable(
+            pair.first.where(RealmRoom.class)
+                .findAll()
+                .asObservable()),
+        pair -> close(pair.first, pair.second)
+    )
+        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+        .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
+            && roomSubscriptions.isValid())
+        .map(this::toList));
   }
 
   @Override
-  public Observable<Room> getById(String roomId) {
-    return Observable.defer(() -> {
-      final Realm realm = RealmStore.getRealm(hostname);
-      final Looper looper = Looper.myLooper();
-
-      if (realm == null || looper == null) {
-        return Observable.just(null);
-      }
-
-      return realm.where(RealmRoom.class)
-          .equalTo(RealmRoom.ROOM_ID, roomId)
-          .findFirst()
-          .<RealmRoom>asObservable()
-          .unsubscribeOn(AndroidSchedulers.from(looper))
-          .doOnUnsubscribe(() -> close(realm, looper))
-          .filter(roomSubscription -> roomSubscription != null && roomSubscription.isLoaded()
-              && roomSubscription.isValid())
-          .map(RealmRoom::asRoom);
-    });
+  public Flowable<Room> getById(String roomId) {
+    return Flowable.defer(() -> Flowable.using(
+        () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+        pair -> RxJavaInterop.toV2Flowable(
+            pair.first.where(RealmRoom.class)
+                .equalTo(RealmRoom.ROOM_ID, roomId)
+                .findFirst()
+                .<RealmRoom>asObservable()
+                .filter(roomSubscription -> roomSubscription != null && roomSubscription.isLoaded()
+                    && roomSubscription.isValid())),
+        pair -> close(pair.first, pair.second)
+    )
+        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+        .map(RealmRoom::asRoom));
   }
 
   @Override
-  public Observable<RoomHistoryState> getHistoryStateByRoomId(String roomId) {
-    return Observable.defer(() -> {
-      final Realm realm = RealmStore.getRealm(hostname);
-      final Looper looper = Looper.myLooper();
-
-      if (realm == null || looper == null) {
-        return Observable.just(null);
-      }
-
-      return realm.where(LoadMessageProcedure.class)
-          .equalTo(LoadMessageProcedure.ID, roomId)
-          .findFirst()
-          .<LoadMessageProcedure>asObservable()
-          .unsubscribeOn(AndroidSchedulers.from(looper))
-          .doOnUnsubscribe(() -> close(realm, looper))
-          .filter(loadMessageProcedure -> loadMessageProcedure != null
-              && loadMessageProcedure.isLoaded() && loadMessageProcedure.isValid())
-          .map(LoadMessageProcedure::asRoomHistoryState);
-    });
+  public Flowable<RoomHistoryState> getHistoryStateByRoomId(String roomId) {
+    return Flowable.defer(() -> Flowable.using(
+        () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+        pair -> RxJavaInterop.toV2Flowable(
+            pair.first.where(LoadMessageProcedure.class)
+                .equalTo(LoadMessageProcedure.ID, roomId)
+                .findFirst()
+                .<LoadMessageProcedure>asObservable()
+                .filter(loadMessageProcedure -> loadMessageProcedure != null
+                    && loadMessageProcedure.isLoaded() && loadMessageProcedure.isValid())),
+        pair -> close(pair.first, pair.second)
+    )
+        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+        .map(LoadMessageProcedure::asRoomHistoryState));
   }
 
   @Override
@@ -109,14 +96,14 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
 
       realm.beginTransaction();
 
-      return realm.copyToRealmOrUpdate(loadMessage)
-          .asObservable()
-          .unsubscribeOn(AndroidSchedulers.from(looper))
-          .doOnUnsubscribe(() -> close(realm, looper))
+      return RxJavaInterop.toV2Flowable(realm.copyToRealmOrUpdate(loadMessage)
+          .asObservable())
           .filter(realmObject -> realmObject != null
               && realmObject.isLoaded() && realmObject.isValid())
-          .first()
-          .doOnNext(realmObject -> realm.commitTransaction())
+          .firstElement()
+          .doOnSuccess(it -> realm.commitTransaction())
+          .doOnError(throwable -> realm.cancelTransaction())
+          .doOnEvent((realmObject, throwable) -> close(realm, looper))
           .toSingle()
           .map(realmObject -> true);
     });

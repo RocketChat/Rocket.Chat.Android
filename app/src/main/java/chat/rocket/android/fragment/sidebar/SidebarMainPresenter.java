@@ -2,6 +2,9 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
@@ -10,8 +13,6 @@ import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View>
     implements SidebarMainContract.Presenter {
@@ -72,7 +73,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   }
 
   private void subscribeToRooms() {
-    final Subscription subscription = roomInteractor.getOpenRooms()
+    final Disposable subscription = roomInteractor.getOpenRooms()
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -84,11 +85,11 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   }
 
   private void subscribeToUser() {
-    final Subscription subscription = userRepository.getCurrent()
+    final Disposable subscription = userRepository.getCurrent()
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(user -> view.showUser(user));
+        .subscribe(userOptional -> view.showUser(userOptional.orNull()));
 
     addSubscription(subscription);
   }

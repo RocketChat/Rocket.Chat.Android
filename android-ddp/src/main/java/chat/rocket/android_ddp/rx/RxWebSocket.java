@@ -1,5 +1,12 @@
 package chat.rocket.android_ddp.rx;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.exceptions.OnErrorNotImplementedException;
+import io.reactivex.flowables.ConnectableFlowable;
+
 import java.io.IOException;
 import chat.rocket.android.log.RCLog;
 import okhttp3.OkHttpClient;
@@ -7,11 +14,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import rx.Emitter;
-import rx.Observable;
-import rx.exceptions.OnErrorNotImplementedException;
-import rx.functions.Action1;
-import rx.observables.ConnectableObservable;
 
 public class RxWebSocket {
   private OkHttpClient httpClient;
@@ -21,13 +23,14 @@ public class RxWebSocket {
     httpClient = client;
   }
 
-  public ConnectableObservable<RxWebSocketCallback.Base> connect(String url) {
+  public ConnectableFlowable<RxWebSocketCallback.Base> connect(String url) {
     final Request request = new Request.Builder().url(url).build();
 
-    return Observable.fromEmitter(
-        new Action1<Emitter<RxWebSocketCallback.Base>>() {
+    return Flowable.create(
+        new FlowableOnSubscribe<RxWebSocketCallback.Base>() {
           @Override
-          public void call(Emitter<RxWebSocketCallback.Base> emitter) {
+          public void subscribe(FlowableEmitter<RxWebSocketCallback.Base> emitter)
+              throws Exception {
             httpClient.newWebSocket(request, new WebSocketListener() {
               @Override
               public void onOpen(WebSocket webSocket, Response response) {
@@ -52,12 +55,11 @@ public class RxWebSocket {
               @Override
               public void onClosed(WebSocket webSocket, int code, String reason) {
                 emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
-                emitter.onCompleted();
+                emitter.onComplete();
               }
             });
           }
-        },
-        Emitter.BackpressureMode.BUFFER
+        }, BackpressureStrategy.BUFFER
     ).publish();
   }
 

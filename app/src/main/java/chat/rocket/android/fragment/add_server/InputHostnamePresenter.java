@@ -2,6 +2,10 @@ package chat.rocket.android.fragment.add_server;
 
 import android.content.SharedPreferences;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.rest.DefaultServerPolicyApi;
 import chat.rocket.android.api.rest.ServerPolicyApi;
@@ -10,9 +14,6 @@ import chat.rocket.android.helper.ServerPolicyApiValidationHelper;
 import chat.rocket.android.helper.ServerPolicyHelper;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.View>
     implements InputHostnameContract.Presenter {
@@ -40,9 +41,9 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
     final ServerPolicyApiValidationHelper validationHelper =
         new ServerPolicyApiValidationHelper(serverPolicyApi);
 
-    clearSubscripions();
+    clearSubscriptions();
 
-    final Subscription subscription = ServerPolicyHelper.isApiVersionValid(validationHelper)
+    final Disposable subscription = ServerPolicyHelper.isApiVersionValid(validationHelper)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(() -> view.hideLoader())

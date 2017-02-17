@@ -1,5 +1,8 @@
 package chat.rocket.core.interactors;
 
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 import java.util.List;
 import java.util.UUID;
 import chat.rocket.core.SyncState;
@@ -9,8 +12,6 @@ import chat.rocket.core.models.RoomHistoryState;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.MessageRepository;
 import chat.rocket.core.repositories.RoomRepository;
-import rx.Observable;
-import rx.Single;
 
 public class MessageInteractor {
 
@@ -42,7 +43,7 @@ public class MessageInteractor {
           return !roomHistoryState.isComplete()
               && (syncState == SyncState.SYNCED || syncState == SyncState.FAILED);
         })
-        .first()
+        .firstElement()
         .toSingle()
         .flatMap(roomHistoryState -> roomRepository
             .setHistoryState(roomHistoryState.withSyncState(SyncState.NOT_SYNCED)));
@@ -75,7 +76,7 @@ public class MessageInteractor {
     return messageRepository.unreadCountFor(room, user);
   }
 
-  public Observable<List<Message>> getAllFrom(Room room) {
+  public Flowable<List<Message>> getAllFrom(Room room) {
     return messageRepository.getAllFrom(room);
   }
 }

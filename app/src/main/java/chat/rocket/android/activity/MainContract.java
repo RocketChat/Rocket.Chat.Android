@@ -10,7 +10,7 @@ public interface MainContract {
 
     void showRoom(String hostname, String roomId);
 
-    void showUnreadCount(int roomsCount, int mentionsCount);
+    void showUnreadCount(long roomsCount, int mentionsCount);
 
     void showLoginScreen();
 

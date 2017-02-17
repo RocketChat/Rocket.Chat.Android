@@ -219,10 +219,10 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   }
 
   @Override
-  public void showUnreadCount(int roomsCount, int mentionsCount) {
+  public void showUnreadCount(long roomsCount, int mentionsCount) {
     RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
     if (toolbar != null) {
-      toolbar.setUnreadBudge(roomsCount, mentionsCount);
+      toolbar.setUnreadBudge((int) roomsCount, mentionsCount);
     }
   }
 

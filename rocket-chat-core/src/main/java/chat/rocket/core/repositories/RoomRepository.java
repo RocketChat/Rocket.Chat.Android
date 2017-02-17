@@ -1,18 +1,19 @@
 package chat.rocket.core.repositories;
 
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 import java.util.List;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomHistoryState;
-import rx.Observable;
-import rx.Single;
 
 public interface RoomRepository {
 
-  Observable<List<Room>> getAll();
+  Flowable<List<Room>> getAll();
 
-  Observable<Room> getById(String roomId);
+  Flowable<Room> getById(String roomId);
 
-  Observable<RoomHistoryState> getHistoryStateByRoomId(String roomId);
+  Flowable<RoomHistoryState> getHistoryStateByRoomId(String roomId);
 
   Single<Boolean> setHistoryState(RoomHistoryState roomHistoryState);
 }

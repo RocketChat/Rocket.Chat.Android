@@ -1,8 +1,9 @@
 package chat.rocket.core.interactors;
 
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 import chat.rocket.core.repositories.UserRepository;
-import rx.Observable;
-import rx.Single;
 
 public class CanCreateRoomInteractor {
 
@@ -16,13 +17,12 @@ public class CanCreateRoomInteractor {
   }
 
   public Single<Boolean> canCreate(String roomId) {
-    return Observable.zip(
+    return Flowable.zip(
         userRepository.getCurrent(),
         sessionInteractor.getDefault(),
-        Observable.just(roomId),
+        Flowable.just(roomId),
         (user, session, room) -> user != null && session != null && room != null
     )
-        .first()
-        .toSingle();
+        .first(false);
   }
 }

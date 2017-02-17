@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
 import com.jakewharton.rxbinding.support.v4.widget.RxDrawerLayout;
 
 import java.lang.reflect.Field;
@@ -56,6 +57,7 @@ import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -233,7 +235,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
     SlidingPaneLayout pane = (SlidingPaneLayout) getActivity().findViewById(R.id.sliding_pane);
     if (drawerLayout != null && pane != null) {
-      RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
+      RxJavaInterop.toV2Flowable(RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END))
           .compose(bindToLifecycle())
           .subscribe(opened -> {
             try {

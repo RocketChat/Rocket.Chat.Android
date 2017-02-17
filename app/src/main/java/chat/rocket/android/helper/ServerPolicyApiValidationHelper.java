@@ -2,8 +2,9 @@ package chat.rocket.android.helper;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.Flowable;
+
 import chat.rocket.android.api.rest.ServerPolicyApi;
-import rx.Observable;
 
 public class ServerPolicyApiValidationHelper {
 
@@ -13,7 +14,7 @@ public class ServerPolicyApiValidationHelper {
     this.serverPolicyApi = serverPolicyApi;
   }
 
-  public Observable<ServerPolicyHelper.ServerInfoResponse> getApiVersion() {
+  public Flowable<ServerPolicyHelper.ServerInfoResponse> getApiVersion() {
     return serverPolicyApi.getApiInfoSecurely()
         .onErrorResumeNext(serverPolicyApi.getApiInfoInsecurely())
         .map(response -> new ServerPolicyHelper.ServerInfoResponse(

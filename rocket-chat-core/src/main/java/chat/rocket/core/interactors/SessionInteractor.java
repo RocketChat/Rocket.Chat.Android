@@ -1,9 +1,11 @@
 package chat.rocket.core.interactors;
 
+import com.fernandocejas.arrow.optional.Optional;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 import chat.rocket.core.models.Session;
 import chat.rocket.core.repositories.SessionRepository;
-import rx.Observable;
-import rx.Single;
 
 public class SessionInteractor {
 
@@ -15,20 +17,23 @@ public class SessionInteractor {
     this.sessionRepository = sessionRepository;
   }
 
-  public Observable<Session> getDefault() {
+  public Flowable<Optional<Session>> getDefault() {
     return sessionRepository.getById(DEFAULT_ID);
   }
 
-  public Observable<Session.State> getSessionState() {
+  public Flowable<Session.State> getSessionState() {
     return getDefault()
-        .map(this::getStateFrom);
+        .map(sessionOptional -> getStateFrom(sessionOptional.orNull()));
   }
 
   public Single<Boolean> retryLogin() {
     return getDefault()
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .filter(session -> session.getToken() != null
             && (!session.isTokenVerified() || session.getError() != null))
         .map(session -> session.withTokenVerified(false).withError(null))
+        .firstElement()
         .toSingle()
         .flatMap(sessionRepository::save);
   }

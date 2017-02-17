@@ -5,17 +5,17 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath rootProject.ext.androidPlugin
+        classpath 'com.android.tools.build:gradle:2.2.3'
     }
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.compileSdkVersion
+        minSdkVersion 16
+        targetSdkVersion 25
         versionCode 1
         versionName "1"
 
@@ -29,27 +29,36 @@ android {
     }
 }
 
-dependencies {
-    testCompile 'junit:junit:4.12'
-    compile rootProject.ext.supportAnnotations
-    compile rootProject.ext.supportAppCompat
-    compile rootProject.ext.supportV13
-    compile rootProject.ext.supportDesign
+ext {
+    supportVersion = '25.1.1'
+    frescoVersion = '1.1.0'
+}
 
+dependencies {
     compile project(':rocket-chat-core')
 
-    compile 'org.nibor.autolink:autolink:0.5.0'
+    compile "com.android.support:support-annotations:$supportVersion"
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:support-v13:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
 
-    compile rootProject.ext.textDrawable
-    compile rootProject.ext.okhttp3
-    compile rootProject.ext.boltsTask
+    compile 'org.nibor.autolink:autolink:0.6.0'
+
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+
+    compile 'com.parse.bolts:bolts-tasks:1.4.0'
 
     compile 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
 
-    compile rootProject.ext.frescoBase
-    compile rootProject.ext.frescoAnimatedGif
-    compile rootProject.ext.frescoAnimatedWebp
-    compile rootProject.ext.frescoWebp
-    compile rootProject.ext.frescoImagePipelineOkHttp3
+    compile "com.facebook.fresco:fresco:$frescoVersion"
+    compile "com.facebook.fresco:animated-gif:$frescoVersion"
+    compile "com.facebook.fresco:animated-webp:$frescoVersion"
+    compile "com.facebook.fresco:webpsupport:$frescoVersion"
+    compile "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
+
     compile 'com.caverock:androidsvg:1.2.1'
+
+    testCompile 'junit:junit:4.12'
 }

@@ -1,21 +1,23 @@
 package chat.rocket.core.repositories;
 
+import com.fernandocejas.arrow.optional.Optional;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 import java.util.List;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
-import rx.Observable;
-import rx.Single;
 
 public interface MessageRepository {
 
-  Single<Message> getById(String messageId);
+  Single<Optional<Message>> getById(String messageId);
 
   Single<Boolean> save(Message message);
 
   Single<Boolean> delete(Message message);
 
-  Observable<List<Message>> getAllFrom(Room room);
+  Flowable<List<Message>> getAllFrom(Room room);
 
   Single<Integer> unreadCountFor(Room room, User user);
 }

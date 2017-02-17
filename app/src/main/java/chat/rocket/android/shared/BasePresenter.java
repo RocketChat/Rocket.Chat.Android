@@ -2,14 +2,14 @@ package chat.rocket.android.shared;
 
 import android.support.annotation.NonNull;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public abstract class BasePresenter<T extends BaseContract.View>
     implements BaseContract.Presenter<T> {
 
   protected T view;
-  private CompositeSubscription compositeSubscription = new CompositeSubscription();
+  private CompositeDisposable compositeSubscription = new CompositeDisposable();
 
   @Override
   public void bindView(@NonNull T view) {
@@ -22,11 +22,11 @@ public abstract class BasePresenter<T extends BaseContract.View>
     view = null;
   }
 
-  protected void addSubscription(Subscription subscription) {
+  protected void addSubscription(Disposable subscription) {
     compositeSubscription.add(subscription);
   }
 
-  protected void clearSubscripions() {
+  protected void clearSubscriptions() {
     compositeSubscription.clear();
   }
 }
