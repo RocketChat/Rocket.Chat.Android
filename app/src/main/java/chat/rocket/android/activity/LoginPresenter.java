@@ -17,6 +17,8 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
   private final SessionInteractor sessionInteractor;
   private final ConnectivityManagerApi connectivityManagerApi;
 
+  private boolean isLogging = false;
+
   public LoginPresenter(String hostname,
                         SessionInteractor sessionInteractor,
                         ConnectivityManagerApi connectivityManagerApi) {
@@ -36,6 +38,10 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
       return;
     }
 
+    if (isLogging) {
+      return;
+    }
+
     loadSessionState();
   }
 
@@ -47,12 +53,15 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
         .subscribe(state -> {
           switch (state) {
             case UNAVAILABLE:
+              isLogging = true;
               view.showLogin(hostname);
               break;
             case INVALID:
+              isLogging = false;
               view.showRetryLogin(hostname);
               break;
             case VALID:
+              isLogging = false;
               view.closeView();
           }
         });
