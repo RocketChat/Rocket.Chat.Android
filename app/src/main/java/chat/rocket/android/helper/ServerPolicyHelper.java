@@ -16,8 +16,7 @@ public class ServerPolicyHelper {
       return "demo.rocket.chat";
     }
 
-    return removeExtraInvalidChars(
-        removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname))));
+    return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
   }
 
   public static Observable<ServerValidation> isApiVersionValid(
