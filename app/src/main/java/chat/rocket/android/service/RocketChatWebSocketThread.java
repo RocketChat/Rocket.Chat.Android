@@ -163,8 +163,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   /**
-   * THIS METHOD THROWS EXCEPTION!!
-   * Use terminate() instead!!
+   * THIS METHOD THROWS EXCEPTION!! Use terminate() instead!!
    */
   @Deprecated
   @Override
