@@ -1,9 +1,10 @@
 package chat.rocket.core.interactors;
 
+import io.reactivex.Flowable;
+
 import java.util.List;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.repositories.RoomRepository;
-import rx.Observable;
 
 public class RoomInteractor {
 
@@ -13,26 +14,29 @@ public class RoomInteractor {
     this.roomRepository = roomRepository;
   }
 
-  public Observable<Integer> getTotalUnreadMentionsCount() {
+  public Flowable<Integer> getTotalUnreadMentionsCount() {
     return roomRepository.getAll()
-        .flatMap(rooms -> Observable.from(rooms)
+        .flatMap(rooms -> Flowable.fromIterable(rooms)
             .filter(room -> room.isOpen() && room.isAlert())
             .map(Room::getUnread)
             .defaultIfEmpty(0)
-            .reduce((unreadCount, unreadCount2) -> unreadCount + unreadCount2));
+            .reduce((unreadCount, unreadCount2) -> unreadCount + unreadCount2)
+            .toFlowable());
   }
 
-  public Observable<Integer> getTotalUnreadRoomsCount() {
+  public Flowable<Long> getTotalUnreadRoomsCount() {
     return roomRepository.getAll()
-        .flatMap(rooms -> Observable.from(rooms)
+        .flatMap(rooms -> Flowable.fromIterable(rooms)
             .filter(room -> room.isOpen() && room.isAlert())
-            .count());
+            .count()
+            .toFlowable());
   }
 
-  public Observable<List<Room>> getOpenRooms() {
+  public Flowable<List<Room>> getOpenRooms() {
     return roomRepository.getAll()
-        .flatMap(rooms -> Observable.from(rooms)
+        .flatMap(rooms -> Flowable.fromIterable(rooms)
             .filter(Room::isOpen)
-            .toList());
+            .toList()
+            .toFlowable());
   }
 }

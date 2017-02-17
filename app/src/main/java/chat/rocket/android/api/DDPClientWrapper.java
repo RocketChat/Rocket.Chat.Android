@@ -1,6 +1,7 @@
 package chat.rocket.android.api;
 
 import android.support.annotation.Nullable;
+import io.reactivex.Flowable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -12,7 +13,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.android_ddp.DDPSubscription;
-import rx.Observable;
 
 /**
  * DDP client wrapper.
@@ -69,7 +69,7 @@ public class DDPClientWrapper {
   /**
    * Returns Observable for handling DDP subscription.
    */
-  public Observable<DDPSubscription.Event> getSubscriptionCallback() {
+  public Flowable<DDPSubscription.Event> getSubscriptionCallback() {
     return ddpClient.getSubscriptionCallback();
   }
 

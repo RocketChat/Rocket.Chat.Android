@@ -10,13 +10,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath rootProject.ext.androidPlugin
+        classpath 'com.android.tools.build:gradle:2.2.3'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath rootProject.ext.retroLambdaPlugin
-        classpath rootProject.ext.retroLambdaPatch
-        classpath rootProject.ext.realmPlugin
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+        classpath 'io.realm:realm-gradle-plugin:2.3.1'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
@@ -27,12 +27,12 @@ buildscript {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "chat.rocket.android"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.compileSdkVersion
+        minSdkVersion 16
+        targetSdkVersion 25
         versionCode 9
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -66,6 +66,7 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/rxjava.properties'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -81,45 +82,56 @@ play {
     track = "${track}"
 }
 
+ext {
+    supportVersion = '25.1.1'
+    playLibVersion = '10.2.0'
+    stethoVersion = '1.4.2'
+    rxbindingVersion = '1.0.0'
+    rxlifecycleVersion = '2.0.1'
+    icepickVersion = '3.2.0'
+    permissionsdispatcherVersion = '2.3.1'
+}
+
 dependencies {
     compile project(':log-wrapper')
     compile project(':android-ddp')
     compile project(':rocket-chat-core')
     compile project(':rocket-chat-android-widgets')
     compile project(':persistence-realm')
-    compile rootProject.ext.supportAppCompat
-    compile rootProject.ext.supportDesign
+
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
 
     qaCompile('com.instabug.library:instabug:3.1.0') {
         exclude group: 'io.reactivex'
     }
     compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.google.firebase:firebase-core:10.2.0'
-    compile 'com.google.firebase:firebase-crash:10.2.0'
+    compile "com.google.firebase:firebase-core:$playLibVersion"
+    compile "com.google.firebase:firebase-crash:$playLibVersion"
 
-    compile 'com.google.android.gms:play-services-gcm:10.2.0'
+    compile "com.google.android.gms:play-services-gcm:$playLibVersion"
 
-    compile rootProject.ext.okhttp3
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
 
-    compile 'com.facebook.stetho:stetho:1.4.1'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
+    compile "com.facebook.stetho:stetho:$stethoVersion"
+    compile "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
     compile 'com.uphyca:stetho_realm:2.0.1'
 
-    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-support-v4:1.0.0'
+    compile "com.jakewharton.rxbinding:rxbinding:$rxbindingVersion"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4:$rxbindingVersion"
 
-    compile 'com.trello:rxlifecycle:1.0'
-    compile 'com.trello:rxlifecycle-android:1.0'
-    compile 'com.trello:rxlifecycle-components:1.0'
+    compile "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
+    compile "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycleVersion"
+    compile "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
 
-    compile rootProject.ext.textDrawable
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
-    compile 'frankiesardo:icepick:3.2.0'
-    provided 'frankiesardo:icepick-processor:3.2.0'
+    compile "frankiesardo:icepick:$icepickVersion"
+    provided "frankiesardo:icepick-processor:$icepickVersion"
 
-    compile 'com.github.hotchemi:permissionsdispatcher:2.3.0'
-    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.0'
+    compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

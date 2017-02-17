@@ -1,53 +1,13 @@
 ext {
-  androidPlugin = 'com.android.tools.build:gradle:2.2.3'
-  realmPlugin = 'io.realm:realm-gradle-plugin:2.2.1'
-  retroLambdaPlugin = 'me.tatarka:gradle-retrolambda:3.3.1'
-  retroLambdaPatch = 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
-  compileSdkVersion = 25
-  buildToolsVersion = '25.0.1'
-  minSdkVersion = 16
-
-  supportVersion = '25.0.1'
-  supportAnnotations = "com.android.support:support-annotations:$supportVersion"
-  supportRecyclerView = "com.android.support:recyclerview-v7:$supportVersion"
-  supportAppCompat = "com.android.support:appcompat-v7:$supportVersion"
-  supportV13 = "com.android.support:support-v13:$supportVersion"
-  supportDesign = "com.android.support:design:$supportVersion"
-
-  frescoVersion = '1.0.1'
-  frescoBase = "com.facebook.fresco:fresco:$frescoVersion"
-  frescoAnimatedGif = "com.facebook.fresco:animated-gif:$frescoVersion"
-  frescoAnimatedWebp = "com.facebook.fresco:animated-webp:$frescoVersion"
-  frescoWebp = "com.facebook.fresco:webpsupport:$frescoVersion"
-  frescoImagePipelineOkHttp3 = "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
-
-  rxJava = 'io.reactivex:rxjava:1.2.3'
-  boltsTask = 'com.parse.bolts:bolts-tasks:1.4.0'
-  okhttp3 = 'com.squareup.okhttp3:okhttp:3.5.0'
-  textDrawable = 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
-  preDexLibs = !"true".equals(System.getenv("CI"))
-}
-
-subprojects { project ->
-  project.configurations.all {
-    resolutionStrategy {
-      eachDependency { details ->
-        if (details.requested.group == 'com.android.support'
-            && details.requested.name.indexOf("multidex") == -1) {
-          details.useVersion(rootProject.ext.supportVersion)
-        }
-      }
-    }
-  }
+    preDexLibs = !"true".equals(System.getenv("CI"))
 }
 
 subprojects {
-  project.plugins.whenPluginAdded { plugin ->
-    if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
-      project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-    } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
-      project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+    project.plugins.whenPluginAdded { plugin ->
+        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        }
     }
-  }
 }

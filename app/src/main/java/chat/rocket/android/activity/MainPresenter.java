@@ -3,14 +3,16 @@ package chat.rocket.android.activity;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
+import chat.rocket.core.models.Session;
 
 public class MainPresenter extends BasePresenter<MainContract.View>
     implements MainContract.Presenter {
@@ -37,7 +39,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
   @Override
   public void onOpenRoom(String hostname, String roomId) {
-    final Subscription subscription = canCreateRoomInteractor.canCreate(roomId)
+    final Disposable subscription = canCreateRoomInteractor.canCreate(roomId)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(allowed -> {
@@ -53,14 +55,14 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
   @Override
   public void onRetryLogin() {
-    final Subscription subscription = sessionInteractor.retryLogin()
+    final Disposable subscription = sessionInteractor.retryLogin()
         .subscribe();
 
     addSubscription(subscription);
   }
 
   private void subscribeToUnreadCount() {
-    final Subscription subscription = Observable.combineLatest(
+    final Disposable subscription = Flowable.combineLatest(
         roomInteractor.getTotalUnreadRoomsCount(),
         roomInteractor.getTotalUnreadMentionsCount(),
         (Pair::new)
@@ -73,10 +75,11 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   }
 
   private void subscribeToSession() {
-    final Subscription subscription = sessionInteractor.getDefault()
+    final Disposable subscription = sessionInteractor.getDefault()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(session -> {
+        .subscribe(sessionOptional -> {
+          Session session = sessionOptional.orNull();
           if (session == null || session.getToken() == null) {
             view.showLoginScreen();
             return;

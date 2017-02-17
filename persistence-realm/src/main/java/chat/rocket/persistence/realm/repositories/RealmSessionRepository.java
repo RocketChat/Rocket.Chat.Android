@@ -1,15 +1,18 @@
 package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
+import android.support.v4.util.Pair;
+import com.fernandocejas.arrow.optional.Optional;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
 
 import chat.rocket.core.models.Session;
 import chat.rocket.core.repositories.SessionRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
-import rx.Observable;
-import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 public class RealmSessionRepository extends RealmRepository implements SessionRepository {
 
@@ -20,29 +23,24 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
   }
 
   @Override
-  public Observable<Session> getById(int id) {
-    return Observable.defer(() -> {
-      final Realm realm = RealmStore.getRealm(hostname);
-      final Looper looper = Looper.myLooper();
-
-      if (realm == null || looper == null) {
-        return Observable.just(null);
-      }
-
-      return realm.where(RealmSession.class)
-          .equalTo(RealmSession.ID, id)
-          .findAll()
-          .<RealmSession>asObservable()
-          .unsubscribeOn(AndroidSchedulers.from(looper))
-          .doOnUnsubscribe(() -> close(realm, looper))
-          .filter(it -> it != null && it.isLoaded() && it.isValid())
-          .map(realmSessions -> {
-            if (realmSessions.size() == 0) {
-              return null;
-            }
-            return realmSessions.get(0).asSession();
-          });
-    });
+  public Flowable<Optional<Session>> getById(int id) {
+    return Flowable.defer(() -> Flowable.using(
+        () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+        pair -> RxJavaInterop.toV2Flowable(
+            pair.first.where(RealmSession.class)
+                .equalTo(RealmSession.ID, id)
+                .findAll()
+                .<RealmSession>asObservable()),
+        pair -> close(pair.first, pair.second)
+    )
+        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+        .filter(it -> it != null && it.isLoaded() && it.isValid())
+        .map(realmSessions -> {
+          if (realmSessions.size() == 0) {
+            return Optional.absent();
+          }
+          return Optional.of(realmSessions.get(0).asSession());
+        }));
   }
 
   @Override
@@ -52,7 +50,7 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
       final Looper looper = Looper.myLooper();
 
       if (realm == null || looper == null) {
-        return Single.just(null);
+        return Single.just(false);
       }
 
       RealmSession realmSession = realm.where(RealmSession.class)
@@ -72,13 +70,13 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
 
       realm.beginTransaction();
 
-      return realm.copyToRealmOrUpdate(realmSession)
-          .asObservable()
-          .unsubscribeOn(AndroidSchedulers.from(looper))
-          .doOnUnsubscribe(() -> close(realm, looper))
+      return RxJavaInterop.toV2Flowable(realm.copyToRealmOrUpdate(realmSession)
+          .asObservable())
           .filter(it -> it != null && it.isLoaded() && it.isValid())
-          .first()
-          .doOnNext(it -> realm.commitTransaction())
+          .firstElement()
+          .doOnSuccess(it -> realm.commitTransaction())
+          .doOnError(throwable -> realm.cancelTransaction())
+          .doOnEvent((realmObject, throwable) -> close(realm, looper))
           .toSingle()
           .map(realmObject -> true);
     });

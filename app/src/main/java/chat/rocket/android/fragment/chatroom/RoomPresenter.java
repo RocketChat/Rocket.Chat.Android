@@ -4,6 +4,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
+import com.fernandocejas.arrow.optional.Optional;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
@@ -16,9 +21,6 @@ import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.android.service.ConnectivityManagerApi;
-import rx.Single;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class RoomPresenter extends BasePresenter<RoomContract.View>
     implements RoomContract.Presenter {
@@ -55,7 +57,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void loadMessages() {
-    final Subscription subscription = getSingleRoom()
+    final Disposable subscription = getSingleRoom()
         .flatMap(messageInteractor::loadMessages)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -71,7 +73,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   @Override
   public void loadMoreMessages() {
 
-    final Subscription subscription = getSingleRoom()
+    final Disposable subscription = getSingleRoom()
         .flatMap(messageInteractor::loadMoreMessages)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -97,7 +99,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void sendMessage(String messageText) {
-    final Subscription subscription = getRoomUserPair()
+    final Disposable subscription = getRoomUserPair()
         .flatMap(pair -> messageInteractor.send(pair.first, pair.second, messageText))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -112,7 +114,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void resendMessage(Message message) {
-    final Subscription subscription = messageInteractor.resend(message)
+    final Disposable subscription = messageInteractor.resend(message)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
@@ -122,7 +124,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void deleteMessage(Message message) {
-    final Subscription subscription = messageInteractor.delete(message)
+    final Disposable subscription = messageInteractor.delete(message)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
@@ -132,7 +134,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void onUnreadCount() {
-    final Subscription subscription = getRoomUserPair()
+    final Disposable subscription = getRoomUserPair()
         .flatMap(roomUserPair -> messageInteractor
             .unreadCountFor(roomUserPair.first, roomUserPair.second))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
@@ -146,8 +148,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void onMarkAsRead() {
-    final Subscription subscription = roomRepository.getById(roomId)
-        .first()
+    final Disposable subscription = roomRepository.getById(roomId)
+        .firstElement()
         .filter(room -> room != null && room.isAlert())
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -160,7 +162,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   private void getRoomInfo() {
-    final Subscription subscription = roomRepository.getById(roomId)
+    final Disposable subscription = roomRepository.getById(roomId)
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -172,7 +174,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   private void getRoomHistoryStateInfo() {
-    final Subscription subscription = roomRepository.getHistoryStateByRoomId(roomId)
+    final Disposable subscription = roomRepository.getHistoryStateByRoomId(roomId)
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -190,8 +192,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   private void getMessages() {
-    final Subscription subscription = roomRepository.getById(roomId)
-        .first()
+    final Disposable subscription = roomRepository.getById(roomId)
         .flatMap(messageInteractor::getAllFrom)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -204,8 +205,9 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
     return Single.zip(
         getSingleRoom(),
         userRepository.getCurrent()
-            .filter(user -> user != null)
-            .first()
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .firstElement()
             .toSingle(),
         Pair::new
     );
@@ -213,7 +215,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   private Single<Room> getSingleRoom() {
     return roomRepository.getById(roomId)
-        .first()
+        .firstElement()
         .toSingle();
   }
 }

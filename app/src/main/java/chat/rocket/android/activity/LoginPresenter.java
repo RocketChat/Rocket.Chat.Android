@@ -2,12 +2,13 @@ package chat.rocket.android.activity;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.SessionInteractor;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View>
     implements LoginContract.Presenter {
@@ -45,7 +46,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
   }
 
   private void loadSessionState() {
-    final Subscription subscription = sessionInteractor.getSessionState()
+    final Disposable subscription = sessionInteractor.getSessionState()
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())

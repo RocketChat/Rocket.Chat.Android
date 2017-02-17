@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
-import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import io.realm.Case;
 
@@ -14,6 +13,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.sidebar.dialog.SuggestUserAdapter;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmAutoCompleteAdapter;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 /**
  * add Direct RealmMessage.
@@ -39,17 +39,18 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
     AutoCompleteTextView autoCompleteTextView =
         (AutoCompleteTextView) getDialog().findViewById(R.id.editor_username);
 
-    RealmAutoCompleteAdapter<RealmUser> adapter = realmHelper.createAutoCompleteAdapter(getContext(),
-        (realm, text) -> realm.where(RealmUser.class)
-            .contains(RealmUser.USERNAME, text, Case.INSENSITIVE)
-            .findAllSorted(RealmUser.USERNAME),
-        context -> new SuggestUserAdapter(context, hostname));
+    RealmAutoCompleteAdapter<RealmUser> adapter =
+        realmHelper.createAutoCompleteAdapter(getContext(),
+            (realm, text) -> realm.where(RealmUser.class)
+                .contains(RealmUser.USERNAME, text, Case.INSENSITIVE)
+                .findAllSorted(RealmUser.USERNAME),
+            context -> new SuggestUserAdapter(context, hostname));
     autoCompleteTextView.setAdapter(adapter);
 
-    RxTextView.textChanges(autoCompleteTextView)
+    RxJavaInterop.toV2Flowable(RxTextView.textChanges(autoCompleteTextView))
         .map(text -> !TextUtils.isEmpty(text))
         .compose(bindToLifecycle())
-        .subscribe(RxView.enabled(buttonAddDirectMessage));
+        .subscribe(buttonAddDirectMessage::setEnabled);
 
     buttonAddDirectMessage.setOnClickListener(view -> createRoom());
   }

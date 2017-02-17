@@ -2,42 +2,50 @@ apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
 buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath rootProject.ext.androidPlugin
-    classpath rootProject.ext.retroLambdaPlugin
-    classpath rootProject.ext.retroLambdaPatch
-  }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+    }
 }
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.compileSdkVersion
-    versionCode 1
-    versionName "0.0.8"
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-  }
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "0.0.8"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    supportVersion = '25.1.1'
 }
 
 dependencies {
-  compile project(':log-wrapper')
-  compile rootProject.ext.supportAnnotations
-  compile rootProject.ext.okhttp3
-  compile rootProject.ext.rxJava
-  compile rootProject.ext.boltsTask
+    compile project(':log-wrapper')
+
+    compile "com.android.support:support-annotations:$supportVersion"
+
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+
+    compile 'io.reactivex.rxjava2:rxjava:2.0.6'
+
+    compile 'com.parse.bolts:bolts-tasks:1.4.0'
 }

@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 /**
  * add Channel, add Private-group.
@@ -36,10 +36,11 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
   protected void onSetupDialog() {
     View buttonAddChannel = getDialog().findViewById(R.id.btn_add_channel);
 
-    RxTextView.textChanges((TextView) getDialog().findViewById(R.id.editor_channel_name))
+    RxJavaInterop.toV2Flowable(
+        RxTextView.textChanges((TextView) getDialog().findViewById(R.id.editor_channel_name)))
         .map(text -> !TextUtils.isEmpty(text))
         .compose(bindToLifecycle())
-        .subscribe(RxView.enabled(buttonAddChannel));
+        .subscribe(buttonAddChannel::setEnabled);
 
     buttonAddChannel.setOnClickListener(view -> createRoom());
   }

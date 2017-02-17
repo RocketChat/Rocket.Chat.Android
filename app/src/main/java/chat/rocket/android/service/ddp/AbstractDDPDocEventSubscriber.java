@@ -2,6 +2,7 @@ package chat.rocket.android.service.ddp;
 
 import android.content.Context;
 import android.text.TextUtils;
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import org.json.JSONArray;
@@ -15,7 +16,6 @@ import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android_ddp.DDPSubscription;
-import rx.Subscription;
 
 public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   protected final Context context;
@@ -24,7 +24,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   protected final DDPClientRef ddpClientRef;
   private boolean isUnsubscribed;
   private String subscriptionId;
-  private Subscription rxSubscription;
+  private Disposable rxSubscription;
 
   protected AbstractDDPDocEventSubscriber(Context context, String hostname,
                                           RealmHelper realmHelper, DDPClientRef ddpClientRef) {
@@ -94,7 +94,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     onRegister();
   }
 
-  protected Subscription subscribe() {
+  protected Disposable subscribe() {
     return ddpClientRef.get().getSubscriptionCallback()
         .filter(event -> event instanceof DDPSubscription.DocEvent)
         .cast(DDPSubscription.DocEvent.class)
@@ -179,7 +179,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     isUnsubscribed = true;
     onUnregister();
     if (rxSubscription != null) {
-      rxSubscription.unsubscribe();
+      rxSubscription.dispose();
     }
     if (!TextUtils.isEmpty(subscriptionId)) {
       ddpClientRef.get().unsubscribe(subscriptionId).continueWith(new LogIfError());
