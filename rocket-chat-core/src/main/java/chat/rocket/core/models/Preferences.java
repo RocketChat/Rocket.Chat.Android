@@ -12,7 +12,8 @@ public abstract class Preferences {
   @Nullable
   public abstract String getNewRoomNotification();
 
-  public abstract boolean isNewMessageNotification();
+  @Nullable
+  public abstract String getNewMessageNotification();
 
   public abstract boolean isUseEmojis();
 
@@ -51,7 +52,7 @@ public abstract class Preferences {
 
     public abstract Builder setNewRoomNotification(String newRoomNotification);
 
-    public abstract Builder setNewMessageNotification(boolean newMessageNotification);
+    public abstract Builder setNewMessageNotification(String newMessageNotification);
 
     public abstract Builder setUseEmojis(boolean useEmojis);
 
