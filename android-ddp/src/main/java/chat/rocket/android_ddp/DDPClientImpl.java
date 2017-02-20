@@ -54,38 +54,47 @@ public class DDPClientImpl {
       flowable = websocket.connect(url).autoConnect();
       CompositeDisposable subscriptions = new CompositeDisposable();
 
-      subscriptions.add(flowable.filter(callback -> callback instanceof RxWebSocketCallback.Open)
-          .subscribe(callback -> {
-            sendMessage("connect",
-                json -> (TextUtils.isEmpty(session) ? json : json.put("session", session)).put(
-                    "version", "pre2").put("support", new JSONArray().put("pre2").put("pre1")),
-                task);
-          }, err -> {
-          }));
+      subscriptions.add(
+          flowable.filter(callback -> callback instanceof RxWebSocketCallback.Open)
+              .subscribe(
+                  callback -> {
+                    sendMessage("connect",
+                        json -> (TextUtils.isEmpty(session) ? json : json.put("session", session))
+                            .put(
+                                "version", "pre2")
+                            .put("support", new JSONArray().put("pre2").put("pre1")),
+                        task);
+                  },
+                  err -> {
+                  }
+              )
+      );
 
       subscriptions.add(
-          flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+          flowable.filter(
+              callback -> callback instanceof RxWebSocketCallback.Message)
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
               .timeout(7, TimeUnit.SECONDS)
               .subscribe(response -> {
-                String msg = extractMsg(response);
-                if ("connected".equals(msg) && !response.isNull("session")) {
-                  task.trySetResult(
-                      new DDPClientCallback.Connect(client, response.optString("session")));
-                  subscriptions.dispose();
-                } else if ("error".equals(msg) && "Already connected".equals(
-                    response.optString("reason"))) {
-                  task.trySetResult(new DDPClientCallback.Connect(client, null));
-                  subscriptions.dispose();
-                } else if ("failed".equals(msg)) {
-                  task.trySetError(
-                      new DDPClientCallback.Connect.Failed(client, response.optString("version")));
-                  subscriptions.dispose();
-                }
-              }, err -> {
-                task.trySetError(new DDPClientCallback.Connect.Timeout(client));
-              }));
+                    String msg = extractMsg(response);
+                    if ("connected".equals(msg) && !response.isNull("session")) {
+                      task.trySetResult(
+                          new DDPClientCallback.Connect(client, response.optString("session")));
+                      subscriptions.dispose();
+                    } else if ("error".equals(msg) && "Already connected".equals(
+                        response.optString("reason"))) {
+                      task.trySetResult(new DDPClientCallback.Connect(client, null));
+                      subscriptions.dispose();
+                    } else if ("failed".equals(msg)) {
+                      task.trySetError(
+                          new DDPClientCallback.Connect.Failed(client, response.optString("version")));
+                      subscriptions.dispose();
+                    }
+                  },
+                  err -> task.trySetError(new DDPClientCallback.Connect.Timeout(client))
+              )
+      );
 
       addErrorCallback(subscriptions, task);
 
@@ -110,23 +119,25 @@ public class DDPClientImpl {
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
               .timeout(4, TimeUnit.SECONDS)
-              .subscribe(response -> {
-                String msg = extractMsg(response);
-                if ("pong".equals(msg)) {
-                  if (response.isNull("id")) {
-                    task.setResult(new DDPClientCallback.Ping(client, null));
-                    subscriptions.dispose();
-                  } else {
-                    String _id = response.optString("id");
-                    if (id.equals(_id)) {
-                      task.setResult(new DDPClientCallback.Ping(client, id));
-                      subscriptions.dispose();
+              .subscribe(
+                  response -> {
+                    String msg = extractMsg(response);
+                    if ("pong".equals(msg)) {
+                      if (response.isNull("id")) {
+                        task.setResult(new DDPClientCallback.Ping(client, null));
+                        subscriptions.dispose();
+                      } else {
+                        String _id = response.optString("id");
+                        if (id.equals(_id)) {
+                          task.setResult(new DDPClientCallback.Ping(client, id));
+                          subscriptions.dispose();
+                        }
+                      }
                     }
-                  }
-                }
-              }, err -> {
-                task.setError(new DDPClientCallback.Ping.Timeout(client));
-              }));
+                  },
+                  err -> task.setError(new DDPClientCallback.Ping.Timeout(client))
+              )
+      );
 
       addErrorCallback(subscriptions, task);
     } else {
@@ -146,29 +157,33 @@ public class DDPClientImpl {
           flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
-              .subscribe(response -> {
-                String msg = extractMsg(response);
-                if ("ready".equals(msg) && !response.isNull("subs")) {
-                  JSONArray ids = response.optJSONArray("subs");
-                  for (int i = 0; i < ids.length(); i++) {
-                    String _id = ids.optString(i);
-                    if (id.equals(_id)) {
-                      task.setResult(new DDPSubscription.Ready(client, id));
-                      subscriptions.dispose();
-                      break;
+              .subscribe(
+                  response -> {
+                    String msg = extractMsg(response);
+                    if ("ready".equals(msg) && !response.isNull("subs")) {
+                      JSONArray ids = response.optJSONArray("subs");
+                      for (int i = 0; i < ids.length(); i++) {
+                        String _id = ids.optString(i);
+                        if (id.equals(_id)) {
+                          task.setResult(new DDPSubscription.Ready(client, id));
+                          subscriptions.dispose();
+                          break;
+                        }
+                      }
+                    } else if ("nosub".equals(msg) && !response.isNull("id") && !response.isNull(
+                        "error")) {
+                      String _id = response.optString("id");
+                      if (id.equals(_id)) {
+                        task.setError(new DDPSubscription.NoSub.Error(client, id,
+                            response.optJSONObject("error")));
+                        subscriptions.dispose();
+                      }
                     }
+                  },
+                  err -> {
                   }
-                } else if ("nosub".equals(msg) && !response.isNull("id") && !response.isNull(
-                    "error")) {
-                  String _id = response.optString("id");
-                  if (id.equals(_id)) {
-                    task.setError(new DDPSubscription.NoSub.Error(client, id,
-                        response.optJSONObject("error")));
-                    subscriptions.dispose();
-                  }
-                }
-              }, err -> {
-              }));
+              )
+      );
 
       addErrorCallback(subscriptions, task);
     } else {
@@ -188,17 +203,21 @@ public class DDPClientImpl {
           flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
-              .subscribe(response -> {
-                String msg = extractMsg(response);
-                if ("nosub".equals(msg) && response.isNull("error") && !response.isNull("id")) {
-                  String _id = response.optString("id");
-                  if (id.equals(_id)) {
-                    task.setResult(new DDPSubscription.NoSub(client, id));
-                    subscriptions.dispose();
+              .subscribe(
+                  response -> {
+                    String msg = extractMsg(response);
+                    if ("nosub".equals(msg) && response.isNull("error") && !response.isNull("id")) {
+                      String _id = response.optString("id");
+                      if (id.equals(_id)) {
+                        task.setResult(new DDPSubscription.NoSub(client, id));
+                        subscriptions.dispose();
+                      }
+                    }
+                  },
+                  err -> {
                   }
-                }
-              }, err -> {
-              }));
+              )
+      );
 
       addErrorCallback(subscriptions, task);
     } else {
@@ -220,26 +239,30 @@ public class DDPClientImpl {
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
               .timeout(timeoutMs, TimeUnit.MILLISECONDS)
-              .subscribe(response -> {
-                String msg = extractMsg(response);
-                if ("result".equals(msg)) {
-                  String _id = response.optString("id");
-                  if (id.equals(_id)) {
-                    if (!response.isNull("error")) {
-                      task.setError(new DDPClientCallback.RPC.Error(client, id,
-                          response.optJSONObject("error")));
-                    } else {
-                      String result = response.optString("result");
-                      task.setResult(new DDPClientCallback.RPC(client, id, result));
+              .subscribe(
+                  response -> {
+                    String msg = extractMsg(response);
+                    if ("result".equals(msg)) {
+                      String _id = response.optString("id");
+                      if (id.equals(_id)) {
+                        if (!response.isNull("error")) {
+                          task.setError(new DDPClientCallback.RPC.Error(client, id,
+                              response.optJSONObject("error")));
+                        } else {
+                          String result = response.optString("result");
+                          task.setResult(new DDPClientCallback.RPC(client, id, result));
+                        }
+                        subscriptions.dispose();
+                      }
                     }
-                    subscriptions.dispose();
+                  },
+                  err -> {
+                    if (err instanceof TimeoutException) {
+                      task.setError(new DDPClientCallback.RPC.Timeout(client));
+                    }
                   }
-                }
-              }, err -> {
-                if (err instanceof TimeoutException) {
-                  task.setError(new DDPClientCallback.RPC.Timeout(client));
-                }
-              }));
+              )
+      );
 
       addErrorCallback(subscriptions, task);
     } else {
@@ -258,17 +281,21 @@ public class DDPClientImpl {
         flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
             .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
             .map(DDPClientImpl::toJson)
-            .subscribe(response -> {
-              String msg = extractMsg(response);
-              if ("ping".equals(msg)) {
-                if (response.isNull("id")) {
-                  sendMessage("pong", null);
-                } else {
-                  sendMessage("pong", json -> json.put("id", response.getString("id")));
+            .subscribe(
+                response -> {
+                  String msg = extractMsg(response);
+                  if ("ping".equals(msg)) {
+                    if (response.isNull("id")) {
+                      sendMessage("pong", null);
+                    } else {
+                      sendMessage("pong", json -> json.put("id", response.getString("id")));
+                    }
+                  }
+                },
+                err -> {
                 }
-              }
-            }, err -> {
-            }));
+            )
+    );
   }
 
   public Flowable<DDPSubscription.Event> getDDPSubscription() {
@@ -325,13 +352,16 @@ public class DDPClientImpl {
 
     flowable.filter(callback -> callback instanceof RxWebSocketCallback.Close)
         .cast(RxWebSocketCallback.Close.class)
-        .subscribe(task::setResult, err -> {
-          if (err instanceof Exception) {
-            task.setError((Exception) err);
-          } else {
-            task.setError(new Exception(err));
-          }
-        });
+        .subscribe(
+            task::setResult,
+            err -> {
+              if (err instanceof Exception) {
+                task.setError((Exception) err);
+              } else {
+                task.setError(new Exception(err));
+              }
+            }
+        );
 
     return task.getTask().onSuccessTask(_task -> {
       unsubscribeBaseListeners();
@@ -358,11 +388,16 @@ public class DDPClientImpl {
   }
 
   private void addErrorCallback(CompositeDisposable subscriptions, TaskCompletionSource<?> task) {
-    subscriptions.add(flowable.subscribe(base -> {
-    }, err -> {
-      task.trySetError(new Exception(err));
-      subscriptions.dispose();
-    }));
+    subscriptions.add(
+        flowable.subscribe(
+            base -> {
+            },
+            err -> {
+              task.trySetError(new Exception(err));
+              subscriptions.dispose();
+            }
+        )
+    );
   }
 
   public void close(int code, String reason) {

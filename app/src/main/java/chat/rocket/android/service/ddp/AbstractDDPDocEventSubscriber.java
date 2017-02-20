@@ -99,23 +99,27 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
         .filter(event -> event instanceof DDPSubscription.DocEvent)
         .cast(DDPSubscription.DocEvent.class)
         .filter(event -> isTarget(event.collection))
-        .subscribe(docEvent -> {
-          try {
-            if (docEvent instanceof DDPSubscription.Added.Before) {
-              onDocumentAdded((DDPSubscription.Added) docEvent); //ignore Before
-            } else if (docEvent instanceof DDPSubscription.Added) {
-              onDocumentAdded((DDPSubscription.Added) docEvent);
-            } else if (docEvent instanceof DDPSubscription.Removed) {
-              onDocumentRemoved((DDPSubscription.Removed) docEvent);
-            } else if (docEvent instanceof DDPSubscription.Changed) {
-              onDocumentChanged((DDPSubscription.Changed) docEvent);
-            } else if (docEvent instanceof DDPSubscription.MovedBefore) {
-              //ignore movedBefore
+        .subscribe(
+            docEvent -> {
+              try {
+                if (docEvent instanceof DDPSubscription.Added.Before) {
+                  onDocumentAdded((DDPSubscription.Added) docEvent); //ignore Before
+                } else if (docEvent instanceof DDPSubscription.Added) {
+                  onDocumentAdded((DDPSubscription.Added) docEvent);
+                } else if (docEvent instanceof DDPSubscription.Removed) {
+                  onDocumentRemoved((DDPSubscription.Removed) docEvent);
+                } else if (docEvent instanceof DDPSubscription.Changed) {
+                  onDocumentChanged((DDPSubscription.Changed) docEvent);
+                } else if (docEvent instanceof DDPSubscription.MovedBefore) {
+                  //ignore movedBefore
+                }
+              } catch (Exception exception) {
+                RCLog.w(exception, "failed to handle subscription callback");
+              }
+            },
+            throwable -> {
             }
-          } catch (Exception exception) {
-            RCLog.w(exception, "failed to handle subscription callback");
-          }
-        });
+        );
   }
 
   protected void onDocumentAdded(DDPSubscription.Added docEvent) {
