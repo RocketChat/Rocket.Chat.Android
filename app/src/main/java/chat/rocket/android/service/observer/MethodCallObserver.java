@@ -109,9 +109,17 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
       if (task.isFaulted()) {
         return realmHelper.executeTransaction(realm -> {
           Exception exception = task.getError();
-          final String errMessage = (exception instanceof DDPClientCallback.RPC.Error)
-              ? ((DDPClientCallback.RPC.Error) exception).error.toString()
-              : exception.getMessage();
+          final String errMessage;
+
+          if (exception instanceof DDPClientCallback.RPC.Error) {
+            errMessage = ((DDPClientCallback.RPC.Error) exception).error.toString();
+          } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
+            // temp "fix"- we need to rewrite the connection layer a bit
+            errMessage = "{\"message\": \"Connection Timeout\"}";
+          } else {
+            errMessage = exception.getMessage();
+          }
+
           realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
               .put(MethodCall.ID, methodCallId)
               .put(MethodCall.SYNC_STATE, SyncState.FAILED)

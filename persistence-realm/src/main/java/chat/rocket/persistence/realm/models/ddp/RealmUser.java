@@ -87,7 +87,7 @@ public class RealmUser extends RealmObject {
 
   public User asUser() {
     // convert email list
-    final int total = emails.size();
+    final int total = emails != null ? emails.size() : 0;
     final List<Email> coreEmails = new ArrayList<>(total);
 
     for (int i = 0; i < total; i++) {

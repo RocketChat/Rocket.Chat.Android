@@ -75,7 +75,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       }
     } else {
       if (hostname.equals(newHostname)) {
-        // we are good
+        updateHostname(newHostname);
         return;
       }
 

@@ -52,6 +52,9 @@ public class ImageKeyboardEditText extends EditText {
   @Override
   public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
     final InputConnection inputConnection = super.onCreateInputConnection(editorInfo);
+    if (inputConnection == null) {
+      return null;
+    }
 
     EditorInfoCompat.setContentMimeTypes(editorInfo, mimeTypes);
 
