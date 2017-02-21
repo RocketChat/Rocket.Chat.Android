@@ -24,7 +24,7 @@ public class RoomListHeaderViewHolder extends RecyclerView.ViewHolder {
       button.setVisibility(View.GONE);
     } else {
       button.setVisibility(View.VISIBLE);
-      button.setOnClickListener(v -> clickListener.onClick());
+      button.setOnClickListener(view -> clickListener.onClick());
     }
 
     title.setText(roomListHeader.getTitle());
