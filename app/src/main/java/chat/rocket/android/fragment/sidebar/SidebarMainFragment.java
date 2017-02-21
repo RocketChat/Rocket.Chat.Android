@@ -1,15 +1,18 @@
 package chat.rocket.android.fragment.sidebar;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
+import java.util.ArrayList;
 import java.util.List;
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
@@ -20,7 +23,11 @@ import chat.rocket.android.fragment.sidebar.dialog.AbstractAddRoomDialogFragment
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.layouthelper.chatroom.RoomListManager;
+import chat.rocket.android.layouthelper.chatroom.roomlist.ChannelRoomListHeader;
+import chat.rocket.android.layouthelper.chatroom.roomlist.DirectMessageRoomListHeader;
+import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
+import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
+import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
@@ -36,7 +43,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private SidebarMainContract.Presenter presenter;
 
-  private RoomListManager roomListManager;
+  private RoomListAdapter adapter;
 
   private String hostname;
 
@@ -93,19 +100,17 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     setupUserActionToggle();
     setupUserStatusButtons();
     setupLogoutButton();
-    setupAddChannelButton();
     setupVersionInfo();
 
-    roomListManager = new RoomListManager(
-        rootView.findViewById(R.id.unread_title),
-        (LinearLayout) rootView.findViewById(R.id.unread_container),
-        (LinearLayout) rootView.findViewById(R.id.channels_container),
-        (LinearLayout) rootView.findViewById(R.id.direct_messages_container));
-    roomListManager.setOnItemClickListener(view -> {
-      RocketChatCache.get(view.getContext()).edit()
-          .putString(RocketChatCache.KEY_SELECTED_ROOM_ID, view.getRoomId())
-          .apply();
-    });
+    adapter = new RoomListAdapter();
+    adapter.setOnItemClickListener(room -> RocketChatCache.get(getContext()).edit()
+        .putString(RocketChatCache.KEY_SELECTED_ROOM_ID, room.getRoomId())
+        .apply());
+
+    RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.room_list_container);
+    recyclerView.setLayoutManager(
+        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    recyclerView.setAdapter(adapter);
   }
 
   private void setupUserActionToggle() {
@@ -152,10 +157,25 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   }
 
   private void updateRoomListMode(User user) {
-    if (user == null || user.getSettings() == null || user.getSettings().getPreferences() == null) {
-      return;
+    final List<RoomListHeader> roomListHeaders = new ArrayList<>();
+
+    if (user != null && user.getSettings() != null && user.getSettings().getPreferences() != null
+        && user.getSettings().getPreferences().isUnreadRoomsMode()) {
+      roomListHeaders.add(new UnreadRoomListHeader(
+          getString(R.string.fragment_sidebar_main_unread_rooms_title)
+      ));
     }
-    roomListManager.setUnreadRoomMode(user.getSettings().getPreferences().isUnreadRoomsMode());
+
+    roomListHeaders.add(new ChannelRoomListHeader(
+        getString(R.string.fragment_sidebar_main_channels_title),
+        () -> showAddRoomDialog(AddChannelDialogFragment.create(hostname))
+    ));
+    roomListHeaders.add(new DirectMessageRoomListHeader(
+        getString(R.string.fragment_sidebar_main_direct_messages_title),
+        () -> showAddRoomDialog(AddDirectMessageDialogFragment.create(hostname))
+    ));
+
+    adapter.setRoomListHeaders(roomListHeaders);
   }
 
   private void setupLogoutButton() {
@@ -171,16 +191,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     if (toggleUserAction != null && toggleUserAction.isChecked()) {
       toggleUserAction.setChecked(false);
     }
-  }
-
-  private void setupAddChannelButton() {
-    rootView.findViewById(R.id.btn_add_channel).setOnClickListener(view -> {
-      showAddRoomDialog(AddChannelDialogFragment.create(hostname));
-    });
-
-    rootView.findViewById(R.id.btn_add_direct_message).setOnClickListener(view -> {
-      showAddRoomDialog(AddDirectMessageDialogFragment.create(hostname));
-    });
   }
 
   private void setupVersionInfo() {
@@ -203,8 +213,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   }
 
   @Override
-  public void showRoomList(List<Room> roomList) {
-    roomListManager.setRooms(roomList);
+  public void showRoomList(@NonNull List<Room> roomList) {
+    adapter.setRooms(roomList);
   }
 
   @Override
