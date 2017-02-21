@@ -27,6 +27,18 @@ public abstract class Room {
 
   public abstract long getLastSeen();
 
+  public boolean isChannel() {
+    return TYPE_CHANNEL.equals(getType());
+  }
+
+  public boolean isPrivate() {
+    return TYPE_PRIVATE.equals(getType());
+  }
+
+  public boolean isDirectMessage() {
+    return TYPE_DIRECT_MESSAGE.equals(getType());
+  }
+
   public static Builder builder() {
     return new AutoValue_Room.Builder();
   }

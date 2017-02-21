@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import chat.rocket.android.widget.R;
 /**
  * Room list-item view used in sidebar.
  */
-public class RoomListItemView extends LinearLayout {
+public class RoomListItemView extends FrameLayout {
   private static HashMap<String, Integer> ICON_TABLE = new HashMap<String, Integer>() {
     {
       put("c", R.string.fa_hashtag);
@@ -48,7 +49,8 @@ public class RoomListItemView extends LinearLayout {
   }
 
   private void initialize(Context context) {
-    setOrientation(HORIZONTAL);
+    setLayoutParams(new LinearLayout.LayoutParams(
+        LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
     TypedArray array2 = context.getTheme().obtainStyledAttributes(new int[]{
         R.attr.selectableItemBackground
