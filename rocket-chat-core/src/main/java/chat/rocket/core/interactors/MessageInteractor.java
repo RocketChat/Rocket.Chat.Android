@@ -63,9 +63,10 @@ public class MessageInteractor {
     return messageRepository.save(message);
   }
 
-  public Single<Boolean> resend(Message message) {
+  public Single<Boolean> resend(Message message, User sender) {
     return messageRepository.save(
-        message.withSyncState(SyncState.NOT_SYNCED));
+        message.withSyncState(SyncState.NOT_SYNCED)
+            .withUser(sender));
   }
 
   public Single<Boolean> delete(Message message) {

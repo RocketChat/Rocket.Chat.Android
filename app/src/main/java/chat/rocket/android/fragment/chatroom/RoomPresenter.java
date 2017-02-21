@@ -114,7 +114,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void resendMessage(Message message) {
-    final Disposable subscription = messageInteractor.resend(message)
+    final Disposable subscription = getCurrentUser()
+        .flatMap(user -> messageInteractor.resend(message, user))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe();
@@ -204,17 +205,21 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   private Single<Pair<Room, User>> getRoomUserPair() {
     return Single.zip(
         getSingleRoom(),
-        userRepository.getCurrent()
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .firstElement()
-            .toSingle(),
+        getCurrentUser(),
         Pair::new
     );
   }
 
   private Single<Room> getSingleRoom() {
     return roomRepository.getById(roomId)
+        .firstElement()
+        .toSingle();
+  }
+
+  private Single<User> getCurrentUser() {
+    return userRepository.getCurrent()
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .firstElement()
         .toSingle();
   }
