@@ -56,12 +56,12 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
         editor.putString(RocketChatCache.KEY_SELECTED_ROOM_ID,
             intent.getStringExtra(PushConstants.ROOM_ID));
       }
-
-      if (intent.hasExtra(PushConstants.NOT_ID)) {
-        PushNotificationHandler
-            .cleanUpNotificationStack(intent.getIntExtra(PushConstants.NOT_ID, 0));
-      }
       editor.apply();
+    }
+
+    if (intent.hasExtra(PushConstants.NOT_ID)) {
+      PushNotificationHandler
+          .cleanUpNotificationStack(intent.getIntExtra(PushConstants.NOT_ID, 0));
     }
   }
 
