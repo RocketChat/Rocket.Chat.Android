@@ -102,17 +102,16 @@ public class PushNotificationHandler implements PushConstants {
     String hostname = getHostname(extras);
     String roomId = getRoomId(extras);
 
-    if (hostname == null || roomId == null || !isValidHostname(context, hostname)) {
-      return;
-    }
-
     int notId = parseInt(NOT_ID, extras);
     Intent notificationIntent = new Intent(context, MainActivity.class);
     notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     notificationIntent.putExtra(PUSH_BUNDLE, extras);
-    notificationIntent.putExtra(HOSTNAME, hostname);
-    notificationIntent.putExtra(ROOM_ID, roomId);
     notificationIntent.putExtra(NOT_ID, notId);
+
+    if (hostname != null && roomId != null && isValidHostname(context, hostname)) {
+      notificationIntent.putExtra(HOSTNAME, hostname);
+      notificationIntent.putExtra(ROOM_ID, roomId);
+    }
 
     int requestCode = random.nextInt();
     PendingIntent contentIntent = PendingIntent
