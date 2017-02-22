@@ -5,17 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.drawable.ProgressBarDrawable;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
@@ -76,36 +71,13 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
 
   private void appendUrlView(WebContent webContent, boolean autoloadImages) {
     final String url = webContent.getUrl();
-    final WebContentHeaders webContentHeaders = webContent.getHeaders();
-    String contentType = webContentHeaders != null ? webContentHeaders.getContentType() : "";
 
-    if (contentType != null && contentType.startsWith("image/")
-        && ImageFormat.SUPPORTED_LIST.contains(contentType)) {
-      final View inlineImageView = inflater.inflate(R.layout.message_inline_image, this, false);
-      final SimpleDraweeView
-          inlineImage = (SimpleDraweeView) inlineImageView.findViewById(R.id.message_inline_image);
-      final View loadView = inlineImageView.findViewById(R.id.message_inline_image_load);
-
-      loadImage(url, inlineImage, loadView, autoloadImages);
-      addView(inlineImageView);
-    }
+    addMessageInlineImage(webContent, autoloadImages, url);
 
     // see Rocket.Chat:packages/rocketchat-oembed/client/oembedUrlWidget.coffee
     final Map<WebContentMeta.Type, WebContentMeta> webContentMetaMap = webContent.getMetaMap();
     if (webContentMetaMap == null || webContentMetaMap.size() == 0) {
       return;
-    }
-
-    String title = webContent.getMetaTitle();
-
-    String description = webContent.getMetaDescription();
-    if (description != null) {
-      if (description.startsWith("\"")) {
-        description = description.substring(1);
-      }
-      if (description.endsWith("\"")) {
-        description = description.substring(0, description.length() - 1);
-      }
     }
 
     final String imageURL = webContent.getMetaImage();
@@ -116,8 +88,8 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     View embedUrl = inflater.inflate(R.layout.message_inline_embed_url, this, false);
 
     ((TextView) embedUrl.findViewById(R.id.hostname)).setText(host);
-    ((TextView) embedUrl.findViewById(R.id.title)).setText(title);
-    ((TextView) embedUrl.findViewById(R.id.description)).setText(description);
+    ((TextView) embedUrl.findViewById(R.id.title)).setText(webContent.getMetaTitle());
+    ((TextView) embedUrl.findViewById(R.id.description)).setText(removeQuote(webContent.getMetaDescription()));
 
     final SimpleDraweeView image = (SimpleDraweeView) embedUrl.findViewById(R.id.image);
     if (TextUtils.isEmpty(imageURL)) {
@@ -137,6 +109,34 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     });
 
     addView(embedUrl);
+  }
+
+  private String removeQuote(String description) {
+    if (description != null) {
+      if (description.startsWith("\"")) {
+        description = description.substring(1);
+      }
+      if (description.endsWith("\"")) {
+        description = description.substring(0, description.length() - 1);
+      }
+    }
+    return description;
+  }
+
+  private void addMessageInlineImage(WebContent webContent, boolean autoloadImages, String url) {
+    final WebContentHeaders webContentHeaders = webContent.getHeaders();
+    String contentType = webContentHeaders != null ? webContentHeaders.getContentType() : "";
+
+    if (contentType != null && contentType.startsWith("image/")
+        && ImageFormat.SUPPORTED_LIST.contains(contentType)) {
+      final View inlineImageView = inflater.inflate(R.layout.message_inline_image, this, false);
+      final SimpleDraweeView
+          inlineImage = (SimpleDraweeView) inlineImageView.findViewById(R.id.message_inline_image);
+      final View loadView = inlineImageView.findViewById(R.id.message_inline_image_load);
+
+      loadImage(url, inlineImage, loadView, autoloadImages);
+      addView(inlineImageView);
+    }
   }
 
   private void loadImage(final String url, final SimpleDraweeView drawee, final View load,
