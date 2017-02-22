@@ -4,6 +4,7 @@ import android.content.Context;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.util.concurrent.TimeUnit;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.rest.CookieInterceptor;
 import chat.rocket.android.api.rest.DefaultCookieProvider;
 import okhttp3.OkHttpClient;
@@ -20,7 +21,8 @@ public class OkHttpHelper {
     if (httpClientForDownloadFile == null) {
       httpClientForDownloadFile = new OkHttpClient.Builder()
           .addNetworkInterceptor(new StethoInterceptor())
-          .addInterceptor(new CookieInterceptor(new DefaultCookieProvider(context)))
+          .addInterceptor(
+              new CookieInterceptor(new DefaultCookieProvider(new RocketChatCache(context))))
           .build();
     }
     return httpClientForDownloadFile;
