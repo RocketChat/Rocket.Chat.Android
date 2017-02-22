@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -20,6 +21,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 import java.util.Map;
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.helper.FrescoHelper;
 import chat.rocket.android.widget.helper.ImageFormat;
 import chat.rocket.core.models.WebContent;
 import chat.rocket.core.models.WebContentHeaders;
@@ -59,7 +61,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     setOrientation(VERTICAL);
   }
 
-  public void setUrls(List<WebContent> webContents) {
+  public void setUrls(List<WebContent> webContents, boolean autoloadImages) {
     if (this.webContents != null && this.webContents.equals(webContents)) {
       return;
     }
@@ -68,20 +70,24 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     removeAllViews();
 
     for (int i = 0, size = webContents.size(); i < size; i++) {
-      appendUrlView(webContents.get(i));
+      appendUrlView(webContents.get(i), autoloadImages);
     }
   }
 
-  private void appendUrlView(WebContent webContent) {
+  private void appendUrlView(WebContent webContent, boolean autoloadImages) {
     final String url = webContent.getUrl();
     final WebContentHeaders webContentHeaders = webContent.getHeaders();
     String contentType = webContentHeaders != null ? webContentHeaders.getContentType() : "";
 
     if (contentType != null && contentType.startsWith("image/")
         && ImageFormat.SUPPORTED_LIST.contains(contentType)) {
-      View inlineImage = inflater.inflate(R.layout.message_inline_image, this, false);
-      loadImage(url, (SimpleDraweeView) inlineImage.findViewById(R.id.message_inline_image));
-      addView(inlineImage);
+      final View inlineImageView = inflater.inflate(R.layout.message_inline_image, this, false);
+      final SimpleDraweeView
+          inlineImage = (SimpleDraweeView) inlineImageView.findViewById(R.id.message_inline_image);
+      final View loadView = inlineImageView.findViewById(R.id.message_inline_image_load);
+
+      loadImage(url, inlineImage, loadView, autoloadImages);
+      addView(inlineImageView);
     }
 
     // see Rocket.Chat:packages/rocketchat-oembed/client/oembedUrlWidget.coffee
@@ -102,7 +108,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
       }
     }
 
-    String imageURL = webContent.getMetaImage();
+    final String imageURL = webContent.getMetaImage();
 
     WebContentParsedUrl parsedUrl = webContent.getParsedUrl();
     String host = parsedUrl != null ? parsedUrl.getHost() : null;
@@ -117,7 +123,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     if (TextUtils.isEmpty(imageURL)) {
       image.setVisibility(View.GONE);
     } else {
-      loadImage(imageURL, image);
+      FrescoHelper.setupDraweeAndLoadImage(imageURL, image);
       image.setVisibility(View.VISIBLE);
     }
 
@@ -133,17 +139,22 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     addView(embedUrl);
   }
 
-  private void loadImage(String imageUrl, SimpleDraweeView draweeView) {
-    final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-    hierarchy.setPlaceholderImage(
-        VectorDrawableCompat.create(getResources(), R.drawable.image_dummy, null));
-    hierarchy.setFailureImage(
-        VectorDrawableCompat.create(getResources(), R.drawable.image_error, null));
+  private void loadImage(final String url, final SimpleDraweeView drawee, final View load,
+                         boolean autoloadImage) {
+    if (autoloadImage) {
+      load.setVisibility(GONE);
+      FrescoHelper.setupDraweeAndLoadImage(url, drawee);
+      return;
+    }
 
-    final DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setUri(Uri.parse(imageUrl))
-        .setAutoPlayAnimations(true)
-        .build();
-    draweeView.setController(controller);
+    FrescoHelper.setupDrawee(drawee);
+    load.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        load.setVisibility(GONE);
+        load.setOnClickListener(null);
+        FrescoHelper.loadImage(url, drawee);
+      }
+    });
   }
 }

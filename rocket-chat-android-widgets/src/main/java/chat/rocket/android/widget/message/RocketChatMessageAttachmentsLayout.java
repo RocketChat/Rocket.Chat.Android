@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,13 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.helper.FrescoHelper;
 import chat.rocket.core.models.Attachment;
 import chat.rocket.core.models.AttachmentAuthor;
 import chat.rocket.core.models.AttachmentField;
@@ -65,7 +62,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     this.hostname = hostname;
   }
 
-  public void setAttachments(List<Attachment> attachments) {
+  public void setAttachments(List<Attachment> attachments, boolean autoloadImages) {
     if (this.attachments != null && this.attachments.equals(attachments)) {
       return;
     }
@@ -73,11 +70,11 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     removeAllViews();
 
     for (int i = 0, size = attachments.size(); i < size; i++) {
-      appendAttachmentView(attachments.get(i));
+      appendAttachmentView(attachments.get(i), autoloadImages);
     }
   }
 
-  private void appendAttachmentView(Attachment attachment) {
+  private void appendAttachmentView(Attachment attachment, boolean autoloadImages) {
     if (attachment == null) {
       return;
     }
@@ -88,7 +85,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     showAuthorAttachment(attachment, attachmentView);
     showTitleAttachment(attachment, attachmentView);
     showReferenceAttachment(attachment, attachmentView);
-    showImageAttachment(attachment, attachmentView);
+    showImageAttachment(attachment, attachmentView, autoloadImages);
     // audio
     // video
     showFieldsAttachment(attachment, attachmentView);
@@ -122,7 +119,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     authorBox.setVisibility(VISIBLE);
 
-    loadImage(author.getIconUrl(),
+    FrescoHelper.setupDraweeAndLoadImage(absolutize(author.getIconUrl()),
         (SimpleDraweeView) attachmentView.findViewById(R.id.author_icon));
 
     final TextView authorName = (TextView) attachmentView.findViewById(R.id.author_name);
@@ -186,7 +183,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       thumbImage.setVisibility(GONE);
     } else {
       thumbImage.setVisibility(VISIBLE);
-      loadImage(thumbUrl, thumbImage);
+      FrescoHelper.setupDraweeAndLoadImage(absolutize(thumbUrl), thumbImage);
     }
 
     final TextView refText = (TextView) refBox.findViewById(R.id.text);
@@ -200,17 +197,21 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     }
   }
 
-  private void showImageAttachment(Attachment attachment, View attachmentView) {
-    final SimpleDraweeView attachedImage =
-        (SimpleDraweeView) attachmentView.findViewById(R.id.image);
+  private void showImageAttachment(Attachment attachment, View attachmentView,
+                                   boolean autoloadImages) {
+    final View imageContainer = attachmentView.findViewById(R.id.image_container);
     if (attachment.getImageUrl() == null) {
-      attachedImage.setVisibility(GONE);
+      imageContainer.setVisibility(GONE);
       return;
     }
 
-    attachedImage.setVisibility(VISIBLE);
+    imageContainer.setVisibility(VISIBLE);
 
-    loadImage(attachment.getImageUrl(), attachedImage);
+    final SimpleDraweeView attachedImage =
+        (SimpleDraweeView) attachmentView.findViewById(R.id.image);
+    final View load = attachmentView.findViewById(R.id.image_load);
+
+    loadImage(absolutize(attachment.getImageUrl()), attachedImage, load, autoloadImages);
   }
 
   private void showFieldsAttachment(Attachment attachment, View attachmentView) {
@@ -240,17 +241,22 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     return url.startsWith("/") ? "https://" + hostname + url : url;
   }
 
-  private void loadImage(String url, SimpleDraweeView draweeView) {
-    final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-    hierarchy.setPlaceholderImage(
-        VectorDrawableCompat.create(getResources(), R.drawable.image_dummy, null));
-    hierarchy.setFailureImage(
-        VectorDrawableCompat.create(getResources(), R.drawable.image_error, null));
+  private void loadImage(final String url, final SimpleDraweeView drawee, final View load,
+                         boolean autoloadImage) {
+    if (autoloadImage) {
+      load.setVisibility(GONE);
+      FrescoHelper.setupDraweeAndLoadImage(url, drawee);
+      return;
+    }
 
-    final DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setUri(Uri.parse(absolutize(url)))
-        .setAutoPlayAnimations(true)
-        .build();
-    draweeView.setController(controller);
+    FrescoHelper.setupDrawee(drawee);
+    load.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        load.setVisibility(GONE);
+        load.setOnClickListener(null);
+        FrescoHelper.loadImage(url, drawee);
+      }
+    });
   }
 }

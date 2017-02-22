@@ -78,14 +78,14 @@ public class RoomFragment extends AbstractChatRoomFragment
   private LoadMoreScrollListener scrollListener;
   private MessageFormManager messageFormManager;
   private RecyclerViewAutoScrollManager autoScrollManager;
-  private AbstractNewMessageIndicatorManager newMessageIndicatorManager;
-  private Snackbar unreadIndicator;
+  protected AbstractNewMessageIndicatorManager newMessageIndicatorManager;
+  protected Snackbar unreadIndicator;
   private boolean previousUnreadMessageExists;
   private MessageListAdapter adapter;
 
   private List<AbstractExtraActionItem> extraActionItems;
 
-  private RoomContract.Presenter presenter;
+  protected RoomContract.Presenter presenter;
 
   public RoomFragment() {
   }
@@ -203,7 +203,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     }
   }
 
-  private Snackbar getUnreadCountIndicatorView(int count) {
+  protected Snackbar getUnreadCountIndicatorView(int count) {
     // TODO: replace with another custom View widget, not to hide message composer.
     final String caption = getResources().getString(
         R.string.fmt_dialog_view_latest_message_title, count);
@@ -446,5 +446,15 @@ public class RoomFragment extends AbstractChatRoomFragment
         .setNeutralButton(R.string.discard,
             (dialog, which) -> presenter.deleteMessage(message))
         .show();
+  }
+
+  @Override
+  public void autoloadImages() {
+    adapter.setAutoloadImages(true);
+  }
+
+  @Override
+  public void manualLoadImages() {
+    adapter.setAutoloadImages(false);
   }
 }

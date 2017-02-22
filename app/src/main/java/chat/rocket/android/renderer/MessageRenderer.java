@@ -26,10 +26,12 @@ import chat.rocket.core.models.WebContent;
 public class MessageRenderer extends AbstractRenderer<Message> {
 
   private final UserRenderer userRenderer;
+  private final boolean autoloadImages;
 
-  public MessageRenderer(Context context, Message message) {
+  public MessageRenderer(Context context, Message message, boolean autoloadImages) {
     super(context, message);
     userRenderer = new UserRenderer(context, message.getUser());
+    this.autoloadImages = autoloadImages;
   }
 
   /**
@@ -111,7 +113,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       urlsLayout.setVisibility(View.GONE);
     } else {
       urlsLayout.setVisibility(View.VISIBLE);
-      urlsLayout.setUrls(webContents);
+      urlsLayout.setUrls(webContents, autoloadImages);
     }
 
     return this;
@@ -132,7 +134,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     } else {
       attachmentsLayout.setVisibility(View.VISIBLE);
       attachmentsLayout.setHostname(hostname);
-      attachmentsLayout.setAttachments(attachments);
+      attachmentsLayout.setAttachments(attachments, autoloadImages);
     }
 
     return this;

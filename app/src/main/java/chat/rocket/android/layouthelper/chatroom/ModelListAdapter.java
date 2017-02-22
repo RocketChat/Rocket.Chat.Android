@@ -32,6 +32,8 @@ public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
 
   protected abstract List<VM> mapResultsToViewModel(List<T> results);
 
+  protected abstract boolean shouldAutoloadImages();
+
   @Override
   public int getItemViewType(int position) {
     return getRealmModelViewType(getItem(position));
@@ -53,7 +55,7 @@ public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
         onItemClickListener.onItemClick(model2);
       }
     });
-    holder.bind(model);
+    holder.bind(model, shouldAutoloadImages());
   }
 
   @Override

@@ -22,6 +22,10 @@ public interface RoomContract {
     void showMessages(List<Message> messages);
 
     void showMessageSendFailure(Message message);
+
+    void autoloadImages();
+
+    void manualLoadImages();
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
