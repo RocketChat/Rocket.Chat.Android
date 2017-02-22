@@ -47,6 +47,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private String hostname;
 
+  private RocketChatCache rocketChatCache;
+
   public SidebarMainFragment() {
   }
 
@@ -69,6 +71,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
     Bundle args = getArguments();
     hostname = args == null ? null : args.getString(HOSTNAME);
+
+    rocketChatCache = new RocketChatCache(getContext());
 
     presenter = new SidebarMainPresenter(
         hostname,
@@ -103,9 +107,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     setupVersionInfo();
 
     adapter = new RoomListAdapter();
-    adapter.setOnItemClickListener(room -> RocketChatCache.get(getContext()).edit()
-        .putString(RocketChatCache.KEY_SELECTED_ROOM_ID, room.getRoomId())
-        .apply());
+    adapter.setOnItemClickListener(room -> rocketChatCache.setSelectedRoomId(room.getRoomId()));
 
     RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.room_list_container);
     recyclerView.setLayoutManager(

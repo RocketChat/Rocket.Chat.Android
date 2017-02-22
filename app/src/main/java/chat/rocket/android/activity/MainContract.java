@@ -12,6 +12,8 @@ public interface MainContract {
 
     void showUnreadCount(long roomsCount, int mentionsCount);
 
+    void showAddServerScreen();
+
     void showLoginScreen();
 
     void showConnectionError();
