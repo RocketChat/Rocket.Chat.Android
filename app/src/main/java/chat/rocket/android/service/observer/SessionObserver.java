@@ -33,7 +33,8 @@ public class SessionObserver extends AbstractModelObserver<RealmSession> {
     super(context, hostname, realmHelper, ddpClientRef);
     count = 0;
 
-    streamNotifyMessage = new StreamRoomMessageManager(context, hostname, realmHelper, ddpClientRef);
+    streamNotifyMessage =
+        new StreamRoomMessageManager(context, hostname, realmHelper, ddpClientRef);
     pushHelper = new RaixPushHelper(realmHelper, ddpClientRef);
   }
 
@@ -72,7 +73,7 @@ public class SessionObserver extends AbstractModelObserver<RealmSession> {
 
     // update push info
     pushHelper
-        .pushSetUser(RocketChatCache.getOrCreatePushId(context))
+        .pushSetUser(new RocketChatCache(context).getOrCreatePushId())
         .continueWith(new LogIfError());
   }
 

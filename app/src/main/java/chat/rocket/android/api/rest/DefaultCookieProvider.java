@@ -1,7 +1,5 @@
 package chat.rocket.android.api.rest;
 
-import android.content.Context;
-
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
@@ -10,10 +8,10 @@ import chat.rocket.persistence.realm.RealmStore;
 
 public class DefaultCookieProvider implements CookieProvider {
 
-  private final Context applicationContext;
+  private RocketChatCache rocketChatCache;
 
-  public DefaultCookieProvider(Context context) {
-    applicationContext = context.getApplicationContext();
+  public DefaultCookieProvider(RocketChatCache rocketChatCache) {
+    this.rocketChatCache = rocketChatCache;
   }
 
   @Override
@@ -46,6 +44,6 @@ public class DefaultCookieProvider implements CookieProvider {
   }
 
   private String getHostnameFromCache() {
-    return RocketChatCache.getSelectedServerHostname(applicationContext);
+    return rocketChatCache.getSelectedServerHostname();
   }
 }
