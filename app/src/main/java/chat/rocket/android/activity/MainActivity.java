@@ -111,10 +111,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     return false;
   }
 
-  private boolean shouldLaunchAddServerActivity() {
-    return ConnectivityManager.getInstance(getApplicationContext()).getServerList().isEmpty();
-  }
-
   @DebugLog
   @Override
   protected void onHostnameUpdated() {
