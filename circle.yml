@@ -41,11 +41,11 @@ deployment:
     tag: /v\d+\.\d+\.\d+(?!.)/
     owner: RocketChat
     commands:
-      - ./gradlew publishListingProdRelease
+      - ./gradlew publishListingRelease
         -Dorg.gradle.project.track=beta
   alpha:
     tag: /v\d+\.\d+\.\d+/
     owner: RocketChat
     commands:
-      - ./gradlew publishListingQaRelease
+      - ./gradlew publishListingRelease
         -Dorg.gradle.pr oject.track=alpha

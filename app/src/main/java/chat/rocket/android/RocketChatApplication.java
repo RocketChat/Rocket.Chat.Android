@@ -11,7 +11,6 @@ import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.android.widget.RocketChatWidgets;
-import chat.rocket.android.wrappers.InstabugWrapper;
 import chat.rocket.persistence.realm.RocketChatPersistenceRealm;
 
 /**
@@ -33,14 +32,9 @@ public class RocketChatApplication extends MultiDexApplication {
       RealmStore.put(serverInfo.getHostname());
     }
 
-    Stetho.initialize(Stetho.newInitializerBuilder(this)
-        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
-        .build());
-
-    InstabugWrapper.build(this, getString(R.string.instabug_api_key));
-
-    //TODO: add periodic trigger for RocketChatService.keepAlive(this) here!
+    if (BuildConfig.DEBUG) {
+      enableStetho();
+    }
 
     RocketChatWidgets.initialize(this, OkHttpHelper.getClientForDownloadFile(this));
   }
@@ -56,6 +50,13 @@ public class RocketChatApplication extends MultiDexApplication {
         .detectLeakedSqlLiteObjects()
         .detectLeakedClosableObjects()
         .penaltyLog()
+        .build());
+  }
+
+  private void enableStetho() {
+    Stetho.initialize(Stetho.newInitializerBuilder(this)
+        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
         .build());
   }
 }
