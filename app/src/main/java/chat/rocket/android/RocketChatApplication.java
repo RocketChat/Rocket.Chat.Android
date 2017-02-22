@@ -1,5 +1,6 @@
 package chat.rocket.android;
 
+import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
@@ -19,6 +20,10 @@ import chat.rocket.persistence.realm.RocketChatPersistenceRealm;
 public class RocketChatApplication extends MultiDexApplication {
   @Override
   public void onCreate() {
+    if (BuildConfig.DEBUG) {
+      enableStrictMode();
+    }
+
     super.onCreate();
 
     RocketChatPersistenceRealm.init(this);
@@ -38,5 +43,19 @@ public class RocketChatApplication extends MultiDexApplication {
     //TODO: add periodic trigger for RocketChatService.keepAlive(this) here!
 
     RocketChatWidgets.initialize(this, OkHttpHelper.getClientForDownloadFile(this));
+  }
+
+  private void enableStrictMode() {
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+        .detectDiskReads()
+        .detectDiskWrites()
+        .detectNetwork()   // or .detectAll() for all detectable problems
+        .penaltyLog()
+        .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+        .detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects()
+        .penaltyLog()
+        .build());
   }
 }
