@@ -14,11 +14,9 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
-import chat.rocket.android.helper.LogIfError;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
-import chat.rocket.core.models.User;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
@@ -47,29 +45,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     statusTicker = new StatusTicker();
     setupSidebar();
-    if (roomId == null) {
-      showFragment(new HomeFragment());
-    }
-
-    if (shouldLaunchAddServerActivity()) {
-      LaunchUtil.showAddServerActivity(this);
-    }
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-
-    setUserOnlineIfServerAvailable();
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-
-    if (presenter != null) {
-      presenter.bindView(this);
-    }
   }
 
   @Override
@@ -79,27 +54,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     }
 
     super.onPause();
-  }
-
-  @Override
-  protected void onStop() {
-    setUserAwayIfServerAvailable();
-
-    super.onStop();
-  }
-
-  private void setUserOnlineIfServerAvailable() {
-    if (hostname != null) {
-      new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_ONLINE)
-          .continueWith(new LogIfError());
-    }
-  }
-
-  private void setUserAwayIfServerAvailable() {
-    if (hostname != null) {
-      new MethodCallHelper(this, hostname).setUserPresence(User.STATUS_AWAY)
-          .continueWith(new LogIfError());
-    }
   }
 
   private void setupSidebar() {
@@ -184,10 +138,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     presenter = new MainPresenter(
         roomInteractor,
         createRoomInteractor,
-        sessionInteractor
+        sessionInteractor,
+        new MethodCallHelper(this, hostname),
+        ConnectivityManager.getInstance(getApplicationContext())
     );
 
     updateSidebarMainFragment();
+
+    presenter.bindView(this);
   }
 
   private void updateSidebarMainFragment() {
@@ -224,6 +182,11 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     if (toolbar != null) {
       toolbar.setUnreadBudge((int) roomsCount, mentionsCount);
     }
+  }
+
+  @Override
+  public void showAddServerScreen() {
+    LaunchUtil.showAddServerActivity(this);
   }
 
   @Override
