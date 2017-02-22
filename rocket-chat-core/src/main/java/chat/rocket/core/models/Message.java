@@ -40,6 +40,8 @@ public abstract class Message {
 
   public abstract Message withSyncState(int syncState);
 
+  public abstract Message withUser(User user);
+
   public static Builder builder() {
     return new AutoValue_Message.Builder();
   }
