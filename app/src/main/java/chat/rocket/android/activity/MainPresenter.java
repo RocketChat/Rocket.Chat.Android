@@ -8,11 +8,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Session;
+import chat.rocket.core.models.User;
 
 public class MainPresenter extends BasePresenter<MainContract.View>
     implements MainContract.Presenter {
@@ -20,21 +24,42 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   private final CanCreateRoomInteractor canCreateRoomInteractor;
   private final RoomInteractor roomInteractor;
   private final SessionInteractor sessionInteractor;
+  private final MethodCallHelper methodCallHelper;
+  private final ConnectivityManagerApi connectivityManagerApi;
 
   public MainPresenter(RoomInteractor roomInteractor,
                        CanCreateRoomInteractor canCreateRoomInteractor,
-                       SessionInteractor sessionInteractor) {
+                       SessionInteractor sessionInteractor,
+                       MethodCallHelper methodCallHelper,
+                       ConnectivityManagerApi connectivityManagerApi) {
     this.roomInteractor = roomInteractor;
     this.canCreateRoomInteractor = canCreateRoomInteractor;
     this.sessionInteractor = sessionInteractor;
+    this.methodCallHelper = methodCallHelper;
+    this.connectivityManagerApi = connectivityManagerApi;
   }
 
   @Override
   public void bindView(@NonNull MainContract.View view) {
     super.bindView(view);
 
+    view.showHome();
+
+    if (shouldLaunchAddServerActivity()) {
+      view.showAddServerScreen();
+      return;
+    }
+
     subscribeToUnreadCount();
     subscribeToSession();
+    setUserOnline();
+  }
+
+  @Override
+  public void release() {
+    setUserAway();
+
+    super.release();
   }
 
   @Override
@@ -100,5 +125,19 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         });
 
     addSubscription(subscription);
+  }
+
+  private void setUserOnline() {
+    methodCallHelper.setUserPresence(User.STATUS_ONLINE)
+        .continueWith(new LogIfError());
+  }
+
+  private void setUserAway() {
+    methodCallHelper.setUserPresence(User.STATUS_AWAY)
+        .continueWith(new LogIfError());
+  }
+
+  private boolean shouldLaunchAddServerActivity() {
+    return connectivityManagerApi.getServerList().isEmpty();
   }
 }
