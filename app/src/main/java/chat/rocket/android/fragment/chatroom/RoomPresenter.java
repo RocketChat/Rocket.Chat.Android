@@ -17,6 +17,7 @@ import chat.rocket.core.SyncState;
 import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.models.Settings;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
@@ -53,6 +54,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
     getRoomInfo();
     getRoomHistoryStateInfo();
     getMessages();
+    getUserPreferences();
   }
 
   @Override
@@ -198,6 +200,27 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(messages -> view.showMessages(messages));
+
+    addSubscription(subscription);
+  }
+
+  private void getUserPreferences() {
+    final Disposable subscription = userRepository.getCurrent()
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .map(User::getSettings)
+        .filter(settings -> settings != null)
+        .map(Settings::getPreferences)
+        .distinctUntilChanged()
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(preferences -> {
+          if (preferences.isAutoImageLoad()) {
+            view.autoloadImages();
+          } else {
+            view.manualLoadImages();
+          }
+        });
 
     addSubscription(subscription);
   }

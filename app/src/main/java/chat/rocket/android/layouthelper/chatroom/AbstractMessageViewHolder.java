@@ -38,8 +38,8 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
   /**
    * bind the view model.
    */
-  public final void bind(PairedMessage pairedMessage) {
-    bindMessage(pairedMessage);
+  public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
+    bindMessage(pairedMessage, autoloadImages);
 
     if (pairedMessage.target != null) {
       int syncState = pairedMessage.target.getSyncState();
@@ -53,7 +53,7 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
     renderNewDayAndSequential(pairedMessage);
   }
 
-  protected abstract void bindMessage(PairedMessage pairedMessage);
+  protected abstract void bindMessage(PairedMessage pairedMessage, boolean autoloadImages);
 
   private void renderNewDayAndSequential(PairedMessage pairedMessage) {
     //see Rocket.Chat:packages/rocketchat-livechat/app/client/views/message.coffee

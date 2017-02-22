@@ -23,12 +23,18 @@ public class MessageListAdapter
   private static final int VIEW_TYPE_SYSTEM_MESSAGE = 2;
 
   private final String hostname;
+
+  private boolean autoloadImages = false;
   private boolean hasNext;
   private boolean isLoaded;
 
   public MessageListAdapter(Context context, String hostname) {
     super(context);
     this.hostname = hostname;
+  }
+
+  public void setAutoloadImages(boolean autoloadImages) {
+    this.autoloadImages = autoloadImages;
   }
 
   /**
@@ -88,7 +94,7 @@ public class MessageListAdapter
       default:
         return new AbstractMessageViewHolder(itemView, hostname) {
           @Override
-          protected void bindMessage(PairedMessage pairedMessage) {
+          protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
           }
         };
     }
@@ -107,6 +113,11 @@ public class MessageListAdapter
     extMessages.add(new PairedMessage(results.get(results.size() - 1), null));
 
     return extMessages;
+  }
+
+  @Override
+  protected boolean shouldAutoloadImages() {
+    return autoloadImages;
   }
 
   @Override

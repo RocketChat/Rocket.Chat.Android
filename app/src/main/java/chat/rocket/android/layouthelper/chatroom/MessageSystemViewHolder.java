@@ -21,8 +21,8 @@ public class MessageSystemViewHolder extends AbstractMessageViewHolder {
   }
 
   @Override
-  protected void bindMessage(PairedMessage pairedMessage) {
-    new MessageRenderer(itemView.getContext(), pairedMessage.target)
+  protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
+    new MessageRenderer(itemView.getContext(), pairedMessage.target, autoloadImages)
         .avatarInto(avatar, hostname)
         .usernameInto(username, subUsername)
         .timestampInto(timestamp);

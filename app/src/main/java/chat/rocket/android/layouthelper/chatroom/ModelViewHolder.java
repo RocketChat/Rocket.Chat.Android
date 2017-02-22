@@ -9,5 +9,5 @@ public abstract class ModelViewHolder<T> extends RecyclerView.ViewHolder {
     super(itemView);
   }
 
-  public abstract void bind(T model);
+  public abstract void bind(T model, boolean autoloadImages);
 }
