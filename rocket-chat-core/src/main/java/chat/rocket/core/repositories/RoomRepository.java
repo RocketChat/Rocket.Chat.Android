@@ -1,5 +1,6 @@
 package chat.rocket.core.repositories;
 
+import com.fernandocejas.arrow.optional.Optional;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -13,7 +14,7 @@ public interface RoomRepository {
 
   Flowable<Room> getById(String roomId);
 
-  Flowable<RoomHistoryState> getHistoryStateByRoomId(String roomId);
+  Flowable<Optional<RoomHistoryState>> getHistoryStateByRoomId(String roomId);
 
   Single<Boolean> setHistoryState(RoomHistoryState roomHistoryState);
 }

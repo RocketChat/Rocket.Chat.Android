@@ -25,9 +25,8 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
     Icepick.saveInstanceState(this, outState);
   }
 
-  protected abstract
   @IdRes
-  int getLayoutContainerForFragment();
+  protected abstract int getLayoutContainerForFragment();
 
   @Override
   public final void onBackPressed() {

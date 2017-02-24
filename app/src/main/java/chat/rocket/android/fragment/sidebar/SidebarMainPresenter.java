@@ -6,11 +6,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
+import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
 
@@ -20,13 +22,16 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   private final String hostname;
   private final RoomInteractor roomInteractor;
   private final UserRepository userRepository;
+  private final RocketChatCache rocketChatCache;
   private final MethodCallHelper methodCallHelper;
 
   public SidebarMainPresenter(String hostname, RoomInteractor roomInteractor,
-                              UserRepository userRepository, MethodCallHelper methodCallHelper) {
+                              UserRepository userRepository, RocketChatCache rocketChatCache,
+                              MethodCallHelper methodCallHelper) {
     this.hostname = hostname;
     this.roomInteractor = roomInteractor;
     this.userRepository = userRepository;
+    this.rocketChatCache = rocketChatCache;
     this.methodCallHelper = methodCallHelper;
   }
 
@@ -43,6 +48,11 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
 
     subscribeToRooms();
     subscribeToUser();
+  }
+
+  @Override
+  public void onRoomSelected(Room room) {
+    rocketChatCache.setSelectedRoomId(room.getRoomId());
   }
 
   @Override

@@ -15,6 +15,7 @@ public abstract class User {
 
   public abstract String getId();
 
+  @Nullable
   public abstract String getUsername();
 
   @Nullable

@@ -22,6 +22,8 @@ public interface SidebarMainContract {
 
   interface Presenter extends BaseContract.Presenter<View> {
 
+    void onRoomSelected(Room room);
+
     void onUserOnline();
 
     void onUserAway();

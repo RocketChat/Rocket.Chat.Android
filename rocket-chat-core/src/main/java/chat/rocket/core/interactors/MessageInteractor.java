@@ -1,5 +1,6 @@
 package chat.rocket.core.interactors;
 
+import com.fernandocejas.arrow.optional.Optional;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -38,6 +39,8 @@ public class MessageInteractor {
 
   public Single<Boolean> loadMoreMessages(Room room) {
     return roomRepository.getHistoryStateByRoomId(room.getRoomId())
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .filter(roomHistoryState -> {
           int syncState = roomHistoryState.getSyncState();
           return !roomHistoryState.isComplete()

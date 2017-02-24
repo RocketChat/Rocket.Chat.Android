@@ -10,6 +10,7 @@ import android.view.View;
 
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
@@ -136,7 +137,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         createRoomInteractor,
         sessionInteractor,
         new MethodCallHelper(this, hostname),
-        ConnectivityManager.getInstance(getApplicationContext())
+        ConnectivityManager.getInstance(getApplicationContext()),
+        new RocketChatCache(this)
     );
 
     updateSidebarMainFragment();

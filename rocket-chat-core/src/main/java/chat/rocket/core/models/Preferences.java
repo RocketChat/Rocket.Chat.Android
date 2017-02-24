@@ -27,6 +27,7 @@ public abstract class Preferences {
 
   public abstract boolean isAutoImageLoad();
 
+  @Nullable
   public abstract String getEmailNotificationMode();
 
   public abstract boolean isUnreadAlert();
