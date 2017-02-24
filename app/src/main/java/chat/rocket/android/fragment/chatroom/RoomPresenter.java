@@ -152,8 +152,10 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   @Override
   public void onMarkAsRead() {
     final Disposable subscription = roomRepository.getById(roomId)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .firstElement()
-        .filter(room -> room != null && room.isAlert())
+        .filter(Room::isAlert)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
@@ -167,6 +169,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   private void getRoomInfo() {
     final Disposable subscription = roomRepository.getById(roomId)
         .distinctUntilChanged()
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
@@ -198,6 +202,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   private void getMessages() {
     final Disposable subscription = roomRepository.getById(roomId)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .flatMap(messageInteractor::getAllFrom)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -238,6 +244,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   private Single<Room> getSingleRoom() {
     return roomRepository.getById(roomId)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .firstElement()
         .toSingle();
   }

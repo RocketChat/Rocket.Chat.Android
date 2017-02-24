@@ -117,8 +117,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
           .equalTo(RealmMessage.ID, message.getId())
           .findAll()
           .<RealmResults<RealmMessage>>asObservable())
-          .filter(realmObject -> realmObject != null
-              && realmObject.isLoaded() && realmObject.isValid())
+          .filter(realmObject -> realmObject.isLoaded() && realmObject.isValid())
           .firstElement()
           .toSingle()
           .flatMap(realmMessages -> Single.just(realmMessages.deleteAllFromRealm()))

@@ -44,20 +44,36 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
   }
 
   @Override
-  public Flowable<Room> getById(String roomId) {
+  public Flowable<Optional<Room>> getById(String roomId) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmRoom.class)
-                .equalTo(RealmRoom.ROOM_ID, roomId)
-                .findFirst()
-                .<RealmRoom>asObservable()
-                .filter(roomSubscription -> roomSubscription != null && roomSubscription.isLoaded()
-                    && roomSubscription.isValid())),
+        pair -> {
+          RealmRoom realmRoom = pair.first.where(RealmRoom.class)
+              .equalTo(RealmRoom.ROOM_ID, roomId)
+              .findFirst();
+
+          if (realmRoom == null) {
+            return Flowable.just(Optional.<RealmRoom>absent());
+          }
+
+          return RxJavaInterop.toV2Flowable(
+              realmRoom
+                  .<RealmRoom>asObservable()
+                  .filter(
+                      roomSubscription -> roomSubscription.isLoaded()
+                          && roomSubscription.isValid())
+                  .map(Optional::of));
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-        .map(RealmRoom::asRoom));
+        .map(optional -> {
+          if (optional.isPresent()) {
+            return Optional.of(optional.get().asRoom());
+          }
+
+          return Optional.absent();
+        }));
   }
 
   @Override

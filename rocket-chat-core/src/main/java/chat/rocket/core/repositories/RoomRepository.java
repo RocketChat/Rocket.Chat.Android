@@ -12,7 +12,7 @@ public interface RoomRepository {
 
   Flowable<List<Room>> getAll();
 
-  Flowable<Room> getById(String roomId);
+  Flowable<Optional<Room>> getById(String roomId);
 
   Flowable<Optional<RoomHistoryState>> getHistoryStateByRoomId(String roomId);
 
