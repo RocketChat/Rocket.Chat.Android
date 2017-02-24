@@ -19,7 +19,7 @@ public class RealmSettings extends RealmObject {
   public Settings asSettings() {
     return Settings.builder()
         .setId(id)
-        .setPreferences(preferences.asPreferences())
+        .setPreferences(preferences != null ? preferences.asPreferences() : null)
         .build();
   }
 

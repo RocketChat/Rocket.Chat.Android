@@ -2,6 +2,7 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
+import com.fernandocejas.arrow.optional.Optional;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -60,20 +61,36 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
   }
 
   @Override
-  public Flowable<RoomHistoryState> getHistoryStateByRoomId(String roomId) {
+  public Flowable<Optional<RoomHistoryState>> getHistoryStateByRoomId(String roomId) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(LoadMessageProcedure.class)
-                .equalTo(LoadMessageProcedure.ID, roomId)
-                .findFirst()
-                .<LoadMessageProcedure>asObservable()
-                .filter(loadMessageProcedure -> loadMessageProcedure != null
-                    && loadMessageProcedure.isLoaded() && loadMessageProcedure.isValid())),
+        pair -> {
+
+          LoadMessageProcedure messageProcedure = pair.first.where(LoadMessageProcedure.class)
+              .equalTo(LoadMessageProcedure.ID, roomId)
+              .findFirst();
+
+          if (messageProcedure == null) {
+            return Flowable.just(Optional.<LoadMessageProcedure>absent());
+          }
+
+          return RxJavaInterop.toV2Flowable(
+              messageProcedure
+                  .<LoadMessageProcedure>asObservable()
+                  .filter(loadMessageProcedure -> loadMessageProcedure.isLoaded()
+                      && loadMessageProcedure.isValid())
+                  .map(Optional::of));
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-        .map(LoadMessageProcedure::asRoomHistoryState));
+        .map(optional -> {
+          if (optional.isPresent()) {
+            return Optional.of(optional.get().asRoomHistoryState());
+          }
+
+          return Optional.absent();
+        }));
   }
 
   @Override

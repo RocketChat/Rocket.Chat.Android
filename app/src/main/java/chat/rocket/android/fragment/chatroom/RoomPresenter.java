@@ -179,6 +179,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   private void getRoomHistoryStateInfo() {
     final Disposable subscription = roomRepository.getHistoryStateByRoomId(roomId)
         .distinctUntilChanged()
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(

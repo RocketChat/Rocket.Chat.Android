@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.service.ConnectivityManagerApi;
@@ -26,29 +27,32 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   private final SessionInteractor sessionInteractor;
   private final MethodCallHelper methodCallHelper;
   private final ConnectivityManagerApi connectivityManagerApi;
+  private final RocketChatCache rocketChatCache;
 
   public MainPresenter(RoomInteractor roomInteractor,
                        CanCreateRoomInteractor canCreateRoomInteractor,
                        SessionInteractor sessionInteractor,
                        MethodCallHelper methodCallHelper,
-                       ConnectivityManagerApi connectivityManagerApi) {
+                       ConnectivityManagerApi connectivityManagerApi,
+                       RocketChatCache rocketChatCache) {
     this.roomInteractor = roomInteractor;
     this.canCreateRoomInteractor = canCreateRoomInteractor;
     this.sessionInteractor = sessionInteractor;
     this.methodCallHelper = methodCallHelper;
     this.connectivityManagerApi = connectivityManagerApi;
+    this.rocketChatCache = rocketChatCache;
   }
 
   @Override
   public void bindView(@NonNull MainContract.View view) {
     super.bindView(view);
 
-    view.showHome();
-
     if (shouldLaunchAddServerActivity()) {
       view.showAddServerScreen();
       return;
     }
+
+    openRoom();
 
     subscribeToUnreadCount();
     subscribeToSession();
@@ -84,6 +88,18 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         .subscribe();
 
     addSubscription(subscription);
+  }
+
+  private void openRoom() {
+    String hostname = rocketChatCache.getSelectedServerHostname();
+    String roomId = rocketChatCache.getSelectedRoomId();
+
+    if (roomId == null || roomId.length() == 0) {
+      view.showHome();
+      return;
+    }
+
+    onOpenRoom(hostname, roomId);
   }
 
   private void subscribeToUnreadCount() {

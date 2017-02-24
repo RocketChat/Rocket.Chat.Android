@@ -2,11 +2,14 @@ package chat.rocket.core.models;
 
 import com.google.auto.value.AutoValue;
 
+import javax.annotation.Nullable;
+
 @AutoValue
 public abstract class Settings {
 
   public abstract String getId();
 
+  @Nullable
   public abstract Preferences getPreferences();
 
   public static Builder builder() {

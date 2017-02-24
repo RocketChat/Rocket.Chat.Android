@@ -19,7 +19,6 @@ import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
-import chat.rocket.android.fragment.sidebar.dialog.AbstractAddRoomDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.helper.TextUtils;
@@ -47,8 +46,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private String hostname;
 
-  private RocketChatCache rocketChatCache;
-
   public SidebarMainFragment() {
   }
 
@@ -72,12 +69,11 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     Bundle args = getArguments();
     hostname = args == null ? null : args.getString(HOSTNAME);
 
-    rocketChatCache = new RocketChatCache(getContext());
-
     presenter = new SidebarMainPresenter(
         hostname,
         new RoomInteractor(new RealmRoomRepository(hostname)),
         new RealmUserRepository(hostname),
+        new RocketChatCache(getContext()),
         TextUtils.isEmpty(hostname) ? null : new MethodCallHelper(getContext(), hostname)
     );
   }
@@ -107,7 +103,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     setupVersionInfo();
 
     adapter = new RoomListAdapter();
-    adapter.setOnItemClickListener(room -> rocketChatCache.setSelectedRoomId(room.getRoomId()));
+    adapter.setOnItemClickListener(room -> presenter.onRoomSelected(room));
 
     RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.room_list_container);
     recyclerView.setLayoutManager(
@@ -119,9 +115,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     final CompoundButton toggleUserAction =
         ((CompoundButton) rootView.findViewById(R.id.toggle_user_action));
     toggleUserAction.setFocusableInTouchMode(false);
-    rootView.findViewById(R.id.user_info_container).setOnClickListener(view -> {
-      toggleUserAction.toggle();
-    });
+
+    rootView.findViewById(R.id.user_info_container)
+        .setOnClickListener(view -> toggleUserAction.toggle());
+
     RxJavaInterop.toV2Flowable(RxCompoundButton.checkedChanges(toggleUserAction))
         .compose(bindToLifecycle())
         .subscribe(aBoolean -> {
@@ -201,7 +198,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   }
 
   private void showAddRoomDialog(DialogFragment dialog) {
-    dialog.show(getFragmentManager(), AbstractAddRoomDialogFragment.class.getSimpleName());
+    dialog.show(getFragmentManager(), "AbstractAddRoomDialogFragment");
   }
 
   @Override
