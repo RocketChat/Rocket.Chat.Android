@@ -44,11 +44,12 @@ public class RealmBasedServerInfo extends RealmObject {
     return RealmStore.getOrCreateForServerScope(DB_NAME);
   }
 
-  public static void addOrUpdate(String hostname, String name) {
+  public static void addOrUpdate(String hostname, String name, boolean insecure) {
     getRealm().executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(RealmBasedServerInfo.class, new JSONObject()
             .put(ColumnName.HOSTNAME, hostname)
-            .put(ColumnName.NAME, TextUtils.isEmpty(name) ? JSONObject.NULL : name)));
+            .put(ColumnName.NAME, TextUtils.isEmpty(name) ? JSONObject.NULL : name)
+            .put(ColumnName.INSECURE, insecure)));
   }
 
   public static void remove(String hostname) {
@@ -78,19 +79,6 @@ public class RealmBasedServerInfo extends RealmObject {
     RealmBasedServerInfo impl = getRealm().executeTransactionForRead(realm ->
         realm.where(RealmBasedServerInfo.class).equalTo(ColumnName.HOSTNAME, hostname).findFirst());
     return impl == null ? null : impl.getServerInfo();
-  }
-
-  public static void setInsecure(String hostname, boolean insecure) {
-    RealmBasedServerInfo impl = getRealm().executeTransactionForRead(realm ->
-        realm.where(RealmBasedServerInfo.class).equalTo(ColumnName.HOSTNAME, hostname).findFirst());
-
-    if (impl != null) {
-      impl.insecure = insecure;
-      getRealm().executeTransaction(realm -> {
-        realm.copyToRealmOrUpdate(impl);
-        return null;
-      });
-    }
   }
 
   public static List<ServerInfo> getServerInfoList() {
