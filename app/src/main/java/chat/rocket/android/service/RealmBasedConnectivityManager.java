@@ -74,8 +74,7 @@ import rx.subjects.PublishSubject;
 
   @Override
   public void addOrUpdateServer(String hostname, @Nullable String name, boolean insecure) {
-    RealmBasedServerInfo.addOrUpdate(hostname, name);
-    RealmBasedServerInfo.setInsecure(hostname, insecure);
+    RealmBasedServerInfo.addOrUpdate(hostname, name, insecure);
     if (!serverConnectivityList.containsKey(hostname)) {
       serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
     }
