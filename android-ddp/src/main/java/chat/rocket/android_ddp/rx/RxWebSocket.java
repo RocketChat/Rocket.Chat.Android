@@ -2,7 +2,6 @@ package chat.rocket.android_ddp.rx;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.exceptions.OnErrorNotImplementedException;
 import io.reactivex.flowables.ConnectableFlowable;
@@ -27,11 +26,8 @@ public class RxWebSocket {
     final Request request = new Request.Builder().url(url).build();
 
     return Flowable.create(
-        new FlowableOnSubscribe<RxWebSocketCallback.Base>() {
-          @Override
-          public void subscribe(FlowableEmitter<RxWebSocketCallback.Base> emitter)
-              throws Exception {
-            httpClient.newWebSocket(request, new WebSocketListener() {
+        (FlowableOnSubscribe<RxWebSocketCallback.Base>) emitter -> httpClient
+            .newWebSocket(request, new WebSocketListener() {
               @Override
               public void onOpen(WebSocket webSocket, Response response) {
                 RxWebSocket.this.webSocket = webSocket;
@@ -57,9 +53,8 @@ public class RxWebSocket {
                 emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
                 emitter.onComplete();
               }
-            });
-          }
-        }, BackpressureStrategy.BUFFER
+            }),
+        BackpressureStrategy.BUFFER
     ).publish();
   }
 
