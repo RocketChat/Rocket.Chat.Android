@@ -10,7 +10,8 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
+
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.android.widget.RocketChatAvatar;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
 
@@ -119,12 +119,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     rootView.findViewById(R.id.user_info_container)
         .setOnClickListener(view -> toggleUserAction.toggle());
 
-    RxJavaInterop.toV2Flowable(RxCompoundButton.checkedChanges(toggleUserAction))
+    RxCompoundButton.checkedChanges(toggleUserAction)
         .compose(bindToLifecycle())
-        .subscribe(aBoolean -> {
-          rootView.findViewById(R.id.user_action_outer_container)
-              .setVisibility(aBoolean ? View.VISIBLE : View.GONE);
-        });
+        .subscribe(aBoolean -> rootView.findViewById(R.id.user_action_outer_container)
+            .setVisibility(aBoolean ? View.VISIBLE : View.GONE));
   }
 
   private void setupUserStatusButtons() {

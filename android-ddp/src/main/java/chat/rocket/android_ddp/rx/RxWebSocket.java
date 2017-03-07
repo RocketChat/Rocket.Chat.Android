@@ -2,7 +2,6 @@ package chat.rocket.android_ddp.rx;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.exceptions.OnErrorNotImplementedException;
 import io.reactivex.flowables.ConnectableFlowable;
@@ -27,39 +26,35 @@ public class RxWebSocket {
     final Request request = new Request.Builder().url(url).build();
 
     return Flowable.create(
-        new FlowableOnSubscribe<RxWebSocketCallback.Base>() {
-          @Override
-          public void subscribe(FlowableEmitter<RxWebSocketCallback.Base> emitter)
-              throws Exception {
-            httpClient.newWebSocket(request, new WebSocketListener() {
+        (FlowableOnSubscribe<RxWebSocketCallback.Base>) emitter -> httpClient
+            .newWebSocket(request, new WebSocketListener() {
               @Override
-              public void onOpen(WebSocket webSocket, Response response) {
-                RxWebSocket.this.webSocket = webSocket;
+              public void onOpen(WebSocket webSocket1, Response response) {
+                RxWebSocket.this.webSocket = webSocket1;
                 emitter.onNext(new RxWebSocketCallback.Open(RxWebSocket.this.webSocket, response));
               }
 
               @Override
-              public void onFailure(WebSocket webSocket, Throwable err, Response response) {
+              public void onFailure(WebSocket webSocket1, Throwable err, Response response) {
                 try {
-                  emitter.onError(new RxWebSocketCallback.Failure(webSocket, err, response));
+                  emitter.onError(new RxWebSocketCallback.Failure(webSocket1, err, response));
                 } catch (OnErrorNotImplementedException ex) {
                   RCLog.w(ex, "OnErrorNotImplementedException ignored");
                 }
               }
 
               @Override
-              public void onMessage(WebSocket webSocket, String text) {
-                emitter.onNext(new RxWebSocketCallback.Message(webSocket, text));
+              public void onMessage(WebSocket webSocket1, String text) {
+                emitter.onNext(new RxWebSocketCallback.Message(webSocket1, text));
               }
 
               @Override
-              public void onClosed(WebSocket webSocket, int code, String reason) {
-                emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
+              public void onClosed(WebSocket webSocket1, int code, String reason) {
+                emitter.onNext(new RxWebSocketCallback.Close(webSocket1, code, reason));
                 emitter.onComplete();
               }
-            });
-          }
-        }, BackpressureStrategy.BUFFER
+            }),
+        BackpressureStrategy.BUFFER
     ).publish();
   }
 

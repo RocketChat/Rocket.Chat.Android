@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
-import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import io.realm.Case;
 
 import bolts.Task;
@@ -13,7 +13,6 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.sidebar.dialog.SuggestUserAdapter;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmAutoCompleteAdapter;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 /**
  * add Direct RealmMessage.
@@ -47,7 +46,7 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
             context -> new SuggestUserAdapter(context, hostname));
     autoCompleteTextView.setAdapter(adapter);
 
-    RxJavaInterop.toV2Flowable(RxTextView.textChanges(autoCompleteTextView))
+    RxTextView.textChanges(autoCompleteTextView)
         .map(text -> !TextUtils.isEmpty(text))
         .compose(bindToLifecycle())
         .subscribe(buttonAddDirectMessage::setEnabled);
