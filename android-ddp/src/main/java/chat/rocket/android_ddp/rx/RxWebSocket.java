@@ -29,28 +29,28 @@ public class RxWebSocket {
         (FlowableOnSubscribe<RxWebSocketCallback.Base>) emitter -> httpClient
             .newWebSocket(request, new WebSocketListener() {
               @Override
-              public void onOpen(WebSocket webSocket1, Response response) {
-                RxWebSocket.this.webSocket = webSocket1;
+              public void onOpen(WebSocket webSocket, Response response) {
+                RxWebSocket.this.webSocket = webSocket;
                 emitter.onNext(new RxWebSocketCallback.Open(RxWebSocket.this.webSocket, response));
               }
 
               @Override
-              public void onFailure(WebSocket webSocket1, Throwable err, Response response) {
+              public void onFailure(WebSocket webSocket, Throwable err, Response response) {
                 try {
-                  emitter.onError(new RxWebSocketCallback.Failure(webSocket1, err, response));
+                  emitter.onError(new RxWebSocketCallback.Failure(webSocket, err, response));
                 } catch (OnErrorNotImplementedException ex) {
                   RCLog.w(ex, "OnErrorNotImplementedException ignored");
                 }
               }
 
               @Override
-              public void onMessage(WebSocket webSocket1, String text) {
-                emitter.onNext(new RxWebSocketCallback.Message(webSocket1, text));
+              public void onMessage(WebSocket webSocket, String text) {
+                emitter.onNext(new RxWebSocketCallback.Message(webSocket, text));
               }
 
               @Override
-              public void onClosed(WebSocket webSocket1, int code, String reason) {
-                emitter.onNext(new RxWebSocketCallback.Close(webSocket1, code, reason));
+              public void onClosed(WebSocket webSocket, int code, String reason) {
+                emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
                 emitter.onComplete();
               }
             }),
