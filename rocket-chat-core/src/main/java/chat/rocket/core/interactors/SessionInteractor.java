@@ -32,10 +32,15 @@ public class SessionInteractor {
         .map(Optional::get)
         .filter(session -> session.getToken() != null
             && (!session.isTokenVerified() || session.getError() != null))
-        .map(session -> session.withTokenVerified(false).withError(null))
-        .firstElement()
-        .toSingle()
-        .flatMap(sessionRepository::save);
+        .map(session -> Optional.of(session.withTokenVerified(false).withError(null)))
+        .first(Optional.absent())
+        .flatMap(sessionOptional -> {
+          if (!sessionOptional.isPresent()) {
+            return Single.just(false);
+          }
+
+          return sessionRepository.save(sessionOptional.get());
+        });
   }
 
   private Session.State getStateFrom(Session session) {

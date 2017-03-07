@@ -41,17 +41,9 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-        .filter(it -> it != null && it.isLoaded()
-            && it.isValid())
-        .map(realmMessages -> {
-          if (realmMessages.size() > 0) {
-            return Optional.of(realmMessages.get(0).asMessage());
-          }
-
-          return Optional.<Message>absent();
-        })
-        .firstElement()
-        .toSingle());
+        .filter(it -> it.isLoaded() && it.isValid() && it.size() > 0)
+        .map(realmMessages -> Optional.of(realmMessages.get(0).asMessage()))
+        .first(Optional.absent()));
   }
 
   @Override
@@ -91,7 +83,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
 
       return RxJavaInterop.toV2Flowable(realm.copyToRealmOrUpdate(realmMessage)
           .asObservable())
-          .filter(it -> it != null && it.isLoaded() && it.isValid())
+          .filter(it -> it.isLoaded() && it.isValid())
           .firstElement()
           .doOnSuccess(it -> realm.commitTransaction())
           .doOnError(throwable -> realm.cancelTransaction())
@@ -143,8 +135,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-        .filter(it -> it != null
-            && it.isLoaded() && it.isValid())
+        .filter(it -> it.isLoaded() && it.isValid())
         .map(this::toList));
   }
 

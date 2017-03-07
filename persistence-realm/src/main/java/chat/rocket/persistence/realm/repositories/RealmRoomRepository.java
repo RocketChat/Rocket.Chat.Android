@@ -131,8 +131,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
 
       return RxJavaInterop.toV2Flowable(realm.copyToRealmOrUpdate(loadMessage)
           .asObservable())
-          .filter(realmObject -> realmObject != null
-              && realmObject.isLoaded() && realmObject.isValid())
+          .filter(realmObject -> realmObject.isLoaded() && realmObject.isValid())
           .firstElement()
           .doOnSuccess(it -> realm.commitTransaction())
           .doOnError(throwable -> realm.cancelTransaction())
