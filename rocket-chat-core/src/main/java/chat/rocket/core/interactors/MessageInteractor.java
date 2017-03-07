@@ -46,10 +46,15 @@ public class MessageInteractor {
           return !roomHistoryState.isComplete()
               && (syncState == SyncState.SYNCED || syncState == SyncState.FAILED);
         })
-        .firstElement()
-        .toSingle()
-        .flatMap(roomHistoryState -> roomRepository
-            .setHistoryState(roomHistoryState.withSyncState(SyncState.NOT_SYNCED)));
+        .map(Optional::of)
+        .first(Optional.absent())
+        .flatMap(historyStateOptional -> {
+          if (!historyStateOptional.isPresent()) {
+            return Single.just(false);
+          }
+          return roomRepository
+              .setHistoryState(historyStateOptional.get().withSyncState(SyncState.NOT_SYNCED));
+        });
   }
 
   public Single<Boolean> send(Room destination, User sender, String messageText) {
