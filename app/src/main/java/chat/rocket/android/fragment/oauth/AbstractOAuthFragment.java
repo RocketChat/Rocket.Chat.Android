@@ -12,20 +12,22 @@ import org.json.JSONObject;
 import java.nio.charset.Charset;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
-import chat.rocket.android.helper.LogIfError;
-import chat.rocket.android.log.RCLog;
-import chat.rocket.persistence.realm.models.ddp.RealmMeteorLoginServiceConfiguration;
-import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.core.models.LoginServiceConfiguration;
+import chat.rocket.persistence.realm.repositories.RealmLoginServiceConfigurationRepository;
 
-public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
+public abstract class AbstractOAuthFragment extends AbstractWebViewFragment
+    implements OAuthContract.View {
 
-  protected String hostname;
-  private String url;
-  private boolean resultOK;
+  private OAuthContract.Presenter presenter;
 
   protected abstract String getOAuthServiceName();
 
-  protected abstract String generateURL(RealmMeteorLoginServiceConfiguration oauthConfig);
+  protected String hostname;
+  private String url;
+
+  private boolean resultOK;
+
+  protected abstract String generateURL(LoginServiceConfiguration oauthConfig);
 
   private boolean hasValidArgs(Bundle args) {
     return args != null
@@ -54,47 +56,28 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
     }
 
     hostname = args.getString("hostname");
-    RealmMeteorLoginServiceConfiguration oauthConfig =
-        RealmStore.get(hostname).executeTransactionForRead(realm ->
-            realm.where(RealmMeteorLoginServiceConfiguration.class)
-                .equalTo(RealmMeteorLoginServiceConfiguration.SERVICE, getOAuthServiceName())
-                .findFirst());
-    if (oauthConfig == null) {
-      throw new IllegalArgumentException(
-          "Invalid hostname given,");
-    }
-    url = generateURL(oauthConfig);
+
+    presenter = new OAuthPresenter(
+        new RealmLoginServiceConfigurationRepository(hostname),
+        new MethodCallHelper(getContext(), hostname)
+    );
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    presenter.bindView(this);
+    presenter.loadService(getOAuthServiceName());
+  }
+
+  @Override
+  public void onPause() {
+    presenter.release();
+    super.onPause();
   }
 
   @Override
   protected void navigateToInitialPage(WebView webview) {
-    if (TextUtils.isEmpty(url)) {
-      finish();
-      return;
-    }
-
-    resultOK = false;
-    webview.loadUrl(url);
-    webview.addJavascriptInterface(new JSInterface(result -> {
-      // onPageFinish is called twice... Should ignore latter one.
-      if (resultOK) {
-        return;
-      }
-
-      if (result != null && result.optBoolean("setCredentialToken", false)) {
-        try {
-          final String credentialToken = result.getString("credentialToken");
-          final String credentialSecret = result.getString("credentialSecret");
-
-          handleOAuthCallback(credentialToken, credentialSecret);
-          resultOK = true;
-        } catch (JSONException exception) {
-          RCLog.e(exception, "failed to parse OAuth result.");
-        }
-      }
-
-      onOAuthCompleted();
-    }), "_rocketchet_hook");
   }
 
   @Override
@@ -108,18 +91,58 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
     }
   }
 
-  private void handleOAuthCallback(final String credentialToken, final String credentialSecret) {
-    new MethodCallHelper(getContext(), hostname)
-        .loginWithOAuth(credentialToken, credentialSecret)
-        .continueWith(new LogIfError());
+  @Override
+  public void showService(LoginServiceConfiguration oauthConfig) {
+    url = generateURL(oauthConfig);
+
+    showWebView();
+  }
+
+  @Override
+  public void close() {
+    finish();
+  }
+
+  @Override
+  public void showLoginDone() {
+    resultOK = true;
+    onOAuthCompleted();
+  }
+
+  @Override
+  public void showLoginError() {
+    onOAuthCompleted();
+  }
+
+  private void showWebView() {
+    if (TextUtils.isEmpty(url)) {
+      finish();
+      return;
+    }
+
+    final WebView webView = getWebview();
+    if (webView == null) {
+      finish();
+      return;
+    }
+
+    resultOK = false;
+    webView.loadUrl(url);
+    webView.addJavascriptInterface(new JSInterface(result -> {
+      // onPageFinish is called twice... Should ignore latter one.
+      if (resultOK) {
+        return;
+      }
+
+      presenter.login(result);
+    }), "_rocketchet_hook");
   }
 
   protected void onOAuthCompleted() {
-
   }
 
   private interface JSInterfaceCallback {
-    void hanldeResult(@Nullable JSONObject result);
+    void handleResult(@Nullable JSONObject result);
   }
 
   private static final class JSInterface {
@@ -132,9 +155,9 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment {
     @JavascriptInterface
     public void handleConfig(String config) {
       try {
-        jsInterfaceCallback.hanldeResult(new JSONObject(config));
+        jsInterfaceCallback.handleResult(new JSONObject(config));
       } catch (Exception exception) {
-        jsInterfaceCallback.hanldeResult(null);
+        jsInterfaceCallback.handleResult(null);
       }
     }
   }

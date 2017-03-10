@@ -11,18 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.oauth.OAuthProviderInfo;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.persistence.realm.models.ddp.RealmMeteorLoginServiceConfiguration;
-import chat.rocket.persistence.realm.RealmListObserver;
-import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.core.models.LoginServiceConfiguration;
+import chat.rocket.persistence.realm.repositories.RealmLoginServiceConfigurationRepository;
+import chat.rocket.persistence.realm.repositories.RealmPublicSettingRepository;
 
 /**
  * Login screen.
  */
-public class LoginFragment extends AbstractServerConfigFragment {
-  private RealmListObserver<RealmMeteorLoginServiceConfiguration> authProvidersObserver;
+public class LoginFragment extends AbstractServerConfigFragment implements LoginContract.View {
+
+  private LoginContract.Presenter presenter;
+
+  private View btnEmail;
+  private View waitingView;
 
   @Override
   protected int getLayout() {
@@ -32,37 +35,22 @@ public class LoginFragment extends AbstractServerConfigFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    authProvidersObserver = RealmStore.get(hostname)
-        .createListObserver(realm -> realm.where(RealmMeteorLoginServiceConfiguration.class).findAll())
-        .setOnUpdateListener(this::onRenderAuthProviders);
+
+    presenter = new LoginPresenter(
+        new RealmLoginServiceConfigurationRepository(hostname),
+        new RealmPublicSettingRepository(hostname),
+        new MethodCallHelper(getContext(), hostname)
+    );
   }
 
   @Override
   protected void onSetupView() {
-    final View btnEmail = rootView.findViewById(R.id.btn_login_with_email);
+    btnEmail = rootView.findViewById(R.id.btn_login_with_email);
     final TextView txtUsername = (TextView) rootView.findViewById(R.id.editor_username);
     final TextView txtPasswd = (TextView) rootView.findViewById(R.id.editor_passwd);
-    final View waitingView = rootView.findViewById(R.id.waiting);
-    btnEmail.setOnClickListener(view -> {
-      final CharSequence username = txtUsername.getText();
-      final CharSequence passwd = txtPasswd.getText();
-      if (TextUtils.isEmpty(username) || TextUtils.isEmpty(passwd)) {
-        return;
-      }
-      view.setEnabled(false);
-      waitingView.setVisibility(View.VISIBLE);
-
-      new MethodCallHelper(getContext(), hostname)
-          .loginWithEmail(username.toString(), passwd.toString())
-          .continueWith(task -> {
-            if (task.isFaulted()) {
-              showError(task.getError().getMessage());
-              view.setEnabled(true);
-              waitingView.setVisibility(View.GONE);
-            }
-            return null;
-          });
-    });
+    waitingView = rootView.findViewById(R.id.waiting);
+    btnEmail.setOnClickListener(
+        view -> presenter.login(txtUsername.getText().toString(), txtPasswd.getText().toString()));
 
     final View btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
     btnUserRegistration.setOnClickListener(view -> UserRegistrationDialogFragment.create(hostname,
@@ -70,11 +58,25 @@ public class LoginFragment extends AbstractServerConfigFragment {
         .show(getFragmentManager(), UserRegistrationDialogFragment.class.getSimpleName()));
   }
 
-  private void showError(String errString) {
-    Snackbar.make(rootView, errString, Snackbar.LENGTH_SHORT).show();
+  @Override
+  public void showLoader() {
+    btnEmail.setEnabled(false);
+    waitingView.setVisibility(View.VISIBLE);
   }
 
-  private void onRenderAuthProviders(List<RealmMeteorLoginServiceConfiguration> authProviders) {
+  @Override
+  public void hideLoader() {
+    btnEmail.setEnabled(true);
+    waitingView.setVisibility(View.GONE);
+  }
+
+  @Override
+  public void showError(String message) {
+    Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void showLoginServices(List<LoginServiceConfiguration> loginServiceList) {
     HashMap<String, View> viewMap = new HashMap<>();
     HashMap<String, Boolean> supportedMap = new HashMap<>();
     for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
@@ -82,7 +84,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
       supportedMap.put(info.serviceName, false);
     }
 
-    for (RealmMeteorLoginServiceConfiguration authProvider : authProviders) {
+    for (LoginServiceConfiguration authProvider : loginServiceList) {
       for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
         if (!supportedMap.get(info.serviceName)
             && info.serviceName.equals(authProvider.getService())) {
@@ -116,12 +118,12 @@ public class LoginFragment extends AbstractServerConfigFragment {
   @Override
   public void onResume() {
     super.onResume();
-    authProvidersObserver.sub();
+    presenter.bindView(this);
   }
 
   @Override
   public void onPause() {
-    authProvidersObserver.unsub();
+    presenter.release();
     super.onPause();
   }
 }

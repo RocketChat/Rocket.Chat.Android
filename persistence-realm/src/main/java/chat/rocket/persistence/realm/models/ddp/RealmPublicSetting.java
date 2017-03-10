@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import chat.rocket.core.JsonConstants;
+import chat.rocket.core.models.PublicSetting;
 import chat.rocket.persistence.realm.RealmHelper;
 
 /**
@@ -112,5 +113,15 @@ public class RealmPublicSetting extends RealmObject {
 
   public void setMeta(String meta) {
     this.meta = meta;
+  }
+
+  public PublicSetting asPublicSetting() {
+    return PublicSetting.builder()
+        .setId(_id)
+        .setGroup(group)
+        .setType(type)
+        .setValue(value)
+        .setUpdatedAt(_updatedAt)
+        .build();
   }
 }

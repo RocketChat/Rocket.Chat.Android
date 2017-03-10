@@ -25,7 +25,6 @@ abstract class AbstractServerConfigFragment extends AbstractFragment {
     hostname = args.getString(LoginActivity.KEY_HOSTNAME);
     if (TextUtils.isEmpty(hostname)) {
       finish();
-      return;
     }
   }
 
