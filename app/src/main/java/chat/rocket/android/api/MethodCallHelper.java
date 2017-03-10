@@ -166,6 +166,21 @@ public class MethodCallHelper {
         .onSuccessTask(this::saveToken);
   }
 
+  public Task<Void> loginWithLdap(final String username, final String password) {
+    return call("login", TIMEOUT_MS, () -> {
+      JSONObject param = new JSONObject();
+
+      param.put("ldap", true);
+      param.put("username", username);
+      param.put("ldapPass", password);
+      param.put("ldapOptions", new JSONObject());
+
+      return new JSONArray().put(param);
+    }).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+        .onSuccessTask(this::saveToken);
+  }
+
   /**
    * Login with OAuth.
    */

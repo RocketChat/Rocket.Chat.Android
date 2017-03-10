@@ -10,6 +10,7 @@ import io.realm.RealmResults;
 import java.io.IOException;
 import java.util.List;
 import bolts.Task;
+import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogIfError;
@@ -66,10 +67,7 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
   }
 
   private Task<Void> registerGcmTokenForServer() throws IOException {
-    final String senderId = RealmPublicSetting
-        .getString(realmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
-
-    final String gcmToken = getGcmToken(senderId);
+    final String gcmToken = getGcmToken(getSenderId());
     final RealmUser currentUser = realmHelper.executeTransactionForRead(realm ->
         RealmUser.queryCurrentUser(realm).findFirst());
     final String userId = currentUser != null ? currentUser.getId() : null;
@@ -82,6 +80,17 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
   private String getGcmToken(String senderId) throws IOException {
     return InstanceID.getInstance(context)
         .getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+  }
+
+  private String getSenderId() {
+    final String senderId = RealmPublicSetting
+        .getString(realmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
+
+    if (senderId.length() != 0) {
+      return senderId;
+    }
+
+    return context.getString(R.string.gcm_sender_id);
   }
 
 }

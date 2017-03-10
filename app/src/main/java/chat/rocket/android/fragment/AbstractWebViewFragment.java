@@ -16,6 +16,7 @@ import hugo.weaving.DebugLog;
 
 public abstract class AbstractWebViewFragment extends AbstractFragment
     implements OnBackPressListener {
+  private boolean isSet = false;
   private WebView webview;
   private WebViewClient webviewClient = new WebViewClient() {
     private boolean error;
@@ -66,6 +67,10 @@ public abstract class AbstractWebViewFragment extends AbstractFragment
   }
 
   private void setupWebView() {
+    if (isSet) {
+      return;
+    }
+
     WebSettings settings = webview.getSettings();
     if (settings != null) {
       settings.setJavaScriptEnabled(true);
@@ -80,6 +85,8 @@ public abstract class AbstractWebViewFragment extends AbstractFragment
       //refs: https://code.google.com/p/android/issues/detail?id=35288
       webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
+
+    isSet = true;
   }
 
   @Override
@@ -90,6 +97,15 @@ public abstract class AbstractWebViewFragment extends AbstractFragment
     } else {
       return false;
     }
+  }
+
+  protected WebView getWebview() {
+    if (webview == null) {
+      return null;
+    }
+
+    setupWebView();
+    return webview;
   }
 
   protected abstract void navigateToInitialPage(WebView webview);
