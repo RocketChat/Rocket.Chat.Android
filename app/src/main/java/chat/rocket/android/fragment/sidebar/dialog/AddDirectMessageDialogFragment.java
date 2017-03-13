@@ -28,6 +28,9 @@ import chat.rocket.persistence.realm.repositories.RealmUserRepository;
  * add Direct RealmMessage.
  */
 public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragment {
+
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
   public static AddDirectMessageDialogFragment create(String hostname) {
     Bundle args = new Bundle();
     args.putString("hostname", hostname);
@@ -36,8 +39,6 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
     fragment.setArguments(args);
     return fragment;
   }
-
-  private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
   @Override
   protected int getLayout() {
