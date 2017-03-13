@@ -11,6 +11,7 @@ import io.reactivex.disposables.Disposable;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.SyncState;
@@ -30,6 +31,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   private final MessageInteractor messageInteractor;
   private final UserRepository userRepository;
   private final RoomRepository roomRepository;
+  private final AbsoluteUrlHelper absoluteUrlHelper;
   private final MethodCallHelper methodCallHelper;
   private final ConnectivityManagerApi connectivityManagerApi;
 
@@ -37,12 +39,14 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                        UserRepository userRepository,
                        MessageInteractor messageInteractor,
                        RoomRepository roomRepository,
+                       AbsoluteUrlHelper absoluteUrlHelper,
                        MethodCallHelper methodCallHelper,
                        ConnectivityManagerApi connectivityManagerApi) {
     this.roomId = roomId;
     this.userRepository = userRepository;
     this.messageInteractor = messageInteractor;
     this.roomRepository = roomRepository;
+    this.absoluteUrlHelper = absoluteUrlHelper;
     this.methodCallHelper = methodCallHelper;
     this.connectivityManagerApi = connectivityManagerApi;
   }
@@ -68,6 +72,16 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
             connectivityManagerApi.keepAliveServer();
           }
         });
+
+    addSubscription(subscription);
+  }
+
+  @Override
+  public void onViewSetup() {
+    final Disposable subscription = absoluteUrlHelper.getRocketChatAbsoluteUrl()
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(it -> view.setupWith(it.orNull()));
 
     addSubscription(subscription);
   }

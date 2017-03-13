@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.helper.FrescoHelper;
 import chat.rocket.core.models.Attachment;
@@ -28,7 +29,7 @@ import chat.rocket.core.models.AttachmentTitle;
  */
 public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   private LayoutInflater inflater;
-  private String hostname;
+  private AbsoluteUrl absoluteUrl;
   private List<Attachment> attachments;
 
   public RocketChatMessageAttachmentsLayout(Context context) {
@@ -58,8 +59,8 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     setOrientation(VERTICAL);
   }
 
-  public void setHostname(String hostname) {
-    this.hostname = hostname;
+  public void setAbsoluteUrl(AbsoluteUrl absoluteUrl) {
+    this.absoluteUrl = absoluteUrl;
   }
 
   public void setAttachments(List<Attachment> attachments, boolean autoloadImages) {
@@ -238,7 +239,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   }
 
   private String absolutize(String url) {
-    return url.startsWith("/") ? "https://" + hostname + url : url;
+    return absoluteUrl.getAbsolute(url);
   }
 
   private void loadImage(final String url, final SimpleDraweeView drawee, final View load,

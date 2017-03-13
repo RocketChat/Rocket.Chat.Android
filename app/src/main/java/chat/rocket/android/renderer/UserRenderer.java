@@ -7,6 +7,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.core.models.User;
 import chat.rocket.android.widget.RocketChatAvatar;
 
@@ -22,13 +23,13 @@ public class UserRenderer extends AbstractRenderer<User> {
   /**
    * show Avatar image
    */
-  public UserRenderer avatarInto(RocketChatAvatar rocketChatAvatar, String hostname) {
+  public UserRenderer avatarInto(RocketChatAvatar rocketChatAvatar, AbsoluteUrl absoluteUrl) {
     if (!shouldHandle(rocketChatAvatar)) {
       return this;
     }
 
     if (!TextUtils.isEmpty(object.getUsername())) {
-      new Avatar(hostname, object.getUsername()).into(rocketChatAvatar);
+      new Avatar(absoluteUrl, object.getUsername()).into(rocketChatAvatar);
     }
     return this;
   }

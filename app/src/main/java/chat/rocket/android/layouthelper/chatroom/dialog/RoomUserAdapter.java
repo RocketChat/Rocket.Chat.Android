@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.core.models.User;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmHelper;
@@ -22,17 +23,17 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
   private final Context context;
   private final LayoutInflater inflater;
   private final RealmHelper realmHelper;
-  private final String hostname;
+  private final AbsoluteUrl absoluteUrl;
   private List<String> usernames;
 
   /**
    * Constructor with required parameters.
    */
-  public RoomUserAdapter(Context context, RealmHelper realmHelper, String hostname) {
+  public RoomUserAdapter(Context context, RealmHelper realmHelper, AbsoluteUrl absoluteUrl) {
     this.context = context;
     this.inflater = LayoutInflater.from(context);
     this.realmHelper = realmHelper;
-    this.hostname = hostname;
+    this.absoluteUrl = absoluteUrl;
   }
 
   @Override
@@ -57,12 +58,12 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
           .setUtcOffset(0)
           .build();
       new UserRenderer(context, user)
-          .avatarInto(holder.avatar, hostname)
+          .avatarInto(holder.avatar, absoluteUrl)
           .usernameInto(holder.username);
     } else {
       new UserRenderer(context, realmUser.asUser())
           .statusColorInto(holder.status)
-          .avatarInto(holder.avatar, hostname)
+          .avatarInto(holder.avatar, absoluteUrl)
           .usernameInto(holder.username);
     }
   }

@@ -10,6 +10,7 @@ import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.ExtModelListAdapter;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.core.models.Message;
 
 /**
@@ -22,15 +23,19 @@ public class MessageListAdapter
   private static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
   private static final int VIEW_TYPE_SYSTEM_MESSAGE = 2;
 
-  private final String hostname;
+  private AbsoluteUrl absoluteUrl;
 
   private boolean autoloadImages = false;
   private boolean hasNext;
   private boolean isLoaded;
 
-  public MessageListAdapter(Context context, String hostname) {
+  public MessageListAdapter(Context context) {
     super(context);
-    this.hostname = hostname;
+  }
+
+  public void setAbsoluteUrl(AbsoluteUrl absoluteUrl) {
+    this.absoluteUrl = absoluteUrl;
+    notifyDataSetChanged();
   }
 
   public void setAutoloadImages(boolean autoloadImages) {
@@ -88,11 +93,11 @@ public class MessageListAdapter
   protected AbstractMessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
     switch (viewType) {
       case VIEW_TYPE_NORMAL_MESSAGE:
-        return new MessageNormalViewHolder(itemView, hostname);
+        return new MessageNormalViewHolder(itemView, absoluteUrl);
       case VIEW_TYPE_SYSTEM_MESSAGE:
-        return new MessageSystemViewHolder(itemView, hostname);
+        return new MessageSystemViewHolder(itemView, absoluteUrl);
       default:
-        return new AbstractMessageViewHolder(itemView, hostname) {
+        return new AbstractMessageViewHolder(itemView, absoluteUrl) {
           @Override
           protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
           }

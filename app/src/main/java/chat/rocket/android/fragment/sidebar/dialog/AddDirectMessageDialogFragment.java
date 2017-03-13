@@ -4,15 +4,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
+import com.fernandocejas.arrow.optional.Optional;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Case;
 
 import bolts.Task;
+import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
+import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
+import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.sidebar.dialog.SuggestUserAdapter;
+import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmAutoCompleteAdapter;
+import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
+import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
+import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 
 /**
  * add Direct RealmMessage.
@@ -27,6 +37,8 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
     return fragment;
   }
 
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
   @Override
   protected int getLayout() {
     return R.layout.dialog_add_direct_message;
@@ -38,13 +50,19 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
     AutoCompleteTextView autoCompleteTextView =
         (AutoCompleteTextView) getDialog().findViewById(R.id.editor_username);
 
-    RealmAutoCompleteAdapter<RealmUser> adapter =
-        realmHelper.createAutoCompleteAdapter(getContext(),
-            (realm, text) -> realm.where(RealmUser.class)
-                .contains(RealmUser.USERNAME, text, Case.INSENSITIVE)
-                .findAllSorted(RealmUser.USERNAME),
-            context -> new SuggestUserAdapter(context, hostname));
-    autoCompleteTextView.setAdapter(adapter);
+    AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
+        hostname,
+        new RealmServerInfoRepository(),
+        new RealmUserRepository(hostname),
+        new SessionInteractor(new RealmSessionRepository(hostname))
+    );
+
+    compositeDisposable.add(
+        absoluteUrlHelper.getRocketChatAbsoluteUrl()
+            .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::setupView)
+    );
 
     RxTextView.textChanges(autoCompleteTextView)
         .map(text -> !TextUtils.isEmpty(text))
@@ -52,6 +70,25 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
         .subscribe(buttonAddDirectMessage::setEnabled);
 
     buttonAddDirectMessage.setOnClickListener(view -> createRoom());
+  }
+
+  private void setupView(Optional<RocketChatAbsoluteUrl> rocketChatAbsoluteUrlOptional) {
+    compositeDisposable.clear();
+
+    if (!rocketChatAbsoluteUrlOptional.isPresent()) {
+      return;
+    }
+
+    AutoCompleteTextView autoCompleteTextView =
+        (AutoCompleteTextView) getDialog().findViewById(R.id.editor_username);
+
+    RealmAutoCompleteAdapter<RealmUser> adapter =
+        realmHelper.createAutoCompleteAdapter(getContext(),
+            (realm, text) -> realm.where(RealmUser.class)
+                .contains(RealmUser.USERNAME, text, Case.INSENSITIVE)
+                .findAllSorted(RealmUser.USERNAME),
+            context -> new SuggestUserAdapter(context, rocketChatAbsoluteUrlOptional.get()));
+    autoCompleteTextView.setAdapter(adapter);
   }
 
   @Override

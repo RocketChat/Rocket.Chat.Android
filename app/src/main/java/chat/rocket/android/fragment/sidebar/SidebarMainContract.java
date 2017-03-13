@@ -3,6 +3,7 @@ package chat.rocket.android.fragment.sidebar;
 import android.support.annotation.NonNull;
 
 import java.util.List;
+import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.shared.BaseContract;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
@@ -17,7 +18,7 @@ public interface SidebarMainContract {
 
     void showRoomList(@NonNull List<Room> roomList);
 
-    void showUser(User user);
+    void show(User user, RocketChatAbsoluteUrl absoluteUrl);
   }
 
   interface Presenter extends BaseContract.Presenter<View> {

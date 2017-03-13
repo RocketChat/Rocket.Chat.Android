@@ -11,6 +11,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.RocketChatAvatar;
 
 /**
@@ -22,11 +23,11 @@ public class Avatar {
       0xFF03A9F4, 0xFF00BCD4, 0xFF009688, 0xFF4CAF50, 0xFF8BC34A, 0xFFCDDC39,
       0xFFFFC107, 0xFFFF9800, 0xFFFF5722, 0xFF795548, 0xFF9E9E9E, 0xFF607D8B
   };
-  private final String hostname;
+  private final AbsoluteUrl absoluteUrl;
   private final String username;
 
-  public Avatar(String hostname, String username) {
-    this.hostname = hostname;
+  public Avatar(AbsoluteUrl absoluteUrl, String username) {
+    this.absoluteUrl = absoluteUrl;
     this.username = username;
   }
 
@@ -71,7 +72,7 @@ public class Avatar {
     //from Rocket.Chat:packages/rocketchat-ui/lib/avatar.coffee
     //REMARK! this is often SVG image! (see: Rocket.Chat:server/startup/avatar.coffee)
     try {
-      return "https://" + hostname + "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
+      return absoluteUrl.getAbsolute("/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg");
     } catch (UnsupportedEncodingException exception) {
       RCLog.e(exception, "failed to get URL for user: %s", username);
       return null;

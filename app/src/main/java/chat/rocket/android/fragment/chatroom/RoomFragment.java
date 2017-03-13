@@ -29,6 +29,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
+import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
 import chat.rocket.android.helper.OnBackPressListener;
@@ -47,10 +48,13 @@ import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.interactors.MessageInteractor;
+import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
+import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.persistence.realm.RealmStore;
@@ -111,16 +115,28 @@ public class RoomFragment extends AbstractChatRoomFragment
     hostname = args.getString(HOSTNAME);
     roomId = args.getString(ROOM_ID);
 
+    RealmRoomRepository roomRepository = new RealmRoomRepository(hostname);
+
     MessageInteractor messageInteractor = new MessageInteractor(
         new RealmMessageRepository(hostname),
-        new RealmRoomRepository(hostname)
+        roomRepository
+    );
+
+    RealmUserRepository userRepository = new RealmUserRepository(hostname);
+
+    AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
+        hostname,
+        new RealmServerInfoRepository(),
+        userRepository,
+        new SessionInteractor(new RealmSessionRepository(hostname))
     );
 
     presenter = new RoomPresenter(
         roomId,
-        new RealmUserRepository(hostname),
+        userRepository,
         messageInteractor,
-        new RealmRoomRepository(hostname),
+        roomRepository,
+        absoluteUrlHelper,
         new MethodCallHelper(getContext(), hostname),
         ConnectivityManager.getInstance(getContext())
     );
@@ -138,7 +154,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   protected void onSetupView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    adapter = new MessageListAdapter(getContext(), hostname);
+    adapter = new MessageListAdapter(getContext());
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
 
@@ -186,6 +202,8 @@ public class RoomFragment extends AbstractChatRoomFragment
     setupSideMenu();
     setupMessageComposer();
     setupMessageActions();
+
+    presenter.onViewSetup();
   }
 
   private void setupMessageActions() {
@@ -214,7 +232,12 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void onDestroyView() {
     RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    listView.getAdapter().unregisterAdapterDataObserver(autoScrollManager);
+    if (listView != null) {
+      RecyclerView.Adapter adapter = listView.getAdapter();
+      if (adapter != null) {
+        adapter.unregisterAdapterDataObserver(autoScrollManager);
+      }
+    }
     super.onDestroyView();
   }
 
@@ -386,6 +409,11 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   @Override
+  public void setupWith(RocketChatAbsoluteUrl rocketChatAbsoluteUrl) {
+    adapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
+  }
+
+  @Override
   public void render(Room room) {
     String type = room.getType();
     if (Room.TYPE_CHANNEL.equals(type)) {
@@ -433,6 +461,9 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void showMessages(List<Message> messages) {
+    if (adapter == null) {
+      return;
+    }
     adapter.updateData(messages);
   }
 

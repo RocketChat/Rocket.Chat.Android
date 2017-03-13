@@ -4,6 +4,7 @@ import android.view.View;
 
 import chat.rocket.android.R;
 import chat.rocket.android.renderer.MessageRenderer;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
@@ -19,8 +20,8 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
   /**
    * constructor WITH hostname.
    */
-  public MessageNormalViewHolder(View itemView, String hostname) {
-    super(itemView, hostname);
+  public MessageNormalViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
+    super(itemView, absoluteUrl);
     body = (RocketChatMessageLayout) itemView.findViewById(R.id.message_body);
     urls = (RocketChatMessageUrlsLayout) itemView.findViewById(R.id.message_urls);
     attachments =
@@ -30,11 +31,11 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
   @Override
   protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
     new MessageRenderer(itemView.getContext(), pairedMessage.target, autoloadImages)
-        .avatarInto(avatar, hostname)
+        .avatarInto(avatar, absoluteUrl)
         .usernameInto(username, subUsername)
         .timestampInto(timestamp)
         .bodyInto(body)
         .urlsInto(urls)
-        .attachmentsInto(attachments, hostname);
+        .attachmentsInto(attachments, absoluteUrl);
   }
 }

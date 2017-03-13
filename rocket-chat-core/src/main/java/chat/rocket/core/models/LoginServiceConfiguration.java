@@ -2,6 +2,8 @@ package chat.rocket.core.models;
 
 import com.google.auto.value.AutoValue;
 
+import javax.annotation.Nullable;
+
 @AutoValue
 public abstract class LoginServiceConfiguration {
 
@@ -9,6 +11,7 @@ public abstract class LoginServiceConfiguration {
 
   public abstract String getService();
 
+  @Nullable
   public abstract String getKey();
 
   public static Builder builder() {
