@@ -21,7 +21,7 @@
         <exclude name="AbstractNaming" />
         <exclude name="LongVariable" />
         <!--exclude name="ShortMethodName" /-->
-        <!--exclude name="ShortVariable" /-->
+        <exclude name="ShortVariable" />
         <exclude name="ShortClassName" />
         <!--<exclude name="VariableNamingConventions" />-->
     </rule>

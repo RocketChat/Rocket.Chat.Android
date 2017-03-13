@@ -20,8 +20,10 @@ import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
+import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
+import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.roomlist.ChannelRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.DirectMessageRoomListHeader;
@@ -29,10 +31,13 @@ import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
 import chat.rocket.core.interactors.RoomInteractor;
+import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
 import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
+import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.android.widget.RocketChatAvatar;
 
@@ -69,11 +74,21 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     Bundle args = getArguments();
     hostname = args == null ? null : args.getString(HOSTNAME);
 
+    RealmUserRepository userRepository = new RealmUserRepository(hostname);
+
+    AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
+        hostname,
+        new RealmServerInfoRepository(),
+        userRepository,
+        new SessionInteractor(new RealmSessionRepository(hostname))
+    );
+
     presenter = new SidebarMainPresenter(
         hostname,
         new RoomInteractor(new RealmRoomRepository(hostname)),
-        new RealmUserRepository(hostname),
+        userRepository,
         new RocketChatCache(getContext()),
+        absoluteUrlHelper,
         TextUtils.isEmpty(hostname) ? null : new MethodCallHelper(getContext(), hostname)
     );
   }
@@ -144,10 +159,11 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     });
   }
 
-  private void onRenderCurrentUser(User user) {
-    if (user != null && !TextUtils.isEmpty(hostname)) {
+  private void onRenderCurrentUser(User user, RocketChatAbsoluteUrl absoluteUrl) {
+    if (user != null && absoluteUrl != null) {
       new UserRenderer(getContext(), user)
-          .avatarInto((RocketChatAvatar) rootView.findViewById(R.id.current_user_avatar), hostname)
+          .avatarInto((RocketChatAvatar) rootView.findViewById(R.id.current_user_avatar),
+              absoluteUrl)
           .usernameInto((TextView) rootView.findViewById(R.id.current_user_name))
           .statusColorInto((ImageView) rootView.findViewById(R.id.current_user_status));
     }
@@ -215,8 +231,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   }
 
   @Override
-  public void showUser(User user) {
-    onRenderCurrentUser(user);
+  public void show(User user, RocketChatAbsoluteUrl absoluteUrl) {
+    onRenderCurrentUser(user, absoluteUrl);
     updateRoomListMode(user);
   }
 }

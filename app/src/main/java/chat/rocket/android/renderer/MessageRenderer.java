@@ -10,6 +10,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.models.Attachment;
 import chat.rocket.core.models.Message;
@@ -37,15 +38,15 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   /**
    * show Avatar image.
    */
-  public MessageRenderer avatarInto(RocketChatAvatar rocketChatAvatar, String hostname) {
+  public MessageRenderer avatarInto(RocketChatAvatar rocketChatAvatar, AbsoluteUrl absoluteUrl) {
     if (object.getSyncState() == SyncState.FAILED) {
       rocketChatAvatar.loadImage(VectorDrawableCompat
           .create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
     } else if (TextUtils.isEmpty(object.getAvatar())) {
-      userRenderer.avatarInto(rocketChatAvatar, hostname);
+      userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
     } else {
       final User user = object.getUser();
-      setAvatarInto(object.getAvatar(), hostname, user == null ? null : user.getUsername(),
+      setAvatarInto(object.getAvatar(), absoluteUrl, user == null ? null : user.getUsername(),
           rocketChatAvatar);
     }
     return this;
@@ -123,7 +124,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show urls in RocketChatMessageUrlsLayout.
    */
   public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout,
-                                         String hostname) {
+                                         AbsoluteUrl absoluteUrl) {
     if (!shouldHandle(attachmentsLayout)) {
       return this;
     }
@@ -133,16 +134,16 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       attachmentsLayout.setVisibility(View.GONE);
     } else {
       attachmentsLayout.setVisibility(View.VISIBLE);
-      attachmentsLayout.setHostname(hostname);
+      attachmentsLayout.setAbsoluteUrl(absoluteUrl);
       attachmentsLayout.setAttachments(attachments, autoloadImages);
     }
 
     return this;
   }
 
-  private void setAvatarInto(String avatar, String hostname, String username,
+  private void setAvatarInto(String avatar, AbsoluteUrl absoluteUrl, String username,
                              RocketChatAvatar imageView) {
-    imageView.loadImage(avatar, new Avatar(hostname, username).getTextDrawable(context));
+    imageView.loadImage(avatar, new Avatar(absoluteUrl, username).getTextDrawable(context));
   }
 
   private void aliasAndUsernameInto(TextView aliasTextView, TextView usernameTextView) {

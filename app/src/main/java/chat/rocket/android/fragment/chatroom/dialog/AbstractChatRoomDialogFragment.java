@@ -15,9 +15,8 @@ abstract class AbstractChatRoomDialogFragment extends BottomSheetDialogFragment 
   protected RealmHelper realmHelper;
   protected String roomId;
 
-  protected
   @LayoutRes
-  abstract int getLayout();
+  protected abstract int getLayout();
 
   protected abstract void onSetupDialog();
 

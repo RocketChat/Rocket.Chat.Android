@@ -11,6 +11,8 @@ public interface RoomContract {
 
   interface View extends BaseContract.View {
 
+    void setupWith(RocketChatAbsoluteUrl rocketChatAbsoluteUrl);
+
     void render(Room room);
 
     void updateHistoryState(boolean hasNext, boolean isLoaded);
@@ -33,6 +35,8 @@ public interface RoomContract {
     void loadMessages();
 
     void loadMoreMessages();
+
+    void onViewSetup();
 
     void onMessageSelected(@Nullable Message message);
 

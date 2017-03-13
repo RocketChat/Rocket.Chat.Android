@@ -7,6 +7,7 @@ import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.core.SyncState;
 import chat.rocket.android.widget.RocketChatAvatar;
 
@@ -16,14 +17,14 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
   protected final TextView subUsername;
   protected final TextView timestamp;
   protected final View userAndTimeContainer;
-  protected final String hostname;
+  protected final AbsoluteUrl absoluteUrl;
   protected final View newDayContainer;
   protected final TextView newDayText;
 
   /**
    * constructor WITH hostname.
    */
-  public AbstractMessageViewHolder(View itemView, String hostname) {
+  public AbstractMessageViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
     super(itemView);
     avatar = (RocketChatAvatar) itemView.findViewById(R.id.user_avatar);
     username = (TextView) itemView.findViewById(R.id.username);
@@ -32,7 +33,7 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
     userAndTimeContainer = itemView.findViewById(R.id.user_and_timestamp_container);
     newDayContainer = itemView.findViewById(R.id.newday_container);
     newDayText = (TextView) itemView.findViewById(R.id.newday_text);
-    this.hostname = hostname;
+    this.absoluteUrl = absoluteUrl;
   }
 
   /**

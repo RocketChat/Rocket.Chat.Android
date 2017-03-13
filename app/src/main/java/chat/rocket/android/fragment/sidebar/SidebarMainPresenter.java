@@ -1,13 +1,16 @@
 package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
+import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
@@ -23,15 +26,19 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   private final RoomInteractor roomInteractor;
   private final UserRepository userRepository;
   private final RocketChatCache rocketChatCache;
+  private final AbsoluteUrlHelper absoluteUrlHelper;
   private final MethodCallHelper methodCallHelper;
 
   public SidebarMainPresenter(String hostname, RoomInteractor roomInteractor,
-                              UserRepository userRepository, RocketChatCache rocketChatCache,
+                              UserRepository userRepository,
+                              RocketChatCache rocketChatCache,
+                              AbsoluteUrlHelper absoluteUrlHelper,
                               MethodCallHelper methodCallHelper) {
     this.hostname = hostname;
     this.roomInteractor = roomInteractor;
     this.userRepository = userRepository;
     this.rocketChatCache = rocketChatCache;
+    this.absoluteUrlHelper = absoluteUrlHelper;
     this.methodCallHelper = methodCallHelper;
   }
 
@@ -47,7 +54,17 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     view.showScreen();
 
     subscribeToRooms();
-    subscribeToUser();
+
+    final Disposable subscription = Flowable.combineLatest(
+        userRepository.getCurrent().distinctUntilChanged(),
+        absoluteUrlHelper.getRocketChatAbsoluteUrl().toFlowable(),
+        Pair::new
+    )
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(pair -> view.show(pair.first.orNull(), pair.second.orNull()));
+
+    addSubscription(subscription);
   }
 
   @Override
@@ -90,16 +107,6 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         .subscribe(
             rooms -> view.showRoomList(rooms)
         );
-
-    addSubscription(subscription);
-  }
-
-  private void subscribeToUser() {
-    final Disposable subscription = userRepository.getCurrent()
-        .distinctUntilChanged()
-        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(userOptional -> view.showUser(userOptional.orNull()));
 
     addSubscription(subscription);
   }

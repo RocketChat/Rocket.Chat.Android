@@ -2,6 +2,7 @@ package chat.rocket.persistence.realm.models;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -24,14 +25,14 @@ public class RealmBasedServerInfo extends RealmObject {
   private String session;
   private boolean insecure;
 
-  interface ColumnName {
+  public interface ColumnName {
     String HOSTNAME = "hostname";
     String NAME = "name";
     String SESSION = "session";
     String INSECURE = "insecure";
   }
 
-  ServerInfo getServerInfo() {
+  public ServerInfo getServerInfo() {
     return ServerInfo.builder()
         .setHostname(hostname)
         .setName(name)
@@ -40,12 +41,16 @@ public class RealmBasedServerInfo extends RealmObject {
         .build();
   }
 
-  public static RealmHelper getRealm() {
+  public static Realm getRealm() {
+    return RealmStore.getRealm(DB_NAME);
+  }
+
+  public static RealmHelper getRealmHelper() {
     return RealmStore.getOrCreateForServerScope(DB_NAME);
   }
 
   public static void addOrUpdate(String hostname, String name, boolean insecure) {
-    getRealm().executeTransaction(realm ->
+    getRealmHelper().executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(RealmBasedServerInfo.class, new JSONObject()
             .put(ColumnName.HOSTNAME, hostname)
             .put(ColumnName.NAME, TextUtils.isEmpty(name) ? JSONObject.NULL : name)
@@ -53,7 +58,7 @@ public class RealmBasedServerInfo extends RealmObject {
   }
 
   public static void remove(String hostname) {
-    getRealm().executeTransaction(realm -> {
+    getRealmHelper().executeTransaction(realm -> {
       realm.where(RealmBasedServerInfo.class).equalTo(ColumnName.HOSTNAME, hostname)
           .findAll()
           .deleteAllFromRealm();
@@ -62,12 +67,12 @@ public class RealmBasedServerInfo extends RealmObject {
   }
 
   public static void updateSession(String hostname, String session) {
-    RealmBasedServerInfo impl = getRealm().executeTransactionForRead(realm ->
+    RealmBasedServerInfo impl = getRealmHelper().executeTransactionForRead(realm ->
         realm.where(RealmBasedServerInfo.class).equalTo(ColumnName.HOSTNAME, hostname).findFirst());
 
     if (impl != null) {
       impl.session = session;
-      getRealm().executeTransaction(realm -> {
+      getRealmHelper().executeTransaction(realm -> {
         realm.copyToRealmOrUpdate(impl);
         return null;
       });
@@ -76,13 +81,13 @@ public class RealmBasedServerInfo extends RealmObject {
 
   @Nullable
   public static ServerInfo getServerInfoForHost(String hostname) {
-    RealmBasedServerInfo impl = getRealm().executeTransactionForRead(realm ->
+    RealmBasedServerInfo impl = getRealmHelper().executeTransactionForRead(realm ->
         realm.where(RealmBasedServerInfo.class).equalTo(ColumnName.HOSTNAME, hostname).findFirst());
     return impl == null ? null : impl.getServerInfo();
   }
 
   public static List<ServerInfo> getServerInfoList() {
-    List<RealmBasedServerInfo> results = getRealm().executeTransactionForReadResults(realm ->
+    List<RealmBasedServerInfo> results = getRealmHelper().executeTransactionForReadResults(realm ->
         realm.where(RealmBasedServerInfo.class).findAll());
     ArrayList<ServerInfo> list = new ArrayList<>();
     for (RealmBasedServerInfo impl : results) {

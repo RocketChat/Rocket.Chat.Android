@@ -7,20 +7,30 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import com.fernandocejas.arrow.optional.Optional;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
+import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
+import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.layouthelper.chatroom.dialog.RoomUserAdapter;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
+import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
+import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
+import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 
 /**
  * Dialog to show members in a room.
@@ -30,6 +40,8 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
   private String hostname;
   private RealmObjectObserver<GetUsersOfRoomsProcedure> procedureObserver;
   private int previousSyncState;
+
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
   public UsersOfRoomDialogFragment() {
   }
@@ -76,9 +88,32 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
 
   @Override
   protected void onSetupDialog() {
+    AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
+        hostname,
+        new RealmServerInfoRepository(),
+        new RealmUserRepository(hostname),
+        new SessionInteractor(new RealmSessionRepository(hostname))
+    );
+
+    compositeDisposable.add(
+        absoluteUrlHelper.getRocketChatAbsoluteUrl()
+            .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::setupView)
+    );
+  }
+
+  private void setupView(Optional<RocketChatAbsoluteUrl> rocketChatAbsoluteUrlOptional) {
+    compositeDisposable.clear();
+
+    if (!rocketChatAbsoluteUrlOptional.isPresent()) {
+      return;
+    }
+
     RecyclerView recyclerView = (RecyclerView) getDialog().findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-    recyclerView.setAdapter(new RoomUserAdapter(getContext(), realmHelper, hostname));
+    recyclerView.setAdapter(
+        new RoomUserAdapter(getContext(), realmHelper, rocketChatAbsoluteUrlOptional.get()));
   }
 
   private void requestGetUsersOfRoom() {
