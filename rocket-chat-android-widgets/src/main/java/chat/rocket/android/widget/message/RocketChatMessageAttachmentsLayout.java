@@ -242,7 +242,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     if (absoluteUrl == null) {
       return url;
     }
-    return absoluteUrl.getAbsolute(url);
+    return absoluteUrl.from(url);
   }
 
   private void loadImage(final String url, final SimpleDraweeView drawee, final View load,

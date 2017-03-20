@@ -76,7 +76,7 @@ public class Avatar {
       if (absoluteUrl == null) {
         return avatarUrl;
       }
-      return absoluteUrl.getAbsolute(avatarUrl);
+      return absoluteUrl.from(avatarUrl);
     } catch (UnsupportedEncodingException exception) {
       RCLog.e(exception, "failed to get URL for user: %s", username);
       return null;
