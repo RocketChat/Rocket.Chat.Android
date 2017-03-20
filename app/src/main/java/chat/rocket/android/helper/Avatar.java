@@ -72,7 +72,11 @@ public class Avatar {
     //from Rocket.Chat:packages/rocketchat-ui/lib/avatar.coffee
     //REMARK! this is often SVG image! (see: Rocket.Chat:server/startup/avatar.coffee)
     try {
-      return absoluteUrl.getAbsolute("/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg");
+      final String avatarUrl = "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
+      if (absoluteUrl == null) {
+        return avatarUrl;
+      }
+      return absoluteUrl.from(avatarUrl);
     } catch (UnsupportedEncodingException exception) {
       RCLog.e(exception, "failed to get URL for user: %s", username);
       return null;
