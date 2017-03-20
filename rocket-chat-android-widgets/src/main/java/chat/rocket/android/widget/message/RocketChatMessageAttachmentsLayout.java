@@ -239,6 +239,9 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   }
 
   private String absolutize(String url) {
+    if (absoluteUrl == null) {
+      return url;
+    }
     return absoluteUrl.getAbsolute(url);
   }
 
