@@ -24,6 +24,7 @@ public class RealmRoom extends RealmObject {
   public static final String UNREAD = "unread";
   public static final String UPDATED_AT = "_updatedAt";
   public static final String LAST_SEEN = "ls";
+  public static final String FAVORITE = "f";
 
   public static final String TYPE_CHANNEL = "c";
   public static final String TYPE_PRIVATE = "p";
@@ -39,6 +40,7 @@ public class RealmRoom extends RealmObject {
   private int unread;
   private long _updatedAt;
   private long ls; //last seen.
+  private boolean f;
 
   public static JSONObject customizeJson(JSONObject roomSubscriptionJson) throws JSONException {
     if (!roomSubscriptionJson.isNull(LAST_SEEN)) {
@@ -128,6 +130,14 @@ public class RealmRoom extends RealmObject {
     this.ls = ls;
   }
 
+  public boolean isFavorite() {
+    return f;
+  }
+
+  public void setFavorite(boolean f) {
+    this.f = f;
+  }
+
   public Room asRoom() {
     return Room.builder()
         .setId(_id)
@@ -139,6 +149,7 @@ public class RealmRoom extends RealmObject {
         .setUnread(unread)
         .setUpdatedAt(_updatedAt)
         .setLastSeen(ls)
+        .setFavorite(f)
         .build();
   }
 }

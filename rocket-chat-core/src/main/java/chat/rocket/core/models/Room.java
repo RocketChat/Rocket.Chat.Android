@@ -27,6 +27,8 @@ public abstract class Room {
 
   public abstract long getLastSeen();
 
+  public abstract boolean isFavorite();
+
   public boolean isChannel() {
     return TYPE_CHANNEL.equals(getType());
   }
@@ -63,6 +65,8 @@ public abstract class Room {
     public abstract Builder setUpdatedAt(long updatedAt);
 
     public abstract Builder setLastSeen(long lastSeen);
+
+    public abstract Builder setFavorite(boolean favorite);
 
     public abstract Room build();
   }
