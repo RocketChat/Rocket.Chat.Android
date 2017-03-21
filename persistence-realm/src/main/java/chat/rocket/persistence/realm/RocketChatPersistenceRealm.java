@@ -15,7 +15,8 @@ public class RocketChatPersistenceRealm {
         new RealmConfiguration.Builder()
             .name("rocket.chat.persistence.realm")
             .modules(new RocketChatLibraryModule())
-            .deleteRealmIfMigrationNeeded()
+            .schemaVersion(1)
+            .migration(new Migration())
             .build());
   }
 }

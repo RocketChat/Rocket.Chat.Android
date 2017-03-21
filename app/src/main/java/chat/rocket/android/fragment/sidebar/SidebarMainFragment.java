@@ -27,6 +27,7 @@ import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.roomlist.ChannelRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.DirectMessageRoomListHeader;
+import chat.rocket.android.layouthelper.chatroom.roomlist.FavoriteRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
@@ -178,6 +179,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
           getString(R.string.fragment_sidebar_main_unread_rooms_title)
       ));
     }
+
+    roomListHeaders.add(new FavoriteRoomListHeader(
+        getString(R.string.fragment_sidebar_main_favorite_title)
+    ));
 
     roomListHeaders.add(new ChannelRoomListHeader(
         getString(R.string.fragment_sidebar_main_channels_title),
