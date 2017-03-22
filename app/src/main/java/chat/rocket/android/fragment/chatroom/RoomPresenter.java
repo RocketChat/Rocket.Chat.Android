@@ -59,6 +59,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
     getRoomHistoryStateInfo();
     getMessages();
     getUserPreferences();
+    getAbsoluteUrl();
   }
 
   @Override
@@ -72,16 +73,6 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
             connectivityManagerApi.keepAliveServer();
           }
         });
-
-    addSubscription(subscription);
-  }
-
-  @Override
-  public void onViewSetup() {
-    final Disposable subscription = absoluteUrlHelper.getRocketChatAbsoluteUrl()
-        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(it -> view.setupWith(it.orNull()));
 
     addSubscription(subscription);
   }
@@ -244,6 +235,15 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
             view.manualLoadImages();
           }
         });
+
+    addSubscription(subscription);
+  }
+
+  private void getAbsoluteUrl() {
+    final Disposable subscription = absoluteUrlHelper.getRocketChatAbsoluteUrl()
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(it -> view.setupWith(it.orNull()));
 
     addSubscription(subscription);
   }

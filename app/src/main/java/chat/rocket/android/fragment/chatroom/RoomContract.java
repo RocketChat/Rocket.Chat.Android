@@ -36,8 +36,6 @@ public interface RoomContract {
 
     void loadMoreMessages();
 
-    void onViewSetup();
-
     void onMessageSelected(@Nullable Message message);
 
     void sendMessage(String messageText);
