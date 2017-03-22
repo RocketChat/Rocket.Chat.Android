@@ -57,11 +57,19 @@ public class DefaultServerPolicyApi implements ServerPolicyApi {
     return new okhttp3.Callback() {
       @Override
       public void onFailure(Call call, IOException ioException) {
+        if (emitter.isCancelled()) {
+          return;
+        }
+
         emitter.onError(ioException);
       }
 
       @Override
       public void onResponse(Call call, okhttp3.Response response) throws IOException {
+        if (emitter.isCancelled()) {
+          return;
+        }
+
         if (!response.isSuccessful()) {
           emitter.onNext(new Response<>(false, protocol, null));
           emitter.onComplete();

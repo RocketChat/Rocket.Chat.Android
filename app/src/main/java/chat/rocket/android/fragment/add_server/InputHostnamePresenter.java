@@ -53,9 +53,7 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
                 view.showInvalidServerError();
               }
             },
-            throwable -> {
-              view.showConnectionError();
-            });
+            throwable -> view.showConnectionError());
 
     addSubscription(subscription);
   }

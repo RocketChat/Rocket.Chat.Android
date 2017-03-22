@@ -202,8 +202,6 @@ public class RoomFragment extends AbstractChatRoomFragment
     setupSideMenu();
     setupMessageComposer();
     setupMessageActions();
-
-    presenter.onViewSetup();
   }
 
   private void setupMessageActions() {
