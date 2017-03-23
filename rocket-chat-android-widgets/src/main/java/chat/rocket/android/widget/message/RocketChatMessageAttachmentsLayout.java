@@ -158,9 +158,13 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       titleView.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View view) {
-          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+          final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          view.getContext().startActivity(intent);
+
+          final Context context = view.getContext();
+          if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+          }
         }
       });
       TextViewCompat.setTextAppearance(titleView,

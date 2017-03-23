@@ -31,11 +31,11 @@ import okio.Source;
 /**
  * execute file uploading and requesting sendMessage with attachment.
  */
-public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploading> {
+public class FileUploadingToUrlObserver extends AbstractModelObserver<FileUploading> {
   private FileUploadingHelper methodCall;
 
-  public FileUploadingToS3Observer(Context context, String hostname,
-                                   RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+  public FileUploadingToUrlObserver(Context context, String hostname,
+                                    RealmHelper realmHelper, DDPClientRef ddpClientRef) {
     super(context, hostname, realmHelper, ddpClientRef);
     methodCall = new FileUploadingHelper(realmHelper, ddpClientRef);
 
@@ -43,7 +43,11 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
       // resume pending operations.
       RealmResults<FileUploading> pendingUploadRequests = realm.where(FileUploading.class)
           .equalTo(FileUploading.SYNC_STATE, SyncState.SYNCING)
+          .beginGroup()
           .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_S3)
+          .or()
+          .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_GOOGLE)
+          .endGroup()
           .findAll();
       for (FileUploading req : pendingUploadRequests) {
         req.setSyncState(SyncState.NOT_SYNCED);
@@ -56,7 +60,11 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
           .or()
           .equalTo(FileUploading.SYNC_STATE, SyncState.FAILED)
           .endGroup()
+          .beginGroup()
           .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_S3)
+          .or()
+          .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_GOOGLE)
+          .endGroup()
           .findAll().deleteAllFromRealm();
       return null;
     }).continueWith(new LogIfError());
@@ -66,7 +74,11 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
   public RealmResults<FileUploading> queryItems(Realm realm) {
     return realm.where(FileUploading.class)
         .equalTo(FileUploading.SYNC_STATE, SyncState.NOT_SYNCED)
+        .beginGroup()
         .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_S3)
+        .or()
+        .equalTo(FileUploading.STORAGE_TYPE, FileUploading.STORAGE_TYPE_GOOGLE)
+        .endGroup()
         .findAll();
   }
 
@@ -91,13 +103,20 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
     final long filesize = fileUploading.getFilesize();
     final String mimeType = fileUploading.getMimeType();
     final Uri fileUri = Uri.parse(fileUploading.getUri());
+    final String storageType = fileUploading.getStorageType();
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
             .put(FileUploading.ID, uplId)
             .put(FileUploading.SYNC_STATE, SyncState.SYNCING)
         )
-    ).onSuccessTask(_task -> methodCall.uploadRequest(filename, filesize, mimeType, roomId)
+    ).onSuccessTask(_task -> {
+          if (FileUploading.STORAGE_TYPE_GOOGLE.equals(storageType)) {
+            return methodCall.uploadGoogleRequest(filename, filesize, mimeType, roomId);
+          } else {
+            return methodCall.uploadS3Request(filename, filesize, mimeType, roomId);
+          }
+        }
     ).onSuccessTask(task -> {
       final JSONObject info = task.getResult();
       final String uploadUrl = info.getString("upload");
@@ -156,7 +175,9 @@ public class FileUploadingToS3Observer extends AbstractModelObserver<FileUploadi
       }
     }).onSuccessTask(task -> {
       String downloadUrl = task.getResult();
-      return methodCall.sendFileMessage(roomId, "s3", new JSONObject()
+      String storage = FileUploading.STORAGE_TYPE_GOOGLE.equals(storageType) ? storageType : "s3";
+
+      return methodCall.sendFileMessage(roomId, storage, new JSONObject()
           .put("_id", Uri.parse(downloadUrl).getLastPathSegment())
           .put("type", mimeType)
           .put("size", filesize)
