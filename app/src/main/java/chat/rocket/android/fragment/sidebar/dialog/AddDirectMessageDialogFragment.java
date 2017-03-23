@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.sidebar.dialog;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -15,6 +16,7 @@ import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.sidebar.dialog.SuggestUserAdapter;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -45,6 +47,7 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
     return R.layout.dialog_add_direct_message;
   }
 
+  @SuppressLint("RxLeakedSubscription")
   @Override
   protected void onSetupDialog() {
     View buttonAddDirectMessage = getDialog().findViewById(R.id.btn_add_direct_message);
@@ -62,13 +65,19 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
         absoluteUrlHelper.getRocketChatAbsoluteUrl()
             .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::setupView)
+            .subscribe(
+                this::setupView,
+                Logger::report
+            )
     );
 
     RxTextView.textChanges(autoCompleteTextView)
         .map(text -> !TextUtils.isEmpty(text))
         .compose(bindToLifecycle())
-        .subscribe(buttonAddDirectMessage::setEnabled);
+        .subscribe(
+            buttonAddDirectMessage::setEnabled,
+            Logger::report
+        );
 
     buttonAddDirectMessage.setOnClickListener(view -> createRoom());
   }

@@ -12,6 +12,7 @@ import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
@@ -62,7 +63,10 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     )
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(pair -> view.show(pair.first.orNull(), pair.second.orNull()));
+        .subscribe(
+            pair -> view.show(pair.first.orNull(), pair.second.orNull()),
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
@@ -105,7 +109,8 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-            rooms -> view.showRoomList(rooms)
+            rooms -> view.showRoomList(rooms),
+            Logger::report
         );
 
     addSubscription(subscription);

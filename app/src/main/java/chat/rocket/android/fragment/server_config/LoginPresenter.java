@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import bolts.Task;
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.PublicSettingsConstants;
@@ -49,7 +50,10 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
         publicSettingRepository.getById(PublicSettingsConstants.LDAP.ENABLE)
             .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(publicSettingOptional -> doLogin(username, password, publicSettingOptional))
+            .subscribe(
+                publicSettingOptional -> doLogin(username, password, publicSettingOptional),
+                Logger::report
+            )
     );
   }
 
@@ -59,7 +63,9 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
             .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                loginServiceConfigurations -> view.showLoginServices(loginServiceConfigurations))
+                loginServiceConfigurations -> view.showLoginServices(loginServiceConfigurations),
+                Logger::report
+            )
     );
   }
 

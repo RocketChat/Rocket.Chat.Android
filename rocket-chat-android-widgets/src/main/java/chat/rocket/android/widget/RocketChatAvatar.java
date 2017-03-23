@@ -56,6 +56,7 @@ public class RocketChatAvatar extends FrameLayout {
   public void loadImage(String url, Drawable placeholder) {
     final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
     hierarchy.setPlaceholderImage(placeholder);
+    hierarchy.setFailureImage(placeholder);
 
     final DraweeController controller = Fresco.newDraweeControllerBuilder()
         .setUri(Uri.parse(url))

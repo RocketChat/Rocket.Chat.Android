@@ -7,6 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -49,7 +50,10 @@ public class RetryLoginPresenter extends BasePresenter<RetryLoginContract.View>
         sessionInteractor.getDefault()
             .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::onSession)
+            .subscribe(
+                this::onSession,
+                Logger::report
+            )
     );
   }
 

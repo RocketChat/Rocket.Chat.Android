@@ -6,6 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -50,21 +51,24 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(state -> {
-          switch (state) {
-            case UNAVAILABLE:
-              isLogging = true;
-              view.showLogin(hostname);
-              break;
-            case INVALID:
-              isLogging = false;
-              view.showRetryLogin(hostname);
-              break;
-            case VALID:
-              isLogging = false;
-              view.closeView();
-          }
-        });
+        .subscribe(
+            state -> {
+              switch (state) {
+                case UNAVAILABLE:
+                  isLogging = true;
+                  view.showLogin(hostname);
+                  break;
+                case INVALID:
+                  isLogging = false;
+                  view.showRetryLogin(hostname);
+                  break;
+                case VALID:
+                  isLogging = false;
+                  view.closeView();
+              }
+            },
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
