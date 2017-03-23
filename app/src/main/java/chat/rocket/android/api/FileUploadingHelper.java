@@ -21,16 +21,14 @@ public class FileUploadingHelper extends MethodCallHelper {
     super(realmHelper, ddpClientRef);
   }
 
-  public Task<JSONObject> uploadRequest(String filename, long filesize, String mimeType,
-                                        String roomId) {
-    return call("slingshot/uploadRequest", TIMEOUT_MS, () -> new JSONArray()
-        .put("rocketchat-uploads")
-        .put(new JSONObject()
-            .put("name", filename)
-            .put("size", filesize)
-            .put("type", mimeType))
-        .put(new JSONObject().put("rid", roomId)))
-        .onSuccessTask(CONVERT_TO_JSON_OBJECT);
+  public Task<JSONObject> uploadS3Request(String filename, long filesize, String mimeType,
+                                          String roomId) {
+    return uploadRequest("rocketchat-uploads", filename, filesize, mimeType, roomId);
+  }
+
+  public Task<JSONObject> uploadGoogleRequest(String filename, long filesize, String mimeType,
+                                              String roomId) {
+    return uploadRequest("rocketchat-uploads-gs", filename, filesize, mimeType, roomId);
   }
 
   public Task<Void> sendFileMessage(String roomId, String storageType, JSONObject fileObj) {
@@ -58,5 +56,18 @@ public class FileUploadingHelper extends MethodCallHelper {
         .put(store)
         .put(token)
     ).onSuccessTask(CONVERT_TO_JSON_OBJECT);
+  }
+
+  private Task<JSONObject> uploadRequest(String uploadType, String filename,
+                                         long filesize, String mimeType,
+                                         String roomId) {
+    return call("slingshot/uploadRequest", TIMEOUT_MS, () -> new JSONArray()
+        .put(uploadType)
+        .put(new JSONObject()
+            .put("name", filename)
+            .put("size", filesize)
+            .put("type", mimeType))
+        .put(new JSONObject().put("rid", roomId)))
+        .onSuccessTask(CONVERT_TO_JSON_OBJECT);
   }
 }
