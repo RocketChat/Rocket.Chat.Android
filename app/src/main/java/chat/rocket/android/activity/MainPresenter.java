@@ -11,6 +11,7 @@ import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
@@ -71,13 +72,16 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     final Disposable subscription = canCreateRoomInteractor.canCreate(roomId)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(allowed -> {
-          if (allowed) {
-            view.showRoom(hostname, roomId);
-          } else {
-            view.showHome();
-          }
-        });
+        .subscribe(
+            allowed -> {
+              if (allowed) {
+                view.showRoom(hostname, roomId);
+              } else {
+                view.showHome();
+              }
+            },
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
@@ -110,7 +114,10 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     )
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(pair -> view.showUnreadCount(pair.first, pair.second));
+        .subscribe(
+            pair -> view.showUnreadCount(pair.first, pair.second),
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
@@ -119,26 +126,29 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     final Disposable subscription = sessionInteractor.getDefault()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(sessionOptional -> {
-          Session session = sessionOptional.orNull();
-          if (session == null || session.getToken() == null) {
-            view.showLoginScreen();
-            return;
-          }
+        .subscribe(
+            sessionOptional -> {
+              Session session = sessionOptional.orNull();
+              if (session == null || session.getToken() == null) {
+                view.showLoginScreen();
+                return;
+              }
 
-          String error = session.getError();
-          if (error != null && error.length() != 0) {
-            view.showConnectionError();
-            return;
-          }
+              String error = session.getError();
+              if (error != null && error.length() != 0) {
+                view.showConnectionError();
+                return;
+              }
 
-          if (!session.isTokenVerified()) {
-            view.showConnecting();
-            return;
-          }
+              if (!session.isTokenVerified()) {
+                view.showConnecting();
+                return;
+              }
 
-          view.showConnectionOk();
-        });
+              view.showConnectionOk();
+            },
+            Logger::report
+        );
 
     addSubscription(subscription);
   }

@@ -21,6 +21,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.layouthelper.chatroom.dialog.RoomUserAdapter;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
@@ -99,7 +100,10 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
         absoluteUrlHelper.getRocketChatAbsoluteUrl()
             .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::setupView)
+            .subscribe(
+                this::setupView,
+                Logger::report
+            )
     );
   }
 

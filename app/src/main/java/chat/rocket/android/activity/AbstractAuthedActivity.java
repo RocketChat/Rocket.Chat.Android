@@ -11,6 +11,7 @@ import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.push.PushNotificationHandler;
@@ -173,7 +174,10 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
             .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::updateHostnameIfNeeded)
+            .subscribe(
+                this::updateHostnameIfNeeded,
+                Logger::report
+            )
     );
 
     compositeDisposable.add(
@@ -181,7 +185,10 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
             .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::updateRoomIdIfNeeded)
+            .subscribe(
+                this::updateRoomIdIfNeeded,
+                Logger::report
+            )
     );
   }
 }

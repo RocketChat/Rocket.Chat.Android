@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.sidebar;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.roomlist.ChannelRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.DirectMessageRoomListHeader;
@@ -127,6 +129,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     recyclerView.setAdapter(adapter);
   }
 
+  @SuppressLint("RxLeakedSubscription")
   private void setupUserActionToggle() {
     final CompoundButton toggleUserAction =
         ((CompoundButton) rootView.findViewById(R.id.toggle_user_action));
@@ -137,8 +140,11 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
     RxCompoundButton.checkedChanges(toggleUserAction)
         .compose(bindToLifecycle())
-        .subscribe(aBoolean -> rootView.findViewById(R.id.user_action_outer_container)
-            .setVisibility(aBoolean ? View.VISIBLE : View.GONE));
+        .subscribe(
+            aBoolean -> rootView.findViewById(R.id.user_action_outer_container)
+                .setVisibility(aBoolean ? View.VISIBLE : View.GONE),
+            Logger::report
+        );
   }
 
   private void setupUserStatusButtons() {

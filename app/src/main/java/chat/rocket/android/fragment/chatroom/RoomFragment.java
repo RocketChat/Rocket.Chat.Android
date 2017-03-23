@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment.chatroom;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
 import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
@@ -244,6 +246,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     presenter.onMessageSelected(pairedMessage.target);
   }
 
+  @SuppressLint("RxLeakedSubscription")
   private void setupSideMenu() {
     View sideMenu = rootView.findViewById(R.id.room_side_menu);
     sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
@@ -257,15 +260,18 @@ public class RoomFragment extends AbstractChatRoomFragment
     if (drawerLayout != null && pane != null) {
       RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
           .compose(bindToLifecycle())
-          .subscribe(opened -> {
-            try {
-              Field fieldSlidable = pane.getClass().getDeclaredField("mCanSlide");
-              fieldSlidable.setAccessible(true);
-              fieldSlidable.setBoolean(pane, !opened);
-            } catch (Exception exception) {
-              RCLog.w(exception);
-            }
-          });
+          .subscribe(
+              opened -> {
+                try {
+                  Field fieldSlidable = pane.getClass().getDeclaredField("mCanSlide");
+                  fieldSlidable.setAccessible(true);
+                  fieldSlidable.setBoolean(pane, !opened);
+                } catch (Exception exception) {
+                  RCLog.w(exception);
+                }
+              },
+              Logger::report
+          );
     }
   }
 

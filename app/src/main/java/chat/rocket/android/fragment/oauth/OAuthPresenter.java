@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.repositories.LoginServiceConfigurationRepository;
@@ -28,13 +29,16 @@ public class OAuthPresenter extends BasePresenter<OAuthContract.View>
         loginServiceConfigurationRepository.getByName(serviceName)
             .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(optional -> {
-              if (optional.isPresent()) {
-                view.showService(optional.get());
-              } else {
-                view.close();
-              }
-            })
+            .subscribe(
+                optional -> {
+                  if (optional.isPresent()) {
+                    view.showService(optional.get());
+                  } else {
+                    view.close();
+                  }
+                },
+                Logger::report
+            )
     );
   }
 

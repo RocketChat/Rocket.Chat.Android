@@ -28,7 +28,6 @@ abstract class AbstractServerConfigFragment extends AbstractFragment {
     }
   }
 
-
   protected void showFragment(Fragment fragment) {
     getFragmentManager().beginTransaction()
         .add(R.id.content, fragment)

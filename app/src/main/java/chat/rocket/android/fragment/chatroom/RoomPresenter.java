@@ -13,6 +13,7 @@ import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.interactors.MessageInteractor;
@@ -68,11 +69,14 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .flatMap(messageInteractor::loadMessages)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(success -> {
-          if (success) {
-            connectivityManagerApi.keepAliveServer();
-          }
-        });
+        .subscribe(
+            success -> {
+              if (success) {
+                connectivityManagerApi.keepAliveServer();
+              }
+            },
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
@@ -84,11 +88,14 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .flatMap(messageInteractor::loadMoreMessages)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(success -> {
-          if (success) {
-            connectivityManagerApi.keepAliveServer();
-          }
-        });
+        .subscribe(
+            success -> {
+              if (success) {
+                connectivityManagerApi.keepAliveServer();
+              }
+            },
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
@@ -110,11 +117,14 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .flatMap(pair -> messageInteractor.send(pair.first, pair.second, messageText))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(success -> {
-          if (success) {
-            view.onMessageSendSuccessfully();
-          }
-        });
+        .subscribe(
+            success -> {
+              if (success) {
+                view.onMessageSendSuccessfully();
+              }
+            },
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
@@ -148,7 +158,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-            count -> view.showUnreadCount(count)
+            count -> view.showUnreadCount(count),
+            Logger::report
         );
 
     addSubscription(subscription);
@@ -165,7 +176,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             room -> methodCallHelper.readMessages(room.getRoomId())
-                .continueWith(new LogIfError())
+                .continueWith(new LogIfError()),
+            Logger::report
         );
 
     addSubscription(subscription);
@@ -179,7 +191,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-            room -> view.render(room)
+            room -> view.render(room),
+            Logger::report
         );
 
     addSubscription(subscription);
@@ -199,7 +212,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                   !roomHistoryState.isComplete(),
                   syncState == SyncState.SYNCED || syncState == SyncState.FAILED
               );
-            }
+            },
+            Logger::report
         );
 
     addSubscription(subscription);
@@ -212,7 +226,10 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .flatMap(messageInteractor::getAllFrom)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(messages -> view.showMessages(messages));
+        .subscribe(
+            messages -> view.showMessages(messages),
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
@@ -228,13 +245,16 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(preferences -> {
-          if (preferences.isAutoImageLoad()) {
-            view.autoloadImages();
-          } else {
-            view.manualLoadImages();
-          }
-        });
+        .subscribe(
+            preferences -> {
+              if (preferences.isAutoImageLoad()) {
+                view.autoloadImages();
+              } else {
+                view.manualLoadImages();
+              }
+            },
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
@@ -243,7 +263,10 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
     final Disposable subscription = absoluteUrlHelper.getRocketChatAbsoluteUrl()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(it -> view.setupWith(it.orNull()));
+        .subscribe(
+            it -> view.setupWith(it.orNull()),
+            Logger::report
+        );
 
     addSubscription(subscription);
   }
