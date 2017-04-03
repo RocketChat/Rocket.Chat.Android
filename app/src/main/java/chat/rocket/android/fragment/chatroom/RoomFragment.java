@@ -20,12 +20,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
@@ -49,8 +53,13 @@ import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.widget.message.autocomplete.AutocompleteManager;
+import chat.rocket.android.widget.message.autocomplete.channel.ChannelSource;
+import chat.rocket.android.widget.message.autocomplete.user.UserSource;
 import chat.rocket.core.interactors.MessageInteractor;
+import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
+import chat.rocket.core.interactors.UserInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
@@ -87,6 +96,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   protected Snackbar unreadIndicator;
   private boolean previousUnreadMessageExists;
   private MessageListAdapter adapter;
+  private AutocompleteManager autocompleteManager;
 
   private List<AbstractExtraActionItem> extraActionItems;
 
@@ -238,6 +248,12 @@ public class RoomFragment extends AbstractChatRoomFragment
         adapter.unregisterAdapterDataObserver(autoScrollManager);
       }
     }
+
+    if (autocompleteManager != null) {
+      autocompleteManager.dispose();
+      autocompleteManager = null;
+    }
+
     super.onDestroyView();
   }
 
@@ -290,7 +306,31 @@ public class RoomFragment extends AbstractChatRoomFragment
     messageFormManager =
         new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
     messageFormManager.setSendMessageCallback(this::sendMessage);
-    messageFormLayout.setEditTextContentListener(this::onCommitContent);
+    messageFormLayout.setEditTextCommitContentListener(this::onCommitContent);
+
+    autocompleteManager =
+        new AutocompleteManager((ViewGroup) rootView.findViewById(R.id.message_list_root));
+
+    autocompleteManager.registerSource(
+        new ChannelSource(
+            new RoomInteractor(new RealmRoomRepository(hostname)),
+            AndroidSchedulers.from(BackgroundLooper.get()),
+            AndroidSchedulers.mainThread()
+        )
+    );
+
+    autocompleteManager.registerSource(
+        new UserSource(
+            new UserInteractor(new RealmUserRepository(hostname)),
+            AndroidSchedulers.from(BackgroundLooper.get()),
+            AndroidSchedulers.mainThread()
+        )
+    );
+
+    autocompleteManager.bindTo(
+        messageFormLayout.getEditText(),
+        messageFormLayout
+    );
   }
 
   @Override

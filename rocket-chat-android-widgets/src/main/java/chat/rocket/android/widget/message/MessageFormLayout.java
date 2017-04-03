@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -115,6 +116,10 @@ public class MessageFormLayout extends LinearLayout {
     addView(composer);
   }
 
+  public EditText getEditText() {
+    return (EditText) composer.findViewById(R.id.editor);
+  }
+
   public void setExtraActionSelectionClickListener(
       ExtraActionSelectionClickListener extraActionSelectionClickListener) {
     this.extraActionSelectionClickListener = extraActionSelectionClickListener;
@@ -153,7 +158,8 @@ public class MessageFormLayout extends LinearLayout {
     composer.findViewById(R.id.btn_submit).setEnabled(enabled);
   }
 
-  public void setEditTextContentListener(ImageKeyboardEditText.OnCommitContentListener listener) {
+  public void setEditTextCommitContentListener(
+      ImageKeyboardEditText.OnCommitContentListener listener) {
     this.listener = listener;
   }
 

@@ -3,6 +3,7 @@ package chat.rocket.core.interactors;
 import io.reactivex.Flowable;
 
 import java.util.List;
+import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.repositories.RoomRepository;
 
@@ -38,5 +39,9 @@ public class RoomInteractor {
             .filter(Room::isOpen)
             .toList()
             .toFlowable());
+  }
+
+  public Flowable<List<Room>> getRoomsWithNameLike(String name) {
+    return roomRepository.getSortedLikeName(name, SortDirection.DESC, 5);
   }
 }

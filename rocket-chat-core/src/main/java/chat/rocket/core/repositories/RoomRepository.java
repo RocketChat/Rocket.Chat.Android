@@ -5,6 +5,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import java.util.List;
+import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomHistoryState;
 
@@ -17,4 +18,6 @@ public interface RoomRepository {
   Flowable<Optional<RoomHistoryState>> getHistoryStateByRoomId(String roomId);
 
   Single<Boolean> setHistoryState(RoomHistoryState roomHistoryState);
+
+  Flowable<List<Room>> getSortedLikeName(String name, SortDirection direction, int limit);
 }
