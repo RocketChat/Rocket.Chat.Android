@@ -10,9 +10,9 @@ import chat.rocket.android.widget.message.autocomplete.AutocompleteAdapter;
 public class UserAdapter extends AutocompleteAdapter<UserItem, UserViewHolder> {
 
   @Override
-  public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public UserViewHolder getViewHolder(ViewGroup parent) {
     View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.autocomplete_channel_view, parent, false);
+        .inflate(R.layout.autocomplete_user_view, parent, false);
 
     return new UserViewHolder(view, onClickListener);
   }

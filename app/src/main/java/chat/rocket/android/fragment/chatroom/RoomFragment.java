@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.renderer.RocketChatUserStatusProvider;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteManager;
 import chat.rocket.android.widget.message.autocomplete.channel.ChannelSource;
 import chat.rocket.android.widget.message.autocomplete.user.UserSource;
@@ -62,6 +65,7 @@ import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.interactors.UserInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
@@ -99,6 +103,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   private AutocompleteManager autocompleteManager;
 
   private List<AbstractExtraActionItem> extraActionItems;
+
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
   protected RoomContract.Presenter presenter;
 
@@ -249,6 +255,8 @@ public class RoomFragment extends AbstractChatRoomFragment
       }
     }
 
+    compositeDisposable.clear();
+
     if (autocompleteManager != null) {
       autocompleteManager.dispose();
       autocompleteManager = null;
@@ -319,13 +327,35 @@ public class RoomFragment extends AbstractChatRoomFragment
         )
     );
 
-    autocompleteManager.registerSource(
-        new UserSource(
-            new UserInteractor(new RealmUserRepository(hostname)),
-            AndroidSchedulers.from(BackgroundLooper.get()),
-            AndroidSchedulers.mainThread()
-        )
+    final UserRepository userRepository = new RealmUserRepository(hostname);
+
+    final AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
+        hostname,
+        new RealmServerInfoRepository(),
+        userRepository,
+        new SessionInteractor(new RealmSessionRepository(hostname))
     );
+
+    Disposable disposable = absoluteUrlHelper.getRocketChatAbsoluteUrl()
+        .subscribe(
+            optional -> {
+              if (optional.isPresent()) {
+                autocompleteManager.registerSource(
+                    new UserSource(
+                        new UserInteractor(userRepository),
+                        optional.get(),
+                        RocketChatUserStatusProvider.getInstance(),
+                        AndroidSchedulers.from(BackgroundLooper.get()),
+                        AndroidSchedulers.mainThread()
+                    )
+                );
+              }
+            },
+            throwable -> {
+            }
+        );
+
+    compositeDisposable.add(disposable);
 
     autocompleteManager.bindTo(
         messageFormLayout.getEditText(),

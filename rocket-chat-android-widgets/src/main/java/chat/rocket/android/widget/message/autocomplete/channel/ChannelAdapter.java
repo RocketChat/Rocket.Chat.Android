@@ -10,7 +10,7 @@ import chat.rocket.android.widget.message.autocomplete.AutocompleteAdapter;
 public class ChannelAdapter extends AutocompleteAdapter<ChannelItem, ChannelViewHolder> {
 
   @Override
-  public ChannelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public ChannelViewHolder getViewHolder(ViewGroup parent) {
     View view = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.autocomplete_channel_view, parent, false);
 

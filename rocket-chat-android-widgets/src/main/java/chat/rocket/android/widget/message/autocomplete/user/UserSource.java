@@ -11,6 +11,8 @@ import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
+import chat.rocket.android.widget.AbsoluteUrl;
+import chat.rocket.android.widget.helper.UserStatusProvider;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteSource;
 import chat.rocket.core.interactors.UserInteractor;
 import chat.rocket.core.models.User;
@@ -18,11 +20,17 @@ import chat.rocket.core.models.User;
 public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
 
   private final UserInteractor userInteractor;
+  private final AbsoluteUrl absoluteUrl;
+  private final UserStatusProvider userStatusProvider;
   private final Scheduler bgScheduler;
   private final Scheduler fgScheduler;
 
-  public UserSource(UserInteractor userInteractor, Scheduler bgScheduler, Scheduler fgScheduler) {
+  public UserSource(UserInteractor userInteractor, AbsoluteUrl absoluteUrl,
+                    UserStatusProvider userStatusProvider,
+                    Scheduler bgScheduler, Scheduler fgScheduler) {
     this.userInteractor = userInteractor;
+    this.absoluteUrl = absoluteUrl;
+    this.userStatusProvider = userStatusProvider;
     this.bgScheduler = bgScheduler;
     this.fgScheduler = fgScheduler;
   }
@@ -50,6 +58,7 @@ public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
             return userInteractor.getUserAutocompleteSuggestions(s);
           }
         })
+        .distinctUntilChanged()
         .map(new Function<List<User>, List<UserItem>>() {
           @Override
           public List<UserItem> apply(@io.reactivex.annotations.NonNull List<User> users)
@@ -90,7 +99,7 @@ public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
 
   @Override
   protected String getAutocompleteSuggestion(UserItem autocompleteItem) {
-    return getTrigger() + autocompleteItem.getTitle();
+    return getTrigger() + autocompleteItem.getSuggestion();
   }
 
   private List<UserItem> toUserItemList(List<User> users) {
@@ -98,7 +107,7 @@ public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
     List<UserItem> userItems = new ArrayList<>(size);
 
     for (int i = 0; i < size; i++) {
-      userItems.add(new UserItem(users.get(i)));
+      userItems.add(new UserItem(users.get(i), absoluteUrl, userStatusProvider));
     }
 
     return userItems;

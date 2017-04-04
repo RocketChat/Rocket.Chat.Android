@@ -53,6 +53,7 @@ public class ChannelSource extends AutocompleteSource<ChannelAdapter, ChannelIte
             return roomInteractor.getRoomsWithNameLike(s);
           }
         })
+        .distinctUntilChanged()
         .map(new Function<List<Room>, List<ChannelItem>>() {
           @Override
           public List<ChannelItem> apply(@io.reactivex.annotations.NonNull List<Room> rooms)
@@ -93,7 +94,7 @@ public class ChannelSource extends AutocompleteSource<ChannelAdapter, ChannelIte
 
   @Override
   protected String getAutocompleteSuggestion(ChannelItem autocompleteItem) {
-    return getTrigger() + autocompleteItem.getTitle();
+    return getTrigger() + autocompleteItem.getSuggestion();
   }
 
   private List<ChannelItem> toChannelItemList(List<Room> rooms) {

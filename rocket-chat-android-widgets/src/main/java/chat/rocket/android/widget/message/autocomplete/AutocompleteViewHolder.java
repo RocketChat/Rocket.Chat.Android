@@ -11,6 +11,8 @@ public abstract class AutocompleteViewHolder<I extends AutocompleteItem>
 
   public abstract void bind(I autocompleteItem);
 
+  public abstract void showAsEmpty();
+
   public interface OnClickListener<I extends AutocompleteItem> {
     void onClick(I autocompleteItem);
   }

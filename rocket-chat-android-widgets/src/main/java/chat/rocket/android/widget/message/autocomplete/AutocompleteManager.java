@@ -2,9 +2,11 @@ package chat.rocket.android.widget.message.autocomplete;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
@@ -39,6 +41,9 @@ public class AutocompleteManager {
   private final View contentHolder;
   private final RecyclerView recyclerView;
 
+  private float contentHolderInitialY;
+  private final float yOffset;
+
   private final AutocompleteSource.OnAutocompleteSelected onAutocompleteSelected =
       new AutocompleteSource.OnAutocompleteSelected() {
         @Override
@@ -57,6 +62,12 @@ public class AutocompleteManager {
     recyclerView.setLayoutManager(new LinearLayoutManager(parent.getContext()));
 
     parent.addView(contentHolder);
+
+    yOffset = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        32,
+        contentHolder.getContext().getResources().getDisplayMetrics()
+    );
   }
 
   public void registerSource(AutocompleteSource autocompleteSource) {
@@ -70,9 +81,17 @@ public class AutocompleteManager {
       RelativeLayout.LayoutParams layoutParams =
           (RelativeLayout.LayoutParams) contentHolder.getLayoutParams();
       layoutParams.addRule(RelativeLayout.ABOVE, anchor.getId());
-    }
 
-    contentHolder.setVisibility(View.GONE);
+      contentHolder.getViewTreeObserver().addOnGlobalLayoutListener(
+          new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+              contentHolderInitialY = contentHolder.getY();
+              animateHide();
+              contentHolder.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+          });
+    }
 
     afterTextChangeDisposable = RxTextView.afterTextChangeEvents(editText)
         .debounce(300, TimeUnit.MILLISECONDS)
@@ -151,7 +170,7 @@ public class AutocompleteManager {
 
     this.text = text;
 
-    contentHolder.setVisibility(View.VISIBLE);
+    animateShow();
 
     sourceDisposable.clear();
 
@@ -159,7 +178,7 @@ public class AutocompleteManager {
   }
 
   private void cleanState() {
-    contentHolder.setVisibility(View.GONE);
+    animateHide();
 
     sourceDisposable.clear();
 
@@ -221,5 +240,33 @@ public class AutocompleteManager {
 
     editText.setText(stringBuilder.toString());
     editText.setSelection(selectionPos);
+  }
+
+  private void animateHide() {
+    contentHolder.animate().cancel();
+    contentHolder.animate()
+        .alpha(0)
+        .translationY(contentHolderInitialY + yOffset)
+        .setDuration(150)
+        .withEndAction(new Runnable() {
+          @Override
+          public void run() {
+            contentHolder.setVisibility(View.GONE);
+          }
+        });
+  }
+
+  private void animateShow() {
+    contentHolder.animate().cancel();
+    contentHolder.animate()
+        .alpha(1)
+        .translationY(contentHolderInitialY)
+        .setDuration(150)
+        .withStartAction(new Runnable() {
+          @Override
+          public void run() {
+            contentHolder.setVisibility(View.VISIBLE);
+          }
+        });
   }
 }

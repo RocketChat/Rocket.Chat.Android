@@ -10,12 +10,14 @@ import chat.rocket.android.widget.message.autocomplete.AutocompleteViewHolder;
 public class ChannelViewHolder extends AutocompleteViewHolder<ChannelItem> {
 
   private final TextView titleTextView;
+  private final TextView iconTextView;
 
   public ChannelViewHolder(View itemView,
                            final AutocompleteViewHolder.OnClickListener<ChannelItem> onClickListener) {
     super(itemView);
 
     titleTextView = (TextView) itemView.findViewById(R.id.title);
+    iconTextView = (TextView) itemView.findViewById(R.id.icon);
 
     itemView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -32,7 +34,17 @@ public class ChannelViewHolder extends AutocompleteViewHolder<ChannelItem> {
     itemView.setTag(channelItem);
 
     if (titleTextView != null) {
-      titleTextView.setText(channelItem.getTitle());
+      titleTextView.setText(channelItem.getSuggestion());
     }
+
+    if (iconTextView != null) {
+      iconTextView.setText(channelItem.getIcon());
+    }
+  }
+
+  @Override
+  public void showAsEmpty() {
+    iconTextView.setVisibility(View.GONE);
+    titleTextView.setText(R.string.no_channel_found);
   }
 }
