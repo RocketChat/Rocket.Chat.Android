@@ -89,10 +89,4 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
 
     return userList;
   }
-
-  private List<RealmUser> safeSubList(RealmResults<RealmUser> realmUsers,
-                                      int fromIndex,
-                                      int toIndex) {
-    return realmUsers.subList(Math.max(0, fromIndex), Math.min(realmUsers.size(), toIndex));
-  }
 }

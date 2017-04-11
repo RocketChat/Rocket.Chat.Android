@@ -56,9 +56,11 @@ import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.renderer.RocketChatUserStatusProvider;
+import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteManager;
 import chat.rocket.android.widget.message.autocomplete.channel.ChannelSource;
 import chat.rocket.android.widget.message.autocomplete.user.UserSource;
+import chat.rocket.core.interactors.AutocompleteChannelInteractor;
 import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -70,6 +72,7 @@ import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
+import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.persistence.realm.RealmStore;
@@ -321,7 +324,11 @@ public class RoomFragment extends AbstractChatRoomFragment
 
     autocompleteManager.registerSource(
         new ChannelSource(
-            new RoomInteractor(new RealmRoomRepository(hostname)),
+            new AutocompleteChannelInteractor(
+                new RealmRoomRepository(hostname),
+                new RealmSpotlightRoomRepository(hostname),
+                new DeafultTempSpotlightRoomCaller(new MethodCallHelper(getContext(), hostname))
+            ),
             AndroidSchedulers.from(BackgroundLooper.get()),
             AndroidSchedulers.mainThread()
         )

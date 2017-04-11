@@ -150,8 +150,34 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
         pair -> RxJavaInterop.toV2Flowable(
             pair.first.where(RealmRoom.class)
                 .like(RealmRoom.NAME, "*" + name + "*")
+                .beginGroup()
+                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
+                .or()
+                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
+                .endGroup()
                 .findAllSorted(RealmRoom.NAME,
                     direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
+                .asObservable()),
+        pair -> close(pair.first, pair.second)
+    )
+        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+        .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
+            && roomSubscriptions.isValid())
+        .map(realmRooms -> toList(safeSubList(realmRooms, 0, limit))));
+  }
+
+  @Override
+  public Flowable<List<Room>> getLatestSeen(int limit) {
+    return Flowable.defer(() -> Flowable.using(
+        () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+        pair -> RxJavaInterop.toV2Flowable(
+            pair.first.where(RealmRoom.class)
+                .beginGroup()
+                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
+                .or()
+                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
+                .endGroup()
+                .findAllSorted(RealmRoom.LAST_SEEN, Sort.ASCENDING)
                 .asObservable()),
         pair -> close(pair.first, pair.second)
     )
@@ -183,11 +209,5 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
     }
 
     return roomList;
-  }
-
-  private List<RealmRoom> safeSubList(RealmResults<RealmRoom> realmRooms,
-                                      int fromIndex,
-                                      int toIndex) {
-    return realmRooms.subList(Math.max(0, fromIndex), Math.min(realmRooms.size(), toIndex));
   }
 }

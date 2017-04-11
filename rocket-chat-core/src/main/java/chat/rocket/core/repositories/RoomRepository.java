@@ -20,4 +20,6 @@ public interface RoomRepository {
   Single<Boolean> setHistoryState(RoomHistoryState roomHistoryState);
 
   Flowable<List<Room>> getSortedLikeName(String name, SortDirection direction, int limit);
+
+  Flowable<List<Room>> getLatestSeen(int limit);
 }

@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import chat.rocket.android.widget.R;
-import chat.rocket.android.widget.message.autocomplete.AutocompleteItem;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteViewHolder;
 
 public class ChannelViewHolder extends AutocompleteViewHolder<ChannelItem> {

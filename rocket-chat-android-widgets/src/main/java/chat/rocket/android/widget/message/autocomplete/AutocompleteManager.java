@@ -146,11 +146,6 @@ public class AutocompleteManager {
     }
 
     final String toCompleteText = getToCompleteText(text, selectionStart);
-    // trigger plus 2 letters
-    if (toCompleteText.length() < 3) {
-      cleanState();
-      return;
-    }
 
     final AutocompleteSource source = getSource(toCompleteText);
     if (source == null) {

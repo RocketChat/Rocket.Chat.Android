@@ -13,19 +13,19 @@ import org.reactivestreams.Publisher;
 import java.util.ArrayList;
 import java.util.List;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteSource;
-import chat.rocket.core.interactors.RoomInteractor;
-import chat.rocket.core.models.Room;
+import chat.rocket.core.interactors.AutocompleteChannelInteractor;
+import chat.rocket.core.models.SpotlightRoom;
 
 public class ChannelSource extends AutocompleteSource<ChannelAdapter, ChannelItem> {
 
-  private final RoomInteractor roomInteractor;
+  private final AutocompleteChannelInteractor autocompleteChannelInteractor;
   private final Scheduler bgScheduler;
   private final Scheduler fgScheduler;
 
-  public ChannelSource(RoomInteractor roomInteractor,
+  public ChannelSource(AutocompleteChannelInteractor autocompleteChannelInteractor,
                        Scheduler bgScheduler,
                        Scheduler fgScheduler) {
-    this.roomInteractor = roomInteractor;
+    this.autocompleteChannelInteractor = autocompleteChannelInteractor;
     this.bgScheduler = bgScheduler;
     this.fgScheduler = fgScheduler;
   }
@@ -46,19 +46,20 @@ public class ChannelSource extends AutocompleteSource<ChannelAdapter, ChannelIte
             return s.substring(1);
           }
         })
-        .flatMap(new Function<String, Publisher<List<Room>>>() {
+        .flatMap(new Function<String, Publisher<List<SpotlightRoom>>>() {
           @Override
-          public Publisher<List<Room>> apply(@io.reactivex.annotations.NonNull String s)
+          public Publisher<List<SpotlightRoom>> apply(@io.reactivex.annotations.NonNull String s)
               throws Exception {
-            return roomInteractor.getRoomsWithNameLike(s);
+            return autocompleteChannelInteractor.getSuggestionsFor(s);
           }
         })
         .distinctUntilChanged()
-        .map(new Function<List<Room>, List<ChannelItem>>() {
+        .map(new Function<List<SpotlightRoom>, List<ChannelItem>>() {
           @Override
-          public List<ChannelItem> apply(@io.reactivex.annotations.NonNull List<Room> rooms)
+          public List<ChannelItem> apply(
+              @io.reactivex.annotations.NonNull List<SpotlightRoom> spotlightRooms)
               throws Exception {
-            return toChannelItemList(rooms);
+            return toChannelItemList(spotlightRooms);
           }
         })
         .subscribeOn(bgScheduler)
@@ -97,12 +98,12 @@ public class ChannelSource extends AutocompleteSource<ChannelAdapter, ChannelIte
     return getTrigger() + autocompleteItem.getSuggestion();
   }
 
-  private List<ChannelItem> toChannelItemList(List<Room> rooms) {
-    int size = rooms.size();
+  private List<ChannelItem> toChannelItemList(List<SpotlightRoom> spotlightRooms) {
+    int size = spotlightRooms.size();
     List<ChannelItem> channelItems = new ArrayList<>(size);
 
     for (int i = 0; i < size; i++) {
-      channelItems.add(new ChannelItem(rooms.get(i)));
+      channelItems.add(new ChannelItem(spotlightRooms.get(i)));
     }
 
     return channelItems;
