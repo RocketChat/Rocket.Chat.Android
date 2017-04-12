@@ -6,15 +6,15 @@ import android.support.annotation.NonNull;
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.helper.UserStatusProvider;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteItem;
-import chat.rocket.core.models.User;
+import chat.rocket.core.models.SpotlightUser;
 
 public class UserItem implements AutocompleteItem {
 
-  private final User user;
+  private final SpotlightUser user;
   private final AbsoluteUrl absoluteUrl;
   private final UserStatusProvider userStatusProvider;
 
-  public UserItem(@NonNull User user, AbsoluteUrl absoluteUrl,
+  public UserItem(@NonNull SpotlightUser user, AbsoluteUrl absoluteUrl,
                   UserStatusProvider userStatusProvider) {
     this.user = user;
     this.absoluteUrl = absoluteUrl;

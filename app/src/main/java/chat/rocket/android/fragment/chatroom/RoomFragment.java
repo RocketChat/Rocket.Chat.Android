@@ -13,6 +13,7 @@ import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.os.BuildCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -22,8 +23,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fernandocejas.arrow.optional.Optional;
 import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -57,10 +60,12 @@ import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionIte
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.renderer.RocketChatUserStatusProvider;
 import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
+import chat.rocket.android.service.temp.DefaultTempSpotlightUserCaller;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteManager;
 import chat.rocket.android.widget.message.autocomplete.channel.ChannelSource;
 import chat.rocket.android.widget.message.autocomplete.user.UserSource;
 import chat.rocket.core.interactors.AutocompleteChannelInteractor;
+import chat.rocket.core.interactors.AutocompleteUserInteractor;
 import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -73,6 +78,7 @@ import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmSpotlightUserRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.persistence.realm.RealmStore;
@@ -111,6 +117,8 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   protected RoomContract.Presenter presenter;
 
+  private RealmRoomRepository roomRepository;
+
   public RoomFragment() {
   }
 
@@ -136,7 +144,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     hostname = args.getString(HOSTNAME);
     roomId = args.getString(ROOM_ID);
 
-    RealmRoomRepository roomRepository = new RealmRoomRepository(hostname);
+    roomRepository = new RealmRoomRepository(hostname);
 
     MessageInteractor messageInteractor = new MessageInteractor(
         new RealmMessageRepository(hostname),
@@ -322,12 +330,14 @@ public class RoomFragment extends AbstractChatRoomFragment
     autocompleteManager =
         new AutocompleteManager((ViewGroup) rootView.findViewById(R.id.message_list_root));
 
+    final MethodCallHelper methodCallHelper = new MethodCallHelper(getContext(), hostname);
+
     autocompleteManager.registerSource(
         new ChannelSource(
             new AutocompleteChannelInteractor(
                 new RealmRoomRepository(hostname),
                 new RealmSpotlightRoomRepository(hostname),
-                new DeafultTempSpotlightRoomCaller(new MethodCallHelper(getContext(), hostname))
+                new DeafultTempSpotlightRoomCaller(methodCallHelper)
             ),
             AndroidSchedulers.from(BackgroundLooper.get()),
             AndroidSchedulers.mainThread()
@@ -343,14 +353,24 @@ public class RoomFragment extends AbstractChatRoomFragment
         new SessionInteractor(new RealmSessionRepository(hostname))
     );
 
-    Disposable disposable = absoluteUrlHelper.getRocketChatAbsoluteUrl()
+    Disposable disposable = Single.zip(
+        absoluteUrlHelper.getRocketChatAbsoluteUrl(),
+        roomRepository.getById(roomId).first(Optional.absent()),
+        Pair::create
+    )
         .subscribe(
-            optional -> {
-              if (optional.isPresent()) {
+            pair -> {
+              if (pair.first.isPresent() && pair.second.isPresent()) {
                 autocompleteManager.registerSource(
                     new UserSource(
-                        new UserInteractor(userRepository),
-                        optional.get(),
+                        new AutocompleteUserInteractor(
+                            pair.second.get(),
+                            userRepository,
+                            new RealmMessageRepository(hostname),
+                            new RealmSpotlightUserRepository(hostname),
+                            new DefaultTempSpotlightUserCaller(methodCallHelper)
+                        ),
+                        pair.first.get(),
                         RocketChatUserStatusProvider.getInstance(),
                         AndroidSchedulers.from(BackgroundLooper.get()),
                         AndroidSchedulers.mainThread()

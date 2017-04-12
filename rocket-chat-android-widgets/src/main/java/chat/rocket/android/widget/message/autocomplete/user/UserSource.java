@@ -14,21 +14,21 @@ import java.util.List;
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.helper.UserStatusProvider;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteSource;
-import chat.rocket.core.interactors.UserInteractor;
-import chat.rocket.core.models.User;
+import chat.rocket.core.interactors.AutocompleteUserInteractor;
+import chat.rocket.core.models.SpotlightUser;
 
 public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
 
-  private final UserInteractor userInteractor;
+  private final AutocompleteUserInteractor autocompleteUserInteractor;
   private final AbsoluteUrl absoluteUrl;
   private final UserStatusProvider userStatusProvider;
   private final Scheduler bgScheduler;
   private final Scheduler fgScheduler;
 
-  public UserSource(UserInteractor userInteractor, AbsoluteUrl absoluteUrl,
-                    UserStatusProvider userStatusProvider,
+  public UserSource(AutocompleteUserInteractor autocompleteUserInteractor,
+                    AbsoluteUrl absoluteUrl, UserStatusProvider userStatusProvider,
                     Scheduler bgScheduler, Scheduler fgScheduler) {
-    this.userInteractor = userInteractor;
+    this.autocompleteUserInteractor = autocompleteUserInteractor;
     this.absoluteUrl = absoluteUrl;
     this.userStatusProvider = userStatusProvider;
     this.bgScheduler = bgScheduler;
@@ -51,17 +51,17 @@ public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
             return s.substring(1);
           }
         })
-        .flatMap(new Function<String, Publisher<List<User>>>() {
+        .flatMap(new Function<String, Publisher<List<SpotlightUser>>>() {
           @Override
-          public Publisher<List<User>> apply(@io.reactivex.annotations.NonNull String s)
+          public Publisher<List<SpotlightUser>> apply(@io.reactivex.annotations.NonNull String s)
               throws Exception {
-            return userInteractor.getUserAutocompleteSuggestions(s);
+            return autocompleteUserInteractor.getSuggestionsFor(s);
           }
         })
         .distinctUntilChanged()
-        .map(new Function<List<User>, List<UserItem>>() {
+        .map(new Function<List<SpotlightUser>, List<UserItem>>() {
           @Override
-          public List<UserItem> apply(@io.reactivex.annotations.NonNull List<User> users)
+          public List<UserItem> apply(@io.reactivex.annotations.NonNull List<SpotlightUser> users)
               throws Exception {
             return toUserItemList(users);
           }
@@ -102,7 +102,7 @@ public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
     return getTrigger() + autocompleteItem.getSuggestion();
   }
 
-  private List<UserItem> toUserItemList(List<User> users) {
+  private List<UserItem> toUserItemList(List<SpotlightUser> users) {
     int size = users.size();
     List<UserItem> userItems = new ArrayList<>(size);
 
