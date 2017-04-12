@@ -8,17 +8,17 @@ import chat.rocket.core.models.User;
 
 public class RocketChatUserStatusProvider implements UserStatusProvider {
 
-  private static RocketChatUserStatusProvider INSTANCE;
+  private static RocketChatUserStatusProvider instance;
 
   private RocketChatUserStatusProvider() {
   }
 
   public static RocketChatUserStatusProvider getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new RocketChatUserStatusProvider();
+    if (instance == null) {
+      instance = new RocketChatUserStatusProvider();
     }
 
-    return INSTANCE;
+    return instance;
   }
 
   @Override
