@@ -16,10 +16,7 @@ public class Migration implements RealmMigration {
     RealmSchema schema = dynamicRealm.getSchema();
 
     if (oldVersion == 0) {
-      RealmObjectSchema roomSchema = schema.get("RealmRoom");
-
-      roomSchema.addField("f", boolean.class);
-
+      // NOOP
       oldVersion++;
     }
 
