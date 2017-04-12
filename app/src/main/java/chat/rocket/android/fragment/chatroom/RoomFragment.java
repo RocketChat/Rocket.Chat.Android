@@ -69,7 +69,6 @@ import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
@@ -115,6 +114,9 @@ public class RoomFragment extends AbstractChatRoomFragment
   protected RoomContract.Presenter presenter;
 
   private RealmRoomRepository roomRepository;
+  private RealmUserRepository userRepository;
+  private MethodCallHelper methodCallHelper;
+  private AbsoluteUrlHelper absoluteUrlHelper;
 
   public RoomFragment() {
   }
@@ -148,14 +150,16 @@ public class RoomFragment extends AbstractChatRoomFragment
         roomRepository
     );
 
-    RealmUserRepository userRepository = new RealmUserRepository(hostname);
+    userRepository = new RealmUserRepository(hostname);
 
-    AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
+    absoluteUrlHelper = new AbsoluteUrlHelper(
         hostname,
         new RealmServerInfoRepository(),
         userRepository,
         new SessionInteractor(new RealmSessionRepository(hostname))
     );
+
+    methodCallHelper = new MethodCallHelper(getContext(), hostname);
 
     presenter = new RoomPresenter(
         roomId,
@@ -163,7 +167,7 @@ public class RoomFragment extends AbstractChatRoomFragment
         messageInteractor,
         roomRepository,
         absoluteUrlHelper,
-        new MethodCallHelper(getContext(), hostname),
+        methodCallHelper,
         ConnectivityManager.getInstance(getContext())
     );
 
@@ -302,8 +306,8 @@ public class RoomFragment extends AbstractChatRoomFragment
                 }
               },
               Logger::report
-          );
-      )
+          )
+      );
     }
   }
 
@@ -327,27 +331,16 @@ public class RoomFragment extends AbstractChatRoomFragment
     autocompleteManager =
         new AutocompleteManager((ViewGroup) rootView.findViewById(R.id.message_list_root));
 
-    final MethodCallHelper methodCallHelper = new MethodCallHelper(getContext(), hostname);
-
     autocompleteManager.registerSource(
         new ChannelSource(
             new AutocompleteChannelInteractor(
-                new RealmRoomRepository(hostname),
+                roomRepository,
                 new RealmSpotlightRoomRepository(hostname),
                 new DeafultTempSpotlightRoomCaller(methodCallHelper)
             ),
             AndroidSchedulers.from(BackgroundLooper.get()),
             AndroidSchedulers.mainThread()
         )
-    );
-
-    final UserRepository userRepository = new RealmUserRepository(hostname);
-
-    final AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
-        hostname,
-        new RealmServerInfoRepository(),
-        userRepository,
-        new SessionInteractor(new RealmSessionRepository(hostname))
     );
 
     Disposable disposable = Single.zip(
