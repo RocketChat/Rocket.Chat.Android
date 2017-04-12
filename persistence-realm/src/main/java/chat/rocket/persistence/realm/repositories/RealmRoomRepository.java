@@ -6,6 +6,7 @@ import com.fernandocejas.arrow.optional.Optional;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -149,7 +150,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> RxJavaInterop.toV2Flowable(
             pair.first.where(RealmRoom.class)
-                .like(RealmRoom.NAME, "*" + name + "*")
+                .like(RealmRoom.NAME, "*" + name + "*", Case.INSENSITIVE)
                 .beginGroup()
                 .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
                 .or()

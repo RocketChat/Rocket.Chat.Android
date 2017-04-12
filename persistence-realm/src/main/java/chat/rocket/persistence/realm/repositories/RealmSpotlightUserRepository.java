@@ -4,6 +4,7 @@ import android.os.Looper;
 import android.support.v4.util.Pair;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.Case;
 import io.realm.Sort;
 
 import java.util.ArrayList;
@@ -31,7 +32,15 @@ public class RealmSpotlightUserRepository extends RealmRepository
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> RxJavaInterop.toV2Flowable(
             pair.first.where(RealmSpotlightUser.class)
-                .like(RealmSpotlightUser.Columns.USERNAME, "*" + name + "*")
+                .beginGroup()
+                .like(RealmSpotlightUser.Columns.USERNAME, "*" + name + "*", Case.INSENSITIVE)
+                .isNull(RealmSpotlightUser.Columns.NAME)
+                .endGroup()
+                .or()
+                .beginGroup()
+                .like(RealmSpotlightUser.Columns.NAME, "*" + name + "*", Case.INSENSITIVE)
+                .isNotNull(RealmSpotlightUser.Columns.USERNAME)
+                .endGroup()
                 .findAllSorted(RealmSpotlightUser.Columns.USERNAME,
                     direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
                 .asObservable()),

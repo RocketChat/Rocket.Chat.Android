@@ -10,11 +10,13 @@ public class RealmSpotlightUser extends RealmObject {
   public interface Columns {
     String ID = "_id";
     String USERNAME = "username";
+    String NAME = "name";
     String STATUS = "status";
   }
 
   @PrimaryKey private String _id;
   private String username;
+  private String name;
   private String status;
 
   public String getId() {
@@ -33,6 +35,14 @@ public class RealmSpotlightUser extends RealmObject {
     this.username = username;
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public String getStatus() {
     return status;
   }
@@ -45,6 +55,7 @@ public class RealmSpotlightUser extends RealmObject {
     return SpotlightUser.builder()
         .setId(_id)
         .setUsername(username)
+        .setName(name)
         .setStatus(status)
         .build();
   }

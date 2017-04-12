@@ -33,6 +33,14 @@ public class Migration implements RealmMigration {
           .addField(RealmSpotlightRoom.Columns.ID, String.class, FieldAttribute.PRIMARY_KEY)
           .addField(RealmSpotlightRoom.Columns.NAME, String.class)
           .addField(RealmSpotlightRoom.Columns.TYPE, String.class);
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 2) {
+      RealmObjectSchema roomSchema = schema.get("RealmSpotlightUser");
+
+      roomSchema.addField(RealmSpotlightUser.Columns.NAME, String.class);
     }
   }
 }

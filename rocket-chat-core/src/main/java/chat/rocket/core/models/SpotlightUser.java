@@ -12,6 +12,9 @@ public abstract class SpotlightUser {
   public abstract String getUsername();
 
   @Nullable
+  public abstract String getName();
+
+  @Nullable
   public abstract String getStatus();
 
   public static Builder builder() {
@@ -24,6 +27,8 @@ public abstract class SpotlightUser {
     public abstract Builder setId(String id);
 
     public abstract Builder setUsername(String username);
+
+    public abstract Builder setName(String name);
 
     public abstract Builder setStatus(String status);
 
