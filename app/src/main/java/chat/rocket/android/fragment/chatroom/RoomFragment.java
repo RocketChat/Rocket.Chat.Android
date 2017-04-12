@@ -279,7 +279,6 @@ public class RoomFragment extends AbstractChatRoomFragment
     presenter.onMessageSelected(pairedMessage.target);
   }
 
-  @SuppressLint("RxLeakedSubscription")
   private void setupSideMenu() {
     View sideMenu = rootView.findViewById(R.id.room_side_menu);
     sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
@@ -291,7 +290,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
     SlidingPaneLayout pane = (SlidingPaneLayout) getActivity().findViewById(R.id.sliding_pane);
     if (drawerLayout != null && pane != null) {
-      RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
+      compositeDisposable.add(RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
           .compose(bindToLifecycle())
           .subscribe(
               opened -> {
@@ -305,6 +304,7 @@ public class RoomFragment extends AbstractChatRoomFragment
               },
               Logger::report
           );
+      )
     }
   }
 
