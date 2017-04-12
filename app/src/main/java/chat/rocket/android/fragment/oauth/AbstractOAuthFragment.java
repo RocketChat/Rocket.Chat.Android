@@ -127,6 +127,7 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment
     }
 
     resultOK = false;
+    webView.getSettings().setUserAgentString("Chrome/56.0.0.0 Mobile");
     webView.loadUrl(url);
     webView.addJavascriptInterface(new JSInterface(result -> {
       // onPageFinish is called twice... Should ignore latter one.
