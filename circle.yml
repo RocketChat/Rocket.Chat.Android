@@ -34,7 +34,7 @@ dependencies:
 test:
   override:
     - ./gradlew assembleRelease --stacktrace
-    - find . -name app-*-release.apk -exec mv {} $CIRCLE_ARTIFACTS/ \;
+    - find . -name *.apk -exec mv {} $CIRCLE_ARTIFACTS/ \;
 
 deployment:
   beta:
