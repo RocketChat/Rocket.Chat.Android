@@ -82,7 +82,13 @@ public class MethodCallHelper {
           if (TextUtils.isEmpty(errMessageJson)) {
             return Task.forError(exception);
           }
+          String errType = new JSONObject(errMessageJson).getString("error");
           String errMessage = new JSONObject(errMessageJson).getString("message");
+
+          if (TwoStepAuthException.TYPE.equals(errType)) {
+            return Task.forError(new TwoStepAuthException(errMessage));
+          }
+
           return Task.forError(new Exception(errMessage));
         } else if (exception instanceof DDPClientCallback.RPC.Error) {
           String errMessage = ((DDPClientCallback.RPC.Error) exception).error.getString("message");

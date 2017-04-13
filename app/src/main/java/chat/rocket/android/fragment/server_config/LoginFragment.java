@@ -116,6 +116,11 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
   }
 
   @Override
+  public void showTwoStepAuth() {
+    //
+  }
+
+  @Override
   public void onResume() {
     super.onResume();
     presenter.bindView(this);
