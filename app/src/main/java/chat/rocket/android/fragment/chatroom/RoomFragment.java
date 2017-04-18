@@ -1,7 +1,6 @@
 package chat.rocket.android.fragment.chatroom;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +12,7 @@ import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.os.BuildCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -20,12 +20,20 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 
+import com.fernandocejas.arrow.optional.Optional;
 import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
@@ -49,6 +57,14 @@ import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.renderer.RocketChatUserStatusProvider;
+import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
+import chat.rocket.android.service.temp.DefaultTempSpotlightUserCaller;
+import chat.rocket.android.widget.message.autocomplete.AutocompleteManager;
+import chat.rocket.android.widget.message.autocomplete.channel.ChannelSource;
+import chat.rocket.android.widget.message.autocomplete.user.UserSource;
+import chat.rocket.core.interactors.AutocompleteChannelInteractor;
+import chat.rocket.core.interactors.AutocompleteUserInteractor;
 import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Message;
@@ -57,6 +73,8 @@ import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
+import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmSpotlightUserRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.persistence.realm.RealmStore;
@@ -87,10 +105,18 @@ public class RoomFragment extends AbstractChatRoomFragment
   protected Snackbar unreadIndicator;
   private boolean previousUnreadMessageExists;
   private MessageListAdapter adapter;
+  private AutocompleteManager autocompleteManager;
 
   private List<AbstractExtraActionItem> extraActionItems;
 
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
   protected RoomContract.Presenter presenter;
+
+  private RealmRoomRepository roomRepository;
+  private RealmUserRepository userRepository;
+  private MethodCallHelper methodCallHelper;
+  private AbsoluteUrlHelper absoluteUrlHelper;
 
   public RoomFragment() {
   }
@@ -117,21 +143,23 @@ public class RoomFragment extends AbstractChatRoomFragment
     hostname = args.getString(HOSTNAME);
     roomId = args.getString(ROOM_ID);
 
-    RealmRoomRepository roomRepository = new RealmRoomRepository(hostname);
+    roomRepository = new RealmRoomRepository(hostname);
 
     MessageInteractor messageInteractor = new MessageInteractor(
         new RealmMessageRepository(hostname),
         roomRepository
     );
 
-    RealmUserRepository userRepository = new RealmUserRepository(hostname);
+    userRepository = new RealmUserRepository(hostname);
 
-    AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
+    absoluteUrlHelper = new AbsoluteUrlHelper(
         hostname,
         new RealmServerInfoRepository(),
         userRepository,
         new SessionInteractor(new RealmSessionRepository(hostname))
     );
+
+    methodCallHelper = new MethodCallHelper(getContext(), hostname);
 
     presenter = new RoomPresenter(
         roomId,
@@ -139,7 +167,7 @@ public class RoomFragment extends AbstractChatRoomFragment
         messageInteractor,
         roomRepository,
         absoluteUrlHelper,
-        new MethodCallHelper(getContext(), hostname),
+        methodCallHelper,
         ConnectivityManager.getInstance(getContext())
     );
 
@@ -238,6 +266,14 @@ public class RoomFragment extends AbstractChatRoomFragment
         adapter.unregisterAdapterDataObserver(autoScrollManager);
       }
     }
+
+    compositeDisposable.clear();
+
+    if (autocompleteManager != null) {
+      autocompleteManager.dispose();
+      autocompleteManager = null;
+    }
+
     super.onDestroyView();
   }
 
@@ -246,7 +282,6 @@ public class RoomFragment extends AbstractChatRoomFragment
     presenter.onMessageSelected(pairedMessage.target);
   }
 
-  @SuppressLint("RxLeakedSubscription")
   private void setupSideMenu() {
     View sideMenu = rootView.findViewById(R.id.room_side_menu);
     sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
@@ -258,7 +293,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
     SlidingPaneLayout pane = (SlidingPaneLayout) getActivity().findViewById(R.id.sliding_pane);
     if (drawerLayout != null && pane != null) {
-      RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
+      compositeDisposable.add(RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
           .compose(bindToLifecycle())
           .subscribe(
               opened -> {
@@ -271,7 +306,8 @@ public class RoomFragment extends AbstractChatRoomFragment
                 }
               },
               Logger::report
-          );
+          )
+      );
     }
   }
 
@@ -290,7 +326,58 @@ public class RoomFragment extends AbstractChatRoomFragment
     messageFormManager =
         new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
     messageFormManager.setSendMessageCallback(this::sendMessage);
-    messageFormLayout.setEditTextContentListener(this::onCommitContent);
+    messageFormLayout.setEditTextCommitContentListener(this::onCommitContent);
+
+    autocompleteManager =
+        new AutocompleteManager((ViewGroup) rootView.findViewById(R.id.message_list_root));
+
+    autocompleteManager.registerSource(
+        new ChannelSource(
+            new AutocompleteChannelInteractor(
+                roomRepository,
+                new RealmSpotlightRoomRepository(hostname),
+                new DeafultTempSpotlightRoomCaller(methodCallHelper)
+            ),
+            AndroidSchedulers.from(BackgroundLooper.get()),
+            AndroidSchedulers.mainThread()
+        )
+    );
+
+    Disposable disposable = Single.zip(
+        absoluteUrlHelper.getRocketChatAbsoluteUrl(),
+        roomRepository.getById(roomId).first(Optional.absent()),
+        Pair::create
+    )
+        .subscribe(
+            pair -> {
+              if (pair.first.isPresent() && pair.second.isPresent()) {
+                autocompleteManager.registerSource(
+                    new UserSource(
+                        new AutocompleteUserInteractor(
+                            pair.second.get(),
+                            userRepository,
+                            new RealmMessageRepository(hostname),
+                            new RealmSpotlightUserRepository(hostname),
+                            new DefaultTempSpotlightUserCaller(methodCallHelper)
+                        ),
+                        pair.first.get(),
+                        RocketChatUserStatusProvider.getInstance(),
+                        AndroidSchedulers.from(BackgroundLooper.get()),
+                        AndroidSchedulers.mainThread()
+                    )
+                );
+              }
+            },
+            throwable -> {
+            }
+        );
+
+    compositeDisposable.add(disposable);
+
+    autocompleteManager.bindTo(
+        messageFormLayout.getEditText(),
+        messageFormLayout
+    );
   }
 
   @Override

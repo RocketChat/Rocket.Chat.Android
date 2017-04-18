@@ -4,7 +4,6 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.widget.AbsoluteUrl;
@@ -56,18 +55,7 @@ public class UserRenderer extends AbstractRenderer<User> {
     }
 
     String status = object.getStatus();
-    if (User.STATUS_ONLINE.equals(status)) {
-      imageView.setImageResource(R.drawable.userstatus_online);
-    } else if (User.STATUS_AWAY.equals(status)) {
-      imageView.setImageResource(R.drawable.userstatus_away);
-    } else if (User.STATUS_BUSY.equals(status)) {
-      imageView.setImageResource(R.drawable.userstatus_busy);
-    } else if (User.STATUS_OFFLINE.equals(status)) {
-      imageView.setImageResource(R.drawable.userstatus_offline);
-    } else {
-      // unknown status is rendered as "offline" status.
-      imageView.setImageResource(R.drawable.userstatus_offline);
-    }
+    imageView.setImageResource(RocketChatUserStatusProvider.getInstance().getStatusResId(status));
 
     return this;
   }

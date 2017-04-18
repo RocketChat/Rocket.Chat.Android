@@ -6,11 +6,14 @@ import com.fernandocejas.arrow.optional.Optional;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomHistoryState;
 import chat.rocket.core.repositories.RoomRepository;
@@ -141,7 +144,63 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
     });
   }
 
+  @Override
+  public Flowable<List<Room>> getSortedLikeName(String name, SortDirection direction, int limit) {
+    return Flowable.defer(() -> Flowable.using(
+        () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+        pair -> RxJavaInterop.toV2Flowable(
+            pair.first.where(RealmRoom.class)
+                .like(RealmRoom.NAME, "*" + name + "*", Case.INSENSITIVE)
+                .beginGroup()
+                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
+                .or()
+                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
+                .endGroup()
+                .findAllSorted(RealmRoom.NAME,
+                    direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
+                .asObservable()),
+        pair -> close(pair.first, pair.second)
+    )
+        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+        .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
+            && roomSubscriptions.isValid())
+        .map(realmRooms -> toList(safeSubList(realmRooms, 0, limit))));
+  }
+
+  @Override
+  public Flowable<List<Room>> getLatestSeen(int limit) {
+    return Flowable.defer(() -> Flowable.using(
+        () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+        pair -> RxJavaInterop.toV2Flowable(
+            pair.first.where(RealmRoom.class)
+                .beginGroup()
+                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
+                .or()
+                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
+                .endGroup()
+                .findAllSorted(RealmRoom.LAST_SEEN, Sort.ASCENDING)
+                .asObservable()),
+        pair -> close(pair.first, pair.second)
+    )
+        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+        .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
+            && roomSubscriptions.isValid())
+        .map(realmRooms -> toList(safeSubList(realmRooms, 0, limit))));
+  }
+
   private List<Room> toList(RealmResults<RealmRoom> realmRooms) {
+    int total = realmRooms.size();
+
+    final List<Room> roomList = new ArrayList<>(total);
+
+    for (int i = 0; i < total; i++) {
+      roomList.add(realmRooms.get(i).asRoom());
+    }
+
+    return roomList;
+  }
+
+  private List<Room> toList(List<RealmRoom> realmRooms) {
     int total = realmRooms.size();
 
     final List<Room> roomList = new ArrayList<>(total);
