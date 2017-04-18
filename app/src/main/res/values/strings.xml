@@ -47,4 +47,7 @@
     <string name="connection_error_try_later">There\'s a connection error. Please try later.</string>
 
     <string name="version_info_text">Version: %s</string>
+    <string name="two_factor_authentication_title">Two-factor authentication</string>
+    <string name="open_your_authentication_app_and_enter_the_code">Open your authentication app and enter the code</string>
+    <string name="two_factor_code">Two-factor code</string>
 </resources>

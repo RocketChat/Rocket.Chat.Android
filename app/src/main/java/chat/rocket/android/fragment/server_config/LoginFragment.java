@@ -55,7 +55,7 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
     final View btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
     btnUserRegistration.setOnClickListener(view -> UserRegistrationDialogFragment.create(hostname,
         txtUsername.getText().toString(), txtPasswd.getText().toString())
-        .show(getFragmentManager(), UserRegistrationDialogFragment.class.getSimpleName()));
+        .show(getFragmentManager(), "UserRegistrationDialogFragment"));
   }
 
   @Override
@@ -117,7 +117,7 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
 
   @Override
   public void showTwoStepAuth() {
-    //
+    showFragmentWithBackStack(TwoStepAuthFragment.create(hostname));
   }
 
   @Override
