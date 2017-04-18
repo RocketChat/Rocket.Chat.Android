@@ -15,6 +15,8 @@ public interface LoginContract {
     void showError(String message);
 
     void showLoginServices(List<LoginServiceConfiguration> loginServiceList);
+
+    void showTwoStepAuth();
   }
 
   interface Presenter extends BaseContract.Presenter<View> {

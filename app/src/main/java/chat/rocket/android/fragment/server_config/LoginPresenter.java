@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import bolts.Task;
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.api.TwoStepAuthException;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
@@ -74,7 +75,14 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
         .continueWith(task -> {
           if (task.isFaulted()) {
             view.hideLoader();
-            view.showError(task.getError().getMessage());
+
+            final Exception error = task.getError();
+
+            if (error instanceof TwoStepAuthException) {
+              view.showTwoStepAuth();
+            } else {
+              view.showError(error.getMessage());
+            }
           }
           return null;
         });
