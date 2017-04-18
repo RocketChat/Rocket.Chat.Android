@@ -84,7 +84,7 @@ public class MethodCallHelper {
           if (TextUtils.isEmpty(errMessageJson)) {
             return Task.forError(exception);
           }
-          String errType = new JSONObject(errMessageJson).getString("error");
+          String errType = new JSONObject(errMessageJson).optString("error");
           String errMessage = new JSONObject(errMessageJson).getString("message");
 
           if (TwoStepAuthException.TYPE.equals(errType)) {
@@ -218,6 +218,33 @@ public class MethodCallHelper {
           }
           return task;
         });
+  }
+
+
+  public Task<Void> twoStepCodeLogin(final String usernameOrEmail, final String password,
+                                     final String twoStepCode) {
+    return call("login", TIMEOUT_MS, () -> {
+      JSONObject loginParam = new JSONObject();
+      if (Patterns.EMAIL_ADDRESS.matcher(usernameOrEmail).matches()) {
+        loginParam.put("user", new JSONObject().put("email", usernameOrEmail));
+      } else {
+        loginParam.put("user", new JSONObject().put("username", usernameOrEmail));
+      }
+      loginParam.put("password", new JSONObject()
+          .put("digest", CheckSum.sha256(password))
+          .put("algorithm", "sha-256"));
+
+      JSONObject twoStepParam = new JSONObject();
+      twoStepParam.put("login", loginParam);
+      twoStepParam.put("code", twoStepCode);
+
+      JSONObject param = new JSONObject();
+      param.put("totp", twoStepParam);
+
+      return new JSONArray().put(param);
+    }).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+        .onSuccessTask(this::saveToken);
   }
 
   /**

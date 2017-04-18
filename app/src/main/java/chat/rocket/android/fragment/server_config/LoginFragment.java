@@ -26,6 +26,8 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
 
   private View btnEmail;
   private View waitingView;
+  private TextView txtUsername;
+  private TextView txtPasswd;
 
   @Override
   protected int getLayout() {
@@ -46,8 +48,8 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
   @Override
   protected void onSetupView() {
     btnEmail = rootView.findViewById(R.id.btn_login_with_email);
-    final TextView txtUsername = (TextView) rootView.findViewById(R.id.editor_username);
-    final TextView txtPasswd = (TextView) rootView.findViewById(R.id.editor_passwd);
+    txtUsername = (TextView) rootView.findViewById(R.id.editor_username);
+    txtPasswd = (TextView) rootView.findViewById(R.id.editor_passwd);
     waitingView = rootView.findViewById(R.id.waiting);
     btnEmail.setOnClickListener(
         view -> presenter.login(txtUsername.getText().toString(), txtPasswd.getText().toString()));
@@ -117,7 +119,9 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
 
   @Override
   public void showTwoStepAuth() {
-    showFragmentWithBackStack(TwoStepAuthFragment.create(hostname));
+    showFragmentWithBackStack(TwoStepAuthFragment.create(
+        hostname, txtUsername.getText().toString(), txtPasswd.getText().toString()
+    ));
   }
 
   @Override
