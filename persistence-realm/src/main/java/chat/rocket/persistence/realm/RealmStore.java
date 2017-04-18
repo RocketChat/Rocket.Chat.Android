@@ -14,7 +14,9 @@ public class RealmStore {
     return new RealmConfiguration.Builder()
         .name(name + ".realm")
         .modules(new RocketChatLibraryModule())
-        .deleteRealmIfMigrationNeeded().build();
+        .migration(new Migration())
+        .schemaVersion(3)
+        .build();
   }
 
   public static void put(String name) {

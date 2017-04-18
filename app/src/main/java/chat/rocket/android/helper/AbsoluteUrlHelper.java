@@ -38,8 +38,7 @@ public class AbsoluteUrlHelper {
             .filter(Optional::isPresent)
             .map(Optional::get),
         (info, user, session) -> Optional.of(new RocketChatAbsoluteUrl(
-            info, user,
-            session
+            info, user, session
         ))
     )
         .first(Optional.absent());

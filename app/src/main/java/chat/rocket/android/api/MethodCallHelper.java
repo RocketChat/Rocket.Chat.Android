@@ -16,6 +16,8 @@ import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
+import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
@@ -366,6 +368,42 @@ public class MethodCallHelper {
         });
   }
 
+  public Task<Void> searchSpotlightUsers(String term) {
+    return searchSpotlight(
+        RealmSpotlightUser.class, "users", term
+    );
+  }
+
+  public Task<Void> searchSpotlightRooms(String term) {
+    return searchSpotlight(
+        RealmSpotlightRoom.class, "rooms", term
+    );
+  }
+
+  private Task<Void> searchSpotlight(Class clazz, String key, String term) {
+    return call("spotlight", TIMEOUT_MS, () -> new JSONArray()
+        .put(term)
+        .put(JSONObject.NULL)
+        .put(new JSONObject().put(key, true)))
+        .onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> {
+          final JSONObject result = task.getResult();
+          if (!result.has(key)) {
+            return null;
+          }
+
+          Object items = result.get(key);
+          if (!(items instanceof JSONArray)) {
+            return null;
+          }
+
+          return realmHelper.executeTransaction(realm -> {
+            realm.delete(clazz);
+            realm.createOrUpdateAllFromJson(clazz, (JSONArray) items);
+            return null;
+          });
+        });
+  }
 
   protected interface ParamBuilder {
     JSONArray buildParam() throws JSONException;
