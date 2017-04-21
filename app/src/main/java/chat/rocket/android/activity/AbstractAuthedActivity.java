@@ -36,6 +36,10 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     if (savedInstanceState == null) {
       handleIntent(getIntent());
     }
+    ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
+
+    updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
+    updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
   }
 
   @Override
@@ -148,10 +152,6 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
-
-    updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
-    updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
 
     subscribeToConfigChanges();
   }
