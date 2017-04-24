@@ -56,6 +56,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   public void bindView(@NonNull RoomContract.View view) {
     super.bindView(view);
 
+    getRoomRoles();
     getRoomInfo();
     getRoomHistoryStateInfo();
     getMessages();
@@ -181,6 +182,10 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         );
 
     addSubscription(subscription);
+  }
+
+  private void getRoomRoles() {
+    methodCallHelper.getRoomRoles(roomId);
   }
 
   private void getRoomInfo() {
