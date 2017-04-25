@@ -44,6 +44,13 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     this.rocketChatCache = rocketChatCache;
   }
 
+  public void bindViewOnly(@NonNull MainContract.View view) {
+    super.bindView(view);
+    subscribeToUnreadCount();
+    subscribeToSession();
+    setUserOnline();
+  }
+
   @Override
   public void bindView(@NonNull MainContract.View view) {
     super.bindView(view);
