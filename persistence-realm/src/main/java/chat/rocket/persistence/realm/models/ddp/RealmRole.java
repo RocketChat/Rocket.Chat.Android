@@ -5,7 +5,17 @@ import io.realm.annotations.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import chat.rocket.core.models.Role;
+
 public class RealmRole extends RealmObject {
+
+  public interface Columns {
+    String ID = "id";
+    String NAME = "name";
+  }
+
+  @PrimaryKey private String id;
+  private String name;
 
   public static JSONObject customizeJson(String roleString) throws JSONException {
     JSONObject roleObject = new JSONObject();
@@ -15,14 +25,6 @@ public class RealmRole extends RealmObject {
 
     return roleObject;
   }
-
-  public interface Columns {
-    String ID = "id";
-    String NAME = "name";
-  }
-
-  @PrimaryKey private String id;
-  private String name;
 
   public String getId() {
     return id;
@@ -38,5 +40,12 @@ public class RealmRole extends RealmObject {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Role asRole() {
+    return Role.builder()
+        .setId(id)
+        .setName(name)
+        .build();
   }
 }

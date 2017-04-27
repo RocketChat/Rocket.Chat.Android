@@ -7,7 +7,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+import chat.rocket.core.models.Role;
+import chat.rocket.core.models.RoomRole;
+
 public class RealmRoomRole extends RealmObject {
+
+  public interface Columns {
+    String ID = "_id";
+    String ROOM_ID = "rid";
+    String USER = "u";
+    String ROLES = "roles";
+  }
+
+  @PrimaryKey private String _id;
+  private String rid;
+  private RealmUser u;
+  private RealmList<RealmRole> roles;
 
   public static JSONObject customizeJson(JSONObject roomRoles) throws JSONException {
     JSONArray roleStrings = roomRoles.getJSONArray(Columns.ROLES);
@@ -21,18 +38,6 @@ public class RealmRoomRole extends RealmObject {
 
     return roomRoles;
   }
-
-  public interface Columns {
-    String ID = "_id";
-    String ROOM_ID = "rid";
-    String USER = "u";
-    String ROLES = "roles";
-  }
-
-  @PrimaryKey private String _id;
-  private String rid;
-  private RealmUser u;
-  private RealmList<RealmRole> roles;
 
   public String getId() {
     return _id;
@@ -64,5 +69,21 @@ public class RealmRoomRole extends RealmObject {
 
   public void setRoles(RealmList<RealmRole> roles) {
     this.roles = roles;
+  }
+
+  public RoomRole asRoomRole() {
+    int size = this.roles.size();
+    List<Role> roles = new ArrayList<>(size);
+
+    for (int i = 0; i < size; i++) {
+      roles.add(this.roles.get(i).asRole());
+    }
+
+    return RoomRole.builder()
+        .setId(_id)
+        .setRoomId(rid)
+        .setUser(u.asUser())
+        .setRoles(roles)
+        .build();
   }
 }

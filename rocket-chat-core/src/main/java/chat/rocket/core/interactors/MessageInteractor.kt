@@ -12,7 +12,8 @@ import chat.rocket.core.models.User
 import chat.rocket.core.repositories.MessageRepository
 import chat.rocket.core.repositories.RoomRepository
 
-class MessageInteractor(private val messageRepository: MessageRepository, private val roomRepository: RoomRepository) {
+class MessageInteractor(private val messageRepository: MessageRepository,
+                        private val roomRepository: RoomRepository) {
 
     fun loadMessages(room: Room): Single<Boolean> {
         val roomHistoryState = RoomHistoryState.builder()

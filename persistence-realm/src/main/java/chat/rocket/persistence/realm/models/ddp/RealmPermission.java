@@ -7,7 +7,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+import chat.rocket.core.models.Permission;
+import chat.rocket.core.models.Role;
+
 public class RealmPermission extends RealmObject {
+
+  public interface Columns {
+    String ID = "_id";
+    String NAME = "name";
+    String ROLES = "roles";
+  }
+
+  @PrimaryKey private String _id;
+  private String name;
+  private RealmList<RealmRole> roles;
 
   public static JSONObject customizeJson(JSONObject permissionsJson) throws JSONException {
     permissionsJson.put(Columns.NAME, permissionsJson.getString(Columns.ID));
@@ -23,16 +38,6 @@ public class RealmPermission extends RealmObject {
 
     return permissionsJson;
   }
-
-  public interface Columns {
-    String ID = "_id";
-    String NAME = "name";
-    String ROLES = "roles";
-  }
-
-  @PrimaryKey private String _id;
-  private String name;
-  private RealmList<RealmRole> roles;
 
   public String getId() {
     return _id;
@@ -56,5 +61,20 @@ public class RealmPermission extends RealmObject {
 
   public void setRoles(RealmList<RealmRole> roles) {
     this.roles = roles;
+  }
+
+  public Permission asPermission() {
+    int size = this.roles.size();
+    List<Role> roles = new ArrayList<>(size);
+
+    for (int i = 0; i < size; i++) {
+      roles.add(this.roles.get(i).asRole());
+    }
+
+    return Permission.builder()
+        .setId(_id)
+        .setName(name)
+        .setRoles(roles)
+        .build();
   }
 }
