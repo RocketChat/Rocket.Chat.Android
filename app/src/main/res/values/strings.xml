@@ -50,4 +50,5 @@
     <string name="two_factor_authentication_title">Two-factor authentication</string>
     <string name="open_your_authentication_app_and_enter_the_code">Open your authentication app and enter the code</string>
     <string name="two_factor_code">Two-factor code</string>
+    <string name="navigation_search_rooms">Search Rooms</string>
 </resources>
