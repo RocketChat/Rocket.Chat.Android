@@ -109,6 +109,7 @@ dependencies {
 
     compile "com.jakewharton.rxbinding2:rxbinding:$rxbindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxbindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxbindingVersion"
 
     compile "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
     compile "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycleVersion"

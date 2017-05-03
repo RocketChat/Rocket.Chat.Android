@@ -154,6 +154,11 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
+  public Task<Void> joinRoom(String roomId) {
+    return call("joinRoom", TIMEOUT_MS, () -> new JSONArray().put(roomId))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
   /**
    * Login with username/email and password.
    */
