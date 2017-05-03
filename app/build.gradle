@@ -33,8 +33,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 20
-        versionName "1.0.10"
+        versionCode 21
+        versionName "1.0.11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -109,6 +109,7 @@ dependencies {
 
     compile "com.jakewharton.rxbinding2:rxbinding:$rxbindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxbindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxbindingVersion"
 
     compile "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
     compile "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycleVersion"

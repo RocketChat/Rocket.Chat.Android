@@ -17,6 +17,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.models.SpotlightRoom;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
 
@@ -74,6 +75,11 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   @Override
   public void onRoomSelected(Room room) {
     rocketChatCache.setSelectedRoomId(room.getRoomId());
+  }
+
+  @Override
+  public void onSpotlightRoomSelected(SpotlightRoom spotlightRoom) {
+    rocketChatCache.setSelectedRoomId(spotlightRoom.getId());
   }
 
   @Override
