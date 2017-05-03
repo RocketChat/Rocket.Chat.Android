@@ -18,6 +18,7 @@ public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
   protected final LayoutInflater inflater;
   private List<VM> adapterData;
   private OnItemClickListener<VM> onItemClickListener;
+  private OnItemLongClickListener<VM> onItemLongClickListener;
 
   protected ModelListAdapter(Context context) {
     this.inflater = LayoutInflater.from(context);
@@ -42,6 +43,20 @@ public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
   @Override
   public final VH onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView = inflater.inflate(getLayout(viewType), parent, false);
+
+    itemView.setOnClickListener(view -> {
+      VM model = (VM) (view.getTag());
+      if (model != null && onItemClickListener != null) {
+        onItemClickListener.onItemClick(model);
+      }
+    });
+
+    itemView.setOnLongClickListener(view -> {
+      VM model = (VM) (view.getTag());
+      return model != null && onItemLongClickListener != null
+          && onItemLongClickListener.onItemLongClick(model);
+    });
+
     return onCreateRealmModelViewHolder(viewType, itemView);
   }
 
@@ -49,12 +64,6 @@ public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
   public void onBindViewHolder(VH holder, int position) {
     VM model = getItem(position);
     holder.itemView.setTag(model);
-    holder.itemView.setOnClickListener(view -> {
-      VM model2 = (VM) (view.getTag());
-      if (model2 != null && onItemClickListener != null) {
-        onItemClickListener.onItemClick(model2);
-      }
-    });
     holder.bind(model, shouldAutoloadImages());
   }
 
@@ -114,11 +123,19 @@ public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
     this.onItemClickListener = onItemClickListener;
   }
 
+  public void setOnItemLongClickListener(OnItemLongClickListener<VM> onItemLongClickListener) {
+    this.onItemLongClickListener = onItemLongClickListener;
+  }
+
   public interface Constructor<T, VM, VH extends ModelViewHolder<VM>> {
     ModelListAdapter<T, VM, VH> getNewInstance(Context context);
   }
 
   public interface OnItemClickListener<VM> {
     void onItemClick(VM model);
+  }
+
+  public interface OnItemLongClickListener<VM> {
+    boolean onItemLongClick(VM model);
   }
 }

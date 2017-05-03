@@ -90,7 +90,8 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, ExtraActionPickerDialogFragment.Callback,
-    ModelListAdapter.OnItemClickListener<PairedMessage>, RoomContract.View {
+    ModelListAdapter.OnItemClickListener<PairedMessage>,
+    ModelListAdapter.OnItemLongClickListener<PairedMessage>, RoomContract.View {
 
   private static final int DIALOG_ID = 1;
   private static final String HOSTNAME = "hostname";
@@ -187,6 +188,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     adapter = new MessageListAdapter(getContext());
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
+    adapter.setOnItemLongClickListener(this);
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);
@@ -280,6 +282,11 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void onItemClick(PairedMessage pairedMessage) {
     presenter.onMessageSelected(pairedMessage.target);
+  }
+
+  @Override
+  public boolean onItemLongClick(PairedMessage model) {
+    return false;
   }
 
   private void setupSideMenu() {
