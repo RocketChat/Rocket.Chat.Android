@@ -15,6 +15,7 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
+import chat.rocket.android.helper.KeyboardHelper;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -46,6 +47,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     statusTicker = new StatusTicker();
     setupSidebar();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (presenter != null && presenter instanceof MainPresenter) {
+      ((MainPresenter)presenter).bindViewOnly(this);
+    }
   }
 
   @Override
@@ -172,6 +181,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   public void showRoom(String hostname, String roomId) {
     showFragment(RoomFragment.create(hostname, roomId));
     closeSidebarIfNeeded();
+    KeyboardHelper.hideSoftKeyboard(this);
   }
 
   @Override
