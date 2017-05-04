@@ -181,7 +181,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   public void showRoom(String hostname, String roomId) {
     showFragment(RoomFragment.create(hostname, roomId));
     closeSidebarIfNeeded();
-    //TODO: Hide keyboard
     KeyboardHelper.hideSoftKeyboard(this);
   }
 
