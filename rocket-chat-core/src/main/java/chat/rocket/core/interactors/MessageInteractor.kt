@@ -56,6 +56,7 @@ class MessageInteractor(private val messageRepository: MessageRepository,
                 .setMessage(messageText)
                 .setGroupable(false)
                 .setUser(sender)
+                .setEditedAt(0)
                 .build()
 
         return messageRepository.save(message)
@@ -64,6 +65,14 @@ class MessageInteractor(private val messageRepository: MessageRepository,
     fun resend(message: Message, sender: User): Single<Boolean> {
         return messageRepository.save(
                 message.withSyncState(SyncState.NOT_SYNCED).withUser(sender))
+    }
+
+    fun update(message: Message, sender: User, content: String): Single<Boolean> {
+        return messageRepository.save(
+                message.withSyncState(SyncState.NOT_SYNCED)
+                        .withUser(sender)
+                        .withMessage(content)
+                        .withEditedAt(message.editedAt + 1))
     }
 
     fun delete(message: Message): Single<Boolean> {

@@ -6,6 +6,7 @@ import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmPermission;
 import chat.rocket.persistence.realm.models.ddp.RealmRole;
 import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
@@ -60,6 +61,13 @@ public class Migration implements RealmMigration {
           .addField(RealmRoomRole.Columns.ROOM_ID, String.class)
           .addRealmObjectField(RealmRoomRole.Columns.USER, schema.get("RealmUser"))
           .addRealmListField(RealmRoomRole.Columns.ROLES, schema.get("RealmRole"));
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 4) {
+      RealmObjectSchema messageSchema = schema.get("RealmMessage");
+      messageSchema.addField(RealmMessage.EDITED_AT, long.class);
     }
   }
 }

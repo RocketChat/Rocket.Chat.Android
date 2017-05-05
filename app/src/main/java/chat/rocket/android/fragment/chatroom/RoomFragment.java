@@ -120,6 +120,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   private MethodCallHelper methodCallHelper;
   private AbsoluteUrlHelper absoluteUrlHelper;
 
+  private Message edittingMessage = null;
+
   public RoomFragment() {
   }
 
@@ -459,6 +461,11 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public boolean onBackPressed() {
+    if (edittingMessage != null) {
+      edittingMessage = null;
+      messageFormManager.clearComposingText();
+      return true;
+    }
     return closeSideMenuIfNeeded();
   }
 
@@ -513,7 +520,11 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void sendMessage(String messageText) {
-    presenter.sendMessage(messageText);
+    if (edittingMessage == null) {
+      presenter.sendMessage(messageText);
+    } else {
+      presenter.updateMessage(edittingMessage, messageText);
+    }
   }
 
   @Override
@@ -560,6 +571,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   public void onMessageSendSuccessfully() {
     scrollToLatestMessage();
     messageFormManager.onMessageSend();
+    edittingMessage = null;
   }
 
   @Override
@@ -597,5 +609,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void onEditMessage(Message message) {
+    edittingMessage = message;
+    messageFormManager.setEditMessage(message.getMessage());
   }
 }

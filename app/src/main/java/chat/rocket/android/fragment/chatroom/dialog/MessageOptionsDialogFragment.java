@@ -119,6 +119,8 @@ public class MessageOptionsDialogFragment extends BottomSheetDialogFragment {
         .subscribe(
             pair -> {
               if (pair.second) {
+                bottomSheetDialog.findViewById(R.id.message_options_info)
+                    .setVisibility(View.GONE);
                 View editView = bottomSheetDialog.findViewById(R.id.message_options_edit_action);
                 editView.setVisibility(View.VISIBLE);
                 editView.setOnClickListener(view -> internalListener.onEdit(pair.first));

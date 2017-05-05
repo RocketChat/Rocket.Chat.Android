@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -135,8 +136,8 @@ public class MessageFormLayout extends LinearLayout {
     }
   }
 
-  private TextView getEditor() {
-    return (TextView) composer.findViewById(R.id.editor);
+  private EditText getEditor() {
+    return (EditText) composer.findViewById(R.id.editor);
   }
 
   public final String getText() {
@@ -144,11 +145,19 @@ public class MessageFormLayout extends LinearLayout {
   }
 
   public final void setText(final CharSequence text) {
-    final TextView editor = getEditor();
+    final EditText editor = getEditor();
     editor.post(new Runnable() {
       @Override
       public void run() {
         editor.setText(text);
+        if (text.length() > 0) {
+          editor.setSelection(text.length());
+
+          InputMethodManager inputMethodManager = (InputMethodManager) editor.getContext()
+              .getSystemService(Context.INPUT_METHOD_SERVICE);
+          editor.requestFocus();
+          inputMethodManager.showSoftInput(editor, 0);
+        }
       }
     });
   }

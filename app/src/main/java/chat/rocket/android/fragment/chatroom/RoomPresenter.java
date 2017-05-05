@@ -142,6 +142,24 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   @Override
+  public void updateMessage(Message message, String content) {
+    final Disposable subscription = getCurrentUser()
+        .flatMap(user -> messageInteractor.update(message, user, content))
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(
+            success -> {
+              if (success) {
+                view.onMessageSendSuccessfully();
+              }
+            },
+            Logger::report
+        );
+
+    addSubscription(subscription);
+  }
+
+  @Override
   public void deleteMessage(Message message) {
     final Disposable subscription = messageInteractor.delete(message)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))

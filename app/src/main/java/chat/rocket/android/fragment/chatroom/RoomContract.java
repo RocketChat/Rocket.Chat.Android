@@ -42,6 +42,8 @@ public interface RoomContract {
 
     void resendMessage(Message message);
 
+    void updateMessage(Message message, String content);
+
     void deleteMessage(Message message);
 
     void onUnreadCount();

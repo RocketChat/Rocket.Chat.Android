@@ -71,6 +71,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
       realmMessage.setTimestamp(message.getTimestamp());
       realmMessage.setRoomId(message.getRoomId());
       realmMessage.setMessage(message.getMessage());
+      realmMessage.setEditedAt(message.getEditedAt());
 
       RealmUser realmUser = realmMessage.getUser();
       if (realmUser == null) {
