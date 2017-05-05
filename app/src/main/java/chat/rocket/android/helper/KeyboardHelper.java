@@ -7,9 +7,10 @@ import android.view.inputmethod.InputMethodManager;
 
 public class KeyboardHelper {
   public static void hideSoftKeyboard(Activity activity) {
-    if (activity.getCurrentFocus() != null) {
+    View currentFocus = activity.getCurrentFocus();
+    if (currentFocus != null) {
       InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-      inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+      inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
     }
   }
 
