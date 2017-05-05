@@ -289,6 +289,12 @@ public class RoomFragment extends AbstractChatRoomFragment
   public boolean onItemLongClick(PairedMessage pairedMessage) {
     MessageOptionsDialogFragment messageOptionsDialogFragment = MessageOptionsDialogFragment
         .create(pairedMessage.target);
+
+    messageOptionsDialogFragment.setOnMessageOptionSelectedListener(message -> {
+      messageOptionsDialogFragment.dismiss();
+      onEditMessage(message);
+    });
+
     messageOptionsDialogFragment.show(getChildFragmentManager(), "MessageOptionsDialogFragment");
     return true;
   }
@@ -588,5 +594,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void manualLoadImages() {
     adapter.setAutoloadImages(false);
+  }
+
+  private void onEditMessage(Message message) {
   }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,6 +40,16 @@ public class MessageOptionsDialogFragment extends BottomSheetDialogFragment {
   public final static String ARG_MESSAGE_ID = "messageId";
 
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
+  private OnMessageOptionSelectedListener internalListener = new OnMessageOptionSelectedListener() {
+    @Override
+    public void onEdit(Message message) {
+      if (externalListener != null) {
+        externalListener.onEdit(message);
+      }
+    }
+  };
+
+  private OnMessageOptionSelectedListener externalListener = null;
 
   public static MessageOptionsDialogFragment create(@NonNull Message message) {
     Bundle bundle = new Bundle();
@@ -48,6 +59,11 @@ public class MessageOptionsDialogFragment extends BottomSheetDialogFragment {
     messageOptionsDialogFragment.setArguments(bundle);
 
     return messageOptionsDialogFragment;
+  }
+
+  public void setOnMessageOptionSelectedListener(
+      OnMessageOptionSelectedListener onMessageOptionSelectedListener) {
+    externalListener = onMessageOptionSelectedListener;
   }
 
   @NonNull
@@ -87,18 +103,25 @@ public class MessageOptionsDialogFragment extends BottomSheetDialogFragment {
     Disposable disposable = messageRepository.getById(messageId)
         .flatMap(it -> {
           if (!it.isPresent()) {
-            return Single.just(false);
+            return Single.just(Pair.<Message, Boolean>create(null, false));
           }
 
-          return editMessageInteractor.isAllowed(it.get());
+          Message message = it.get();
+
+          return Single.zip(
+              Single.just(message),
+              editMessageInteractor.isAllowed(message),
+              Pair::create
+          );
         })
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-            isEditAllowed -> {
-              if (isEditAllowed) {
-                bottomSheetDialog.findViewById(R.id.message_options_edit_action)
-                    .setVisibility(View.VISIBLE);
+            pair -> {
+              if (pair.second) {
+                View editView = bottomSheetDialog.findViewById(R.id.message_options_edit_action);
+                editView.setVisibility(View.VISIBLE);
+                editView.setOnClickListener(view -> internalListener.onEdit(pair.first));
               } else {
                 ((TextView) bottomSheetDialog.findViewById(R.id.message_options_info))
                     .setText(R.string.message_options_no_permissions_info);
@@ -137,5 +160,9 @@ public class MessageOptionsDialogFragment extends BottomSheetDialogFragment {
         roomRepository,
         publicSettingRepository
     );
+  }
+
+  public interface OnMessageOptionSelectedListener {
+    void onEdit(Message message);
   }
 }
