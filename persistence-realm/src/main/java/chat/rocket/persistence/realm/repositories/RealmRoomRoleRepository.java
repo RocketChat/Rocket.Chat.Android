@@ -14,6 +14,7 @@ import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.RoomRoleRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 public class RealmRoomRoleRepository extends RealmRepository implements RoomRoleRepository {
@@ -31,14 +32,19 @@ public class RealmRoomRoleRepository extends RealmRepository implements RoomRole
         pair -> RxJavaInterop.toV2Flowable(
             pair.first.where(RealmRoomRole.class)
                 .equalTo(RealmRoomRole.Columns.ROOM_ID, room.getId())
-                .equalTo(RealmRoomRole.Columns.USER + ".id", user.getId())
+                .equalTo(RealmRoomRole.Columns.USER + "." + RealmUser.ID, user.getId())
                 .findAll()
                 .<RealmResults<RealmRoomRole>>asObservable()),
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-        .filter(it -> it.isLoaded() && it.isValid() && it.size() > 0)
-        .map(it -> Optional.of(it.get(0).asRoomRole()))
+        .filter(it -> it.isLoaded() && it.isValid())
+        .map(it -> {
+          if (it.size() == 0) {
+            return Optional.<RoomRole>absent();
+          }
+          return Optional.of(it.get(0).asRoomRole());
+        })
         .first(Optional.absent()));
   }
 }

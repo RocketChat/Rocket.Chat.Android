@@ -37,6 +37,7 @@ import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
+import chat.rocket.android.fragment.chatroom.dialog.MessageOptionsDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
@@ -285,8 +286,11 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   @Override
-  public boolean onItemLongClick(PairedMessage model) {
-    return false;
+  public boolean onItemLongClick(PairedMessage pairedMessage) {
+    MessageOptionsDialogFragment messageOptionsDialogFragment = MessageOptionsDialogFragment
+        .create(pairedMessage.target);
+    messageOptionsDialogFragment.show(getChildFragmentManager(), "MessageOptionsDialogFragment");
+    return true;
   }
 
   private void setupSideMenu() {

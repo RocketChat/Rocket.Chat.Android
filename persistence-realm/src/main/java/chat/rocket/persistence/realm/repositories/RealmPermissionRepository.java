@@ -34,8 +34,13 @@ public class RealmPermissionRepository extends RealmRepository implements Permis
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-        .filter(it -> it.isLoaded() && it.isValid() && it.size() > 0)
-        .map(it -> Optional.of(it.get(0).asPermission()))
+        .filter(it -> it.isLoaded() && it.isValid())
+        .map(it -> {
+          if (it.size() == 0) {
+            return Optional.<Permission>absent();
+          }
+          return Optional.of(it.get(0).asPermission());
+        })
         .first(Optional.absent()));
   }
 }
