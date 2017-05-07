@@ -164,7 +164,8 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
         JSONArray array = new JSONArray(procedure.getRecords());
         ArrayList<String> users = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
-          users.add(array.getString(i));
+          JSONObject user = array.getJSONObject(i);
+          users.add(user.getString("username"));
         }
         onRenderUsers(users);
       } catch (JSONException exception) {
