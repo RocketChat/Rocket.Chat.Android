@@ -17,9 +17,9 @@ public class RealmRepository {
     new Handler(looper).post(realm::close);
   }
 
-  protected <T extends RealmObject> List<T> safeSubList(RealmResults<T> realmObjects,
-                                                        int fromIndex,
-                                                        int toIndex) {
+  <T extends RealmObject> List<T> safeSubList(RealmResults<T> realmObjects,
+                                              int fromIndex,
+                                              int toIndex) {
     return realmObjects.subList(Math.max(0, fromIndex), Math.min(realmObjects.size(), toIndex));
   }
 }

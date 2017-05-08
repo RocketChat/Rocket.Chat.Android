@@ -12,7 +12,8 @@ import chat.rocket.core.models.User
 import chat.rocket.core.repositories.MessageRepository
 import chat.rocket.core.repositories.RoomRepository
 
-class MessageInteractor(private val messageRepository: MessageRepository, private val roomRepository: RoomRepository) {
+class MessageInteractor(private val messageRepository: MessageRepository,
+                        private val roomRepository: RoomRepository) {
 
     fun loadMessages(room: Room): Single<Boolean> {
         val roomHistoryState = RoomHistoryState.builder()
@@ -55,6 +56,7 @@ class MessageInteractor(private val messageRepository: MessageRepository, privat
                 .setMessage(messageText)
                 .setGroupable(false)
                 .setUser(sender)
+                .setEditedAt(0)
                 .build()
 
         return messageRepository.save(message)
@@ -63,6 +65,14 @@ class MessageInteractor(private val messageRepository: MessageRepository, privat
     fun resend(message: Message, sender: User): Single<Boolean> {
         return messageRepository.save(
                 message.withSyncState(SyncState.NOT_SYNCED).withUser(sender))
+    }
+
+    fun update(message: Message, sender: User, content: String): Single<Boolean> {
+        return messageRepository.save(
+                message.withSyncState(SyncState.NOT_SYNCED)
+                        .withUser(sender)
+                        .withMessage(content)
+                        .withEditedAt(message.editedAt + 1))
     }
 
     fun delete(message: Message): Single<Boolean> {

@@ -12,10 +12,12 @@ import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.persistence.realm.models.ddp.RealmPermission;
 import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
@@ -362,12 +364,18 @@ public class MethodCallHelper {
   /**
    * send message.
    */
-  public Task<Void> sendMessage(String messageId, String roomId, String msg) {
+  public Task<Void> sendMessage(String messageId, String roomId, String msg, long editedAt) {
     try {
-      return sendMessage(new JSONObject()
+      JSONObject messageJson = new JSONObject()
           .put("_id", messageId)
           .put("rid", roomId)
-          .put("msg", msg));
+          .put("msg", msg);
+
+      if (editedAt == 0) {
+        return sendMessage(messageJson);
+      } else {
+        return updateMessage(messageJson);
+      }
     } catch (JSONException exception) {
       return Task.forError(exception);
     }
@@ -378,6 +386,11 @@ public class MethodCallHelper {
    */
   private Task<Void> sendMessage(final JSONObject messageJson) {
     return call("sendMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
+  private Task<Void> updateMessage(final JSONObject messageJson) {
+    return call("updateMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
         .onSuccessTask(task -> Task.forResult(null));
   }
 
@@ -401,6 +414,40 @@ public class MethodCallHelper {
           return realmHelper.executeTransaction(realm -> {
             realm.delete(RealmPublicSetting.class);
             realm.createOrUpdateAllFromJson(RealmPublicSetting.class, settings);
+            return null;
+          });
+        });
+  }
+
+  public Task<Void> getPermissions() {
+    return call("permissions/get", TIMEOUT_MS)
+        .onSuccessTask(CONVERT_TO_JSON_ARRAY)
+        .onSuccessTask(task -> {
+          final JSONArray permissions = task.getResult();
+          for (int i = 0; i < permissions.length(); i++) {
+            RealmPermission.customizeJson(permissions.getJSONObject(i));
+          }
+
+          return realmHelper.executeTransaction(realm -> {
+            realm.delete(RealmPermission.class);
+            realm.createOrUpdateAllFromJson(RealmPermission.class, permissions);
+            return null;
+          });
+        });
+  }
+
+  public Task<Void> getRoomRoles(final String roomId) {
+    return call("getRoomRoles", TIMEOUT_MS, () -> new JSONArray().put(roomId))
+        .onSuccessTask(CONVERT_TO_JSON_ARRAY)
+        .onSuccessTask(task -> {
+          final JSONArray roomRoles = task.getResult();
+          for (int i = 0; i < roomRoles.length(); i++) {
+            RealmRoomRole.customizeJson(roomRoles.getJSONObject(i));
+          }
+
+          return realmHelper.executeTransaction(realm -> {
+            realm.delete(RealmRoomRole.class);
+            realm.createOrUpdateAllFromJson(RealmRoomRole.class, roomRoles);
             return null;
           });
         });

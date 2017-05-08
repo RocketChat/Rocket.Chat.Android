@@ -43,6 +43,7 @@ public class RealmMessage extends RealmObject {
   public static final String GROUPABLE = "groupable";
   public static final String ATTACHMENTS = "attachments";
   public static final String URLS = "urls";
+  public static final String EDITED_AT = "editedAt";
 
   @PrimaryKey private String _id;
   private String t; //type:
@@ -56,6 +57,7 @@ public class RealmMessage extends RealmObject {
   private String avatar;
   private String attachments; //JSONArray.
   private String urls; //JSONArray.
+  private long editedAt;
 
   public static JSONObject customizeJson(JSONObject messageJson) throws JSONException {
     long ts = messageJson.getJSONObject(TIMESTAMP).getLong(JsonConstants.DATE);
@@ -65,6 +67,15 @@ public class RealmMessage extends RealmObject {
     if (messageJson.isNull(GROUPABLE)) {
       messageJson.put(GROUPABLE, true);
     }
+
+    long editedAt = 0L;
+    JSONObject editedAtObj = messageJson.optJSONObject(EDITED_AT);
+    if (editedAtObj != null) {
+      editedAt = editedAtObj.optLong(JsonConstants.DATE);
+    }
+
+    messageJson.remove(EDITED_AT);
+    messageJson.put(EDITED_AT, editedAt);
 
     return messageJson;
   }
@@ -165,6 +176,14 @@ public class RealmMessage extends RealmObject {
     this.avatar = avatar;
   }
 
+  public long getEditedAt() {
+    return editedAt;
+  }
+
+  public void setEditedAt(long editedAt) {
+    this.editedAt = editedAt;
+  }
+
   public Message asMessage() {
     return Message.builder()
         .setId(_id)
@@ -177,6 +196,7 @@ public class RealmMessage extends RealmObject {
         .setGroupable(groupable)
         .setAlias(alias)
         .setAvatar(avatar)
+        .setEditedAt(editedAt)
         .setAttachments(getCoreAttachments())
         .setWebContents(getWebContents())
         .build();

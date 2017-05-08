@@ -37,6 +37,7 @@ import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
+import chat.rocket.android.fragment.chatroom.dialog.MessageOptionsDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
@@ -90,7 +91,8 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class RoomFragment extends AbstractChatRoomFragment
     implements OnBackPressListener, ExtraActionPickerDialogFragment.Callback,
-    ModelListAdapter.OnItemClickListener<PairedMessage>, RoomContract.View {
+    ModelListAdapter.OnItemClickListener<PairedMessage>,
+    ModelListAdapter.OnItemLongClickListener<PairedMessage>, RoomContract.View {
 
   private static final int DIALOG_ID = 1;
   private static final String HOSTNAME = "hostname";
@@ -117,6 +119,8 @@ public class RoomFragment extends AbstractChatRoomFragment
   private RealmUserRepository userRepository;
   private MethodCallHelper methodCallHelper;
   private AbsoluteUrlHelper absoluteUrlHelper;
+
+  private Message edittingMessage = null;
 
   public RoomFragment() {
   }
@@ -187,6 +191,7 @@ public class RoomFragment extends AbstractChatRoomFragment
     adapter = new MessageListAdapter(getContext());
     listView.setAdapter(adapter);
     adapter.setOnItemClickListener(this);
+    adapter.setOnItemLongClickListener(this);
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
         LinearLayoutManager.VERTICAL, true);
@@ -280,6 +285,20 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void onItemClick(PairedMessage pairedMessage) {
     presenter.onMessageSelected(pairedMessage.target);
+  }
+
+  @Override
+  public boolean onItemLongClick(PairedMessage pairedMessage) {
+    MessageOptionsDialogFragment messageOptionsDialogFragment = MessageOptionsDialogFragment
+        .create(pairedMessage.target);
+
+    messageOptionsDialogFragment.setOnMessageOptionSelectedListener(message -> {
+      messageOptionsDialogFragment.dismiss();
+      onEditMessage(message);
+    });
+
+    messageOptionsDialogFragment.show(getChildFragmentManager(), "MessageOptionsDialogFragment");
+    return true;
   }
 
   private void setupSideMenu() {
@@ -442,6 +461,11 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public boolean onBackPressed() {
+    if (edittingMessage != null) {
+      edittingMessage = null;
+      messageFormManager.clearComposingText();
+      return true;
+    }
     return closeSideMenuIfNeeded();
   }
 
@@ -496,7 +520,11 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void sendMessage(String messageText) {
-    presenter.sendMessage(messageText);
+    if (edittingMessage == null) {
+      presenter.sendMessage(messageText);
+    } else {
+      presenter.updateMessage(edittingMessage, messageText);
+    }
   }
 
   @Override
@@ -543,6 +571,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   public void onMessageSendSuccessfully() {
     scrollToLatestMessage();
     messageFormManager.onMessageSend();
+    edittingMessage = null;
   }
 
   @Override
@@ -577,5 +606,10 @@ public class RoomFragment extends AbstractChatRoomFragment
   @Override
   public void manualLoadImages() {
     adapter.setAutoloadImages(false);
+  }
+
+  private void onEditMessage(Message message) {
+    edittingMessage = message;
+    messageFormManager.setEditMessage(message.getMessage());
   }
 }
