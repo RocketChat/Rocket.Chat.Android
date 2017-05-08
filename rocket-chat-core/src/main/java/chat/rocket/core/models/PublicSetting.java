@@ -23,6 +23,10 @@ public abstract class PublicSetting {
     return Boolean.parseBoolean(getValue());
   }
 
+  public long getValueAsLong() {
+    return Long.parseLong(getValue());
+  }
+
   public static Builder builder() {
     return new AutoValue_PublicSetting.Builder();
   }

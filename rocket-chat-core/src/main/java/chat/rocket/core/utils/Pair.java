@@ -37,6 +37,14 @@ public class Pair<F, S> {
     this.second = second;
   }
 
+  public F component1() {
+    return first;
+  }
+
+  public S component2() {
+    return second;
+  }
+
   /**
    * Checks the two objects for equality by delegating to their respective
    * {@link Object#equals(Object)} methods.
