@@ -15,7 +15,7 @@ public class RealmStore {
         .name(name + ".realm")
         .modules(new RocketChatLibraryModule())
         .migration(new Migration())
-        .schemaVersion(3)
+        .schemaVersion(5)
         .build();
   }
 

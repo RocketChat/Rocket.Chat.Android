@@ -57,6 +57,6 @@ public class LinkMovementMethodCompat extends LinkMovementMethod {
       }
     }
 
-    return Touch.onTouchEvent(widget, buffer, event);
+    return false;
   }
 }

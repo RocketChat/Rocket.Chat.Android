@@ -270,6 +270,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     return connectDDPClient()
         .flatMap(_val -> Single.fromEmitter(emitter -> {
           fetchPublicSettings();
+          fetchPermissions();
           registerListeners();
           emitter.onSuccess(true);
         }));
@@ -277,6 +278,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private Task<Void> fetchPublicSettings() {
     return new MethodCallHelper(realmHelper, ddpClientRef).getPublicSettings();
+  }
+
+  private Task<Void> fetchPermissions() {
+    return new MethodCallHelper(realmHelper, ddpClientRef).getPermissions();
   }
 
   //@DebugLog

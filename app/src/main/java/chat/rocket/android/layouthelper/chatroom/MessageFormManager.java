@@ -33,6 +33,11 @@ public class MessageFormManager {
     messageFormLayout.setEnabled(true);
   }
 
+  public void setEditMessage(String message) {
+    clearComposingText();
+    messageFormLayout.setText(message);
+  }
+
   private void sendMessage(String message) {
     if (sendMessageCallback == null) {
       return;

@@ -20,6 +20,8 @@ public class Linkify {
 
   public static void markup(TextView textview) {
     textview.setMovementMethod(LinkMovementMethodCompat.getInstance());
+    textview.setClickable(false);
+    textview.setLongClickable(false);
     final CharSequence text = textview.getText();
     textview.setText(markupInner(text));
   }

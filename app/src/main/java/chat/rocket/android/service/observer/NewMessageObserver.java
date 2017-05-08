@@ -57,13 +57,14 @@ public class NewMessageObserver extends AbstractModelObserver<RealmMessage> {
     final String messageId = message.getId();
     final String roomId = message.getRoomId();
     final String msg = message.getMessage();
+    final long editedAt = message.getEditedAt();
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(RealmMessage.class, new JSONObject()
             .put(RealmMessage.ID, messageId)
             .put(RealmMessage.SYNC_STATE, SyncState.SYNCING)
         )
-    ).onSuccessTask(task -> methodCall.sendMessage(messageId, roomId, msg)
+    ).onSuccessTask(task -> methodCall.sendMessage(messageId, roomId, msg, editedAt)
     ).continueWith(task -> {
       if (task.isFaulted()) {
         RCLog.w(task.getError());

@@ -38,9 +38,15 @@ public abstract class Message {
   @Nullable
   public abstract String getAvatar();
 
+  public abstract long getEditedAt();
+
   public abstract Message withSyncState(int syncState);
 
   public abstract Message withUser(User user);
+
+  public abstract Message withMessage(String message);
+
+  public abstract Message withEditedAt(long editedAt);
 
   public static Builder builder() {
     return new AutoValue_Message.Builder();
@@ -59,7 +65,7 @@ public abstract class Message {
 
     public abstract Builder setTimestamp(long timestamp);
 
-    public abstract Builder setMessage(String msg);
+    public abstract Builder setMessage(String message);
 
     public abstract Builder setUser(User user);
 
@@ -72,6 +78,8 @@ public abstract class Message {
     public abstract Builder setAlias(String alias);
 
     public abstract Builder setAvatar(String avatar);
+
+    public abstract Builder setEditedAt(long editedAt);
 
     public abstract Message build();
   }
