@@ -34,7 +34,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 22
-        versionName "1.0.12"
+        versionName "1.0.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -124,6 +124,8 @@ dependencies {
 
     compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
+
+    compile "com.android.support:support-annotations:$supportVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'
