@@ -124,6 +124,8 @@ dependencies {
 
     compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
+
+    compile "com.android.support:support-annotations:$supportVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'
