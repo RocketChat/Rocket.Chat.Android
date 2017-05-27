@@ -1,6 +1,7 @@
 package chat.rocket.android.renderer;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import chat.rocket.android.renderer.optional.Condition;
@@ -15,27 +16,28 @@ abstract class AbstractRenderer<T> {
     this.object = object;
   }
 
+  // TODO should we get rid of this simpler version of 'shouldHandle'?
   protected boolean shouldHandle(View view) {
     return object != null && view != null;
   }
 
-  protected boolean shouldHandle(View target, Condition additionalCondition, Optional optional,
-                                 String key) {
-    if (target == null || object == null) {
-      if (optional != null) {
-        optional.onNoData(key);
-      }
+  protected boolean shouldHandle(View target,
+                                 @Nullable Condition additionalCondition,
+                                 Optional optional,
+                                 @Nullable String key) {
+    if (target == null) {
       return false;
     }
-
-    if (optional != null) {
-      if (!additionalCondition.isOK()) {
-        optional.onNoData(key);
-        return false;
-      } else {
+    if (object == null) {
+      optional.onNoData(key);
+    } else {
+      if (additionalCondition == null || additionalCondition.isOK()) {
         optional.onDataExists(key);
+        return true;
+      } else {
+        optional.onNoData(key);
       }
     }
-    return true;
+    return false;
   }
 }
