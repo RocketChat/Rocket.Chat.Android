@@ -5,13 +5,13 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.2'
     }
 }
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         minSdkVersion 16
@@ -30,8 +30,8 @@ android {
 }
 
 ext {
-    supportVersion = '25.2.0'
-    frescoVersion = '1.1.0'
+    supportVersion = '25.3.1'
+    frescoVersion = '1.3.0'
     rxbindingVersion = '2.0.0'
 }
 
@@ -49,7 +49,7 @@ dependencies {
 
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
 
     compile 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
 

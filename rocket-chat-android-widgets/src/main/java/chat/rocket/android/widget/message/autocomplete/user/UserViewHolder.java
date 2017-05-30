@@ -12,6 +12,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.RocketChatAvatar;
@@ -81,6 +82,7 @@ public class UserViewHolder extends AutocompleteViewHolder<UserItem> {
     //REMARK! this is often SVG image! (see: Rocket.Chat:server/startup/avatar.coffee)
     try {
       final String avatarUrl = "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
+      //  TODO why absoluteUrl is nullable? By allowing that, the app tries to load non-existing images
       if (absoluteUrl == null) {
         return avatarUrl;
       }
