@@ -10,7 +10,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -28,13 +28,13 @@ buildscript {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
     defaultConfig {
         applicationId "chat.rocket.android"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 22
-        versionName "1.0.12"
+        versionName "1.0.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -75,13 +75,13 @@ play {
 }
 
 ext {
-    supportVersion = '25.2.0'
-    playLibVersion = '10.2.0'
+    supportVersion = '25.3.1'
+    playLibVersion = '10.2.6'
     stethoVersion = '1.4.2'
     rxbindingVersion = '2.0.0'
-    rxlifecycleVersion = '2.0.1'
+    rxlifecycleVersion = '2.1.0'
     icepickVersion = '3.2.0'
-    permissionsdispatcherVersion = '2.3.1'
+    permissionsdispatcherVersion = '2.4.0'
 }
 
 dependencies {
@@ -101,7 +101,7 @@ dependencies {
 
     compile "com.google.android.gms:play-services-gcm:$playLibVersion"
 
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
 
     compile "com.facebook.stetho:stetho:$stethoVersion"
     compile "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
@@ -124,6 +124,8 @@ dependencies {
 
     compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
+
+    compile "com.android.support:support-annotations:$supportVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

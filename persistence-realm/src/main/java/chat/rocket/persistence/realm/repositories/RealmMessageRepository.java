@@ -2,7 +2,9 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
+
 import com.fernandocejas.arrow.optional.Optional;
+
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -12,6 +14,7 @@ import io.realm.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
@@ -75,10 +78,11 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
 
       RealmUser realmUser = realmMessage.getUser();
       if (realmUser == null) {
-        realmUser = new RealmUser();
+        realmUser = realm.where(RealmUser.class)
+            .equalTo(RealmUser.ID, message.getUser().getId())
+            .findFirst();
       }
-
-      realmUser.setId(message.getUser().getId());
+      realmMessage.setUser(realmUser);
 
       realm.beginTransaction();
 
