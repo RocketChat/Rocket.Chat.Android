@@ -23,5 +23,7 @@ public class RocketChatWidgets {
     ImageFormatConfigurator.addCustomDrawableFactories(draweeConfigBuilder);
 
     Fresco.initialize(context, config, draweeConfigBuilder.build());
+
+    Fresco.getImagePipeline().clearCaches();
   }
 }
