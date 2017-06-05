@@ -80,7 +80,12 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
 
       RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
       if (thread != null) {
-        return thread.terminate();
+        return thread.terminate()
+                //after disconnection from server, remove RCWebSocket key from HashMap
+                .doAfterTerminate(() -> {
+                  webSocketThreads.remove(hostname);
+                  stopSelf();
+                });
       } else {
         return Observable.timer(1, TimeUnit.SECONDS).toSingle()
             .flatMap(_val -> disconnectFromServer(hostname));

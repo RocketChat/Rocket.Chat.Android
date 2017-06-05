@@ -12,6 +12,7 @@ import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.models.ddp.RealmPermission;
 import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
 import chat.rocket.core.SyncState;
@@ -261,6 +262,13 @@ public class MethodCallHelper {
     return call("logout", TIMEOUT_MS).onSuccessTask(task ->
         realmHelper.executeTransaction(realm -> {
           realm.delete(RealmSession.class);
+          //check whether the server list is empty
+          if (!ConnectivityManager.getInstance(context).getServerList().isEmpty()){
+            //for each server in serverList -> remove the server
+            for (ServerInfo server: ConnectivityManager.getInstance(context).getServerList()) {
+              ConnectivityManager.getInstance(context.getApplicationContext()).removeServer(server.getHostname());
+            }
+          }
           return null;
         }));
   }

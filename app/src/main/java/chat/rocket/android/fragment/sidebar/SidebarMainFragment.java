@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
+import chat.rocket.android.LaunchUtil;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -267,6 +268,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
       presenter.onLogout();
       closeUserActionContainer();
+      LaunchUtil.showAddServerActivity(getContext());
     });
   }
 

@@ -238,7 +238,8 @@ import rx.subjects.PublishSubject;
       serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTING);
 
       if (serviceInterface != null) {
-        return serviceInterface.disconnectFromServer(hostname);
+        return serviceInterface.disconnectFromServer(hostname)
+                .doAfterTerminate(() -> serverConnectivityList.remove(hostname));
       } else {
         return Single.error(new IllegalStateException("not prepared"));
       }
