@@ -6,10 +6,12 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractWebViewFragment;
 import chat.rocket.core.models.LoginServiceConfiguration;
@@ -61,13 +63,14 @@ public abstract class AbstractOAuthFragment extends AbstractWebViewFragment
         new RealmLoginServiceConfigurationRepository(hostname),
         new MethodCallHelper(getContext(), hostname)
     );
+
+    presenter.loadService(getOAuthServiceName());
   }
 
   @Override
   public void onResume() {
     super.onResume();
     presenter.bindView(this);
-    presenter.loadService(getOAuthServiceName());
   }
 
   @Override
