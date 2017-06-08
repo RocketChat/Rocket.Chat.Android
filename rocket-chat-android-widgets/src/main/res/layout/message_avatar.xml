@@ -4,4 +4,5 @@
         android:id="@+id/drawee_avatar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        fresco:actualImageScaleType="fitCenter" />
+        fresco:actualImageScaleType="fitCenter"
+        fresco:roundedCornerRadius="5dp" />

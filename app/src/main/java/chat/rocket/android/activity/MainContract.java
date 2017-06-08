@@ -28,5 +28,7 @@ public interface MainContract {
     void onOpenRoom(String hostname, String roomId);
 
     void onRetryLogin();
+
+    void bindViewOnly(View view);
   }
 }

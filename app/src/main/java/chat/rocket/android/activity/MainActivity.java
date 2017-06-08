@@ -52,8 +52,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   @Override
   protected void onResume() {
     super.onResume();
-    if (presenter != null && presenter instanceof MainPresenter) {
-      ((MainPresenter)presenter).bindViewOnly(this);
+    if (presenter != null) {
+      presenter.bindViewOnly(this);
     }
   }
 
