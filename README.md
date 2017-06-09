@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/91f528f840e848b6aa512dea4d13ea85)](https://www.codacy.com/app/RocketChat/Rocket-Chat-Android?utm_source=github.com&utm_medium=referral&utm_content=RocketChat/Rocket.Chat.Android&utm_campaign=badger)
 [![CircleCI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop) [![Build Status](https://travis-ci.org/RocketChat/Rocket.Chat.Android.svg?branch=develop)](https://travis-ci.org/RocketChat/Rocket.Chat.Android)
 
 # Rocket.Chat.Android
