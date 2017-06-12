@@ -44,6 +44,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     this.rocketChatCache = rocketChatCache;
   }
 
+  @Override
   public void bindViewOnly(@NonNull MainContract.View view) {
     super.bindView(view);
     subscribeToUnreadCount();
