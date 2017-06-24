@@ -10,6 +10,9 @@ import android.support.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import chat.rocket.android.activity.MainActivity;
+import chat.rocket.persistence.realm.RealmStore;
 import hugo.weaving.DebugLog;
 import rx.Observable;
 import rx.Single;
@@ -49,7 +52,6 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
   @Override
   public void onCreate() {
     super.onCreate();
-
     connectivityManager = ConnectivityManager.getInstanceForInternal(getApplicationContext());
     connectivityManager.resetConnectivityStateList();
     webSocketThreads = new HashMap<>();
@@ -80,7 +82,20 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
 
       RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
       if (thread != null) {
-        return thread.terminate();
+        return thread.terminate()
+            // after disconnection from server
+            .doAfterTerminate(() -> {
+              // remove RCWebSocket key from HashMap
+              webSocketThreads.remove(hostname);
+              // remove RealmConfiguration key from HashMap
+              RealmStore.sStore.remove(hostname);
+              // clear "cache" SharedPreference
+              this.getSharedPreferences("cache", 0).edit().clear().apply();
+              // start a fresh new MainActivity
+              Intent intent = new Intent(this, MainActivity.class);
+              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+              this.startActivity(intent);
+            });
       } else {
         return Observable.timer(1, TimeUnit.SECONDS).toSingle()
             .flatMap(_val -> disconnectFromServer(hostname));

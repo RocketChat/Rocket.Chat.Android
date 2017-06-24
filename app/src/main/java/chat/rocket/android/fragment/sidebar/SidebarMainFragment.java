@@ -267,6 +267,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
       presenter.onLogout();
       closeUserActionContainer();
+
+      // destroy Activity on logout to be able to recreate most of the environment
+      this.getActivity().finish();
     });
   }
 
