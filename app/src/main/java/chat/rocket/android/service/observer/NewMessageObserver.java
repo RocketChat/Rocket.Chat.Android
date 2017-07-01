@@ -21,8 +21,7 @@ public class NewMessageObserver extends AbstractModelObserver<RealmMessage> {
 
   private final MethodCallHelper methodCall;
 
-  public NewMessageObserver(Context context, String hostname,
-                            RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+  public NewMessageObserver(Context context, String hostname, RealmHelper realmHelper, DDPClientRef ddpClientRef) {
     super(context, hostname, realmHelper, ddpClientRef);
     methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
 
