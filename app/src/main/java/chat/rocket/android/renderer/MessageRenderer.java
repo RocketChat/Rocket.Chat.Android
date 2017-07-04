@@ -78,7 +78,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       case SyncState.SYNCING:
         textView.setText(R.string.sending);
         break;
-      case SyncState.NOT_SYNCED:
+      case SyncState.FAILED:
         textView.setText(R.string.failed_to_sync);
       default:
         textView.setText(DateTime.fromEpocMs(object.getTimestamp(), DateTime.Format.TIME));
