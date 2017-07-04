@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/colorPrimaryDark">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryDark"
+    tools:context="chat.rocket.android.fragment.add_server.InputHostnameFragment">
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/white"
-            android:minWidth="288dp"
-            android:orientation="horizontal"
-            android:padding="@dimen/margin_24">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:minWidth="288dp"
+        android:padding="@dimen/margin_24"
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-            <TextView
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="4dp"
+                    android:paddingLeft="4dp"
                     android:text="@string/fragment_input_hostname_hostname"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
-            <EditText
+                <EditText
                     android:id="@+id/editor_hostname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -35,13 +43,13 @@
                     android:imeOptions="actionGo"
                     android:inputType="textWebEditText"
                     android:singleLine="true" />
-        </LinearLayout>
+            </LinearLayout>
 
-        <Space
-                android:layout_width="@dimen/margin_8"
+            <Space
+                android:layout_width="@dimen/margin_16"
                 android:layout_height="wrap_content" />
 
-        <android.support.design.widget.FloatingActionButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/btn_connect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,15 +57,23 @@
                 app:elevation="2dp"
                 app:fabSize="mini"
                 app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />
+        </LinearLayout>
+
+        <chat.rocket.android.widget.WaitingView
+            android:id="@+id/waiting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <TextView
-            android:id="@+id/version_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_margin="@dimen/margin_8"
-            android:textColor="@android:color/white"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            tools:text="Version: 1.0" />
+        android:id="@+id/version_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_margin="@dimen/margin_8"
+        android:textColor="@android:color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 </FrameLayout>
