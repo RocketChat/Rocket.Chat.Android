@@ -16,6 +16,7 @@
     <string name="users_of_room_title">Members List</string>
     <string name="fmt_room_user_count">Total: %,d users</string>
     <string name="sending">Sending…</string>
+    <string name="failed_to_sync">Failed to send!</string>
     <string name="resend">Resend</string>
     <string name="discard">Discard</string>
 

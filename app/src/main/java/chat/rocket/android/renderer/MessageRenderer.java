@@ -40,8 +40,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    */
   public MessageRenderer avatarInto(RocketChatAvatar rocketChatAvatar, AbsoluteUrl absoluteUrl) {
     if (object.getSyncState() == SyncState.FAILED) {
-      rocketChatAvatar.loadImage(VectorDrawableCompat
-          .create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
+      rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
     } else if (TextUtils.isEmpty(object.getAvatar())) {
       userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
     } else {
@@ -76,9 +75,11 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     }
 
     switch (object.getSyncState()) {
-      case SyncState.NOT_SYNCED:
       case SyncState.SYNCING:
         textView.setText(R.string.sending);
+        break;
+      case SyncState.FAILED:
+        textView.setText(R.string.failed_to_sync);
         break;
       default:
         textView.setText(DateTime.fromEpocMs(object.getTimestamp(), DateTime.Format.TIME));

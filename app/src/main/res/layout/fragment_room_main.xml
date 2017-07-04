@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/message_list_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/messageListRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="chat.rocket.android.fragment.chatroom.RoomFragment">
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview"
+            android:id="@+id/messageRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/message_composer" />
+            android:layout_above="@+id/messageComposer" />
 
     <chat.rocket.android.widget.message.MessageFormLayout
-            android:id="@+id/message_composer"
+            android:id="@+id/messageComposer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/Theme.AppCompat.Light"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            android:theme="@style/Theme.AppCompat.Light" />
 </RelativeLayout>

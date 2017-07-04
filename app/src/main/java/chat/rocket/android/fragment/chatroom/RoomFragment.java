@@ -25,14 +25,10 @@ import android.view.ViewGroup;
 import com.fernandocejas.arrow.optional.Optional;
 import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -50,6 +46,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.AbstractNewMessageIndicatorManager;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
+import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
 import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
@@ -59,8 +56,11 @@ import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionIte
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.renderer.RocketChatUserStatusProvider;
+import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
 import chat.rocket.android.service.temp.DefaultTempSpotlightUserCaller;
+import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
+import chat.rocket.android.widget.message.MessageFormLayout;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteManager;
 import chat.rocket.android.widget.message.autocomplete.channel.ChannelSource;
 import chat.rocket.android.widget.message.autocomplete.user.UserSource;
@@ -70,6 +70,7 @@ import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
@@ -77,11 +78,10 @@ import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightUserRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
-import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
-import chat.rocket.persistence.realm.RealmStore;
-import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
-import chat.rocket.android.widget.message.MessageFormLayout;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -89,10 +89,12 @@ import permissions.dispatcher.RuntimePermissions;
  * Chat room screen.
  */
 @RuntimePermissions
-public class RoomFragment extends AbstractChatRoomFragment
-    implements OnBackPressListener, ExtraActionPickerDialogFragment.Callback,
-    ModelListAdapter.OnItemClickListener<PairedMessage>,
-    ModelListAdapter.OnItemLongClickListener<PairedMessage>, RoomContract.View {
+public class RoomFragment extends AbstractChatRoomFragment implements
+        OnBackPressListener,
+        ExtraActionPickerDialogFragment.Callback,
+        ModelListAdapter.OnItemClickListener<PairedMessage>,
+        ModelListAdapter.OnItemLongClickListener<PairedMessage>,
+        RoomContract.View {
 
   private static final int DIALOG_ID = 1;
   private static final String HOSTNAME = "hostname";
@@ -102,11 +104,11 @@ public class RoomFragment extends AbstractChatRoomFragment
   private String roomId;
   private LoadMoreScrollListener scrollListener;
   private MessageFormManager messageFormManager;
-  private RecyclerViewAutoScrollManager autoScrollManager;
+  private RecyclerViewAutoScrollManager recyclerViewAutoScrollManager;
   protected AbstractNewMessageIndicatorManager newMessageIndicatorManager;
   protected Snackbar unreadIndicator;
   private boolean previousUnreadMessageExists;
-  private MessageListAdapter adapter;
+  private MessageListAdapter messageListAdapter;
   private AutocompleteManager autocompleteManager;
 
   private List<AbstractExtraActionItem> extraActionItems;
@@ -122,8 +124,7 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   private Message edittingMessage = null;
 
-  public RoomFragment() {
-  }
+  public RoomFragment() {}
 
   /**
    * create fragment with roomId.
@@ -187,16 +188,17 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   protected void onSetupView() {
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-    adapter = new MessageListAdapter(getContext());
-    listView.setAdapter(adapter);
-    adapter.setOnItemClickListener(this);
-    adapter.setOnItemLongClickListener(this);
+    RecyclerView messageRecyclerView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
 
-    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
-        LinearLayoutManager.VERTICAL, true);
-    listView.setLayoutManager(layoutManager);
-    autoScrollManager = new RecyclerViewAutoScrollManager(layoutManager) {
+    messageListAdapter = new MessageListAdapter(getContext());
+    messageRecyclerView.setAdapter(messageListAdapter);
+    messageListAdapter.setOnItemClickListener(this);
+    messageListAdapter.setOnItemLongClickListener(this);
+
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+    messageRecyclerView.setLayoutManager(linearLayoutManager);
+
+    recyclerViewAutoScrollManager = new RecyclerViewAutoScrollManager(linearLayoutManager) {
       @Override
       protected void onAutoScrollMissed() {
         if (newMessageIndicatorManager != null) {
@@ -204,17 +206,17 @@ public class RoomFragment extends AbstractChatRoomFragment
         }
       }
     };
-    adapter.registerAdapterDataObserver(autoScrollManager);
+    messageListAdapter.registerAdapterDataObserver(recyclerViewAutoScrollManager);
 
-    scrollListener = new LoadMoreScrollListener(layoutManager, 40) {
+    scrollListener = new LoadMoreScrollListener(linearLayoutManager, 40) {
       @Override
       public void requestMoreItem() {
         presenter.loadMoreMessages();
       }
     };
-    listView.addOnScrollListener(scrollListener);
-    listView.addOnScrollListener(
-        new RecyclerViewScrolledToBottomListener(layoutManager, 1, this::markAsReadIfNeeded));
+    messageRecyclerView.addOnScrollListener(scrollListener);
+    messageRecyclerView.addOnScrollListener(
+        new RecyclerViewScrolledToBottomListener(linearLayoutManager, 1, this::markAsReadIfNeeded));
 
     newMessageIndicatorManager = new AbstractNewMessageIndicatorManager() {
       @Override
@@ -247,7 +249,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void scrollToLatestMessage() {
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
     if (listView != null) {
       listView.scrollToPosition(0);
     }
@@ -264,11 +266,11 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void onDestroyView() {
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
     if (listView != null) {
       RecyclerView.Adapter adapter = listView.getAdapter();
       if (adapter != null) {
-        adapter.unregisterAdapterDataObserver(autoScrollManager);
+        adapter.unregisterAdapterDataObserver(recyclerViewAutoScrollManager);
       }
     }
 
@@ -340,15 +342,12 @@ public class RoomFragment extends AbstractChatRoomFragment
   }
 
   private void setupMessageComposer() {
-    final MessageFormLayout messageFormLayout =
-        (MessageFormLayout) rootView.findViewById(R.id.message_composer);
-    messageFormManager =
-        new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
+    final MessageFormLayout messageFormLayout = (MessageFormLayout) rootView.findViewById(R.id.messageComposer);
+    messageFormManager = new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
     messageFormManager.setSendMessageCallback(this::sendMessage);
     messageFormLayout.setEditTextCommitContentListener(this::onCommitContent);
 
-    autocompleteManager =
-        new AutocompleteManager((ViewGroup) rootView.findViewById(R.id.message_list_root));
+    autocompleteManager = new AutocompleteManager((ViewGroup) rootView.findViewById(R.id.messageListRelativeLayout));
 
     autocompleteManager.registerSource(
         new ChannelSource(
@@ -452,8 +451,7 @@ public class RoomFragment extends AbstractChatRoomFragment
   public void onItemSelected(int itemId) {
     for (AbstractExtraActionItem extraActionItem : extraActionItems) {
       if (extraActionItem.getItemId() == itemId) {
-        RoomFragmentPermissionsDispatcher
-            .onExtraActionSelectedWithCheck(RoomFragment.this, extraActionItem);
+        RoomFragmentPermissionsDispatcher.onExtraActionSelectedWithCheck(RoomFragment.this, extraActionItem);
         return;
       }
     }
@@ -529,7 +527,7 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void setupWith(RocketChatAbsoluteUrl rocketChatAbsoluteUrl) {
-    adapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
+    messageListAdapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
   }
 
   @Override
@@ -555,7 +553,7 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void updateHistoryState(boolean hasNext, boolean isLoaded) {
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
     if (listView == null || !(listView.getAdapter() instanceof MessageListAdapter)) {
       return;
     }
@@ -581,10 +579,10 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void showMessages(List<Message> messages) {
-    if (adapter == null) {
+    if (messageListAdapter == null) {
       return;
     }
-    adapter.updateData(messages);
+    messageListAdapter.updateData(messages);
   }
 
   @Override
@@ -600,12 +598,12 @@ public class RoomFragment extends AbstractChatRoomFragment
 
   @Override
   public void autoloadImages() {
-    adapter.setAutoloadImages(true);
+    messageListAdapter.setAutoloadImages(true);
   }
 
   @Override
   public void manualLoadImages() {
-    adapter.setAutoloadImages(false);
+    messageListAdapter.setAutoloadImages(false);
   }
 
   private void onEditMessage(Message message) {
