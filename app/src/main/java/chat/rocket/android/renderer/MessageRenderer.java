@@ -80,6 +80,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
         break;
       case SyncState.FAILED:
         textView.setText(R.string.failed_to_sync);
+        break;
       default:
         textView.setText(DateTime.fromEpocMs(object.getTimestamp(), DateTime.Format.TIME));
         break;
