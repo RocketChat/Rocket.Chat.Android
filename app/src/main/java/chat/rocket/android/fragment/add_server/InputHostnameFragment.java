@@ -21,9 +21,9 @@ import chat.rocket.android.service.ConnectivityManager;
 public class InputHostnameFragment extends AbstractFragment implements InputHostnameContract.View {
 
   private InputHostnameContract.Presenter presenter;
+  private View waitingView;
 
-  public InputHostnameFragment() {
-  }
+  public InputHostnameFragment() {}
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
   protected void onSetupView() {
     setupVersionInfo();
 
+    waitingView = rootView.findViewById(R.id.waiting);
     rootView.findViewById(R.id.btn_connect).setOnClickListener(view -> handleConnect());
   }
 
@@ -82,11 +83,13 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
   @Override
   public void showLoader() {
     rootView.findViewById(R.id.btn_connect).setEnabled(false);
+    waitingView.setVisibility(View.VISIBLE);
   }
 
   @Override
   public void hideLoader() {
     rootView.findViewById(R.id.btn_connect).setEnabled(true);
+    waitingView.setVisibility(View.GONE);
   }
 
   @Override
