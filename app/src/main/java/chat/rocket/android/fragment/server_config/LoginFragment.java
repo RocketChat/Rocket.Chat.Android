@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.server_config;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -23,8 +24,7 @@ import chat.rocket.persistence.realm.repositories.RealmPublicSettingRepository;
 public class LoginFragment extends AbstractServerConfigFragment implements LoginContract.View {
 
   private LoginContract.Presenter presenter;
-
-  private View btnEmail;
+  private ConstraintLayout container;
   private View waitingView;
   private TextView txtUsername;
   private TextView txtPasswd;
@@ -47,7 +47,9 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
 
   @Override
   protected void onSetupView() {
-    btnEmail = rootView.findViewById(R.id.btn_login_with_email);
+    container = (ConstraintLayout) rootView.findViewById(R.id.container);
+
+    View btnEmail = rootView.findViewById(R.id.btn_login_with_email);
     txtUsername = (TextView) rootView.findViewById(R.id.editor_username);
     txtPasswd = (TextView) rootView.findViewById(R.id.editor_passwd);
     waitingView = rootView.findViewById(R.id.waiting);
@@ -62,14 +64,14 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
 
   @Override
   public void showLoader() {
-    btnEmail.setEnabled(false);
+    container.setVisibility(View.GONE);
     waitingView.setVisibility(View.VISIBLE);
   }
 
   @Override
   public void hideLoader() {
-    btnEmail.setEnabled(true);
     waitingView.setVisibility(View.GONE);
+    container.setVisibility(View.VISIBLE);
   }
 
   @Override
