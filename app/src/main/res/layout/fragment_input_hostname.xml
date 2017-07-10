@@ -13,7 +13,7 @@
     android:layout_width="wrap_content"
     android:minWidth="288dp"
     android:layout_height="wrap_content"
-    android:padding="@dimen/margin_16"
+    android:padding="@dimen/margin_24"
     android:background="@drawable/container_bg"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toTopOf="@+id/version_info"
@@ -34,7 +34,7 @@
 
     <EditText
       android:id="@+id/editor_hostname"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:hint="@string/fragment_input_hostname_server_hint"
       android:imeOptions="actionSend"

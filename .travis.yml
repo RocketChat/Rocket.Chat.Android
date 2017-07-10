@@ -8,6 +8,8 @@ before_script:
  - echo y | android update sdk --no-ui --all --filter extra-android-m2repository,extra-android-support
  - echo y | android update sdk --no-ui --all --filter extra-google-m2repository,extra-google-google_play_services
  - echo y | android update sdk --no-ui --all --filter build-tools-25.0.3
+ - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
+ - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
  - ./gradlew dependencies
 
 script:
