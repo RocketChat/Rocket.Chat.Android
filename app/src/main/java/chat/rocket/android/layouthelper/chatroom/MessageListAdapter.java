@@ -16,8 +16,7 @@ import chat.rocket.core.models.Message;
 /**
  * target list adapter for chat room.
  */
-public class MessageListAdapter
-    extends ExtModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
+public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
 
   private static final int VIEW_TYPE_UNKNOWN = 0;
   private static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
@@ -99,8 +98,7 @@ public class MessageListAdapter
       default:
         return new AbstractMessageViewHolder(itemView, absoluteUrl) {
           @Override
-          protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
-          }
+          protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {}
         };
     }
   }

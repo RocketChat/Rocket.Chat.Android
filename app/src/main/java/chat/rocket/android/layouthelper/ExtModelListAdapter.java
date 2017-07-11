@@ -11,8 +11,7 @@ import chat.rocket.android.layouthelper.chatroom.ModelViewHolder;
 /**
  * ModelListAdapter with header and footer.
  */
-public abstract class ExtModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
-    extends ModelListAdapter<T, VM, VH> {
+public abstract class ExtModelListAdapter<T, VM, VH extends ModelViewHolder<VM>> extends ModelListAdapter<T, VM, VH> {
   protected static final int VIEW_TYPE_HEADER = -1;
   protected static final int VIEW_TYPE_FOOTER = -2;
 

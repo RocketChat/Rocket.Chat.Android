@@ -40,17 +40,14 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    * bind the view model.
    */
   public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
-    bindMessage(pairedMessage, autoloadImages);
-
     if (pairedMessage.target != null) {
-      int syncState = pairedMessage.target.getSyncState();
-      if (syncState == SyncState.NOT_SYNCED || syncState == SyncState.SYNCING) {
+      if (pairedMessage.target.getSyncState() != SyncState.SYNCED)
         itemView.setAlpha(0.6f);
-      } else {
+      else
         itemView.setAlpha(1.0f);
-      }
     }
 
+    bindMessage(pairedMessage, autoloadImages);
     renderNewDayAndSequential(pairedMessage);
   }
 
@@ -73,19 +70,17 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
 
   private void setSequential(boolean sequential) {
     if (avatar != null) {
-      if (sequential) {
+      if (sequential)
         avatar.setVisibility(View.GONE);
-      } else {
+      else
         avatar.setVisibility(View.VISIBLE);
-      }
     }
 
     if (userAndTimeContainer != null) {
-      if (sequential) {
+      if (sequential)
         userAndTimeContainer.setVisibility(View.GONE);
-      } else {
+      else
         userAndTimeContainer.setVisibility(View.VISIBLE);
-      }
     }
   }
 

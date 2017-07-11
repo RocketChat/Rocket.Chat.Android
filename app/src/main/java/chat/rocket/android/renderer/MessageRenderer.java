@@ -39,15 +39,19 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show Avatar image.
    */
   public MessageRenderer avatarInto(RocketChatAvatar rocketChatAvatar, AbsoluteUrl absoluteUrl) {
-    if (object.getSyncState() == SyncState.FAILED) {
-      rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
-    } else if (TextUtils.isEmpty(object.getAvatar())) {
-      userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
-    } else {
-      final User user = object.getUser();
-      setAvatarInto(object.getAvatar(), absoluteUrl, user == null ? null : user.getUsername(),
-          rocketChatAvatar);
+    if (!shouldHandle(rocketChatAvatar)) {
+      return this;
     }
+
+    if (object.getSyncState() == SyncState.FAILED)
+      rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
+    else if (TextUtils.isEmpty(object.getAvatar()))
+      userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
+    else {
+      final User user = object.getUser();
+      setAvatarInto(object.getAvatar(), absoluteUrl, user == null ? null : user.getUsername(), rocketChatAvatar);
+    }
+
     return this;
   }
 
@@ -77,6 +81,9 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     switch (object.getSyncState()) {
       case SyncState.SYNCING:
         textView.setText(R.string.sending);
+        break;
+      case SyncState.NOT_SYNCED:
+        textView.setText(R.string.not_synced);
         break;
       case SyncState.FAILED:
         textView.setText(R.string.failed_to_sync);
@@ -142,8 +149,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     return this;
   }
 
-  private void setAvatarInto(String avatar, AbsoluteUrl absoluteUrl, String username,
-                             RocketChatAvatar imageView) {
+  private void setAvatarInto(String avatar, AbsoluteUrl absoluteUrl, String username, RocketChatAvatar imageView) {
     imageView.loadImage(avatar, new Avatar(absoluteUrl, username).getTextDrawable(context));
   }
 

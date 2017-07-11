@@ -74,13 +74,17 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
         RCLog.w(task.getError());
-        return realmHelper.executeTransaction(realm ->
+        realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
                 .put(LoadMessageProcedure.ID, roomId)
                 .put(LoadMessageProcedure.SYNC_STATE, SyncState.FAILED)));
       } else {
-        return Task.forResult(null);
+        realmHelper.executeTransaction(realm ->
+            realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
+                .put(LoadMessageProcedure.ID, roomId)
+                .put(LoadMessageProcedure.SYNC_STATE, SyncState.SYNCED)));
       }
+      return null;
     });
   }
 }

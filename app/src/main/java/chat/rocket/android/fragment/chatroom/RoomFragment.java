@@ -215,14 +215,12 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       }
     };
     messageRecyclerView.addOnScrollListener(scrollListener);
-    messageRecyclerView.addOnScrollListener(
-        new RecyclerViewScrolledToBottomListener(linearLayoutManager, 1, this::markAsReadIfNeeded));
+    messageRecyclerView.addOnScrollListener(new RecyclerViewScrolledToBottomListener(linearLayoutManager, 1, this::markAsReadIfNeeded));
 
     newMessageIndicatorManager = new AbstractNewMessageIndicatorManager() {
       @Override
       protected void onShowIndicator(int count, boolean onlyAlreadyShown) {
-        if ((onlyAlreadyShown && unreadIndicator != null && unreadIndicator.isShown())
-            || !onlyAlreadyShown) {
+        if ((onlyAlreadyShown && unreadIndicator != null && unreadIndicator.isShown()) || !onlyAlreadyShown) {
           unreadIndicator = getUnreadCountIndicatorView(count);
           unreadIndicator.show();
         }
