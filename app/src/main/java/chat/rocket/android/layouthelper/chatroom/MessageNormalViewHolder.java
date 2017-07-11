@@ -1,14 +1,12 @@
 package chat.rocket.android.layouthelper.chatroom;
 
 import android.view.View;
-
 import chat.rocket.android.R;
 import chat.rocket.android.renderer.MessageRenderer;
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
-import chat.rocket.core.SyncState;
 
 /**
  * ViewData holder of NORMAL chat message.
