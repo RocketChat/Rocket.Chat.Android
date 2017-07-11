@@ -2,6 +2,13 @@
 
 language: android
 jdk: oraclejdk8
+
+env:
+  global:
+    - ANDROID_HOME=/usr/local/android-sdk
+    - TOOLS=${ANDROID_HOME}/tools
+    - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
+
 before_script:
  - echo y | android update sdk --no-ui --all --filter tools,platform-tools
  - echo y | android update sdk --no-ui --all --filter android-25
