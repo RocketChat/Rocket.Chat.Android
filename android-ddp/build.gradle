@@ -13,8 +13,8 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -22,7 +22,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "0.0.8"
     }
@@ -34,14 +34,10 @@ android {
     }
 }
 
-ext {
-    supportVersion = '25.3.1'
-}
-
 dependencies {
     compile project(':log-wrapper')
 
-    compile "com.android.support:support-annotations:$supportVersion"
+    compile "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
 
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
 
