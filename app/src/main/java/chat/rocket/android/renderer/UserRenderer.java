@@ -3,12 +3,11 @@ package chat.rocket.android.renderer;
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.widget.AbsoluteUrl;
-import chat.rocket.core.models.User;
 import chat.rocket.android.widget.RocketChatAvatar;
+import chat.rocket.core.models.User;
 
 /**
  * Renderer for RealmUser model.
@@ -29,6 +28,20 @@ public class UserRenderer extends AbstractRenderer<User> {
 
     if (!TextUtils.isEmpty(object.getUsername())) {
       new Avatar(absoluteUrl, object.getUsername()).into(rocketChatAvatar);
+    }
+    return this;
+  }
+
+  /**
+   * show Avatar error image
+   */
+  public UserRenderer errorAvatarInto(RocketChatAvatar rocketChatAvatar) {
+    if (!shouldHandle(rocketChatAvatar)) {
+      return this;
+    }
+
+    if (!TextUtils.isEmpty(object.getUsername())) {
+      new Avatar(null, object.getUsername()).errorInto(rocketChatAvatar);
     }
     return this;
   }

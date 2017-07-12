@@ -3,13 +3,12 @@ package chat.rocket.android.layouthelper.chatroom;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
-
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.widget.AbsoluteUrl;
-import chat.rocket.core.SyncState;
 import chat.rocket.android.widget.RocketChatAvatar;
+import chat.rocket.core.SyncState;
 
 public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMessage> {
   protected final RocketChatAvatar avatar;
@@ -40,17 +39,14 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    * bind the view model.
    */
   public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
-    bindMessage(pairedMessage, autoloadImages);
-
     if (pairedMessage.target != null) {
-      int syncState = pairedMessage.target.getSyncState();
-      if (syncState == SyncState.NOT_SYNCED || syncState == SyncState.SYNCING) {
+      if (pairedMessage.target.getSyncState() != SyncState.SYNCED)
         itemView.setAlpha(0.6f);
-      } else {
+      else
         itemView.setAlpha(1.0f);
-      }
     }
 
+    bindMessage(pairedMessage, autoloadImages);
     renderNewDayAndSequential(pairedMessage);
   }
 
@@ -73,19 +69,17 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
 
   private void setSequential(boolean sequential) {
     if (avatar != null) {
-      if (sequential) {
+      if (sequential)
         avatar.setVisibility(View.GONE);
-      } else {
+      else
         avatar.setVisibility(View.VISIBLE);
-      }
     }
 
     if (userAndTimeContainer != null) {
-      if (sequential) {
+      if (sequential)
         userAndTimeContainer.setVisibility(View.GONE);
-      } else {
+      else
         userAndTimeContainer.setVisibility(View.VISIBLE);
-      }
     }
   }
 

@@ -1,7 +1,6 @@
 package chat.rocket.android.layouthelper.chatroom;
 
 import android.view.View;
-
 import chat.rocket.android.R;
 import chat.rocket.android.renderer.MessageRenderer;
 import chat.rocket.android.widget.AbsoluteUrl;
@@ -24,8 +23,7 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
     super(itemView, absoluteUrl);
     body = (RocketChatMessageLayout) itemView.findViewById(R.id.message_body);
     urls = (RocketChatMessageUrlsLayout) itemView.findViewById(R.id.message_urls);
-    attachments =
-        (RocketChatMessageAttachmentsLayout) itemView.findViewById(R.id.message_attachments);
+    attachments = (RocketChatMessageAttachmentsLayout) itemView.findViewById(R.id.message_attachments);
   }
 
   @Override

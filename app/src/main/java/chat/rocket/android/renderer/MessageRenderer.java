@@ -1,25 +1,23 @@
 package chat.rocket.android.renderer;
 
 import android.content.Context;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.View;
 import android.widget.TextView;
-
-import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.widget.AbsoluteUrl;
-import chat.rocket.core.SyncState;
-import chat.rocket.core.models.Attachment;
-import chat.rocket.core.models.Message;
 import chat.rocket.android.widget.RocketChatAvatar;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
+import chat.rocket.core.SyncState;
+import chat.rocket.core.models.Attachment;
+import chat.rocket.core.models.Message;
 import chat.rocket.core.models.User;
 import chat.rocket.core.models.WebContent;
+import java.util.List;
 
 /**
  * Renderer for RealmMessage model.
@@ -39,15 +37,20 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show Avatar image.
    */
   public MessageRenderer avatarInto(RocketChatAvatar rocketChatAvatar, AbsoluteUrl absoluteUrl) {
-    if (object.getSyncState() == SyncState.FAILED) {
-      rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
-    } else if (TextUtils.isEmpty(object.getAvatar())) {
-      userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
-    } else {
-      final User user = object.getUser();
-      setAvatarInto(object.getAvatar(), absoluteUrl, user == null ? null : user.getUsername(),
-          rocketChatAvatar);
+    if (!shouldHandle(rocketChatAvatar)) {
+      return this;
     }
+
+    if (object.getSyncState() == SyncState.FAILED)
+//      rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
+      userRenderer.errorAvatarInto(rocketChatAvatar);
+    else if (TextUtils.isEmpty(object.getAvatar()))
+      userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
+    else {
+      final User user = object.getUser();
+      setAvatarInto(object.getAvatar(), absoluteUrl, user == null ? null : user.getUsername(), rocketChatAvatar);
+    }
+
     return this;
   }
 
@@ -77,6 +80,9 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     switch (object.getSyncState()) {
       case SyncState.SYNCING:
         textView.setText(R.string.sending);
+        break;
+      case SyncState.NOT_SYNCED:
+        textView.setText(R.string.not_synced);
         break;
       case SyncState.FAILED:
         textView.setText(R.string.failed_to_sync);
@@ -142,8 +148,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     return this;
   }
 
-  private void setAvatarInto(String avatar, AbsoluteUrl absoluteUrl, String username,
-                             RocketChatAvatar imageView) {
+  private void setAvatarInto(String avatar, AbsoluteUrl absoluteUrl, String username, RocketChatAvatar imageView) {
     imageView.loadImage(avatar, new Avatar(absoluteUrl, username).getTextDrawable(context));
   }
 

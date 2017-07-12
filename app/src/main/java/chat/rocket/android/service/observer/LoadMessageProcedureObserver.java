@@ -1,20 +1,18 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
+import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.log.RCLog;
+import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import org.json.JSONObject;
-
 import java.util.List;
-import bolts.Task;
-import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.log.RCLog;
-import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.models.ddp.RealmMessage;
-import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
+import org.json.JSONObject;
 
 /**
  * Background process for loading messages.
@@ -74,13 +72,17 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
     ).continueWithTask(task -> {
       if (task.isFaulted()) {
         RCLog.w(task.getError());
-        return realmHelper.executeTransaction(realm ->
+        realmHelper.executeTransaction(realm ->
             realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
                 .put(LoadMessageProcedure.ID, roomId)
                 .put(LoadMessageProcedure.SYNC_STATE, SyncState.FAILED)));
       } else {
-        return Task.forResult(null);
+        realmHelper.executeTransaction(realm ->
+            realm.createOrUpdateObjectFromJson(LoadMessageProcedure.class, new JSONObject()
+                .put(LoadMessageProcedure.ID, roomId)
+                .put(LoadMessageProcedure.SYNC_STATE, SyncState.SYNCED)));
       }
+      return null;
     });
   }
 }

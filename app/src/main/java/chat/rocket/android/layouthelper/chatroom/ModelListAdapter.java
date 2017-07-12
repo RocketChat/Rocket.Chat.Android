@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 @SuppressWarnings("PMD.GenericsNaming")
-public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>>
-    extends RecyclerView.Adapter<VH> {
+public abstract class ModelListAdapter<T, VM, VH extends ModelViewHolder<VM>> extends RecyclerView.Adapter<VH> {
 
   protected final LayoutInflater inflater;
   private List<VM> adapterData;
