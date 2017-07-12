@@ -8,13 +8,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import chat.rocket.android.R;
-import com.amulyakhare.textdrawable.TextDrawable;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.RocketChatAvatar;
+import com.amulyakhare.textdrawable.TextDrawable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Helper for rendering user avatar image.

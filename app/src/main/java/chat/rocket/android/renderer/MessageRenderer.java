@@ -1,25 +1,23 @@
 package chat.rocket.android.renderer;
 
 import android.content.Context;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.View;
 import android.widget.TextView;
-
-import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.widget.AbsoluteUrl;
-import chat.rocket.core.SyncState;
-import chat.rocket.core.models.Attachment;
-import chat.rocket.core.models.Message;
 import chat.rocket.android.widget.RocketChatAvatar;
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout;
 import chat.rocket.android.widget.message.RocketChatMessageLayout;
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
+import chat.rocket.core.SyncState;
+import chat.rocket.core.models.Attachment;
+import chat.rocket.core.models.Message;
 import chat.rocket.core.models.User;
 import chat.rocket.core.models.WebContent;
+import java.util.List;
 
 /**
  * Renderer for RealmMessage model.

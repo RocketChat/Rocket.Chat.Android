@@ -3,13 +3,12 @@ package chat.rocket.android.layouthelper.chatroom;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
-
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.widget.AbsoluteUrl;
-import chat.rocket.core.SyncState;
 import chat.rocket.android.widget.RocketChatAvatar;
+import chat.rocket.core.SyncState;
 
 public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMessage> {
   protected final RocketChatAvatar avatar;
