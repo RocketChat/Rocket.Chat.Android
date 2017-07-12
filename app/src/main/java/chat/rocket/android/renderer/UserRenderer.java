@@ -33,6 +33,20 @@ public class UserRenderer extends AbstractRenderer<User> {
   }
 
   /**
+   * show Avatar error image
+   */
+  public UserRenderer errorAvatarInto(RocketChatAvatar rocketChatAvatar) {
+    if (!shouldHandle(rocketChatAvatar)) {
+      return this;
+    }
+
+    if (!TextUtils.isEmpty(object.getUsername())) {
+      new Avatar(null, object.getUsername()).errorInto(rocketChatAvatar);
+    }
+    return this;
+  }
+
+  /**
    * show Username in textView
    */
   public UserRenderer usernameInto(TextView textView) {

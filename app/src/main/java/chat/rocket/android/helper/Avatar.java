@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.graphics.drawable.VectorDrawableCompat;
+import chat.rocket.android.R;
 import com.amulyakhare.textdrawable.TextDrawable;
 
 import java.io.UnsupportedEncodingException;
@@ -89,6 +91,14 @@ public class Avatar {
   public void into(final RocketChatAvatar rocketChatAvatar) {
     final Context context = rocketChatAvatar.getContext();
     rocketChatAvatar.loadImage(getImageUrl(), getTextDrawable(context));
+  }
+
+  /**
+   * render error avatar into RocketChatAvatar.
+   */
+  public void errorInto(final RocketChatAvatar rocketChatAvatar) {
+    final Context context = rocketChatAvatar.getContext();
+    rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
   }
 
   public Drawable getTextDrawable(Context context) {

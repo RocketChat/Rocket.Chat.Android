@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -49,8 +50,18 @@ public class RocketChatAvatar extends FrameLayout {
   }
 
   public void loadImage(Drawable drawable) {
+//    final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
+//    hierarchy.setImage(drawable, 100, true); // Is there a better way?
+
     final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-    hierarchy.setImage(drawable, 100, true); // Is there a better way?
+    hierarchy.setPlaceholderImage(drawable);
+    hierarchy.setFailureImage(drawable);
+
+    final DraweeController controller = Fresco.newDraweeControllerBuilder()
+        .setAutoPlayAnimations(true)
+        .build();
+    draweeView.setController(controller);
+
   }
 
   public void loadImage(String url, Drawable placeholder) {

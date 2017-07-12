@@ -21,14 +21,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.fernandocejas.arrow.optional.Optional;
-import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -78,10 +70,15 @@ import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightUserRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
+import com.fernandocejas.arrow.optional.Optional;
+import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -104,6 +101,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   private String roomId;
   private LoadMoreScrollListener scrollListener;
   private MessageFormManager messageFormManager;
+  private RecyclerView messageRecyclerView;
   private RecyclerViewAutoScrollManager recyclerViewAutoScrollManager;
   protected AbstractNewMessageIndicatorManager newMessageIndicatorManager;
   protected Snackbar unreadIndicator;
@@ -188,7 +186,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   @Override
   protected void onSetupView() {
-    RecyclerView messageRecyclerView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
+    messageRecyclerView = rootView.findViewById(R.id.messageRecyclerView);
 
     messageListAdapter = new MessageListAdapter(getContext());
     messageRecyclerView.setAdapter(messageListAdapter);
@@ -247,10 +245,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   private void scrollToLatestMessage() {
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
-    if (listView != null) {
-      listView.scrollToPosition(0);
-    }
+    if (messageRecyclerView != null)
+      messageRecyclerView.scrollToPosition(0);
   }
 
   protected Snackbar getUnreadCountIndicatorView(int count) {
@@ -264,13 +260,9 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   @Override
   public void onDestroyView() {
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
-    if (listView != null) {
-      RecyclerView.Adapter adapter = listView.getAdapter();
-      if (adapter != null) {
+    RecyclerView.Adapter adapter = messageRecyclerView.getAdapter();
+      if (adapter != null)
         adapter.unregisterAdapterDataObserver(recyclerViewAutoScrollManager);
-      }
-    }
 
     compositeDisposable.clear();
 
@@ -551,12 +543,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   @Override
   public void updateHistoryState(boolean hasNext, boolean isLoaded) {
-    RecyclerView listView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
-    if (listView == null || !(listView.getAdapter() instanceof MessageListAdapter)) {
+    if (messageRecyclerView == null || !(messageRecyclerView.getAdapter() instanceof MessageListAdapter)) {
       return;
     }
 
-    MessageListAdapter adapter = (MessageListAdapter) listView.getAdapter();
+    MessageListAdapter adapter = (MessageListAdapter) messageRecyclerView.getAdapter();
     if (isLoaded) {
       scrollListener.setLoadingDone();
     }

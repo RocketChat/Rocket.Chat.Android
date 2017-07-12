@@ -44,7 +44,8 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     }
 
     if (object.getSyncState() == SyncState.FAILED)
-      rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
+//      rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
+      userRenderer.errorAvatarInto(rocketChatAvatar);
     else if (TextUtils.isEmpty(object.getAvatar()))
       userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
     else {
