@@ -23,13 +23,13 @@ dependencies:
     - echo $API_KEY_STRINGS_BASE64 | base64 --decode > app/src/release/res/values/api_key_strings.xml
 
     - echo y | android update sdk --no-ui --all --filter tools,platform-tools
-    - echo y | android update sdk --no-ui --all --filter android-25
+    - echo y | android update sdk --no-ui --all --filter android-26
     - echo y | android update sdk --no-ui --all --filter extra-android-m2repository,extra-android-support
     - echo y | android update sdk --no-ui --all --filter extra-google-m2repository,extra-google-google_play_services
-    - echo y | android update sdk --no-ui --all --filter build-tools-25.0.3
+    - echo y | android update sdk --no-ui --all --filter build-tools-26.0.0
   cache_directories:
     - /usr/local/android-sdk-linux/tools
-    - /usr/local/android-sdk-linux/build-tools/25.0.3
+    - /usr/local/android-sdk-linux/build-tools/26.0.0
 
 test:
   override:
