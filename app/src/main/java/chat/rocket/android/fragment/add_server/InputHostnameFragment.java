@@ -3,10 +3,10 @@ package chat.rocket.android.fragment.add_server;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
-
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
@@ -21,6 +21,7 @@ import chat.rocket.android.service.ConnectivityManager;
 public class InputHostnameFragment extends AbstractFragment implements InputHostnameContract.View {
 
   private InputHostnameContract.Presenter presenter;
+  private ConstraintLayout container;
   private View waitingView;
 
   public InputHostnameFragment() {}
@@ -29,11 +30,8 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    final Context appContext = getContext().getApplicationContext();
-
-    presenter = new InputHostnamePresenter(
-        new RocketChatCache(appContext),
-        ConnectivityManager.getInstance(appContext));
+    Context appContext = getContext().getApplicationContext();
+    presenter = new InputHostnamePresenter(new RocketChatCache(appContext), ConnectivityManager.getInstance(appContext));
   }
 
   @Override
@@ -45,6 +43,7 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
   protected void onSetupView() {
     setupVersionInfo();
 
+    container = (ConstraintLayout) rootView.findViewById(R.id.container);
     waitingView = rootView.findViewById(R.id.waiting);
     rootView.findViewById(R.id.btn_connect).setOnClickListener(view -> handleConnect());
   }
@@ -82,14 +81,14 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
 
   @Override
   public void showLoader() {
-    rootView.findViewById(R.id.btn_connect).setEnabled(false);
+    container.setVisibility(View.GONE);
     waitingView.setVisibility(View.VISIBLE);
   }
 
   @Override
   public void hideLoader() {
-    rootView.findViewById(R.id.btn_connect).setEnabled(true);
     waitingView.setVisibility(View.GONE);
+    container.setVisibility(View.VISIBLE);
   }
 
   @Override

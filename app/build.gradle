@@ -27,12 +27,12 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "chat.rocket.android"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 25
         versionName "1.0.15"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -75,7 +75,6 @@ play {
 }
 
 ext {
-    supportVersion = '25.3.1'
     playLibVersion = '10.2.6'
     stethoVersion = '1.4.2'
     rxbindingVersion = '2.0.0'
@@ -91,8 +90,11 @@ dependencies {
     compile project(':rocket-chat-android-widgets')
     compile project(':persistence-realm')
 
-    compile "com.android.support:appcompat-v7:$supportVersion"
-    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.ext.supportLibraryVersion"
+
+    compile "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     compile 'com.android.support:multidex:1.0.1'
 
@@ -124,8 +126,6 @@ dependencies {
 
     compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
-
-    compile "com.android.support:support-annotations:$supportVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'
