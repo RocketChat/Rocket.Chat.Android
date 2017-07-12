@@ -6,12 +6,10 @@ sudo: required
 
 android:
   components: # Cookbooks version: https://github.com/travis-ci/travis-cookbooks/tree/9c6cd11
-    - tools
-    - platform-tools
-    - build-tools-26.0.0
-    - extra-android-support
-    - extra-android-m2repository
-    - extra-google-m2repository
+  - tools # Update preinstalled tools from revision 24.0.2 to 24.4.1
+  - build-tools-25.0.3 # Match build-tools version used in build.gradle
+  - platform-tools # Update platform-tools to revision 25.0.3+
+  - tools # Update tools from revision 24.4.1 to 25.2.5
     
 env:
   global:
