@@ -3,6 +3,9 @@ package chat.rocket.android.activity;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
+import chat.rocket.android.service.RocketChatWebSocketThread;
+import chat.rocket.android.service.ServerConnectivity;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -19,6 +22,7 @@ import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Session;
 import chat.rocket.core.models.User;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter extends BasePresenter<MainContract.View>
     implements MainContract.Presenter {
@@ -159,6 +163,19 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         );
 
     addSubscription(subscription);
+
+    addSubscription(
+            RxJavaInterop.toV2Observable(connectivityManagerApi.getServerConnectivityAsObservable())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(serverConnectivity -> {
+                      if (serverConnectivity.state == ServerConnectivity.STATE_CONNECTING) {
+                        view.showConnecting();
+                      }
+                    },
+                    err -> {
+                    })
+    );
   }
 
   private void setUserOnline() {

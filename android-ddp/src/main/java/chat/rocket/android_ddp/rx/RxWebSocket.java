@@ -7,6 +7,9 @@ import io.reactivex.exceptions.OnErrorNotImplementedException;
 import io.reactivex.flowables.ConnectableFlowable;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
+
 import chat.rocket.android.log.RCLog;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,7 +40,11 @@ public class RxWebSocket {
               @Override
               public void onFailure(WebSocket webSocket, Throwable err, Response response) {
                 try {
-                  emitter.onError(new RxWebSocketCallback.Failure(webSocket, err, response));
+                  if (err instanceof UnknownHostException) {
+                    emitter.onError(err);
+                  } else {
+                    emitter.onNext(new RxWebSocketCallback.Failure(webSocket, err, response));
+                  }
                 } catch (OnErrorNotImplementedException ex) {
                   RCLog.w(ex, "OnErrorNotImplementedException ignored");
                 }
@@ -55,7 +62,7 @@ public class RxWebSocket {
               }
             }),
         BackpressureStrategy.BUFFER
-    ).publish();
+    ).delay(2000, TimeUnit.MILLISECONDS).publish();
   }
 
   public boolean sendText(String message) throws IOException {

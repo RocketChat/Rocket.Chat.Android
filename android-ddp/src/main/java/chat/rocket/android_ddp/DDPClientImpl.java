@@ -3,28 +3,34 @@ package chat.rocket.android_ddp;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import io.reactivex.Flowable;
-import io.reactivex.disposables.CompositeDisposable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.rx.RxWebSocket;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.CompositeDisposable;
 import okhttp3.OkHttpClient;
 
 public class DDPClientImpl {
   private final DDPClient client;
-  private final RxWebSocket websocket;
+  private RxWebSocket websocket;
   private Flowable<RxWebSocketCallback.Base> flowable;
   private CompositeDisposable subscriptions;
+  private OkHttpClient okHttpClient;
+  private String currentSession;
+  private String url;
 
   public DDPClientImpl(DDPClient self, OkHttpClient client) {
+    okHttpClient = client;
     websocket = new RxWebSocket(client);
     this.client = self;
   }
@@ -51,21 +57,23 @@ public class DDPClientImpl {
   public void connect(final TaskCompletionSource<DDPClientCallback.Connect> task, final String url,
                       String session) {
     try {
+      this.url = url;
       flowable = websocket.connect(url).autoConnect();
       CompositeDisposable subscriptions = new CompositeDisposable();
 
       subscriptions.add(
-          flowable.filter(callback -> callback instanceof RxWebSocketCallback.Open)
+          flowable.retry().filter(callback -> callback instanceof RxWebSocketCallback.Open)
               .subscribe(
                   callback -> {
                     sendMessage("connect",
-                        json -> (TextUtils.isEmpty(session) ? json : json.put("session", session))
+                        json -> (TextUtils.isEmpty(session) ? json : json.put("session", DDPClientImpl.this.currentSession))
                             .put(
                                 "version", "pre2")
                             .put("support", new JSONArray().put("pre2").put("pre1")),
                         task);
                   },
                   err -> {
+                    System.err.println("Something bad happened!");
                   }
               )
       );
@@ -79,6 +87,7 @@ public class DDPClientImpl {
               .subscribe(response -> {
                     String msg = extractMsg(response);
                     if ("connected".equals(msg) && !response.isNull("session")) {
+                      currentSession = response.optString("session");
                       task.trySetResult(
                           new DDPClientCallback.Connect(client, response.optString("session")));
                       subscriptions.dispose();
@@ -369,6 +378,28 @@ public class DDPClientImpl {
     });
   }
 
+  public Task<RxWebSocketCallback.Failure> getOnFailureCallback() {
+    TaskCompletionSource<RxWebSocketCallback.Failure> task = new TaskCompletionSource<>();
+
+    flowable.filter(callback -> callback instanceof RxWebSocketCallback.Failure)
+            .cast(RxWebSocketCallback.Failure.class)
+            .subscribe(
+                    task::setResult,
+                    err -> {
+                      if (err instanceof Exception) {
+                        task.setError((Exception) err);
+                      } else {
+                        task.setError(new Exception(err));
+                      }
+                    }
+            );
+
+    return task.getTask().onSuccessTask(_task -> {
+      unsubscribeBaseListeners();
+      return _task;
+    });
+  }
+
   private boolean sendMessage(String msg, @Nullable JSONBuilder json) {
     try {
       JSONObject origJson = new JSONObject().put("msg", msg);
@@ -383,7 +414,8 @@ public class DDPClientImpl {
   private void sendMessage(String msg, @Nullable JSONBuilder json,
                            TaskCompletionSource<?> taskForSetError) {
     if (!sendMessage(msg, json)) {
-      taskForSetError.trySetError(new DDPClientCallback.Closed(client));
+      if (taskForSetError != null)
+        taskForSetError.trySetError(new DDPClientCallback.Closed(client));
     }
   }
 

@@ -117,10 +117,10 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
           } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
             // temp "fix"- we need to rewrite the connection layer a bit
             errMessage = "{\"message\": \"Connection Timeout\"}";
-          } else if (exception instanceof RxWebSocketCallback.Failure) {
+          } /*else if (exception instanceof RxWebSocketCallback.Failure) {
             // temp "fix"- we need to rewrite the connection layer a bit
             errMessage = "{\"message\": \"Connection Failure\"}";
-          } else {
+          }*/ else {
             errMessage = exception.getMessage();
           }
 

@@ -31,13 +31,11 @@ public class RxWebSocketCallback {
     }
   }
 
-  public static class Failure extends Exception {
-    public WebSocket ws;
+  public static class Failure extends Base {
     public Response response;
 
     public Failure(WebSocket websocket, Throwable err, Response response) {
-      super(err);
-      this.ws = websocket;
+      super("Failure", websocket);
       this.response = response;
     }
 
