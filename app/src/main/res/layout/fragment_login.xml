@@ -17,125 +17,132 @@
     app:layout_constraintRight_toRightOf="parent">
 
     <android.support.constraint.ConstraintLayout
-    android:id="@+id/container"
-    android:layout_width="wrap_content"
-    android:minWidth="288dp"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/margin_16"
-    android:background="@drawable/container_bg"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintLeft_toLeftOf="parent">
-
-    <io.github.yusukeiwaki.android.widget.FontAwesomeButton
-      android:id="@+id/btn_login_with_twitter"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
-      android:text="@string/fa_twitter"
-      android:textSize="16sp"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintBottom_toTopOf="@+id/text_input_username"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toLeftOf="@+id/btn_login_with_facebook" />
-
-    <io.github.yusukeiwaki.android.widget.FontAwesomeButton
-      android:id="@+id/btn_login_with_facebook"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
-      android:text="@string/fa_facebook_official"
-      android:textSize="16sp"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintBottom_toTopOf="@+id/text_input_username"
-      app:layout_constraintLeft_toRightOf="@+id/btn_login_with_twitter"
-      app:layout_constraintRight_toLeftOf="@+id/btn_login_with_github" />
-
-    <io.github.yusukeiwaki.android.widget.FontAwesomeButton
-      android:id="@+id/btn_login_with_github"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
-      android:text="@string/fa_github"
-      android:textSize="16sp"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintBottom_toTopOf="@+id/text_input_username"
-      app:layout_constraintLeft_toRightOf="@+id/btn_login_with_facebook"
-      app:layout_constraintRight_toLeftOf="@+id/btn_login_with_google" />
-
-    <io.github.yusukeiwaki.android.widget.FontAwesomeButton
-      android:id="@+id/btn_login_with_google"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
-      android:text="@string/fa_google"
-      android:textSize="16sp"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintBottom_toTopOf="@+id/text_input_username"
-      app:layout_constraintLeft_toRightOf="@+id/btn_login_with_github"
-      app:layout_constraintRight_toRightOf="parent" />
-
-    <android.support.design.widget.TextInputLayout
-      android:id="@+id/text_input_username"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      app:layout_constraintTop_toBottomOf="@+id/btn_login_with_twitter"
-      app:layout_constraintBottom_toTopOf="@+id/text_input_passwd"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent">
-
-      <android.support.design.widget.TextInputEditText
-        android:id="@+id/editor_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/fragment_login_username_or_email"
-        android:imeOptions="actionNext"
-        android:inputType="textWebEmailAddress"
-        android:maxLines="1" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-      android:id="@+id/text_input_passwd"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      app:passwordToggleEnabled="true"
-      app:layout_constraintTop_toBottomOf="@+id/text_input_username"
-      app:layout_constraintBottom_toTopOf="@+id/btn_user_registration"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent">
-
-      <android.support.design.widget.TextInputEditText
-        android:id="@+id/editor_passwd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/fragment_login_password"
-        android:imeOptions="actionNext"
-        android:inputType="textWebPassword"
-        android:maxLines="1" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.FloatingActionButton
-      android:id="@+id/btn_user_registration"
+      android:id="@+id/container"
       android:layout_width="wrap_content"
+      android:minWidth="280dp"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_16"
-      app:backgroundTint="@color/white"
-      app:elevation="2dp"
-      app:fabSize="mini"
-      app:srcCompat="@drawable/ic_user_registration_blue_24dp"
-      app:layout_constraintTop_toBottomOf="@+id/text_input_passwd"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent" />
-
-    <android.support.design.widget.FloatingActionButton
-      android:id="@+id/btn_login_with_email"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_16"
-      app:elevation="2dp"
-      app:fabSize="normal"
-      app:srcCompat="@drawable/ic_arrow_forward_white_24dp"
-      app:layout_constraintTop_toBottomOf="@+id/text_input_passwd"
+      android:paddingStart="@dimen/margin_16"
+      android:paddingLeft="@dimen/margin_16"
+      android:paddingEnd="@dimen/margin_16"
+      android:paddingRight="@dimen/margin_16"
+      android:paddingTop="@dimen/margin_8"
+      android:paddingBottom="@dimen/margin_8"
+      android:background="@drawable/container_bg"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent" />
-  </android.support.constraint.ConstraintLayout>
+      app:layout_constraintLeft_toLeftOf="parent">
+
+      <ImageButton
+        android:id="@+id/btn_login_with_twitter"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_button_twitter_24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_username"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btn_login_with_facebook"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
+      <ImageButton
+        android:id="@+id/btn_login_with_facebook"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_button_facebook_24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_username"
+        app:layout_constraintLeft_toRightOf="@+id/btn_login_with_twitter"
+        app:layout_constraintRight_toLeftOf="@+id/btn_login_with_github"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
+      <ImageButton
+        android:id="@+id/btn_login_with_github"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_button_github_24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_username"
+        app:layout_constraintLeft_toRightOf="@+id/btn_login_with_facebook"
+        app:layout_constraintRight_toLeftOf="@+id/btn_login_with_google"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
+      <ImageButton
+        android:id="@+id/btn_login_with_google"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_button_google_24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_username"
+        app:layout_constraintLeft_toRightOf="@+id/btn_login_with_github"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login_with_twitter"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_passwd"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/editor_username"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/fragment_login_username_or_email"
+          android:imeOptions="actionNext"
+          android:inputType="textWebEmailAddress"
+          android:maxLines="1" />
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_passwd"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_username"
+        app:layout_constraintBottom_toTopOf="@+id/btn_user_registration"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/editor_passwd"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/fragment_login_password"
+          android:imeOptions="actionNext"
+          android:inputType="textWebPassword"
+          android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
+
+      <Button
+        android:id="@+id/btn_user_registration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_8"
+        android:text="@string/fragment_login_sign_up"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_passwd"
+        app:layout_constraintRight_toLeftOf="@+id/btn_login_with_email"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/Widget.AppCompat.Button.Colored" />
+
+      <Button
+        android:id="@+id/btn_login_with_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_8"
+        android:text="@string/fragment_login_sign_in"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_passwd"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/btn_user_registration"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/Widget.AppCompat.Button.Colored" />
+    </android.support.constraint.ConstraintLayout>
   </ScrollView>
 
   <chat.rocket.android.widget.WaitingView

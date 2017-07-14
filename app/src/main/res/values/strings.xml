@@ -32,8 +32,11 @@
     <string name="fragment_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
     <string name="fragment_input_hostname_hostname">Hostname</string>
     <string name="fragment_input_hostname_server_hint">demo.rocket.chat</string>
+    <string name="fragment_input_hostname_connect">CONNECT</string>
     <string name="fragment_login_username_or_email">Username or email</string>
     <string name="fragment_login_password">Password</string>
+    <string name="fragment_login_sign_up">SIGN UP</string>
+    <string name="fragment_login_sign_in">SIGN IN</string>
     <string name="fragment_retry_login_retry_title">RETRY</string>
     <string name="fragment_retry_login_error_title">Connection Error</string>
     <string name="server_config_activity_authenticating">Authenticating…</string>
