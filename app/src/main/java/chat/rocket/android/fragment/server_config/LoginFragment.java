@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -47,18 +48,19 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
 
   @Override
   protected void onSetupView() {
-    container = (ConstraintLayout) rootView.findViewById(R.id.container);
+    container = rootView.findViewById(R.id.container);
 
-    View btnEmail = rootView.findViewById(R.id.btn_login_with_email);
-    txtUsername = (TextView) rootView.findViewById(R.id.editor_username);
-    txtPasswd = (TextView) rootView.findViewById(R.id.editor_passwd);
+    Button btnEmail = rootView.findViewById(R.id.btn_login_with_email);
+    Button btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
+    txtUsername = rootView.findViewById(R.id.editor_username);
+    txtPasswd = rootView.findViewById(R.id.editor_passwd);
     waitingView = rootView.findViewById(R.id.waiting);
-    btnEmail.setOnClickListener(
-        view -> presenter.login(txtUsername.getText().toString(), txtPasswd.getText().toString()));
 
-    final View btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
-    btnUserRegistration.setOnClickListener(view -> UserRegistrationDialogFragment.create(hostname,
-        txtUsername.getText().toString(), txtPasswd.getText().toString())
+    btnEmail.setOnClickListener(view ->
+        presenter.login(txtUsername.getText().toString(), txtPasswd.getText().toString()));
+
+    btnUserRegistration.setOnClickListener(view ->
+        UserRegistrationDialogFragment.create(hostname, txtUsername.getText().toString(), txtPasswd.getText().toString())
         .show(getFragmentManager(), "UserRegistrationDialogFragment"));
   }
 

@@ -43,7 +43,7 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
   protected void onSetupView() {
     setupVersionInfo();
 
-    container = (ConstraintLayout) rootView.findViewById(R.id.container);
+    container = rootView.findViewById(R.id.container);
     waitingView = rootView.findViewById(R.id.waiting);
     rootView.findViewById(R.id.btn_connect).setOnClickListener(view -> handleConnect());
   }
