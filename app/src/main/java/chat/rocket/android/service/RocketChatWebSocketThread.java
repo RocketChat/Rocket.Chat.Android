@@ -3,27 +3,24 @@ package chat.rocket.android.service;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
+
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import bolts.Task;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
-import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.service.ddp.stream.StreamRoomMessage;
-import chat.rocket.core.models.ServerInfo;
-import chat.rocket.persistence.realm.models.internal.RealmSession;
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
 import chat.rocket.android.service.ddp.base.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.service.ddp.base.UserDataSubscriber;
+import chat.rocket.android.service.ddp.stream.StreamRoomMessage;
 import chat.rocket.android.service.observer.CurrentUserObserver;
 import chat.rocket.android.service.observer.FileUploadingToUrlObserver;
 import chat.rocket.android.service.observer.FileUploadingWithUfsObserver;
@@ -35,11 +32,14 @@ import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
+import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import hugo.weaving.DebugLog;
 import io.reactivex.disposables.CompositeDisposable;
 import rx.Single;
-import rx.Subscription;
 
 /**
  * Thread for handling WebSocket connection.

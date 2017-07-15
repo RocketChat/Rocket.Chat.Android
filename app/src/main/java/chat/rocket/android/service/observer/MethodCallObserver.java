@@ -1,19 +1,20 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import io.realm.Realm;
-import io.realm.RealmResults;
+
 import org.json.JSONObject;
 
 import java.util.List;
+
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.LogIfError;
-import chat.rocket.android_ddp.rx.RxWebSocketCallback;
-import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.models.internal.MethodCall;
-import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.models.internal.MethodCall;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Observing MethodCall record, executing RPC if needed.
