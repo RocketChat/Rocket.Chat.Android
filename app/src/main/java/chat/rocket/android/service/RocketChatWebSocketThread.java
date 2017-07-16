@@ -38,6 +38,7 @@ import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import hugo.weaving.DebugLog;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import rx.Single;
 
@@ -254,28 +255,14 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
                 task.getResult().client.getOnFailureCallback().onSuccess(_task -> {
                   ddpClient = null;
-                  CompositeDisposable subscriptions = new CompositeDisposable();
+                  CompositeDisposable disposables = new CompositeDisposable();
                   connectivityManager.notifyConnecting(hostname);
-                  subscriptions.add(
+                  disposables.add(
                           RxJavaInterop.toV2Single(connect().retry())
+                                  .observeOn(AndroidSchedulers.from(getLooper()))
                                   .subscribe(
-                                          rocketChatWebSocketThread -> {
-                                            String roomId = rocketChatCache.getSelectedRoomId();
-                                            if (roomId != null) {
-                                              StreamRoomMessage streamRoomObserver = new StreamRoomMessage(
-                                                      appContext,
-                                                      hostname,
-                                                      realmHelper,
-                                                      ddpClientRef,
-                                                      roomId
-                                              );
-                                              streamRoomObserver.register();
-                                              listeners.add(streamRoomObserver);
-                                            }
-                                          },
-                                          err -> {
-                                            subscriptions.dispose();
-                                          }
+                                          rocketChatWebSocketThread -> forceRegisteringListeners(),
+                                          err -> logErrorAndDispose(err, disposables)
                                   )
                   );
                   return null;
@@ -306,6 +293,22 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 return null;
               });
         }));
+  }
+
+  private void logErrorAndDispose(Throwable throwable, CompositeDisposable disposables) {
+    RCLog.e(throwable);
+    disposables.clear();
+  }
+
+  private void forceRegisteringListeners() {
+    Iterator<Registrable> iterator = listeners.iterator();
+    while (iterator.hasNext()) {
+      Registrable registrable = iterator.next();
+      registrable.unregister();
+      iterator.remove();
+    }
+    listenersRegistered = false;
+    registerListeners();
   }
 
   @DebugLog

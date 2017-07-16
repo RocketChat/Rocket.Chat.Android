@@ -162,6 +162,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
     addSubscription(subscription);
 
+    // Update to RxJava 2 (issue: https://github.com/RocketChat/Rocket.Chat.Android/issues/355)
     addSubscription(
             RxJavaInterop.toV2Observable(connectivityManagerApi.getServerConnectivityAsObservable())
                     .subscribeOn(Schedulers.io())
@@ -171,8 +172,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                         view.showConnecting();
                       }
                     },
-                    err -> {
-                    })
+                    Logger::report)
     );
   }
 
