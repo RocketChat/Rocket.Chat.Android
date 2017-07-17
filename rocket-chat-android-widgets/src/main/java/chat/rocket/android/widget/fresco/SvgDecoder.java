@@ -24,7 +24,7 @@ public class SvgDecoder {
   public static final ImageFormat SVG_FORMAT = new ImageFormat("SVG_FORMAT", "svg");
 
   // We do not include the closing ">" since there can be additional information
-  private static final String HEADER_TAG = "<svg";
+  private static final String HEADER_TAG = "<?xml";
 
   public static class SvgFormatChecker implements ImageFormat.FormatChecker {
 
