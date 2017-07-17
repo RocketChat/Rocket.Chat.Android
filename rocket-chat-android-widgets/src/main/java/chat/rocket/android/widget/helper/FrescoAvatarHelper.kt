@@ -11,24 +11,17 @@ class FrescoAvatarHelper {
 
     companion object {
 
-        @JvmStatic fun setupDraweeAndLoadImage(draweeView: SimpleDraweeView, imageUrl: String) {
-            FrescoAvatarHelper.setupDrawee(draweeView)
-            FrescoAvatarHelper.loadImage(imageUrl, draweeView)
-        }
-
-        @JvmStatic fun setupDrawee(draweeView: SimpleDraweeView) {
+        @JvmStatic fun loadImage(draweeView: SimpleDraweeView, imageUrl: String) {
             val hierarchy = draweeView.hierarchy
             hierarchy.setPlaceholderImage(VectorDrawableCompat.create(draweeView.resources, R.drawable.ic_avatar_placeholder, null))
             hierarchy.setFailureImage(VectorDrawableCompat.create(draweeView.resources, R.drawable.ic_avatar_failure, null))
             hierarchy.setProgressBarImage(ProgressBarDrawable())
-        }
 
-        @JvmStatic fun loadImage(imageUrl: String, draweeView: SimpleDraweeView) {
             val controller = Fresco.newDraweeControllerBuilder()
                     .setUri(Uri.parse(imageUrl))
-                    .setAutoPlayAnimations(true)
-                    .setTapToRetryEnabled(true)
+                    .setOldController(draweeView.controller)
                     .build()
+
             draweeView.controller = controller
         }
 
@@ -40,6 +33,7 @@ class FrescoAvatarHelper {
             val controller = Fresco.newDraweeControllerBuilder()
                     .setAutoPlayAnimations(true)
                     .build()
+
             draweeView.controller = controller
         }
     }

@@ -5,23 +5,20 @@ import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 
 /**
- * Based on https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/CustomImageFormatConfigurator.java
+ * Helper class to add custom decoders and drawable factories.
+ * See: https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/CustomImageFormatConfigurator.java
  */
-public class ImageFormatConfigurator {
+public class CustomImageFormatConfigurator {
 
   @Nullable
   public static ImageDecoderConfig createImageDecoderConfig() {
     ImageDecoderConfig.Builder config = ImageDecoderConfig.newBuilder();
-
-    config.addDecodingCapability(
-        SvgDecoderConfig.SVG_FORMAT,
-        new SvgDecoderConfig.SvgFormatChecker(),
-        new SvgDecoderConfig.SvgDecoder());
-
+    config.addDecodingCapability(SvgDecoder.SVG_FORMAT, new SvgDecoder.SvgFormatChecker(), new SvgDecoder.Decoder());
     return config.build();
   }
 
   public static void addCustomDrawableFactories(DraweeConfig.Builder draweeConfigBuilder) {
-    draweeConfigBuilder.addCustomDrawableFactory(new SvgDecoderConfig.SvgDrawableFactory());
+    draweeConfigBuilder.addCustomDrawableFactory(ColorImage.createDrawableFactory());
+    draweeConfigBuilder.addCustomDrawableFactory(new SvgDecoder.SvgDrawableFactory());
   }
 }

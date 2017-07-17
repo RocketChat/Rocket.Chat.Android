@@ -3,8 +3,8 @@ package chat.rocket.android.widget.fresco;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
-import android.support.annotation.Nullable;
-
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
 import com.facebook.drawee.backends.pipeline.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
@@ -13,14 +13,13 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
-
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
+import javax.annotation.Nullable;
 
 /**
- * Based on https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/svg/SvgDecoderExample.java
+ * SVG example that defines all classes required to decode and render SVG images.
+ * See: https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/svg/SvgDecoderExample.java
  */
-public class SvgDecoderConfig {
+public class SvgDecoder {
 
   public static final ImageFormat SVG_FORMAT = new ImageFormat("SVG_FORMAT", "svg");
 
@@ -92,7 +91,7 @@ public class SvgDecoderConfig {
   /**
    * Decodes a SVG_FORMAT image
    */
-  public static class SvgDecoder implements ImageDecoder {
+  public static class Decoder implements ImageDecoder {
 
     @Override
     public CloseableImage decode(
