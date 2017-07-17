@@ -71,7 +71,7 @@ public class Avatar {
     //from Rocket.Chat:packages/rocketchat-ui/lib/avatar.coffee
     //REMARK! this is often SVG image! (see: Rocket.Chat:server/startup/avatar.coffee)
     try {
-      final String avatarUrl = "/avatar/" + URLEncoder.encode(username, "UTF-8") + ".jpg";
+      final String avatarUrl = "/avatar/" + URLEncoder.encode(username, "UTF-8");
       if (absoluteUrl == null) {
         return avatarUrl;
       }
