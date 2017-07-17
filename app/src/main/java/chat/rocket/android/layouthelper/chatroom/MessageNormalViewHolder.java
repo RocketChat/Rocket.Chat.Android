@@ -21,9 +21,9 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
    */
   public MessageNormalViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
     super(itemView, absoluteUrl);
-    body = (RocketChatMessageLayout) itemView.findViewById(R.id.message_body);
-    urls = (RocketChatMessageUrlsLayout) itemView.findViewById(R.id.message_urls);
-    attachments = (RocketChatMessageAttachmentsLayout) itemView.findViewById(R.id.message_attachments);
+    body = itemView.findViewById(R.id.message_body);
+    urls = itemView.findViewById(R.id.message_urls);
+    attachments = itemView.findViewById(R.id.message_attachments);
   }
 
   @Override

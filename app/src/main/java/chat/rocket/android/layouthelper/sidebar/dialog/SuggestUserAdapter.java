@@ -28,7 +28,7 @@ public class SuggestUserAdapter extends RealmAutoCompleteAdapter<RealmUser> {
   protected void onBindItemView(View itemView, RealmUser user) {
     new UserRenderer(itemView.getContext(), user.asUser())
         .statusColorInto((ImageView) itemView.findViewById(R.id.room_user_status))
-        .avatarInto((RocketChatAvatar) itemView.findViewById(R.id.room_user_avatar), absoluteUrl);
+        .avatarInto((RocketChatAvatar) itemView.findViewById(R.id.room_user_avatar), absoluteUrl, false);
   }
 
   @Override

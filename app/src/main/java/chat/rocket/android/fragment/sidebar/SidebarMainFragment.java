@@ -10,19 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -40,19 +28,26 @@ import chat.rocket.android.layouthelper.chatroom.roomlist.FavoriteRoomListHeader
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
+import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.core.SortDirection;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.SpotlightRoom;
 import chat.rocket.core.models.User;
-import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
-import chat.rocket.android.widget.RocketChatAvatar;
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
 
@@ -230,9 +225,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   private void onRenderCurrentUser(User user, RocketChatAbsoluteUrl absoluteUrl) {
     if (user != null && absoluteUrl != null) {
       new UserRenderer(getContext(), user)
-          .avatarInto((RocketChatAvatar) rootView.findViewById(R.id.current_user_avatar), absoluteUrl)
-          .usernameInto((TextView) rootView.findViewById(R.id.current_user_name))
-          .statusColorInto((ImageView) rootView.findViewById(R.id.current_user_status));
+          .avatarInto(rootView.findViewById(R.id.current_user_avatar), absoluteUrl, false)
+          .usernameInto(rootView.findViewById(R.id.current_user_name))
+          .statusColorInto(rootView.findViewById(R.id.current_user_status));
     }
   }
 

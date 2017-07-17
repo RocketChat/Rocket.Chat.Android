@@ -22,10 +22,8 @@ public class FrescoHelper {
 
   public static void setupDrawee(SimpleDraweeView draweeView) {
     final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-    hierarchy.setPlaceholderImage(
-        VectorDrawableCompat.create(draweeView.getResources(), R.drawable.image_dummy, null));
-    hierarchy.setFailureImage(
-        VectorDrawableCompat.create(draweeView.getResources(), R.drawable.image_error, null));
+    hierarchy.setPlaceholderImage(VectorDrawableCompat.create(draweeView.getResources(), R.drawable.image_dummy, null));
+    hierarchy.setFailureImage(VectorDrawableCompat.create(draweeView.getResources(), R.drawable.image_error, null));
     hierarchy.setProgressBarImage(new ProgressBarDrawable());
   }
 
