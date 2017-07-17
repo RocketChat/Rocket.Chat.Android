@@ -1,5 +1,6 @@
 package chat.rocket.android_ddp.rx;
 
+import static android.R.attr.resizeable;
 import static android.R.attr.type;
 
 import chat.rocket.android.log.RCLog;
@@ -28,6 +29,9 @@ public class RxWebSocketCallback {
     public Open(WebSocket websocket, Response response) {
       super("Open", websocket);
       this.response = response;
+      if (response != null && response.body() != null) {
+        this.response.body().close();
+      }
     }
   }
 
@@ -37,6 +41,9 @@ public class RxWebSocketCallback {
     public Failure(WebSocket websocket, Throwable err, Response response) {
       super("Failure", websocket);
       this.response = response;
+      if (response != null && response.body() != null) {
+        this.response.body().close();
+      }
     }
 
     @Override
