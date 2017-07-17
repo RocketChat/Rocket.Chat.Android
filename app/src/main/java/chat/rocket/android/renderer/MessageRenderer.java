@@ -128,8 +128,9 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show urls in RocketChatMessageUrlsLayout.
    */
   public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout, AbsoluteUrl absoluteUrl) {
-    if (!shouldHandle(attachmentsLayout))
+    if (!shouldHandle(attachmentsLayout)) {
       return this;
+    }
 
     List<Attachment> attachments = object.getAttachments();
     if (attachments == null || attachments.size() == 0) {
