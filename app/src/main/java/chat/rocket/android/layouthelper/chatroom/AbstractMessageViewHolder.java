@@ -25,13 +25,13 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    */
   public AbstractMessageViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
     super(itemView);
-    avatar = (RocketChatAvatar) itemView.findViewById(R.id.user_avatar);
-    username = (TextView) itemView.findViewById(R.id.username);
-    subUsername = (TextView) itemView.findViewById(R.id.sub_username);
-    timestamp = (TextView) itemView.findViewById(R.id.timestamp);
+    avatar = itemView.findViewById(R.id.user_avatar);
+    username = itemView.findViewById(R.id.username);
+    subUsername = itemView.findViewById(R.id.sub_username);
+    timestamp = itemView.findViewById(R.id.timestamp);
     userAndTimeContainer = itemView.findViewById(R.id.user_and_timestamp_container);
     newDayContainer = itemView.findViewById(R.id.newday_container);
-    newDayText = (TextView) itemView.findViewById(R.id.newday_text);
+    newDayText = itemView.findViewById(R.id.newday_text);
     this.absoluteUrl = absoluteUrl;
   }
 
@@ -39,11 +39,11 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    * bind the view model.
    */
   public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
-    if (pairedMessage.target != null) {
-      if (pairedMessage.target.getSyncState() != SyncState.SYNCED)
-        itemView.setAlpha(0.6f);
-      else
-        itemView.setAlpha(1.0f);
+    if (pairedMessage.target.getSyncState() != SyncState.SYNCED) {
+      itemView.setAlpha(0.6f);
+    }
+    else {
+      itemView.setAlpha(1.0f);
     }
 
     bindMessage(pairedMessage, autoloadImages);

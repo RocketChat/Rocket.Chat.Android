@@ -301,8 +301,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       closeSideMenuIfNeeded();
     });
 
-    DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
-    SlidingPaneLayout pane = (SlidingPaneLayout) getActivity().findViewById(R.id.sliding_pane);
+    DrawerLayout drawerLayout = rootView.findViewById(R.id.drawer_layout);
+    SlidingPaneLayout pane = getActivity().findViewById(R.id.sliding_pane);
     if (drawerLayout != null && pane != null) {
       compositeDisposable.add(RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
           .compose(bindToLifecycle())

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 import chat.rocket.android.R;
-import chat.rocket.android.helper.Avatar;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.widget.AbsoluteUrl;
@@ -15,7 +14,6 @@ import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.models.Attachment;
 import chat.rocket.core.models.Message;
-import chat.rocket.core.models.User;
 import chat.rocket.core.models.WebContent;
 import java.util.List;
 
@@ -41,16 +39,18 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       return this;
     }
 
-    if (object.getSyncState() == SyncState.FAILED)
-//      rocketChatAvatar.loadImage(VectorDrawableCompat.create(context.getResources(), R.drawable.ic_error_outline_black_24dp, null));
-      userRenderer.errorAvatarInto(rocketChatAvatar);
-    else if (TextUtils.isEmpty(object.getAvatar()))
-      userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
-    else {
-      final User user = object.getUser();
-      setAvatarInto(object.getAvatar(), absoluteUrl, user == null ? null : user.getUsername(), rocketChatAvatar);
+    switch (object.getSyncState()){
+      case SyncState.FAILED:
+        userRenderer.avatarInto(rocketChatAvatar, absoluteUrl, true);
+        break;
+      default:
+        if (TextUtils.isEmpty(object.getAvatar())) {
+          userRenderer.avatarInto(rocketChatAvatar, absoluteUrl, false);
+        } else {
+          rocketChatAvatar.loadImage(object.getAvatar());
+        }
+        break;
     }
-
     return this;
   }
 
@@ -91,7 +91,6 @@ public class MessageRenderer extends AbstractRenderer<Message> {
         textView.setText(DateTime.fromEpocMs(object.getTimestamp(), DateTime.Format.TIME));
         break;
     }
-
     return this;
   }
 
@@ -104,7 +103,6 @@ public class MessageRenderer extends AbstractRenderer<Message> {
     }
 
     rocketChatMessageLayout.setText(object.getMessage());
-
     return this;
   }
 
@@ -123,15 +121,13 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       urlsLayout.setVisibility(View.VISIBLE);
       urlsLayout.setUrls(webContents, autoloadImages);
     }
-
     return this;
   }
 
   /**
    * show urls in RocketChatMessageUrlsLayout.
    */
-  public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout,
-                                         AbsoluteUrl absoluteUrl) {
+  public MessageRenderer attachmentsInto(RocketChatMessageAttachmentsLayout attachmentsLayout, AbsoluteUrl absoluteUrl) {
     if (!shouldHandle(attachmentsLayout)) {
       return this;
     }
@@ -144,12 +140,7 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       attachmentsLayout.setAbsoluteUrl(absoluteUrl);
       attachmentsLayout.setAttachments(attachments, autoloadImages);
     }
-
     return this;
-  }
-
-  private void setAvatarInto(String avatar, AbsoluteUrl absoluteUrl, String username, RocketChatAvatar imageView) {
-    imageView.loadImage(avatar, new Avatar(absoluteUrl, username).getTextDrawable(context));
   }
 
   private void aliasAndUsernameInto(TextView aliasTextView, TextView usernameTextView) {

@@ -2,15 +2,11 @@ package chat.rocket.android.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.interfaces.DraweeController;
+import chat.rocket.android.widget.helper.FrescoAvatarHelper;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class RocketChatAvatar extends FrameLayout {
@@ -39,36 +35,19 @@ public class RocketChatAvatar extends FrameLayout {
   }
 
   private void initialize(Context context, AttributeSet attrs) {
-    LayoutInflater.from(context)
+    LayoutInflater
+        .from(context)
         .inflate(R.layout.message_avatar, this, true);
-
-    draweeView = (SimpleDraweeView) findViewById(R.id.drawee_avatar);
+    draweeView = findViewById(R.id.drawee_avatar);
   }
 
-  public void loadImage(Drawable drawable) {
-//    final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-//    hierarchy.setImage(drawable, 100, true); // Is there a better way?
-
-    final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-    hierarchy.setPlaceholderImage(drawable);
-    hierarchy.setFailureImage(drawable);
-
-    final DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setAutoPlayAnimations(true)
-        .build();
-    draweeView.setController(controller);
-
+  public void loadImage(String imageUrl) {
+    FrescoAvatarHelper
+        .loadImage(draweeView, imageUrl);
   }
 
-  public void loadImage(String url, Drawable placeholder) {
-    final GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-    hierarchy.setPlaceholderImage(placeholder);
-    hierarchy.setFailureImage(placeholder);
-
-    final DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setUri(Uri.parse(url))
-        .setAutoPlayAnimations(true)
-        .build();
-    draweeView.setController(controller);
+  public void showFailureImage() {
+    FrescoAvatarHelper
+        .showFailureImage(draweeView);
   }
 }
