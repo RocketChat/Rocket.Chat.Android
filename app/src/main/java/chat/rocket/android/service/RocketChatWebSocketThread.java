@@ -32,6 +32,7 @@ import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
+import chat.rocket.android_ddp.DDPClientImpl;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
@@ -207,7 +208,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
             if (task.isFaulted()) {
               RCLog.e(task.getError());
               emitter.onSuccess(false);
-              ddpClient.close();
+              ddpClient.close(DDPClientImpl.CLOSED_NOT_ALIVE, "Ping timeout");
             } else {
               keepAliveTimer.update();
               emitter.onSuccess(true);
@@ -379,7 +380,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
     listenersRegistered = false;
     if (ddpClient != null) {
-      ddpClient.close();
+      ddpClient.close(DDPClientImpl.CLOSED_NORMALLY, "Closed by client");
       ddpClient = null;
     }
   }

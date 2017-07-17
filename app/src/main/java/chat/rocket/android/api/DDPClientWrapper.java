@@ -45,8 +45,8 @@ public class DDPClientWrapper {
   /**
    * close connection.
    */
-  public void close() {
-    ddpClient.close();
+  public void close(int code, String reason) {
+    ddpClient.close(code, reason);
   }
 
   /**

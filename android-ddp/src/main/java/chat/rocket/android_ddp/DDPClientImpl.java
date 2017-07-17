@@ -1,5 +1,6 @@
 package chat.rocket.android_ddp;
 
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -8,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -19,8 +21,11 @@ import chat.rocket.android_ddp.rx.RxWebSocketCallback;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 public class DDPClientImpl {
+  public static final int CLOSED_NORMALLY = 1000;
+  public static final int CLOSED_NOT_ALIVE = 1001;
   private final DDPClient client;
   private RxWebSocket websocket;
   private Flowable<RxWebSocketCallback.Base> flowable;
@@ -135,6 +140,7 @@ public class DDPClientImpl {
                           disposables.clear();
                         }
                       }
+                      disposables.clear();
                     }
                   },
                   err -> task.setError(new DDPClientCallback.Ping.Timeout(client))
@@ -286,6 +292,7 @@ public class DDPClientImpl {
                 response -> {
                   String msg = extractMsg(response);
                   if ("ping".equals(msg)) {
+                    SystemClock.sleep(8000);
                     if (response.isNull("id")) {
                       sendMessage("pong", null);
                     } else {

@@ -65,7 +65,7 @@ public class DDPClient {
     return impl.getOnFailureCallback();
   }
 
-  public void close() {
-    impl.close(1000, "closed by DDPClient#close()");
+  public void close(int code, String reason) {
+    impl.close(code, reason);
   }
 }

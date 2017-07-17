@@ -1,16 +1,16 @@
 package chat.rocket.android_ddp.rx;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.FlowableOnSubscribe;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
-import io.reactivex.flowables.ConnectableFlowable;
-
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android_ddp.DDPClientImpl;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.exceptions.OnErrorNotImplementedException;
+import io.reactivex.flowables.ConnectableFlowable;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -57,8 +57,17 @@ public class RxWebSocket {
 
               @Override
               public void onClosed(WebSocket webSocket, int code, String reason) {
-                emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
-                emitter.onComplete();
+                switch (code) {
+                  case DDPClientImpl.CLOSED_NORMALLY:
+                    emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
+                    emitter.onComplete();
+                    break;
+                  case DDPClientImpl.CLOSED_NOT_ALIVE:
+                    emitter.onNext(new RxWebSocketCallback.Failure(webSocket, new Exception(reason), null));
+                    break;
+                  default:
+                    RCLog.e("Websocket closed abnormally");
+                }
               }
             }),
         BackpressureStrategy.BUFFER
