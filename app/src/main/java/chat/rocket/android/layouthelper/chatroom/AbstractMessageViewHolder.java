@@ -39,10 +39,12 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    * bind the view model.
    */
   public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
-    if (pairedMessage.target.getSyncState() != SyncState.SYNCED)
+    if (pairedMessage.target.getSyncState() != SyncState.SYNCED) {
       itemView.setAlpha(0.6f);
-    else
+    }
+    else {
       itemView.setAlpha(1.0f);
+    }
 
     bindMessage(pairedMessage, autoloadImages);
     renderNewDayAndSequential(pairedMessage);

@@ -54,14 +54,17 @@ public class UserViewHolder extends AutocompleteViewHolder<UserItem> {
 
     final String suggestion = userItem.getSuggestion();
 
-    if (titleTextView != null)
+    if (titleTextView != null) {
       titleTextView.setText(suggestion);
+    }
 
-    if (avatar != null)
+    if (avatar != null) {
       avatar.loadImage(getImageUrl(suggestion, userItem.getAbsoluteUrl()));
+    }
 
-    if (status != null)
+    if (status != null) {
       status.setImageResource(userItem.getStatusResId());
+    }
   }
 
   @Override

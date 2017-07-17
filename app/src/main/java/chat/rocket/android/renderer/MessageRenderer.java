@@ -35,18 +35,20 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show Avatar image.
    */
   public MessageRenderer avatarInto(RocketChatAvatar rocketChatAvatar, AbsoluteUrl absoluteUrl) {
-    if (!shouldHandle(rocketChatAvatar))
+    if (!shouldHandle(rocketChatAvatar)) {
       return this;
+    }
 
     switch (object.getSyncState()){
       case SyncState.FAILED:
         userRenderer.avatarInto(rocketChatAvatar, absoluteUrl, true);
         break;
       default:
-        if (TextUtils.isEmpty(object.getAvatar()))
+        if (TextUtils.isEmpty(object.getAvatar())) {
           userRenderer.avatarInto(rocketChatAvatar, absoluteUrl, false);
-        else
+        } else {
           rocketChatAvatar.loadImage(object.getAvatar());
+        }
         break;
     }
     return this;
@@ -58,10 +60,12 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   public MessageRenderer usernameInto(TextView usernameTextView, TextView subUsernameTextView) {
     if (TextUtils.isEmpty(object.getAlias())) {
       userRenderer.usernameInto(usernameTextView);
-      if (subUsernameTextView != null)
+      if (subUsernameTextView != null) {
         subUsernameTextView.setVisibility(View.GONE);
-    } else
+      }
+    } else {
       aliasAndUsernameInto(usernameTextView, subUsernameTextView);
+    }
     return this;
   }
 
@@ -69,8 +73,9 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show timestamp in textView.
    */
   public MessageRenderer timestampInto(TextView textView) {
-    if (!shouldHandle(textView))
+    if (!shouldHandle(textView)) {
       return this;
+    }
 
     switch (object.getSyncState()) {
       case SyncState.SYNCING:
@@ -93,8 +98,9 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show body in RocketChatMessageLayout.
    */
   public MessageRenderer bodyInto(RocketChatMessageLayout rocketChatMessageLayout) {
-    if (!shouldHandle(rocketChatMessageLayout))
+    if (!shouldHandle(rocketChatMessageLayout)) {
       return this;
+    }
 
     rocketChatMessageLayout.setText(object.getMessage());
     return this;
@@ -104,13 +110,14 @@ public class MessageRenderer extends AbstractRenderer<Message> {
    * show urls in RocketChatMessageUrlsLayout.
    */
   public MessageRenderer urlsInto(RocketChatMessageUrlsLayout urlsLayout) {
-    if (!shouldHandle(urlsLayout))
+    if (!shouldHandle(urlsLayout)) {
       return this;
+    }
 
     List<WebContent> webContents = object.getWebContents();
-    if (webContents == null || webContents.size() == 0)
+    if (webContents == null || webContents.size() == 0) {
       urlsLayout.setVisibility(View.GONE);
-    else {
+    } else {
       urlsLayout.setVisibility(View.VISIBLE);
       urlsLayout.setUrls(webContents, autoloadImages);
     }
@@ -125,9 +132,9 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       return this;
 
     List<Attachment> attachments = object.getAttachments();
-    if (attachments == null || attachments.size() == 0)
+    if (attachments == null || attachments.size() == 0) {
       attachmentsLayout.setVisibility(View.GONE);
-    else {
+    } else {
       attachmentsLayout.setVisibility(View.VISIBLE);
       attachmentsLayout.setAbsoluteUrl(absoluteUrl);
       attachmentsLayout.setAttachments(attachments, autoloadImages);
@@ -136,15 +143,17 @@ public class MessageRenderer extends AbstractRenderer<Message> {
   }
 
   private void aliasAndUsernameInto(TextView aliasTextView, TextView usernameTextView) {
-    if (shouldHandle(aliasTextView))
+    if (shouldHandle(aliasTextView)) {
       aliasTextView.setText(object.getAlias());
+    }
 
     if (shouldHandle(usernameTextView)) {
       if (object.getUser() != null) {
         usernameTextView.setText("@" + object.getUser().getUsername());
         usernameTextView.setVisibility(View.VISIBLE);
-      } else
+      } else {
         usernameTextView.setVisibility(View.GONE);
+      }
     }
   }
 

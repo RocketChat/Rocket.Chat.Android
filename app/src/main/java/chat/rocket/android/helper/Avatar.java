@@ -86,10 +86,11 @@ public class Avatar {
    * render avatar into RocketChatAvatar.
    */
   public void into(final RocketChatAvatar rocketChatAvatar, boolean showFailureImage) {
-    if (showFailureImage)
+    if (showFailureImage) {
       rocketChatAvatar.showFailureImage();
-    else
+    } else {
       rocketChatAvatar.loadImage(getImageUrl());
+    }
   }
 
   public Drawable getTextDrawable(Context context) {
