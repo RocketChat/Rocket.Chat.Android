@@ -18,7 +18,7 @@ public class MessageSystemViewHolder extends AbstractMessageViewHolder {
    */
   public MessageSystemViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
     super(itemView, absoluteUrl);
-    body = (TextView) itemView.findViewById(R.id.message_body);
+    body = itemView.findViewById(R.id.message_body);
   }
 
   @Override
