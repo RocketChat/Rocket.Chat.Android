@@ -58,12 +58,12 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
           .setUtcOffset(0)
           .build();
       new UserRenderer(context, user)
-          .avatarInto(holder.avatar, absoluteUrl, false)
+          .avatarInto(holder.avatar, absoluteUrl)
           .usernameInto(holder.username);
     } else {
       new UserRenderer(context, realmUser.asUser())
           .statusColorInto(holder.status)
-          .avatarInto(holder.avatar, absoluteUrl, false)
+          .avatarInto(holder.avatar, absoluteUrl)
           .usernameInto(holder.username);
     }
   }

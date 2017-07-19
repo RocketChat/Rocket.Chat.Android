@@ -21,14 +21,14 @@ public class UserRenderer extends AbstractRenderer<User> {
   /**
    * show Avatar image
    */
-  public UserRenderer avatarInto(RocketChatAvatar rocketChatAvatar, AbsoluteUrl absoluteUrl, boolean showFailureImage) {
+  public UserRenderer avatarInto(RocketChatAvatar rocketChatAvatar, AbsoluteUrl absoluteUrl) {
     if (!shouldHandle(rocketChatAvatar)) {
       return this;
     }
 
     if (!TextUtils.isEmpty(object.getUsername())) {
       new Avatar(absoluteUrl, object.getUsername())
-          .into(rocketChatAvatar, showFailureImage);
+          .into(rocketChatAvatar);
     }
     return this;
   }
