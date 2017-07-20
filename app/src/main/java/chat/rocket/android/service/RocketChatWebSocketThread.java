@@ -32,14 +32,11 @@ import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android.service.observer.TokenLoginObserver;
-import chat.rocket.android_ddp.DDPClientImpl;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import hugo.weaving.DebugLog;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import rx.Single;
 
@@ -68,7 +65,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final RealmHelper realmHelper;
   private final ConnectivityManagerInternal connectivityManager;
   private final ArrayList<Registrable> listeners = new ArrayList<>();
-  private DDPClientWrapper ddpClient;
+  private static DDPClientWrapper ddpClient;
   private boolean listenersRegistered;
   private RocketChatCache rocketChatCache;
   private DDPClientRef ddpClientRef = new DDPClientRef() {
@@ -157,7 +154,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
       return Single.fromEmitter(emitter -> {
         new Handler(getLooper()).post(() -> {
           RCLog.d("thread %s: terminated()", Thread.currentThread().getId());
-          unregisterListeners();
+          unregisterListenersAndClose();
           connectivityManager.notifyConnectionLost(hostname,
               ConnectivityManagerInternal.REASON_CLOSED_BY_USER);
           RocketChatWebSocketThread.super.quit();
@@ -206,9 +203,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
         public void run() {
           ddpClient.ping().continueWith(task -> {
             if (task.isFaulted()) {
-              RCLog.e(task.getError());
+              Exception error = task.getError();
+              RCLog.e(error);
               emitter.onSuccess(false);
-              ddpClient.close(DDPClientImpl.CLOSED_NOT_ALIVE, "Ping timeout");
             } else {
               keepAliveTimer.update();
               emitter.onSuccess(true);
@@ -248,24 +245,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
                 // handling WebSocket#onClose() callback.
                 task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
-                  if (listenersRegistered) {
-                    terminate();
-                  }
-                  return null;
-                });
-
-                task.getResult().client.getOnFailureCallback().onSuccess(_task -> {
+                  ddpClient.close();
                   ddpClient = null;
-                  CompositeDisposable disposables = new CompositeDisposable();
-                  connectivityManager.notifyConnecting(hostname);
-                  disposables.add(
-                          RxJavaInterop.toV2Single(connect().retry())
-                                  .observeOn(AndroidSchedulers.from(getLooper()))
-                                  .subscribe(
-                                          rocketChatWebSocketThread -> forceRegisteringListeners(),
-                                          err -> logErrorAndDispose(err, disposables)
-                                  )
-                  );
+                  connectivityManager.notifyConnectionLost(hostname,
+                          ConnectivityManagerInternal.REASON_NETWORK_ERROR);
                   return null;
                 });
 
@@ -331,7 +314,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     return new MethodCallHelper(realmHelper, ddpClientRef).getPermissions();
   }
 
-  //@DebugLog
+  @DebugLog
   private void registerListeners() {
     if (!Thread.currentThread().getName().equals("RC_thread_" + hostname)) {
       // execute in Looper.
@@ -340,7 +323,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
 
     if (listenersRegistered) {
-      return;
+      unregisterListeners();
     }
     listenersRegistered = true;
 
@@ -355,18 +338,27 @@ public class RocketChatWebSocketThread extends HandlerThread {
           registrable.register();
           listeners.add(registrable);
         }
-
+        // Register for room stream messages
         String roomId = rocketChatCache.getSelectedRoomId();
         if (roomId != null) {
           StreamRoomMessage streamRoomMessage = new StreamRoomMessage(
-                  appContext, hostname, realmHelper, ddpClientRef, roomId);
-
+                  appContext, hostname, realmHelper, ddpClientRef, roomId
+          );
           streamRoomMessage.register();
           listeners.add(streamRoomMessage);
         }
       } catch (Exception exception) {
         RCLog.w(exception, "Failed to register listeners!!");
       }
+    }
+  }
+
+  @DebugLog
+  private void unregisterListenersAndClose() {
+   unregisterListeners();
+    if (ddpClient != null) {
+      ddpClient.close();
+      ddpClient = null;
     }
   }
 
@@ -379,9 +371,5 @@ public class RocketChatWebSocketThread extends HandlerThread {
       iterator.remove();
     }
     listenersRegistered = false;
-    if (ddpClient != null) {
-      ddpClient.close(DDPClientImpl.CLOSED_NORMALLY, "Closed by client");
-      ddpClient = null;
-    }
   }
 }

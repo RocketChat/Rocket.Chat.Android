@@ -61,11 +61,7 @@ public class DDPClient {
     return impl.getOnCloseCallback();
   }
 
-  public Task<RxWebSocketCallback.Failure> getOnFailureCallback() {
-    return impl.getOnFailureCallback();
-  }
-
-  public void close(int code, String reason) {
-    impl.close(code, reason);
+  public void close() {
+    impl.close(1000, "closed by DDPClient#close()");
   }
 }

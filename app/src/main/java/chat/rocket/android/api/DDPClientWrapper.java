@@ -1,11 +1,12 @@
 package chat.rocket.android.api;
 
 import android.support.annotation.Nullable;
-import io.reactivex.Flowable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.UUID;
+
 import bolts.Task;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.TextUtils;
@@ -13,6 +14,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.android_ddp.DDPSubscription;
+import io.reactivex.Flowable;
 
 /**
  * DDP client wrapper.
@@ -45,8 +47,8 @@ public class DDPClientWrapper {
   /**
    * close connection.
    */
-  public void close(int code, String reason) {
-    ddpClient.close(code, reason);
+  public void close() {
+    ddpClient.close();
   }
 
   /**

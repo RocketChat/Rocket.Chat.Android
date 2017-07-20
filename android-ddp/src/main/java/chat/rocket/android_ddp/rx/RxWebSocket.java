@@ -1,7 +1,6 @@
 package chat.rocket.android_ddp.rx;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import chat.rocket.android.log.RCLog;
@@ -18,8 +17,13 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
 public class RxWebSocket {
+  public static final int REASON_CLOSED_BY_USER = 101;
+  public static final int REASON_NETWORK_ERROR = 102;
+  public static final int REASON_SERVER_ERROR = 103;
+  public static final int REASON_UNKNOWN = 104;
   private OkHttpClient httpClient;
   private WebSocket webSocket;
+  private boolean hadErrorsBefore;
 
   public RxWebSocket(OkHttpClient client) {
     httpClient = client;
@@ -33,6 +37,7 @@ public class RxWebSocket {
             .newWebSocket(request, new WebSocketListener() {
               @Override
               public void onOpen(WebSocket webSocket, Response response) {
+                hadErrorsBefore = false;
                 RxWebSocket.this.webSocket = webSocket;
                 emitter.onNext(new RxWebSocketCallback.Open(RxWebSocket.this.webSocket, response));
               }
@@ -40,10 +45,10 @@ public class RxWebSocket {
               @Override
               public void onFailure(WebSocket webSocket, Throwable err, Response response) {
                 try {
-                  if (err instanceof UnknownHostException) {
-                    emitter.onError(err);
-                  } else {
-                    emitter.onNext(new RxWebSocketCallback.Failure(webSocket, err, response));
+                  if (!hadErrorsBefore) {
+                    hadErrorsBefore = true;
+                    emitter.onNext(new RxWebSocketCallback.Close(webSocket, REASON_NETWORK_ERROR, err.getMessage()));
+                    emitter.onComplete();
                   }
                 } catch (OnErrorNotImplementedException ex) {
                   RCLog.w(ex, "OnErrorNotImplementedException ignored");
@@ -71,7 +76,7 @@ public class RxWebSocket {
               }
             }),
         BackpressureStrategy.BUFFER
-    ).delay(2000, TimeUnit.MILLISECONDS).publish();
+    ).delay(4, TimeUnit.SECONDS).publish();
   }
 
   public boolean sendText(String message) throws IOException {

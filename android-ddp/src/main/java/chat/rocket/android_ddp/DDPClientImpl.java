@@ -59,7 +59,7 @@ public class DDPClientImpl {
   public void connect(final TaskCompletionSource<DDPClientCallback.Connect> task, final String url,
                       String session) {
     try {
-      flowable = websocket.connect(url).autoConnect();
+      flowable = websocket.connect(url).autoConnect(2);
       CompositeDisposable disposables = new CompositeDisposable();
 
       disposables.add(
@@ -125,7 +125,6 @@ public class DDPClientImpl {
           flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
-              .timeout(4, TimeUnit.SECONDS)
               .subscribe(
                   response -> {
                     String msg = extractMsg(response);
@@ -370,29 +369,14 @@ public class DDPClientImpl {
     });
   }
 
-  public Task<RxWebSocketCallback.Failure> getOnFailureCallback() {
-    TaskCompletionSource<RxWebSocketCallback.Failure> task = new TaskCompletionSource<>();
-
-    flowable.filter(callback -> callback instanceof RxWebSocketCallback.Failure)
-            .cast(RxWebSocketCallback.Failure.class)
-            .subscribe(
-                    task::setResult,
-                    err -> setTaskError(task, err)
-            );
-
-    return task.getTask().onSuccessTask(_task -> {
-      unsubscribeBaseListeners();
-      return _task;
-    });
-  }
-
   private boolean sendMessage(String msg, @Nullable JSONBuilder json) {
     try {
       JSONObject origJson = new JSONObject().put("msg", msg);
       String msg2 = (json == null ? origJson : json.create(origJson)).toString();
-      return websocket.sendText(msg2);
+      websocket.sendText(msg2);
     } catch (Exception e) {
       RCLog.e(e);
+      return false;
     }
     return true; // ignore exception here.
   }

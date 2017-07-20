@@ -20,7 +20,6 @@ import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter extends BasePresenter<MainContract.View>
     implements MainContract.Presenter {
@@ -65,6 +64,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
     openRoom();
 
+    subscribeToNetworkChanges();
     subscribeToUnreadCount();
     subscribeToSession();
     setUserOnline();
@@ -98,10 +98,8 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
   @Override
   public void onRetryLogin() {
-    final Disposable subscription = sessionInteractor.retryLogin()
-        .subscribe();
-
-    addSubscription(subscription);
+    view.showConnecting();
+    connectivityManagerApi.keepAliveServer();
   }
 
   private void openRoom() {
@@ -161,19 +159,18 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         );
 
     addSubscription(subscription);
+  }
 
-    // Update to RxJava 2 (issue: https://github.com/RocketChat/Rocket.Chat.Android/issues/355)
-    addSubscription(
-            RxJavaInterop.toV2Observable(connectivityManagerApi.getServerConnectivityAsObservable())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(serverConnectivity -> {
-                      if (serverConnectivity.state == ServerConnectivity.STATE_CONNECTING) {
-                        view.showConnecting();
-                      }
-                    },
-                    Logger::report)
-    );
+  private void subscribeToNetworkChanges() {
+    Disposable disposable = RxJavaInterop.toV2Flowable(connectivityManagerApi.getServerConnectivityAsObservable())
+            .filter(connectivity -> connectivity.state == ServerConnectivity.STATE_DISCONNECTED)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    a -> view.showConnectionError(),
+                    Logger::report
+            );
+
+    addSubscription(disposable);
   }
 
   private void setUserOnline() {
