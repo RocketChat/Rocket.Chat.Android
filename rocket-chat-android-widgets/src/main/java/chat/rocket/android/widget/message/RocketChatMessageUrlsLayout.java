@@ -11,12 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import chat.rocket.android.widget.helper.FrescoHelper;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 import java.util.Map;
 import chat.rocket.android.widget.R;
-import chat.rocket.android.widget.helper.FrescoHelper;
 import chat.rocket.android.widget.helper.ImageFormat;
 import chat.rocket.core.models.WebContent;
 import chat.rocket.core.models.WebContentHeaders;
@@ -95,7 +95,8 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     if (TextUtils.isEmpty(imageURL)) {
       image.setVisibility(View.GONE);
     } else {
-      FrescoHelper.setupDraweeAndLoadImage(imageURL, image);
+      FrescoHelper
+          .loadImageWithCustomization(image, imageURL);
       image.setVisibility(View.VISIBLE);
     }
 
@@ -143,17 +144,18 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
                          boolean autoloadImage) {
     if (autoloadImage) {
       load.setVisibility(GONE);
-      FrescoHelper.setupDraweeAndLoadImage(url, drawee);
+      FrescoHelper
+          .loadImageWithCustomization(drawee, url);
       return;
     }
 
-    FrescoHelper.setupDrawee(drawee);
     load.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
         load.setVisibility(GONE);
         load.setOnClickListener(null);
-        FrescoHelper.loadImage(url, drawee);
+        FrescoHelper
+            .loadImageWithCustomization(drawee, url);
       }
     });
   }

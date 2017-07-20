@@ -2,6 +2,7 @@ package chat.rocket.android.layouthelper.chatroom;
 
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
@@ -12,6 +13,7 @@ import chat.rocket.core.SyncState;
 
 public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMessage> {
   protected final RocketChatAvatar avatar;
+  protected final ImageView errorImageView;
   protected final TextView username;
   protected final TextView subUsername;
   protected final TextView timestamp;
@@ -26,6 +28,7 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
   public AbstractMessageViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
     super(itemView);
     avatar = itemView.findViewById(R.id.user_avatar);
+    errorImageView = itemView.findViewById(R.id.errorImageView);
     username = itemView.findViewById(R.id.username);
     subUsername = itemView.findViewById(R.id.sub_username);
     timestamp = itemView.findViewById(R.id.timestamp);
@@ -39,11 +42,10 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    * bind the view model.
    */
   public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
-    if (pairedMessage.target.getSyncState() != SyncState.SYNCED) {
-      itemView.setAlpha(0.6f);
-    }
-    else {
-      itemView.setAlpha(1.0f);
+    if (pairedMessage.target.getSyncState() == SyncState.FAILED) {
+      errorImageView.setVisibility(View.VISIBLE);
+    } else {
+      errorImageView.setVisibility(View.GONE);
     }
 
     bindMessage(pairedMessage, autoloadImages);
@@ -69,10 +71,11 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
 
   private void setSequential(boolean sequential) {
     if (avatar != null) {
-      if (sequential)
+      if (sequential) {
         avatar.setVisibility(View.GONE);
-      else
+      } else {
         avatar.setVisibility(View.VISIBLE);
+      }
     }
 
     if (userAndTimeContainer != null) {
