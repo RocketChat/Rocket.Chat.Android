@@ -5,15 +5,16 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/messageRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/messageComposer" />
+      android:id="@+id/messageRecyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scrollbars="vertical"
+      android:layout_above="@+id/messageComposer" />
 
     <chat.rocket.android.widget.message.MessageFormLayout
-            android:id="@+id/messageComposer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:theme="@style/Theme.AppCompat.Light" />
+      android:id="@+id/messageComposer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:theme="@style/Theme.AppCompat.Light" />
 </RelativeLayout>

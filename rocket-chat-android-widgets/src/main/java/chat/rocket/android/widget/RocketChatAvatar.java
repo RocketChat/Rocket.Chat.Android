@@ -6,7 +6,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
-import chat.rocket.android.widget.helper.FrescoAvatarHelper;
+import chat.rocket.android.widget.helper.FrescoHelper;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class RocketChatAvatar extends FrameLayout {
@@ -41,13 +41,8 @@ public class RocketChatAvatar extends FrameLayout {
     draweeView = findViewById(R.id.drawee_avatar);
   }
 
-  public void loadImage(String imageUrl) {
-    FrescoAvatarHelper
-        .loadImage(draweeView, imageUrl);
-  }
-
-  public void showFailureImage() {
-    FrescoAvatarHelper
-        .showFailureImage(draweeView);
+  public void loadImage(String imageUri) {
+    FrescoHelper
+        .loadImage(draweeView, imageUri);
   }
 }

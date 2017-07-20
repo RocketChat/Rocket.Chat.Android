@@ -2,7 +2,7 @@
 <resources>
     <style name="Widget.RocketChat.RoomToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/TextAppearance.Widget.RocketChat.RoomToolbar.Title</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="TextAppearance.Widget.RocketChat.RoomToolbar.Title"

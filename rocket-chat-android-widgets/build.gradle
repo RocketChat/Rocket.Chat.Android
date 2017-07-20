@@ -33,7 +33,7 @@ android {
 }
 
 ext {
-    frescoVersion = '1.3.0'
+    frescoVersion = '1.4.0'
     rxbindingVersion = '2.0.0'
 }
 

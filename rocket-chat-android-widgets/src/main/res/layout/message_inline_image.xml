@@ -10,6 +10,7 @@
             android:id="@+id/message_inline_image"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            fresco:placeholderImage="@drawable/image_dummy"
             fresco:actualImageScaleType="fitStart" />
 
     <TextView

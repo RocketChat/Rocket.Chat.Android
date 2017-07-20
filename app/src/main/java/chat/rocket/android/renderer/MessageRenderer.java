@@ -21,7 +21,6 @@ import java.util.List;
  * Renderer for RealmMessage model.
  */
 public class MessageRenderer extends AbstractRenderer<Message> {
-
   private final UserRenderer userRenderer;
   private final boolean autoloadImages;
 
@@ -39,17 +38,11 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       return this;
     }
 
-    switch (object.getSyncState()){
-      case SyncState.FAILED:
-        userRenderer.avatarInto(rocketChatAvatar, absoluteUrl, true);
-        break;
-      default:
-        if (TextUtils.isEmpty(object.getAvatar())) {
-          userRenderer.avatarInto(rocketChatAvatar, absoluteUrl, false);
-        } else {
-          rocketChatAvatar.loadImage(object.getAvatar());
-        }
-        break;
+    if (TextUtils.isEmpty(object.getAvatar())) {
+      userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
+      // Avatar from oauth providers
+    } else {
+      rocketChatAvatar.loadImage(object.getAvatar());
     }
     return this;
   }
