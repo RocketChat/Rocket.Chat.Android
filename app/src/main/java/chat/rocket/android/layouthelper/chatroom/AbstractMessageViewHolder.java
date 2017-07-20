@@ -43,11 +43,9 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    */
   public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
     if (pairedMessage.target.getSyncState() == SyncState.FAILED) {
-      avatar.setVisibility(View.GONE);
       errorImageView.setVisibility(View.VISIBLE);
     } else {
       errorImageView.setVisibility(View.GONE);
-      avatar.setVisibility(View.VISIBLE);
     }
 
     bindMessage(pairedMessage, autoloadImages);
@@ -73,10 +71,11 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
 
   private void setSequential(boolean sequential) {
     if (avatar != null) {
-      if (sequential)
+      if (sequential) {
         avatar.setVisibility(View.GONE);
-      else
+      } else {
         avatar.setVisibility(View.VISIBLE);
+      }
     }
 
     if (userAndTimeContainer != null) {
