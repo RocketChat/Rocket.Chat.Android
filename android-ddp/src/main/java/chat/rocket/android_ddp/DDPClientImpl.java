@@ -378,10 +378,8 @@ public class DDPClientImpl {
 
   private void sendMessage(String msg, @Nullable JSONBuilder json,
                            TaskCompletionSource<?> taskForSetError) {
-    if (!sendMessage(msg, json)) {
-      if (taskForSetError != null) {
-        taskForSetError.trySetError(new DDPClientCallback.Closed(client));
-      }
+    if (!sendMessage(msg, json) && taskForSetError != null) {
+      taskForSetError.trySetError(new DDPClientCallback.Closed(client));
     }
   }
 
