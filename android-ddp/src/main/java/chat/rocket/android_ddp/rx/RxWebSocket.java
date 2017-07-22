@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android_ddp.DDPClientImpl;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOnSubscribe;
@@ -17,10 +16,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
 public class RxWebSocket {
-  public static final int REASON_CLOSED_BY_USER = 101;
-  public static final int REASON_NETWORK_ERROR = 102;
-  public static final int REASON_SERVER_ERROR = 103;
-  public static final int REASON_UNKNOWN = 104;
+  public static final int REASON_NETWORK_ERROR = 100;
   private OkHttpClient httpClient;
   private WebSocket webSocket;
   private boolean hadErrorsBefore;
@@ -62,17 +58,7 @@ public class RxWebSocket {
 
               @Override
               public void onClosed(WebSocket webSocket, int code, String reason) {
-                switch (code) {
-                  case DDPClientImpl.CLOSED_NORMALLY:
-                    emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
-                    emitter.onComplete();
-                    break;
-                  case DDPClientImpl.CLOSED_NOT_ALIVE:
-                    emitter.onNext(new RxWebSocketCallback.Failure(webSocket, new Exception(reason), null));
-                    break;
-                  default:
-                    RCLog.e("Websocket closed abnormally");
-                }
+                emitter.onNext(new RxWebSocketCallback.Close(webSocket, code, reason));
               }
             }),
         BackpressureStrategy.BUFFER

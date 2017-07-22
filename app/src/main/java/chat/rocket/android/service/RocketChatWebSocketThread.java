@@ -9,12 +9,14 @@ import org.json.JSONObject;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 import bolts.Task;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
@@ -37,8 +39,8 @@ import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import hugo.weaving.DebugLog;
-import io.reactivex.disposables.CompositeDisposable;
 import rx.Single;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Thread for handling WebSocket connection.
@@ -65,16 +67,15 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final RealmHelper realmHelper;
   private final ConnectivityManagerInternal connectivityManager;
   private final ArrayList<Registrable> listeners = new ArrayList<>();
-  private static DDPClientWrapper ddpClient;
+  private DDPClientWrapper ddpClient;
   private boolean listenersRegistered;
   private RocketChatCache rocketChatCache;
-  private DDPClientRef ddpClientRef = new DDPClientRef() {
+  private final DDPClientRef ddpClientRef = new DDPClientRef() {
     @Override
     public DDPClientWrapper get() {
       return ddpClient;
     }
   };
-
 
   private static class KeepAliveTimer {
     private long lastTime;
@@ -223,12 +224,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
           if (!alive) {
             RCLog.d("DDPClient#create");
             ddpClient = DDPClientWrapper.create(hostname);
-            ddpClientRef = new DDPClientRef() {
-              @Override
-              public DDPClientWrapper get() {
-                return ddpClient;
-              }
-            };
           }
         });
   }
@@ -246,9 +241,25 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 // handling WebSocket#onClose() callback.
                 task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
                   ddpClient.close();
-                  ddpClient = null;
-                  connectivityManager.notifyConnectionLost(hostname,
-                          ConnectivityManagerInternal.REASON_NETWORK_ERROR);
+                  forceInvalidateTokens();
+                  connectivityManager.notifyConnecting(hostname);
+                  // Needed to use subscriptions because of legacy code.
+                  // TODO: Should update to RxJava 2
+                  final CompositeSubscription subscriptions = new CompositeSubscription();
+                  subscriptions.add(
+                    connect().retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS))
+                    .subscribe(
+                        connected -> {
+                          if (!connected) {
+                            connectivityManager.notifyConnectionLost(
+                                    hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR
+                            );
+                          }
+                          subscriptions.clear();
+                        },
+                        err -> logErrorAndUnsubscribe(subscriptions, err)
+                    )
+                  );
                   return null;
                 });
 
@@ -279,20 +290,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
         }));
   }
 
-  private void logErrorAndDispose(Throwable throwable, CompositeDisposable disposables) {
-    RCLog.e(throwable);
-    disposables.clear();
-  }
-
-  private void forceRegisteringListeners() {
-    Iterator<Registrable> iterator = listeners.iterator();
-    while (iterator.hasNext()) {
-      Registrable registrable = iterator.next();
-      registrable.unregister();
-      iterator.remove();
-    }
-    listenersRegistered = false;
-    registerListeners();
+  private void logErrorAndUnsubscribe(CompositeSubscription subscriptions, Throwable err) {
+    RCLog.e(err);
+    subscriptions.clear();
   }
 
   @DebugLog
@@ -340,7 +340,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         }
         // Register for room stream messages
         String roomId = rocketChatCache.getSelectedRoomId();
-        if (roomId != null) {
+        if (roomId != null && !roomId.isEmpty()) {
           StreamRoomMessage streamRoomMessage = new StreamRoomMessage(
                   appContext, hostname, realmHelper, ddpClientRef, roomId
           );

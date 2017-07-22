@@ -163,10 +163,15 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
   private void subscribeToNetworkChanges() {
     Disposable disposable = RxJavaInterop.toV2Flowable(connectivityManagerApi.getServerConnectivityAsObservable())
-            .filter(connectivity -> connectivity.state == ServerConnectivity.STATE_DISCONNECTED)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                    a -> view.showConnectionError(),
+                    connectivity -> {
+                      if (connectivity.state == ServerConnectivity.STATE_CONNECTED) {
+                        view.showConnectionOk();
+                        return;
+                      }
+                      view.showConnecting();
+                    },
                     Logger::report
             );
 
