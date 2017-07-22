@@ -254,8 +254,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   protected Snackbar getUnreadCountIndicatorView(int count) {
     // TODO: replace with another custom View widget, not to hide message composer.
-    final String caption = getResources().getString(
-        R.string.fmt_dialog_view_latest_message_title, count);
+    final String caption = getResources().getQuantityString(
+        R.plurals.fmt_dialog_view_latest_message_title, count, count);
 
     return Snackbar.make(rootView, caption, Snackbar.LENGTH_LONG)
         .setAction(R.string.dialog_view_latest_message_action, view -> scrollToLatestMessage());
