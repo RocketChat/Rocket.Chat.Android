@@ -1,7 +1,7 @@
 package chat.rocket.android.widget;
 
 import android.content.Context;
-import chat.rocket.android.widget.fresco.CustomImageFormatConfigurator;
+
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -9,8 +9,11 @@ import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFact
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
+
 import java.util.HashSet;
 import java.util.Set;
+
+import chat.rocket.android.widget.fresco.CustomImageFormatConfigurator;
 import okhttp3.OkHttpClient;
 
 public class RocketChatWidgets {
