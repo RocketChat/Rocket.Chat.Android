@@ -19,13 +19,14 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
   protected final TextView timestamp;
   protected final View userAndTimeContainer;
   protected final AbsoluteUrl absoluteUrl;
+  protected final String hostname;
   protected final View newDayContainer;
   protected final TextView newDayText;
 
   /**
    * constructor WITH hostname.
    */
-  public AbstractMessageViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
+  public AbstractMessageViewHolder(View itemView, AbsoluteUrl absoluteUrl, String hostname) {
     super(itemView);
     avatar = itemView.findViewById(R.id.user_avatar);
     errorImageView = itemView.findViewById(R.id.errorImageView);
@@ -36,6 +37,7 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
     newDayContainer = itemView.findViewById(R.id.newday_container);
     newDayText = itemView.findViewById(R.id.newday_text);
     this.absoluteUrl = absoluteUrl;
+    this.hostname = hostname;
   }
 
   /**

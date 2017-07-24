@@ -188,7 +188,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   protected void onSetupView() {
     messageRecyclerView = rootView.findViewById(R.id.messageRecyclerView);
 
-    messageListAdapter = new MessageListAdapter(getContext());
+    messageListAdapter = new MessageListAdapter(getContext(), hostname);
     messageRecyclerView.setAdapter(messageListAdapter);
     messageListAdapter.setOnItemClickListener(this);
     messageListAdapter.setOnItemLongClickListener(this);
@@ -369,7 +369,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
                             new DefaultTempSpotlightUserCaller(methodCallHelper)
                         ),
                         pair.first.get(),
-                        RocketChatUserStatusProvider.getInstance(),
+                        RocketChatUserStatusProvider.INSTANCE,
                         AndroidSchedulers.from(BackgroundLooper.get()),
                         AndroidSchedulers.mainThread()
                     )

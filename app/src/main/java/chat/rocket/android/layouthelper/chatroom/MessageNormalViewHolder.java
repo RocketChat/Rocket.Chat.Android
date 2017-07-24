@@ -19,8 +19,8 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
   /**
    * constructor WITH hostname.
    */
-  public MessageNormalViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
-    super(itemView, absoluteUrl);
+  public MessageNormalViewHolder(View itemView, AbsoluteUrl absoluteUrl, String hostname) {
+    super(itemView, absoluteUrl, hostname);
     body = itemView.findViewById(R.id.message_body);
     urls = itemView.findViewById(R.id.message_urls);
     attachments = itemView.findViewById(R.id.message_attachments);
@@ -28,12 +28,12 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
 
   @Override
   protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
-    new MessageRenderer(itemView.getContext(), pairedMessage.target, autoloadImages)
-        .avatarInto(avatar, absoluteUrl)
-        .usernameInto(username, subUsername)
-        .timestampInto(timestamp)
-        .bodyInto(body)
-        .urlsInto(urls)
-        .attachmentsInto(attachments, absoluteUrl);
+    MessageRenderer messageRenderer = new MessageRenderer(pairedMessage.target, autoloadImages);
+    messageRenderer.showAvatar(avatar, hostname);
+    messageRenderer.showUsername(username, subUsername);
+    messageRenderer.showTimestampOrMessageState(timestamp);
+    messageRenderer.showBody(body);
+    messageRenderer.showUrl(urls);
+    messageRenderer.showAttachment(attachments, absoluteUrl);
   }
 }

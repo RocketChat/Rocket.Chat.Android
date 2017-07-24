@@ -16,18 +16,17 @@ public class MessageSystemViewHolder extends AbstractMessageViewHolder {
   /**
    * constructor WITH hostname.
    */
-  public MessageSystemViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
-    super(itemView, absoluteUrl);
+  public MessageSystemViewHolder(View itemView, AbsoluteUrl absoluteUrl, String hostname) {
+    super(itemView, absoluteUrl, hostname);
     body = itemView.findViewById(R.id.message_body);
   }
 
   @Override
   protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
-    new MessageRenderer(itemView.getContext(), pairedMessage.target, autoloadImages)
-        .avatarInto(avatar, absoluteUrl)
-        .usernameInto(username, subUsername)
-        .timestampInto(timestamp);
-
+    MessageRenderer messageRenderer = new MessageRenderer(pairedMessage.target, autoloadImages);
+    messageRenderer.showAvatar(avatar, hostname);
+    messageRenderer.showUsername(username, subUsername);
+    messageRenderer.showTimestampOrMessageState(timestamp);
     if (pairedMessage.target != null) {
       body.setText(MessageType.parse(pairedMessage.target.getType())
           .getString(body.getContext(), pairedMessage.target));

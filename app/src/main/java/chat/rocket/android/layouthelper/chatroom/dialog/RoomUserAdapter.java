@@ -24,16 +24,18 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
   private final LayoutInflater inflater;
   private final RealmHelper realmHelper;
   private final AbsoluteUrl absoluteUrl;
+  private final String hostname;
   private List<String> usernames;
 
   /**
    * Constructor with required parameters.
    */
-  public RoomUserAdapter(Context context, RealmHelper realmHelper, AbsoluteUrl absoluteUrl) {
+  public RoomUserAdapter(Context context, RealmHelper realmHelper, AbsoluteUrl absoluteUrl, String hostname) {
     this.context = context;
     this.inflater = LayoutInflater.from(context);
     this.realmHelper = realmHelper;
     this.absoluteUrl = absoluteUrl;
+    this.hostname = hostname;
   }
 
   @Override
@@ -57,14 +59,15 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
           .setUsername(username)
           .setUtcOffset(0)
           .build();
-      new UserRenderer(context, user)
-          .avatarInto(holder.avatar, absoluteUrl)
-          .usernameInto(holder.username);
+
+      UserRenderer userRenderer = new UserRenderer(user);
+      userRenderer.showAvatar(holder.avatar, hostname);
+      userRenderer.showUsername(holder.username);
     } else {
-      new UserRenderer(context, realmUser.asUser())
-          .statusColorInto(holder.status)
-          .avatarInto(holder.avatar, absoluteUrl)
-          .usernameInto(holder.username);
+      UserRenderer userRenderer = new UserRenderer(realmUser.asUser());
+      userRenderer.showAvatar(holder.avatar, hostname);
+      userRenderer.showUsername(holder.username);
+      userRenderer.showStatusColor(holder.status);
     }
   }
 
