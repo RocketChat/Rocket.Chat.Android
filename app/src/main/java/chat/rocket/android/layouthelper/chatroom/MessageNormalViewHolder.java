@@ -29,7 +29,7 @@ public class MessageNormalViewHolder extends AbstractMessageViewHolder {
   @Override
   protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
     MessageRenderer messageRenderer = new MessageRenderer(pairedMessage.target, autoloadImages);
-    messageRenderer.showAvatar(avatar, hostname);
+    messageRenderer.showAvatar(avatar, hostname, userNotFoundAvatarImageView);
     messageRenderer.showUsername(username, subUsername);
     messageRenderer.showTimestampOrMessageState(timestamp);
     messageRenderer.showBody(body);

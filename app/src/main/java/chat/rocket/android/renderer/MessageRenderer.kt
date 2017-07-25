@@ -1,6 +1,7 @@
 package chat.rocket.android.renderer
 
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
@@ -18,19 +19,20 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
     /**
      * Show user's avatar image in RocketChatAvatar widget.
      */
-    fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String) {
+    fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String, userNotFoundAvatarImageView: ImageView) {
         if (message.avatar != null) {
             // Load user's avatar image from Oauth provider URI.
             rocketChatAvatarWidget.loadImage(message.avatar)
         } else {
-            // Load user's avatar image from Rocket.Chat URI (only if username is not null).
             val username: String? = message.user?.username
+            // Load user's avatar image from Rocket.Chat URI if username is not null.
             if (username != null) {
                 rocketChatAvatarWidget.loadImage(RocketChatUserAvatar(hostname, username).imageUri)
+            } else {
+                // Hide RocketChatAvatar widget and show an "user not found" avatar.
+                rocketChatAvatarWidget.visibility = View.GONE
+                userNotFoundAvatarImageView.visibility = View.VISIBLE
             }
-            /**
-             * TODO Load default image for nullable username.
-             */
         }
     }
 
