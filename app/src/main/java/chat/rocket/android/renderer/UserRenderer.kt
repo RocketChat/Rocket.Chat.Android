@@ -17,10 +17,9 @@ class UserRenderer(val user: User) {
         val username: String? = user.username
         if (username != null) {
             rocketChatAvatarWidget.loadImage(RocketChatUserAvatar(hostname, username).imageUri)
+        } else {
+            rocketChatAvatarWidget.visibility = View.GONE
         }
-        /**
-         * TODO Load default image for nullable username.
-         */
     }
 
     /**

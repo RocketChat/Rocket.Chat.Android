@@ -25,11 +25,12 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
             rocketChatAvatarWidget.loadImage(message.avatar)
         } else {
             val username: String? = message.user?.username
-            // Load user's avatar image from Rocket.Chat URI if username is not null.
             if (username != null) {
+                // Load user's avatar image from Rocket.Chat URI.
                 rocketChatAvatarWidget.loadImage(RocketChatUserAvatar(hostname, username).imageUri)
+                userNotFoundAvatarImageView.visibility = View.GONE
+                rocketChatAvatarWidget.visibility = View.VISIBLE
             } else {
-                // Hide RocketChatAvatar widget and show an "user not found" avatar.
                 rocketChatAvatarWidget.visibility = View.GONE
                 userNotFoundAvatarImageView.visibility = View.VISIBLE
             }
@@ -42,17 +43,12 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
     fun showUsername(usernameTextView: TextView, subUsernameTextView: TextView?) {
         if (message.alias == null) {
             usernameTextView.text = message.user?.username ?: usernameTextView.context.getText(R.string.user_not_found)
-            if (subUsernameTextView != null)
-                subUsernameTextView.visibility = View.GONE
         } else {
             usernameTextView.text = message.alias
-            if (subUsernameTextView != null) {
-                if (message.user != null) {
-                    subUsernameTextView.text = "@" + message.user?.username
-                    subUsernameTextView.visibility = View.VISIBLE
-                } else {
-                    subUsernameTextView.visibility = View.GONE
-                }
+            val username: String? = message.user?.username
+            if (username != null && subUsernameTextView != null) {
+                subUsernameTextView.text = subUsernameTextView.context.getString(R.string.sub_username, username)
+                subUsernameTextView.visibility = View.VISIBLE
             }
         }
     }
