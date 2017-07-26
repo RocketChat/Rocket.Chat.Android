@@ -21,3 +21,7 @@ echo "sdk.dir="$ANDROID_HOME > local.properties
 ## Bug report & Feature request
 
 Please report via [GitHub issue](https://github.com/RocketChat/Rocket.Chat.Android/issues) :)
+
+## Coding Style
+
+Please follow our [coding style](https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/CODING_STYLE.md) when contributing.
