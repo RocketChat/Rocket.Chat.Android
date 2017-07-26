@@ -38,13 +38,11 @@ public class MessageRenderer extends AbstractRenderer<Message> {
       return this;
     }
 
-    if(object.getSyncState() != SyncState.FAILED) {
-      if (TextUtils.isEmpty(object.getAvatar())) {
-        userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
-        // Avatar from oauth providers
-      } else {
-        rocketChatAvatar.loadImage(object.getAvatar());
-      }
+    if (TextUtils.isEmpty(object.getAvatar())) {
+      userRenderer.avatarInto(rocketChatAvatar, absoluteUrl);
+      // Avatar from oauth providers
+    } else {
+      rocketChatAvatar.loadImage(object.getAvatar());
     }
     return this;
   }
