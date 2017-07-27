@@ -2,6 +2,7 @@ package chat.rocket.android.service.internal;
 
 import android.content.Context;
 
+import chat.rocket.android.log.RCLog;
 import io.reactivex.disposables.CompositeDisposable;
 
 import chat.rocket.android.RocketChatCache;
@@ -47,7 +48,7 @@ public abstract class AbstractRocketChatCacheObserver implements Registrable {
     compositeDisposable.add(
         new RocketChatCache(context)
             .getSelectedRoomIdPublisher()
-            .subscribe(this::updateRoomIdWith)
+            .subscribe(this::updateRoomIdWith, RCLog::e)
     );
   }
 
