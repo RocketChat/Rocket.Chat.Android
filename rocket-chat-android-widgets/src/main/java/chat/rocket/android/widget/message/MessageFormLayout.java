@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import chat.rocket.android.widget.R;
 
@@ -23,8 +23,8 @@ public class MessageFormLayout extends LinearLayout {
 
   protected ViewGroup composer;
 
-  private View btnExtra;
-  private View btnSubmit;
+  private ImageButton attachButton;
+  private ImageButton sendButton;
 
   private ExtraActionSelectionClickListener extraActionSelectionClickListener;
   private SubmitTextListener submitTextListener;
@@ -55,18 +55,18 @@ public class MessageFormLayout extends LinearLayout {
     composer = (ViewGroup) LayoutInflater.from(getContext())
         .inflate(R.layout.message_composer, this, false);
 
-    btnExtra = composer.findViewById(R.id.btn_extras);
+    attachButton = composer.findViewById(R.id.button_attach);
 
-    btnExtra.setOnClickListener(new OnClickListener() {
+    attachButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
         onExtraActionSelectionClick();
       }
     });
 
-    btnSubmit = composer.findViewById(R.id.btn_submit);
+    sendButton = composer.findViewById(R.id.button_send);
 
-    btnSubmit.setOnClickListener(new OnClickListener() {
+    sendButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
         String messageText = getText();
@@ -76,11 +76,11 @@ public class MessageFormLayout extends LinearLayout {
       }
     });
 
-    btnSubmit.setScaleX(0);
-    btnSubmit.setScaleY(0);
-    btnSubmit.setVisibility(GONE);
+    sendButton.setScaleX(0);
+    sendButton.setScaleY(0);
+    sendButton.setVisibility(GONE);
 
-    ImageKeyboardEditText editText = (ImageKeyboardEditText) composer.findViewById(R.id.editor);
+    ImageKeyboardEditText editText = composer.findViewById(R.id.editor);
 
     editText.addTextChangedListener(new TextWatcher() {
       @Override
@@ -94,11 +94,11 @@ public class MessageFormLayout extends LinearLayout {
       @Override
       public void afterTextChanged(Editable s) {
         if (TextUtils.getTrimmedLength(s) > 0) {
-          animateHide(btnExtra);
-          animateShow(btnSubmit);
+          animateHide(attachButton);
+          animateShow(sendButton);
         } else {
-          animateShow(btnExtra);
-          animateHide(btnSubmit);
+          animateShow(attachButton);
+          animateHide(sendButton);
         }
       }
     });
@@ -164,7 +164,7 @@ public class MessageFormLayout extends LinearLayout {
 
   public void setEnabled(boolean enabled) {
     getEditor().setEnabled(enabled);
-    composer.findViewById(R.id.btn_submit).setEnabled(enabled);
+    composer.findViewById(R.id.button_send).setEnabled(enabled);
   }
 
   public void setEditTextCommitContentListener(
