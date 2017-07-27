@@ -21,6 +21,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
@@ -70,15 +75,13 @@ import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightUserRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
+
 import com.hadisatrio.optional.Optional;
 import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -251,8 +254,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   protected Snackbar getUnreadCountIndicatorView(int count) {
     // TODO: replace with another custom View widget, not to hide message composer.
-    final String caption = getResources().getString(
-        R.string.fmt_dialog_view_latest_message_title, count);
+    final String caption = getResources().getQuantityString(
+        R.plurals.fmt_dialog_view_latest_message_title, count, count);
 
     return Snackbar.make(rootView, caption, Snackbar.LENGTH_LONG)
         .setAction(R.string.dialog_view_latest_message_action, view -> scrollToLatestMessage());
@@ -598,5 +601,9 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   private void onEditMessage(Message message) {
     edittingMessage = message;
     messageFormManager.setEditMessage(message.getMessage());
+  }
+
+  public void refreshRoom() {
+    presenter.loadMessages();
   }
 }

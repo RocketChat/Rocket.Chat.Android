@@ -14,14 +14,20 @@
 
     <string name="start_of_conversation">Start of conversation</string>
     <string name="users_of_room_title">Members List</string>
-    <string name="fmt_room_user_count">Total: %,d users</string>
+    <plurals name="fmt_room_user_count">
+        <item quantity="one">Total: %,d user</item>
+        <item quantity="other">Total: %,d users</item>
+    </plurals>
     <string name="sending">Sending…</string>
     <string name="not_synced">Not synced</string>
     <string name="failed_to_sync">Failed to sync</string>
     <string name="resend">Resend</string>
     <string name="discard">Discard</string>
 
-    <string name="fmt_dialog_view_latest_message_title">New %d messages</string>
+    <plurals name="fmt_dialog_view_latest_message_title">
+        <item quantity="one">New %d message</item>
+        <item quantity="other">New %d messages</item>
+    </plurals>
     <string name="dialog_view_latest_message_action">View</string>
 
     <string name="file_uploading_title">Uploading…</string>

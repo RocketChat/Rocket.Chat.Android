@@ -3,22 +3,23 @@ package chat.rocket.android.activity;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.service.ConnectivityManagerApi;
+import chat.rocket.android.service.ServerConnectivity;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Session;
 import chat.rocket.core.models.User;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class MainPresenter extends BasePresenter<MainContract.View>
     implements MainContract.Presenter {
@@ -63,6 +64,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
     openRoom();
 
+    subscribeToNetworkChanges();
     subscribeToUnreadCount();
     subscribeToSession();
     setUserOnline();
@@ -96,10 +98,8 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
   @Override
   public void onRetryLogin() {
-    final Disposable subscription = sessionInteractor.retryLogin()
-        .subscribe();
-
-    addSubscription(subscription);
+    view.showConnecting();
+    connectivityManagerApi.keepAliveServer();
   }
 
   private void openRoom() {
@@ -159,6 +159,23 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         );
 
     addSubscription(subscription);
+  }
+
+  private void subscribeToNetworkChanges() {
+    Disposable disposable = RxJavaInterop.toV2Flowable(connectivityManagerApi.getServerConnectivityAsObservable())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    connectivity -> {
+                      if (connectivity.state == ServerConnectivity.STATE_CONNECTED) {
+                        view.showConnectionOk();
+                        return;
+                      }
+                      view.showConnecting();
+                    },
+                    Logger::report
+            );
+
+    addSubscription(disposable);
   }
 
   private void setUserOnline() {

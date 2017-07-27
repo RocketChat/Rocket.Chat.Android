@@ -55,7 +55,11 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   @Override
   public void bindView(@NonNull RoomContract.View view) {
     super.bindView(view);
+    refreshRoom();
+  }
 
+  @Override
+  public void refreshRoom() {
     getRoomRoles();
     getRoomInfo();
     getRoomHistoryStateInfo();
