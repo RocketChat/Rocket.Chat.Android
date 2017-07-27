@@ -164,7 +164,7 @@ public class MessageFormLayout extends LinearLayout {
 
   public void setEnabled(boolean enabled) {
     getEditor().setEnabled(enabled);
-    composer.findViewById(R.id.sendImageButton).setEnabled(enabled);
+    composer.findViewById(R.id.button_send).setEnabled(enabled);
   }
 
   public void setEditTextCommitContentListener(
