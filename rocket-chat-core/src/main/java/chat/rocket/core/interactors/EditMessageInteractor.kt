@@ -5,7 +5,7 @@ import chat.rocket.core.PublicSettingsConstants
 import chat.rocket.core.models.*
 import chat.rocket.core.repositories.*
 import chat.rocket.core.utils.Pair
-import com.fernandocejas.arrow.optional.Optional
+import com.hadisatrio.optional.Optional
 import io.reactivex.Single
 import io.reactivex.functions.Function4
 

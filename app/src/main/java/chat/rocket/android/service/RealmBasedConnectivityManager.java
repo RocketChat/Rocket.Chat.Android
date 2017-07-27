@@ -133,6 +133,14 @@ import rx.subjects.PublishSubject;
         new ServerConnectivity(hostname, ServerConnectivity.STATE_DISCONNECTED));
   }
 
+  @DebugLog
+  @Override
+  public void notifyConnecting(String hostname) {
+    serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTING);
+    connectivitySubject.onNext(
+            new ServerConnectivity(hostname, ServerConnectivity.STATE_CONNECTING));
+  }
+
   @Override
   public Observable<ServerConnectivity> getServerConnectivityAsObservable() {
     return Observable.concat(Observable.from(getCurrentConnectivityList()), connectivitySubject);

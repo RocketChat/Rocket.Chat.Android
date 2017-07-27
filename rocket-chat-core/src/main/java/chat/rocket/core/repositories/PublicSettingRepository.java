@@ -1,6 +1,6 @@
 package chat.rocket.core.repositories;
 
-import com.fernandocejas.arrow.optional.Optional;
+import com.hadisatrio.optional.Optional;
 import io.reactivex.Single;
 
 import chat.rocket.core.models.PublicSetting;

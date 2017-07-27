@@ -1,6 +1,6 @@
 package chat.rocket.android.helper;
 
-import com.fernandocejas.arrow.optional.Optional;
+import com.hadisatrio.optional.Optional;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 

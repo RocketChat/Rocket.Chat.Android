@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
-import com.fernandocejas.arrow.optional.Optional;
+import com.hadisatrio.optional.Optional;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -97,7 +97,7 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
             (realm, text) -> realm.where(RealmUser.class)
                 .contains(RealmUser.USERNAME, text, Case.INSENSITIVE)
                 .findAllSorted(RealmUser.USERNAME),
-            context -> new SuggestUserAdapter(context, rocketChatAbsoluteUrlOptional.get()));
+            context -> new SuggestUserAdapter(context, rocketChatAbsoluteUrlOptional.get(), hostname));
     autoCompleteTextView.setAdapter(adapter);
   }
 

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
-import com.fernandocejas.arrow.optional.Optional;
+import com.hadisatrio.optional.Optional;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -55,7 +55,11 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   @Override
   public void bindView(@NonNull RoomContract.View view) {
     super.bindView(view);
+    refreshRoom();
+  }
 
+  @Override
+  public void refreshRoom() {
     getRoomRoles();
     getRoomInfo();
     getRoomHistoryStateInfo();
