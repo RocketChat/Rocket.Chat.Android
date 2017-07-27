@@ -1,7 +1,5 @@
 package chat.rocket.android_ddp.rx;
 
-import static android.R.attr.type;
-
 import chat.rocket.android.log.RCLog;
 import okhttp3.Response;
 import okhttp3.WebSocket;
@@ -28,25 +26,8 @@ public class RxWebSocketCallback {
     public Open(WebSocket websocket, Response response) {
       super("Open", websocket);
       this.response = response;
-    }
-  }
-
-  public static class Failure extends Exception {
-    public WebSocket ws;
-    public Response response;
-
-    public Failure(WebSocket websocket, Throwable err, Response response) {
-      super(err);
-      this.ws = websocket;
-      this.response = response;
-    }
-
-    @Override
-    public String toString() {
-      if (response != null) {
-        return "[" + type + "] " + response.message();
-      } else {
-        return super.toString();
+      if (response != null && response.body() != null) {
+        this.response.body().close();
       }
     }
   }

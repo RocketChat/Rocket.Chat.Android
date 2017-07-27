@@ -13,21 +13,24 @@ import chat.rocket.core.SyncState;
 
 public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMessage> {
   protected final RocketChatAvatar avatar;
+  protected final ImageView userNotFoundAvatarImageView;
   protected final ImageView errorImageView;
   protected final TextView username;
   protected final TextView subUsername;
   protected final TextView timestamp;
   protected final View userAndTimeContainer;
   protected final AbsoluteUrl absoluteUrl;
+  protected final String hostname;
   protected final View newDayContainer;
   protected final TextView newDayText;
 
   /**
    * constructor WITH hostname.
    */
-  public AbstractMessageViewHolder(View itemView, AbsoluteUrl absoluteUrl) {
+  public AbstractMessageViewHolder(View itemView, AbsoluteUrl absoluteUrl, String hostname) {
     super(itemView);
     avatar = itemView.findViewById(R.id.user_avatar);
+    userNotFoundAvatarImageView = itemView.findViewById(R.id.userNotFoundAvatarImageView);
     errorImageView = itemView.findViewById(R.id.errorImageView);
     username = itemView.findViewById(R.id.username);
     subUsername = itemView.findViewById(R.id.sub_username);
@@ -36,6 +39,7 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
     newDayContainer = itemView.findViewById(R.id.newday_container);
     newDayText = itemView.findViewById(R.id.newday_text);
     this.absoluteUrl = absoluteUrl;
+    this.hostname = hostname;
   }
 
   /**

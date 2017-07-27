@@ -3,7 +3,7 @@ package chat.rocket.persistence.realm.repositories;
 import android.os.Looper;
 import android.support.v4.util.Pair;
 
-import com.fernandocejas.arrow.optional.Optional;
+import com.hadisatrio.optional.Optional;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;

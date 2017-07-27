@@ -224,10 +224,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private void onRenderCurrentUser(User user, RocketChatAbsoluteUrl absoluteUrl) {
     if (user != null && absoluteUrl != null) {
-      new UserRenderer(getContext(), user)
-          .avatarInto(rootView.findViewById(R.id.current_user_avatar), absoluteUrl)
-          .usernameInto(rootView.findViewById(R.id.current_user_name))
-          .statusColorInto(rootView.findViewById(R.id.current_user_status));
+      UserRenderer userRenderer = new UserRenderer(user);
+      userRenderer.showAvatar(rootView.findViewById(R.id.current_user_avatar), hostname);
+      userRenderer.showUsername(rootView.findViewById(R.id.current_user_name));
+      userRenderer.showStatusColor(rootView.findViewById(R.id.current_user_status));
     }
   }
 
