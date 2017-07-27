@@ -97,7 +97,7 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
             (realm, text) -> realm.where(RealmUser.class)
                 .contains(RealmUser.USERNAME, text, Case.INSENSITIVE)
                 .findAllSorted(RealmUser.USERNAME),
-            context -> new SuggestUserAdapter(context, rocketChatAbsoluteUrlOptional.get()));
+            context -> new SuggestUserAdapter(context, rocketChatAbsoluteUrlOptional.get(), hostname));
     autoCompleteTextView.setAdapter(adapter);
   }
 

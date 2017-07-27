@@ -19,6 +19,14 @@
       android:layout_height="32dp"
       android:layout_margin="8dp" />
 
+    <ImageView
+      android:id="@+id/userNotFoundAvatarImageView"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:layout_margin="8dp"
+      app:srcCompat="@drawable/ic_user_not_found_avatar_black_24dp"
+      android:visibility="gone" />
+
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

@@ -22,14 +22,16 @@ public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessa
   private static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
   private static final int VIEW_TYPE_SYSTEM_MESSAGE = 2;
 
+  private String hostname;
   private AbsoluteUrl absoluteUrl;
 
   private boolean autoloadImages = false;
   private boolean hasNext;
   private boolean isLoaded;
 
-  public MessageListAdapter(Context context) {
+  public MessageListAdapter(Context context, String hostname) {
     super(context);
+    this.hostname = hostname;
   }
 
   public void setAbsoluteUrl(AbsoluteUrl absoluteUrl) {
@@ -92,11 +94,11 @@ public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessa
   protected AbstractMessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
     switch (viewType) {
       case VIEW_TYPE_NORMAL_MESSAGE:
-        return new MessageNormalViewHolder(itemView, absoluteUrl);
+        return new MessageNormalViewHolder(itemView, absoluteUrl, hostname);
       case VIEW_TYPE_SYSTEM_MESSAGE:
-        return new MessageSystemViewHolder(itemView, absoluteUrl);
+        return new MessageSystemViewHolder(itemView, absoluteUrl, hostname);
       default:
-        return new AbstractMessageViewHolder(itemView, absoluteUrl) {
+        return new AbstractMessageViewHolder(itemView, absoluteUrl, hostname) {
           @Override
           protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {}
         };
