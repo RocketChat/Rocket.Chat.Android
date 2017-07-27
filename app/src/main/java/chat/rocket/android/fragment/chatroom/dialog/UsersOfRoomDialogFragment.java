@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import com.fernandocejas.arrow.optional.Optional;
+import com.hadisatrio.optional.Optional;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import org.json.JSONArray;
@@ -117,7 +117,7 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
     RecyclerView recyclerView = (RecyclerView) getDialog().findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
     recyclerView.setAdapter(
-        new RoomUserAdapter(getContext(), realmHelper, rocketChatAbsoluteUrlOptional.get()));
+        new RoomUserAdapter(getContext(), realmHelper, rocketChatAbsoluteUrlOptional.get(), hostname));
   }
 
   private void requestGetUsersOfRoom() {

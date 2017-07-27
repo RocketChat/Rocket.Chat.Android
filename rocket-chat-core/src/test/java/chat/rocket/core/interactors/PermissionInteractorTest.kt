@@ -4,7 +4,7 @@ import chat.rocket.core.models.*
 import chat.rocket.core.repositories.PermissionRepository
 import chat.rocket.core.repositories.RoomRoleRepository
 import chat.rocket.core.repositories.UserRepository
-import com.fernandocejas.arrow.optional.Optional
+import com.hadisatrio.optional.Optional
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
