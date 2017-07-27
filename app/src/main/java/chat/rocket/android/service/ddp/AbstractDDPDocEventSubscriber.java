@@ -185,7 +185,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     if (rxSubscription != null) {
       rxSubscription.dispose();
     }
-    if (!TextUtils.isEmpty(subscriptionId)) {
+    if (!TextUtils.isEmpty(subscriptionId) && ddpClientRef.get() != null) {
       ddpClientRef.get().unsubscribe(subscriptionId).continueWith(new LogIfError());
     }
   }
