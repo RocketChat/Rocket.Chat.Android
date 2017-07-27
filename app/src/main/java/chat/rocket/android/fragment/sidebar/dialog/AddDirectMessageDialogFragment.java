@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
-import com.fernandocejas.arrow.optional.Optional;
+import com.hadisatrio.optional.Optional;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;

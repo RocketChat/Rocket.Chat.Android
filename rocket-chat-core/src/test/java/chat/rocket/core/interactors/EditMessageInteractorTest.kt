@@ -7,7 +7,7 @@ import chat.rocket.core.models.PublicSetting
 import chat.rocket.core.models.Room
 import chat.rocket.core.models.User
 import chat.rocket.core.repositories.*
-import com.fernandocejas.arrow.optional.Optional
+import com.hadisatrio.optional.Optional
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver

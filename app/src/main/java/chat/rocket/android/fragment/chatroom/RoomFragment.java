@@ -22,9 +22,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fernandocejas.arrow.optional.Optional;
-import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +75,9 @@ import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightUserRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
+
+import com.hadisatrio.optional.Optional;
+import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
