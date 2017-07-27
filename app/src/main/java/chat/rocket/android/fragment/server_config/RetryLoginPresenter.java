@@ -2,7 +2,7 @@ package chat.rocket.android.fragment.server_config;
 
 import android.support.annotation.NonNull;
 
-import com.fernandocejas.arrow.optional.Optional;
+import com.hadisatrio.optional.Optional;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import chat.rocket.android.BackgroundLooper;

@@ -6,7 +6,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 import chat.rocket.core.repositories.UserRepository
-import com.fernandocejas.arrow.optional.Optional
+import com.hadisatrio.optional.Optional
 import io.reactivex.functions.Function3
 
 class CanCreateRoomInteractor(private val userRepository: UserRepository,
