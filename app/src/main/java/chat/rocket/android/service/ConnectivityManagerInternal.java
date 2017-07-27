@@ -23,4 +23,6 @@ import chat.rocket.core.models.ServerInfo;
   void notifyConnectionEstablished(String hostname, String session);
 
   void notifyConnectionLost(String hostname, int reason);
+
+  void notifyConnecting(String hostname);
 }

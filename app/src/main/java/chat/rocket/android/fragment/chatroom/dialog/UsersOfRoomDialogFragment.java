@@ -192,7 +192,7 @@ public class UsersOfRoomDialogFragment extends AbstractChatRoomDialogFragment {
    */
   private void onRenderTotalCount(long total) {
     TextView userCount = (TextView) getDialog().findViewById(R.id.room_user_count);
-    userCount.setText(getString(R.string.fmt_room_user_count, total));
+    userCount.setText(getResources().getQuantityString(R.plurals.fmt_room_user_count, (int) total, total));
   }
 
   /**

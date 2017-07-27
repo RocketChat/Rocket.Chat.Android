@@ -16,11 +16,11 @@ import chat.rocket.android.fragment.chatroom.HomeFragment;
 import chat.rocket.android.fragment.chatroom.RoomFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.KeyboardHelper;
+import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
-import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
@@ -34,6 +34,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   private StatusTicker statusTicker;
 
   private MainContract.Presenter presenter;
+  private RoomFragment roomFragment;
 
   @Override
   protected int getLayoutContainerForFragment() {
@@ -179,7 +180,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   @Override
   public void showRoom(String hostname, String roomId) {
-    showFragment(RoomFragment.create(hostname, roomId));
+    roomFragment = RoomFragment.create(hostname, roomId);
+    showFragment(roomFragment);
     closeSidebarIfNeeded();
     KeyboardHelper.hideSoftKeyboard(this);
   }
@@ -222,6 +224,9 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   @Override
   public void showConnectionOk() {
     statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
+    if (roomFragment != null) {
+      roomFragment.refreshRoom();
+    }
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.

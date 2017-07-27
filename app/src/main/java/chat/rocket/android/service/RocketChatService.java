@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import chat.rocket.android.activity.MainActivity;
@@ -24,6 +25,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
 
   private ConnectivityManagerInternal connectivityManager;
   private HashMap<String, RocketChatWebSocketThread> webSocketThreads;
+  private Semaphore webSocketThreadLock = new Semaphore(1);
 
   public class LocalBinder extends Binder {
     ConnectivityServiceInterface getServiceInterface() {
@@ -49,6 +51,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
     context.unbindService(serviceConnection);
   }
 
+  @DebugLog
   @Override
   public void onCreate() {
     super.onCreate();
@@ -57,6 +60,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
     webSocketThreads = new HashMap<>();
   }
 
+  @DebugLog
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     connectivityManager.ensureConnections();
@@ -106,12 +110,17 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
   @DebugLog
   private Single<RocketChatWebSocketThread> getOrCreateWebSocketThread(String hostname) {
     return Single.defer(() -> {
+      webSocketThreadLock.acquire();
       if (webSocketThreads.containsKey(hostname)) {
         RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
+        webSocketThreadLock.release();
         return Single.just(thread);
       }
       return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
-          .doOnSuccess(thread -> webSocketThreads.put(hostname, thread));
+          .doOnSuccess(thread -> {
+            webSocketThreads.put(hostname, thread);
+            webSocketThreadLock.release();
+          });
     });
   }
 

@@ -49,5 +49,7 @@ public interface RoomContract {
     void onUnreadCount();
 
     void onMarkAsRead();
+
+    void refreshRoom();
   }
 }
