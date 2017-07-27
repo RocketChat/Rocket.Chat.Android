@@ -23,8 +23,8 @@ public class MessageFormLayout extends LinearLayout {
 
   protected ViewGroup composer;
 
-  private ImageButton attachmentImageButton;
-  private ImageButton sendImageButton;
+  private ImageButton attachButton;
+  private ImageButton sendButton;
 
   private ExtraActionSelectionClickListener extraActionSelectionClickListener;
   private SubmitTextListener submitTextListener;
@@ -55,18 +55,18 @@ public class MessageFormLayout extends LinearLayout {
     composer = (ViewGroup) LayoutInflater.from(getContext())
         .inflate(R.layout.message_composer, this, false);
 
-    attachmentImageButton = composer.findViewById(R.id.attachmentImageButton);
+    attachButton = composer.findViewById(R.id.button_attach);
 
-    attachmentImageButton.setOnClickListener(new OnClickListener() {
+    attachButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
         onExtraActionSelectionClick();
       }
     });
 
-    sendImageButton = composer.findViewById(R.id.sendImageButton);
+    sendButton = composer.findViewById(R.id.button_send);
 
-    sendImageButton.setOnClickListener(new OnClickListener() {
+    sendButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
         String messageText = getText();
@@ -76,9 +76,9 @@ public class MessageFormLayout extends LinearLayout {
       }
     });
 
-    sendImageButton.setScaleX(0);
-    sendImageButton.setScaleY(0);
-    sendImageButton.setVisibility(GONE);
+    sendButton.setScaleX(0);
+    sendButton.setScaleY(0);
+    sendButton.setVisibility(GONE);
 
     ImageKeyboardEditText editText = composer.findViewById(R.id.editor);
 
@@ -94,11 +94,11 @@ public class MessageFormLayout extends LinearLayout {
       @Override
       public void afterTextChanged(Editable s) {
         if (TextUtils.getTrimmedLength(s) > 0) {
-          animateHide(attachmentImageButton);
-          animateShow(sendImageButton);
+          animateHide(attachButton);
+          animateShow(sendButton);
         } else {
-          animateShow(attachmentImageButton);
-          animateHide(sendImageButton);
+          animateShow(attachButton);
+          animateHide(sendButton);
         }
       }
     });

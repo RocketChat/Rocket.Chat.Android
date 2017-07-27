@@ -22,11 +22,11 @@
       android:background="@null"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toLeftOf="@+id/imageButtonContainer"
+      app:layout_constraintRight_toLeftOf="@+id/container"
       app:layout_constraintBottom_toBottomOf="parent"/>
 
     <android.support.constraint.ConstraintLayout
-      android:id="@+id/imageButtonContainer"
+      android:id="@+id/container"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="16dp"
@@ -39,18 +39,18 @@
       app:layout_constraintBottom_toBottomOf="@+id/editor">
 
         <ImageButton
-          android:id="@+id/attachmentImageButton"
+          android:id="@+id/button_attach"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:tint="@color/colorDefaultMessageComposerIcon"
+          android:tint="@color/color_icon_composer"
           app:srcCompat="@drawable/ic_attach_file_black_24dp"
           android:background="?attr/selectableItemBackgroundBorderless"/>
 
         <ImageButton
-          android:id="@+id/sendImageButton"
+          android:id="@+id/button_send"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:tint="@color/colorAccent"
+          android:tint="@color/color_accent"
           app:srcCompat="@drawable/ic_send_black_24dp"
           android:background="?attr/selectableItemBackgroundBorderless"/>
     </android.support.constraint.ConstraintLayout>
