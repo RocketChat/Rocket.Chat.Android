@@ -16,7 +16,7 @@ class UserRenderer(val user: User) {
     fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String) {
         val username: String? = user.username
         if (username != null) {
-            rocketChatAvatarWidget.loadImage(RocketChatUserAvatar(hostname, username).imageUri)
+            rocketChatAvatarWidget.loadImage(RocketChatUserAvatar.getUri(hostname, username))
         } else {
             rocketChatAvatarWidget.visibility = View.GONE
         }
