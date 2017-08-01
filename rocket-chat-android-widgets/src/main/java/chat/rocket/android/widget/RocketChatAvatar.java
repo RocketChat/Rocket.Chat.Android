@@ -35,14 +35,11 @@ public class RocketChatAvatar extends FrameLayout {
   }
 
   private void initialize(Context context, AttributeSet attrs) {
-    LayoutInflater
-        .from(context)
-        .inflate(R.layout.message_avatar, this, true);
+    LayoutInflater.from(context).inflate(R.layout.message_avatar, this, true);
     draweeView = findViewById(R.id.drawee_avatar);
   }
 
   public void loadImage(String imageUri) {
-    FrescoHelper
-        .loadImage(draweeView, imageUri);
+    FrescoHelper.loadImage(draweeView, imageUri);
   }
 }
