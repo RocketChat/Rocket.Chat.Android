@@ -61,15 +61,15 @@ object RocketChatUserAvatar {
      * @return A string with username initials.
      */
     fun getUsernameInitials(username: String): String {
-        val name = username
-                .replace("[^A-Za-z0-9]", ".")
-                .replace("\\.+", ".")
-                .replace("(^\\.)|(\\.$)", "")
-        val initials = name.split(".")
-        if (initials.size > 1) {
-            return (initials[0].substring(0, 1) + initials[initials.size - 1].substring(0, 1)).toUpperCase()
+        if (username.isEmpty()) {
+            return "?"
+        }
+
+        val splitUsername = username.split(".")
+        if (splitUsername.size > 1) {
+            return (splitUsername[0].substring(0, 1) + splitUsername[splitUsername.size - 1].substring(0, 1)).toUpperCase()
         } else {
-            return (name.replace("[^A-Za-z0-9]", "").substring(0, 2)).toUpperCase()
+            return username.toUpperCase()
         }
     }
 
