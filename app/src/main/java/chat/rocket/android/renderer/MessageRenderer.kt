@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
+import chat.rocket.android.helper.OkHttpHelper
 import chat.rocket.android.helper.RocketChatUserAvatar
 import chat.rocket.android.widget.AbsoluteUrl
 import chat.rocket.android.widget.RocketChatAvatar
@@ -19,18 +20,27 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
     /**
      * Show user's avatar image in RocketChatAvatar widget.
      */
-    fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String, userNotFoundAvatarImageView: ImageView) {
+    fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String, userNotFoundAvatarImageView: ImageView, userAvatarSvgImage: ImageView) {
         if (message.avatar != null) {
             // Load user's avatar image from Oauth provider URI.
             rocketChatAvatarWidget.loadImage(message.avatar)
         } else {
             val username: String? = message.user?.username
             if (username != null) {
-                // Load user's avatar image from Rocket.Chat URI.
-                rocketChatAvatarWidget.loadImage(RocketChatUserAvatar(hostname, username).imageUri)
                 userNotFoundAvatarImageView.visibility = View.GONE
-                rocketChatAvatarWidget.visibility = View.VISIBLE
+                val userAvatarUri = RocketChatUserAvatar.getUri(hostname, username)
+                val userAvatarImageContentType = OkHttpHelper.getContentType(userAvatarUri)
+                if (userAvatarImageContentType == "image/svg+xml") {
+                    rocketChatAvatarWidget.visibility = View.GONE
+                    userAvatarSvgImage.setImageDrawable(RocketChatUserAvatar.getTextDrawable(username, userAvatarSvgImage.context))
+                    userAvatarSvgImage.visibility = View.VISIBLE
+                } else {
+                    userAvatarSvgImage.visibility = View.GONE
+                    rocketChatAvatarWidget.loadImage(userAvatarUri)
+                    rocketChatAvatarWidget.visibility = View.VISIBLE
+                }
             } else {
+                userAvatarSvgImage.visibility = View.GONE
                 rocketChatAvatarWidget.visibility = View.GONE
                 userNotFoundAvatarImageView.visibility = View.VISIBLE
             }
