@@ -1,5 +1,6 @@
 package chat.rocket.android.widget.helper
 
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.graphics.drawable.VectorDrawableCompat
 import chat.rocket.android.widget.R
@@ -10,8 +11,9 @@ import com.facebook.drawee.view.SimpleDraweeView
 
 class FrescoHelper {
     companion object {
-        @JvmStatic fun loadImage(draweeView: SimpleDraweeView, imageUri: String) {
-            draweeView.setImageURI(imageUri)
+        @JvmStatic fun loadImage(simpleDraweeView: SimpleDraweeView, imageUri: String, placeholderDrawable: Drawable) {
+            simpleDraweeView.hierarchy.setPlaceholderImage(placeholderDrawable)
+            simpleDraweeView.controller = Fresco.newDraweeControllerBuilder().setUri(imageUri).setAutoPlayAnimations(true).build()
         }
 
         /** TODO
