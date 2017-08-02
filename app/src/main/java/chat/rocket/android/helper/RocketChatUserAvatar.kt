@@ -69,7 +69,11 @@ object RocketChatUserAvatar {
         if (splitUsername.size > 1) {
             return (splitUsername[0].substring(0, 1) + splitUsername[splitUsername.size - 1].substring(0, 1)).toUpperCase()
         } else {
-            return username.toUpperCase()
+            if (username.length > 1) {
+                return username.substring(0, 2).toUpperCase()
+            } else {
+                return username.substring(0, 1).toUpperCase()
+            }
         }
     }
 
