@@ -88,7 +88,7 @@ play {
 }
 
 ext {
-    playLibVersion = '10.2.6'
+    playLibVersion = '11.0.4'
     stethoVersion = '1.4.2'
     rxbindingVersion = '2.0.0'
     rxlifecycleVersion = '2.1.0'
