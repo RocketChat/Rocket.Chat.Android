@@ -18,6 +18,11 @@ import okhttp3.OkHttpClient;
 
 public class RocketChatWidgets {
 
+  /**
+   * TODO
+   * The SVG support (by setImageDecoderConfig method) should be enabled after RC servers are stable.
+   * Info about that: https://github.com/RocketChat/Rocket.Chat/pull/7572
+   */
   public static void initialize(Context context, OkHttpClient okHttpClient) {
     FLog.setMinimumLoggingLevel(FLog.VERBOSE);
     Set<RequestListener> listeners = new HashSet<>();
@@ -26,7 +31,7 @@ public class RocketChatWidgets {
     ImagePipelineConfig imagePipelineConfig = OkHttpImagePipelineConfigFactory
         .newBuilder(context, okHttpClient)
         .setRequestListeners(listeners)
-        .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig())
+//        .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig())
         .setDownsampleEnabled(true)
         .experiment().setBitmapPrepareToDraw(true)
         .experiment().setPartialImageCachingEnabled(true)
