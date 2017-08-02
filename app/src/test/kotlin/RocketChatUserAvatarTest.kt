@@ -4,7 +4,7 @@ import org.junit.Test
 class RocketChatUserAvatarTest {
 
     @Test
-    fun `Test username initials`() {
+    fun getUsernameInitialsTest() {
         assert(RocketChatUserAvatar.getUsernameInitials("") == "?")
         assert(RocketChatUserAvatar.getUsernameInitials("?") == "?")
         assert(RocketChatUserAvatar.getUsernameInitials("f") == "F")
