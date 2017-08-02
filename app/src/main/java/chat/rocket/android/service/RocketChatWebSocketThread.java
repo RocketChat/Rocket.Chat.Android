@@ -338,18 +338,20 @@ public class RocketChatWebSocketThread extends HandlerThread {
           registrable.register();
           listeners.add(registrable);
         }
-        // Register for room stream messages
-        String roomId = rocketChatCache.getSelectedRoomId();
-        if (roomId != null && !roomId.isEmpty()) {
-          StreamRoomMessage streamRoomMessage = new StreamRoomMessage(
-                  appContext, hostname, realmHelper, ddpClientRef, roomId
-          );
-          streamRoomMessage.register();
-          listeners.add(streamRoomMessage);
-        }
+
       } catch (Exception exception) {
         RCLog.w(exception, "Failed to register listeners!!");
       }
+    }
+
+    // Register for room stream messages
+    String roomId = rocketChatCache.getSelectedRoomId();
+    if (roomId != null && !roomId.isEmpty()) {
+      StreamRoomMessage streamRoomMessage = new StreamRoomMessage(
+              appContext, hostname, realmHelper, ddpClientRef, roomId
+      );
+      streamRoomMessage.register();
+      listeners.add(streamRoomMessage);
     }
   }
 
