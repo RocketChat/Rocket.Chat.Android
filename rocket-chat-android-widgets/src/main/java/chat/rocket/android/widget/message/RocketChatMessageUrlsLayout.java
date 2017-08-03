@@ -95,8 +95,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
     if (TextUtils.isEmpty(imageURL)) {
       image.setVisibility(View.GONE);
     } else {
-      FrescoHelper
-          .loadImageWithCustomization(image, imageURL);
+      FrescoHelper.INSTANCE.loadImageWithCustomization(image, imageURL);
       image.setVisibility(View.VISIBLE);
     }
 
@@ -144,8 +143,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
                          boolean autoloadImage) {
     if (autoloadImage) {
       load.setVisibility(GONE);
-      FrescoHelper
-          .loadImageWithCustomization(drawee, url);
+      FrescoHelper.INSTANCE.loadImageWithCustomization(drawee, url);
       return;
     }
 
@@ -154,8 +152,7 @@ public class RocketChatMessageUrlsLayout extends LinearLayout {
       public void onClick(View v) {
         load.setVisibility(GONE);
         load.setOnClickListener(null);
-        FrescoHelper
-            .loadImageWithCustomization(drawee, url);
+        FrescoHelper.INSTANCE.loadImageWithCustomization(drawee, url);
       }
     });
   }

@@ -24,11 +24,17 @@ android {
 
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    sourceSets {
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 }
 
@@ -49,6 +55,8 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
 
     compile 'org.nibor.autolink:autolink:0.6.0'
 
