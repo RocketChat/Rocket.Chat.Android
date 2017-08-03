@@ -41,6 +41,6 @@ public class RocketChatAvatar extends FrameLayout {
   }
 
   public void loadImage(String imageUri, Drawable placeholderDrawable) {
-    FrescoHelper.loadImage(simpleDraweeViewAvatar, imageUri, placeholderDrawable);
+    FrescoHelper.INSTANCE.loadImage(simpleDraweeViewAvatar, imageUri, placeholderDrawable);
   }
 }

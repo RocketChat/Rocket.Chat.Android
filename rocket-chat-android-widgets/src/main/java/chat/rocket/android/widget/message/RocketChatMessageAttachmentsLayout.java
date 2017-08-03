@@ -119,8 +119,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     authorBox.setVisibility(VISIBLE);
 
-    FrescoHelper
-        .loadImageWithCustomization((SimpleDraweeView) attachmentView.findViewById(R.id.author_icon), absolutize(author.getIconUrl()));
+    FrescoHelper.INSTANCE.loadImageWithCustomization((SimpleDraweeView) attachmentView.findViewById(R.id.author_icon), absolutize(author.getIconUrl()));
 
     final TextView authorName = (TextView) attachmentView.findViewById(R.id.author_name);
     authorName.setText(author.getName());
@@ -187,8 +186,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       thumbImage.setVisibility(GONE);
     } else {
       thumbImage.setVisibility(VISIBLE);
-      FrescoHelper
-          .loadImageWithCustomization(thumbImage, absolutize(thumbUrl));
+      FrescoHelper.INSTANCE.loadImageWithCustomization(thumbImage, absolutize(thumbUrl));
     }
 
     final TextView refText = (TextView) refBox.findViewById(R.id.text);
@@ -253,8 +251,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
                          boolean autoloadImage) {
     if (autoloadImage) {
       load.setVisibility(GONE);
-      FrescoHelper
-          .loadImageWithCustomization(drawee, url);
+      FrescoHelper.INSTANCE.loadImageWithCustomization(drawee, url);
       return;
     }
 
@@ -263,8 +260,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       public void onClick(View v) {
         load.setVisibility(GONE);
         load.setOnClickListener(null);
-        FrescoHelper
-            .loadImageWithCustomization(drawee, url);
+        FrescoHelper.INSTANCE.loadImageWithCustomization(drawee, url);
       }
     });
   }

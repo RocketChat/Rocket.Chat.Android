@@ -5,9 +5,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
-import chat.rocket.android.helper.RocketChatUserAvatar
 import chat.rocket.android.widget.AbsoluteUrl
 import chat.rocket.android.widget.RocketChatAvatar
+import chat.rocket.android.widget.helper.UserAvatarHelper
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
 import chat.rocket.android.widget.message.RocketChatMessageLayout
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout
@@ -23,12 +23,12 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
         val username: String? = message.user?.username
         if (username != null) {
             userNotFoundAvatarImageView.visibility = View.GONE
-            val placeholderDrawable = RocketChatUserAvatar.getTextDrawable(username, rocketChatAvatarWidget.context)
+            val placeholderDrawable = UserAvatarHelper.getTextDrawable(username, rocketChatAvatarWidget.context)
             if (message.avatar != null) {
                 // Load user's avatar image from Oauth provider URI.
                 rocketChatAvatarWidget.loadImage(message.avatar, placeholderDrawable)
             } else {
-                rocketChatAvatarWidget.loadImage(RocketChatUserAvatar.getUri(hostname, username), placeholderDrawable)
+                rocketChatAvatarWidget.loadImage(UserAvatarHelper.getUri(hostname, username), placeholderDrawable)
             }
         } else {
             rocketChatAvatarWidget.visibility = View.GONE
