@@ -60,11 +60,6 @@ android {
         }
     }
 
-    sourceSets {
-        test.java.srcDirs += 'src/test/kotlin'
-        androidTest.java.srcDirs += 'src/androidTest/kotlin'
-    }
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -110,8 +105,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
 
     compile "com.google.firebase:firebase-core:$playLibVersion"
     compile "com.google.firebase:firebase-crash:$playLibVersion"
