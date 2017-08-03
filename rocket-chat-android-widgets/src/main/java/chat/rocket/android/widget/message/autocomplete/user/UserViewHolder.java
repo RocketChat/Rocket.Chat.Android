@@ -1,17 +1,18 @@
 package chat.rocket.android.widget.message.autocomplete.user;
 
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.RocketChatAvatar;
+import chat.rocket.android.widget.helper.UserAvatarHelper;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteViewHolder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class UserViewHolder extends AutocompleteViewHolder<UserItem> {
-
   private final TextView titleTextView;
   private final RocketChatAvatar avatar;
   private final ImageView status;
@@ -44,7 +45,9 @@ public class UserViewHolder extends AutocompleteViewHolder<UserItem> {
     }
 
     if (avatar != null) {
-      avatar.loadImage(getImageUrl(suggestion, userItem.getAbsoluteUrl()));
+      String absoluteUri = UserAvatarHelper.INSTANCE.getAbsoluteUri(userItem.getAbsoluteUrl(), suggestion);
+      Drawable placeholderDrawable = UserAvatarHelper.INSTANCE.getTextDrawable(suggestion, itemView.getContext());
+      avatar.loadImage(absoluteUri, placeholderDrawable);
     }
 
     if (status != null) {
@@ -57,20 +60,5 @@ public class UserViewHolder extends AutocompleteViewHolder<UserItem> {
     status.setVisibility(View.GONE);
     avatar.setVisibility(View.GONE);
     titleTextView.setText(R.string.no_user_found);
-  }
-
-  private String getImageUrl(String username, AbsoluteUrl absoluteUrl) {
-    //from Rocket.Chat:packages/rocketchat-ui/lib/avatar.coffee
-    //REMARK! this is often SVG image! (see: Rocket.Chat:server/startup/avatar.coffee)
-    try {
-      final String avatarUrl = "/avatar/" + URLEncoder.encode(username, "UTF-8");
-      //  TODO why absoluteUrl is nullable? By allowing that, the app tries to load non-existing images
-      if (absoluteUrl == null) {
-        return avatarUrl;
-      }
-      return absoluteUrl.from(avatarUrl);
-    } catch (UnsupportedEncodingException exception) {
-      return null;
-    }
   }
 }

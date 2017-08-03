@@ -31,6 +31,7 @@ buildscript {
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "chat.rocket.android"
         minSdkVersion 16
@@ -38,10 +39,10 @@ android {
         versionCode 28
         versionName "1.0.16"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
+
     signingConfigs {
         release {
             storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
@@ -50,6 +51,7 @@ android {
             keyPassword System.getenv("KEY_PASSWORD")
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -57,27 +59,31 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/rxjava.properties'
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     lintOptions {
         //avoiding okio error: https://github.com/square/okhttp/issues/896
         lintConfig file("lint.xml")
     }
 }
+
 play {
     jsonFile = file('rocket-chat.json')
     track = "${track}"
 }
 
 ext {
-    playLibVersion = '10.2.6'
+    playLibVersion = '11.0.4'
     stethoVersion = '1.4.2'
     rxbindingVersion = '2.0.0'
     rxlifecycleVersion = '2.1.0'
