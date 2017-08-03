@@ -58,7 +58,7 @@ object UserAvatarHelper {
     }
 
     /**
-     * Returns a string with the username initials. For example: username John Doe returns JD initials.
+     * Returns a string with the username initials. For example: username John.Doe returns JD initials.
      *
      * @param username The username.
      * @return A string with username initials.
