@@ -3,7 +3,6 @@ package chat.rocket.android.renderer
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import chat.rocket.android.R
 import chat.rocket.android.widget.RocketChatAvatar
 import chat.rocket.android.widget.helper.UserAvatarHelper
 import chat.rocket.core.models.User
@@ -26,7 +25,10 @@ class UserRenderer(val user: User) {
      * Show username in textView.
      */
     fun showUsername(textView: TextView) {
-        textView.text = user.username ?: textView.context.getText(R.string.user_not_found)
+        val username: String? = user.username
+        if (username != null) {
+            textView.text = username
+        }
     }
 
     /**

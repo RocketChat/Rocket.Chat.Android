@@ -1,88 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical"
-  android:theme="@style/AppTheme">
-
-  <include layout="@layout/list_item_message_newday" />
-
-  <FrameLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme">
 
-    <chat.rocket.android.widget.RocketChatAvatar
-      android:id="@+id/user_avatar"
-      android:layout_width="32dp"
-      android:layout_height="32dp"
-      android:layout_margin="8dp" />
+    <include layout="@layout/list_item_message_newday" />
 
-    <ImageView
-      android:id="@+id/userNotFoundAvatarImageView"
-      android:layout_width="32dp"
-      android:layout_height="32dp"
-      android:layout_margin="8dp"
-      app:srcCompat="@drawable/ic_user_not_found_avatar_black_24dp"
-      android:visibility="gone" />
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="8dp"
-      android:layout_marginStart="48dp"
-      android:orientation="vertical"
-      android:layout_marginRight="8dp"
-      android:layout_marginLeft="48dp">
-
-      <LinearLayout
-        android:id="@+id/user_and_timestamp_container"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <TextView
-          android:id="@+id/username"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textAppearance="@style/TextAppearance.RocketChat.Message.Username"
-          tools:text="John Doe" />
+        <chat.rocket.android.widget.RocketChatAvatar
+            android:id="@+id/user_avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="8dp" />
 
-        <Space
-          android:layout_width="@dimen/margin_8"
-          android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="48dp"
+            android:orientation="vertical"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="48dp">
 
-        <TextView
-          android:id="@+id/timestamp"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:enabled="false"
-          tools:text="12:34" />
+            <LinearLayout
+                android:id="@+id/user_and_timestamp_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <View
-          android:layout_width="0dp"
-          android:layout_height="0dp"
-          android:layout_weight="1" />
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.RocketChat.Message.Username"
+                    tools:text="John Doe" />
 
-        <ImageView
-          android:id="@+id/errorImageView"
-          android:layout_width="wrap_content"
-          android:layout_height="16dp"
-          android:layout_gravity="end"
-          android:gravity="end"
-          android:tint="@color/colorRed400"
-          app:srcCompat="@drawable/ic_error_black_24dp"
-          android:visibility="gone" />
-      </LinearLayout>
+                <Space
+                    android:layout_width="@dimen/margin_8"
+                    android:layout_height="wrap_content" />
 
-      <TextView
-        android:id="@+id/message_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textStyle="italic"
-        android:enabled="false" />
-    </LinearLayout>
-  </FrameLayout>
+                <TextView
+                    android:id="@+id/timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    tools:text="12:34" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/errorImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:layout_gravity="end"
+                    android:gravity="end"
+                    android:tint="@color/colorRed400"
+                    app:srcCompat="@drawable/ic_error_black_24dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <TextView
+            android:id="@+id/message_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textStyle="italic"
+            android:enabled="false" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>
