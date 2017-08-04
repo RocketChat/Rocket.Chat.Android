@@ -1,7 +1,6 @@
 package chat.rocket.android.renderer
 
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
@@ -19,10 +18,9 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
     /**
      * Show user's avatar image in RocketChatAvatar widget.
      */
-    fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String, userNotFoundAvatarImageView: ImageView) {
+    fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String) {
         val username: String? = message.user?.username
         if (username != null) {
-            userNotFoundAvatarImageView.visibility = View.GONE
             val placeholderDrawable = UserAvatarHelper.getTextDrawable(username, rocketChatAvatarWidget.context)
             if (message.avatar != null) {
                 // Load user's avatar image from Oauth provider URI.
@@ -32,7 +30,6 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
             }
         } else {
             rocketChatAvatarWidget.visibility = View.GONE
-            userNotFoundAvatarImageView.visibility = View.VISIBLE
         }
     }
 
@@ -40,14 +37,16 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
      * Show username in textView.
      */
     fun showUsername(usernameTextView: TextView, subUsernameTextView: TextView?) {
-        if (message.alias == null) {
-            usernameTextView.text = message.user?.username ?: usernameTextView.context.getText(R.string.user_not_found)
-        } else {
-            usernameTextView.text = message.alias
-            val username: String? = message.user?.username
-            if (username != null && subUsernameTextView != null) {
-                subUsernameTextView.text = subUsernameTextView.context.getString(R.string.sub_username, username)
-                subUsernameTextView.visibility = View.VISIBLE
+        val username: String? = message.user?.username
+        if (username != null) {
+            if (message.alias == null) {
+                usernameTextView.text = username
+            } else {
+                usernameTextView.text = message.alias
+                if (subUsernameTextView != null) {
+                    subUsernameTextView.text = subUsernameTextView.context.getString(R.string.sub_username, username)
+                    subUsernameTextView.visibility = View.VISIBLE
+                }
             }
         }
     }

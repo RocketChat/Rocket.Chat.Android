@@ -35,7 +35,6 @@
     <string name="dialog_user_registration_email">Email</string>
     <string name="dialog_user_registration_username">Username</string>
     <string name="sub_username">\@%s</string>
-    <string name="user_not_found">User not found</string>
     <string name="dialog_user_registration_password">Password</string>
     <string name="fragment_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
     <string name="fragment_input_hostname_hostname">Hostname</string>
