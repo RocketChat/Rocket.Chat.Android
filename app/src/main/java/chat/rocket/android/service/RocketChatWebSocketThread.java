@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import bolts.Task;
-import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
@@ -22,7 +21,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.service.ddp.base.ActiveUsersSubscriber;
 import chat.rocket.android.service.ddp.base.LoginServiceConfigurationSubscriber;
 import chat.rocket.android.service.ddp.base.UserDataSubscriber;
-import chat.rocket.android.service.ddp.stream.StreamRoomMessage;
 import chat.rocket.android.service.observer.CurrentUserObserver;
 import chat.rocket.android.service.observer.FileUploadingToUrlObserver;
 import chat.rocket.android.service.observer.FileUploadingWithUfsObserver;
@@ -69,7 +67,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final ArrayList<Registrable> listeners = new ArrayList<>();
   private DDPClientWrapper ddpClient;
   private boolean listenersRegistered;
-  private RocketChatCache rocketChatCache;
   private final DDPClientRef ddpClientRef = new DDPClientRef() {
     @Override
     public DDPClientWrapper get() {
@@ -103,7 +100,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
     this.hostname = hostname;
     this.realmHelper = RealmStore.getOrCreate(hostname);
     this.connectivityManager = ConnectivityManager.getInstanceForInternal(appContext);
-    this.rocketChatCache = new RocketChatCache(appContext);
   }
 
   /**
@@ -185,7 +181,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @DebugLog
   public Single<Boolean> keepAlive() {
     return checkIfConnectionAlive()
-        .flatMap(alive -> alive ? Single.just(true) : connect());
+        .flatMap(alive -> alive ? Single.just(true) : connectWithExponentialBackoff());
   }
 
   private Single<Boolean> checkIfConnectionAlive() {
@@ -247,13 +243,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
                   // TODO: Should update to RxJava 2
                   final CompositeSubscription subscriptions = new CompositeSubscription();
                   subscriptions.add(
-                    connect().retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS))
+                    connectWithExponentialBackoff()
                     .subscribe(
                         connected -> {
                           if (!connected) {
-                            connectivityManager.notifyConnectionLost(
-                                    hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR
-                            );
+                            connectivityManager.notifyConnecting(hostname);
                           }
                           subscriptions.clear();
                         },
@@ -293,6 +287,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private void logErrorAndUnsubscribe(CompositeSubscription subscriptions, Throwable err) {
     RCLog.e(err);
     subscriptions.clear();
+  }
+
+  private Single<Boolean> connectWithExponentialBackoff() {
+    return connect().retryWhen(RxHelper.exponentialBackoff(Integer.MAX_VALUE, 500, TimeUnit.MILLISECONDS));
   }
 
   @DebugLog
@@ -342,16 +340,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
       } catch (Exception exception) {
         RCLog.w(exception, "Failed to register listeners!!");
       }
-    }
-
-    // Register for room stream messages
-    String roomId = rocketChatCache.getSelectedRoomId();
-    if (roomId != null && !roomId.isEmpty()) {
-      StreamRoomMessage streamRoomMessage = new StreamRoomMessage(
-              appContext, hostname, realmHelper, ddpClientRef, roomId
-      );
-      streamRoomMessage.register();
-      listeners.add(streamRoomMessage);
     }
   }
 
