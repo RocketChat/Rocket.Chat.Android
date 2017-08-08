@@ -387,6 +387,9 @@ public class DDPClientImpl {
     disposables.add(
         flowable.subscribe(
             base -> {
+              if (base instanceof RxWebSocketCallback.Close) {
+                task.trySetError(new Exception(((RxWebSocketCallback.Close) base).reason));
+              }
             },
             err -> {
               task.trySetError(new Exception(err));
