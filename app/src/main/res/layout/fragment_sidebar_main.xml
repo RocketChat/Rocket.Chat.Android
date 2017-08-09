@@ -74,7 +74,7 @@
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:queryHint="@string/navigation_search_rooms"
+            app:queryHint="@string/spotlight_search"
             app:iconifiedByDefault="false" />
     </FrameLayout>
 
