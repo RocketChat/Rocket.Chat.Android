@@ -3,6 +3,7 @@ package chat.rocket.android.fragment.sidebar;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
+import chat.rocket.core.models.Spotlight;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -17,7 +18,6 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.models.SpotlightRoom;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
 
@@ -78,8 +78,8 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   }
 
   @Override
-  public void onSpotlightRoomSelected(SpotlightRoom spotlightRoom) {
-    rocketChatCache.setSelectedRoomId(spotlightRoom.getId());
+  public void onSpotlightSelected(Spotlight spotlight) {
+    rocketChatCache.setSelectedRoomId(spotlight.getId());
   }
 
   @Override
