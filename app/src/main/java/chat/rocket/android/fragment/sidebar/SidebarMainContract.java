@@ -6,7 +6,7 @@ import java.util.List;
 import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.shared.BaseContract;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.models.SpotlightRoom;
+import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 
 public interface SidebarMainContract {
@@ -26,7 +26,7 @@ public interface SidebarMainContract {
 
     void onRoomSelected(Room room);
 
-    void onSpotlightRoomSelected(SpotlightRoom spotlightRoom);
+    void onSpotlightSelected(Spotlight spotlight);
 
     void onUserOnline();
 
