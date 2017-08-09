@@ -33,12 +33,12 @@ import chat.rocket.core.SortDirection;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.models.SpotlightRoom;
+import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
-import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
@@ -50,21 +50,17 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
-
-  private static final String HOSTNAME = "hostname";
-
   private SidebarMainContract.Presenter presenter;
-
   private RoomListAdapter adapter;
-
   private String hostname;
 
   private MethodCallHelper methodCallHelper;
-  private RealmSpotlightRoomRepository realmSpotlightRoomRepository;
+  private RealmSpotlightRepository realmSpotlightRepository;
   private SearchView searchView;
 
-  public SidebarMainFragment() {
-  }
+  private static final String HOSTNAME = "hostname";
+
+  public SidebarMainFragment() {}
 
   /**
    * create SidebarMainFragment with hostname.
@@ -87,7 +83,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     hostname = args == null ? null : args.getString(HOSTNAME);
 
     methodCallHelper = new MethodCallHelper(getContext(), hostname);
-    realmSpotlightRoomRepository = new RealmSpotlightRoomRepository(hostname);
+    realmSpotlightRepository = new RealmSpotlightRepository(hostname);
 
     RealmUserRepository userRepository = new RealmUserRepository(hostname);
 
@@ -133,6 +129,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     setupLogoutButton();
     setupVersionInfo();
 
+    searchView = rootView.findViewById(R.id.search);
+
     adapter = new RoomListAdapter();
     adapter.setOnItemClickListener(new RoomListAdapter.OnItemClickListener() {
       @Override
@@ -142,47 +140,44 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       }
 
       @Override
-      public void onItemClick(SpotlightRoom spotlightRoom) {
+      public void onItemClick(Spotlight spotlight) {
         searchView.setQuery(null, false);
         searchView.clearFocus();
-        methodCallHelper.joinRoom(spotlightRoom.getId())
+        methodCallHelper.joinRoom(spotlight.getId())
             .onSuccessTask(task -> {
-              presenter.onSpotlightRoomSelected(spotlightRoom);
+              presenter.onSpotlightSelected(spotlight);
               return null;
             });
       }
     });
 
-    RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.room_list_container);
-    recyclerView.setLayoutManager(
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    RecyclerView recyclerView = rootView.findViewById(R.id.room_list_container);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     recyclerView.setAdapter(adapter);
-
-    searchView = (SearchView) rootView.findViewById(R.id.search);
 
     RxSearchView.queryTextChanges(searchView)
         .compose(bindToLifecycle())
-        .debounce(300, TimeUnit.MILLISECONDS)
+        .debounce(100, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
-        .switchMap(it -> {
-          if (it.length() == 0) {
+        .switchMap(charSequence -> {
+          if (charSequence.length() == 0) {
             adapter.setMode(RoomListAdapter.MODE_ROOM);
-            return Observable.just(Collections.<SpotlightRoom>emptyList());
+            return Observable.just(Collections.<Spotlight>emptyList());
+          } else {
+            adapter.setMode(RoomListAdapter.MODE_SPOTLIGHT);
+            final String queryString = charSequence.toString();
+            methodCallHelper.searchSpotlight(queryString);
+            return realmSpotlightRepository.getSuggestionsFor(queryString, SortDirection.ASC, 10).toObservable();
           }
-
-          adapter.setMode(RoomListAdapter.MODE_SPOTLIGHT_ROOM);
-
-          final String queryString = it.toString();
-
-          methodCallHelper.searchSpotlightRooms(queryString);
-
-          return realmSpotlightRoomRepository.getSuggestionsFor(queryString, SortDirection.DESC, 10)
-              .toObservable();
         })
         .subscribe(
             this::showSearchSuggestions,
             Logger::report
         );
+  }
+
+  private void showSearchSuggestions(List<Spotlight> spotlightList) {
+    adapter.setSpotlightList(spotlightList);
   }
 
   @SuppressLint("RxLeakedSubscription")
@@ -305,7 +300,4 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     updateRoomListMode(user);
   }
 
-  private void showSearchSuggestions(List<SpotlightRoom> spotlightRooms) {
-    adapter.setSpotlightRoomList(spotlightRooms);
-  }
 }
