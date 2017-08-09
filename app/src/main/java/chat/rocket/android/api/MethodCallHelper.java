@@ -1,7 +1,11 @@
 package chat.rocket.android.api;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Patterns;
+import chat.rocket.persistence.realm.RealmHelper.Transaction;
+import chat.rocket.persistence.realm.models.ddp.RealmSpotlight;
+import io.realm.Realm;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -462,15 +466,43 @@ public class MethodCallHelper {
   }
 
   public Task<Void> searchSpotlightUsers(String term) {
-    return searchSpotlight(
-        RealmSpotlightUser.class, "users", term
-    );
+    return searchSpotlight(RealmSpotlightUser.class, "users", term);
   }
 
   public Task<Void> searchSpotlightRooms(String term) {
-    return searchSpotlight(
-        RealmSpotlightRoom.class, "rooms", term
-    );
+    return searchSpotlight(RealmSpotlightRoom.class, "rooms", term);
+  }
+
+  public Task<Void> searchSpotlight(String term) {
+    return call("spotlight", TIMEOUT_MS, () ->
+        new JSONArray()
+            .put(term)
+            .put(JSONObject.NULL)
+            .put(new JSONObject().put("rooms", true).put("users", true))
+    ).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> {
+          final JSONObject result = task.getResult();
+          if (result.has("rooms") && result.has("users")) {
+            JSONArray jsonRoomArray = (JSONArray) result.get("rooms");
+            JSONArray jsonUserArray = (JSONArray) result.get("users");
+
+            String roomJsonString = jsonRoomArray.toString().replace("[","").replace("]","");
+            String userJsonString = jsonUserArray.toString().replace("[","").replace("]","");
+            String jsonString = "[" + roomJsonString + "," + userJsonString + "]";
+
+            Log.i("JSON", jsonString);
+
+            realmHelper.executeTransaction(new Transaction() {
+              @Override
+              public Object execute(Realm realm) throws JSONException {
+                realm.delete(RealmSpotlight.class);
+                realm.createOrUpdateAllFromJson(RealmSpotlight.class, jsonString);
+                return null;
+              }
+            });
+          }
+          return null;
+        });
   }
 
   private Task<Void> searchSpotlight(Class clazz, String key, String term) {
