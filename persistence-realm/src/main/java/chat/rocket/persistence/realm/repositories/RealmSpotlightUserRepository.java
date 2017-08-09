@@ -16,8 +16,7 @@ import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
-public class RealmSpotlightUserRepository extends RealmRepository
-    implements SpotlightUserRepository {
+public class RealmSpotlightUserRepository extends RealmRepository implements SpotlightUserRepository {
 
   private final String hostname;
 
@@ -26,8 +25,7 @@ public class RealmSpotlightUserRepository extends RealmRepository
   }
 
   @Override
-  public Flowable<List<SpotlightUser>> getSuggestionsFor(String name, SortDirection direction,
-                                                         int limit) {
+  public Flowable<List<SpotlightUser>> getSuggestionsFor(String name, SortDirection direction, int limit) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> RxJavaInterop.toV2Flowable(
