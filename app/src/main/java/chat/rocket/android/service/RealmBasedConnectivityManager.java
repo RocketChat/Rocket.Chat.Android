@@ -164,7 +164,7 @@ import rx.subjects.PublishSubject;
 
       return connectToServer(hostname)
           //.doOnError(RCLog::e)
-          .retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
+          .retryWhen(RxHelper.exponentialBackoff(Integer.MAX_VALUE, 500, TimeUnit.MILLISECONDS));
     });
   }
 
