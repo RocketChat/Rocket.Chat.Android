@@ -17,6 +17,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.rx.RxWebSocket;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import okhttp3.OkHttpClient;
 
@@ -106,40 +107,76 @@ public class DDPClientImpl {
     }
   }
 
-  public void ping(final TaskCompletionSource<DDPClientCallback.Ping> task,
-                   @Nullable final String id) {
+  public Flowable<DDPClientCallback.Base> ping(@Nullable final String id) {
 
     final boolean requested = (TextUtils.isEmpty(id)) ?
         sendMessage("ping", null) :
         sendMessage("ping", json -> json.put("id", id));
 
     if (requested) {
+      return flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+//              .timeout(8, TimeUnit.SECONDS)
+              .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+              .map(DDPClientImpl::toJson)
+              .filter(response -> "pong".equalsIgnoreCase(extractMsg(response)))
+              .doOnError(error -> {
+                RCLog.e(error, "Heartbeat ping[%s] xxx failed xxx", id);
+              })
+              .map(response -> {
+                String msg = extractMsg(response);
+                if ("pong".equals(msg)) {
+                  RCLog.d("pong[%s] <", id);
+                  if (response.isNull("id")) {
+                    return new DDPClientCallback.Ping(client, null);
+                  } else {
+                    String _id = response.optString("id");
+                    if (id.equals(_id)) {
+                      return new DDPClientCallback.Ping(client, _id);
+                    } else {
+                      return new DDPClientCallback.Ping.UnMatched(client, id);
+                    }
+                  }
+                }
+                // if we receive anything other than a pong throw an exception
+                throw new DDPClientCallback.RPC.Error(client, id, response);
+              });
+    } else {
+      return Flowable.error(new DDPClientCallback.Closed(client));
+    }
+  }
+
+  public void ping(final TaskCompletionSource<DDPClientCallback.Ping> task,
+                   @Nullable final String id) {
+
+    final boolean requested = (TextUtils.isEmpty(id)) ?
+            sendMessage("ping", null) :
+            sendMessage("ping", json -> json.put("id", id));
+
+    if (requested) {
       CompositeDisposable disposables = new CompositeDisposable();
 
       disposables.add(
-          flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
-              .timeout(8, TimeUnit.SECONDS)
-              .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
-              .map(DDPClientImpl::toJson)
-              .subscribe(
-                  response -> {
-                    String msg = extractMsg(response);
-                    if ("pong".equals(msg)) {
-                      if (response.isNull("id")) {
-                        task.setResult(new DDPClientCallback.Ping(client, null));
-                        disposables.clear();
-                      } else {
-                        String _id = response.optString("id");
-                        if (id.equals(_id)) {
-                          task.setResult(new DDPClientCallback.Ping(client, id));
-                          disposables.clear();
-                        }
-                      }
-                      disposables.clear();
-                    }
-                  },
-                  err -> task.setError(new DDPClientCallback.Ping.Timeout(client))
-              )
+              flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+                      .timeout(8, TimeUnit.SECONDS)
+                      .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
+                      .map(DDPClientImpl::toJson)
+                      .subscribe(
+                              response -> {
+                                String msg = extractMsg(response);
+                                if ("pong".equals(msg)) {
+                                  if (response.isNull("id")) {
+                                    task.setResult(new DDPClientCallback.Ping(client, null));
+                                  } else {
+                                    String _id = response.optString("id");
+                                    if (id.equals(_id)) {
+                                      task.setResult(new DDPClientCallback.Ping(client, id));
+                                    }
+                                  }
+                                  disposables.clear();
+                                }
+                              },
+                              err -> task.setError(new DDPClientCallback.Ping.Timeout(client))
+                      )
       );
 
       addErrorCallback(disposables, task);
@@ -368,12 +405,11 @@ public class DDPClientImpl {
     try {
       JSONObject origJson = new JSONObject().put("msg", msg);
       String msg2 = (json == null ? origJson : json.create(origJson)).toString();
-      websocket.sendText(msg2);
+      return websocket.sendText(msg2);
     } catch (Exception e) {
       RCLog.e(e);
       return false;
     }
-    return true; // ignore exception here.
   }
 
   private void sendMessage(String msg, @Nullable JSONBuilder json,
