@@ -53,8 +53,8 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
   private void onServerValid(String hostname, boolean usesSecureConnection) {
     rocketChatCache.setSelectedServerHostname(hostname);
 
-    hostname = hostname.replace("/", ".");
-    connectivityManager.addOrUpdateServer(hostname, hostname, !usesSecureConnection);
+    String server = hostname.replace("/", ".");
+    connectivityManager.addOrUpdateServer(server, server, !usesSecureConnection);
     connectivityManager.keepAliveServer();
 
     view.showHome();
