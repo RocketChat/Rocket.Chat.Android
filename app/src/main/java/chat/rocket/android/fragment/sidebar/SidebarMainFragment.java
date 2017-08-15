@@ -60,8 +60,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private static final String HOSTNAME = "hostname";
 
-  public SidebarMainFragment() {}
-
   /**
    * create SidebarMainFragment with hostname.
    */
