@@ -23,13 +23,7 @@ class RealmSpotlightRepository(private val hostname: String) : RealmRepository()
         return Flowable.defer { Flowable.using<RealmResults<RealmSpotlight>, Pair<Realm, Looper>>({
             Pair<Realm, Looper>(RealmStore.getRealm(hostname), Looper.myLooper())
         }, { pair -> RxJavaInterop.toV2Flowable<RealmResults<RealmSpotlight>>(pair.first.where(RealmSpotlight::class.java)
-                .beginGroup()
                 .like(Columns.NAME, "*$term*", Case.INSENSITIVE)
-                .endGroup()
-                .or()
-                .beginGroup()
-                .like(Columns.USERNAME, "*$term*", Case.INSENSITIVE)
-                .endGroup()
                 .findAllSorted(Columns.NAME, if (direction == SortDirection.ASC) Sort.ASCENDING else Sort.DESCENDING)
                 .asObservable())
         }) { pair -> close(pair.first, pair.second) }
