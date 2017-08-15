@@ -1,11 +1,8 @@
 package chat.rocket.android.api;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Patterns;
-import chat.rocket.persistence.realm.RealmHelper.Transaction;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlight;
-import io.realm.Realm;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
