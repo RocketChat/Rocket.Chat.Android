@@ -20,7 +20,7 @@ open class RealmSpotlight : RealmObject() {
     }
 
     companion object {
-        fun customizeUserJsonObject(userJsonObject: JSONObject) {
+        fun customizeUserJSONObject(userJsonObject: JSONObject) {
             userJsonObject.put(Columns.NAME, userJsonObject.get("username"))
             userJsonObject.put(Columns.TYPE, "d")
             userJsonObject.remove("username")

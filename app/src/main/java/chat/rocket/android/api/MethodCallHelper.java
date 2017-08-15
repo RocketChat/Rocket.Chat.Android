@@ -490,7 +490,7 @@ public class MethodCallHelper {
             JSONArray userJsonArray = (JSONArray) result.get("users");
             int usersTotal = userJsonArray.length();
             for (int i = 0; i < usersTotal; ++i) {
-              RealmSpotlight.Companion.customizeUserJsonObject(userJsonArray.getJSONObject(i));
+              RealmSpotlight.Companion.customizeUserJSONObject(userJsonArray.getJSONObject(i));
             }
 
             if (jsonString == null) {
