@@ -478,7 +478,7 @@ public class MethodCallHelper {
             .put(new JSONObject().put("rooms", true).put("users", true))
     ).onSuccessTask(CONVERT_TO_JSON_OBJECT)
         .onSuccessTask(task -> {
-          String jsonString = "";
+          String jsonString = null;
           final JSONObject result = task.getResult();
 
           if (result.has("rooms")) {
@@ -493,14 +493,14 @@ public class MethodCallHelper {
               RealmSpotlight.Companion.customizeUserJsonObject(userJsonArray.getJSONObject(i));
             }
 
-            if (jsonString.equals("")) {
+            if (jsonString == null) {
               jsonString = userJsonArray.toString();
             } else {
               jsonString = jsonString.replace("]", "") + "," + userJsonArray.toString().replace("[", "");
             }
           }
 
-          if (!jsonString.equals("")) {
+          if (jsonString != null) {
             String jsonStringResults = jsonString;
             realmHelper.executeTransaction(realm -> {
               realm.delete(RealmSpotlight.class);
