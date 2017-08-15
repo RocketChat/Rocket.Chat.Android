@@ -481,24 +481,34 @@ public class MethodCallHelper {
             .put(new JSONObject().put("rooms", true).put("users", true))
     ).onSuccessTask(CONVERT_TO_JSON_OBJECT)
         .onSuccessTask(task -> {
+          String jsonString = "";
           final JSONObject result = task.getResult();
-          if (result.has("rooms") && result.has("users")) {
-            JSONArray jsonRoomArray = (JSONArray) result.get("rooms");
-            JSONArray jsonUserArray = (JSONArray) result.get("users");
 
-            String roomJsonString = jsonRoomArray.toString().replace("[","").replace("]","");
-            String userJsonString = jsonUserArray.toString().replace("[","").replace("]","");
-            String jsonString = "[" + roomJsonString + "," + userJsonString + "]";
+          if (result.has("rooms")) {
+            JSONArray roomJsonArray = (JSONArray) result.get("rooms");
+            jsonString = roomJsonArray.toString();
+          }
 
-            Log.i("JSON", jsonString);
+          if (result.has("users")) {
+            JSONArray userJsonArray = (JSONArray) result.get("users");
+            int usersTotal = userJsonArray.length();
+            for (int i = 0; i < usersTotal; ++i) {
+              RealmSpotlight.Companion.customizeUserJsonObject(userJsonArray.getJSONObject(i));
+            }
 
-            realmHelper.executeTransaction(new Transaction() {
-              @Override
-              public Object execute(Realm realm) throws JSONException {
-                realm.delete(RealmSpotlight.class);
-                realm.createOrUpdateAllFromJson(RealmSpotlight.class, jsonString);
-                return null;
-              }
+            if (jsonString.equals("")) {
+              jsonString = userJsonArray.toString();
+            } else {
+              jsonString = jsonString.replace("]", "") + "," + userJsonArray.toString().replace("[", "");
+            }
+          }
+
+          if (!jsonString.equals("")) {
+            String jsonStringResults = jsonString;
+            realmHelper.executeTransaction(realm -> {
+              realm.delete(RealmSpotlight.class);
+              realm.createOrUpdateAllFromJson(RealmSpotlight.class, jsonStringResults);
+              return null;
             });
           }
           return null;
