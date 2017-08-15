@@ -60,6 +60,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private static final String HOSTNAME = "hostname";
 
+  public SidebarMainFragment() {}
+
   /**
    * create SidebarMainFragment with hostname.
    */
@@ -141,11 +143,21 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       public void onItemClick(Spotlight spotlight) {
         searchView.setQuery(null, false);
         searchView.clearFocus();
-        methodCallHelper.joinRoom(spotlight.getId())
-            .onSuccessTask(task -> {
-              presenter.onSpotlightSelected(spotlight);
-              return null;
-            });
+
+        if (spotlight.getType().equals("d")) {
+          String username = spotlight.getName();
+          methodCallHelper.createDirectMessage(username)
+              .onSuccessTask(task -> {
+                presenter.onSpotlightSelected(spotlight);
+                return null;
+              });
+        } else {
+          methodCallHelper.joinRoom(spotlight.getId())
+              .onSuccessTask(task -> {
+                presenter.onSpotlightSelected(spotlight);
+                return null;
+              });
+        }
       }
     });
 
