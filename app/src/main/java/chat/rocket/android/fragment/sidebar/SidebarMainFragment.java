@@ -29,7 +29,6 @@ import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
 import chat.rocket.android.renderer.UserRenderer;
-import chat.rocket.core.SortDirection;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Room;
@@ -145,18 +144,14 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
         if (spotlight.getType().equals("d")) {
           String username = spotlight.getName();
-          methodCallHelper.createDirectMessage(username)
-              .onSuccessTask(task -> {
-                presenter.onSpotlightSelected(spotlight);
-                return null;
-              });
-        } else {
-          methodCallHelper.joinRoom(spotlight.getId())
-              .onSuccessTask(task -> {
-                presenter.onSpotlightSelected(spotlight);
-                return null;
-              });
+          methodCallHelper.createDirectMessage(username);
         }
+
+        methodCallHelper.joinRoom(spotlight.getId())
+            .onSuccessTask(task -> {
+              presenter.onSpotlightSelected(spotlight);
+              return null;
+            });
       }
     });
 
