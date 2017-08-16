@@ -1,4 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 apply plugin: 'kotlin-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jakewharton.hugo'
@@ -9,6 +15,7 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
@@ -22,6 +29,7 @@ buildscript {
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 
     // Exclude the version that the android plugin depends on.
@@ -134,6 +142,10 @@ dependencies {
 
     compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 
     provided 'com.parse.bolts:bolts-tasks:1.4.0'
     provided 'io.reactivex.rxjava2:rxjava:2.1.0'
