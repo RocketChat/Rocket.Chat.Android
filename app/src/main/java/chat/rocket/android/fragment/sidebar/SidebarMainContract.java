@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.Flowable;
 import java.util.List;
 import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.shared.BaseContract;
@@ -27,6 +28,8 @@ public interface SidebarMainContract {
     void onRoomSelected(Room room);
 
     void onSpotlightSelected(Spotlight spotlight);
+
+    Flowable<List<Spotlight>> searchSpotlight(String term);
 
     void onUserOnline();
 
