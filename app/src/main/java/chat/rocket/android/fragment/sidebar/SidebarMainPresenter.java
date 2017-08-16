@@ -23,10 +23,9 @@ import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
 import java.util.List;
 
-public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View>
-    implements SidebarMainContract.Presenter {
-
+public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View> implements SidebarMainContract.Presenter {
   private final String hostname;
+  private String userId;
   private final RoomInteractor roomInteractor;
   private final UserRepository userRepository;
   private final RocketChatCache rocketChatCache;
@@ -71,8 +70,11 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-            pair -> view.show(pair.first.orNull(), pair.second.orNull()),
-            Logger::report
+          pair -> {
+            userId = pair.first.orNull().getId();
+            view.show(pair.first.orNull());
+          },
+          Logger::report
         );
 
     addSubscription(subscription);
@@ -84,14 +86,31 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   }
 
   @Override
-  public void onSpotlightSelected(Spotlight spotlight) {
-    rocketChatCache.setSelectedRoomId(spotlight.getId());
-  }
-
-  @Override
   public Flowable<List<Spotlight>> searchSpotlight(String term) {
     methodCallHelper.searchSpotlight(term);
     return realmSpotlightRepository.getSuggestionsFor(term, 10);
+  }
+
+  @Override
+  public void onSpotlightSelected(Spotlight spotlight) {
+    if (spotlight.getType().equals(Room.TYPE_DIRECT_MESSAGE)) {
+      String username = spotlight.getName();
+      methodCallHelper.createDirectMessage(username)
+          .continueWithTask(task -> {
+            if (task.isCompleted()) {
+              rocketChatCache.setSelectedRoomId(spotlight.getId() + userId);
+            }
+            return null;
+          });
+    } else {
+      methodCallHelper.joinRoom(spotlight.getId())
+          .continueWithTask(task -> {
+            if (task.isCompleted()) {
+              rocketChatCache.setSelectedRoomId(spotlight.getId());
+            }
+            return null;
+          });
+    }
   }
 
   @Override
@@ -116,9 +135,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
 
   @Override
   public void onLogout() {
-    if (methodCallHelper != null) {
       methodCallHelper.logout().continueWith(new LogIfError());
-    }
   }
 
   private void subscribeToRooms() {
@@ -135,8 +152,6 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   }
 
   private void updateCurrentUserStatus(String status) {
-    if (methodCallHelper != null) {
       methodCallHelper.setUserStatus(status).continueWith(new LogIfError());
-    }
   }
 }

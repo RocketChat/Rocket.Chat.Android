@@ -20,7 +20,7 @@ public interface SidebarMainContract {
 
     void showRoomList(@NonNull List<Room> roomList);
 
-    void show(User user, RocketChatAbsoluteUrl absoluteUrl);
+    void show(User user);
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
