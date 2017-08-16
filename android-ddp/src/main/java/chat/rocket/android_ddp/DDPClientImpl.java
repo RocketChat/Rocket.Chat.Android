@@ -17,7 +17,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.rx.RxWebSocket;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
 import io.reactivex.Flowable;
-import io.reactivex.Single;
+import io.reactivex.Maybe;
 import io.reactivex.disposables.CompositeDisposable;
 import okhttp3.OkHttpClient;
 
@@ -107,7 +107,7 @@ public class DDPClientImpl {
     }
   }
 
-  public Flowable<DDPClientCallback.Base> ping(@Nullable final String id) {
+  public Maybe<DDPClientCallback.Base> ping(@Nullable final String id) {
 
     final boolean requested = (TextUtils.isEmpty(id)) ?
         sendMessage("ping", null) :
@@ -115,7 +115,6 @@ public class DDPClientImpl {
 
     if (requested) {
       return flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
-//              .timeout(8, TimeUnit.SECONDS)
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
               .filter(response -> "pong".equalsIgnoreCase(extractMsg(response)))
@@ -133,15 +132,15 @@ public class DDPClientImpl {
                     if (id.equals(_id)) {
                       return new DDPClientCallback.Ping(client, _id);
                     } else {
-                      return new DDPClientCallback.Ping.UnMatched(client, id);
+                      return new DDPClientCallback.Ping.UnMatched(client, _id);
                     }
                   }
                 }
                 // if we receive anything other than a pong throw an exception
                 throw new DDPClientCallback.RPC.Error(client, id, response);
-              });
+              }).firstElement();
     } else {
-      return Flowable.error(new DDPClientCallback.Closed(client));
+      return Maybe.error(new DDPClientCallback.Closed(client));
     }
   }
 

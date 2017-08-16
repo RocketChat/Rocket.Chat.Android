@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.UUID;
-import java.util.concurrent.TimeoutException;
 
 import bolts.Task;
 import chat.rocket.android.helper.OkHttpHelper;
@@ -16,7 +15,7 @@ import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.android_ddp.DDPSubscription;
 import io.reactivex.Flowable;
-import io.reactivex.Single;
+import io.reactivex.Maybe;
 
 /**
  * DDP client wrapper.
@@ -130,7 +129,7 @@ public class DDPClientWrapper {
   /**
    * check WebSocket connectivity with ping.
    */
-  public Flowable<DDPClientCallback.Base> doPing() {
+  public Maybe<DDPClientCallback.Base> doPing() {
     final String pingId = UUID.randomUUID().toString();
     RCLog.d("ping[%s] >", pingId);
     return ddpClient.doPing(pingId);
