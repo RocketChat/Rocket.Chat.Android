@@ -3,7 +3,6 @@ package chat.rocket.android.fragment.sidebar;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import io.reactivex.Flowable;

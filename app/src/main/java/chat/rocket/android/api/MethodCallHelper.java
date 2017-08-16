@@ -1,7 +1,6 @@
 package chat.rocket.android.api;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Patterns;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlight;
 import org.json.JSONArray;

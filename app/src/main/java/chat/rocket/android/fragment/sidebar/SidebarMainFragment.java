@@ -48,8 +48,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import rx.Subscriber;
-import rx.functions.Action1;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
   private SidebarMainContract.Presenter presenter;
