@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import rx.Subscriber;
+import rx.functions.Action1;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
   private SidebarMainContract.Presenter presenter;
@@ -55,7 +57,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   private String hostname;
 
   private MethodCallHelper methodCallHelper;
-  private RealmSpotlightRepository realmSpotlightRepository;
   private SearchView searchView;
 
   private static final String HOSTNAME = "hostname";
@@ -83,7 +84,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     hostname = args == null ? null : args.getString(HOSTNAME);
 
     methodCallHelper = new MethodCallHelper(getContext(), hostname);
-    realmSpotlightRepository = new RealmSpotlightRepository(hostname);
 
     RealmUserRepository userRepository = new RealmUserRepository(hostname);
 
@@ -100,7 +100,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         userRepository,
         new RocketChatCache(getContext()),
         absoluteUrlHelper,
-        TextUtils.isEmpty(hostname) ? null : new MethodCallHelper(getContext(), hostname)
+        TextUtils.isEmpty(hostname) ? null : new MethodCallHelper(getContext(), hostname),
+        new RealmSpotlightRepository(hostname)
     );
   }
 
@@ -175,15 +176,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
             return Observable.just(Collections.<Spotlight>emptyList());
           } else {
             adapter.setMode(RoomListAdapter.MODE_SPOTLIGHT);
-            final String queryString = charSequence.toString();
-            methodCallHelper.searchSpotlight(queryString);
-            return realmSpotlightRepository.getSuggestionsFor(queryString, SortDirection.ASC, 10).toObservable();
+            return presenter.searchSpotlight(charSequence.toString()).toObservable();
           }
         })
-        .subscribe(
-            this::showSearchSuggestions,
-            Logger::report
-        );
+        .subscribe(this::showSearchSuggestions, Logger::report);
   }
 
   private void showSearchSuggestions(List<Spotlight> spotlightList) {
