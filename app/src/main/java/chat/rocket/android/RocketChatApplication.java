@@ -2,9 +2,11 @@ package chat.rocket.android;
 
 import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.List;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.persistence.realm.RealmStore;
@@ -24,6 +26,7 @@ public class RocketChatApplication extends MultiDexApplication {
     }
 
     super.onCreate();
+    Fabric.with(this, new Crashlytics());
 
     RocketChatPersistenceRealm.init(this);
 
