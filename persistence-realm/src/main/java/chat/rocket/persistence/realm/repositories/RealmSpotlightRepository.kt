@@ -2,7 +2,6 @@ package chat.rocket.persistence.realm.repositories
 
 import android.os.Looper
 import android.support.v4.util.Pair
-import chat.rocket.core.SortDirection
 import chat.rocket.core.models.Spotlight
 import chat.rocket.core.repositories.SpotlightRepository
 import chat.rocket.persistence.realm.RealmStore
@@ -19,12 +18,11 @@ import java.util.ArrayList
 
 class RealmSpotlightRepository(private val hostname: String) : RealmRepository(), SpotlightRepository {
 
-    override fun getSuggestionsFor(term: String, direction: SortDirection, limit: Int): Flowable<List<Spotlight>> {
+    override fun getSuggestionsFor(term: String, limit: Int): Flowable<List<Spotlight>> {
         return Flowable.defer { Flowable.using<RealmResults<RealmSpotlight>, Pair<Realm, Looper>>({
             Pair<Realm, Looper>(RealmStore.getRealm(hostname), Looper.myLooper())
         }, { pair -> RxJavaInterop.toV2Flowable<RealmResults<RealmSpotlight>>(pair.first.where(RealmSpotlight::class.java)
-                .like(Columns.NAME, "*$term*", Case.INSENSITIVE)
-                .findAllSorted(Columns.NAME, if (direction == SortDirection.ASC) Sort.ASCENDING else Sort.DESCENDING)
+                .findAllSorted(Columns.TYPE, Sort.DESCENDING)
                 .asObservable())
         }) { pair -> close(pair.first, pair.second) }
                 .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()!!))
