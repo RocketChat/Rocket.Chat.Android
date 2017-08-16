@@ -3,7 +3,9 @@ package chat.rocket.android.fragment.sidebar;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
+import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.Spotlight;
+import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -20,6 +22,7 @@ import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
+import java.util.List;
 
 public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View>
     implements SidebarMainContract.Presenter {
@@ -30,18 +33,22 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   private final RocketChatCache rocketChatCache;
   private final AbsoluteUrlHelper absoluteUrlHelper;
   private final MethodCallHelper methodCallHelper;
+  private RealmSpotlightRepository realmSpotlightRepository;
 
-  public SidebarMainPresenter(String hostname, RoomInteractor roomInteractor,
+  public SidebarMainPresenter(String hostname,
+                              RoomInteractor roomInteractor,
                               UserRepository userRepository,
                               RocketChatCache rocketChatCache,
                               AbsoluteUrlHelper absoluteUrlHelper,
-                              MethodCallHelper methodCallHelper) {
+                              MethodCallHelper methodCallHelper,
+                              RealmSpotlightRepository realmSpotlightRepository) {
     this.hostname = hostname;
     this.roomInteractor = roomInteractor;
     this.userRepository = userRepository;
     this.rocketChatCache = rocketChatCache;
     this.absoluteUrlHelper = absoluteUrlHelper;
     this.methodCallHelper = methodCallHelper;
+    this.realmSpotlightRepository = realmSpotlightRepository;
   }
 
   @Override
@@ -80,6 +87,12 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   @Override
   public void onSpotlightSelected(Spotlight spotlight) {
     rocketChatCache.setSelectedRoomId(spotlight.getId());
+  }
+
+  @Override
+  public Flowable<List<Spotlight>> searchSpotlight(String term) {
+    methodCallHelper.searchSpotlight(term);
+    return realmSpotlightRepository.getSuggestionsFor(term, 10);
   }
 
   @Override
