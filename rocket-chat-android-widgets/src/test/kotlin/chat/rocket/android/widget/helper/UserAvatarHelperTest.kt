@@ -18,5 +18,9 @@ class UserAvatarHelperTest {
         assert(UserAvatarHelper.getUsernameInitials("Foo.bar") == "FB")
         assert(UserAvatarHelper.getUsernameInitials("Foobar.bar") == "FB")
         assert(UserAvatarHelper.getUsernameInitials("Foobar.bar.zab") == "FZ")
+        assert(UserAvatarHelper.getUsernameInitials("..") == "..")
+        assert(UserAvatarHelper.getUsernameInitials("...") == "..")
+        assert(UserAvatarHelper.getUsernameInitials(".Foo.") == ".F")
+        assert(UserAvatarHelper.getUsernameInitials("Foo..") == "FO")
     }
 }

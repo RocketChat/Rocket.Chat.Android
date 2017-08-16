@@ -135,13 +135,15 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> RxJavaInterop.toV2Flowable(pair.first.where(RealmMessage.class)
             .equalTo(RealmMessage.ROOM_ID, room.getRoomId())
+            .isNotNull(RealmMessage.USER)
             .findAllSorted(RealmMessage.TIMESTAMP, Sort.DESCENDING)
             .asObservable()),
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
         .filter(it -> it.isLoaded() && it.isValid())
-        .map(this::toList));
+        .map(this::toList)
+        .distinctUntilChanged());
   }
 
   @Override

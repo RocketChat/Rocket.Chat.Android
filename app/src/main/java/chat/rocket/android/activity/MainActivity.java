@@ -34,7 +34,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   private StatusTicker statusTicker;
 
   private MainContract.Presenter presenter;
-  private RoomFragment roomFragment;
 
   @Override
   protected int getLayoutContainerForFragment() {
@@ -180,8 +179,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   @Override
   public void showRoom(String hostname, String roomId) {
-    roomFragment = RoomFragment.create(hostname, roomId);
-    showFragment(roomFragment);
+    showFragment(RoomFragment.create(hostname, roomId));
     closeSidebarIfNeeded();
     KeyboardHelper.hideSoftKeyboard(this);
   }
@@ -224,9 +222,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   @Override
   public void showConnectionOk() {
     statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
-    if (roomFragment != null) {
-      roomFragment.refreshRoom();
-    }
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.

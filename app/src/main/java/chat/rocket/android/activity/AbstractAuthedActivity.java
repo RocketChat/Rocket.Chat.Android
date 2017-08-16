@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.hadisatrio.optional.Optional;
+
 import java.util.List;
 
 import chat.rocket.android.LaunchUtil;
@@ -179,6 +181,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private void subscribeToConfigChanges() {
     compositeDisposable.add(
         rocketChatCache.getSelectedServerHostnamePublisher()
+            .map(Optional::get)
             .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -190,6 +193,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
 
     compositeDisposable.add(
         rocketChatCache.getSelectedRoomIdPublisher()
+            .map(Optional::get)
             .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

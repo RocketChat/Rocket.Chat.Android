@@ -20,7 +20,7 @@ abstract class AbstractBaseSubscriber extends AbstractDDPDocEventSubscriber {
 
   @Override
   protected final boolean shouldTruncateTableOnInitialize() {
-    return true;
+    return false;
   }
 
   protected abstract String getSubscriptionCallbackName();

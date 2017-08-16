@@ -98,8 +98,10 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
   @Override
   public void onRetryLogin() {
-    view.showConnecting();
-    connectivityManagerApi.keepAliveServer();
+    final Disposable subscription = sessionInteractor.retryLogin()
+            .subscribe();
+
+    addSubscription(subscription);
   }
 
   private void openRoom() {
