@@ -1,6 +1,7 @@
 package chat.rocket.android.api;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Patterns;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlight;
 import org.json.JSONArray;
@@ -481,14 +482,14 @@ public class MethodCallHelper {
           String jsonString = null;
           final JSONObject result = task.getResult();
 
-          if (result.has("rooms")) {
-            JSONArray roomJsonArray = (JSONArray) result.get("rooms");
+          JSONArray roomJsonArray = (JSONArray) result.get("rooms");
+          if (roomJsonArray.length() > 0) {
             jsonString = roomJsonArray.toString();
           }
 
-          if (result.has("users")) {
-            JSONArray userJsonArray = (JSONArray) result.get("users");
-            int usersTotal = userJsonArray.length();
+          JSONArray userJsonArray = (JSONArray) result.get("users");
+          int usersTotal = userJsonArray.length();
+          if (usersTotal > 0) {
             for (int i = 0; i < usersTotal; ++i) {
               RealmSpotlight.Companion.customizeUserJSONObject(userJsonArray.getJSONObject(i));
             }
