@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import io.reactivex.Flowable;
 import java.util.List;
-import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.shared.BaseContract;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.Spotlight;
