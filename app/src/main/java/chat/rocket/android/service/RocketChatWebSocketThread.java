@@ -4,9 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 
-import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.PeriodicTask;
-
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
@@ -418,28 +415,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private void startHeartBeat() {
-    // This task is scheduled to guarantee that RocketChatService is still bound at the application
-    // process. This is necessary due to the way the keep-alive assertions are currently architectured.
-    // By doing those keep-alives periodically we try to ensure that we have the app alive
-    // if for some reason its process gets killed (for any reason).
-    // TODO: should set this at another point; we should specify a reasonable time-window.
-    // TODO: should check and handle the case Google Play Services isn't available.
-    // TODO: consider on using https://github.com/evernote/android-job for this as it allows much more
-    // customisation like running at exponential backoff and others. We should alos use it more
-    // extensively throughout the app on all the common tasks, like i.e. sending a message
-    GcmNetworkManager gcmNetworkManager = GcmNetworkManager.getInstance(appContext);
-    gcmNetworkManager.schedule(
-            new PeriodicTask.Builder()
-                    .setRequiresCharging(false)
-                    .setUpdateCurrent(true)
-                    .setRequiredNetwork(com.google.android.gms.gcm.Task.NETWORK_STATE_ANY)
-                    .setTag(TaskService.TAG_KEEP_ALIVE)
-                    .setService(TaskService.class)
-                    .setPeriod(30)
-                    .setFlex(15)
-                    .build()
-    );
-
     hearbeatDisposable.clear();
     hearbeatDisposable.add(
         heartbeat(HEARTBEAT_PERIOD_MS)
