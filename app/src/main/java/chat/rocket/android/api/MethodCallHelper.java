@@ -8,26 +8,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.UUID;
+
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.core.SyncState;
 import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmPermission;
 import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
-import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.persistence.realm.RealmStore;
-import chat.rocket.android.service.DDPClientRef;
-import chat.rocket.android_ddp.DDPClientCallback;
 import hugo.weaving.DebugLog;
 
 /**
@@ -83,10 +84,6 @@ public class MethodCallHelper {
     return task.continueWithTask(_task -> {
       if (_task.isFaulted()) {
         Exception exception = _task.getError();
-        // If wet get any error, close the socket to let the RocketChatWebSocketThread aware of it.
-        // FIXME: when rewriting the network layer we should get rid of this MethodCallHelper
-        // monolith concept. It decouples a lot the socket from the rest of the app.
-        ddpClientRef.get().close();
         if (exception instanceof MethodCall.Error) {
           String errMessageJson = exception.getMessage();
           if (TextUtils.isEmpty(errMessageJson)) {
