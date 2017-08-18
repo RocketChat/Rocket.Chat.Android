@@ -17,8 +17,7 @@ import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
-public class RealmSpotlightRoomRepository extends RealmRepository
-    implements SpotlightRoomRepository {
+public class RealmSpotlightRoomRepository extends RealmRepository implements SpotlightRoomRepository {
 
   private final String hostname;
 
@@ -27,8 +26,7 @@ public class RealmSpotlightRoomRepository extends RealmRepository
   }
 
   @Override
-  public Flowable<List<SpotlightRoom>> getSuggestionsFor(String name, SortDirection direction,
-                                                         int limit) {
+  public Flowable<List<SpotlightRoom>> getSuggestionsFor(String name, SortDirection direction, int limit) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> RxJavaInterop.toV2Flowable(
@@ -39,8 +37,7 @@ public class RealmSpotlightRoomRepository extends RealmRepository
                 .or()
                 .equalTo(RealmSpotlightRoom.Columns.TYPE, RealmRoom.TYPE_PRIVATE)
                 .endGroup()
-                .findAllSorted(RealmSpotlightRoom.Columns.NAME,
-                    direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
+                .findAllSorted(RealmSpotlightRoom.Columns.NAME, direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
                 .asObservable()),
         pair -> close(pair.first, pair.second)
     )

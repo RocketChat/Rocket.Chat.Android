@@ -2,11 +2,11 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.Flowable;
 import java.util.List;
-import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.shared.BaseContract;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.models.SpotlightRoom;
+import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 
 public interface SidebarMainContract {
@@ -19,14 +19,16 @@ public interface SidebarMainContract {
 
     void showRoomList(@NonNull List<Room> roomList);
 
-    void show(User user, RocketChatAbsoluteUrl absoluteUrl);
+    void show(User user);
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
 
     void onRoomSelected(Room room);
 
-    void onSpotlightRoomSelected(SpotlightRoom spotlightRoom);
+    void onSpotlightSelected(Spotlight spotlight);
+
+    Flowable<List<Spotlight>> searchSpotlight(String term);
 
     void onUserOnline();
 
