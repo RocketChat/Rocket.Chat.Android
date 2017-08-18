@@ -98,7 +98,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
       methodCallHelper.createDirectMessage(username)
           .continueWithTask(task -> {
             if (task.isCompleted()) {
-              rocketChatCache.setSelectedRoomId(spotlight.getId() + userId);
+              rocketChatCache.setSelectedRoomId(task.getResult());
             }
             return null;
           });
