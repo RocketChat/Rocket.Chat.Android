@@ -3,10 +3,12 @@ package chat.rocket.android;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import com.hadisatrio.optional.Optional;
 
 import java.util.UUID;
+
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
 
 /**
  * sharedpreference-based cache.
@@ -51,11 +53,11 @@ public class RocketChatCache {
     return preferences.getString(KEY_PUSH_ID, null);
   }
 
-  public Flowable<String> getSelectedServerHostnamePublisher() {
+  public Flowable<Optional<String>> getSelectedServerHostnamePublisher() {
     return getValuePublisher(KEY_SELECTED_SERVER_HOSTNAME);
   }
 
-  public Flowable<String> getSelectedRoomIdPublisher() {
+  public Flowable<Optional<String>> getSelectedRoomIdPublisher() {
     return getValuePublisher(KEY_SELECTED_ROOM_ID);
   }
 
@@ -75,12 +77,13 @@ public class RocketChatCache {
     getEditor().putString(key, value).apply();
   }
 
-  private Flowable<String> getValuePublisher(final String key) {
+  private Flowable<Optional<String>> getValuePublisher(final String key) {
     return Flowable.create(emitter -> {
       SharedPreferences.OnSharedPreferenceChangeListener
           listener = (sharedPreferences, changedKey) -> {
         if (key.equals(changedKey) && !emitter.isCancelled()) {
-          emitter.onNext(getString(key, null));
+          String value = getString(key, null);
+          emitter.onNext(Optional.of(value));
         }
       };
 

@@ -602,8 +602,4 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     edittingMessage = message;
     messageFormManager.setEditMessage(message.getMessage());
   }
-
-  public void refreshRoom() {
-    presenter.loadMessages();
-  }
 }
