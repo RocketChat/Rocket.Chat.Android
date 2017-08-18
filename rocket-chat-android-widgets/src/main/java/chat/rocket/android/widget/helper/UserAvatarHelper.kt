@@ -70,9 +70,9 @@ object UserAvatarHelper {
 
         val splitUsername = username.split(".")
         val splitCount = splitUsername.size
-        if (splitCount > 1 && splitUsername[0].isNotEmpty() && splitUsername[1].isNotEmpty()) {
+        if (splitCount > 1 && splitUsername[0].isNotEmpty() && splitUsername[splitCount-1].isNotEmpty()) {
             val firstInitial = splitUsername[0].substring(0, 1)
-            val secondInitial = splitUsername[1].substring(0, 1)
+            val secondInitial = splitUsername[splitCount-1].substring(0, 1)
             return (firstInitial + secondInitial).toUpperCase()
         } else {
             if (username.length > 1) {
