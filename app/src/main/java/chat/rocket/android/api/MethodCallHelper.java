@@ -365,9 +365,10 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
-  public Task<Void> createDirectMessage(final String username) {
+  public Task<String> createDirectMessage(final String username) {
     return call("createDirectMessage", TIMEOUT_MS, () -> new JSONArray().put(username))
-        .onSuccessTask(task -> Task.forResult(null));
+        .onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("rid")));
   }
 
   /**
