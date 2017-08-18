@@ -85,7 +85,9 @@ public class MethodCallHelper {
         // If wet get any error, close the socket to let the RocketChatWebSocketThread aware of it.
         // FIXME: when rewriting the network layer we should get rid of this MethodCallHelper
         // monolith concept. It decouples a lot the socket from the rest of the app.
-        ddpClientRef.get().close();
+        if (ddpClientRef.get() != null) {
+          ddpClientRef.get().close();
+        }
         if (exception instanceof MethodCall.Error) {
           String errMessageJson = exception.getMessage();
           if (TextUtils.isEmpty(errMessageJson)) {
