@@ -105,6 +105,7 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
   protected Task<Void> getMethodCallForSubmitAction() {
     String username =
         ((TextView) getDialog().findViewById(R.id.editor_username)).getText().toString();
-    return methodCall.createDirectMessage(username);
+    return methodCall.createDirectMessage(username)
+        .onSuccess(task -> null);
   }
 }
