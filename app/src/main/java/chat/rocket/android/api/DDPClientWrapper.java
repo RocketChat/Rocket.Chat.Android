@@ -15,6 +15,7 @@ import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.android_ddp.DDPSubscription;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 /**
  * DDP client wrapper.
@@ -123,5 +124,14 @@ public class DDPClientWrapper {
             return Task.forResult(null);
           }
         });
+  }
+
+  /**
+   * check WebSocket connectivity with ping.
+   */
+  public Maybe<DDPClientCallback.Base> doPing() {
+    final String pingId = UUID.randomUUID().toString();
+    RCLog.d("ping[%s] >", pingId);
+    return ddpClient.doPing(pingId);
   }
 }

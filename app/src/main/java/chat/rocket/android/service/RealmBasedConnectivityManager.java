@@ -63,6 +63,7 @@ import rx.subjects.PublishSubject;
     }
   }
 
+  @DebugLog
   @Override
   public void ensureConnections() {
     for (String hostname : serverConnectivityList.keySet()) {
@@ -146,6 +147,7 @@ import rx.subjects.PublishSubject;
     return Observable.concat(Observable.from(getCurrentConnectivityList()), connectivitySubject);
   }
 
+  @DebugLog
   private Single<Boolean> connectToServerIfNeeded(String hostname, boolean forceConnect) {
     return Single.defer(() -> {
       final int connectivity = serverConnectivityList.get(hostname);
@@ -163,8 +165,8 @@ import rx.subjects.PublishSubject;
       }
 
       return connectToServer(hostname)
-          //.doOnError(RCLog::e)
-          .retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
+          .doOnError(RCLog::e)
+          .retryWhen(RxHelper.exponentialBackoff(Integer.MAX_VALUE, 500, TimeUnit.MILLISECONDS));
     });
   }
 
@@ -191,7 +193,7 @@ import rx.subjects.PublishSubject;
     });
   }
 
-
+  @DebugLog
   private Single<Boolean> waitForConnected(String hostname) {
     return connectivitySubject
         .filter(serverConnectivity -> hostname.equals(serverConnectivity.hostname))
@@ -207,6 +209,7 @@ import rx.subjects.PublishSubject;
                 : Single.error(new ServerConnectivity.DisconnectedException()));
   }
 
+  @DebugLog
   private Single<Boolean> waitForDisconnected(String hostname) {
     return connectivitySubject
         .filter(serverConnectivity -> hostname.equals(serverConnectivity.hostname))
