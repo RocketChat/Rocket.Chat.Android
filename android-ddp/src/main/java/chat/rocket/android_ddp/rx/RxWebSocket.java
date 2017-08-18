@@ -62,14 +62,20 @@ public class RxWebSocket {
               }
             }),
         BackpressureStrategy.BUFFER
-    ).delay(4, TimeUnit.SECONDS).publish();
+    ).publish();
   }
 
   public boolean sendText(String message) throws IOException {
+    if (webSocket == null) {
+        return false;
+    }
     return webSocket.send(message);
   }
 
   public boolean close(int code, String reason) throws IOException {
+    if (webSocket == null) {
+      return false;
+    }
     return webSocket.close(code, reason);
   }
 }

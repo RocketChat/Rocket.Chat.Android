@@ -1,12 +1,14 @@
 package chat.rocket.android_ddp;
 
 import android.support.annotation.Nullable;
-import io.reactivex.Flowable;
+
 import org.json.JSONArray;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import okhttp3.OkHttpClient;
 
 public class DDPClient {
@@ -32,6 +34,10 @@ public class DDPClient {
     TaskCompletionSource<DDPClientCallback.Ping> task = new TaskCompletionSource<>();
     impl.ping(task, id);
     return task.getTask();
+  }
+
+  public Maybe<DDPClientCallback.Base> doPing(@Nullable String id) {
+    return impl.ping(id);
   }
 
   public Task<DDPClientCallback.RPC> rpc(String method, JSONArray params, String id,

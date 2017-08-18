@@ -83,6 +83,10 @@ public class MethodCallHelper {
     return task.continueWithTask(_task -> {
       if (_task.isFaulted()) {
         Exception exception = _task.getError();
+        // If wet get any error, close the socket to let the RocketChatWebSocketThread aware of it.
+        // FIXME: when rewriting the network layer we should get rid of this MethodCallHelper
+        // monolith concept. It decouples a lot the socket from the rest of the app.
+        ddpClientRef.get().close();
         if (exception instanceof MethodCall.Error) {
           String errMessageJson = exception.getMessage();
           if (TextUtils.isEmpty(errMessageJson)) {
@@ -94,7 +98,6 @@ public class MethodCallHelper {
           if (TwoStepAuthException.TYPE.equals(errType)) {
             return Task.forError(new TwoStepAuthException(errMessage));
           }
-
           return Task.forError(new Exception(errMessage));
         } else if (exception instanceof DDPClientCallback.RPC.Error) {
           String errMessage = ((DDPClientCallback.RPC.Error) exception).error.getString("message");
