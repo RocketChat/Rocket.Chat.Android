@@ -3,6 +3,8 @@ package chat.rocket.android.fragment.sidebar;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
+import chat.rocket.core.models.Spotlight;
+import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -17,31 +19,34 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.models.SpotlightRoom;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
+import java.util.List;
 
-public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View>
-    implements SidebarMainContract.Presenter {
-
+public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View> implements SidebarMainContract.Presenter {
   private final String hostname;
+  private String userId;
   private final RoomInteractor roomInteractor;
   private final UserRepository userRepository;
   private final RocketChatCache rocketChatCache;
   private final AbsoluteUrlHelper absoluteUrlHelper;
   private final MethodCallHelper methodCallHelper;
+  private RealmSpotlightRepository realmSpotlightRepository;
 
-  public SidebarMainPresenter(String hostname, RoomInteractor roomInteractor,
+  public SidebarMainPresenter(String hostname,
+                              RoomInteractor roomInteractor,
                               UserRepository userRepository,
                               RocketChatCache rocketChatCache,
                               AbsoluteUrlHelper absoluteUrlHelper,
-                              MethodCallHelper methodCallHelper) {
+                              MethodCallHelper methodCallHelper,
+                              RealmSpotlightRepository realmSpotlightRepository) {
     this.hostname = hostname;
     this.roomInteractor = roomInteractor;
     this.userRepository = userRepository;
     this.rocketChatCache = rocketChatCache;
     this.absoluteUrlHelper = absoluteUrlHelper;
     this.methodCallHelper = methodCallHelper;
+    this.realmSpotlightRepository = realmSpotlightRepository;
   }
 
   @Override
@@ -65,8 +70,11 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-            pair -> view.show(pair.first.orNull(), pair.second.orNull()),
-            Logger::report
+          pair -> {
+            userId = pair.first.orNull().getId();
+            view.show(pair.first.orNull());
+          },
+          Logger::report
         );
 
     addSubscription(subscription);
@@ -78,8 +86,31 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   }
 
   @Override
-  public void onSpotlightRoomSelected(SpotlightRoom spotlightRoom) {
-    rocketChatCache.setSelectedRoomId(spotlightRoom.getId());
+  public Flowable<List<Spotlight>> searchSpotlight(String term) {
+    methodCallHelper.searchSpotlight(term);
+    return realmSpotlightRepository.getSuggestionsFor(term, 10);
+  }
+
+  @Override
+  public void onSpotlightSelected(Spotlight spotlight) {
+    if (spotlight.getType().equals(Room.TYPE_DIRECT_MESSAGE)) {
+      String username = spotlight.getName();
+      methodCallHelper.createDirectMessage(username)
+          .continueWithTask(task -> {
+            if (task.isCompleted()) {
+              rocketChatCache.setSelectedRoomId(spotlight.getId() + userId);
+            }
+            return null;
+          });
+    } else {
+      methodCallHelper.joinRoom(spotlight.getId())
+          .continueWithTask(task -> {
+            if (task.isCompleted()) {
+              rocketChatCache.setSelectedRoomId(spotlight.getId());
+            }
+            return null;
+          });
+    }
   }
 
   @Override
@@ -104,9 +135,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
 
   @Override
   public void onLogout() {
-    if (methodCallHelper != null) {
       methodCallHelper.logout().continueWith(new LogIfError());
-    }
   }
 
   private void subscribeToRooms() {
@@ -123,8 +152,6 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
   }
 
   private void updateCurrentUserStatus(String status) {
-    if (methodCallHelper != null) {
       methodCallHelper.setUserStatus(status).continueWith(new LogIfError());
-    }
   }
 }

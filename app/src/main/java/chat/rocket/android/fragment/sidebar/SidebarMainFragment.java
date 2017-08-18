@@ -16,12 +16,10 @@ import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
-import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddDirectMessageDialogFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.Logger;
-import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.roomlist.ChannelRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.DirectMessageRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.FavoriteRoomListHeader;
@@ -29,16 +27,15 @@ import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
 import chat.rocket.android.renderer.UserRenderer;
-import chat.rocket.core.SortDirection;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.models.SpotlightRoom;
+import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
-import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
+import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
@@ -50,21 +47,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
-
+  private SidebarMainContract.Presenter presenter;
+  private RoomListAdapter adapter;
+  private SearchView searchView;
+  private String hostname;
   private static final String HOSTNAME = "hostname";
 
-  private SidebarMainContract.Presenter presenter;
-
-  private RoomListAdapter adapter;
-
-  private String hostname;
-
-  private MethodCallHelper methodCallHelper;
-  private RealmSpotlightRoomRepository realmSpotlightRoomRepository;
-  private SearchView searchView;
-
-  public SidebarMainFragment() {
-  }
+  public SidebarMainFragment() {}
 
   /**
    * create SidebarMainFragment with hostname.
@@ -83,12 +72,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    Bundle args = getArguments();
-    hostname = args == null ? null : args.getString(HOSTNAME);
-
-    methodCallHelper = new MethodCallHelper(getContext(), hostname);
-    realmSpotlightRoomRepository = new RealmSpotlightRoomRepository(hostname);
-
+    hostname = getArguments().getString(HOSTNAME);
     RealmUserRepository userRepository = new RealmUserRepository(hostname);
 
     AbsoluteUrlHelper absoluteUrlHelper = new AbsoluteUrlHelper(
@@ -104,7 +88,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         userRepository,
         new RocketChatCache(getContext()),
         absoluteUrlHelper,
-        TextUtils.isEmpty(hostname) ? null : new MethodCallHelper(getContext(), hostname)
+        new MethodCallHelper(getContext(), hostname),
+        new RealmSpotlightRepository(hostname)
     );
   }
 
@@ -133,6 +118,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     setupLogoutButton();
     setupVersionInfo();
 
+    searchView = rootView.findViewById(R.id.search);
+
     adapter = new RoomListAdapter();
     adapter.setOnItemClickListener(new RoomListAdapter.OnItemClickListener() {
       @Override
@@ -142,57 +129,39 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       }
 
       @Override
-      public void onItemClick(SpotlightRoom spotlightRoom) {
+      public void onItemClick(Spotlight spotlight) {
         searchView.setQuery(null, false);
         searchView.clearFocus();
-        methodCallHelper.joinRoom(spotlightRoom.getId())
-            .onSuccessTask(task -> {
-              presenter.onSpotlightRoomSelected(spotlightRoom);
-              return null;
-            });
+        presenter.onSpotlightSelected(spotlight);
       }
     });
 
-    RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.room_list_container);
-    recyclerView.setLayoutManager(
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    RecyclerView recyclerView = rootView.findViewById(R.id.room_list_container);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     recyclerView.setAdapter(adapter);
-
-    searchView = (SearchView) rootView.findViewById(R.id.search);
 
     RxSearchView.queryTextChanges(searchView)
         .compose(bindToLifecycle())
         .debounce(300, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
-        .switchMap(it -> {
-          if (it.length() == 0) {
+        .switchMap(charSequence -> {
+          if (charSequence.length() == 0) {
             adapter.setMode(RoomListAdapter.MODE_ROOM);
-            return Observable.just(Collections.<SpotlightRoom>emptyList());
+            return Observable.just(Collections.<Spotlight>emptyList());
+          } else {
+            adapter.setMode(RoomListAdapter.MODE_SPOTLIGHT);
+            return presenter.searchSpotlight(charSequence.toString()).toObservable();
           }
-
-          adapter.setMode(RoomListAdapter.MODE_SPOTLIGHT_ROOM);
-
-          final String queryString = it.toString();
-
-          methodCallHelper.searchSpotlightRooms(queryString);
-
-          return realmSpotlightRoomRepository.getSuggestionsFor(queryString, SortDirection.DESC, 10)
-              .toObservable();
         })
-        .subscribe(
-            this::showSearchSuggestions,
-            Logger::report
-        );
+        .subscribe(this::showSearchSuggestions, Logger::report);
   }
 
   @SuppressLint("RxLeakedSubscription")
   private void setupUserActionToggle() {
-    final CompoundButton toggleUserAction =
-        ((CompoundButton) rootView.findViewById(R.id.toggle_user_action));
+    final CompoundButton toggleUserAction = rootView.findViewById(R.id.toggle_user_action);
     toggleUserAction.setFocusableInTouchMode(false);
 
-    rootView.findViewById(R.id.user_info_container)
-        .setOnClickListener(view -> toggleUserAction.toggle());
+    rootView.findViewById(R.id.user_info_container).setOnClickListener(view -> toggleUserAction.toggle());
 
     RxCompoundButton.checkedChanges(toggleUserAction)
         .compose(bindToLifecycle())
@@ -201,6 +170,27 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
                 .setVisibility(aBoolean ? View.VISIBLE : View.GONE),
             Logger::report
         );
+  }
+
+  @Override
+  public void showScreen() {
+    rootView.setVisibility(View.VISIBLE);
+  }
+
+  @Override
+  public void showEmptyScreen() {
+    rootView.setVisibility(View.INVISIBLE);
+  }
+
+  @Override
+  public void showRoomList(@NonNull List<Room> roomList) {
+    adapter.setRooms(roomList);
+  }
+
+  @Override
+  public void show(User user) {
+    onRenderCurrentUser(user);
+    updateRoomListMode(user);
   }
 
   private void setupUserStatusButtons() {
@@ -222,8 +212,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     });
   }
 
-  private void onRenderCurrentUser(User user, RocketChatAbsoluteUrl absoluteUrl) {
-    if (user != null && absoluteUrl != null) {
+  private void onRenderCurrentUser(User user) {
+    if (user != null) {
       UserRenderer userRenderer = new UserRenderer(user);
       userRenderer.showAvatar(rootView.findViewById(R.id.current_user_avatar), hostname);
       userRenderer.showUsername(rootView.findViewById(R.id.current_user_name));
@@ -261,22 +251,20 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
       presenter.onLogout();
       closeUserActionContainer();
-
       // destroy Activity on logout to be able to recreate most of the environment
       this.getActivity().finish();
     });
   }
 
   private void closeUserActionContainer() {
-    final CompoundButton toggleUserAction =
-        ((CompoundButton) rootView.findViewById(R.id.toggle_user_action));
+    final CompoundButton toggleUserAction = rootView.findViewById(R.id.toggle_user_action);
     if (toggleUserAction != null && toggleUserAction.isChecked()) {
       toggleUserAction.setChecked(false);
     }
   }
 
   private void setupVersionInfo() {
-    TextView versionInfoView = (TextView) rootView.findViewById(R.id.version_info);
+    TextView versionInfoView = rootView.findViewById(R.id.version_info);
     versionInfoView.setText(getString(R.string.version_info_text, BuildConfig.VERSION_NAME));
   }
 
@@ -284,28 +272,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     dialog.show(getFragmentManager(), "AbstractAddRoomDialogFragment");
   }
 
-  @Override
-  public void showScreen() {
-    rootView.setVisibility(View.VISIBLE);
-  }
-
-  @Override
-  public void showEmptyScreen() {
-    rootView.setVisibility(View.INVISIBLE);
-  }
-
-  @Override
-  public void showRoomList(@NonNull List<Room> roomList) {
-    adapter.setRooms(roomList);
-  }
-
-  @Override
-  public void show(User user, RocketChatAbsoluteUrl absoluteUrl) {
-    onRenderCurrentUser(user, absoluteUrl);
-    updateRoomListMode(user);
-  }
-
-  private void showSearchSuggestions(List<SpotlightRoom> spotlightRooms) {
-    adapter.setSpotlightRoomList(spotlightRooms);
+  private void showSearchSuggestions(List<Spotlight> spotlightList) {
+    adapter.setSpotlightList(spotlightList);
   }
 }

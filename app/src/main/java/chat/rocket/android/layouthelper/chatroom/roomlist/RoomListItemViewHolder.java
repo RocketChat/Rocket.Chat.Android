@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 
 import chat.rocket.android.widget.internal.RoomListItemView;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.models.SpotlightRoom;
+import chat.rocket.core.models.Spotlight;
 
 public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
   public RoomListItemViewHolder(RoomListItemView itemView,
@@ -17,8 +17,8 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
 
         if (tag instanceof Room) {
           listener.onItemClick((Room) view.getTag());
-        } else if (tag instanceof SpotlightRoom) {
-          listener.onItemClick((SpotlightRoom) view.getTag());
+        } else if (tag instanceof Spotlight) {
+          listener.onItemClick((Spotlight) view.getTag());
         }
       }
     });
@@ -34,13 +34,13 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
         .setTag(room);
   }
 
-  public void bind(SpotlightRoom spotlightRoom) {
+  public void bind(Spotlight spotlight) {
     ((RoomListItemView) itemView)
-        .setRoomId(spotlightRoom.getId())
-        .setRoomName(spotlightRoom.getName())
-        .setRoomType(spotlightRoom.getType())
+        .setRoomId(spotlight.getId())
+        .setRoomName(spotlight.getName())
+        .setRoomType(spotlight.getType())
         .setAlert(false)
         .setUnreadCount(0)
-        .setTag(spotlightRoom);
+        .setTag(spotlight);
   }
 }
