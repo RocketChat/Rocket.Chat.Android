@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import chat.rocket.core.models.Spotlight;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -12,18 +13,17 @@ import java.util.Map;
 import chat.rocket.android.R;
 import chat.rocket.android.widget.internal.RoomListItemView;
 import chat.rocket.core.models.Room;
-import chat.rocket.core.models.SpotlightRoom;
 
 public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
   public static final int MODE_ROOM = 0;
-  public static final int MODE_SPOTLIGHT_ROOM = 1;
+  public static final int MODE_SPOTLIGHT = 1;
 
   private static final int VIEW_TYPE_HEADER = 0;
   private static final int VIEW_TYPE_ROOM = 1;
 
   private List<Room> roomList = Collections.emptyList();
-  private List<SpotlightRoom> spotlightRoomList = Collections.emptyList();
+  private List<Spotlight> spotlightList = Collections.emptyList();
   private List<RoomListHeader> roomListHeaders = Collections.emptyList();
   private Map<Integer, RoomListHeader> headersPosition = new HashMap<>();
 
@@ -39,9 +39,9 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onItemClick(SpotlightRoom spotlightRoom) {
+    public void onItemClick(Spotlight spotlight) {
       if (externalListener != null) {
-        externalListener.onItemClick(spotlightRoom);
+        externalListener.onItemClick(spotlight);
       }
     }
   };
@@ -56,8 +56,8 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     updateRoomList();
   }
 
-  public void setSpotlightRoomList(@NonNull List<SpotlightRoom> spotlightRoomList) {
-    this.spotlightRoomList = spotlightRoomList;
+  public void setSpotlightList(@NonNull List<Spotlight> spotlightList) {
+    this.spotlightList = spotlightList;
     updateRoomList();
   }
 
@@ -66,7 +66,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     if (mode == MODE_ROOM) {
       // clean up
-      spotlightRoomList.clear();
+      spotlightList.clear();
     }
   }
 
@@ -96,23 +96,22 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
       ((RoomListItemViewHolder) holder)
           .bind(roomList.get(position - getTotalHeadersBeforePosition(position)));
-    } else if (mode == MODE_SPOTLIGHT_ROOM) {
-      ((RoomListItemViewHolder) holder)
-          .bind(spotlightRoomList.get(position));
+    } else if (mode == MODE_SPOTLIGHT) {
+      ((RoomListItemViewHolder) holder).bind(spotlightList.get(position));
     }
   }
 
   @Override
   public int getItemCount() {
-    if (mode == MODE_SPOTLIGHT_ROOM) {
-      return spotlightRoomList.size();
+    if (mode == MODE_SPOTLIGHT) {
+      return spotlightList.size();
     }
     return roomList.size() + headersPosition.size();
   }
 
   @Override
   public int getItemViewType(int position) {
-    if (mode == MODE_SPOTLIGHT_ROOM) {
+    if (mode == MODE_SPOTLIGHT) {
       return VIEW_TYPE_ROOM;
     }
 
@@ -188,6 +187,6 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   public interface OnItemClickListener {
     void onItemClick(Room room);
 
-    void onItemClick(SpotlightRoom spotlightRoom);
+    void onItemClick(Spotlight spotlight);
   }
 }
