@@ -23,6 +23,7 @@ public class RocketChatApplication extends MultiDexApplication {
   public void onCreate() {
     if (BuildConfig.DEBUG) {
       enableStrictMode();
+      enableStetho();
     }
 
     super.onCreate();
@@ -33,10 +34,6 @@ public class RocketChatApplication extends MultiDexApplication {
     List<ServerInfo> serverInfoList = ConnectivityManager.getInstance(this).getServerList();
     for (ServerInfo serverInfo : serverInfoList) {
       RealmStore.put(serverInfo.getHostname());
-    }
-
-    if (BuildConfig.DEBUG) {
-      enableStetho();
     }
 
     RocketChatWidgets.initialize(this, OkHttpHelper.getClientForDownloadFile(this));
