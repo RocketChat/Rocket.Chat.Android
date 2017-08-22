@@ -2,6 +2,8 @@ package chat.rocket.android.service.ddp;
 
 import android.content.Context;
 import android.text.TextUtils;
+
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -16,6 +18,7 @@ import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android_ddp.DDPSubscription;
+import io.realm.RealmResults;
 
 public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   protected final Context context;
@@ -167,7 +170,16 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   private void onDocumentRemoved(Realm realm, DDPSubscription.Removed docEvent)
       throws JSONException {
     //executed in RealmTransaction
-    realm.where(getModelClass()).equalTo("_id", docEvent.docID).findAll().deleteAllFromRealm();
+    RealmResults<? extends RealmObject> docs = realm.where(getModelClass())
+            .equalTo("_id", docEvent.docID).findAll();
+    if (RealmUser.class.equals(getModelClass())) {
+      for (RealmObject doc : docs) {
+        RealmUser user = (RealmUser) doc;
+        user.setStatus(RealmUser.STATUS_OFFLINE);
+      }
+    } else {
+      docs.deleteAllFromRealm();
+    }
   }
 
   private void mergeJson(JSONObject target, JSONObject src) throws JSONException {
