@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import com.hadisatrio.optional.Optional;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -217,11 +219,28 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .map(Optional::get)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-            room -> view.render(room),
+        .subscribe(room -> {
+              if (room.isDirectMessage()) {
+                getUserByUsername(room, room.getName());
+              } else {
+                view.render(room, null);
+              }
+            },
             Logger::report
         );
+    addSubscription(subscription);
+  }
 
+  private void getUserByUsername(Room room, String username) {
+    final Disposable subscription = userRepository.getByUsername(username)
+        .distinctUntilChanged()
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(user -> view.render(room, user),
+            Logger::report
+        );
     addSubscription(subscription);
   }
 
