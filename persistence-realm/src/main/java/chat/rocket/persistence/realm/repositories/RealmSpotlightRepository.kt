@@ -10,7 +10,6 @@ import chat.rocket.persistence.realm.models.ddp.RealmSpotlight.Columns
 import hu.akarnokd.rxjava.interop.RxJavaInterop
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.realm.Case
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
@@ -20,7 +19,7 @@ class RealmSpotlightRepository(private val hostname: String) : RealmRepository()
 
     override fun getSuggestionsFor(term: String, limit: Int): Flowable<List<Spotlight>> {
         return Flowable.defer { Flowable.using<RealmResults<RealmSpotlight>, Pair<Realm, Looper>>({
-            Pair<Realm, Looper>(RealmStore.getRealm(hostname), Looper.myLooper())
+            Pair(RealmStore.getRealm(hostname), Looper.myLooper())
         }, { pair -> RxJavaInterop.toV2Flowable<RealmResults<RealmSpotlight>>(pair.first.where(RealmSpotlight::class.java)
                 .findAllSorted(Columns.TYPE, Sort.DESCENDING)
                 .asObservable())
@@ -35,7 +34,7 @@ class RealmSpotlightRepository(private val hostname: String) : RealmRepository()
         val total = realmSpotlightList.size
         val spotlightList = ArrayList<Spotlight>(total)
 
-        (0..total - 1).mapTo(spotlightList) {
+        (0 until total).mapTo(spotlightList) {
             realmSpotlightList[it].asSpotlight()
         }
 
