@@ -84,6 +84,7 @@ android {
         //avoiding okio error: https://github.com/square/okhttp/issues/896
         lintConfig file("lint.xml")
     }
+    
     sourceSets {
         debug {
             manifest.srcFile 'src/debug/AndroidManifest.xml'
