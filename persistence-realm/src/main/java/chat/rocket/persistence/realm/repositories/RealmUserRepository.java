@@ -11,7 +11,6 @@ import io.realm.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
-import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.persistence.realm.RealmStore;
