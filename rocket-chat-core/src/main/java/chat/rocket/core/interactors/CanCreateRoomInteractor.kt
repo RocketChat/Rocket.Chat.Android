@@ -14,7 +14,7 @@ class CanCreateRoomInteractor(private val userRepository: UserRepository,
 
     fun canCreate(roomId: String): Single<Boolean> {
         return Flowable.zip<Optional<User>, Optional<Session>, String, Boolean>(
-                userRepository.current,
+                userRepository.getCurrent(),
                 sessionInteractor.getDefault(),
                 Flowable.just(roomId),
                 Function3 { user, session, room -> user.isPresent && session.isPresent && room != null }

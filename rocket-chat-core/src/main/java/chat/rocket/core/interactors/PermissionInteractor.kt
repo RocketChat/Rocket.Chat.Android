@@ -14,7 +14,7 @@ class PermissionInteractor(private val userRepository: UserRepository,
                            private val permissionRepository: PermissionRepository) {
 
     fun isAllowed(permissionId: String, room: Room): Single<Boolean> {
-        return userRepository.current
+        return userRepository.getCurrent()
                 .first(Optional.absent())
                 .flatMap {
                     if (!it.isPresent) {
