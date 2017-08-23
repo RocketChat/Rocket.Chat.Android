@@ -19,7 +19,6 @@ import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 public class RealmUserRepository extends RealmRepository implements UserRepository {
-
   private final String hostname;
 
   public RealmUserRepository(String hostname) {
@@ -50,14 +49,44 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
   }
 
   @Override
-  public Flowable<List<User>> getSortedLikeName(String name, SortDirection direction, int limit) {
+  public Flowable<Optional<User>> getByUsername(String username) {
+    return Flowable.defer(() -> Flowable.using(
+        () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+        pair -> {
+          RealmUser realmUser = pair.first.where(RealmUser.class)
+              .equalTo(RealmUser.USERNAME, username)
+              .findFirst();
+
+          if (realmUser == null) {
+            return Flowable.just(Optional.<RealmUser>absent());
+          }
+
+          return RxJavaInterop.toV2Flowable(
+              realmUser
+                  .<RealmUser>asObservable()
+                  .filter(user -> user.isLoaded() && user.isValid())
+                  .map(Optional::of));
+        },
+        pair -> close(pair.first, pair.second)
+    )
+        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+        .map(optional -> {
+          if (optional.isPresent()) {
+            return Optional.of(optional.get().asUser());
+          }
+
+          return Optional.absent();
+        }));
+  }
+
+  @Override
+  public Flowable<List<User>> getSortedLikeName(String name, int limit) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> RxJavaInterop.toV2Flowable(
             pair.first.where(RealmUser.class)
                 .like(RealmUser.USERNAME, "*" + name + "*", Case.INSENSITIVE)
-                .findAllSorted(RealmUser.USERNAME,
-                    direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
+                .findAllSorted(RealmUser.USERNAME, Sort.DESCENDING)
                 .asObservable()),
         pair -> close(pair.first, pair.second)
     )
@@ -65,18 +94,6 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
         .filter(realmUsers -> realmUsers != null && realmUsers.isLoaded()
             && realmUsers.isValid())
         .map(realmUsers -> toList(safeSubList(realmUsers, 0, limit))));
-  }
-
-  private List<User> toList(RealmResults<RealmUser> realmUsers) {
-    int total = realmUsers.size();
-
-    final List<User> userList = new ArrayList<>(total);
-
-    for (int i = 0; i < total; i++) {
-      userList.add(realmUsers.get(i).asUser());
-    }
-
-    return userList;
   }
 
   private List<User> toList(List<RealmUser> realmUsers) {
