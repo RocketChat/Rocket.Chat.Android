@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import chat.rocket.core.models.User;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -524,17 +525,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   @Override
-  public void render(Room room) {
-    String type = room.getType();
-    if (Room.TYPE_CHANNEL.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
-    } else if (Room.TYPE_PRIVATE.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_lock_gray_24dp);
-    } else if (Room.TYPE_DIRECT_MESSAGE.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_at_gray_24dp);
-    } else {
-      setToolbarRoomIcon(0);
-    }
+  public void render(Room room, @Nullable User user) {
     setToolbarTitle(room.getName());
 
     boolean unreadMessageExists = room.isAlert();
@@ -542,6 +533,33 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       newMessageIndicatorManager.reset();
     }
     previousUnreadMessageExists = unreadMessageExists;
+
+    if (room.isChannel()) {
+      setToolbarRoomIcon(R.drawable.ic_hashtag_opaque_black_24dp);
+      return;
+    }
+
+    if (room.isPrivate()) {
+      setToolbarRoomIcon(R.drawable.ic_padlock_opaque_black_24dp);
+      return;
+    }
+
+    if (user != null) {
+    switch (user.getStatus()) {
+      case User.STATUS_ONLINE:
+        setToolbarRoomIcon(R.drawable.ic_at_online_24dp);
+        break;
+      case User.STATUS_AWAY:
+        setToolbarRoomIcon(R.drawable.ic_at_away_24dp);
+        break;
+      case User.STATUS_BUSY:
+        setToolbarRoomIcon(R.drawable.ic_at_bush_24dp);
+        break;
+      default:
+        setToolbarRoomIcon(R.drawable.ic_at_opaque_black_24dp);
+        break;
+      }
+    }
   }
 
   @Override
