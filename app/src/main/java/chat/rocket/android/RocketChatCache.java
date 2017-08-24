@@ -83,7 +83,7 @@ public class RocketChatCache {
           listener = (sharedPreferences, changedKey) -> {
         if (key.equals(changedKey) && !emitter.isCancelled()) {
           String value = getString(key, null);
-          emitter.onNext(Optional.of(value));
+          emitter.onNext(Optional.ofNullable(value));
         }
       };
 
