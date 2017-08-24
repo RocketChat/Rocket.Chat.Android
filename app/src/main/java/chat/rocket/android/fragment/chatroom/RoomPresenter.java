@@ -6,8 +6,6 @@ import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
 
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
