@@ -2,6 +2,7 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import android.net.Uri;
+import chat.rocket.android.helper.OkHttpHelper;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import org.json.JSONArray;
@@ -13,7 +14,6 @@ import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.FileUploadingHelper;
 import chat.rocket.android.helper.LogIfError;
-import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.models.internal.FileUploading;
@@ -167,7 +167,7 @@ public class FileUploadingToUrlObserver extends AbstractModelObserver<FileUpload
           .post(bodyBuilder.build())
           .build();
 
-      Response response = OkHttpHelper.getClientForUploadFile().newCall(request).execute();
+      Response response = OkHttpHelper.INSTANCE.getClientForUploadFile().newCall(request).execute();
       if (response.isSuccessful()) {
         return Task.forResult(downloadUrl);
       } else {

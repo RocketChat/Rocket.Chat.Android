@@ -2,6 +2,7 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import android.net.Uri;
+import chat.rocket.android.helper.OkHttpHelper;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import org.json.JSONObject;
@@ -11,7 +12,6 @@ import java.util.List;
 import bolts.Task;
 import chat.rocket.android.api.FileUploadingHelper;
 import chat.rocket.android.helper.LogIfError;
-import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
@@ -143,7 +143,7 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
               .post(RequestBody.create(contentType, buffer, 0, read))
               .build();
 
-          Response response = OkHttpHelper.getClientForUploadFile().newCall(request).execute();
+          Response response = OkHttpHelper.INSTANCE.getClientForUploadFile().newCall(request).execute();
           if (response.isSuccessful()) {
             final JSONObject obj = new JSONObject()
                 .put(FileUploading.ID, uplId)

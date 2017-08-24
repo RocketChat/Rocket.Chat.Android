@@ -3,9 +3,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
-    maven {
-        url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
-    }
+    maven { url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo' }
 }
 
 apply plugin: 'kotlin-android'
@@ -64,7 +62,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable true
+            versionNameSuffix '-DEBUG'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -86,6 +93,16 @@ android {
         //avoiding okio error: https://github.com/square/okhttp/issues/896
         lintConfig file("lint.xml")
     }
+
+    sourceSets {
+        debug {
+            manifest.srcFile 'src/debug/AndroidManifest.xml'
+        }
+
+        release {
+            manifest.srcFile 'src/release/AndroidManifest.xml'
+        }
+    }
 }
 
 play {
@@ -95,7 +112,9 @@ play {
 
 ext {
     playLibVersion = '11.0.4'
-    stethoVersion = '1.4.2'
+    stethoVersion = '1.5.0'
+    stethoOkhttp3Version = '1.5.0'
+    stethoRealmVersion = '2.1.0'
     rxbindingVersion = '2.0.0'
     rxlifecycleVersion = '2.1.0'
     icepickVersion = '3.2.0'
@@ -124,9 +143,9 @@ dependencies {
 
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
 
-    compile "com.facebook.stetho:stetho:$stethoVersion"
-    compile "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
-    compile 'com.uphyca:stetho_realm:2.1.0'
+    debugCompile "com.facebook.stetho:stetho:$stethoVersion"
+    debugCompile "com.facebook.stetho:stetho-okhttp3:$stethoOkhttp3Version"
+    debugCompile "com.uphyca:stetho_realm:$stethoRealmVersion"
 
     compile "com.jakewharton.rxbinding2:rxbinding:$rxbindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxbindingVersion"

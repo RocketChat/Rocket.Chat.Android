@@ -2,13 +2,13 @@ package chat.rocket.android.api;
 
 import android.support.annotation.Nullable;
 
+import chat.rocket.android.helper.OkHttpHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.UUID;
 
 import bolts.Task;
-import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.DDPClient;
@@ -25,7 +25,7 @@ public class DDPClientWrapper {
   private final String hostname;
 
   private DDPClientWrapper(String hostname) {
-    ddpClient = new DDPClient(OkHttpHelper.getClientForWebSocket());
+    ddpClient = new DDPClient(OkHttpHelper.INSTANCE.getClientForWebSocket());
     this.hostname = hostname;
   }
 
