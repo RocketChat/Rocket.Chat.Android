@@ -14,7 +14,9 @@ public interface RoomContract {
 
     void setupWith(RocketChatAbsoluteUrl rocketChatAbsoluteUrl);
 
-    void render(Room room, @Nullable User user);
+    void render(Room room);
+
+    void showUserStatus(User user);
 
     void updateHistoryState(boolean hasNext, boolean isLoaded);
 

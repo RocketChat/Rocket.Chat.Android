@@ -525,7 +525,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   @Override
-  public void render(Room room, @Nullable User user) {
+  public void render(Room room) {
     setToolbarTitle(room.getName());
 
     boolean unreadMessageExists = room.isAlert();
@@ -543,8 +543,10 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       setToolbarRoomIcon(R.drawable.ic_padlock_opaque_black_24dp);
       return;
     }
+  }
 
-    if (user != null) {
+  @Override
+  public void showUserStatus(User user) {
     switch (user.getStatus()) {
       case User.STATUS_ONLINE:
         setToolbarRoomIcon(R.drawable.ic_at_online_24dp);
@@ -558,7 +560,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       default:
         setToolbarRoomIcon(R.drawable.ic_at_opaque_black_24dp);
         break;
-      }
     }
   }
 
