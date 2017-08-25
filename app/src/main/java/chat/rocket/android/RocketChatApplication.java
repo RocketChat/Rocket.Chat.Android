@@ -1,11 +1,11 @@
 package chat.rocket.android;
 
 import android.support.multidex.MultiDexApplication;
+import chat.rocket.android.helper.OkHttpHelper;
 import com.crashlytics.android.Crashlytics;
 
 import io.fabric.sdk.android.Fabric;
 import java.util.List;
-import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.core.models.ServerInfo;
@@ -29,6 +29,6 @@ public class RocketChatApplication extends MultiDexApplication {
       RealmStore.put(serverInfo.getHostname());
     }
 
-    RocketChatWidgets.initialize(this, OkHttpHelper.getClientForDownloadFile(this));
+    RocketChatWidgets.initialize(this, OkHttpHelper.INSTANCE.getClientForDownloadFile(this));
   }
 }

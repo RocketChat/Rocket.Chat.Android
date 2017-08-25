@@ -62,7 +62,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable true
+            versionNameSuffix '-DEBUG'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -84,10 +93,14 @@ android {
         //avoiding okio error: https://github.com/square/okhttp/issues/896
         lintConfig file("lint.xml")
     }
-    
+
     sourceSets {
         debug {
             manifest.srcFile 'src/debug/AndroidManifest.xml'
+        }
+
+        release {
+            manifest.srcFile 'src/release/AndroidManifest.xml'
         }
     }
 }
@@ -160,6 +173,7 @@ dependencies {
     provided 'io.reactivex.rxjava2:rxjava:2.1.0'
     provided 'io.reactivex:rxjava:1.3.0'
     provided "com.github.akarnokd:rxjava2-interop:0.10.2"
+    provided 'com.hadisatrio:Optional:v1.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

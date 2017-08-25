@@ -67,5 +67,7 @@ dependencies {
 
     compile 'com.parse.bolts:bolts-tasks:1.4.0'
 
+    provided 'com.hadisatrio:Optional:v1.0.1'
+
     testCompile 'junit:junit:4.12'
 }

@@ -1,13 +1,13 @@
 package chat.rocket.android.fragment.add_server;
 
 import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.helper.OkHttpHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.rest.DefaultServerPolicyApi;
 import chat.rocket.android.api.rest.ServerPolicyApi;
-import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.ServerPolicyApiValidationHelper;
 import chat.rocket.android.helper.ServerPolicyHelper;
 import chat.rocket.android.service.ConnectivityManagerApi;
@@ -29,7 +29,7 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
   }
 
   public void connectToEnforced(final String hostname) {
-    final ServerPolicyApi serverPolicyApi = new DefaultServerPolicyApi(OkHttpHelper.getClientForUploadFile(), hostname);
+    final ServerPolicyApi serverPolicyApi = new DefaultServerPolicyApi(OkHttpHelper.INSTANCE.getClientForUploadFile(), hostname);
     final ServerPolicyApiValidationHelper validationHelper = new ServerPolicyApiValidationHelper(serverPolicyApi);
 
     clearSubscriptions();
