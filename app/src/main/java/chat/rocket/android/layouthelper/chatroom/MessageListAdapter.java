@@ -32,6 +32,7 @@ public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessa
   public MessageListAdapter(Context context, String hostname) {
     super(context);
     this.hostname = hostname;
+    this.hasNext = true;
   }
 
   public void setAbsoluteUrl(AbsoluteUrl absoluteUrl) {
