@@ -4,8 +4,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -21,6 +23,8 @@ import chat.rocket.core.models.Attachment;
 import chat.rocket.core.models.AttachmentAuthor;
 import chat.rocket.core.models.AttachmentField;
 import chat.rocket.core.models.AttachmentTitle;
+
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
@@ -210,9 +214,19 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     imageContainer.setVisibility(VISIBLE);
 
-    final SimpleDraweeView attachedImage =
-        (SimpleDraweeView) attachmentView.findViewById(R.id.image);
+    final SimpleDraweeView attachedImage = attachmentView.findViewById(R.id.image);
     final View load = attachmentView.findViewById(R.id.image_load);
+
+    // Fix for https://fabric.io/rocketchat3/android/apps/chat.rocket.android/issues/59982403be077a4dcc4d7dc3/sessions/599F217000CF00015C771EEF2021AA0F_f9320e3f88fd11e7935256847afe9799_0_v2?
+    // From: https://github.com/facebook/fresco/issues/1176#issuecomment-216830098
+    // android.support.v4.content.ContextCompat creates your vector drawable
+    Drawable placeholderDrawable = ContextCompat.getDrawable(getContext(), R.drawable.image_dummy);
+
+    // Set the placeholder image to the placeholder vector drawable
+    attachedImage.setHierarchy(
+            GenericDraweeHierarchyBuilder.newInstance(getResources())
+                    .setPlaceholderImage(placeholderDrawable)
+                    .build());
 
     loadImage(absolutize(attachment.getImageUrl()), attachedImage, load, autoloadImages);
   }
