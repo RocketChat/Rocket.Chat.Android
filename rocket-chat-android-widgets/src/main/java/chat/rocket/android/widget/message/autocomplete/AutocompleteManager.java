@@ -220,6 +220,9 @@ public class AutocompleteManager {
   }
 
   private void replaceSelected(String autocompleteSuggestion) {
+    if (text == null) {
+      return;
+    }
     final String preText = text.substring(0, fromIndex);
     final String postText = text.substring(toIndex);
 
