@@ -24,8 +24,8 @@ public class RoomToolbar extends Toolbar {
   private  TextView titleTextView;
   private ImageView roomIconImageView;
   private ImageView badgeImageView;
-  Drawable privateChannelDrawable,
-  Drawable publicChannelDrawable,
+  Drawable privateChannelDrawable;
+  Drawable publicChannelDrawable;
   Drawable userStatusDrawable;
   public static final int STATUS_ONLINE = 1;
   public static final int STATUS_BUSY = 2;
