@@ -3,8 +3,8 @@ package chat.rocket.android.fragment.chatroom;
 import chat.rocket.android.R;
 
 public class HomeFragment extends AbstractChatRoomFragment {
-  public HomeFragment() {
-  }
+
+  public HomeFragment() {}
 
   @Override
   protected int getLayout() {
@@ -13,13 +13,6 @@ public class HomeFragment extends AbstractChatRoomFragment {
 
   @Override
   protected void onSetupView() {
-    setToolbarTitle(R.string.home_fragment_title);
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    setToolbarRoomIcon(0);
-    setToolbarTitle(R.string.home_fragment_title);
+    setToolbarTitle(getText(R.string.home_fragment_title));
   }
 }
