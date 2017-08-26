@@ -14,6 +14,7 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,32 +22,57 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class RoomToolbar extends Toolbar {
 
   public RoomToolbar(Context context) {
     super(context);
-    initialize(context, null);
+    initialize(context);
   }
 
   public RoomToolbar(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    initialize(context, attrs);
+    initialize(context);
   }
 
   public RoomToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    initialize(context, attrs);
+    initialize(context);
   }
 
-  private void initialize(Context context, @Nullable AttributeSet attrs) {
+  private void initialize(Context context) {
     View.inflate(context, R.layout.room_toolbar, this);
+    setNavigationIcon();
 
     titleTextView = findViewById(R.id.toolbar_title);
     roomIconImageView = findViewById(R.id.roomIconImageView);
     userStatusDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_user_status_black_24dp, null);
     privateChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_lock_black_24dp, null);
     publicChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_hashtag_black_24dp, null);
+
+    // TODO Change to lambda and method reference (AS 3+, jackOptions ?).
+    // List<Drawable> drawableArrayList = Arrays.asList(userStatusDrawable, privateChannelDrawable, publicChannelDrawable);
+    // drawableArrayList.forEach(...)
+    // That is beautiful, but consumes more resources, does more process?? #thinking...
+    wrapDrawable(userStatusDrawable);
+    wrapDrawable(privateChannelDrawable);
+    wrapDrawable(publicChannelDrawable);
+
+    tintDrawable(userStatusDrawable, android.R.color.white);
+    tintDrawable(privateChannelDrawable, android.R.color.white);
+    tintDrawable(publicChannelDrawable, android.R.color.white);
+  }
+
+  private void setNavigationIcon() {
+    Drawable menuDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_menu_black_24dp, null);
+    wrapDrawable(menuDrawable);
+    tintDrawable(menuDrawable, android.R.color.white);
+    super.setNavigationIcon(menuDrawable);
   }
 
   @Override
@@ -138,7 +164,7 @@ public class RoomToolbar extends Toolbar {
         .beginConfig()
         .useFont(Typeface.SANS_SERIF)
         .endConfig()
-        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.badge_color));
+        .buildRound(icon, ContextCompat.getColor(getContext(), android.R.color.white));
   }
 
   @Override
@@ -162,8 +188,10 @@ public class RoomToolbar extends Toolbar {
         int badgeTop = iconTop + (iconBottom - iconTop) / 8;
         int badgeBottom = iconTop + (iconBottom - iconTop) * 3 / 8;
         badgeImageView.layout(badgeLeft, badgeTop, badgeRight, badgeBottom);
-      } catch (Exception exception) {
-        return;
+      } catch (NoSuchFieldException noSuchFieldException) {
+        Log.v("RoomToolbar exception: ", noSuchFieldException.getMessage());
+      } catch (IllegalAccessException illegalAccessException) {
+        Log.v("RoomToolbar exception: ", illegalAccessException.getMessage());
       }
     }
   }
