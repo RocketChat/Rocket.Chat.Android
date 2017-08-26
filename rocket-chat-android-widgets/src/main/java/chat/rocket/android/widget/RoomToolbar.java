@@ -1,16 +1,13 @@
 package chat.rocket.android.widget;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -22,13 +19,16 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class RoomToolbar extends Toolbar {
+  private  TextView titleTextView;
+  private ImageView roomIconImageView;
+  private ImageView badgeImageView;
+  Drawable privateChannelDrawable, publicChannelDrawable, userStatusDrawable;
+  public static final int STATUS_ONLINE = 1;
+  public static final int STATUS_BUSY = 2;
+  public static final int STATUS_AWAY = 3;
+  public static final int STATUS_OFFLINE = 4;
 
   public RoomToolbar(Context context) {
     super(context);
@@ -195,13 +195,4 @@ public class RoomToolbar extends Toolbar {
       }
     }
   }
-
-  private  TextView titleTextView;
-  private ImageView roomIconImageView;
-  private ImageView badgeImageView;
-  Drawable privateChannelDrawable, publicChannelDrawable, userStatusDrawable;
-  public static final int STATUS_ONLINE = 1;
-  public static final int STATUS_BUSY = 2;
-  public static final int STATUS_AWAY = 3;
-  public static final int STATUS_OFFLINE = 4;
 }
