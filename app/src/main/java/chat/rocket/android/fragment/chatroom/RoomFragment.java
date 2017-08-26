@@ -535,32 +535,18 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     previousUnreadMessageExists = unreadMessageExists;
 
     if (room.isChannel()) {
-      setToolbarRoomIcon(R.drawable.ic_hashtag_opaque_black_24dp);
+      showToolbarPublicChannelIcon();
       return;
     }
 
     if (room.isPrivate()) {
-      setToolbarRoomIcon(R.drawable.ic_padlock_opaque_black_24dp);
-      return;
+      showToolbarPrivateChannelIcon();
     }
   }
 
   @Override
   public void showUserStatus(User user) {
-    switch (user.getStatus()) {
-      case User.STATUS_ONLINE:
-        setToolbarRoomIcon(R.drawable.ic_at_online_24dp);
-        break;
-      case User.STATUS_AWAY:
-        setToolbarRoomIcon(R.drawable.ic_at_away_24dp);
-        break;
-      case User.STATUS_BUSY:
-        setToolbarRoomIcon(R.drawable.ic_at_bush_24dp);
-        break;
-      default:
-        setToolbarRoomIcon(R.drawable.ic_at_opaque_black_24dp);
-        break;
-    }
+    showToolbarUserStatuslIcon(user.getStatus());
   }
 
   @Override
