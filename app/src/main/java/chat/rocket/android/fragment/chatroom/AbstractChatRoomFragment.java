@@ -1,9 +1,7 @@
 package chat.rocket.android.fragment.chatroom;
 
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,40 +9,47 @@ import android.view.ViewGroup;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.widget.RoomToolbar;
+import chat.rocket.core.models.User;
 
 abstract class AbstractChatRoomFragment extends AbstractFragment {
-
   private RoomToolbar roomToolbar;
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-    roomToolbar = (RoomToolbar) getActivity().findViewById(R.id.activity_main_toolbar);
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    roomToolbar = getActivity().findViewById(R.id.activity_main_toolbar);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  protected void setToolbarTitle(@StringRes int stringResId) {
-    if (roomToolbar == null) {
-      return;
-    }
-
-    roomToolbar.setTitle(stringResId);
-  }
-
   protected void setToolbarTitle(CharSequence title) {
-    if (roomToolbar == null) {
-      return;
-    }
-
     roomToolbar.setTitle(title);
   }
 
-  protected void setToolbarRoomIcon(@DrawableRes int drawableResId) {
-    if (roomToolbar == null) {
-      return;
-    }
+  protected void showToolbarPrivateChannelIcon() {
+    roomToolbar.showPrivateChannelIcon();
+  }
 
-    roomToolbar.setRoomIcon(drawableResId);
+  protected void showToolbarPublicChannelIcon() {
+    roomToolbar.showPublicChannelIcon();
+  }
+
+  protected void showToolbarUserStatuslIcon(String status) {
+    switch (status) {
+      case User.STATUS_ONLINE:
+        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_ONLINE);
+        break;
+      case User.STATUS_BUSY:
+        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_BUSY);
+        break;
+      case User.STATUS_AWAY:
+        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_AWAY);
+        break;
+      case User.STATUS_OFFLINE:
+        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
+        break;
+      default:
+        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
+        break;
+    }
   }
 }
