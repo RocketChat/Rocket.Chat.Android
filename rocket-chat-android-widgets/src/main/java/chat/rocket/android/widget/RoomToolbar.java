@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
@@ -22,9 +23,6 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import java.lang.reflect.Field;
 
 public class RoomToolbar extends Toolbar {
-
-  private TextView titleTextView;
-  private ImageView badgeImageView;
 
   public RoomToolbar(Context context) {
     super(context);
@@ -44,65 +42,67 @@ public class RoomToolbar extends Toolbar {
   private void initialize(Context context, @Nullable AttributeSet attrs) {
     View.inflate(context, R.layout.room_toolbar, this);
 
-    titleTextView = (TextView) findViewById(R.id.toolbar_title);
-
-    if (titleTextView == null) {
-      return;
-    }
-
-    TypedArray typedArrayBase = context.getTheme().obtainStyledAttributes(new int[]{
-        R.attr.titleTextAppearance
-    });
-    try {
-      TextViewCompat.setTextAppearance(titleTextView,
-          typedArrayBase.getResourceId(0,
-              android.support.v7.appcompat.R.style.TextAppearance_Widget_AppCompat_Toolbar_Title));
-    } finally {
-      typedArrayBase.recycle();
-    }
-
-    TypedArray typedArray = context.getTheme().obtainStyledAttributes(
-        attrs,
-        R.styleable.RoomToolbar,
-        0, 0);
-
-    try {
-      titleTextView.setText(typedArray.getText(R.styleable.RoomToolbar_titleText));
-      titleTextView.setCompoundDrawablePadding(
-          typedArray.getLayoutDimension(R.styleable.RoomToolbar_titleDrawablePadding, 0));
-    } finally {
-      typedArray.recycle();
-    }
+    titleTextView = findViewById(R.id.toolbar_title);
+    roomIconImageView = findViewById(R.id.roomIconImageView);
+    userStatusDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_user_status_black_24dp, null);
+    privateChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_lock_black_24dp, null);
+    publicChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_hashtag_black_24dp, null);
   }
 
   @Override
   public void setTitle(@StringRes int resId) {
-    if (titleTextView != null) {
-      titleTextView.setText(resId);
-      return;
-    }
-    super.setTitle(resId);
+    titleTextView.setText(getContext().getText(resId));
   }
 
   @Override
   public void setTitle(CharSequence title) {
-    if (titleTextView != null) {
-      titleTextView.setText(title);
-      return;
-    }
-    super.setTitle(title);
+    titleTextView.setText(title);
   }
 
-  public void setRoomIcon(@DrawableRes int drawableResId) {
-    if (titleTextView == null) {
-      return;
+  public void showPrivateChannelIcon() {
+    roomIconImageView.setImageDrawable(privateChannelDrawable);
+  }
+
+  public void showPublicChannelIcon() {
+    roomIconImageView.setImageDrawable(publicChannelDrawable);
+  }
+
+  public void showUserStatusIcon(int status) {
+    wrapDrawable(userStatusDrawable);
+
+    switch (status) {
+      case STATUS_ONLINE:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_online);
+        break;
+      case STATUS_BUSY:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_busy);
+        break;
+      case STATUS_AWAY:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_away);
+        break;
+      case STATUS_OFFLINE:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_offline);
+        break;
+      default:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_offline);
+        break;
     }
 
-    Drawable drawable = drawableResId > 0
-        ? VectorDrawableCompat.create(getResources(), drawableResId, null)
-        : null;
+    roomIconImageView.setImageDrawable(userStatusDrawable);
+  }
 
-    titleTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+  private void wrapDrawable(Drawable drawable) {
+    DrawableCompat.wrap(drawable);
+  }
+
+  /**
+   * REMARK: You MUST always wrap the drawable before tint it.
+   * @param drawable The drawable to tint.
+   * @param color The color to tint the drawable.
+   * @see #wrapDrawable(Drawable)
+   */
+  private void tintDrawable(Drawable drawable, int color) {
+    DrawableCompat.setTint(drawable, ContextCompat.getColor(getContext(), color));
   }
 
   public void setUnreadBudge(int numUnreadChannels, int numMentionsSum) {
@@ -141,8 +141,6 @@ public class RoomToolbar extends Toolbar {
         .buildRound(icon, ContextCompat.getColor(getContext(), R.color.badge_color));
   }
 
-
-
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
     super.onLayout(changed, left, top, right, bottom);
@@ -170,4 +168,12 @@ public class RoomToolbar extends Toolbar {
     }
   }
 
+  private  TextView titleTextView;
+  private ImageView roomIconImageView;
+  private ImageView badgeImageView;
+  Drawable privateChannelDrawable, publicChannelDrawable, userStatusDrawable;
+  public static final int STATUS_ONLINE = 1;
+  public static final int STATUS_BUSY = 2;
+  public static final int STATUS_AWAY = 3;
+  public static final int STATUS_OFFLINE = 4;
 }
