@@ -89,11 +89,11 @@ public class TwoStepAuthFragment extends AbstractServerConfigFragment
   protected void onSetupView() {
     waitingView = rootView.findViewById(R.id.waiting);
 
-    final TextView twoStepCodeTextView = (TextView) rootView.findViewById(R.id.two_step_code);
+    final TextView twoStepCodeTextView = rootView.findViewById(R.id.two_step_code);
+
+    twoStepCodeTextView.requestFocus();
 
     submitButton = rootView.findViewById(R.id.btn_two_step_login);
-    submitButton.setOnClickListener(view -> {
-      presenter.onCode(twoStepCodeTextView.getText().toString());
-    });
+    submitButton.setOnClickListener(v -> presenter.onCode(twoStepCodeTextView.getText().toString()));
   }
 }
