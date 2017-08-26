@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import chat.rocket.android.LaunchUtil;
@@ -30,9 +29,8 @@ import hugo.weaving.DebugLog;
  * Entry-point for Rocket.Chat.Android application.
  */
 public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
-
+  private RoomToolbar toolbar;
   private StatusTicker statusTicker;
-
   private MainContract.Presenter presenter;
 
   @Override
@@ -44,7 +42,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
+    toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
     statusTicker = new StatusTicker();
     setupSidebar();
   }
@@ -84,7 +82,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     });
 
     final DrawerArrowDrawable drawerArrowDrawable = new DrawerArrowDrawable(this);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
     toolbar.setNavigationIcon(drawerArrowDrawable);
     toolbar.setNavigationOnClickListener(view -> {
       if (pane.isSlideable() && !pane.isOpen()) {
@@ -186,10 +183,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   @Override
   public void showUnreadCount(long roomsCount, int mentionsCount) {
-    RoomToolbar toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
-    if (toolbar != null) {
       toolbar.setUnreadBudge((int) roomsCount, mentionsCount);
-    }
   }
 
   @Override
