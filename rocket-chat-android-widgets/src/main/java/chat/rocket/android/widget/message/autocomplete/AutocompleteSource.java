@@ -12,7 +12,7 @@ public abstract class AutocompleteSource<A extends AutocompleteAdapter, I extend
       new AutocompleteViewHolder.OnClickListener<I>() {
         @Override
         public void onClick(I autocompleteItem) {
-          if (autocompleteSelected != null) {
+          if (autocompleteSelected != null && autocompleteItem != null) {
             autocompleteSelected.onSelected(getAutocompleteSuggestion(autocompleteItem));
           }
         }

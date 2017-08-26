@@ -99,7 +99,7 @@ public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
 
   @Override
   protected String getAutocompleteSuggestion(UserItem autocompleteItem) {
-    return getTrigger() + autocompleteItem.getSuggestion();
+    return getTrigger() + (autocompleteItem == null ? "" : autocompleteItem.getSuggestion());
   }
 
   private List<UserItem> toUserItemList(List<SpotlightUser> users) {
