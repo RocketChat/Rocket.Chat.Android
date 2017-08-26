@@ -11,17 +11,13 @@
             android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <chat.rocket.android.widget.RoomToolbar
-                    android:id="@+id/activity_main_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:theme="@style/Widget.RocketChat.RoomToolbar"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:titleText="@string/app_name"
-                    app:titleDrawablePadding="@dimen/margin_8" />
+                android:id="@+id/activity_main_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
