@@ -2,22 +2,23 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
+
 import com.hadisatrio.optional.Optional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import chat.rocket.core.models.User;
+import chat.rocket.core.repositories.UserRepository;
+import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
-
-import java.util.ArrayList;
-import java.util.List;
-import chat.rocket.core.models.User;
-import chat.rocket.core.repositories.UserRepository;
-import chat.rocket.persistence.realm.RealmStore;
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 public class RealmUserRepository extends RealmRepository implements UserRepository {
     private final String hostname;
@@ -28,16 +29,17 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
 
     @Override
     public Flowable<Optional<User>> getCurrent() {
-        return Flowable.defer(this::realmGetCurrent)
-                .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-                .filter(it -> it != null && it.isLoaded() && it.isValid())
-                .map(realmUsers -> {
-                    if (realmUsers.size() > 0) {
-                        return Optional.of(realmUsers.get(0).asUser());
-                    }
+        return Flowable.defer(() ->
+                realmGetCurrent()
+                    .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+                    .filter(it -> it != null && it.isLoaded() && it.isValid())
+                    .map(realmUsers -> {
+                        if (realmUsers.size() > 0) {
+                            return Optional.of(realmUsers.get(0).asUser());
+                        }
 
-                    return Optional.<User>absent();
-                });
+                        return Optional.<User>absent();
+                    }));
     }
 
     private Flowable<RealmResults<RealmUser>> realmGetCurrent() {
@@ -53,15 +55,16 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
 
     @Override
     public Flowable<Optional<User>> getByUsername(String username) {
-        return Flowable.defer(() -> realmGetByUsername(username))
-                .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-                .map(optional -> {
-                    if (optional.isPresent()) {
-                        return Optional.of(optional.get().asUser());
-                    }
+        return Flowable.defer(() ->
+                realmGetByUsername(username)
+                        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+                        .map(optional -> {
+                            if (optional.isPresent()) {
+                                return Optional.of(optional.get().asUser());
+                            }
 
-                    return Optional.absent();
-                });
+                            return Optional.absent();
+                        }));
     }
 
     private Flowable<Optional<RealmUser>> realmGetByUsername(String username) {
@@ -89,11 +92,12 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
 
     @Override
     public Flowable<List<User>> getSortedLikeName(String name, int limit) {
-        return Flowable.defer(() -> realmGetSortedLikeName(name))
-                .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
-                .filter(realmUsers -> realmUsers != null && realmUsers.isLoaded()
-                        && realmUsers.isValid())
-                .map(realmUsers -> toList(safeSubList(realmUsers, 0, limit)));
+        return Flowable.defer(() ->
+                realmGetSortedLikeName(name)
+                        .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+                        .filter(realmUsers -> realmUsers != null && realmUsers.isLoaded()
+                                && realmUsers.isValid())
+                        .map(realmUsers -> toList(safeSubList(realmUsers, 0, limit))));
     }
 
     private Flowable<RealmResults<RealmUser>> realmGetSortedLikeName(String name) {
