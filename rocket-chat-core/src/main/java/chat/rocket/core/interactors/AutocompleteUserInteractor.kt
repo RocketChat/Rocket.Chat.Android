@@ -29,7 +29,7 @@ class AutocompleteUserInteractor(private val room: Room,
         return Flowable.zip<String, List<Message>, List<SpotlightUser>, Triple<String, List<Message>, List<SpotlightUser>>>(
                 Flowable.just(name),
                 messageRepository.getAllFrom(room),
-                userRepository.getSortedLikeName(name, SortDirection.DESC, 5).map { it.toSpotlightUsers() },
+                userRepository.getSortedLikeName(name, 5).map { it.toSpotlightUsers() },
                 Function3 { a, b, c -> Triple.create(a, b, c) }
         )
                 .flatMap { triple ->

@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.support.annotation.Nullable;
 
+import chat.rocket.core.models.User;
 import java.util.List;
 import chat.rocket.android.shared.BaseContract;
 import chat.rocket.core.models.Message;
@@ -14,6 +15,8 @@ public interface RoomContract {
     void setupWith(RocketChatAbsoluteUrl rocketChatAbsoluteUrl);
 
     void render(Room room);
+
+    void showUserStatus(User user);
 
     void updateHistoryState(boolean hasNext, boolean isLoaded);
 

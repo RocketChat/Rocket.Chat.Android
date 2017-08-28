@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
+
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -212,17 +213,32 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   private void getRoomInfo() {
     final Disposable subscription = roomRepository.getById(roomId)
-        .distinctUntilChanged()
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-            room -> view.render(room),
-            Logger::report
-        );
-
+            .distinctUntilChanged()
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::processRoom, Logger::report);
     addSubscription(subscription);
+  }
+
+  private void processRoom(Room room) {
+    view.render(room);
+
+    if (room.isDirectMessage()) {
+      getUserByUsername(room.getName());
+    }
+  }
+
+  private void getUserByUsername(String username) {
+    final Disposable disposable = userRepository.getByUsername(username)
+            .distinctUntilChanged()
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(view::showUserStatus, Logger::report);
+    addSubscription(disposable);
   }
 
   private void getRoomHistoryStateInfo() {

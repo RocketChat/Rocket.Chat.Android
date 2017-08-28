@@ -3,7 +3,6 @@ package chat.rocket.core.interactors;
 import io.reactivex.Flowable;
 
 import java.util.List;
-import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
 
@@ -16,6 +15,6 @@ public class UserInteractor {
   }
 
   public Flowable<List<User>> getUserAutocompleteSuggestions(String name) {
-    return userRepository.getSortedLikeName(name, SortDirection.DESC, 5);
+    return userRepository.getSortedLikeName(name, 5);
   }
 }

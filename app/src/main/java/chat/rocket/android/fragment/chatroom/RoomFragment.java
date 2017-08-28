@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import chat.rocket.core.models.User;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -525,16 +526,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   @Override
   public void render(Room room) {
-    String type = room.getType();
-    if (Room.TYPE_CHANNEL.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_hashtag_gray_24dp);
-    } else if (Room.TYPE_PRIVATE.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_lock_gray_24dp);
-    } else if (Room.TYPE_DIRECT_MESSAGE.equals(type)) {
-      setToolbarRoomIcon(R.drawable.ic_at_gray_24dp);
-    } else {
-      setToolbarRoomIcon(0);
-    }
     setToolbarTitle(room.getName());
 
     boolean unreadMessageExists = room.isAlert();
@@ -542,6 +533,20 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       newMessageIndicatorManager.reset();
     }
     previousUnreadMessageExists = unreadMessageExists;
+
+    if (room.isChannel()) {
+      showToolbarPublicChannelIcon();
+      return;
+    }
+
+    if (room.isPrivate()) {
+      showToolbarPrivateChannelIcon();
+    }
+  }
+
+  @Override
+  public void showUserStatus(User user) {
+    showToolbarUserStatuslIcon(user.getStatus());
   }
 
   @Override

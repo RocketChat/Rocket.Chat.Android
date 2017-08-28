@@ -17,7 +17,7 @@ class EditMessageInteractor(private val permissionInteractor: PermissionInteract
 
     fun isAllowed(message: Message): Single<Boolean> {
         return Single.zip<Optional<User>, Optional<Room>, Optional<PublicSetting>, Optional<PublicSetting>, Pair<Optional<Room>, Boolean>>(
-                userRepository.current.first(Optional.absent()),
+                userRepository.getCurrent().first(Optional.absent()),
                 roomRepository.getById(message.roomId).first(Optional.absent()),
                 publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING),
                 publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING_BLOCK_TIMEOUT),
