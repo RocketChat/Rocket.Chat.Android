@@ -85,6 +85,25 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         pane.openPane();
       }
     });
+
+    //ref: ActionBarDrawerToggle#setProgress
+    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+      @Override
+      public void onPanelSlide(View panel, float slideOffset) {
+        drawerArrowDrawable.setProgress(slideOffset);
+      }
+
+      @Override
+      public void onPanelOpened(View panel) {
+        drawerArrowDrawable.setVerticalMirror(true);
+      }
+
+      @Override
+      public void onPanelClosed(View panel) {
+        drawerArrowDrawable.setVerticalMirror(false);
+        closeUserActionContainer();
+      }
+    });
   }
 
   private boolean closeSidebarIfNeeded() {
@@ -135,6 +154,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
         .commit();
+  }
+
+  private void closeUserActionContainer() {
+    SidebarMainFragment sidebarFragment = (SidebarMainFragment) getSupportFragmentManager()
+            .findFragmentById(R.id.sidebar_fragment_container);
+    if (sidebarFragment != null) {
+      sidebarFragment.closeUserActionContainer();
+    }
   }
 
   @Override

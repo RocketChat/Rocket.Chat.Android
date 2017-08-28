@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
+                android:textColor="@color/color_embed_hostname"
                 android:enabled="false" />
 
         <TextView
