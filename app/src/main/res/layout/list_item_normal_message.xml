@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:textColor="@color/timestamp"
+                    android:textColor="@color/color_timestamp"
                     tools:text="12:34" />
 
                 <View
