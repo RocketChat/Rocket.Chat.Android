@@ -33,23 +33,27 @@ abstract class AbstractChatRoomFragment extends AbstractFragment {
     roomToolbar.showPublicChannelIcon();
   }
 
-  protected void showToolbarUserStatuslIcon(String status) {
-    switch (status) {
-      case User.STATUS_ONLINE:
-        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_ONLINE);
-        break;
-      case User.STATUS_BUSY:
-        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_BUSY);
-        break;
-      case User.STATUS_AWAY:
-        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_AWAY);
-        break;
-      case User.STATUS_OFFLINE:
-        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
-        break;
-      default:
-        roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
-        break;
+  protected void showToolbarUserStatuslIcon(@Nullable String status) {
+    if (status == null) {
+      roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
+    } else {
+      switch (status) {
+        case User.STATUS_ONLINE:
+          roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_ONLINE);
+          break;
+        case User.STATUS_BUSY:
+          roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_BUSY);
+          break;
+        case User.STATUS_AWAY:
+          roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_AWAY);
+          break;
+        case User.STATUS_OFFLINE:
+          roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
+          break;
+        default:
+          roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
+          break;
+      }
     }
   }
 }
