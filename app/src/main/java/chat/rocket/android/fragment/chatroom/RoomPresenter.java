@@ -231,10 +231,12 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   private void getUserByUsername(String username) {
-    Disposable disposable = userRepository.getByUsername(username)
+    final Disposable disposable = userRepository.getByUsername(username)
             .distinctUntilChanged()
             .filter(Optional::isPresent)
             .map(Optional::get)
+            .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(view::showUserStatus, Logger::report);
     addSubscription(disposable);
   }
