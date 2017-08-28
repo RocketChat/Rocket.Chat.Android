@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@android:color/white"
     android:theme="@style/AppTheme">
 
     <include layout="@layout/list_item_message_newday" />
@@ -63,6 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
+                    android:textColor="@color/color_timestamp"
                     tools:text="12:34" />
 
                 <View

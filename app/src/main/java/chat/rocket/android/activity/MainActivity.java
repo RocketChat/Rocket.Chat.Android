@@ -107,6 +107,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       @Override
       public void onPanelClosed(View panel) {
         drawerArrowDrawable.setVerticalMirror(false);
+        closeUserActionContainer();
       }
     });
   }
@@ -159,6 +160,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
         .commit();
+  }
+
+  private void closeUserActionContainer() {
+    SidebarMainFragment sidebarFragment = (SidebarMainFragment) getSupportFragmentManager()
+            .findFragmentById(R.id.sidebar_fragment_container);
+    if (sidebarFragment != null) {
+      sidebarFragment.closeUserActionContainer();
+    }
   }
 
   @Override

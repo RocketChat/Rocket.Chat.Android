@@ -166,10 +166,14 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     RxCompoundButton.checkedChanges(toggleUserAction)
         .compose(bindToLifecycle())
         .subscribe(
-            aBoolean -> rootView.findViewById(R.id.user_action_outer_container)
-                .setVisibility(aBoolean ? View.VISIBLE : View.GONE),
+            this::showUserActionContainer,
             Logger::report
         );
+  }
+
+  private void showUserActionContainer(boolean show) {
+    rootView.findViewById(R.id.user_action_outer_container)
+            .setVisibility(show ? View.VISIBLE : View.GONE);
   }
 
   @Override
@@ -256,7 +260,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     });
   }
 
-  private void closeUserActionContainer() {
+  public void closeUserActionContainer() {
     final CompoundButton toggleUserAction = rootView.findViewById(R.id.toggle_user_action);
     if (toggleUserAction != null && toggleUserAction.isChecked()) {
       toggleUserAction.setChecked(false);
