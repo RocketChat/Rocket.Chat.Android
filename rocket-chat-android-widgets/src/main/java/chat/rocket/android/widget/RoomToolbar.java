@@ -21,12 +21,15 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import java.lang.reflect.Field;
 
 public class RoomToolbar extends Toolbar {
-  private  TextView titleTextView;
-  private ImageView roomIconImageView;
+  private TextView toolbarText;
+  private ImageView roomTypeImage;
+  private ImageView userStatusImage;
   private ImageView badgeImageView;
+
   private Drawable privateChannelDrawable;
   private Drawable publicChannelDrawable;
   private Drawable userStatusDrawable;
+
   public static final int STATUS_ONLINE = 1;
   public static final int STATUS_BUSY = 2;
   public static final int STATUS_AWAY = 3;
@@ -48,51 +51,43 @@ public class RoomToolbar extends Toolbar {
   }
 
   private void initialize(Context context) {
-    View.inflate(context, R.layout.room_toolbar, this);
+    View.inflate(context, R.layout.toolbar, this);
     setNavigationIcon();
 
-    titleTextView = findViewById(R.id.toolbar_title);
-    roomIconImageView = findViewById(R.id.roomIconImageView);
+    toolbarText = findViewById(R.id.text_toolbar);
+    roomTypeImage = findViewById(R.id.image_room_type);
+    userStatusImage = findViewById(R.id.image_user_status);
+
+    privateChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_lock_white_24dp, null);
+    publicChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_hashtag_white_24dp, null);
     userStatusDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_user_status_black_24dp, null);
-    privateChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_lock_black_24dp, null);
-    publicChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_hashtag_black_24dp, null);
-
-    // TODO Change to lambda and method reference (AS 3+, jackOptions ?).
-    // List<Drawable> drawableArrayList = Arrays.asList(userStatusDrawable, privateChannelDrawable, publicChannelDrawable);
-    // drawableArrayList.forEach(...)
-    // That is beautiful, but consumes more resources, does more process?? #thinking...
-    wrapDrawable(userStatusDrawable);
-    wrapDrawable(privateChannelDrawable);
-    wrapDrawable(publicChannelDrawable);
-
-    tintDrawable(userStatusDrawable, android.R.color.white);
-    tintDrawable(privateChannelDrawable, android.R.color.white);
-    tintDrawable(publicChannelDrawable, android.R.color.white);
   }
 
   private void setNavigationIcon() {
-    Drawable menuDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_menu_black_24dp, null);
-    wrapDrawable(menuDrawable);
-    tintDrawable(menuDrawable, android.R.color.white);
+    Drawable menuDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_menu_white_24dp, null);
     super.setNavigationIcon(menuDrawable);
   }
 
   @Override
   public void setTitle(@StringRes int resId) {
-    titleTextView.setText(getContext().getText(resId));
+    toolbarText.setText(getContext().getText(resId));
   }
 
   @Override
   public void setTitle(CharSequence title) {
-    titleTextView.setText(title);
+    toolbarText.setText(title);
   }
 
   public void showPrivateChannelIcon() {
-    roomIconImageView.setImageDrawable(privateChannelDrawable);
+    roomTypeImage.setImageDrawable(privateChannelDrawable);
+    userStatusImage.setVisibility(GONE);
+    roomTypeImage.setVisibility(VISIBLE);
   }
 
   public void showPublicChannelIcon() {
-    roomIconImageView.setImageDrawable(publicChannelDrawable);
+    roomTypeImage.setImageDrawable(publicChannelDrawable);
+    userStatusImage.setVisibility(GONE);
+    roomTypeImage.setVisibility(VISIBLE);
   }
 
   public void showUserStatusIcon(int status) {
@@ -116,9 +111,16 @@ public class RoomToolbar extends Toolbar {
         break;
     }
 
-    roomIconImageView.setImageDrawable(userStatusDrawable);
+    userStatusImage.setImageDrawable(userStatusDrawable);
+    roomTypeImage.setVisibility(GONE);
+    userStatusImage.setVisibility(VISIBLE);
   }
 
+  /**
+   * Wraps a drawable to be used for example for tinting.
+   * @param drawable The drawable to wrap.
+   * @see #tintDrawable(Drawable, int)
+   */
   private void wrapDrawable(Drawable drawable) {
     DrawableCompat.wrap(drawable);
   }
