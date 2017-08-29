@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SlidingPaneLayout;
-import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.view.View;
 
 import chat.rocket.android.LaunchUtil;
@@ -81,8 +80,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       }
     });
 
-    final DrawerArrowDrawable drawerArrowDrawable = new DrawerArrowDrawable(this);
-    toolbar.setNavigationIcon(drawerArrowDrawable);
     toolbar.setNavigationOnClickListener(view -> {
       if (pane.isSlideable() && !pane.isOpen()) {
         pane.openPane();
@@ -93,17 +90,17 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
       @Override
       public void onPanelSlide(View panel, float slideOffset) {
-        drawerArrowDrawable.setProgress(slideOffset);
+        toolbar.setNavigationIconProgress(slideOffset);
       }
 
       @Override
       public void onPanelOpened(View panel) {
-        drawerArrowDrawable.setVerticalMirror(true);
+        toolbar.setNavigationIconVerticalMirror(true);
       }
 
       @Override
       public void onPanelClosed(View panel) {
-        drawerArrowDrawable.setVerticalMirror(false);
+        toolbar.setNavigationIconVerticalMirror(false);
         closeUserActionContainer();
       }
     });
