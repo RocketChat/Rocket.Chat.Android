@@ -19,6 +19,8 @@ public interface SidebarMainContract {
 
     void showRoomList(@NonNull List<Room> roomList);
 
+    void showUserStatus(@NonNull User user);
+
     void show(User user);
   }
 
