@@ -47,9 +47,6 @@ abstract class AbstractChatRoomFragment extends AbstractFragment {
         case User.STATUS_AWAY:
           roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_AWAY);
           break;
-        case User.STATUS_OFFLINE:
-          roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
-          break;
         default:
           roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);
           break;
