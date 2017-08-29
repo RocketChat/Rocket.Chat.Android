@@ -192,6 +192,11 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   }
 
   @Override
+  public void showUserStatus(@NonNull User user) {
+    adapter.setUserStatus(user);
+  }
+
+  @Override
   public void show(User user) {
     onRenderCurrentUser(user);
     updateRoomListMode(user);
