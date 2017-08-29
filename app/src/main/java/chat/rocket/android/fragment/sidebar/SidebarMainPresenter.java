@@ -5,6 +5,7 @@ import android.support.v4.util.Pair;
 
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
+import com.hadisatrio.optional.Optional;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -143,12 +144,28 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         .distinctUntilChanged()
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(
-            rooms -> view.showRoomList(rooms),
-            Logger::report
-        );
-
+        .subscribe(this::processRooms, Logger::report);
     addSubscription(subscription);
+  }
+
+  private void processRooms(List<Room> roomList) {
+    view.showRoomList(roomList);
+    for (Room room: roomList) {
+      if (room.isDirectMessage()) {
+        subscribeToDirectMessages(room.getName());
+      }
+    }
+  }
+
+  private void subscribeToDirectMessages(String username) {
+    final Disposable disposable = userRepository.getByUsername(username)
+        .distinctUntilChanged()
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(view::showUserStatus, Logger::report);
+    addSubscription(disposable);
   }
 
   private void updateCurrentUserStatus(String status) {
