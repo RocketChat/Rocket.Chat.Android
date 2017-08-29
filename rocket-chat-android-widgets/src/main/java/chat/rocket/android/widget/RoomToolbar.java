@@ -8,6 +8,7 @@ import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -29,6 +30,8 @@ public class RoomToolbar extends Toolbar {
   private Drawable privateChannelDrawable;
   private Drawable publicChannelDrawable;
   private Drawable userStatusDrawable;
+
+  private DrawerArrowDrawable drawerArrowDrawable;
 
   public static final int STATUS_ONLINE = 1;
   public static final int STATUS_BUSY = 2;
@@ -52,7 +55,7 @@ public class RoomToolbar extends Toolbar {
 
   private void initialize(Context context) {
     View.inflate(context, R.layout.toolbar, this);
-    setNavigationIcon();
+    setNavigationIcon(context);
 
     toolbarText = findViewById(R.id.text_toolbar);
     roomTypeImage = findViewById(R.id.image_room_type);
@@ -63,9 +66,18 @@ public class RoomToolbar extends Toolbar {
     userStatusDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_user_status_black_24dp, null);
   }
 
-  private void setNavigationIcon() {
-    Drawable menuDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_menu_white_24dp, null);
-    super.setNavigationIcon(menuDrawable);
+  private void setNavigationIcon(Context context) {
+    drawerArrowDrawable = new DrawerArrowDrawable(context);
+    drawerArrowDrawable.setColor(ContextCompat.getColor(context, android.R.color.white));
+    super.setNavigationIcon(drawerArrowDrawable);
+  }
+
+  public void setNavigationIconProgress(float progress) {
+    drawerArrowDrawable.setProgress(progress);
+  }
+
+  public void setNavigationIconVerticalMirror(boolean verticalMirror) {
+    drawerArrowDrawable.setVerticalMirror(verticalMirror);
   }
 
   @Override
@@ -168,7 +180,7 @@ public class RoomToolbar extends Toolbar {
         .beginConfig()
         .useFont(Typeface.SANS_SERIF)
         .endConfig()
-        .buildRound(icon, ContextCompat.getColor(getContext(), android.R.color.white));
+        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.color_user_status_busy));
   }
 
   @Override
