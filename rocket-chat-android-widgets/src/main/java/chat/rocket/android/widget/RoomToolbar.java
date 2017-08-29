@@ -166,7 +166,7 @@ public class RoomToolbar extends Toolbar {
         badgeImageView.setImageDrawable(getBadgeDrawable(numMentionsSum));
       } else {
         badgeImageView.setScaleType(ImageView.ScaleType.CENTER);
-        badgeImageView.setImageResource(R.drawable.badge_without_number);
+        badgeImageView.setImageResource(R.drawable.ic_badge_without_number_red_10dp);
       }
       badgeImageView.setVisibility(View.VISIBLE);
     } else {
