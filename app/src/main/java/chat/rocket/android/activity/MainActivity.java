@@ -1,10 +1,12 @@
 package chat.rocket.android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.View;
+import android.widget.Button;
 
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
@@ -70,15 +72,18 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     }
 
     final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
-    pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
-      @Override
-      public void onPanelClosed(View panel) {
-        super.onPanelClosed(panel);
-        if (subPane != null) {
+    if (subPane != null) {
+      Button addServerButton = subPane.findViewById(R.id.btn_add_server);
+      pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
+        @Override
+        public void onPanelClosed(View panel) {
+          super.onPanelClosed(panel);
           subPane.closePane();
         }
-      }
-    });
+      });
+
+      addServerButton.setOnClickListener(view -> showAddServerActivity());
+    }
 
     toolbar.setNavigationOnClickListener(view -> {
       if (pane.isSlideable() && !pane.isOpen()) {
@@ -104,6 +109,12 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         closeUserActionContainer();
       }
     });
+  }
+
+  private void showAddServerActivity() {
+    Intent intent = new Intent(this, AddServerActivity.class);
+    intent.putExtra(AddServerActivity.EXTRA_FINISH_ON_BACK_PRESS, true);
+    startActivity(intent);
   }
 
   private boolean closeSidebarIfNeeded() {
