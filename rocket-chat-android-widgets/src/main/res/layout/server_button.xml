@@ -5,4 +5,5 @@
     android:id="@+id/drawee_server_button"
     android:layout_width="80dp"
     android:layout_height="80dp"
+    android:layout_margin="8dp"
     fresco:actualImageScaleType="fitXY" />
