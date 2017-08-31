@@ -123,9 +123,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     adapter = new RoomListAdapter();
     adapter.setOnItemClickListener(new RoomListAdapter.OnItemClickListener() {
       @Override
-      public void onItemClick(Room room) {
         searchView.clearFocus();
-        presenter.onRoomSelected(room);
+      public void onItemClick(RoomSidebar roomSidebar) {
+        presenter.onRoomSelected(roomSidebar);
       }
 
       @Override
@@ -187,13 +187,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   }
 
   @Override
-  public void showRoomList(@NonNull List<Room> roomList) {
-    adapter.setRooms(roomList);
-  }
-
-  @Override
-  public void showUserStatus(@NonNull User user) {
-    adapter.setUserStatus(user);
+  public void showRoomSidebarList(@NonNull List<RoomSidebar> roomSidebarList) {
+    adapter.setRoomSidebarList(roomSidebarList);
   }
 
   @Override
@@ -233,12 +228,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   private void updateRoomListMode(User user) {
     final List<RoomListHeader> roomListHeaders = new ArrayList<>();
 
-    if (user != null && user.getSettings() != null && user.getSettings().getPreferences() != null
-        && user.getSettings().getPreferences().isUnreadRoomsMode()) {
-      roomListHeaders.add(new UnreadRoomListHeader(
-          getString(R.string.fragment_sidebar_main_unread_rooms_title)
-      ));
-    }
+    roomListHeaders.add(new UnreadRoomListHeader(
+        getString(R.string.fragment_sidebar_main_unread_rooms_title)
+    ));
 
     roomListHeaders.add(new FavoriteRoomListHeader(
         getString(R.string.fragment_sidebar_main_favorite_title)
