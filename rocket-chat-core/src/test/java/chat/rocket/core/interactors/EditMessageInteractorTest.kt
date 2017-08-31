@@ -67,7 +67,7 @@ class EditMessageInteractorTest {
         val allowEdit = allowEditPublicSettings(true)
         val allowEditTimeout = allowEditTimeLimitPublicSetting()
 
-        `when`(userRepository.current).thenReturn(Flowable.just(Optional.of(user)))
+        `when`(userRepository.getCurrent()).thenReturn(Flowable.just(Optional.of(user)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING))
                 .thenReturn(Single.just(Optional.of(allowEdit)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING_BLOCK_TIMEOUT))
@@ -93,7 +93,7 @@ class EditMessageInteractorTest {
         val allowEdit = allowEditPublicSettings(false)
         val allowEditTimeout = allowEditTimeLimitPublicSetting()
 
-        `when`(userRepository.current).thenReturn(Flowable.just(Optional.of(user)))
+        `when`(userRepository.getCurrent()).thenReturn(Flowable.just(Optional.of(user)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING))
                 .thenReturn(Single.just(Optional.of(allowEdit)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING_BLOCK_TIMEOUT))
@@ -123,7 +123,7 @@ class EditMessageInteractorTest {
         val allowEdit = allowEditPublicSettings(true)
         val allowEditTimeout = allowEditTimeLimitPublicSetting(1)
 
-        `when`(userRepository.current).thenReturn(Flowable.just(Optional.of(user)))
+        `when`(userRepository.getCurrent()).thenReturn(Flowable.just(Optional.of(user)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING))
                 .thenReturn(Single.just(Optional.of(allowEdit)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING_BLOCK_TIMEOUT))
@@ -155,7 +155,7 @@ class EditMessageInteractorTest {
         val anotherUser = mock(User::class.java)
         `when`(anotherUser.id).thenReturn("another id")
 
-        `when`(userRepository.current).thenReturn(Flowable.just(Optional.of(anotherUser)))
+        `when`(userRepository.getCurrent()).thenReturn(Flowable.just(Optional.of(anotherUser)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING))
                 .thenReturn(Single.just(Optional.of(allowEdit)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING_BLOCK_TIMEOUT))
@@ -184,7 +184,7 @@ class EditMessageInteractorTest {
         val allowEdit = allowEditPublicSettings(true)
         val allowEditTimeout = allowEditTimeLimitPublicSetting()
 
-        `when`(userRepository.current).thenReturn(Flowable.just(Optional.of(user)))
+        `when`(userRepository.getCurrent()).thenReturn(Flowable.just(Optional.of(user)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING))
                 .thenReturn(Single.just(Optional.of(allowEdit)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING_BLOCK_TIMEOUT))
@@ -213,7 +213,7 @@ class EditMessageInteractorTest {
         val allowEdit = allowEditPublicSettings(true)
         val allowEditTimeout = allowEditTimeLimitPublicSetting()
 
-        `when`(userRepository.current).thenReturn(Flowable.just(Optional.of(user)))
+        `when`(userRepository.getCurrent()).thenReturn(Flowable.just(Optional.of(user)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING))
                 .thenReturn(Single.just(Optional.of(allowEdit)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING_BLOCK_TIMEOUT))
@@ -242,7 +242,7 @@ class EditMessageInteractorTest {
         val allowEdit = allowEditPublicSettings(false)
         val allowEditTimeout = allowEditTimeLimitPublicSetting()
 
-        `when`(userRepository.current).thenReturn(Flowable.just(Optional.of(user)))
+        `when`(userRepository.getCurrent()).thenReturn(Flowable.just(Optional.of(user)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING))
                 .thenReturn(Single.just(Optional.of(allowEdit)))
         `when`(publicSettingRepository.getById(PublicSettingsConstants.Message.ALLOW_EDITING_BLOCK_TIMEOUT))

@@ -52,7 +52,7 @@ class PermissionInteractorTest {
     @Test
     fun isAllowedReturnsFalseWhenWithoutCurrentUser() {
 
-        `when`(userRepository.current)
+        `when`(userRepository.getCurrent())
                 .thenReturn(Flowable.just(Optional.absent()))
 
         val testObserver = TestObserver<Boolean>()
@@ -67,7 +67,7 @@ class PermissionInteractorTest {
     fun isAllowedReturnsFalseWhenWithoutRoomRoleAndPermission() {
         val permissionId = "permission"
 
-        `when`(userRepository.current)
+        `when`(userRepository.getCurrent())
                 .thenReturn(Flowable.just(Optional.of(user)))
 
         `when`(roomRoleRepository.getFor(any(Room::class.java), any(User::class.java)))
@@ -88,7 +88,7 @@ class PermissionInteractorTest {
     fun isAllowedReturnsFalseWhenWithoutRoomRole() {
         val permissionId = "permission"
 
-        `when`(userRepository.current)
+        `when`(userRepository.getCurrent())
                 .thenReturn(Flowable.just(Optional.of(user)))
 
         `when`(roomRoleRepository.getFor(any(Room::class.java), any(User::class.java)))
@@ -109,7 +109,7 @@ class PermissionInteractorTest {
     fun isAllowedReturnsFalseWhenWithoutPermission() {
         val permissionId = "permission"
 
-        `when`(userRepository.current)
+        `when`(userRepository.getCurrent())
                 .thenReturn(Flowable.just(Optional.of(user)))
 
         `when`(roomRoleRepository.getFor(any(Room::class.java), any(User::class.java)))
@@ -131,7 +131,7 @@ class PermissionInteractorTest {
 
         val permissionId = "permission"
 
-        `when`(userRepository.current)
+        `when`(userRepository.getCurrent())
                 .thenReturn(Flowable.just(Optional.of(user)))
 
         `when`(roomRoleRepository.getFor(any(Room::class.java), any(User::class.java)))
@@ -153,7 +153,7 @@ class PermissionInteractorTest {
 
         val permissionId = "permission"
 
-        `when`(userRepository.current)
+        `when`(userRepository.getCurrent())
                 .thenReturn(Flowable.just(Optional.of(user)))
 
         `when`(roomRole.roles).thenReturn(getSomeRoles())
@@ -179,7 +179,7 @@ class PermissionInteractorTest {
 
         val permissionId = "permission"
 
-        `when`(userRepository.current)
+        `when`(userRepository.getCurrent())
                 .thenReturn(Flowable.just(Optional.of(user)))
 
         `when`(roomRole.roles).thenReturn(getMoreRoles())
