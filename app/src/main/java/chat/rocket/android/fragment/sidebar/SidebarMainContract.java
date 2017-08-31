@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 
+import chat.rocket.core.models.RoomSidebar;
 import io.reactivex.Flowable;
 import java.util.List;
 import chat.rocket.android.shared.BaseContract;
@@ -17,16 +18,14 @@ public interface SidebarMainContract {
 
     void showEmptyScreen();
 
-    void showRoomList(@NonNull List<Room> roomList);
-
-    void showUserStatus(@NonNull User user);
+    void showRoomSidebarList(@NonNull List<RoomSidebar> roomSidebarList);
 
     void show(User user);
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
 
-    void onRoomSelected(Room room);
+    void onRoomSelected(RoomSidebar roomSidebar);
 
     void onSpotlightSelected(Spotlight spotlight);
 
