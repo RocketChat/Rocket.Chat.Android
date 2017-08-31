@@ -95,6 +95,9 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     toolbar.setNavigationOnClickListener(view -> {
       if (pane.isSlideable() && !pane.isOpen()) {
         pane.openPane();
+        if (subPane != null) {
+          subPane.closePane();
+        }
       }
     });
 
@@ -203,6 +206,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   private void changeServerIfNeeded(String serverHostname) {
     if (!hostname.equalsIgnoreCase(serverHostname)) {
+      closeSidebarIfNeeded();
       RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
       rocketChatCache.setSelectedServerHostname(serverHostname);
       recreate();
