@@ -24,7 +24,7 @@ import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.KeyboardHelper;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
-import chat.rocket.android.widget.helper.UserAvatarHelper;
+import chat.rocket.android.widget.helper.AvatarHelper;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -190,7 +190,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
           serverButton.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
 
-          Drawable drawable = UserAvatarHelper.INSTANCE.getTextDrawable(serverHostname,this);
+          Drawable drawable = AvatarHelper.INSTANCE.getTextDrawable(serverHostname,this);
 
           serverButton.getHierarchy().setPlaceholderImage(drawable);
           serverButton.setController(Fresco.newDraweeControllerBuilder().setAutoPlayAnimations(true).build());

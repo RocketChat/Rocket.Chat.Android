@@ -4,13 +4,11 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import chat.rocket.android.widget.AbsoluteUrl;
+
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.RocketChatAvatar;
-import chat.rocket.android.widget.helper.UserAvatarHelper;
+import chat.rocket.android.widget.helper.AvatarHelper;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteViewHolder;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public class UserViewHolder extends AutocompleteViewHolder<UserItem> {
   private final TextView titleTextView;
@@ -45,8 +43,8 @@ public class UserViewHolder extends AutocompleteViewHolder<UserItem> {
     }
 
     if (avatar != null) {
-      String absoluteUri = UserAvatarHelper.INSTANCE.getAbsoluteUri(userItem.getAbsoluteUrl(), suggestion);
-      Drawable placeholderDrawable = UserAvatarHelper.INSTANCE.getTextDrawable(suggestion, itemView.getContext());
+      String absoluteUri = AvatarHelper.INSTANCE.getAbsoluteUri(userItem.getAbsoluteUrl(), suggestion);
+      Drawable placeholderDrawable = AvatarHelper.INSTANCE.getTextDrawable(suggestion, itemView.getContext());
       avatar.loadImage(absoluteUri, placeholderDrawable);
     }
 
