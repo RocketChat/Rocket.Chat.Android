@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 
 import chat.rocket.android.widget.internal.RoomListItemView;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.models.RoomSidebar;
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 
@@ -17,66 +18,49 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
 
     itemView.setOnClickListener(view -> {
       Object object = view.getTag();
-      if (object instanceof Room) {
-        listener.onItemClick((Room)object);
+      if (object instanceof RoomSidebar) {
+        listener.onItemClick((RoomSidebar)object);
       } else if (object instanceof Spotlight) {
         listener.onItemClick((Spotlight)object);
       }
     });
   }
 
+  public void bind(RoomSidebar roomSidebar) {
+    itemView.setRoomId(roomSidebar.getRoomId());
+    itemView.setRoomName(roomSidebar.getRoomName());
+    itemView.setAlert(roomSidebar.isAlert());
+    itemView.setUnreadCount(roomSidebar.getUnread());
+    itemView.setTag(roomSidebar);
 
-  public void bind(Room room) {
-    itemView
-        .setRoomId(room.getRoomId())
-        .setRoomName(room.getName())
-        .setAlert(room.isAlert())
-        .setUnreadCount(room.getUnread())
-        .setTag(room);
-
-      showRoomIcon(room.getType());
+    String roomType = roomSidebar.getType();
+    if (roomType.equals(Room.TYPE_DIRECT_MESSAGE)) {
+      showUserStatusIcon(roomSidebar.getUserStatus());
+    } else {
+      showRoomIcon(roomType);
+    }
   }
 
   public void bind(Spotlight spotlight) {
-    itemView
-        .setRoomId(spotlight.getId())
-        .setRoomName(spotlight.getName())
-        .setAlert(false)
-        .setUnreadCount(0)
-        .setTag(spotlight);
+    itemView.setRoomId(spotlight.getId());
+    itemView.setRoomName(spotlight.getName());
+    itemView.setAlert(false);
+    itemView.setUnreadCount(0);
+    itemView.setTag(spotlight);
 
     showRoomIcon(spotlight.getType());
   }
 
   /**
-   * Only shows the room icon if it is a PRIVATE CHANNEL or PUBLIC CHANNEL, otherwise you should use {@link #bind(User)} to show the correct icon.
-   * @param roomType The type of Room.
-   * @see Room
-   */
-  private void showRoomIcon(String roomType) {
-    if(!roomType.equals(Room.TYPE_DIRECT_MESSAGE)) {
-      switch (roomType) {
-        case Room.TYPE_CHANNEL:
-          itemView.showPublicChannelIcon();
-          break;
-        case Room.TYPE_PRIVATE:
-          itemView.showPrivateChannelIcon();
-          break;
-      }
-    }
-  }
-
-  /**
    * Shows the user status icon.
-   * @param user The user to show its status.
+   * @param userStatus The user status to show the correspondent icon.
    * @see User
    */
-  public void bind(User user) {
-    String userStatus = user.getStatus();
+  private void showUserStatusIcon(String userStatus) {
     if (userStatus == null) {
       itemView.showOfflineUserStatusIcon();
     } else {
-      switch (user.getStatus()) {
+      switch (userStatus) {
         case User.STATUS_ONLINE:
           itemView.showOnlineUserStatusIcon();
           break;
@@ -90,6 +74,22 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
           itemView.showOfflineUserStatusIcon();
           break;
       }
+    }
+  }
+
+  /**
+   * Only shows the room icon if it is a PRIVATE CHANNEL or PUBLIC CHANNEL, otherwise you should use {@link #showUserStatusIcon(String)} to show the icon.
+   * @param roomType The type of Room.
+   * @see Room
+   */
+  private void showRoomIcon(String roomType) {
+    switch (roomType) {
+      case Room.TYPE_CHANNEL:
+        itemView.showPublicChannelIcon();
+        break;
+      case Room.TYPE_PRIVATE:
+        itemView.showPrivateChannelIcon();
+        break;
     }
   }
 }
