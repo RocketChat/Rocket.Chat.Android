@@ -14,8 +14,8 @@ public class RoomListHeaderViewHolder extends RecyclerView.ViewHolder {
 
   public RoomListHeaderViewHolder(View itemView) {
     super(itemView);
-    title = (TextView) itemView.findViewById(R.id.title);
-    button = (Button) itemView.findViewById(R.id.btn_add);
+    title = itemView.findViewById(R.id.title);
+    button = itemView.findViewById(R.id.btn_add);
   }
 
   public void bind(RoomListHeader roomListHeader) {
