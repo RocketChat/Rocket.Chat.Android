@@ -1,12 +1,18 @@
 package chat.rocket.android.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
@@ -18,6 +24,7 @@ import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.KeyboardHelper;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
+import chat.rocket.android.widget.helper.UserAvatarHelper;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -109,6 +116,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         closeUserActionContainer();
       }
     });
+
+    updateServerListBar();
   }
 
   private void showAddServerActivity() {
@@ -147,6 +156,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         new RealmSessionRepository(hostname)
     );
 
+
     presenter = new MainPresenter(
         roomInteractor,
         createRoomInteractor,
@@ -159,6 +169,44 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     updateSidebarMainFragment();
 
     presenter.bindView(this);
+  }
+
+  @DebugLog
+  private void updateServerListBar() {
+    final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
+    if (subPane != null) {
+      RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
+      //TODO: get the server avatar uri and set
+      rocketChatCache.addHostname(hostname, null);
+
+      LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
+      for (String serverHostname : rocketChatCache.getServerList()) {
+        if (serverListContainer.findViewWithTag(serverHostname) == null) {
+          int serverCount = serverListContainer.getChildCount();
+
+          SimpleDraweeView serverButton =
+                  (SimpleDraweeView) LayoutInflater.from(this).inflate(R.layout.server_button, serverListContainer, false);
+          serverButton.setTag(serverHostname);
+
+          serverButton.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
+
+          Drawable drawable = UserAvatarHelper.INSTANCE.getTextDrawable(serverHostname,this);
+
+          serverButton.getHierarchy().setPlaceholderImage(drawable);
+          serverButton.setController(Fresco.newDraweeControllerBuilder().setAutoPlayAnimations(true).build());
+          serverListContainer.addView(serverButton, serverCount - 1);
+          serverListContainer.requestLayout();
+        }
+      }
+    }
+  }
+
+  private void changeServerIfNeeded(String serverHostname) {
+    if (!hostname.equalsIgnoreCase(serverHostname)) {
+      RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
+      rocketChatCache.setSelectedServerHostname(serverHostname);
+      recreate();
+    }
   }
 
   private void updateSidebarMainFragment() {
