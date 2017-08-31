@@ -2,8 +2,8 @@ package chat.rocket.android.layouthelper.chatroom.roomlist;
 
 import android.support.annotation.NonNull;
 
+import chat.rocket.core.models.RoomSidebar;
 import java.util.List;
-import chat.rocket.core.models.Room;
 
 public class UnreadRoomListHeader implements RoomListHeader {
 
@@ -19,18 +19,17 @@ public class UnreadRoomListHeader implements RoomListHeader {
   }
 
   @Override
-  public boolean owns(Room room) {
-    return room.isAlert();
+  public boolean owns(RoomSidebar roomSidebar) {
+    return roomSidebar.isAlert();
   }
 
   @Override
-  public boolean shouldShow(@NonNull List<Room> roomList) {
-    for (int i = 0, size = roomList.size(); i < size; i++) {
-      if (roomList.get(i).isAlert()) {
+  public boolean shouldShow(@NonNull List<RoomSidebar> roomSidebarList) {
+    for (int i = 0, size = roomSidebarList.size(); i < size; i++) {
+      if (roomSidebarList.get(i).isAlert()) {
         return true;
       }
     }
-
     return false;
   }
 
