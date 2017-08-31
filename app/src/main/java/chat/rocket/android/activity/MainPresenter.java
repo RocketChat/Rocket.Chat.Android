@@ -1,21 +1,29 @@
 package chat.rocket.android.activity;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+
+import com.hadisatrio.optional.Optional;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.Logger;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.service.ServerConnectivity;
 import chat.rocket.android.shared.BasePresenter;
+import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Session;
 import chat.rocket.core.models.User;
+import chat.rocket.core.repositories.PublicSettingRepository;
+import chat.rocket.core.utils.Pair;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,19 +38,21 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   private final MethodCallHelper methodCallHelper;
   private final ConnectivityManagerApi connectivityManagerApi;
   private final RocketChatCache rocketChatCache;
+  private final PublicSettingRepository publicSettingRepository;
 
   public MainPresenter(RoomInteractor roomInteractor,
                        CanCreateRoomInteractor canCreateRoomInteractor,
                        SessionInteractor sessionInteractor,
                        MethodCallHelper methodCallHelper,
                        ConnectivityManagerApi connectivityManagerApi,
-                       RocketChatCache rocketChatCache) {
+                       RocketChatCache rocketChatCache, PublicSettingRepository publicSettingRepository) {
     this.roomInteractor = roomInteractor;
     this.canCreateRoomInteractor = canCreateRoomInteractor;
     this.sessionInteractor = sessionInteractor;
     this.methodCallHelper = methodCallHelper;
     this.connectivityManagerApi = connectivityManagerApi;
     this.rocketChatCache = rocketChatCache;
+    this.publicSettingRepository = publicSettingRepository;
   }
 
   @Override
@@ -51,6 +61,26 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     subscribeToUnreadCount();
     subscribeToSession();
     setUserOnline();
+  }
+
+  @Override
+  public void loadSignedInServers(@NotNull String hostname) {
+    final Disposable disposable = publicSettingRepository.getById(PublicSettingsConstants.Assets.TILE_144)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(publicSetting -> {
+                JSONObject jsonObject = new JSONObject(publicSetting.getValue());
+                rocketChatCache.addHostname(hostname, jsonObject.optString("defaultUrl"));
+                return rocketChatCache.getServerList();
+            })
+            .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    view::showSignedInServers,
+                    RCLog::e
+            );
+
+    addSubscription(disposable);
   }
 
   @Override

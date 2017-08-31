@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.util.List;
+
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -28,6 +30,9 @@ import chat.rocket.android.widget.helper.AvatarHelper;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
+import chat.rocket.core.repositories.PublicSettingRepository;
+import chat.rocket.core.utils.Pair;
+import chat.rocket.persistence.realm.repositories.RealmPublicSettingRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
@@ -60,6 +65,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     super.onResume();
     if (presenter != null) {
       presenter.bindViewOnly(this);
+      presenter.loadSignedInServers(hostname);
     }
   }
 
@@ -119,8 +125,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         closeUserActionContainer();
       }
     });
-
-    updateServerListBar();
   }
 
   private void showAddServerActivity() {
@@ -159,6 +163,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         new RealmSessionRepository(hostname)
     );
 
+    PublicSettingRepository publicSettingRepository = new RealmPublicSettingRepository(hostname);
 
     presenter = new MainPresenter(
         roomInteractor,
@@ -166,51 +171,13 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         sessionInteractor,
         new MethodCallHelper(this, hostname),
         ConnectivityManager.getInstance(getApplicationContext()),
-        new RocketChatCache(this)
+        new RocketChatCache(this),
+        publicSettingRepository
     );
 
     updateSidebarMainFragment();
 
     presenter.bindView(this);
-  }
-
-  @DebugLog
-  private void updateServerListBar() {
-    final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
-    if (subPane != null) {
-      RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
-      //TODO: get the server avatar uri and set
-      rocketChatCache.addHostname(hostname, null);
-
-      LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
-      for (String serverHostname : rocketChatCache.getServerList()) {
-        if (serverListContainer.findViewWithTag(serverHostname) == null) {
-          int serverCount = serverListContainer.getChildCount();
-
-          SimpleDraweeView serverButton =
-                  (SimpleDraweeView) LayoutInflater.from(this).inflate(R.layout.server_button, serverListContainer, false);
-          serverButton.setTag(serverHostname);
-
-          serverButton.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
-
-          Drawable drawable = AvatarHelper.INSTANCE.getTextDrawable(serverHostname,this);
-
-          serverButton.getHierarchy().setPlaceholderImage(drawable);
-          serverButton.setController(Fresco.newDraweeControllerBuilder().setAutoPlayAnimations(true).build());
-          serverListContainer.addView(serverButton, serverCount - 1);
-          serverListContainer.requestLayout();
-        }
-      }
-    }
-  }
-
-  private void changeServerIfNeeded(String serverHostname) {
-    if (!hostname.equalsIgnoreCase(serverHostname)) {
-      closeSidebarIfNeeded();
-      RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
-      rocketChatCache.setSelectedServerHostname(serverHostname);
-      recreate();
-    }
   }
 
   private void updateSidebarMainFragment() {
@@ -285,6 +252,41 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   @Override
   public void showConnectionOk() {
     statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
+  }
+
+  @Override
+  public void showSignedInServers(List<Pair<String, String>> serverList) {
+    final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
+    if (subPane != null) {
+      LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
+      for (Pair<String, String> server : serverList) {
+        if (serverListContainer.findViewWithTag(server.first) == null) {
+          int serverCount = serverListContainer.getChildCount();
+
+          SimpleDraweeView serverButton =
+                  (SimpleDraweeView) LayoutInflater.from(this).inflate(R.layout.server_button, serverListContainer, false);
+          serverButton.setTag(server.first);
+
+          serverButton.setOnClickListener(view -> changeServerIfNeeded(server.first));
+
+          Drawable drawable = AvatarHelper.INSTANCE.getTextDrawable(server.first,this);
+
+          serverButton.getHierarchy().setPlaceholderImage(drawable);
+          serverButton.setController(Fresco.newDraweeControllerBuilder().setUri(server.second).setAutoPlayAnimations(true).build());
+          serverListContainer.addView(serverButton, serverCount - 1);
+          serverListContainer.requestLayout();
+        }
+      }
+    }
+  }
+
+  private void changeServerIfNeeded(String serverHostname) {
+    if (!hostname.equalsIgnoreCase(serverHostname)) {
+      closeSidebarIfNeeded();
+      RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
+      rocketChatCache.setSelectedServerHostname(serverHostname);
+      recreate();
+    }
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.
