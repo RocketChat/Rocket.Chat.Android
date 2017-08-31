@@ -1,6 +1,7 @@
 package chat.rocket.android;
 
 import android.content.Context
+import chat.rocket.core.utils.Pair
 import org.hamcrest.CoreMatchers.equalTo
 import org.json.JSONObject
 import org.junit.Assert.assertThat
@@ -26,16 +27,16 @@ class RocketChatCacheTest {
     @Test
     fun getServerList_ShouldReturnHostnameList() {
         val hostnameList = JSONObject()
-                .put("demo.rocket.chat", "imageuri")
-                .put("192.168.0.6:3000", "imageuri")
+                .put("http://demo.rocket.chat", "images/logo/logo.png")
+                .put("http://192.168.0.6:3000", "images/icon.svg")
                 .toString()
 
         doReturn(hostnameList).`when`(cache).getString("KEY_HOSTNAME_LIST", null)
 
-        val expectedServerList = mutableListOf("demo.rocket.chat", "192.168.0.6:3000")
+        val expectedServerList = mutableListOf(
+                Pair("http://192.168.0.6:3000", "http://192.168.0.6:3000/images/icon.svg"),
+                Pair("http://demo.rocket.chat", "http://demo.rocket.chat/images/logo/logo.png"))
         val serverList = cache.serverList
-        expectedServerList.sort()
-        serverList.sort()
-        assertThat(cache.serverList, equalTo(expectedServerList))
+        assertThat(serverList, equalTo(expectedServerList))
     }
 }

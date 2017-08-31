@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import chat.rocket.android.log.RCLog;
+import chat.rocket.core.utils.Pair;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.annotations.NonNull;
@@ -60,16 +61,17 @@ public class RocketChatCache {
     }
   }
 
-  public List<String> getServerList() {
+  public List<Pair<String, String>> getServerList() {
     String json = getString(KEY_HOSTNAME_LIST, null);
     if (json == null) {
       return Collections.emptyList();
     }
     try {
       JSONObject jsonObj = new JSONObject(json);
-      List<String> serverList = new ArrayList<>();
+      List<Pair<String, String>> serverList = new ArrayList<>();
       for (Iterator<String> iter = jsonObj.keys(); iter.hasNext();) {
-        serverList.add(iter.next());
+        String hostname = iter.next();
+        serverList.add(new Pair<>(hostname,"http://" + hostname + "/" + jsonObj.getString(hostname)));
       }
       return serverList;
     } catch (JSONException e) {
