@@ -5,18 +5,29 @@ import android.content.SharedPreferences;
 
 import com.hadisatrio.optional.Optional;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
+import chat.rocket.android.log.RCLog;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 
 /**
  * sharedpreference-based cache.
  */
 public class RocketChatCache {
-  private static final String KEY_SELECTED_SERVER_HOSTNAME = "selectedServerHostname";
-  private static final String KEY_SELECTED_ROOM_ID = "selectedRoomId";
-  private static final String KEY_PUSH_ID = "pushId";
+  private static final String KEY_SELECTED_SERVER_HOSTNAME = "KEY_SELECTED_SERVER_HOSTNAME";
+  private static final String KEY_SELECTED_ROOM_ID = "KEY_SELECTED_ROOM_ID";
+  private static final String KEY_PUSH_ID = "KEY_PUSH_ID";
+  private static final String KEY_HOSTNAME_LIST = "KEY_HOSTNAME_LIST";
 
   private Context context;
 
@@ -32,12 +43,47 @@ public class RocketChatCache {
     setString(KEY_SELECTED_SERVER_HOSTNAME, hostname);
   }
 
+  public void addHostname(@NonNull String hostname, @Nullable String hostnameAvatarUri) {
+    String hostnameList = getString(KEY_HOSTNAME_LIST, null);
+    try {
+      JSONObject json;
+      if (hostnameList == null) {
+        json = new JSONObject();
+      } else {
+        json = new JSONObject(hostnameList);
+      }
+      // Replace server avatar uri if exists.
+      json.put(hostname, hostnameAvatarUri == null ? JSONObject.NULL : hostnameAvatarUri);
+      setString(KEY_HOSTNAME_LIST, json.toString());
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+  }
+
+  public List<String> getServerList() {
+    String json = getString(KEY_HOSTNAME_LIST, null);
+    if (json == null) {
+      return Collections.emptyList();
+    }
+    try {
+      JSONObject jsonObj = new JSONObject(json);
+      List<String> serverList = new ArrayList<>();
+      for (Iterator<String> iter = jsonObj.keys(); iter.hasNext();) {
+        serverList.add(iter.next());
+      }
+      return serverList;
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+    return Collections.emptyList();
+  }
+
   public String getSelectedRoomId() {
-    return getString(KEY_SELECTED_ROOM_ID, null);
+    return getString(getSelectedServerHostname() + KEY_SELECTED_ROOM_ID, null);
   }
 
   public void setSelectedRoomId(String roomId) {
-    setString(KEY_SELECTED_ROOM_ID, roomId);
+    setString(getSelectedServerHostname() + KEY_SELECTED_ROOM_ID, roomId);
   }
 
   public String getOrCreatePushId() {
@@ -58,7 +104,7 @@ public class RocketChatCache {
   }
 
   public Flowable<Optional<String>> getSelectedRoomIdPublisher() {
-    return getValuePublisher(KEY_SELECTED_ROOM_ID);
+    return getValuePublisher(getSelectedServerHostname() + KEY_SELECTED_ROOM_ID);
   }
 
   private SharedPreferences getSharedPreferences() {
@@ -69,7 +115,7 @@ public class RocketChatCache {
     return getSharedPreferences().edit();
   }
 
-  private String getString(String key, String defaultValue) {
+  public String getString(String key, String defaultValue) {
     return getSharedPreferences().getString(key, defaultValue);
   }
 
