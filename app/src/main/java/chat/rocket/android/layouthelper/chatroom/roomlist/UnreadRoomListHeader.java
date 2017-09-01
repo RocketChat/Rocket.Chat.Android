@@ -25,12 +25,12 @@ public class UnreadRoomListHeader implements RoomListHeader {
 
   @Override
   public boolean shouldShow(@NonNull List<RoomSidebar> roomSidebarList) {
-    for (int i = 0, size = roomSidebarList.size(); i < size; i++) {
-      if (roomSidebarList.get(i).isAlert()) {
+    for (RoomSidebar roomSidebar: roomSidebarList) {
+      if (roomSidebar.isAlert()) {
         return true;
       }
     }
-    return false;
+      return false;
   }
 
   @Override
