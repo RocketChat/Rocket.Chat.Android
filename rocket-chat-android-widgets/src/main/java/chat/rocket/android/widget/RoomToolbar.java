@@ -163,7 +163,7 @@ public class RoomToolbar extends Toolbar {
         .beginConfig()
         .useFont(Typeface.SANS_SERIF)
         .endConfig()
-        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.color_user_status_busy));
+        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.color_alert));
   }
 
   @Override
