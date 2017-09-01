@@ -5,6 +5,8 @@ import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,21 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
 
     public RealmUserRepository(String hostname) {
         this.hostname = hostname;
+    }
+
+    @Override
+    public Flowable<List<User>> getAll() {
+        return Flowable.defer(() -> Flowable.using(
+                () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+                pair -> RxJavaInterop.toV2Flowable(
+                        pair.first.where(RealmUser.class)
+                                .findAll()
+                                .asObservable()),
+                pair -> close(pair.first, pair.second))
+                .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+                .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
+                        && roomSubscriptions.isValid())
+                .map(this::toList));
     }
 
     @Override
