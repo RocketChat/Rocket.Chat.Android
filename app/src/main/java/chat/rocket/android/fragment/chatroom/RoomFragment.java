@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -327,7 +328,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   private boolean closeSideMenuIfNeeded() {
-    DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
+    DrawerLayout drawerLayout = rootView.findViewById(R.id.drawer_layout);
     if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.END)) {
       drawerLayout.closeDrawer(GravityCompat.END);
       return true;
@@ -336,12 +337,12 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   private void setupMessageComposer() {
-    final MessageFormLayout messageFormLayout = (MessageFormLayout) rootView.findViewById(R.id.messageComposer);
+    final MessageFormLayout messageFormLayout = rootView.findViewById(R.id.messageComposer);
     messageFormManager = new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
     messageFormManager.setSendMessageCallback(this::sendMessage);
     messageFormLayout.setEditTextCommitContentListener(this::onCommitContent);
 
-    autocompleteManager = new AutocompleteManager((ViewGroup) rootView.findViewById(R.id.messageListRelativeLayout));
+    autocompleteManager = new AutocompleteManager(rootView.findViewById(R.id.messageListRelativeLayout));
 
     autocompleteManager.registerSource(
         new ChannelSource(
