@@ -10,21 +10,26 @@ open class RealmSpotlight : RealmObject() {
     @PrimaryKey var _id: String? = null
     var name: String? = null
     var t: String? = null
+    var status: String? = null
 
     fun asSpotlight(): Spotlight {
         return Spotlight.builder()
                 .setId(_id)
                 .setName(name)
                 .setType(t)
+                .setStatus(status)
                 .build()
     }
 
     companion object {
+        fun customizeRoomJSONObject(roomJsonObject: JSONObject) {
+            roomJsonObject.put(Columns.STATUS, "")
+        }
+
         fun customizeUserJSONObject(userJsonObject: JSONObject) {
             userJsonObject.put(Columns.NAME, userJsonObject.get("username"))
             userJsonObject.put(Columns.TYPE, "d")
             userJsonObject.remove("username")
-            userJsonObject.remove("status")
         }
     }
 
@@ -33,6 +38,7 @@ open class RealmSpotlight : RealmObject() {
             const val ID = "_id"
             const val NAME = "name"
             const val TYPE = "t"
+            const val STATUS = "status"
         }
     }
 }

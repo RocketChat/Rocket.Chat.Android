@@ -2,16 +2,16 @@ package chat.rocket.android.layouthelper.chatroom.roomlist;
 
 import android.support.annotation.NonNull;
 
+import chat.rocket.core.models.RoomSidebar;
 import java.util.List;
-import chat.rocket.core.models.Room;
 
 public interface RoomListHeader {
 
   String getTitle();
 
-  boolean owns(Room room);
+  boolean owns(RoomSidebar roomSidebar);
 
-  boolean shouldShow(@NonNull List<Room> roomList);
+  boolean shouldShow(@NonNull List<RoomSidebar> roomSidebarList);
 
   ClickListener getClickListener();
 

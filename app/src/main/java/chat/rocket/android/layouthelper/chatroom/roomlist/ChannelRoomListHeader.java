@@ -2,6 +2,7 @@ package chat.rocket.android.layouthelper.chatroom.roomlist;
 
 import android.support.annotation.NonNull;
 
+import chat.rocket.core.models.RoomSidebar;
 import java.util.List;
 import chat.rocket.core.models.Room;
 
@@ -21,12 +22,12 @@ public class ChannelRoomListHeader implements RoomListHeader {
   }
 
   @Override
-  public boolean owns(Room room) {
-    return room.isChannel() || room.isPrivate();
+  public boolean owns(RoomSidebar roomSidebar) {
+    return roomSidebar.getType().equals(Room.TYPE_CHANNEL) || roomSidebar.getType().equals(Room.TYPE_PRIVATE);
   }
 
   @Override
-  public boolean shouldShow(@NonNull List<Room> roomList) {
+  public boolean shouldShow(@NonNull List<RoomSidebar> roomSidebarList) {
     return true;
   }
 

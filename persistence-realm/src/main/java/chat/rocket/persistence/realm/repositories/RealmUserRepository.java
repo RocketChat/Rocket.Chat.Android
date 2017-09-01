@@ -28,6 +28,21 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
     }
 
     @Override
+    public Flowable<List<User>> getAll() {
+        return Flowable.defer(() -> Flowable.using(
+                () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
+                pair -> RxJavaInterop.toV2Flowable(
+                        pair.first.where(RealmUser.class)
+                                .findAll()
+                                .asObservable()),
+                pair -> close(pair.first, pair.second))
+                .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
+                .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
+                        && roomSubscriptions.isValid())
+                .map(this::toList));
+    }
+
+    @Override
     public Flowable<Optional<User>> getCurrent() {
         return Flowable.defer(() ->
                 realmGetCurrent()
