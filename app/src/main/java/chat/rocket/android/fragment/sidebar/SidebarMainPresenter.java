@@ -3,8 +3,6 @@ package chat.rocket.android.fragment.sidebar;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import com.hadisatrio.optional.Optional;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     private final AbsoluteUrlHelper absoluteUrlHelper;
     private final MethodCallHelper methodCallHelper;
     private RealmSpotlightRepository realmSpotlightRepository;
-    private RoomSidebar roomSidebar;
+    private List<RoomSidebar> roomSidebarList;
 
     public SidebarMainPresenter(String hostname,
                                 RoomInteractor roomInteractor,
@@ -146,12 +144,14 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     }
 
     private void processRooms(List<Room> roomList) {
-        ArrayList<RoomSidebar> roomSidebarList = new ArrayList<>();
+        roomSidebarList = new ArrayList<>();
+        List<String> userToObserverList = new ArrayList<>();
+
         for (Room room : roomList) {
             String roomName = room.getName();
             String roomType = room.getType();
 
-            roomSidebar = new RoomSidebar();
+            RoomSidebar roomSidebar = new RoomSidebar();
 
             roomSidebar.setId(room.getId());
             roomSidebar.setRoomId(room.getRoomId());
@@ -164,26 +164,38 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
             roomSidebar.setLastSeen(room.getLastSeen());
 
             if (roomType.equals(Room.TYPE_DIRECT_MESSAGE)) {
-                getUserStatus(roomName);
+                userToObserverList.add(roomName);
             }
 
             roomSidebarList.add(roomSidebar);
         }
-      view.showRoomSidebarList(roomSidebarList);
+        if (userToObserverList.isEmpty()) {
+            view.showRoomSidebarList(roomSidebarList);
+        } else {
+            getUsersStatus();
+        }
     }
 
-    private void getUserStatus(String username) {
-        final Disposable subscription = userRepository.getByUsername(username)
+    private void getUsersStatus() {
+        // TODO Filter when Android Studion uses the java8 features (removeIf).
+        // .filter(userList -> userList.removeIf(user -> !userToObserverList.contains(user.getUsername())))
+        final Disposable subscription = userRepository.getAll()
                 .distinctUntilChanged()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(User::getStatus)
-                .subscribe(this::setUserStatus);
+                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::processUsers, Logger::report);
         addSubscription(subscription);
-    }
+  }
 
-    private void setUserStatus(String status) {
-        roomSidebar.setUserStatus(status);
+    private void processUsers(List<User> userList) {
+        for (User user: userList) {
+            for(RoomSidebar roomSidebar: roomSidebarList) {
+                if (roomSidebar.getRoomName().equals(user.getUsername())) {
+                    roomSidebar.setUserStatus(user.getStatus());
+                }
+            }
+        }
+        view.showRoomSidebarList(roomSidebarList);
     }
 
     private void updateCurrentUserStatus(String status) {
