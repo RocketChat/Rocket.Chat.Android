@@ -5,8 +5,6 @@ import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
