@@ -29,7 +29,7 @@ import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
 import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
-import chat.rocket.core.models.Room;
+import chat.rocket.core.models.RoomSidebar;
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
@@ -123,7 +123,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     adapter = new RoomListAdapter();
     adapter.setOnItemClickListener(new RoomListAdapter.OnItemClickListener() {
       @Override
-        searchView.clearFocus();
       public void onItemClick(RoomSidebar roomSidebar) {
         searchView.clearFocus();
         presenter.onRoomSelected(roomSidebar);
