@@ -125,6 +125,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       @Override
         searchView.clearFocus();
       public void onItemClick(RoomSidebar roomSidebar) {
+        searchView.clearFocus();
         presenter.onRoomSelected(roomSidebar);
       }
 
