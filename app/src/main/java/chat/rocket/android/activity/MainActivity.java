@@ -1,6 +1,7 @@
 package chat.rocket.android.activity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -123,6 +125,9 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       public void onPanelClosed(View panel) {
         toolbar.setNavigationIconVerticalMirror(false);
         closeUserActionContainer();
+        if (subPane != null) {
+          subPane.closePane();
+        }
       }
     });
   }
@@ -263,17 +268,26 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         if (serverListContainer.findViewWithTag(server.first) == null) {
           int serverCount = serverListContainer.getChildCount();
 
-          SimpleDraweeView serverButton =
-                  (SimpleDraweeView) LayoutInflater.from(this).inflate(R.layout.server_button, serverListContainer, false);
-          serverButton.setTag(server.first);
+          View serverRow = LayoutInflater.from(this).inflate(R.layout.server_row, serverListContainer, false);
+          SimpleDraweeView serverButton = serverRow.findViewById(R.id.drawee_server_button);
+          TextView serverLabel = serverRow.findViewById(R.id.text_view_server_label);
 
-          serverButton.setOnClickListener(view -> changeServerIfNeeded(server.first));
+          serverButton.setTag(server.first);
+          serverLabel.setText(server.first);
+
+          // Currently selected server
+          if (server.first.equalsIgnoreCase(hostname)) {
+            serverLabel.setSelected(true);
+            serverLabel.setTypeface(Typeface.DEFAULT_BOLD);
+          }
+
+          serverRow.setOnClickListener(view -> changeServerIfNeeded(server.first));
 
           Drawable drawable = AvatarHelper.INSTANCE.getTextDrawable(server.first,this);
 
           FrescoHelper.INSTANCE.loadImage(serverButton, server.second, drawable);
 
-          serverListContainer.addView(serverButton, serverCount - 1);
+          serverListContainer.addView(serverRow, serverCount - 1);
           serverListContainer.requestLayout();
         }
       }
