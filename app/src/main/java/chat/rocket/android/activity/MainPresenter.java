@@ -4,8 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.hadisatrio.optional.Optional;
 
-import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.RocketChatCache;
@@ -20,6 +22,7 @@ import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
+import chat.rocket.core.models.PublicSetting;
 import chat.rocket.core.models.Session;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.PublicSettingRepository;
@@ -64,15 +67,11 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   }
 
   @Override
-  public void loadSignedInServers(@NotNull String hostname) {
-    final Disposable disposable = publicSettingRepository.getById(PublicSettingsConstants.Assets.TILE_144)
+  public void loadSignedInServers(@NonNull String hostname) {
+    final Disposable disposable = publicSettingRepository.getById(PublicSettingsConstants.Assets.LOGO)
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .map(publicSetting -> {
-                JSONObject jsonObject = new JSONObject(publicSetting.getValue());
-                rocketChatCache.addHostname(hostname, jsonObject.optString("defaultUrl"));
-                return rocketChatCache.getServerList();
-            })
+            .map(setting -> getServerList(hostname, setting))
             .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -132,6 +131,14 @@ public class MainPresenter extends BasePresenter<MainContract.View>
             .subscribe();
 
     addSubscription(subscription);
+  }
+
+  private List<Pair<String, String>> getServerList(String hostname, PublicSetting publicSetting) throws JSONException {
+    JSONObject jsonObject = new JSONObject(publicSetting.getValue());
+    String logoUrl = (jsonObject.has("url")) ?
+            jsonObject.optString("url") : jsonObject.optString("defaultUrl");
+    rocketChatCache.addHostname(hostname, logoUrl);
+    return rocketChatCache.getServerList();
   }
 
   private void openRoom() {

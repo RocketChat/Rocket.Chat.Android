@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
@@ -27,6 +26,7 @@ import chat.rocket.android.helper.KeyboardHelper;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.android.widget.helper.AvatarHelper;
+import chat.rocket.android.widget.helper.FrescoHelper;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
@@ -271,8 +271,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
           Drawable drawable = AvatarHelper.INSTANCE.getTextDrawable(server.first,this);
 
-          serverButton.getHierarchy().setPlaceholderImage(drawable);
-          serverButton.setController(Fresco.newDraweeControllerBuilder().setUri(server.second).setAutoPlayAnimations(true).build());
+          FrescoHelper.INSTANCE.loadImage(serverButton, server.second, drawable);
+
           serverListContainer.addView(serverButton, serverCount - 1);
           serverListContainer.requestLayout();
         }
