@@ -19,6 +19,7 @@ import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomSidebar;
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
+import chat.rocket.core.repositories.SpotlightRepository;
 import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import io.reactivex.Flowable;
@@ -32,7 +33,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     private final RocketChatCache rocketChatCache;
     private final AbsoluteUrlHelper absoluteUrlHelper;
     private final MethodCallHelper methodCallHelper;
-    private RealmSpotlightRepository realmSpotlightRepository;
+    private SpotlightRepository realmSpotlightRepository;
     private List<RoomSidebar> roomSidebarList;
 
     public SidebarMainPresenter(String hostname,

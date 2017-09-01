@@ -48,7 +48,12 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
     itemView.setUnreadCount(0);
     itemView.setTag(spotlight);
 
-    showRoomIcon(spotlight.getType());
+    String roomType = spotlight.getType();
+    if (roomType.equals(Room.TYPE_DIRECT_MESSAGE)) {
+      showUserStatusIcon(spotlight.getStatus());
+    } else {
+      showRoomIcon(roomType);
+    }
   }
 
   /**
@@ -91,7 +96,7 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
         itemView.showPrivateChannelIcon();
         break;
       default:
-        throw new AssertionError("Room type doesn't satisfies. Room type:" + roomType);
+        throw new AssertionError("Room type doesn't satisfies the method documentation. Room type is:" + roomType);
     }
   }
 }
