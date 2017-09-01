@@ -11,6 +11,8 @@ public abstract class Spotlight {
 
   public abstract String getType();
 
+  public abstract String getStatus();
+
   public static Spotlight.Builder builder() {
     return new AutoValue_Spotlight.Builder();
   }
@@ -23,6 +25,8 @@ public abstract class Spotlight {
     public abstract Builder setName(String name);
 
     public abstract Builder setType(String type);
+
+    public abstract Builder setStatus(String status);
 
     public abstract Spotlight build();
   }
