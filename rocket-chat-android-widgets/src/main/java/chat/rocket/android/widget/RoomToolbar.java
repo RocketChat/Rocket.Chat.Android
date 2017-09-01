@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import chat.rocket.android.widget.helper.DrawableHelper;
 import com.amulyakhare.textdrawable.TextDrawable;
 
 import java.lang.reflect.Field;
@@ -103,48 +103,30 @@ public class RoomToolbar extends Toolbar {
   }
 
   public void showUserStatusIcon(int status) {
-    wrapDrawable(userStatusDrawable);
+    DrawableHelper.INSTANCE.wrapDrawable(userStatusDrawable);
 
+    Context context = getContext();
     switch (status) {
       case STATUS_ONLINE:
-        tintDrawable(userStatusDrawable, R.color.color_user_status_online);
+        DrawableHelper.INSTANCE.tintDrawable(userStatusDrawable, context, R.color.color_user_status_online);
         break;
       case STATUS_BUSY:
-        tintDrawable(userStatusDrawable, R.color.color_user_status_busy);
+        DrawableHelper.INSTANCE.tintDrawable(userStatusDrawable, context, R.color.color_user_status_busy);
         break;
       case STATUS_AWAY:
-        tintDrawable(userStatusDrawable, R.color.color_user_status_away);
+        DrawableHelper.INSTANCE.tintDrawable(userStatusDrawable, context, R.color.color_user_status_away);
         break;
       case STATUS_OFFLINE:
-        tintDrawable(userStatusDrawable, R.color.color_user_status_offline);
+        DrawableHelper.INSTANCE.tintDrawable(userStatusDrawable, context, R.color.color_user_status_offline);
         break;
       default:
-        tintDrawable(userStatusDrawable, R.color.color_user_status_offline);
+        DrawableHelper.INSTANCE.tintDrawable(userStatusDrawable, context, R.color.color_user_status_offline);
         break;
     }
 
     userStatusImage.setImageDrawable(userStatusDrawable);
     roomTypeImage.setVisibility(GONE);
     userStatusImage.setVisibility(VISIBLE);
-  }
-
-  /**
-   * Wraps a drawable to be used for example for tinting.
-   * @param drawable The drawable to wrap.
-   * @see #tintDrawable(Drawable, int)
-   */
-  private void wrapDrawable(Drawable drawable) {
-    DrawableCompat.wrap(drawable);
-  }
-
-  /**
-   * REMARK: You MUST always wrap the drawable before tint it.
-   * @param drawable The drawable to tint.
-   * @param color The color to tint the drawable.
-   * @see #wrapDrawable(Drawable)
-   */
-  private void tintDrawable(Drawable drawable, int color) {
-    DrawableCompat.setTint(drawable, ContextCompat.getColor(getContext(), color));
   }
 
   public void setUnreadBudge(int numUnreadChannels, int numMentionsSum) {
@@ -166,7 +148,7 @@ public class RoomToolbar extends Toolbar {
         badgeImageView.setImageDrawable(getBadgeDrawable(numMentionsSum));
       } else {
         badgeImageView.setScaleType(ImageView.ScaleType.CENTER);
-        badgeImageView.setImageResource(R.drawable.badge_without_number);
+        badgeImageView.setImageResource(R.drawable.ic_badge_without_number_red_10dp);
       }
       badgeImageView.setVisibility(View.VISIBLE);
     } else {
@@ -180,7 +162,7 @@ public class RoomToolbar extends Toolbar {
         .beginConfig()
         .useFont(Typeface.SANS_SERIF)
         .endConfig()
-        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.color_user_status_busy));
+        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.color_alert));
   }
 
   @Override
