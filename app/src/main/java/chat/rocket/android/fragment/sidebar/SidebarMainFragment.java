@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -142,7 +143,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
     RxSearchView.queryTextChanges(searchView)
         .compose(bindToLifecycle())
-        .debounce(300, TimeUnit.MILLISECONDS)
+        .debounce(100, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .switchMap(charSequence -> {
           if (charSequence.length() == 0) {
