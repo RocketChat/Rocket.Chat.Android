@@ -265,27 +265,29 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     if (subPane != null) {
       LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
       for (Pair<String, String> server : serverList) {
-        if (serverListContainer.findViewWithTag(server.first) == null) {
+        String serverHostname = server.first;
+        String serverLogoUrl = server.second;
+        if (serverListContainer.findViewWithTag(serverHostname) == null) {
           int serverCount = serverListContainer.getChildCount();
 
           View serverRow = LayoutInflater.from(this).inflate(R.layout.server_row, serverListContainer, false);
           SimpleDraweeView serverButton = serverRow.findViewById(R.id.drawee_server_button);
           TextView serverLabel = serverRow.findViewById(R.id.text_view_server_label);
 
-          serverButton.setTag(server.first);
-          serverLabel.setText(server.first);
+          serverButton.setTag(serverHostname);
+          serverLabel.setText(serverHostname);
 
           // Currently selected server
-          if (server.first.equalsIgnoreCase(hostname)) {
+          if (serverHostname.equalsIgnoreCase(hostname)) {
             serverLabel.setSelected(true);
             serverLabel.setTypeface(Typeface.DEFAULT_BOLD);
           }
 
-          serverRow.setOnClickListener(view -> changeServerIfNeeded(server.first));
+          serverRow.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
 
-          Drawable drawable = AvatarHelper.INSTANCE.getTextDrawable(server.first,this);
+          Drawable placeholder = AvatarHelper.INSTANCE.getTextDrawable(serverHostname,this);
 
-          FrescoHelper.INSTANCE.loadImage(serverButton, server.second, drawable);
+          FrescoHelper.INSTANCE.loadImage(serverButton, serverLogoUrl, placeholder);
 
           serverListContainer.addView(serverRow, serverCount - 1);
           serverListContainer.requestLayout();
