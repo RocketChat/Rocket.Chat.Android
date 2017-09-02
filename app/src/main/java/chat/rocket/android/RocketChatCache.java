@@ -41,7 +41,7 @@ public class RocketChatCache {
   }
 
   public void setSelectedServerHostname(String hostname) {
-    setString(KEY_SELECTED_SERVER_HOSTNAME, hostname);
+    setString(KEY_SELECTED_SERVER_HOSTNAME, hostname.toLowerCase());
   }
 
   public void addHostname(@NonNull String hostname, @Nullable String hostnameAvatarUri) {

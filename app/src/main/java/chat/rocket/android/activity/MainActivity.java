@@ -290,7 +290,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
           FrescoHelper.INSTANCE.loadImage(serverButton, serverLogoUrl, placeholder);
 
           serverListContainer.addView(serverRow, serverCount - 1);
-          serverListContainer.requestLayout();
         }
       }
     }
