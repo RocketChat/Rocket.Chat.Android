@@ -137,7 +137,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     JSONObject jsonObject = new JSONObject(publicSetting.getValue());
     String logoUrl = (jsonObject.has("url")) ?
             jsonObject.optString("url") : jsonObject.optString("defaultUrl");
-    rocketChatCache.addHostname(hostname, logoUrl);
+    rocketChatCache.addHostname(hostname.toLowerCase(), logoUrl);
     return rocketChatCache.getServerList();
   }
 
