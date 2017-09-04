@@ -21,6 +21,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
+import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.core.models.User;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -125,6 +127,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   private Message edittingMessage = null;
 
+  private SlidingPaneLayout pane;
+
   public RoomFragment() {}
 
   /**
@@ -189,6 +193,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   @Override
   protected void onSetupView() {
+    pane = getActivity().findViewById(R.id.sliding_pane);
     messageRecyclerView = rootView.findViewById(R.id.messageRecyclerView);
 
     messageListAdapter = new MessageListAdapter(getContext(), hostname);
@@ -235,6 +240,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       }
     };
 
+    setupSidebar();
     setupSideMenu();
     setupMessageComposer();
     setupMessageActions();
@@ -305,7 +311,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     });
 
     DrawerLayout drawerLayout = rootView.findViewById(R.id.drawer_layout);
-    SlidingPaneLayout pane = getActivity().findViewById(R.id.sliding_pane);
     if (drawerLayout != null && pane != null) {
       compositeDisposable.add(RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
           .compose(bindToLifecycle())
@@ -322,6 +327,47 @@ public class RoomFragment extends AbstractChatRoomFragment implements
               Logger::report
           )
       );
+    }
+  }
+
+  private void setupSidebar() {
+    SlidingPaneLayout subPane = getActivity().findViewById(R.id.sub_sliding_pane);
+    RoomToolbar toolbar = getActivity().findViewById(R.id.activity_main_toolbar);
+
+    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+      @Override
+      public void onPanelSlide(View view, float v) {
+        messageFormManager.enableComposingText(false);
+        //Ref: ActionBarDrawerToggle#setProgress
+        toolbar.setNavigationIconProgress(v);
+      }
+
+      @Override
+      public void onPanelOpened(View view) {
+        toolbar.setNavigationIconVerticalMirror(true);
+      }
+
+      @Override
+      public void onPanelClosed(View view) {
+        messageFormManager.enableComposingText(true);
+        toolbar.setNavigationIconVerticalMirror(false);
+        subPane.closePane();
+        closeUserActionContainer();
+      }
+    });
+
+    toolbar.setNavigationOnClickListener(view -> {
+      if (pane.isSlideable() && !pane.isOpen()) {
+        pane.openPane();
+      }
+    });
+  }
+
+  public void closeUserActionContainer() {
+    SidebarMainFragment sidebarFragment = (SidebarMainFragment) getActivity().getSupportFragmentManager()
+            .findFragmentById(R.id.sidebar_fragment_container);
+    if (sidebarFragment != null) {
+      sidebarFragment.closeUserActionContainer();
     }
   }
 
