@@ -20,7 +20,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 
 import chat.rocket.core.models.User;
 import java.lang.reflect.Field;
@@ -327,7 +326,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   private boolean closeSideMenuIfNeeded() {
-    DrawerLayout drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
+    DrawerLayout drawerLayout = rootView.findViewById(R.id.drawer_layout);
     if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.END)) {
       drawerLayout.closeDrawer(GravityCompat.END);
       return true;
@@ -336,12 +335,12 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   private void setupMessageComposer() {
-    final MessageFormLayout messageFormLayout = (MessageFormLayout) rootView.findViewById(R.id.messageComposer);
+    final MessageFormLayout messageFormLayout = rootView.findViewById(R.id.messageComposer);
     messageFormManager = new MessageFormManager(messageFormLayout, this::showExtraActionSelectionDialog);
     messageFormManager.setSendMessageCallback(this::sendMessage);
     messageFormLayout.setEditTextCommitContentListener(this::onCommitContent);
 
-    autocompleteManager = new AutocompleteManager((ViewGroup) rootView.findViewById(R.id.messageListRelativeLayout));
+    autocompleteManager = new AutocompleteManager(rootView.findViewById(R.id.messageListRelativeLayout));
 
     autocompleteManager.registerSource(
         new ChannelSource(

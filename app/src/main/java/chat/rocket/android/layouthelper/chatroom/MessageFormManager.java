@@ -3,14 +3,13 @@ package chat.rocket.android.layouthelper.chatroom;
 import chat.rocket.android.widget.message.MessageFormLayout;
 
 /**
- * handling MessageForm.
+ * Handles MessageForm.
  */
 public class MessageFormManager {
   private final MessageFormLayout messageFormLayout;
   private SendMessageCallback sendMessageCallback;
 
-  public MessageFormManager(MessageFormLayout messageFormLayout,
-                            MessageFormLayout.ExtraActionSelectionClickListener callback) {
+  public MessageFormManager(MessageFormLayout messageFormLayout, MessageFormLayout.ExtraActionSelectionClickListener callback) {
     this.messageFormLayout = messageFormLayout;
     init(callback);
   }
@@ -24,13 +23,8 @@ public class MessageFormManager {
     this.sendMessageCallback = sendMessageCallback;
   }
 
-  public void clearComposingText() {
-    messageFormLayout.setText("");
-  }
-
   public void onMessageSend() {
     clearComposingText();
-    messageFormLayout.setEnabled(true);
   }
 
   public void setEditMessage(String message) {
@@ -38,12 +32,14 @@ public class MessageFormManager {
     messageFormLayout.setText(message);
   }
 
+  public void clearComposingText() {
+    messageFormLayout.setText("");
+  }
+
   private void sendMessage(String message) {
     if (sendMessageCallback == null) {
       return;
     }
-
-    messageFormLayout.setEnabled(false);
     sendMessageCallback.onSubmitText(message);
   }
 
