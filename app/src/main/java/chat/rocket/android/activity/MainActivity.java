@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SlidingPaneLayout;
-import android.view.View;
 
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
@@ -43,7 +42,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     setContentView(R.layout.activity_main);
     toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
     statusTicker = new StatusTicker();
-    setupSidebar();
   }
 
   @Override
@@ -63,48 +61,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     super.onPause();
   }
 
-  private void setupSidebar() {
-    SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-    if (pane == null) {
-      return;
-    }
-
-    final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
-    pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
-      @Override
-      public void onPanelClosed(View panel) {
-        super.onPanelClosed(panel);
-        if (subPane != null) {
-          subPane.closePane();
-        }
-      }
-    });
-
-    toolbar.setNavigationOnClickListener(view -> {
-      if (pane.isSlideable() && !pane.isOpen()) {
-        pane.openPane();
-      }
-    });
-
-    //ref: ActionBarDrawerToggle#setProgress
-    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
-      @Override
-      public void onPanelSlide(View panel, float slideOffset) {
-        toolbar.setNavigationIconProgress(slideOffset);
-      }
-
-      @Override
-      public void onPanelOpened(View panel) {
-        toolbar.setNavigationIconVerticalMirror(true);
-      }
-
-      @Override
-      public void onPanelClosed(View panel) {
-        toolbar.setNavigationIconVerticalMirror(false);
-        closeUserActionContainer();
-      }
-    });
-  }
 
   private boolean closeSidebarIfNeeded() {
     // REMARK: Tablet UI doesn't have SlidingPane!
@@ -154,14 +110,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
         .commit();
-  }
-
-  private void closeUserActionContainer() {
-    SidebarMainFragment sidebarFragment = (SidebarMainFragment) getSupportFragmentManager()
-            .findFragmentById(R.id.sidebar_fragment_container);
-    if (sidebarFragment != null) {
-      sidebarFragment.closeUserActionContainer();
-    }
   }
 
   @Override
