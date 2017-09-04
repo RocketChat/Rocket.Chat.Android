@@ -4,7 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.RocketChatCache;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android.service.ddp.stream.StreamRoomMessage;
@@ -19,6 +20,7 @@ public class StreamRoomMessageManager implements Registrable {
   private final DDPClientRef ddpClientRef;
   private final AbstractRocketChatCacheObserver cacheObserver;
   private final Handler handler;
+  private final RocketChatCache rocketChatCache;
   private StreamRoomMessage streamRoomMessage;
 
   public StreamRoomMessageManager(Context context, String hostname,
@@ -27,6 +29,7 @@ public class StreamRoomMessageManager implements Registrable {
     this.hostname = hostname;
     this.realmHelper = realmHelper;
     this.ddpClientRef = ddpClientRef;
+    this.rocketChatCache = new RocketChatCache(context);
 
     cacheObserver = new AbstractRocketChatCacheObserver(context, realmHelper) {
       @Override
@@ -57,6 +60,11 @@ public class StreamRoomMessageManager implements Registrable {
   @Override
   public void register() {
     cacheObserver.register();
+    String selectedRoomId = rocketChatCache.getSelectedRoomId();
+    if (selectedRoomId == null) {
+      return;
+    }
+    registerStreamNotifyMessage(selectedRoomId);
   }
 
   @Override

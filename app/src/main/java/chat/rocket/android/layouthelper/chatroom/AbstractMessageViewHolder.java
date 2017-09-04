@@ -2,63 +2,59 @@ package chat.rocket.android.layouthelper.chatroom;
 
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.realm_helper.RealmModelViewHolder;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.RocketChatAvatar;
+import chat.rocket.core.SyncState;
 
-public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<PairedMessage> {
+public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMessage> {
   protected final RocketChatAvatar avatar;
+  protected final ImageView errorImageView;
   protected final TextView username;
   protected final TextView subUsername;
   protected final TextView timestamp;
   protected final View userAndTimeContainer;
+  protected final AbsoluteUrl absoluteUrl;
   protected final String hostname;
-  protected final String userId;
-  protected final String token;
   protected final View newDayContainer;
   protected final TextView newDayText;
 
   /**
    * constructor WITH hostname.
    */
-  public AbstractMessageViewHolder(View itemView, String hostname, String userId, String token) {
+  public AbstractMessageViewHolder(View itemView, AbsoluteUrl absoluteUrl, String hostname) {
     super(itemView);
-    avatar = (RocketChatAvatar) itemView.findViewById(R.id.user_avatar);
-    username = (TextView) itemView.findViewById(R.id.username);
-    subUsername = (TextView) itemView.findViewById(R.id.sub_username);
-    timestamp = (TextView) itemView.findViewById(R.id.timestamp);
+    avatar = itemView.findViewById(R.id.user_avatar);
+    errorImageView = itemView.findViewById(R.id.errorImageView);
+    username = itemView.findViewById(R.id.username);
+    subUsername = itemView.findViewById(R.id.sub_username);
+    timestamp = itemView.findViewById(R.id.timestamp);
     userAndTimeContainer = itemView.findViewById(R.id.user_and_timestamp_container);
     newDayContainer = itemView.findViewById(R.id.newday_container);
-    newDayText = (TextView) itemView.findViewById(R.id.newday_text);
+    newDayText = itemView.findViewById(R.id.newday_text);
+    this.absoluteUrl = absoluteUrl;
     this.hostname = hostname;
-    this.userId = userId;
-    this.token = token;
   }
 
   /**
    * bind the view model.
    */
-  public final void bind(PairedMessage pairedMessage) {
-    bindMessage(pairedMessage);
-
-    if (pairedMessage.target != null) {
-      int syncState = pairedMessage.target.getSyncState();
-      if (syncState == SyncState.NOT_SYNCED || syncState == SyncState.SYNCING) {
-        itemView.setAlpha(0.6f);
-      } else {
-        itemView.setAlpha(1.0f);
-      }
+  public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
+    if (pairedMessage.target.getSyncState() == SyncState.FAILED) {
+      errorImageView.setVisibility(View.VISIBLE);
+    } else {
+      errorImageView.setVisibility(View.GONE);
     }
 
+    bindMessage(pairedMessage, autoloadImages);
     renderNewDayAndSequential(pairedMessage);
   }
 
-  protected abstract void bindMessage(PairedMessage pairedMessage);
+  protected abstract void bindMessage(PairedMessage pairedMessage, boolean autoloadImages);
 
   private void renderNewDayAndSequential(PairedMessage pairedMessage) {
     //see Rocket.Chat:packages/rocketchat-livechat/app/client/views/message.coffee
@@ -85,11 +81,10 @@ public abstract class AbstractMessageViewHolder extends RealmModelViewHolder<Pai
     }
 
     if (userAndTimeContainer != null) {
-      if (sequential) {
+      if (sequential)
         userAndTimeContainer.setVisibility(View.GONE);
-      } else {
+      else
         userAndTimeContainer.setVisibility(View.VISIBLE);
-      }
     }
   }
 

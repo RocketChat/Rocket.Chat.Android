@@ -96,12 +96,27 @@
 
         </LinearLayout>
 
-        <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/image"
+        <FrameLayout
+                android:id="@+id/image_container"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginBottom="8dp"
-                fresco:actualImageScaleType="fitStart" />
+                android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="8dp"
+                    fresco:actualImageScaleType="fitStart" />
+
+            <TextView
+                    android:id="@+id/image_load"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:gravity="center_horizontal|bottom"
+                    android:paddingBottom="16dp"
+                    android:text="@string/click_to_load" />
+
+        </FrameLayout>
 
         <!-- audio -->
         <!-- video -->

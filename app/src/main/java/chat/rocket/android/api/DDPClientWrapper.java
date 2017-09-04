@@ -1,18 +1,21 @@
 package chat.rocket.android.api;
 
 import android.support.annotation.Nullable;
+
+import chat.rocket.android.helper.OkHttpHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.UUID;
+
 import bolts.Task;
-import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.android_ddp.DDPSubscription;
-import rx.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 /**
  * DDP client wrapper.
@@ -22,7 +25,7 @@ public class DDPClientWrapper {
   private final String hostname;
 
   private DDPClientWrapper(String hostname) {
-    ddpClient = new DDPClient(OkHttpHelper.getClientForWebSocket());
+    ddpClient = new DDPClient(OkHttpHelper.INSTANCE.getClientForWebSocket());
     this.hostname = hostname;
   }
 
@@ -69,7 +72,7 @@ public class DDPClientWrapper {
   /**
    * Returns Observable for handling DDP subscription.
    */
-  public Observable<DDPSubscription.Event> getSubscriptionCallback() {
+  public Flowable<DDPSubscription.Event> getSubscriptionCallback() {
     return ddpClient.getSubscriptionCallback();
   }
 
@@ -121,5 +124,14 @@ public class DDPClientWrapper {
             return Task.forResult(null);
           }
         });
+  }
+
+  /**
+   * check WebSocket connectivity with ping.
+   */
+  public Maybe<DDPClientCallback.Base> doPing() {
+    final String pingId = UUID.randomUUID().toString();
+    RCLog.d("ping[%s] >", pingId);
+    return ddpClient.doPing(pingId);
   }
 }

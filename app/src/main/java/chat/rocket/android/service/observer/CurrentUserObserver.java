@@ -7,9 +7,9 @@ import io.realm.RealmResults;
 import java.util.ArrayList;
 import java.util.List;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.helper.LogIfError;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android.service.ddp.stream.StreamNotifyUserSubscriptionsChanged;
@@ -18,7 +18,7 @@ import hugo.weaving.DebugLog;
 /**
  * observe the user with emails.
  */
-public class CurrentUserObserver extends AbstractModelObserver<User> {
+public class CurrentUserObserver extends AbstractModelObserver<RealmUser> {
   private final MethodCallHelper methodCall;
   private boolean currentUserExists;
   private ArrayList<Registrable> listeners;
@@ -31,12 +31,12 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
   }
 
   @Override
-  public RealmResults<User> queryItems(Realm realm) {
-    return User.queryCurrentUser(realm).findAll();
+  public RealmResults<RealmUser> queryItems(Realm realm) {
+    return RealmUser.queryCurrentUser(realm).findAll();
   }
 
   @Override
-  public void onUpdateResults(List<User> results) {
+  public void onUpdateResults(List<RealmUser> results) {
     boolean exists = !results.isEmpty();
 
     if (currentUserExists != exists) {
@@ -50,7 +50,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
   }
 
   @DebugLog
-  private void onLogin(User user) {
+  private void onLogin(RealmUser user) {
     if (listeners != null) {
       onLogout();
     }
@@ -67,7 +67,7 @@ public class CurrentUserObserver extends AbstractModelObserver<User> {
         listeners.add(listener);
       }
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   @DebugLog

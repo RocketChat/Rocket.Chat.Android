@@ -2,6 +2,9 @@ package chat.rocket.android.service.ddp;
 
 import android.content.Context;
 import android.text.TextUtils;
+
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import org.json.JSONArray;
@@ -9,13 +12,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android_ddp.DDPSubscription;
-import rx.Subscription;
+import io.realm.RealmResults;
 
 public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   protected final Context context;
@@ -24,7 +27,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
   protected final DDPClientRef ddpClientRef;
   private boolean isUnsubscribed;
   private String subscriptionId;
-  private Subscription rxSubscription;
+  private Disposable rxSubscription;
 
   protected AbstractDDPDocEventSubscriber(Context context, String hostname,
                                           RealmHelper realmHelper, DDPClientRef ddpClientRef) {
@@ -68,7 +71,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
 
     ddpClientRef.get().subscribe(getSubscriptionName(), params).onSuccess(task -> {
       if (isUnsubscribed) {
-        ddpClientRef.get().unsubscribe(task.getResult().id).continueWith(new LogcatIfError());
+        ddpClientRef.get().unsubscribe(task.getResult().id).continueWith(new LogIfError());
       } else {
         subscriptionId = task.getResult().id;
       }
@@ -87,42 +90,46 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
       }).onSuccess(task -> {
         rxSubscription = subscribe();
         return null;
-      }).continueWith(new LogcatIfError());
+      }).continueWith(new LogIfError());
     } else {
       rxSubscription = subscribe();
     }
     onRegister();
   }
 
-  protected Subscription subscribe() {
+  protected Disposable subscribe() {
     return ddpClientRef.get().getSubscriptionCallback()
         .filter(event -> event instanceof DDPSubscription.DocEvent)
         .cast(DDPSubscription.DocEvent.class)
         .filter(event -> isTarget(event.collection))
-        .subscribe(docEvent -> {
-          try {
-            if (docEvent instanceof DDPSubscription.Added.Before) {
-              onDocumentAdded((DDPSubscription.Added) docEvent); //ignore Before
-            } else if (docEvent instanceof DDPSubscription.Added) {
-              onDocumentAdded((DDPSubscription.Added) docEvent);
-            } else if (docEvent instanceof DDPSubscription.Removed) {
-              onDocumentRemoved((DDPSubscription.Removed) docEvent);
-            } else if (docEvent instanceof DDPSubscription.Changed) {
-              onDocumentChanged((DDPSubscription.Changed) docEvent);
-            } else if (docEvent instanceof DDPSubscription.MovedBefore) {
-              //ignore movedBefore
+        .subscribe(
+            docEvent -> {
+              try {
+                if (docEvent instanceof DDPSubscription.Added.Before) {
+                  onDocumentAdded((DDPSubscription.Added) docEvent); //ignore Before
+                } else if (docEvent instanceof DDPSubscription.Added) {
+                  onDocumentAdded((DDPSubscription.Added) docEvent);
+                } else if (docEvent instanceof DDPSubscription.Removed) {
+                  onDocumentRemoved((DDPSubscription.Removed) docEvent);
+                } else if (docEvent instanceof DDPSubscription.Changed) {
+                  onDocumentChanged((DDPSubscription.Changed) docEvent);
+                } else if (docEvent instanceof DDPSubscription.MovedBefore) {
+                  //ignore movedBefore
+                }
+              } catch (Exception exception) {
+                RCLog.w(exception, "failed to handle subscription callback");
+              }
+            },
+            throwable -> {
             }
-          } catch (Exception exception) {
-            RCLog.w(exception, "failed to handle subscription callback");
-          }
-        });
+        );
   }
 
   protected void onDocumentAdded(DDPSubscription.Added docEvent) {
     realmHelper.executeTransaction(realm -> {
       onDocumentAdded(realm, docEvent);
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   private void onDocumentAdded(Realm realm, DDPSubscription.Added docEvent) throws JSONException {
@@ -136,7 +143,7 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     realmHelper.executeTransaction(realm -> {
       onDocumentChanged(realm, docEvent);
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   private void onDocumentChanged(Realm realm, DDPSubscription.Changed docEvent)
@@ -157,13 +164,22 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     realmHelper.executeTransaction(realm -> {
       onDocumentRemoved(realm, docEvent);
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   private void onDocumentRemoved(Realm realm, DDPSubscription.Removed docEvent)
       throws JSONException {
     //executed in RealmTransaction
-    realm.where(getModelClass()).equalTo("_id", docEvent.docID).findAll().deleteAllFromRealm();
+    RealmResults<? extends RealmObject> docs = realm.where(getModelClass())
+            .equalTo("_id", docEvent.docID).findAll();
+    if (RealmUser.class.equals(getModelClass())) {
+      for (RealmObject doc : docs) {
+        RealmUser user = (RealmUser) doc;
+        user.setStatus(RealmUser.STATUS_OFFLINE);
+      }
+    } else {
+      docs.deleteAllFromRealm();
+    }
   }
 
   private void mergeJson(JSONObject target, JSONObject src) throws JSONException {
@@ -179,10 +195,10 @@ public abstract class AbstractDDPDocEventSubscriber implements Registrable {
     isUnsubscribed = true;
     onUnregister();
     if (rxSubscription != null) {
-      rxSubscription.unsubscribe();
+      rxSubscription.dispose();
     }
-    if (!TextUtils.isEmpty(subscriptionId)) {
-      ddpClientRef.get().unsubscribe(subscriptionId).continueWith(new LogcatIfError());
+    if (!TextUtils.isEmpty(subscriptionId) && ddpClientRef.get() != null) {
+      ddpClientRef.get().unsubscribe(subscriptionId).continueWith(new LogIfError());
     }
   }
 }

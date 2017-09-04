@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import chat.rocket.android.R;
 import chat.rocket.android.renderer.MessageRenderer;
+import chat.rocket.android.widget.AbsoluteUrl;
 
 /**
  * ViewData holder of NORMAL chat message.
@@ -15,18 +16,17 @@ public class MessageSystemViewHolder extends AbstractMessageViewHolder {
   /**
    * constructor WITH hostname.
    */
-  public MessageSystemViewHolder(View itemView, String hostname, String userId, String token) {
-    super(itemView, hostname, userId, token);
-    body = (TextView) itemView.findViewById(R.id.message_body);
+  public MessageSystemViewHolder(View itemView, AbsoluteUrl absoluteUrl, String hostname) {
+    super(itemView, absoluteUrl, hostname);
+    body = itemView.findViewById(R.id.message_body);
   }
 
   @Override
-  protected void bindMessage(PairedMessage pairedMessage) {
-    new MessageRenderer(itemView.getContext(), pairedMessage.target)
-        .avatarInto(avatar, hostname)
-        .usernameInto(username, subUsername)
-        .timestampInto(timestamp);
-
+  protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {
+    MessageRenderer messageRenderer = new MessageRenderer(pairedMessage.target, autoloadImages);
+    messageRenderer.showAvatar(avatar, hostname);
+    messageRenderer.showUsername(username, subUsername);
+    messageRenderer.showTimestampOrMessageState(timestamp);
     if (pairedMessage.target != null) {
       body.setText(MessageType.parse(pairedMessage.target.getType())
           .getString(body.getContext(), pairedMessage.target));

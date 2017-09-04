@@ -1,5 +1,6 @@
 package chat.rocket.android_ddp;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import org.json.JSONObject;
 
@@ -51,6 +52,15 @@ public class DDPClientCallback {
     public Ping(DDPClient client, @Nullable String id) {
       super(client);
       this.id = id;
+    }
+
+    public static class UnMatched extends Base {
+      @NonNull public String id;
+
+      public UnMatched(DDPClient client, @NonNull String id) {
+        super(client);
+        this.id = id;
+      }
     }
 
     public static class Timeout extends BaseException {

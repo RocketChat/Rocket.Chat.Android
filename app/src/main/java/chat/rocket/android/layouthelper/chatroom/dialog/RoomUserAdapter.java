@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.widget.AbsoluteUrl;
+import chat.rocket.core.models.User;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.renderer.UserRenderer;
 
 /**
@@ -21,16 +23,18 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
   private final Context context;
   private final LayoutInflater inflater;
   private final RealmHelper realmHelper;
+  private final AbsoluteUrl absoluteUrl;
   private final String hostname;
   private List<String> usernames;
 
   /**
    * Constructor with required parameters.
    */
-  public RoomUserAdapter(Context context, RealmHelper realmHelper, String hostname) {
+  public RoomUserAdapter(Context context, RealmHelper realmHelper, AbsoluteUrl absoluteUrl, String hostname) {
     this.context = context;
     this.inflater = LayoutInflater.from(context);
     this.realmHelper = realmHelper;
+    this.absoluteUrl = absoluteUrl;
     this.hostname = hostname;
   }
 
@@ -47,19 +51,23 @@ public class RoomUserAdapter extends RecyclerView.Adapter<RoomUserViewHolder> {
       return;
     }
 
-    User user = realmHelper.executeTransactionForRead(realm ->
-        realm.where(User.class).equalTo(User.USERNAME, username).findFirst());
-    if (user == null) {
-      user = new User();
-      user.setUsername(username);
-      new UserRenderer(context, user)
-          .avatarInto(holder.avatar, hostname)
-          .usernameInto(holder.username);
+    RealmUser realmUser = realmHelper.executeTransactionForRead(realm ->
+        realm.where(RealmUser.class).equalTo(RealmUser.USERNAME, username).findFirst());
+    if (realmUser == null) {
+      User user = User.builder()
+          .setId("some-local-is")
+          .setUsername(username)
+          .setUtcOffset(0)
+          .build();
+
+      UserRenderer userRenderer = new UserRenderer(user);
+      userRenderer.showAvatar(holder.avatar, hostname);
+      userRenderer.showUsername(holder.username);
     } else {
-      new UserRenderer(context, user)
-          .statusColorInto(holder.status)
-          .avatarInto(holder.avatar, hostname)
-          .usernameInto(holder.username);
+      UserRenderer userRenderer = new UserRenderer(realmUser.asUser());
+      userRenderer.showAvatar(holder.avatar, hostname);
+      userRenderer.showUsername(holder.username);
+      userRenderer.showStatusColor(holder.status);
     }
   }
 

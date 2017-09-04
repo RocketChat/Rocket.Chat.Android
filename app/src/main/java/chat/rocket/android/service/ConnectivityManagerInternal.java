@@ -1,6 +1,7 @@
 package chat.rocket.android.service;
 
 import java.util.List;
+import chat.rocket.core.models.ServerInfo;
 
 /**
  * interfaces used for RocketChatService and RocketChatwebSocketThread.
@@ -22,4 +23,6 @@ import java.util.List;
   void notifyConnectionEstablished(String hostname, String session);
 
   void notifyConnectionLost(String hostname, int reason);
+
+  void notifyConnecting(String hostname);
 }

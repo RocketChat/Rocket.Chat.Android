@@ -2,9 +2,8 @@ package chat.rocket.android.helper;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.Flowable;
 import org.json.JSONObject;
-
-import rx.Observable;
 
 public class ServerPolicyHelper {
 
@@ -19,7 +18,7 @@ public class ServerPolicyHelper {
     return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
   }
 
-  public static Observable<ServerValidation> isApiVersionValid(
+  public static Flowable<ServerValidation> isApiVersionValid(
       @NonNull ServerPolicyApiValidationHelper serverPolicyApiValidationHelper) {
     return serverPolicyApiValidationHelper.getApiVersion()
         .map(serverInfo ->
@@ -48,6 +47,10 @@ public class ServerPolicyHelper {
     }
 
     return hostname.replaceAll("/+$", "");
+  }
+
+  private static String removeExtraInvalidChars(String hostname) {
+    return hostname.replaceAll("[^\\w|\\.|\\-|/]", "");
   }
 
   private static boolean isValid(JSONObject jsonObject) {

@@ -1,69 +1,78 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="chat.rocket.android">
+          package="chat.rocket.android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <permission
-            android:name="chat.rocket.android.permission.C2D_MESSAGE"
-            android:protectionLevel="signature" />
-    <uses-permission android:name="chat.rocket.android.permission.C2D_MESSAGE" />
+        android:name="chat.rocket.android.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="chat.rocket.android.permission.C2D_MESSAGE"/>
 
     <application
-            android:name=".RocketChatApplication"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+        android:name=".RocketChatApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
 
         <activity
-                android:name=".activity.MainActivity"
-                android:windowSoftInputMode="adjustResize">
+            android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity
-                android:name=".activity.AddServerActivity"
-                android:windowSoftInputMode="adjustResize" />
-        <activity
-                android:name=".activity.LoginActivity"
-                android:windowSoftInputMode="adjustResize"
-                android:configChanges="orientation|screenSize" />
+            android:name=".activity.AddServerActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"/>
 
-        <service android:name=".service.RocketChatService" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <service android:name=".service.RocketChatService"/>
 
         <receiver
-                android:name="com.google.android.gms.gcm.GcmReceiver"
-                android:exported="true"
-                android:permission="com.google.android.c2dm.permission.SEND">
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.example.gcm" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.example.gcm"/>
             </intent-filter>
         </receiver>
 
         <service
-                android:name=".push.gcm.GCMIntentService"
-                android:exported="false">
+            android:name=".push.gcm.GCMIntentService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
-        <service
-                android:name=".push.gcm.GcmInstanceIDListenerService"
-                android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
-            </intent-filter>
-        </service>
-    </application>
 
+        <service
+            android:name=".push.gcm.GcmInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="12ac6e94f850aaffcdff52001af77ca415d06a43" />
+
+    </application>
 </manifest>

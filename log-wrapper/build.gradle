@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath rootProject.ext.androidPlugin
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
@@ -14,8 +14,8 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.compileSdkVersion
+        minSdkVersion 16
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1"
     }
@@ -25,8 +25,4 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
-
-dependencies {
-    compile rootProject.ext.supportAnnotations
 }

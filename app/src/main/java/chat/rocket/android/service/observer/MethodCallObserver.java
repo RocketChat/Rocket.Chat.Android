@@ -1,18 +1,20 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import io.realm.Realm;
-import io.realm.RealmResults;
+
 import org.json.JSONObject;
 
 import java.util.List;
+
 import chat.rocket.android.helper.CheckSum;
-import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.internal.MethodCall;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.models.internal.MethodCall;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Observing MethodCall record, executing RPC if needed.
@@ -45,7 +47,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
           .endGroup()
           .findAll().deleteAllFromRealm();
       return null;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 
   @Override
@@ -109,9 +111,17 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
       if (task.isFaulted()) {
         return realmHelper.executeTransaction(realm -> {
           Exception exception = task.getError();
-          final String errMessage = (exception instanceof DDPClientCallback.RPC.Error)
-              ? ((DDPClientCallback.RPC.Error) exception).error.toString()
-              : exception.getMessage();
+          final String errMessage;
+
+          if (exception instanceof DDPClientCallback.RPC.Error) {
+            errMessage = ((DDPClientCallback.RPC.Error) exception).error.toString();
+          } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
+            // temp "fix"- we need to rewrite the connection layer a bit
+            errMessage = "{\"message\": \"Connection Timeout\"}";
+          } else {
+            errMessage = exception.getMessage();
+          }
+
           realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()
               .put(MethodCall.ID, methodCallId)
               .put(MethodCall.SYNC_STATE, SyncState.FAILED)
@@ -120,6 +130,6 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
         });
       }
       return task;
-    }).continueWith(new LogcatIfError());
+    }).continueWith(new LogIfError());
   }
 }

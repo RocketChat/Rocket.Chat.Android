@@ -10,15 +10,16 @@ import io.realm.RealmResults;
 import java.io.IOException;
 import java.util.List;
 import bolts.Task;
+import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
-import chat.rocket.android.helper.LogcatIfError;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.ddp.PublicSettingsConstants;
-import chat.rocket.android.model.ddp.User;
-import chat.rocket.android.model.internal.GcmPushRegistration;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.android.helper.LogIfError;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
+import chat.rocket.core.PublicSettingsConstants;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.internal.GcmPushRegistration;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 
 /**
@@ -26,8 +27,8 @@ import chat.rocket.android.service.DDPClientRef;
  */
 public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRegistration> {
   public GcmPushRegistrationObserver(Context context, String hostname,
-                                        RealmHelper realmHelper,
-                                        DDPClientRef ddpClientRef) {
+                                     RealmHelper realmHelper,
+                                     DDPClientRef ddpClientRef) {
     super(context, hostname, realmHelper, ddpClientRef);
   }
 
@@ -50,30 +51,27 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
       return null;
     }).onSuccessTask(_task -> registerGcmTokenForServer()
     ).onSuccessTask(_task ->
-      realmHelper.executeTransaction(realm -> {
-        GcmPushRegistration.queryDefault(realm).findFirst().setSyncState(SyncState.SYNCED);
-        return null;
-      })
+        realmHelper.executeTransaction(realm -> {
+          GcmPushRegistration.queryDefault(realm).findFirst().setSyncState(SyncState.SYNCED);
+          return null;
+        })
     ).continueWith(task -> {
       if (task.isFaulted()) {
         realmHelper.executeTransaction(realm -> {
           GcmPushRegistration.queryDefault(realm).findFirst().setSyncState(SyncState.FAILED);
           return null;
-        }).continueWith(new LogcatIfError());
+        }).continueWith(new LogIfError());
       }
       return null;
     });
   }
 
   private Task<Void> registerGcmTokenForServer() throws IOException {
-    final String senderId = PublicSetting
-        .getString(realmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
-
-    final String gcmToken = getGcmToken(senderId);
-    final User currentUser = realmHelper.executeTransactionForRead(realm ->
-        User.queryCurrentUser(realm).findFirst());
+    final String gcmToken = getGcmToken(getSenderId());
+    final RealmUser currentUser = realmHelper.executeTransactionForRead(realm ->
+        RealmUser.queryCurrentUser(realm).findFirst());
     final String userId = currentUser != null ? currentUser.getId() : null;
-    final String pushId = RocketChatCache.getOrCreatePushId(context);
+    final String pushId = new RocketChatCache(context).getOrCreatePushId();
 
     return new RaixPushHelper(realmHelper, ddpClientRef)
         .pushUpdate(pushId, gcmToken, userId);
@@ -82,6 +80,17 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
   private String getGcmToken(String senderId) throws IOException {
     return InstanceID.getInstance(context)
         .getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+  }
+
+  private String getSenderId() {
+    final String senderId = RealmPublicSetting
+        .getString(realmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
+
+    if (senderId.length() != 0) {
+      return senderId;
+    }
+
+    return context.getString(R.string.gcm_sender_id);
   }
 
 }

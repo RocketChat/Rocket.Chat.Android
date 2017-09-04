@@ -1,39 +1,47 @@
 package chat.rocket.android.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.hadisatrio.optional.Optional;
+
 import java.util.List;
+
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.android.model.ddp.RoomSubscription;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.push.PushNotificationHandler;
-import chat.rocket.android.realm_helper.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.ServerInfo;
+import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import icepick.State;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   @State protected String hostname;
   @State protected String roomId;
-  SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener =
-      (sharedPreferences, key) -> {
-        if (RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME.equals(key)) {
-          updateHostnameIfNeeded(sharedPreferences);
-        } else if (RocketChatCache.KEY_SELECTED_ROOM_ID.equals(key)) {
-          updateRoomIdIfNeeded(sharedPreferences);
-        }
-      };
+
+  private RocketChatCache rocketChatCache;
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
+  private boolean isNotification;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    rocketChatCache = new RocketChatCache(this);
+
     if (savedInstanceState == null) {
       handleIntent(getIntent());
     }
+
+    updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
+    updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
   }
 
   @Override
@@ -48,41 +56,37 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     }
 
     if (intent.hasExtra(PushConstants.HOSTNAME)) {
-      SharedPreferences.Editor editor = RocketChatCache.get(this).edit();
-      editor.putString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME,
-          intent.getStringExtra(PushConstants.HOSTNAME));
+      rocketChatCache.setSelectedServerHostname(intent.getStringExtra(PushConstants.HOSTNAME));
 
       if (intent.hasExtra(PushConstants.ROOM_ID)) {
-        editor.putString(RocketChatCache.KEY_SELECTED_ROOM_ID,
-            intent.getStringExtra(PushConstants.ROOM_ID));
+        rocketChatCache.setSelectedRoomId(intent.getStringExtra(PushConstants.ROOM_ID));
       }
+    }
 
-      if (intent.hasExtra(PushConstants.NOT_ID)) {
-        PushNotificationHandler
-            .cleanUpNotificationStack(intent.getIntExtra(PushConstants.NOT_ID, 0));
-      }
-      editor.apply();
+    if (intent.hasExtra(PushConstants.NOT_ID)) {
+      isNotification = true;
+      PushNotificationHandler
+          .cleanUpNotificationStack(intent.getIntExtra(PushConstants.NOT_ID, 0));
     }
   }
 
-  private void updateHostnameIfNeeded(SharedPreferences prefs) {
-    String newHostname = prefs.getString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME, null);
+  private void updateHostnameIfNeeded(String newHostname) {
     if (hostname == null) {
       if (newHostname != null && assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
       } else {
-        recoverFromHostnameError(prefs);
+        recoverFromHostnameError();
       }
     } else {
       if (hostname.equals(newHostname)) {
-        // we are good
+        updateHostname(newHostname);
         return;
       }
 
       if (assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
       } else {
-        recoverFromHostnameError(prefs);
+        recoverFromHostnameError();
       }
     }
   }
@@ -96,7 +100,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     onHostnameUpdated();
   }
 
-  private void recoverFromHostnameError(SharedPreferences prefs) {
+  private void recoverFromHostnameError() {
     final List<ServerInfo> serverInfoList =
         ConnectivityManager.getInstance(getApplicationContext()).getServerList();
     if (serverInfoList == null || serverInfoList.size() == 0) {
@@ -106,36 +110,32 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
 
     // just connect to the first available
     final ServerInfo serverInfo = serverInfoList.get(0);
-    prefs.edit()
-        .putString(RocketChatCache.KEY_SELECTED_SERVER_HOSTNAME, serverInfo.hostname)
-        .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
-        .apply();
+
+    rocketChatCache.setSelectedServerHostname(serverInfo.getHostname());
+    rocketChatCache.setSelectedRoomId(null);
   }
 
-  private void updateRoomIdIfNeeded(SharedPreferences prefs) {
-    String newRoomId = prefs.getString(RocketChatCache.KEY_SELECTED_ROOM_ID, null);
+  private void updateRoomIdIfNeeded(String newRoomId) {
     if (roomId == null) {
-      if (newRoomId != null && assertRoomSubscriptionExists(newRoomId, prefs)) {
+      if (newRoomId != null && assertRoomSubscriptionExists(newRoomId)) {
         updateRoomId(newRoomId);
       }
     } else {
-      if (!roomId.equals(newRoomId) && assertRoomSubscriptionExists(newRoomId, prefs)) {
+      if (!roomId.equals(newRoomId) && assertRoomSubscriptionExists(newRoomId)) {
         updateRoomId(newRoomId);
       }
     }
   }
 
-  private boolean assertRoomSubscriptionExists(String roomId, SharedPreferences prefs) {
+  private boolean assertRoomSubscriptionExists(String roomId) {
     if (!assertServerRealmStoreExists(hostname)) {
       return false;
     }
 
-    RoomSubscription room = RealmStore.get(hostname).executeTransactionForRead(realm ->
-        realm.where(RoomSubscription.class).equalTo(RoomSubscription.ROOM_ID, roomId).findFirst());
+    RealmRoom room = RealmStore.get(hostname).executeTransactionForRead(realm ->
+        realm.where(RealmRoom.class).equalTo(RealmRoom.ROOM_ID, roomId).findFirst());
     if (room == null) {
-      prefs.edit()
-          .remove(RocketChatCache.KEY_SELECTED_ROOM_ID)
-          .apply();
+      rocketChatCache.setSelectedRoomId(null);
       return false;
     }
     return true;
@@ -155,18 +155,20 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
 
-    SharedPreferences prefs = RocketChatCache.get(this);
-    updateHostnameIfNeeded(prefs);
-    updateRoomIdIfNeeded(prefs);
-    prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+    subscribeToConfigChanges();
+
+    ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
+    if (isNotification) {
+      updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
+      updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
+      isNotification = false;
+    }
   }
 
   @Override
   protected void onPause() {
-    SharedPreferences prefs = RocketChatCache.get(this);
-    prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
+    compositeDisposable.clear();
 
     super.onPause();
   }
@@ -174,5 +176,31 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   @Override
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
+  }
+
+  private void subscribeToConfigChanges() {
+    compositeDisposable.add(
+        rocketChatCache.getSelectedServerHostnamePublisher()
+            .map(Optional::get)
+            .distinctUntilChanged()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                this::updateHostnameIfNeeded,
+                Logger::report
+            )
+    );
+
+    compositeDisposable.add(
+        rocketChatCache.getSelectedRoomIdPublisher()
+            .map(Optional::get)
+            .distinctUntilChanged()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                this::updateRoomIdIfNeeded,
+                Logger::report
+            )
+    );
   }
 }

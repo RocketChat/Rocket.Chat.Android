@@ -1,20 +1,23 @@
 package chat.rocket.android.fragment.sidebar.dialog;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
+
+import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import bolts.Task;
 import chat.rocket.android.R;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 
 /**
  * add Channel, add Private-group.
  */
 public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
+
   public AddChannelDialogFragment() {
   }
 
@@ -32,14 +35,18 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
     return R.layout.dialog_add_channel;
   }
 
+  @SuppressLint("RxLeakedSubscription")
   @Override
   protected void onSetupDialog() {
     View buttonAddChannel = getDialog().findViewById(R.id.btn_add_channel);
 
     RxTextView.textChanges((TextView) getDialog().findViewById(R.id.editor_channel_name))
-        .map(text -> !TextUtils.isEmpty(text))
-        .compose(bindToLifecycle())
-        .subscribe(RxView.enabled(buttonAddChannel));
+            .map(text -> !TextUtils.isEmpty(text))
+            .compose(bindToLifecycle())
+            .subscribe(
+                buttonAddChannel::setEnabled,
+                Logger::report
+            );
 
     buttonAddChannel.setOnClickListener(view -> createRoom());
   }

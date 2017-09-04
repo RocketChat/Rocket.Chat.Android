@@ -5,9 +5,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import chat.rocket.android.helper.LogcatIfError;
+import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.ddp.AbstractDDPDocEventSubscriber;
 import chat.rocket.android_ddp.DDPSubscription;
@@ -69,11 +69,11 @@ abstract class AbstractStreamNotifyEventSubscriber extends AbstractDDPDocEventSu
           realm.where(getModelClass())
               .equalTo(getPrimaryKeyForModel(), target.getString(getPrimaryKeyForModel()))
               .findAll().deleteAllFromRealm()
-      ).continueWith(new LogcatIfError());
+      ).continueWith(new LogIfError());
     } else { //inserted, updated
       realmHelper.executeTransaction(realm ->
           realm.createOrUpdateObjectFromJson(getModelClass(), customizeFieldJson(target))
-      ).continueWith(new LogcatIfError());
+      ).continueWith(new LogIfError());
     }
   }
 }

@@ -2,25 +2,33 @@ package chat.rocket.android.api;
 
 import android.content.Context;
 import android.util.Patterns;
+import chat.rocket.persistence.realm.models.ddp.RealmSpotlight;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.UUID;
+
 import bolts.Continuation;
 import bolts.Task;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.Message;
-import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.ddp.RoomSubscription;
-import chat.rocket.android.model.internal.MethodCall;
-import chat.rocket.android.model.internal.Session;
-import chat.rocket.android.realm_helper.RealmHelper;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.core.SyncState;
+import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.ddp.RealmPermission;
+import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
+import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
+import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
+import chat.rocket.persistence.realm.models.internal.MethodCall;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 import hugo.weaving.DebugLog;
 
 /**
@@ -30,7 +38,7 @@ import hugo.weaving.DebugLog;
  */
 public class MethodCallHelper {
 
-  protected static final long TIMEOUT_MS = 4000;
+  protected static final long TIMEOUT_MS = 20000;
   protected static final Continuation<String, Task<JSONObject>> CONVERT_TO_JSON_OBJECT =
       task -> Task.forResult(new JSONObject(task.getResult()));
   protected static final Continuation<String, Task<JSONArray>> CONVERT_TO_JSON_ARRAY =
@@ -43,7 +51,7 @@ public class MethodCallHelper {
    * initialize with Context and hostname.
    */
   public MethodCallHelper(Context context, String hostname) {
-    this.context = context;
+    this.context = context.getApplicationContext();
     this.realmHelper = RealmStore.get(hostname);
     ddpClientRef = null;
   }
@@ -63,7 +71,12 @@ public class MethodCallHelper {
       return ddpClientRef.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
-      return MethodCall.execute(context, realmHelper, methodName, param, timeout);
+      return MethodCall.execute(realmHelper, methodName, param, timeout)
+          .onSuccessTask(task -> {
+            ConnectivityManager.getInstance(context.getApplicationContext())
+                .keepAliveServer();
+            return task;
+          });
     }
   }
 
@@ -76,7 +89,12 @@ public class MethodCallHelper {
           if (TextUtils.isEmpty(errMessageJson)) {
             return Task.forError(exception);
           }
+          String errType = new JSONObject(errMessageJson).optString("error");
           String errMessage = new JSONObject(errMessageJson).getString("message");
+
+          if (TwoStepAuthException.TYPE.equals(errType)) {
+            return Task.forError(new TwoStepAuthException(errMessage));
+          }
           return Task.forError(new Exception(errMessage));
         } else if (exception instanceof DDPClientCallback.RPC.Error) {
           String errMessage = ((DDPClientCallback.RPC.Error) exception).error.getString("message");
@@ -107,7 +125,7 @@ public class MethodCallHelper {
   }
 
   /**
-   * Register User.
+   * Register RealmUser.
    */
   public Task<String> registerUser(final String name, final String email,
                                    final String password, final String confirmPassword) {
@@ -120,8 +138,8 @@ public class MethodCallHelper {
 
   private Task<Void> saveToken(Task<String> task) {
     return realmHelper.executeTransaction(realm ->
-        realm.createOrUpdateObjectFromJson(Session.class, new JSONObject()
-            .put("sessionId", Session.DEFAULT_ID)
+        realm.createOrUpdateObjectFromJson(RealmSession.class, new JSONObject()
+            .put("sessionId", RealmSession.DEFAULT_ID)
             .put("token", task.getResult())
             .put("tokenVerified", true)
             .put("error", JSONObject.NULL)
@@ -140,6 +158,11 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
+  public Task<Void> joinRoom(String roomId) {
+    return call("joinRoom", TIMEOUT_MS, () -> new JSONArray().put(roomId))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
   /**
    * Login with username/email and password.
    */
@@ -154,6 +177,21 @@ public class MethodCallHelper {
       param.put("password", new JSONObject()
           .put("digest", CheckSum.sha256(password))
           .put("algorithm", "sha-256"));
+      return new JSONArray().put(param);
+    }).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+        .onSuccessTask(this::saveToken);
+  }
+
+  public Task<Void> loginWithLdap(final String username, final String password) {
+    return call("login", TIMEOUT_MS, () -> {
+      JSONObject param = new JSONObject();
+
+      param.put("ldap", true);
+      param.put("username", username);
+      param.put("ldapPass", password);
+      param.put("ldapOptions", new JSONObject());
+
       return new JSONArray().put(param);
     }).onSuccessTask(CONVERT_TO_JSON_OBJECT)
         .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
@@ -185,10 +223,37 @@ public class MethodCallHelper {
         .onSuccessTask(this::saveToken)
         .continueWithTask(task -> {
           if (task.isFaulted()) {
-            Session.logError(realmHelper, task.getError());
+            RealmSession.logError(realmHelper, task.getError());
           }
           return task;
         });
+  }
+
+
+  public Task<Void> twoStepCodeLogin(final String usernameOrEmail, final String password,
+                                     final String twoStepCode) {
+    return call("login", TIMEOUT_MS, () -> {
+      JSONObject loginParam = new JSONObject();
+      if (Patterns.EMAIL_ADDRESS.matcher(usernameOrEmail).matches()) {
+        loginParam.put("user", new JSONObject().put("email", usernameOrEmail));
+      } else {
+        loginParam.put("user", new JSONObject().put("username", usernameOrEmail));
+      }
+      loginParam.put("password", new JSONObject()
+          .put("digest", CheckSum.sha256(password))
+          .put("algorithm", "sha-256"));
+
+      JSONObject twoStepParam = new JSONObject();
+      twoStepParam.put("login", loginParam);
+      twoStepParam.put("code", twoStepCode);
+
+      JSONObject param = new JSONObject();
+      param.put("totp", twoStepParam);
+
+      return new JSONArray().put(param);
+    }).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+        .onSuccessTask(this::saveToken);
   }
 
   /**
@@ -197,7 +262,14 @@ public class MethodCallHelper {
   public Task<Void> logout() {
     return call("logout", TIMEOUT_MS).onSuccessTask(task ->
         realmHelper.executeTransaction(realm -> {
-          realm.delete(Session.class);
+          realm.delete(RealmSession.class);
+          //check whether the server list is empty
+          if (!ConnectivityManager.getInstance(context).getServerList().isEmpty()){
+            //for each server in serverList -> remove the server
+            for (ServerInfo server: ConnectivityManager.getInstance(context).getServerList()) {
+              ConnectivityManager.getInstance(context.getApplicationContext()).removeServer(server.getHostname());
+            }
+          }
           return null;
         }));
   }
@@ -211,13 +283,13 @@ public class MethodCallHelper {
           final JSONArray result = task.getResult();
           try {
             for (int i = 0; i < result.length(); i++) {
-              RoomSubscription.customizeJson(result.getJSONObject(i));
+              RealmRoom.customizeJson(result.getJSONObject(i));
             }
 
             return realmHelper.executeTransaction(realm -> {
-              realm.delete(RoomSubscription.class);
+              realm.delete(RealmRoom.class);
               realm.createOrUpdateAllFromJson(
-                  RoomSubscription.class, result);
+                  RealmRoom.class, result);
               return null;
             });
           } catch (JSONException exception) {
@@ -241,18 +313,18 @@ public class MethodCallHelper {
           JSONObject result = task.getResult();
           final JSONArray messages = result.getJSONArray("messages");
           for (int i = 0; i < messages.length(); i++) {
-            Message.customizeJson(messages.getJSONObject(i));
+            RealmMessage.customizeJson(messages.getJSONObject(i));
           }
 
           return realmHelper.executeTransaction(realm -> {
             if (timestamp == 0) {
-              realm.where(Message.class)
+              realm.where(RealmMessage.class)
                   .equalTo("rid", roomId)
                   .equalTo("syncstate", SyncState.SYNCED)
                   .findAll().deleteAllFromRealm();
             }
             if (messages.length() > 0) {
-              realm.createOrUpdateAllFromJson(Message.class, messages);
+              realm.createOrUpdateAllFromJson(RealmMessage.class, messages);
             }
             return null;
           }).onSuccessTask(_task -> Task.forResult(messages));
@@ -293,20 +365,27 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
-  public Task<Void> createDirectMessage(final String username) {
+  public Task<String> createDirectMessage(final String username) {
     return call("createDirectMessage", TIMEOUT_MS, () -> new JSONArray().put(username))
-        .onSuccessTask(task -> Task.forResult(null));
+        .onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> Task.forResult(task.getResult().getString("rid")));
   }
 
   /**
    * send message.
    */
-  public Task<Void> sendMessage(String messageId, String roomId, String msg) {
+  public Task<Void> sendMessage(String messageId, String roomId, String msg, long editedAt) {
     try {
-      return sendMessage(new JSONObject()
+      JSONObject messageJson = new JSONObject()
           .put("_id", messageId)
           .put("rid", roomId)
-          .put("msg", msg));
+          .put("msg", msg);
+
+      if (editedAt == 0) {
+        return sendMessage(messageJson);
+      } else {
+        return updateMessage(messageJson);
+      }
     } catch (JSONException exception) {
       return Task.forError(exception);
     }
@@ -317,6 +396,11 @@ public class MethodCallHelper {
    */
   private Task<Void> sendMessage(final JSONObject messageJson) {
     return call("sendMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
+        .onSuccessTask(task -> Task.forResult(null));
+  }
+
+  private Task<Void> updateMessage(final JSONObject messageJson) {
+    return call("updateMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
         .onSuccessTask(task -> Task.forResult(null));
   }
 
@@ -334,17 +418,125 @@ public class MethodCallHelper {
         .onSuccessTask(task -> {
           final JSONArray settings = task.getResult();
           for (int i = 0; i < settings.length(); i++) {
-            PublicSetting.customizeJson(settings.getJSONObject(i));
+            RealmPublicSetting.customizeJson(settings.getJSONObject(i));
           }
 
           return realmHelper.executeTransaction(realm -> {
-            realm.delete(PublicSetting.class);
-            realm.createOrUpdateAllFromJson(PublicSetting.class, settings);
+            realm.delete(RealmPublicSetting.class);
+            realm.createOrUpdateAllFromJson(RealmPublicSetting.class, settings);
             return null;
           });
         });
   }
 
+  public Task<Void> getPermissions() {
+    return call("permissions/get", TIMEOUT_MS)
+        .onSuccessTask(CONVERT_TO_JSON_ARRAY)
+        .onSuccessTask(task -> {
+          final JSONArray permissions = task.getResult();
+          for (int i = 0; i < permissions.length(); i++) {
+            RealmPermission.customizeJson(permissions.getJSONObject(i));
+          }
+
+          return realmHelper.executeTransaction(realm -> {
+            realm.delete(RealmPermission.class);
+            realm.createOrUpdateAllFromJson(RealmPermission.class, permissions);
+            return null;
+          });
+        });
+  }
+
+  public Task<Void> getRoomRoles(final String roomId) {
+    return call("getRoomRoles", TIMEOUT_MS, () -> new JSONArray().put(roomId))
+        .onSuccessTask(CONVERT_TO_JSON_ARRAY)
+        .onSuccessTask(task -> {
+          final JSONArray roomRoles = task.getResult();
+          for (int i = 0; i < roomRoles.length(); i++) {
+            RealmRoomRole.customizeJson(roomRoles.getJSONObject(i));
+          }
+
+          return realmHelper.executeTransaction(realm -> {
+            realm.delete(RealmRoomRole.class);
+            realm.createOrUpdateAllFromJson(RealmRoomRole.class, roomRoles);
+            return null;
+          });
+        });
+  }
+
+  public Task<Void> searchSpotlightUsers(String term) {
+    return searchSpotlight(RealmSpotlightUser.class, "users", term);
+  }
+
+  public Task<Void> searchSpotlightRooms(String term) {
+    return searchSpotlight(RealmSpotlightRoom.class, "rooms", term);
+  }
+
+  public Task<Void> searchSpotlight(String term) {
+    return call("spotlight", TIMEOUT_MS, () ->
+        new JSONArray()
+            .put(term)
+            .put(JSONObject.NULL)
+            .put(new JSONObject().put("rooms", true).put("users", true))
+    ).onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> {
+          String jsonString = null;
+          final JSONObject result = task.getResult();
+
+          JSONArray roomJsonArray = (JSONArray) result.get("rooms");
+          if (roomJsonArray.length() > 0) {
+            jsonString = roomJsonArray.toString();
+          }
+
+          JSONArray userJsonArray = (JSONArray) result.get("users");
+          int usersTotal = userJsonArray.length();
+          if (usersTotal > 0) {
+            for (int i = 0; i < usersTotal; ++i) {
+              RealmSpotlight.Companion.customizeUserJSONObject(userJsonArray.getJSONObject(i));
+            }
+
+            if (jsonString == null) {
+              jsonString = userJsonArray.toString();
+            } else {
+              jsonString = jsonString.replace("]", "") + "," + userJsonArray.toString().replace("[", "");
+            }
+          }
+
+          if (jsonString != null) {
+            String jsonStringResults = jsonString;
+            realmHelper.executeTransaction(realm -> {
+              realm.delete(RealmSpotlight.class);
+              realm.createOrUpdateAllFromJson(RealmSpotlight.class, jsonStringResults);
+              return null;
+            });
+          }
+          return null;
+        });
+  }
+
+  private Task<Void> searchSpotlight(Class clazz, String key, String term) {
+    return call("spotlight", TIMEOUT_MS, () -> new JSONArray()
+        .put(term)
+        .put(JSONObject.NULL)
+        .put(new JSONObject().put(key, true)))
+        .onSuccessTask(CONVERT_TO_JSON_OBJECT)
+        .onSuccessTask(task -> {
+          final JSONObject result = task.getResult();
+          if (!result.has(key)) {
+            return null;
+          }
+
+          Object items = result.get(key);
+          if (!(items instanceof JSONArray)) {
+            return null;
+          }
+
+          return realmHelper.executeTransaction(realm -> {
+            realm.delete(clazz);
+            realm.createOrUpdateAllFromJson(clazz, (JSONArray) items);
+            return null;
+          });
+        });
+  }
 
   protected interface ParamBuilder {
     JSONArray buildParam() throws JSONException;

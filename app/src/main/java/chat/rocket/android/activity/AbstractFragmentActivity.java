@@ -5,12 +5,10 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.MotionEvent;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import chat.rocket.android.helper.OnBackPressListener;
-import chat.rocket.android.log.RCLog;
-import chat.rocket.android.wrappers.InstabugWrapper;
 import icepick.Icepick;
 
 abstract class AbstractFragmentActivity extends RxAppCompatActivity {
@@ -27,9 +25,8 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
     Icepick.saveInstanceState(this, outState);
   }
 
-  protected abstract
   @IdRes
-  int getLayoutContainerForFragment();
+  protected abstract int getLayoutContainerForFragment();
 
   @Override
   public final void onBackPressed() {
@@ -70,15 +67,5 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
         .replace(getLayoutContainerForFragment(), fragment)
         .addToBackStack(null)
         .commit();
-  }
-
-  @Override
-  public boolean dispatchTouchEvent(MotionEvent event) {
-    try {
-      InstabugWrapper.trackTouchEventOnActivity(event, this);
-    } catch (IllegalStateException exception) {
-      RCLog.w(exception, "Instabug error (ignored)");
-    }
-    return super.dispatchTouchEvent(event);
   }
 }

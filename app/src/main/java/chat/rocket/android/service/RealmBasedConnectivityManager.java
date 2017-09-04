@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.models.RealmBasedServerInfo;
 import hugo.weaving.DebugLog;
 import rx.Observable;
 import rx.Single;
@@ -41,7 +43,7 @@ import rx.subjects.PublishSubject;
 
 
   /*package*/ RealmBasedConnectivityManager setContext(Context appContext) {
-    this.appContext = appContext;
+    this.appContext = appContext.getApplicationContext();
     return this;
   }
 
@@ -49,7 +51,7 @@ import rx.subjects.PublishSubject;
   public void resetConnectivityStateList() {
     serverConnectivityList.clear();
     for (ServerInfo serverInfo : RealmBasedServerInfo.getServerInfoList()) {
-      serverConnectivityList.put(serverInfo.hostname, ServerConnectivity.STATE_DISCONNECTED);
+      serverConnectivityList.put(serverInfo.getHostname(), ServerConnectivity.STATE_DISCONNECTED);
     }
   }
 
@@ -61,23 +63,25 @@ import rx.subjects.PublishSubject;
     }
   }
 
+  @DebugLog
   @Override
   public void ensureConnections() {
     for (String hostname : serverConnectivityList.keySet()) {
       connectToServerIfNeeded(hostname, true/* force connect */)
-          .subscribe(_val -> { }, RCLog::e);
+          .subscribe(_val -> {
+          }, RCLog::e);
     }
   }
 
   @Override
   public void addOrUpdateServer(String hostname, @Nullable String name, boolean insecure) {
-    RealmBasedServerInfo.addOrUpdate(hostname, name);
-    RealmBasedServerInfo.setInsecure(hostname, insecure);
+    RealmBasedServerInfo.addOrUpdate(hostname, name, insecure);
     if (!serverConnectivityList.containsKey(hostname)) {
       serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
     }
     connectToServerIfNeeded(hostname, false)
-        .subscribe(_val -> { }, RCLog::e);
+        .subscribe(_val -> {
+        }, RCLog::e);
   }
 
   @Override
@@ -85,7 +89,8 @@ import rx.subjects.PublishSubject;
     RealmBasedServerInfo.remove(hostname);
     if (serverConnectivityList.containsKey(hostname)) {
       disconnectFromServerIfNeeded(hostname)
-          .subscribe(_val -> { }, RCLog::e);
+          .subscribe(_val -> {
+          }, RCLog::e);
     }
   }
 
@@ -129,11 +134,20 @@ import rx.subjects.PublishSubject;
         new ServerConnectivity(hostname, ServerConnectivity.STATE_DISCONNECTED));
   }
 
+  @DebugLog
+  @Override
+  public void notifyConnecting(String hostname) {
+    serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTING);
+    connectivitySubject.onNext(
+            new ServerConnectivity(hostname, ServerConnectivity.STATE_CONNECTING));
+  }
+
   @Override
   public Observable<ServerConnectivity> getServerConnectivityAsObservable() {
     return Observable.concat(Observable.from(getCurrentConnectivityList()), connectivitySubject);
   }
 
+  @DebugLog
   private Single<Boolean> connectToServerIfNeeded(String hostname, boolean forceConnect) {
     return Single.defer(() -> {
       final int connectivity = serverConnectivityList.get(hostname);
@@ -151,8 +165,8 @@ import rx.subjects.PublishSubject;
       }
 
       return connectToServer(hostname)
-          //.doOnError(RCLog::e)
-          .retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
+          .doOnError(RCLog::e)
+          .retryWhen(RxHelper.exponentialBackoff(Integer.MAX_VALUE, 500, TimeUnit.MILLISECONDS));
     });
   }
 
@@ -179,13 +193,14 @@ import rx.subjects.PublishSubject;
     });
   }
 
-
+  @DebugLog
   private Single<Boolean> waitForConnected(String hostname) {
     return connectivitySubject
         .filter(serverConnectivity -> hostname.equals(serverConnectivity.hostname))
         .map(serverConnectivity -> serverConnectivity.state)
         .filter(state ->
-            state == ServerConnectivity.STATE_CONNECTED || state == ServerConnectivity.STATE_DISCONNECTED)
+            state == ServerConnectivity.STATE_CONNECTED
+                || state == ServerConnectivity.STATE_DISCONNECTED)
         .first()
         .toSingle()
         .flatMap(state ->
@@ -194,6 +209,7 @@ import rx.subjects.PublishSubject;
                 : Single.error(new ServerConnectivity.DisconnectedException()));
   }
 
+  @DebugLog
   private Single<Boolean> waitForDisconnected(String hostname) {
     return connectivitySubject
         .filter(serverConnectivity -> hostname.equals(serverConnectivity.hostname))
@@ -233,7 +249,9 @@ import rx.subjects.PublishSubject;
       serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTING);
 
       if (serviceInterface != null) {
-        return serviceInterface.disconnectFromServer(hostname);
+        return serviceInterface.disconnectFromServer(hostname)
+                // //after disconnection from server, remove HOSTNAME key from HashMap
+                .doAfterTerminate(() -> serverConnectivityList.remove(hostname));
       } else {
         return Single.error(new IllegalStateException("not prepared"));
       }

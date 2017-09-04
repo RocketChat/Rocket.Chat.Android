@@ -1,18 +1,16 @@
 package chat.rocket.android.widget.message;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.view.inputmethod.EditorInfoCompat;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.widget.EditText;
 
-public class ImageKeyboardEditText extends EditText {
+public class ImageKeyboardEditText extends AppCompatEditText {
 
   private final String[] mimeTypes = {"image/gif"};
 
@@ -43,15 +41,12 @@ public class ImageKeyboardEditText extends EditText {
     super(context, attrs, defStyleAttr);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public ImageKeyboardEditText(Context context, AttributeSet attrs, int defStyleAttr,
-                               int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-  }
-
   @Override
   public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
     final InputConnection inputConnection = super.onCreateInputConnection(editorInfo);
+    if (inputConnection == null) {
+      return null;
+    }
 
     EditorInfoCompat.setContentMimeTypes(editorInfo, mimeTypes);
 

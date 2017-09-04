@@ -1,6 +1,6 @@
 package chat.rocket.android.fragment.oauth;
 
-import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
+import chat.rocket.core.models.LoginServiceConfiguration;
 
 public class TwitterOAuthFragment extends AbstractOAuthFragment {
 
@@ -10,7 +10,7 @@ public class TwitterOAuthFragment extends AbstractOAuthFragment {
   }
 
   @Override
-  protected String generateURL(MeteorLoginServiceConfiguration oauthConfig) {
+  protected String generateURL(LoginServiceConfiguration oauthConfig) {
     return "https://" + hostname + "/_oauth/twitter/"
         + "?requestTokenAndRedirect=true&state=" + getStateString();
   }

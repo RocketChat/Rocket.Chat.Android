@@ -2,27 +2,33 @@ package chat.rocket.android.fragment.server_config;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
-import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.oauth.OAuthProviderInfo;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.ddp.MeteorLoginServiceConfiguration;
-import chat.rocket.android.realm_helper.RealmListObserver;
-import chat.rocket.android.realm_helper.RealmStore;
+import chat.rocket.core.models.LoginServiceConfiguration;
+import chat.rocket.persistence.realm.repositories.RealmLoginServiceConfigurationRepository;
+import chat.rocket.persistence.realm.repositories.RealmPublicSettingRepository;
 
 /**
  * Login screen.
  */
-public class LoginFragment extends AbstractServerConfigFragment {
-  private RealmListObserver<MeteorLoginServiceConfiguration> authProvidersObserver;
+public class LoginFragment extends AbstractServerConfigFragment implements LoginContract.View {
+
+  private LoginContract.Presenter presenter;
+  private ConstraintLayout container;
+  private View waitingView;
+  private TextView txtUsername;
+  private TextView txtPasswd;
 
   @Override
   protected int getLayout() {
@@ -32,49 +38,51 @@ public class LoginFragment extends AbstractServerConfigFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    authProvidersObserver = RealmStore.get(hostname)
-        .createListObserver(realm -> realm.where(MeteorLoginServiceConfiguration.class).findAll())
-        .setOnUpdateListener(this::onRenderAuthProviders);
+
+    presenter = new LoginPresenter(
+        new RealmLoginServiceConfigurationRepository(hostname),
+        new RealmPublicSettingRepository(hostname),
+        new MethodCallHelper(getContext(), hostname)
+    );
   }
 
   @Override
   protected void onSetupView() {
-    final View btnEmail = rootView.findViewById(R.id.btn_login_with_email);
-    final TextView txtUsername = (TextView) rootView.findViewById(R.id.editor_username);
-    final TextView txtPasswd = (TextView) rootView.findViewById(R.id.editor_passwd);
-    final View waitingView = rootView.findViewById(R.id.waiting);
-    btnEmail.setOnClickListener(view -> {
-      final CharSequence username = txtUsername.getText();
-      final CharSequence passwd = txtPasswd.getText();
-      if (TextUtils.isEmpty(username) || TextUtils.isEmpty(passwd)) {
-        return;
-      }
-      view.setEnabled(false);
-      waitingView.setVisibility(View.VISIBLE);
+    container = rootView.findViewById(R.id.container);
 
-      new MethodCallHelper(getContext(), hostname)
-          .loginWithEmail(username.toString(), passwd.toString())
-          .continueWith(task -> {
-            if (task.isFaulted()) {
-              showError(task.getError().getMessage());
-              view.setEnabled(true);
-              waitingView.setVisibility(View.GONE);
-            }
-            return null;
-          });
-    });
+    Button btnEmail = rootView.findViewById(R.id.btn_login_with_email);
+    Button btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
+    txtUsername = rootView.findViewById(R.id.editor_username);
+    txtPasswd = rootView.findViewById(R.id.editor_passwd);
+    waitingView = rootView.findViewById(R.id.waiting);
 
-    final View btnUserRegistration = rootView.findViewById(R.id.btn_user_registration);
-    btnUserRegistration.setOnClickListener(view -> UserRegistrationDialogFragment.create(hostname,
-        txtUsername.getText().toString(), txtPasswd.getText().toString())
-        .show(getFragmentManager(), UserRegistrationDialogFragment.class.getSimpleName()));
+    btnEmail.setOnClickListener(view ->
+        presenter.login(txtUsername.getText().toString(), txtPasswd.getText().toString()));
+
+    btnUserRegistration.setOnClickListener(view ->
+        UserRegistrationDialogFragment.create(hostname, txtUsername.getText().toString(), txtPasswd.getText().toString())
+        .show(getFragmentManager(), "UserRegistrationDialogFragment"));
   }
 
-  private void showError(String errString) {
-    Snackbar.make(rootView, errString, Snackbar.LENGTH_SHORT).show();
+  @Override
+  public void showLoader() {
+    container.setVisibility(View.GONE);
+    waitingView.setVisibility(View.VISIBLE);
   }
 
-  private void onRenderAuthProviders(List<MeteorLoginServiceConfiguration> authProviders) {
+  @Override
+  public void hideLoader() {
+    waitingView.setVisibility(View.GONE);
+    container.setVisibility(View.VISIBLE);
+  }
+
+  @Override
+  public void showError(String message) {
+    Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void showLoginServices(List<LoginServiceConfiguration> loginServiceList) {
     HashMap<String, View> viewMap = new HashMap<>();
     HashMap<String, Boolean> supportedMap = new HashMap<>();
     for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
@@ -82,7 +90,7 @@ public class LoginFragment extends AbstractServerConfigFragment {
       supportedMap.put(info.serviceName, false);
     }
 
-    for (MeteorLoginServiceConfiguration authProvider : authProviders) {
+    for (LoginServiceConfiguration authProvider : loginServiceList) {
       for (OAuthProviderInfo info : OAuthProviderInfo.LIST) {
         if (!supportedMap.get(info.serviceName)
             && info.serviceName.equals(authProvider.getService())) {
@@ -114,14 +122,21 @@ public class LoginFragment extends AbstractServerConfigFragment {
   }
 
   @Override
+  public void showTwoStepAuth() {
+    showFragmentWithBackStack(TwoStepAuthFragment.create(
+        hostname, txtUsername.getText().toString(), txtPasswd.getText().toString()
+    ));
+  }
+
+  @Override
   public void onResume() {
     super.onResume();
-    authProvidersObserver.sub();
+    presenter.bindView(this);
   }
 
   @Override
   public void onPause() {
-    authProvidersObserver.unsub();
+    presenter.release();
     super.onPause();
   }
 }

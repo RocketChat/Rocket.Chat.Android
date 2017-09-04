@@ -1,18 +1,18 @@
 package chat.rocket.android.widget;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.TextViewCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,87 +22,129 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import java.lang.reflect.Field;
 
 public class RoomToolbar extends Toolbar {
-
-  private TextView titleTextView;
+  private TextView toolbarText;
+  private ImageView roomTypeImage;
+  private ImageView userStatusImage;
   private ImageView badgeImageView;
+
+  private Drawable privateChannelDrawable;
+  private Drawable publicChannelDrawable;
+  private Drawable userStatusDrawable;
+
+  private DrawerArrowDrawable drawerArrowDrawable;
+
+  public static final int STATUS_ONLINE = 1;
+  public static final int STATUS_BUSY = 2;
+  public static final int STATUS_AWAY = 3;
+  public static final int STATUS_OFFLINE = 4;
 
   public RoomToolbar(Context context) {
     super(context);
-    initialize(context, null);
+    initialize(context);
   }
 
   public RoomToolbar(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    initialize(context, attrs);
+    initialize(context);
   }
 
   public RoomToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    initialize(context, attrs);
+    initialize(context);
   }
 
-  private void initialize(Context context, @Nullable AttributeSet attrs) {
-    View.inflate(context, R.layout.room_toolbar, this);
+  private void initialize(Context context) {
+    View.inflate(context, R.layout.toolbar, this);
+    setNavigationIcon(context);
 
-    titleTextView = (TextView) findViewById(R.id.toolbar_title);
+    toolbarText = findViewById(R.id.text_toolbar);
+    roomTypeImage = findViewById(R.id.image_room_type);
+    userStatusImage = findViewById(R.id.image_user_status);
 
-    if (titleTextView == null) {
-      return;
-    }
+    privateChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_lock_white_24dp, null);
+    publicChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_hashtag_white_24dp, null);
+    userStatusDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_user_status_black_24dp, null);
+  }
 
-    TypedArray typedArrayBase = context.getTheme().obtainStyledAttributes(new int[]{
-        R.attr.titleTextAppearance
-    });
-    try {
-      TextViewCompat.setTextAppearance(titleTextView,
-          typedArrayBase.getResourceId(0,
-              android.support.v7.appcompat.R.style.TextAppearance_Widget_AppCompat_Toolbar_Title));
-    } finally {
-      typedArrayBase.recycle();
-    }
+  private void setNavigationIcon(Context context) {
+    drawerArrowDrawable = new DrawerArrowDrawable(context);
+    drawerArrowDrawable.setColor(ContextCompat.getColor(context, android.R.color.white));
+    super.setNavigationIcon(drawerArrowDrawable);
+  }
 
-    TypedArray typedArray = context.getTheme().obtainStyledAttributes(
-        attrs,
-        R.styleable.RoomToolbar,
-        0, 0);
+  public void setNavigationIconProgress(float progress) {
+    drawerArrowDrawable.setProgress(progress);
+  }
 
-    try {
-      titleTextView.setText(typedArray.getText(R.styleable.RoomToolbar_titleText));
-      titleTextView.setCompoundDrawablePadding(
-          typedArray.getLayoutDimension(R.styleable.RoomToolbar_titleDrawablePadding, 0));
-    } finally {
-      typedArray.recycle();
-    }
+  public void setNavigationIconVerticalMirror(boolean verticalMirror) {
+    drawerArrowDrawable.setVerticalMirror(verticalMirror);
   }
 
   @Override
   public void setTitle(@StringRes int resId) {
-    if (titleTextView != null) {
-      titleTextView.setText(resId);
-      return;
-    }
-    super.setTitle(resId);
+    toolbarText.setText(getContext().getText(resId));
   }
 
   @Override
   public void setTitle(CharSequence title) {
-    if (titleTextView != null) {
-      titleTextView.setText(title);
-      return;
-    }
-    super.setTitle(title);
+    toolbarText.setText(title);
   }
 
-  public void setRoomIcon(@DrawableRes int drawableResId) {
-    if (titleTextView == null) {
-      return;
+  public void showPrivateChannelIcon() {
+    roomTypeImage.setImageDrawable(privateChannelDrawable);
+    userStatusImage.setVisibility(GONE);
+    roomTypeImage.setVisibility(VISIBLE);
+  }
+
+  public void showPublicChannelIcon() {
+    roomTypeImage.setImageDrawable(publicChannelDrawable);
+    userStatusImage.setVisibility(GONE);
+    roomTypeImage.setVisibility(VISIBLE);
+  }
+
+  public void showUserStatusIcon(int status) {
+    wrapDrawable(userStatusDrawable);
+
+    switch (status) {
+      case STATUS_ONLINE:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_online);
+        break;
+      case STATUS_BUSY:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_busy);
+        break;
+      case STATUS_AWAY:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_away);
+        break;
+      case STATUS_OFFLINE:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_offline);
+        break;
+      default:
+        tintDrawable(userStatusDrawable, R.color.color_user_status_offline);
+        break;
     }
 
-    Drawable drawable = drawableResId > 0
-        ? VectorDrawableCompat.create(getResources(), drawableResId, null)
-        : null;
+    userStatusImage.setImageDrawable(userStatusDrawable);
+    roomTypeImage.setVisibility(GONE);
+    userStatusImage.setVisibility(VISIBLE);
+  }
 
-    titleTextView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+  /**
+   * Wraps a drawable to be used for example for tinting.
+   * @param drawable The drawable to wrap.
+   * @see #tintDrawable(Drawable, int)
+   */
+  private void wrapDrawable(Drawable drawable) {
+    DrawableCompat.wrap(drawable);
+  }
+
+  /**
+   * REMARK: You MUST always wrap the drawable before tint it.
+   * @param drawable The drawable to tint.
+   * @param color The color to tint the drawable.
+   * @see #wrapDrawable(Drawable)
+   */
+  private void tintDrawable(Drawable drawable, int color) {
+    DrawableCompat.setTint(drawable, ContextCompat.getColor(getContext(), color));
   }
 
   public void setUnreadBudge(int numUnreadChannels, int numMentionsSum) {
@@ -138,10 +180,8 @@ public class RoomToolbar extends Toolbar {
         .beginConfig()
         .useFont(Typeface.SANS_SERIF)
         .endConfig()
-        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.badge_color));
+        .buildRound(icon, ContextCompat.getColor(getContext(), R.color.color_user_status_busy));
   }
-
-
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -164,10 +204,11 @@ public class RoomToolbar extends Toolbar {
         int badgeTop = iconTop + (iconBottom - iconTop) / 8;
         int badgeBottom = iconTop + (iconBottom - iconTop) * 3 / 8;
         badgeImageView.layout(badgeLeft, badgeTop, badgeRight, badgeBottom);
-      } catch (Exception exception) {
-        return;
+      } catch (NoSuchFieldException noSuchFieldException) {
+        Log.v("RoomToolbar exception: ", noSuchFieldException.getMessage());
+      } catch (IllegalAccessException illegalAccessException) {
+        Log.v("RoomToolbar exception: ", illegalAccessException.getMessage());
       }
     }
   }
-
 }

@@ -1,13 +1,15 @@
 package chat.rocket.android_ddp;
 
 import android.support.annotation.Nullable;
+
 import org.json.JSONArray;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import okhttp3.OkHttpClient;
-import rx.Observable;
 
 public class DDPClient {
   // reference: https://github.com/eddflrs/meteor-ddp/blob/master/meteor-ddp.js
@@ -34,6 +36,10 @@ public class DDPClient {
     return task.getTask();
   }
 
+  public Maybe<DDPClientCallback.Base> doPing(@Nullable String id) {
+    return impl.ping(id);
+  }
+
   public Task<DDPClientCallback.RPC> rpc(String method, JSONArray params, String id,
                                          long timeoutMs) {
     TaskCompletionSource<DDPClientCallback.RPC> task = new TaskCompletionSource<>();
@@ -53,7 +59,7 @@ public class DDPClient {
     return task.getTask();
   }
 
-  public Observable<DDPSubscription.Event> getSubscriptionCallback() {
+  public Flowable<DDPSubscription.Event> getSubscriptionCallback() {
     return impl.getDDPSubscription();
   }
 

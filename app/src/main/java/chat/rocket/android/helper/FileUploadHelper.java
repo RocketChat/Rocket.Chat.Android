@@ -14,10 +14,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.model.SyncState;
-import chat.rocket.android.model.ddp.PublicSetting;
-import chat.rocket.android.model.internal.FileUploading;
-import chat.rocket.android.realm_helper.RealmHelper;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
+import chat.rocket.persistence.realm.models.internal.FileUploading;
+import chat.rocket.persistence.realm.RealmHelper;
 
 /**
  * utility class for uploading file.
@@ -59,7 +59,7 @@ public class FileUploadHelper {
                                      Uri uri, String filename, long filesize, String mimeType) {
     final String uplId = UUID.randomUUID().toString();
     final String storageType =
-        PublicSetting.getString(realmHelper, "FileUpload_Storage_Type", null);
+        RealmPublicSetting.getString(realmHelper, "FileUpload_Storage_Type", null);
 
     realmHelper.executeTransaction(realm ->
         realm.createOrUpdateObjectFromJson(FileUploading.class, new JSONObject()
@@ -74,7 +74,7 @@ public class FileUploadHelper {
             .put(FileUploading.ROOM_ID, roomId)
             .put(FileUploading.ERROR, JSONObject.NULL)
         )
-    ).continueWith(new LogcatIfError());
+    ).continueWith(new LogIfError());
     return uplId;
   }
 

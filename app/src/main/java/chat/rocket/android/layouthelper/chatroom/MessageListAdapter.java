@@ -9,30 +9,39 @@ import java.util.Collections;
 import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.android.layouthelper.ExtRealmModelListAdapter;
-import chat.rocket.android.model.ddp.Message;
+import chat.rocket.android.layouthelper.ExtModelListAdapter;
+import chat.rocket.android.widget.AbsoluteUrl;
+import chat.rocket.core.models.Message;
 
 /**
  * target list adapter for chat room.
  */
-public class MessageListAdapter
-    extends ExtRealmModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
+public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
 
   private static final int VIEW_TYPE_UNKNOWN = 0;
   private static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
   private static final int VIEW_TYPE_SYSTEM_MESSAGE = 2;
 
-  private final String hostname;
-  private final String userId;
-  private final String token;
+  private String hostname;
+  private AbsoluteUrl absoluteUrl;
+
+  private boolean autoloadImages = false;
   private boolean hasNext;
   private boolean isLoaded;
 
-  public MessageListAdapter(Context context, String hostname, String userId, String token) {
+  public MessageListAdapter(Context context, String hostname) {
     super(context);
     this.hostname = hostname;
-    this.userId = userId;
-    this.token = token;
+    this.hasNext = true;
+  }
+
+  public void setAbsoluteUrl(AbsoluteUrl absoluteUrl) {
+    this.absoluteUrl = absoluteUrl;
+    notifyDataSetChanged();
+  }
+
+  public void setAutoloadImages(boolean autoloadImages) {
+    this.autoloadImages = autoloadImages;
   }
 
   /**
@@ -86,14 +95,13 @@ public class MessageListAdapter
   protected AbstractMessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
     switch (viewType) {
       case VIEW_TYPE_NORMAL_MESSAGE:
-        return new MessageNormalViewHolder(itemView, hostname, userId, token);
+        return new MessageNormalViewHolder(itemView, absoluteUrl, hostname);
       case VIEW_TYPE_SYSTEM_MESSAGE:
-        return new MessageSystemViewHolder(itemView, hostname, userId, token);
+        return new MessageSystemViewHolder(itemView, absoluteUrl, hostname);
       default:
-        return new AbstractMessageViewHolder(itemView, hostname, userId, token) {
+        return new AbstractMessageViewHolder(itemView, absoluteUrl, hostname) {
           @Override
-          protected void bindMessage(PairedMessage pairedMessage) {
-          }
+          protected void bindMessage(PairedMessage pairedMessage, boolean autoloadImages) {}
         };
     }
   }
@@ -111,6 +119,11 @@ public class MessageListAdapter
     extMessages.add(new PairedMessage(results.get(results.size() - 1), null));
 
     return extMessages;
+  }
+
+  @Override
+  protected boolean shouldAutoloadImages() {
+    return autoloadImages;
   }
 
   @Override

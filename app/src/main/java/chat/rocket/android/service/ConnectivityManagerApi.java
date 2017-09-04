@@ -3,6 +3,7 @@ package chat.rocket.android.service;
 import android.support.annotation.Nullable;
 
 import java.util.List;
+import chat.rocket.core.models.ServerInfo;
 import rx.Observable;
 import rx.Single;
 
