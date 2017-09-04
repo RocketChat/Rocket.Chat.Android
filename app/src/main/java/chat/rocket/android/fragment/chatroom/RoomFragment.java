@@ -128,6 +128,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   private Message edittingMessage = null;
 
   private SlidingPaneLayout pane;
+  private SidebarMainFragment sidebarFragment;
 
   public RoomFragment() {}
 
@@ -333,11 +334,13 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   private void setupSidebar() {
     SlidingPaneLayout subPane = getActivity().findViewById(R.id.sub_sliding_pane);
     RoomToolbar toolbar = getActivity().findViewById(R.id.activity_main_toolbar);
+    sidebarFragment = (SidebarMainFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.sidebar_fragment_container);
 
     pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
       @Override
       public void onPanelSlide(View view, float v) {
         messageFormManager.enableComposingText(false);
+        sidebarFragment.clearSearchViewFocus();
         //Ref: ActionBarDrawerToggle#setProgress
         toolbar.setNavigationIconProgress(v);
       }
@@ -364,11 +367,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   public void closeUserActionContainer() {
-    SidebarMainFragment sidebarFragment = (SidebarMainFragment) getActivity().getSupportFragmentManager()
-            .findFragmentById(R.id.sidebar_fragment_container);
-    if (sidebarFragment != null) {
       sidebarFragment.closeUserActionContainer();
-    }
   }
 
   private boolean closeSideMenuIfNeeded() {
