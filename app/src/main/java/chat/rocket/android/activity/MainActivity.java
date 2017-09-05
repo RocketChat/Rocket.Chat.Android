@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,7 +90,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
     if (subPane != null) {
-      Button addServerButton = subPane.findViewById(R.id.btn_add_server);
+      View addServerButton = subPane.findViewById(R.id.btn_add_server);
       pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
         @Override
         public void onPanelClosed(View panel) {
@@ -285,9 +287,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
           serverRow.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
 
-          Drawable placeholder = AvatarHelper.INSTANCE.getTextDrawable(serverHostname,this);
-
-          FrescoHelper.INSTANCE.loadImage(serverButton, serverLogoUrl, placeholder);
+          FrescoHelper.INSTANCE.loadImage(serverButton, serverLogoUrl, ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
 
           serverListContainer.addView(serverRow, serverCount - 1);
         }
