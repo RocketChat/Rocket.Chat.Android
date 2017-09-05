@@ -19,6 +19,8 @@ public interface SidebarMainContract {
 
     void showRoomSidebarList(@NonNull List<RoomSidebar> roomSidebarList);
 
+    void filterRoomSidebarList(CharSequence term);
+
     void show(User user);
   }
 
@@ -29,6 +31,8 @@ public interface SidebarMainContract {
     void onSpotlightSelected(Spotlight spotlight);
 
     Flowable<List<Spotlight>> searchSpotlight(String term);
+
+    void disposeSubscriptions();
 
     void onUserOnline();
 
