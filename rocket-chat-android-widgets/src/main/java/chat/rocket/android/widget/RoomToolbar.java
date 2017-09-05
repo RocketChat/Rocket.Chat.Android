@@ -29,6 +29,7 @@ public class RoomToolbar extends Toolbar {
 
   private Drawable privateChannelDrawable;
   private Drawable publicChannelDrawable;
+  private Drawable livechatChannelDrawable;
   private Drawable userStatusDrawable;
 
   private DrawerArrowDrawable drawerArrowDrawable;
@@ -63,6 +64,7 @@ public class RoomToolbar extends Toolbar {
 
     privateChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_lock_white_24dp, null);
     publicChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_hashtag_white_24dp, null);
+    livechatChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_livechat_white_24dp, null);
     userStatusDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_user_status_black_24dp, null);
   }
 
@@ -98,6 +100,12 @@ public class RoomToolbar extends Toolbar {
 
   public void showPublicChannelIcon() {
     roomTypeImage.setImageDrawable(publicChannelDrawable);
+    userStatusImage.setVisibility(GONE);
+    roomTypeImage.setVisibility(VISIBLE);
+  }
+
+  public void showLivechatChannelIcon() {
+    roomTypeImage.setImageDrawable(livechatChannelDrawable);
     userStatusImage.setVisibility(GONE);
     roomTypeImage.setVisibility(VISIBLE);
   }

@@ -33,6 +33,10 @@ abstract class AbstractChatRoomFragment extends AbstractFragment {
     roomToolbar.showPublicChannelIcon();
   }
 
+  protected void showToolbarLivechatChannelIcon() {
+    roomToolbar.showLivechatChannelIcon();
+  }
+
   protected void showToolbarUserStatuslIcon(@Nullable String status) {
     if (status == null) {
       roomToolbar.showUserStatusIcon(RoomToolbar.STATUS_OFFLINE);

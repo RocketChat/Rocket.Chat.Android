@@ -586,6 +586,10 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     if (room.isPrivate()) {
       showToolbarPrivateChannelIcon();
     }
+
+    if (room.isLivechat()) {
+      showToolbarLivechatChannelIcon();
+    }
   }
 
   @Override
