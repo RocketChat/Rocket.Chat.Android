@@ -1,51 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingStart="?attr/listPreferredItemPaddingLeft"
+    android:paddingEnd="?attr/listPreferredItemPaddingRight"
+    android:paddingLeft="?attr/listPreferredItemPaddingLeft"
+    android:paddingRight="?attr/listPreferredItemPaddingRight"
+    android:paddingBottom="10dp">
+
+    <ImageView
+        android:id="@+id/image_room_type"
+        android:layout_width="20dp"
         android:layout_height="wrap_content"
-        android:paddingStart="?attr/listPreferredItemPaddingLeft"
-        android:paddingLeft="?attr/listPreferredItemPaddingLeft"
-        android:paddingRight="?attr/listPreferredItemPaddingRight"
-        android:paddingEnd="?attr/listPreferredItemPaddingRight">
+        android:visibility="gone" />
 
-    <FrameLayout
-            android:layout_width="32dp"
-            android:layout_height="?attr/listPreferredItemHeightSmall"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp">
-
-        <io.github.yusukeiwaki.android.widget.FontAwesomeTextView
-                android:id="@+id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/image_user_status"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <TextView
-            android:id="@+id/text"
-            android:layout_width="0dp"
-            android:layout_height="?attr/listPreferredItemHeightSmall"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+        android:id="@+id/text_room_name"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.9"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
-    <FrameLayout
-            android:id="@+id/alert_count_container"
-            android:layout_width="wrap_content"
-            android:minWidth="20dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:padding="3dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/unread_count_background"
-            android:layout_marginLeft="8dp">
-
-        <TextView
-                android:id="@+id/alert_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14dp"
-                android:layout_gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </FrameLayout>
+    <TextView
+        android:id="@+id/text_alert_count"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:background="@drawable/style_alert_count"
+        android:visibility="gone" />
 </LinearLayout>

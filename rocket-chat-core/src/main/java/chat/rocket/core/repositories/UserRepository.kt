@@ -6,6 +6,8 @@ import chat.rocket.core.models.User
 
 interface UserRepository {
 
+    fun getAll(): Flowable<List<User>>
+
     fun getCurrent(): Flowable<Optional<User>>
 
     fun getByUsername(username: String): Flowable<Optional<User>>

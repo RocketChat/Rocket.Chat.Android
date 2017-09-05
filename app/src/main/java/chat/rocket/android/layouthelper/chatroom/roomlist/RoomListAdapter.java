@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import chat.rocket.core.models.RoomSidebar;
 import chat.rocket.core.models.Spotlight;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import chat.rocket.android.R;
 import chat.rocket.android.widget.internal.RoomListItemView;
-import chat.rocket.core.models.Room;
 
 public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -22,7 +22,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   private static final int VIEW_TYPE_HEADER = 0;
   private static final int VIEW_TYPE_ROOM = 1;
 
-  private List<Room> roomList = Collections.emptyList();
+  private List<RoomSidebar> roomSidebarList = Collections.emptyList();
   private List<Spotlight> spotlightList = Collections.emptyList();
   private List<RoomListHeader> roomListHeaders = Collections.emptyList();
   private Map<Integer, RoomListHeader> headersPosition = new HashMap<>();
@@ -32,9 +32,9 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   private OnItemClickListener externalListener;
   private OnItemClickListener listener = new OnItemClickListener() {
     @Override
-    public void onItemClick(Room room) {
+    public void onItemClick(RoomSidebar roomSidebar) {
       if (externalListener != null) {
-        externalListener.onItemClick(room);
+        externalListener.onItemClick(roomSidebar);
       }
     }
 
@@ -48,17 +48,17 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
   public void setRoomListHeaders(@NonNull List<RoomListHeader> roomListHeaders) {
     this.roomListHeaders = roomListHeaders;
-    updateRoomList();
+    updateRoomSidebarList();
   }
 
-  public void setRooms(@NonNull List<Room> roomList) {
-    this.roomList = roomList;
-    updateRoomList();
+  public void setRoomSidebarList(@NonNull List<RoomSidebar> roomSidebarList) {
+    this.roomSidebarList = roomSidebarList;
+    updateRoomSidebarList();
   }
 
   public void setSpotlightList(@NonNull List<Spotlight> spotlightList) {
     this.spotlightList = spotlightList;
-    updateRoomList();
+    updateRoomSidebarList();
   }
 
   public void setMode(int mode) {
@@ -77,9 +77,9 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     if (viewType == VIEW_TYPE_HEADER) {
-      return new RoomListHeaderViewHolder(
-          LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.room_list_header, parent, false)
+      return new RoomListHeaderViewHolder(LayoutInflater
+          .from(parent.getContext())
+          .inflate(R.layout.room_list_header, parent, false)
       );
     }
     return new RoomListItemViewHolder(new RoomListItemView(parent.getContext()), listener);
@@ -89,13 +89,12 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     if (mode == MODE_ROOM) {
       if (getItemViewType(position) == VIEW_TYPE_HEADER) {
-        ((RoomListHeaderViewHolder) holder)
-            .bind(headersPosition.get(position));
+        ((RoomListHeaderViewHolder) holder).bind(headersPosition.get(position));
         return;
       }
 
-      ((RoomListItemViewHolder) holder)
-          .bind(roomList.get(position - getTotalHeadersBeforePosition(position)));
+      RoomSidebar roomSidebar = roomSidebarList.get(position - getTotalHeadersBeforePosition(position));
+      ((RoomListItemViewHolder) holder).bind(roomSidebar);
     } else if (mode == MODE_SPOTLIGHT) {
       ((RoomListItemViewHolder) holder).bind(spotlightList.get(position));
     }
@@ -106,7 +105,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     if (mode == MODE_SPOTLIGHT) {
       return spotlightList.size();
     }
-    return roomList.size() + headersPosition.size();
+    return roomSidebarList.size() + headersPosition.size();
   }
 
   @Override
@@ -121,7 +120,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     return VIEW_TYPE_ROOM;
   }
 
-  private void updateRoomList() {
+  private void updateRoomSidebarList() {
     if (mode == MODE_ROOM) {
       sortRoomList();
       calculateHeadersPosition();
@@ -132,18 +131,18 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   private void sortRoomList() {
     int totalHeaders = roomListHeaders.size();
 
-    Collections.sort(roomList, (room, anotherRoom) -> {
+    Collections.sort(roomSidebarList, (roomSidebar, anotherRoom) -> {
       for (int i = 0; i < totalHeaders; i++) {
         final RoomListHeader header = roomListHeaders.get(i);
 
-        if (header.owns(room) && !header.owns(anotherRoom)) {
+        if (header.owns(roomSidebar) && !header.owns(anotherRoom)) {
           return -1;
-        } else if (!header.owns(room) && header.owns(anotherRoom)) {
+        } else if (!header.owns(roomSidebar) && header.owns(anotherRoom)) {
           return 1;
         }
       }
 
-      return room.getName().compareTo(anotherRoom.getName());
+      return roomSidebar.getRoomName().compareTo(anotherRoom.getRoomName());
     });
   }
 
@@ -151,19 +150,19 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     headersPosition.clear();
 
     int roomIdx = 0;
-    int totalRooms = roomList.size();
+    int totalRooms = roomSidebarList.size();
     int totalHeaders = roomListHeaders.size();
     for (int i = 0; i < totalHeaders; i++) {
       final RoomListHeader header = roomListHeaders.get(i);
-      if (!header.shouldShow(roomList)) {
+      if (!header.shouldShow(roomSidebarList)) {
         continue;
       }
 
       headersPosition.put(roomIdx + headersPosition.size(), header);
 
       for (; roomIdx < totalRooms; roomIdx++) {
-        final Room room = roomList.get(roomIdx);
-        if (!header.owns(room)) {
+        final RoomSidebar roomSidebar = roomSidebarList.get(roomIdx);
+        if (!header.owns(roomSidebar)) {
           break;
         }
       }
@@ -185,7 +184,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   }
 
   public interface OnItemClickListener {
-    void onItemClick(Room room);
+    void onItemClick(RoomSidebar roomSidebar);
 
     void onItemClick(Spotlight spotlight);
   }

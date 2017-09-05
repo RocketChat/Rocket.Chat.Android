@@ -483,7 +483,11 @@ public class MethodCallHelper {
           final JSONObject result = task.getResult();
 
           JSONArray roomJsonArray = (JSONArray) result.get("rooms");
-          if (roomJsonArray.length() > 0) {
+          int roomTotal = roomJsonArray.length();
+          if (roomTotal > 0) {
+            for (int i = 0; i < roomTotal; ++i) {
+              RealmSpotlight.Companion.customizeRoomJSONObject(roomJsonArray.getJSONObject(i));
+            }
             jsonString = roomJsonArray.toString();
           }
 

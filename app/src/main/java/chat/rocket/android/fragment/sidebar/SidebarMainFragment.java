@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -29,7 +30,7 @@ import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
 import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
-import chat.rocket.core.models.Room;
+import chat.rocket.core.models.RoomSidebar;
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
@@ -123,9 +124,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     adapter = new RoomListAdapter();
     adapter.setOnItemClickListener(new RoomListAdapter.OnItemClickListener() {
       @Override
-      public void onItemClick(Room room) {
+      public void onItemClick(RoomSidebar roomSidebar) {
         searchView.clearFocus();
-        presenter.onRoomSelected(room);
+        presenter.onRoomSelected(roomSidebar);
       }
 
       @Override
@@ -142,7 +143,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
     RxSearchView.queryTextChanges(searchView)
         .compose(bindToLifecycle())
-        .debounce(300, TimeUnit.MILLISECONDS)
+        .debounce(100, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .switchMap(charSequence -> {
           if (charSequence.length() == 0) {
@@ -187,8 +188,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   }
 
   @Override
-  public void showRoomList(@NonNull List<Room> roomList) {
-    adapter.setRooms(roomList);
+  public void showRoomSidebarList(@NonNull List<RoomSidebar> roomSidebarList) {
+    adapter.setRoomSidebarList(roomSidebarList);
   }
 
   @Override
@@ -228,12 +229,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   private void updateRoomListMode(User user) {
     final List<RoomListHeader> roomListHeaders = new ArrayList<>();
 
-    if (user != null && user.getSettings() != null && user.getSettings().getPreferences() != null
-        && user.getSettings().getPreferences().isUnreadRoomsMode()) {
-      roomListHeaders.add(new UnreadRoomListHeader(
-          getString(R.string.fragment_sidebar_main_unread_rooms_title)
-      ));
-    }
+    roomListHeaders.add(new UnreadRoomListHeader(
+        getString(R.string.fragment_sidebar_main_unread_rooms_title)
+    ));
 
     roomListHeaders.add(new FavoriteRoomListHeader(
         getString(R.string.fragment_sidebar_main_favorite_title)
@@ -258,6 +256,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       // destroy Activity on logout to be able to recreate most of the environment
       this.getActivity().finish();
     });
+  }
+
+  public void clearSearchViewFocus() {
+    searchView.clearFocus();
   }
 
   public void closeUserActionContainer() {
