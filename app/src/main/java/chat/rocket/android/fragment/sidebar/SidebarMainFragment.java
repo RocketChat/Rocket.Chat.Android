@@ -296,6 +296,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     });
   }
 
+  public void clearSearchViewFocus() {
+    searchView.clearFocus();
+  }
+
   public void closeUserActionContainer() {
     final CompoundButton toggleUserAction = rootView.findViewById(R.id.toggle_user_action);
     if (toggleUserAction != null && toggleUserAction.isChecked()) {
