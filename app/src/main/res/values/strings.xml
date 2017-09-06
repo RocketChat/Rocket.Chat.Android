@@ -3,6 +3,7 @@
     <string name="fragment_sidebar_main_favorite_title">FAVORITES</string>
     <string name="fragment_sidebar_main_channels_title">CHANNELS</string>
     <string name="fragment_sidebar_main_direct_messages_title">DIRECT MESSAGES</string>
+    <string name="fragment_sidebar_main_livechat_title">LIVECHAT</string>
     <string name="user_status_online">Online</string>
     <string name="user_status_away">Away</string>
     <string name="user_status_busy">Busy</string>

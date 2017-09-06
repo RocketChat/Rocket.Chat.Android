@@ -29,6 +29,7 @@ class RoomListItemView : FrameLayout {
     lateinit private var alertCountText: TextView
     lateinit private var privateChannelDrawable: Drawable
     lateinit private var publicChannelDrawable: Drawable
+    lateinit private var livechatChannelDrawable: Drawable
     lateinit private var userStatusDrawable: Drawable
 
     constructor(context: Context) : super(context) {
@@ -67,6 +68,7 @@ class RoomListItemView : FrameLayout {
 
         privateChannelDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_lock_white_24dp, null)!!
         publicChannelDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_hashtag_white_24dp, null)!!
+        livechatChannelDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_livechat_white_24dp, null)!!
         userStatusDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_user_status_black_24dp, null)!!
     }
 
@@ -99,6 +101,12 @@ class RoomListItemView : FrameLayout {
 
     fun showPublicChannelIcon() {
         roomTypeImage.setImageDrawable(publicChannelDrawable)
+        userStatusImage.visibility = View.GONE
+        roomTypeImage.visibility = View.VISIBLE
+    }
+
+    fun showLivechatChannelIcon() {
+        roomTypeImage.setImageDrawable(livechatChannelDrawable)
         userStatusImage.visibility = View.GONE
         roomTypeImage.visibility = View.VISIBLE
     }
