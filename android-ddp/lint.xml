@@ -1,5 +1,0 @@
-<lint>
-    <issue id="InvalidPackage">
-        <ignore regexp="okio.*jar"/>
-    </issue>
-</lint>

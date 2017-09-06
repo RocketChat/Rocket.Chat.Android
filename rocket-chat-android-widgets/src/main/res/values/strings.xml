@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="message_composer_message_hint">Message</string>
-    <string name="click_to_load">Click to load</string>
-    <string name="no_channel_found">No channel found</string>
-    <string name="no_user_found">No user found</string>
-</resources>

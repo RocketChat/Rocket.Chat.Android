@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="WaitingView">
-        <attr format="dimension" name="dotSize"/>
-        <attr format="integer" name="dotCount"/>
-    </declare-styleable>
-    <dimen name="def_waiting_view_dot_size">16dp</dimen>
-</resources>
