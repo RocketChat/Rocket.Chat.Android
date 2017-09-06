@@ -8,6 +8,7 @@ public abstract class Room {
   public static final String TYPE_CHANNEL = "c";
   public static final String TYPE_PRIVATE = "p";
   public static final String TYPE_DIRECT_MESSAGE = "d";
+  public static final String TYPE_LIVECHAT = "l";
 
   public abstract String getId();
 
@@ -39,6 +40,10 @@ public abstract class Room {
 
   public boolean isDirectMessage() {
     return TYPE_DIRECT_MESSAGE.equals(getType());
+  }
+
+  public boolean isLivechat() {
+    return TYPE_LIVECHAT.equals(getType());
   }
 
   public static Builder builder() {
