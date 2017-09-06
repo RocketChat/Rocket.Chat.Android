@@ -64,6 +64,7 @@
     <string name="open_your_authentication_app_and_enter_the_code">Open your authentication app and enter the code</string>
     <string name="two_factor_code">Two-factor code</string>
     <string name="spotlight_search">Search</string>
+    <string name="spotlight_load_more_results">Load more results</string>
     <string name="edit_message">Edit message</string>
     <string name="message_options_no_message_info">Ooops. Something\'s up!</string>
     <string name="message_options_no_permissions_info">You have no permissions</string>

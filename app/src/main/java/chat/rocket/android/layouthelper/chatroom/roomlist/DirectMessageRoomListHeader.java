@@ -28,7 +28,14 @@ public class DirectMessageRoomListHeader implements RoomListHeader {
 
   @Override
   public boolean shouldShow(@NonNull List<RoomSidebar> roomSidebarList) {
-    return true;
+    for (RoomSidebar roomSidebar: roomSidebarList) {
+      if (roomSidebar.getType().equals(Room.TYPE_DIRECT_MESSAGE)
+              && !roomSidebar.isAlert()
+              && !roomSidebar.isFavorite()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
