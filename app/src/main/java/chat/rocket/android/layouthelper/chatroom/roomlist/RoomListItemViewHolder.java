@@ -95,6 +95,9 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
       case Room.TYPE_PRIVATE:
         itemView.showPrivateChannelIcon();
         break;
+      case Room.TYPE_LIVECHAT:
+        itemView.showLivechatChannelIcon();
+        break;
       default:
         throw new AssertionError("Room type doesn't satisfies the method documentation. Room type is:" + roomType);
     }

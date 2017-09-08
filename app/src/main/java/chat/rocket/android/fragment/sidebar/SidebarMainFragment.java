@@ -24,6 +24,7 @@ import chat.rocket.android.helper.Logger;
 import chat.rocket.android.layouthelper.chatroom.roomlist.ChannelRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.DirectMessageRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.FavoriteRoomListHeader;
+import chat.rocket.android.layouthelper.chatroom.roomlist.LivechatRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
@@ -278,6 +279,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         getString(R.string.fragment_sidebar_main_favorite_title)
     ));
 
+    roomListHeaders.add(new LivechatRoomListHeader(
+            getString(R.string.fragment_sidebar_main_livechat_title)
+    ));
+
     roomListHeaders.add(new ChannelRoomListHeader(
         getString(R.string.fragment_sidebar_main_channels_title),
         () -> showAddRoomDialog(AddChannelDialogFragment.create(hostname))
@@ -297,6 +302,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       // destroy Activity on logout to be able to recreate most of the environment
       this.getActivity().finish();
     });
+  }
+
+  public void clearSearchViewFocus() {
+    searchView.clearFocus();
   }
 
   public void closeUserActionContainer() {
