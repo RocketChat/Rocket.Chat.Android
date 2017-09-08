@@ -135,6 +135,11 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         methodCallHelper.logout().continueWith(new LogIfError());
     }
 
+    @Override
+    public void disposeSubscriptions() {
+        clearSubscriptions();
+    }
+
     private void subscribeToRooms() {
         final Disposable subscription = roomInteractor.getOpenRooms()
                 .distinctUntilChanged()

@@ -2,16 +2,13 @@ package chat.rocket.android.activity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,7 +26,6 @@ import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.KeyboardHelper;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RoomToolbar;
-import chat.rocket.android.widget.helper.AvatarHelper;
 import chat.rocket.android.widget.helper.FrescoHelper;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
@@ -61,7 +57,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     setContentView(R.layout.activity_main);
     toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
     statusTicker = new StatusTicker();
-    setupSidebar();
   }
 
   @Override
@@ -80,58 +75,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     }
 
     super.onPause();
-  }
-
-  private void setupSidebar() {
-    SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-    if (pane == null) {
-      return;
-    }
-
-    final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
-    if (subPane != null) {
-      View addServerButton = subPane.findViewById(R.id.btn_add_server);
-      pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
-        @Override
-        public void onPanelClosed(View panel) {
-          super.onPanelClosed(panel);
-          subPane.closePane();
-        }
-      });
-
-      addServerButton.setOnClickListener(view -> showAddServerActivity());
-    }
-
-    toolbar.setNavigationOnClickListener(view -> {
-      if (pane.isSlideable() && !pane.isOpen()) {
-        pane.openPane();
-        if (subPane != null) {
-          subPane.closePane();
-        }
-      }
-    });
-
-    //ref: ActionBarDrawerToggle#setProgress
-    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
-      @Override
-      public void onPanelSlide(View panel, float slideOffset) {
-        toolbar.setNavigationIconProgress(slideOffset);
-      }
-
-      @Override
-      public void onPanelOpened(View panel) {
-        toolbar.setNavigationIconVerticalMirror(true);
-      }
-
-      @Override
-      public void onPanelClosed(View panel) {
-        toolbar.setNavigationIconVerticalMirror(false);
-        closeUserActionContainer();
-        if (subPane != null) {
-          subPane.closePane();
-        }
-      }
-    });
   }
 
   private void showAddServerActivity() {
@@ -191,14 +134,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
         .commit();
-  }
-
-  private void closeUserActionContainer() {
-    SidebarMainFragment sidebarFragment = (SidebarMainFragment) getSupportFragmentManager()
-            .findFragmentById(R.id.sidebar_fragment_container);
-    if (sidebarFragment != null) {
-      sidebarFragment.closeUserActionContainer();
-    }
   }
 
   @Override

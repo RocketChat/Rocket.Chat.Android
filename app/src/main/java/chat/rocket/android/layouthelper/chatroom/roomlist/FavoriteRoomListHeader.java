@@ -26,7 +26,7 @@ public class FavoriteRoomListHeader implements RoomListHeader {
   @Override
   public boolean shouldShow(@NonNull List<RoomSidebar> roomSidebarList) {
     for (RoomSidebar roomSidebar: roomSidebarList) {
-      if (roomSidebar.isFavorite()) {
+      if (roomSidebar.isFavorite() && !roomSidebar.isAlert()) {
         return true;
       }
     }
