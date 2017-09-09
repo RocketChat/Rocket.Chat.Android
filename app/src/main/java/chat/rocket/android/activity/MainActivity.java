@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.view.View;
 
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
@@ -29,6 +30,7 @@ import hugo.weaving.DebugLog;
 public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
   private RoomToolbar toolbar;
   private StatusTicker statusTicker;
+  private SlidingPaneLayout pane;
   private MainContract.Presenter presenter;
 
   @Override
@@ -42,6 +44,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     setContentView(R.layout.activity_main);
     toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
     statusTicker = new StatusTicker();
+    pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
+    setupToolbar();
   }
 
   @Override
@@ -61,10 +65,34 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     super.onPause();
   }
 
+  private void setupToolbar() {
+    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+      @Override
+      public void onPanelSlide(View view, float v) {
+        //Ref: ActionBarDrawerToggle#setProgress
+        toolbar.setNavigationIconProgress(v);
+      }
+
+      @Override
+      public void onPanelOpened(View view) {
+        toolbar.setNavigationIconVerticalMirror(true);
+      }
+
+      @Override
+      public void onPanelClosed(View view) {
+        toolbar.setNavigationIconVerticalMirror(false);
+      }
+    });
+
+    toolbar.setNavigationOnClickListener(view -> {
+      if (pane.isSlideable() && !pane.isOpen()) {
+        pane.openPane();
+      }
+    });
+  }
 
   private boolean closeSidebarIfNeeded() {
     // REMARK: Tablet UI doesn't have SlidingPane!
-    SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
     if (pane != null && pane.isSlideable() && pane.isOpen()) {
       pane.closePane();
       return true;
