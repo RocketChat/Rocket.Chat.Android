@@ -43,16 +43,18 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
   private SidebarMainContract.Presenter presenter;
   private RoomListAdapter adapter;
-  private RecyclerView recyclerView;
   private SearchView searchView;
   private TextView loadMoreResultsText;
   private List<RoomSidebar> roomSidebarList;
+  private Disposable spotlightDisposable;
   private String hostname;
   private static final String HOSTNAME = "hostname";
 
@@ -139,7 +141,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       }
     });
 
-    recyclerView = rootView.findViewById(R.id.room_list_container);
+    RecyclerView recyclerView = rootView.findViewById(R.id.room_list_container);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     recyclerView.setAdapter(adapter);
 
@@ -148,15 +150,17 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     RxSearchView.queryTextChanges(searchView)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(charSequence -> {
-                adapter.setMode(RoomListAdapter.MODE_ROOM);
+                if (spotlightDisposable != null && !spotlightDisposable.isDisposed()) {
+                    spotlightDisposable.dispose();
+                }
+                presenter.disposeSubscriptions();
                 if (charSequence.length() == 0) {
                     loadMoreResultsText.setVisibility(View.GONE);
+                    adapter.setMode(RoomListAdapter.MODE_ROOM);
                     presenter.bindView(this);
-                    recyclerView.setVisibility(View.VISIBLE);
-              } else {
-                presenter.disposeSubscriptions();
-                filterRoomSidebarList(charSequence);
-              }
+                } else {
+                  filterRoomSidebarList(charSequence);
+                }
             });
 
     loadMoreResultsText.setOnClickListener(view -> loadMoreResults());
@@ -179,16 +183,16 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       }
 
       if (filteredRoomSidebarList.isEmpty()) {
-          recyclerView.setVisibility(View.GONE);
+          loadMoreResults();
       } else {
-          recyclerView.setVisibility(View.VISIBLE);
+          loadMoreResultsText.setVisibility(View.VISIBLE);
+          adapter.setMode(RoomListAdapter.MODE_ROOM);
           adapter.setRoomSidebarList(filteredRoomSidebarList);
       }
-      loadMoreResultsText.setVisibility(View.VISIBLE);
   }
 
   private void loadMoreResults() {
-    presenter.searchSpotlight(searchView.getQuery().toString())
+    spotlightDisposable = presenter.searchSpotlight(searchView.getQuery().toString())
             .toObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::showSearchSuggestions);
@@ -198,7 +202,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     loadMoreResultsText.setVisibility(View.GONE);
     adapter.setMode(RoomListAdapter.MODE_SPOTLIGHT);
     adapter.setSpotlightList(spotlightList);
-    recyclerView.setVisibility(View.VISIBLE);
   }
 
   @SuppressLint("RxLeakedSubscription")
