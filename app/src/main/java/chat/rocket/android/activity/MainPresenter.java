@@ -69,9 +69,9 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   @Override
   public void loadSignedInServers(@NonNull String hostname) {
     final Disposable disposable = publicSettingRepository.getById(PublicSettingsConstants.Assets.LOGO)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .map(setting -> getServerList(hostname, setting))
+            .zipWith(publicSettingRepository.getById(PublicSettingsConstants.General.SITE_NAME), Pair::new)
+            .map(this::getLogoAndSiteNamePair)
+            .map(settings -> getServerList(hostname, settings))
             .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -133,11 +133,24 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     addSubscription(subscription);
   }
 
-  private List<Pair<String, String>> getServerList(String hostname, PublicSetting publicSetting) throws JSONException {
-    JSONObject jsonObject = new JSONObject(publicSetting.getValue());
+  private Pair<String, String> getLogoAndSiteNamePair(Pair<Optional<PublicSetting>, Optional<PublicSetting>> settingsPair) {
+      String logoUrl = "";
+      String siteName = "";
+      if (settingsPair.first.isPresent()) {
+          logoUrl = settingsPair.first.get().getValue();
+      }
+      if (settingsPair.second.isPresent()) {
+          siteName = settingsPair.second.get().getValue();
+      }
+      return new Pair<>(logoUrl, siteName);
+  }
+
+  private List<Pair<String, Pair<String, String>>> getServerList(String hostname, Pair<String, String> serverInfoPair) throws JSONException {
+    JSONObject jsonObject = new JSONObject(serverInfoPair.first);
     String logoUrl = (jsonObject.has("url")) ?
             jsonObject.optString("url") : jsonObject.optString("defaultUrl");
-    rocketChatCache.addHostname(hostname.toLowerCase(), logoUrl);
+    String siteName = serverInfoPair.second;
+    rocketChatCache.addHostname(hostname.toLowerCase(), logoUrl, siteName);
     return rocketChatCache.getServerList();
   }
 

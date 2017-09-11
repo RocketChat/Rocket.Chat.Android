@@ -22,14 +22,19 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/btn_add_server"
                 android:layout_width="match_parent"
-                android:layout_height="80dp">
+                android:layout_height="80dp"
+                android:background="?selectableItemBackground"
+                android:descendantFocusability="afterDescendants">
 
-                <io.github.yusukeiwaki.android.widget.FontAwesomeButton
+                <io.github.yusukeiwaki.android.widget.FontAwesomeTextView
                     android:id="@+id/fa_add_server"
                     style="@style/Base.Widget.AppCompat.Button.Borderless"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_margin="@dimen/margin_8"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:duplicateParentState="true"
                     android:text="@string/fa_plus"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -40,12 +45,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
+                    android:duplicateParentState="true"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
                     android:text="@string/add_new_team"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

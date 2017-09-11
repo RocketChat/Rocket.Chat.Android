@@ -1,7 +1,6 @@
 package chat.rocket.android.activity;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -197,32 +196,37 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   }
 
   @Override
-  public void showSignedInServers(List<Pair<String, String>> serverList) {
+  public void showSignedInServers(List<Pair<String, Pair<String, String>>> serverList) {
     final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
     if (subPane != null) {
       LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
-      for (Pair<String, String> server : serverList) {
+      View addServerButton = subPane.findViewById(R.id.btn_add_server);
+      addServerButton.setOnClickListener(view -> showAddServerActivity());
+      for (Pair<String, Pair<String, String>> server : serverList) {
         String serverHostname = server.first;
-        String serverLogoUrl = server.second;
+        Pair<String, String> serverInfoPair = server.second;
+        String logoUrl = serverInfoPair.first;
+        String siteName = serverInfoPair.second;
         if (serverListContainer.findViewWithTag(serverHostname) == null) {
           int serverCount = serverListContainer.getChildCount();
 
           View serverRow = LayoutInflater.from(this).inflate(R.layout.server_row, serverListContainer, false);
           SimpleDraweeView serverButton = serverRow.findViewById(R.id.drawee_server_button);
-          TextView serverLabel = serverRow.findViewById(R.id.text_view_server_label);
+          TextView hostnameLabel = serverRow.findViewById(R.id.text_view_server_label);
+          TextView siteNameLabel = serverRow.findViewById(R.id.text_view_site_name_label);
 
           serverButton.setTag(serverHostname);
-          serverLabel.setText(serverHostname);
+          hostnameLabel.setText(serverHostname);
+          siteNameLabel.setText(siteName);
 
           // Currently selected server
           if (serverHostname.equalsIgnoreCase(hostname)) {
-            serverLabel.setSelected(true);
-            serverLabel.setTypeface(Typeface.DEFAULT_BOLD);
+            hostnameLabel.setSelected(true);
           }
 
           serverRow.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
 
-          FrescoHelper.INSTANCE.loadImage(serverButton, serverLogoUrl, ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
+          FrescoHelper.INSTANCE.loadImage(serverButton, logoUrl, ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
 
           serverListContainer.addView(serverRow, serverCount - 1);
         }

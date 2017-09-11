@@ -44,7 +44,7 @@ public class RocketChatCache {
     setString(KEY_SELECTED_SERVER_HOSTNAME, hostname.toLowerCase());
   }
 
-  public void addHostname(@NonNull String hostname, @Nullable String hostnameAvatarUri) {
+  public void addHostname(@NonNull String hostname, @Nullable String hostnameAvatarUri, String siteName) {
     String hostnameList = getString(KEY_HOSTNAME_LIST, null);
     try {
       JSONObject json;
@@ -53,25 +53,31 @@ public class RocketChatCache {
       } else {
         json = new JSONObject(hostnameList);
       }
+      JSONObject serverInfoJson = new JSONObject();
+      serverInfoJson.put("hostname", hostnameAvatarUri);
+      serverInfoJson.put("sitename", siteName);
       // Replace server avatar uri if exists.
-      json.put(hostname, hostnameAvatarUri == null ? JSONObject.NULL : hostnameAvatarUri);
+      json.put(hostname, hostnameAvatarUri == null ? JSONObject.NULL : serverInfoJson);
       setString(KEY_HOSTNAME_LIST, json.toString());
     } catch (JSONException e) {
       RCLog.e(e);
     }
   }
 
-  public List<Pair<String, String>> getServerList() {
+  public List<Pair<String, Pair<String, String>>> getServerList() {
     String json = getString(KEY_HOSTNAME_LIST, null);
     if (json == null) {
       return Collections.emptyList();
     }
     try {
       JSONObject jsonObj = new JSONObject(json);
-      List<Pair<String, String>> serverList = new ArrayList<>();
+      List<Pair<String, Pair<String, String>>> serverList = new ArrayList<>();
       for (Iterator<String> iter = jsonObj.keys(); iter.hasNext();) {
         String hostname = iter.next();
-        serverList.add(new Pair<>(hostname,"http://" + hostname + "/" + jsonObj.getString(hostname)));
+        JSONObject serverInfoJson = jsonObj.getJSONObject(hostname);
+        serverList.add(new Pair<>(hostname, new Pair<>(
+                "http://" + hostname + "/" + serverInfoJson.getString("hostname"),
+                serverInfoJson.getString("sitename"))));
       }
       return serverList;
     } catch (JSONException e) {
