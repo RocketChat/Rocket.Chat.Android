@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_pinned_messages"
+        android:title="@string/menu_pinned_messages"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_favorite_messages"
+        android:title="@string/menu_favorite_messages"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_file_list"
+        android:title="@string/menu_file_list"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_member_list"
+        android:title="@string/menu_member_list"
+        app:showAsAction="never" />
+</menu>
