@@ -19,6 +19,8 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
@@ -127,6 +129,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   private Message edittingMessage = null;
 
+  private RoomToolbar toolbar;
+
   private SlidingPaneLayout pane;
   private SidebarMainFragment sidebarFragment;
 
@@ -149,6 +153,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
 
     Bundle args = getArguments();
     hostname = args.getString(HOSTNAME);
@@ -241,6 +246,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       }
     };
 
+    setupToolbar();
     setupSidebar();
     setupSideMenu();
     setupMessageComposer();
@@ -331,9 +337,40 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
   }
 
+  private void setupToolbar() {
+    toolbar = getActivity().findViewById(R.id.activity_main_toolbar);
+    toolbar.getMenu().clear();
+    toolbar.inflateMenu(R.menu.menu_room);
+
+    toolbar.setNavigationOnClickListener(view -> {
+      if (pane.isSlideable() && !pane.isOpen()) {
+        pane.openPane();
+      }
+    });
+
+    toolbar.setOnMenuItemClickListener(menuItem -> {
+      switch (menuItem.getItemId()) {
+        case R.id.action_pinned_messages:
+          // TODO
+          break;
+        case R.id.action_favorite_messages:
+          // TODO
+          break;
+        case R.id.action_file_list:
+          // TODO
+          break;
+        case R.id.action_member_list:
+          // TODO
+          break;
+        default:
+          return super.onOptionsItemSelected(menuItem);
+      }
+      return true;
+    });
+  }
+
   private void setupSidebar() {
     SlidingPaneLayout subPane = getActivity().findViewById(R.id.sub_sliding_pane);
-    RoomToolbar toolbar = getActivity().findViewById(R.id.activity_main_toolbar);
     sidebarFragment = (SidebarMainFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.sidebar_fragment_container);
 
     pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
@@ -356,12 +393,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         toolbar.setNavigationIconVerticalMirror(false);
         subPane.closePane();
         closeUserActionContainer();
-      }
-    });
-
-    toolbar.setNavigationOnClickListener(view -> {
-      if (pane.isSlideable() && !pane.isOpen()) {
-        pane.openPane();
       }
     });
   }
