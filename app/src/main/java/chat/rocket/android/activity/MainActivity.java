@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.LayoutInflater;
@@ -101,6 +102,13 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       @Override
       public void onPanelClosed(View view) {
         toolbar.setNavigationIconVerticalMirror(false);
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.sidebar_fragment_container);
+        if (fragment != null && fragment instanceof SidebarMainFragment) {
+          SidebarMainFragment sidebarMainFragment = (SidebarMainFragment) fragment;
+          sidebarMainFragment.toggleUserActionContainer(false);
+          sidebarMainFragment.showUserActionContainer(false);
+        }
       }
     });
 
@@ -158,6 +166,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   }
 
   private void updateSidebarMainFragment() {
+    closeSidebarIfNeeded();
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
         .commit();
@@ -264,7 +273,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   private void changeServerIfNeeded(String serverHostname) {
     if (!hostname.equalsIgnoreCase(serverHostname)) {
-      closeSidebarIfNeeded();
       RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
       rocketChatCache.setSelectedServerHostname(serverHostname);
       recreate();
