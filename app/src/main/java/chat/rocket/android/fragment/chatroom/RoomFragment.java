@@ -13,20 +13,14 @@ import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.os.BuildCompat;
 import android.support.v4.util.Pair;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 
-import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
-import chat.rocket.android.widget.RoomToolbar;
-import chat.rocket.core.models.User;
-import java.lang.reflect.Field;
+import com.hadisatrio.optional.Optional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +29,10 @@ import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.MessageOptionsDialogFragment;
-import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
+import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
-import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
 import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
@@ -55,11 +48,11 @@ import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadAction
 import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
-import chat.rocket.android.log.RCLog;
 import chat.rocket.android.renderer.RocketChatUserStatusProvider;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
 import chat.rocket.android.service.temp.DefaultTempSpotlightUserCaller;
+import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteManager;
@@ -71,6 +64,7 @@ import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
@@ -79,9 +73,6 @@ import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightUserRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
-
-import com.hadisatrio.optional.Optional;
-import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -248,7 +239,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
     setupToolbar();
     setupSidebar();
-    setupSideMenu();
     setupMessageComposer();
     setupMessageActions();
   }
@@ -307,34 +297,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
     messageOptionsDialogFragment.show(getChildFragmentManager(), "MessageOptionsDialogFragment");
     return true;
-  }
-
-  private void setupSideMenu() {
-    View sideMenu = rootView.findViewById(R.id.room_side_menu);
-    sideMenu.findViewById(R.id.btn_users).setOnClickListener(view -> {
-      UsersOfRoomDialogFragment.create(roomId, hostname)
-          .show(getFragmentManager(), "UsersOfRoomDialogFragment");
-      closeSideMenuIfNeeded();
-    });
-
-    DrawerLayout drawerLayout = rootView.findViewById(R.id.drawer_layout);
-    if (drawerLayout != null && pane != null) {
-      compositeDisposable.add(RxDrawerLayout.drawerOpen(drawerLayout, GravityCompat.END)
-          .compose(bindToLifecycle())
-          .subscribe(
-              opened -> {
-                try {
-                  Field fieldSlidable = pane.getClass().getDeclaredField("mCanSlide");
-                  fieldSlidable.setAccessible(true);
-                  fieldSlidable.setBoolean(pane, !opened);
-                } catch (Exception exception) {
-                  RCLog.w(exception);
-                }
-              },
-              Logger::report
-          )
-      );
-    }
   }
 
   private void setupToolbar() {
@@ -399,15 +361,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   public void closeUserActionContainer() {
       sidebarFragment.closeUserActionContainer();
-  }
-
-  private boolean closeSideMenuIfNeeded() {
-    DrawerLayout drawerLayout = rootView.findViewById(R.id.drawer_layout);
-    if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.END)) {
-      drawerLayout.closeDrawer(GravityCompat.END);
-      return true;
-    }
-    return false;
   }
 
   private void setupMessageComposer() {
@@ -500,7 +453,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   public void onResume() {
     super.onResume();
     presenter.bindView(this);
-    closeSideMenuIfNeeded();
   }
 
   @Override
@@ -531,9 +483,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     if (edittingMessage != null) {
       edittingMessage = null;
       messageFormManager.clearComposingText();
-      return true;
     }
-    return closeSideMenuIfNeeded();
+    return true;
   }
 
   @Override
