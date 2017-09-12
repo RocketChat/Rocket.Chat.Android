@@ -41,8 +41,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:ellipsize="end"
         android:gravity="top"
         android:maxLines="1"
@@ -51,10 +51,25 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/drawee_server_button"
         app:layout_constraintTop_toBottomOf="@+id/text_view_site_name_label"
         tools:text="demo.rocket.chat" />
+
+    <ImageView
+        android:id="@+id/selected_server_dot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_site_name_label"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/serverstatus_selected"
+        tools:visibility="visible" />
 
 
 </android.support.constraint.ConstraintLayout>

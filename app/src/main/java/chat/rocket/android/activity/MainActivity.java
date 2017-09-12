@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -251,6 +252,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
           SimpleDraweeView serverButton = serverRow.findViewById(R.id.drawee_server_button);
           TextView hostnameLabel = serverRow.findViewById(R.id.text_view_server_label);
           TextView siteNameLabel = serverRow.findViewById(R.id.text_view_site_name_label);
+          ImageView dotView = serverRow.findViewById(R.id.selected_server_dot);
 
           serverButton.setTag(serverHostname);
           hostnameLabel.setText(serverHostname);
@@ -258,7 +260,10 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
           // Currently selected server
           if (serverHostname.equalsIgnoreCase(hostname)) {
-            hostnameLabel.setSelected(true);
+            serverRow.setSelected(true);
+            dotView.setVisibility(View.VISIBLE);
+          } else {
+            dotView.setVisibility(View.GONE);
           }
 
           serverRow.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
