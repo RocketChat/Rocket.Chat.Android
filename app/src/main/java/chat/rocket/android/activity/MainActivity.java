@@ -197,7 +197,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   @Override
   public void showUnreadCount(long roomsCount, int mentionsCount) {
-      toolbar.setUnreadBudge((int) roomsCount, mentionsCount);
+      toolbar.setUnreadBadge((int) roomsCount, mentionsCount);
   }
 
   @Override
