@@ -30,6 +30,7 @@ import hugo.weaving.DebugLog;
 public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
   private RoomToolbar toolbar;
   private StatusTicker statusTicker;
+  private SlidingPaneLayout pane;
   private MainContract.Presenter presenter;
 
   @Override
@@ -43,7 +44,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     setContentView(R.layout.activity_main);
     toolbar = (RoomToolbar) findViewById(R.id.activity_main_toolbar);
     statusTicker = new StatusTicker();
-    setupSidebar();
+    pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
+    setupToolbar();
   }
 
   @Override
@@ -63,20 +65,22 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     super.onPause();
   }
 
-  private void setupSidebar() {
-    SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-    if (pane == null) {
-      return;
-    }
-
-    final SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
-    pane.setPanelSlideListener(new SlidingPaneLayout.SimplePanelSlideListener() {
+  private void setupToolbar() {
+    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
       @Override
-      public void onPanelClosed(View panel) {
-        super.onPanelClosed(panel);
-        if (subPane != null) {
-          subPane.closePane();
-        }
+      public void onPanelSlide(View view, float v) {
+        //Ref: ActionBarDrawerToggle#setProgress
+        toolbar.setNavigationIconProgress(v);
+      }
+
+      @Override
+      public void onPanelOpened(View view) {
+        toolbar.setNavigationIconVerticalMirror(true);
+      }
+
+      @Override
+      public void onPanelClosed(View view) {
+        toolbar.setNavigationIconVerticalMirror(false);
       }
     });
 
@@ -85,30 +89,10 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         pane.openPane();
       }
     });
-
-    //ref: ActionBarDrawerToggle#setProgress
-    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
-      @Override
-      public void onPanelSlide(View panel, float slideOffset) {
-        toolbar.setNavigationIconProgress(slideOffset);
-      }
-
-      @Override
-      public void onPanelOpened(View panel) {
-        toolbar.setNavigationIconVerticalMirror(true);
-      }
-
-      @Override
-      public void onPanelClosed(View panel) {
-        toolbar.setNavigationIconVerticalMirror(false);
-        closeUserActionContainer();
-      }
-    });
   }
 
   private boolean closeSidebarIfNeeded() {
     // REMARK: Tablet UI doesn't have SlidingPane!
-    SlidingPaneLayout pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
     if (pane != null && pane.isSlideable() && pane.isOpen()) {
       pane.closePane();
       return true;
@@ -154,14 +138,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
         .commit();
-  }
-
-  private void closeUserActionContainer() {
-    SidebarMainFragment sidebarFragment = (SidebarMainFragment) getSupportFragmentManager()
-            .findFragmentById(R.id.sidebar_fragment_container);
-    if (sidebarFragment != null) {
-      sidebarFragment.closeUserActionContainer();
-    }
   }
 
   @Override

@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -23,13 +24,14 @@ import chat.rocket.android.helper.Logger;
 import chat.rocket.android.layouthelper.chatroom.roomlist.ChannelRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.DirectMessageRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.FavoriteRoomListHeader;
+import chat.rocket.android.layouthelper.chatroom.roomlist.LivechatRoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
 import chat.rocket.android.renderer.UserRenderer;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
-import chat.rocket.core.models.Room;
+import chat.rocket.core.models.RoomSidebar;
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
@@ -39,17 +41,20 @@ import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
-import io.reactivex.Observable;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
   private SidebarMainContract.Presenter presenter;
   private RoomListAdapter adapter;
   private SearchView searchView;
+  private TextView loadMoreResultsText;
+  private List<RoomSidebar> roomSidebarList;
+  private Disposable spotlightDisposable;
   private String hostname;
   private static final String HOSTNAME = "hostname";
 
@@ -123,9 +128,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     adapter = new RoomListAdapter();
     adapter.setOnItemClickListener(new RoomListAdapter.OnItemClickListener() {
       @Override
-      public void onItemClick(Room room) {
+      public void onItemClick(RoomSidebar roomSidebar) {
         searchView.clearFocus();
-        presenter.onRoomSelected(room);
+        presenter.onRoomSelected(roomSidebar);
       }
 
       @Override
@@ -140,20 +145,63 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     recyclerView.setAdapter(adapter);
 
+    loadMoreResultsText = rootView.findViewById(R.id.text_load_more_results);
+
     RxSearchView.queryTextChanges(searchView)
-        .compose(bindToLifecycle())
-        .debounce(300, TimeUnit.MILLISECONDS)
-        .observeOn(AndroidSchedulers.mainThread())
-        .switchMap(charSequence -> {
-          if (charSequence.length() == 0) {
-            adapter.setMode(RoomListAdapter.MODE_ROOM);
-            return Observable.just(Collections.<Spotlight>emptyList());
-          } else {
-            adapter.setMode(RoomListAdapter.MODE_SPOTLIGHT);
-            return presenter.searchSpotlight(charSequence.toString()).toObservable();
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(charSequence -> {
+                if (spotlightDisposable != null && !spotlightDisposable.isDisposed()) {
+                    spotlightDisposable.dispose();
+                }
+                presenter.disposeSubscriptions();
+                if (charSequence.length() == 0) {
+                    loadMoreResultsText.setVisibility(View.GONE);
+                    adapter.setMode(RoomListAdapter.MODE_ROOM);
+                    presenter.bindView(this);
+                } else {
+                  filterRoomSidebarList(charSequence);
+                }
+            });
+
+    loadMoreResultsText.setOnClickListener(view -> loadMoreResults());
+  }
+
+  @Override
+  public void showRoomSidebarList(@NonNull List<RoomSidebar> roomSidebarList) {
+    this.roomSidebarList = roomSidebarList;
+    adapter.setRoomSidebarList(roomSidebarList);
+  }
+
+  @Override
+  public void filterRoomSidebarList(CharSequence term) {
+      List<RoomSidebar> filteredRoomSidebarList = new ArrayList<>();
+
+      for (RoomSidebar roomSidebar: roomSidebarList) {
+          if (roomSidebar.getRoomName().contains(term)) {
+              filteredRoomSidebarList.add(roomSidebar);
           }
-        })
-        .subscribe(this::showSearchSuggestions, Logger::report);
+      }
+
+      if (filteredRoomSidebarList.isEmpty()) {
+          loadMoreResults();
+      } else {
+          loadMoreResultsText.setVisibility(View.VISIBLE);
+          adapter.setMode(RoomListAdapter.MODE_ROOM);
+          adapter.setRoomSidebarList(filteredRoomSidebarList);
+      }
+  }
+
+  private void loadMoreResults() {
+    spotlightDisposable = presenter.searchSpotlight(searchView.getQuery().toString())
+            .toObservable()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::showSearchSuggestions);
+  }
+
+  private void showSearchSuggestions(List<Spotlight> spotlightList) {
+    loadMoreResultsText.setVisibility(View.GONE);
+    adapter.setMode(RoomListAdapter.MODE_SPOTLIGHT);
+    adapter.setSpotlightList(spotlightList);
   }
 
   @SuppressLint("RxLeakedSubscription")
@@ -187,14 +235,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   }
 
   @Override
-  public void showRoomList(@NonNull List<Room> roomList) {
-    adapter.setRooms(roomList);
-  }
-
-  @Override
   public void show(User user) {
     onRenderCurrentUser(user);
-    updateRoomListMode(user);
+    updateRoomListMode();
   }
 
   private void setupUserStatusButtons() {
@@ -225,18 +268,19 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     }
   }
 
-  private void updateRoomListMode(User user) {
+  private void updateRoomListMode() {
     final List<RoomListHeader> roomListHeaders = new ArrayList<>();
 
-    if (user != null && user.getSettings() != null && user.getSettings().getPreferences() != null
-        && user.getSettings().getPreferences().isUnreadRoomsMode()) {
-      roomListHeaders.add(new UnreadRoomListHeader(
-          getString(R.string.fragment_sidebar_main_unread_rooms_title)
-      ));
-    }
+    roomListHeaders.add(new UnreadRoomListHeader(
+        getString(R.string.fragment_sidebar_main_unread_rooms_title)
+    ));
 
     roomListHeaders.add(new FavoriteRoomListHeader(
         getString(R.string.fragment_sidebar_main_favorite_title)
+    ));
+
+    roomListHeaders.add(new LivechatRoomListHeader(
+            getString(R.string.fragment_sidebar_main_livechat_title)
     ));
 
     roomListHeaders.add(new ChannelRoomListHeader(
@@ -260,6 +304,10 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     });
   }
 
+  public void clearSearchViewFocus() {
+    searchView.clearFocus();
+  }
+
   public void closeUserActionContainer() {
     final CompoundButton toggleUserAction = rootView.findViewById(R.id.toggle_user_action);
     if (toggleUserAction != null && toggleUserAction.isChecked()) {
@@ -276,7 +324,4 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     dialog.show(getFragmentManager(), "AbstractAddRoomDialogFragment");
   }
 
-  private void showSearchSuggestions(List<Spotlight> spotlightList) {
-    adapter.setSpotlightList(spotlightList);
-  }
 }

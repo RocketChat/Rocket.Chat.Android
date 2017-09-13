@@ -107,7 +107,6 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
           if (optional.isPresent()) {
             return Optional.of(optional.get().asRoomHistoryState());
           }
-
           return Optional.absent();
         }));
   }

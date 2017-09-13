@@ -6,6 +6,8 @@
 
   <color name="color_timestamp">#FFA8A8A8</color>
   <color name="color_embed_hostname">@color/color_timestamp</color>
+
+  <color name="color_alert">#FFF44336</color> <!-- Red 500-->
   
   <!-- User status colors-->
   <color name="color_user_status_online">#FF4CAF50</color> <!-- Green 500 -->

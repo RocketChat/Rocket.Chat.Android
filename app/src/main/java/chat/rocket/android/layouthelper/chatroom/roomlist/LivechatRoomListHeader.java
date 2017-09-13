@@ -2,18 +2,17 @@ package chat.rocket.android.layouthelper.chatroom.roomlist;
 
 import android.support.annotation.NonNull;
 
-import chat.rocket.core.models.RoomSidebar;
 import java.util.List;
-import chat.rocket.core.models.Room;
 
-public class DirectMessageRoomListHeader implements RoomListHeader {
+import chat.rocket.core.models.Room;
+import chat.rocket.core.models.RoomSidebar;
+
+public class LivechatRoomListHeader implements RoomListHeader {
 
   private final String title;
-  private final ClickListener clickListener;
 
-  public DirectMessageRoomListHeader(String title, ClickListener clickListener) {
+  public LivechatRoomListHeader(String title) {
     this.title = title;
-    this.clickListener = clickListener;
   }
 
   @Override
@@ -23,15 +22,13 @@ public class DirectMessageRoomListHeader implements RoomListHeader {
 
   @Override
   public boolean owns(RoomSidebar roomSidebar) {
-    return roomSidebar.getType().equals(Room.TYPE_DIRECT_MESSAGE);
+    return Room.TYPE_LIVECHAT.equals(roomSidebar.getType());
   }
 
   @Override
   public boolean shouldShow(@NonNull List<RoomSidebar> roomSidebarList) {
     for (RoomSidebar roomSidebar: roomSidebarList) {
-      if (roomSidebar.getType().equals(Room.TYPE_DIRECT_MESSAGE)
-              && !roomSidebar.isAlert()
-              && !roomSidebar.isFavorite()) {
+      if (owns(roomSidebar)) {
         return true;
       }
     }
@@ -40,6 +37,6 @@ public class DirectMessageRoomListHeader implements RoomListHeader {
 
   @Override
   public ClickListener getClickListener() {
-    return clickListener;
+    return null;
   }
 }
