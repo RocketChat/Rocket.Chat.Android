@@ -5,8 +5,9 @@ interface RoomDialogContract {
     interface View {
         fun showPinnedMessages()
         fun showFavoriteMessages()
-        fun showFileList()
-        fun showMemberList()
+        fun showFileList(dataSet: ArrayList<String>)
+        fun showMemberList(dataSet: ArrayList<String>)
+        fun showMessage(message: String)
     }
 
     interface Presenter {
