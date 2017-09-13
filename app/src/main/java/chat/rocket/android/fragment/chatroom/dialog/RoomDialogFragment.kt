@@ -1,0 +1,93 @@
+package chat.rocket.android.fragment.chatroom.dialog
+
+import android.os.Bundle
+import android.support.v4.app.DialogFragment
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import chat.rocket.android.R
+
+/**
+ * Displays a dialog containing pinned messages, favorite messages, file list or member list of a room.
+ */
+class RoomDialogFragment : DialogFragment(), RoomDialogContract.View {
+    lateinit var roomId: String
+    lateinit var roomName: String
+    lateinit var roomType: String
+    lateinit var hostname: String
+    lateinit var token: String
+    lateinit var userId: String
+    private var actionId: Int = 0
+    lateinit var closeButton: ImageButton
+    lateinit var fileListRecyclerView: RecyclerView
+    lateinit var presenter: RoomDialogContract.Presenter
+
+    companion object {
+        fun newInstance(roomId: String, roomName: String, roomType: String, hostname: String, token: String, userId: String, actionId: Int): RoomDialogFragment {
+
+            val args = Bundle()
+            args.putString("roomId", roomId)
+            args.putString("roomName", roomName)
+            args.putString("roomType", roomType)
+            args.putString("hostname", hostname)
+            args.putString("token", token)
+            args.putString("userId", userId)
+            args.putInt("actionId", actionId)
+
+            val roomFileListDialogFragment = RoomDialogFragment()
+            roomFileListDialogFragment.arguments = args
+
+            return roomFileListDialogFragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        roomId = arguments.getString("roomId")
+        roomName = arguments.getString("roomName")
+        roomType = arguments.getString("roomType")
+        hostname = arguments.getString("hostname")
+        token = arguments.getString("token")
+        userId = arguments.getString("userId")
+        actionId = arguments.getInt("actionId")
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.dialog_room_file_list, container, false)
+
+        closeButton = view.findViewById(R.id.button_close)
+        closeButton.setOnClickListener { dismissDialogFragment() }
+        fileListRecyclerView = view.findViewById(R.id.recycler_view_file_list)
+
+        presenter = RoomDialogPresenter(context, this)
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.getDataSet(roomId, roomName, roomType, hostname, token, userId, actionId)
+    }
+
+    override fun showPinnedMessages() {
+//        fileListRecyclerView.adapter = RoomFileListAdapter(dataSet)
+//        fileListRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+    }
+
+    override fun showFavoriteMessages() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showFileList() {
+    }
+
+    override fun showMemberList() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun dismissDialogFragment() {
+        super.dismiss()
+    }
+}
