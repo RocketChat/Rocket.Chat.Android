@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
+import chat.rocket.android.layouthelper.extra_action.upload.FileUploadActionItem;
 import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.core.models.User;
 import java.lang.reflect.Field;
@@ -248,10 +249,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   private void setupMessageActions() {
-    extraActionItems = new ArrayList<>(3); // fixed number as of now
+    extraActionItems = new ArrayList<>(4); // fixed number as of now
     extraActionItems.add(new ImageUploadActionItem());
     extraActionItems.add(new AudioUploadActionItem());
     extraActionItems.add(new VideoUploadActionItem());
+    extraActionItems.add(new FileUploadActionItem());
   }
 
   private void scrollToLatestMessage() {
