@@ -11,6 +11,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.os.BuildCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -29,6 +31,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.MessageOptionsDialogFragment;
+import chat.rocket.android.fragment.chatroom.dialog.RoomDialogFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
@@ -96,7 +99,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   private static final String ROOM_ID = "roomId";
 
   private String hostname;
+  private String token;
+  private String userId;
   private String roomId;
+  private String roomName;
+  private String roomType;
   private LoadMoreScrollListener scrollListener;
   private MessageFormManager messageFormManager;
   private RecyclerView messageRecyclerView;
@@ -313,16 +320,16 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     toolbar.setOnMenuItemClickListener(menuItem -> {
       switch (menuItem.getItemId()) {
         case R.id.action_pinned_messages:
-          // TODO
+          showRoomDialogFragment(R.id.action_pinned_messages);
           break;
         case R.id.action_favorite_messages:
-          // TODO
+          showRoomDialogFragment(R.id.action_favorite_messages);
           break;
         case R.id.action_file_list:
-          // TODO
+          showRoomDialogFragment(R.id.action_file_list);
           break;
         case R.id.action_member_list:
-          // TODO
+          showRoomDialogFragment(R.id.action_member_list);
           break;
         default:
           return super.onOptionsItemSelected(menuItem);
@@ -547,12 +554,16 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   @Override
   public void setupWith(RocketChatAbsoluteUrl rocketChatAbsoluteUrl) {
+    token = rocketChatAbsoluteUrl.getToken();
+    userId = rocketChatAbsoluteUrl.getUserId();
     messageListAdapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
   }
 
   @Override
   public void render(Room room) {
-    setToolbarTitle(room.getName());
+    roomName = room.getName();
+    roomType = room.getType();
+    setToolbarTitle(roomName);
 
     boolean unreadMessageExists = room.isAlert();
     if (newMessageIndicatorManager != null && previousUnreadMessageExists && !unreadMessageExists) {
@@ -636,5 +647,21 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   private void onEditMessage(Message message) {
     edittingMessage = message;
     messageFormManager.setEditMessage(message.getMessage());
+  }
+
+  private void showRoomDialogFragment(int actionId) {
+      FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+      Fragment prev = getFragmentManager().findFragmentByTag("roomDialogFragment");
+      if (prev != null) {
+          fragmentTransaction.remove(prev);
+      }
+      fragmentTransaction.addToBackStack(null);
+
+      DialogFragment roomDialogFragment = RoomDialogFragment.Companion.newInstance(roomId, roomName, roomType,
+              hostname,
+              token,
+              userId,
+              actionId);
+      roomDialogFragment.show(fragmentTransaction, "roomDialogFragment");
   }
 }
