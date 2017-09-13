@@ -7,6 +7,10 @@ import chat.rocket.android.helper.OkHttpHelper
 import chat.rocket.core.models.Room
 import okhttp3.*
 import java.io.IOException
+import okhttp3.HttpUrl
+import org.json.JSONArray
+import org.json.JSONObject
+
 
 class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.View): RoomDialogContract.Presenter {
     override fun getDataSet(roomId: String,
@@ -17,8 +21,20 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                             userId: String,
                             action: Int) {
         when (action) {
-            R.id.action_pinned_messages -> getPinnedMessages(roomType, hostname, token, userId)
-            R.id.action_favorite_messages -> getFavoriteMessages(roomType, hostname, token, userId)
+            R.id.action_pinned_messages -> {
+                getPinnedMessages(roomId,
+                        roomType,
+                        hostname,
+                        token,
+                        userId)
+            }
+            R.id.action_favorite_messages -> {
+                getFavoriteMessages(roomId,
+                        roomType,
+                        hostname,
+                        token,
+                        userId)
+            }
             R.id.action_file_list -> {
                 getFileList(roomId,
                         roomType,
@@ -26,16 +42,32 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                         token,
                         userId)
             }
-            R.id.action_member_list -> getMemberList(roomType, hostname, token, userId)
+            R.id.action_member_list -> {
+                getMemberList(roomId,
+                        roomType,
+                        hostname,
+                        token,
+                        userId)
+            }
         }
     }
 
-    private fun getPinnedMessages(roomType: String, hostname: String, token: String, userId: String) {
-        view.showPinnedMessages()
+    private fun getPinnedMessages(roomId: String,
+                                  roomType: String,
+                                  hostname: String,
+                                  token: String,
+                                  userId: String) {
+        // TODO("not implemented")
+
     }
 
-    private fun getFavoriteMessages(roomType: String, hostname: String, token: String, userId: String) {
-        view.showFavoriteMessages()
+    private fun getFavoriteMessages(roomId: String,
+                                    roomType: String,
+                                    hostname: String,
+                                    token: String,
+                                    userId: String) {
+        // TODO("not implemented")
+
     }
 
     private fun getFileList(roomId: String,
@@ -43,33 +75,75 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                             hostname: String,
                             token: String,
                             userId: String) {
-
         OkHttpHelper.getClient()
-                .newCall(getRequest(roomId,
+                .newCall(getRequestForFileList(roomId,
                         roomType,
                         hostname,
                         token,
                         userId))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        Log.i("REST", "FAIL = " + e.message)
+                        view.showMessage(e.printStackTrace().toString())
                     }
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
-                        Log.i("REST", "SUCCESS = " + response.body()?.string())
-                        val res = response.body()
+                        if (response.isSuccessful) {
+                            val jSONObject = JSONObject(response.body()?.string())
+                            Log.i("REST", " = " + jSONObject.toString())
+                            Log.i("REST", " = " + jSONObject)
+                            val filesJSONArray = jSONObject.get("files") as JSONArray
+
+                            val total = filesJSONArray.length()
+                            val dataSet = ArrayList<String>(total)
+                            (0 until total).mapTo(dataSet) { filesJSONArray.get(it).toString() }
+                            view.showFileList(dataSet)
+                        } else {
+                            // TODO("move to strings.xml")
+                            view.showMessage("Response is not successful")
+                        }
                     }
                 })
-        view.showFileList()
     }
 
-    private fun getMemberList(roomType: String, hostname: String, token: String, userId: String) {
-        view.showMemberList()
+    private fun getMemberList(roomId: String,
+                              roomType: String,
+                              hostname: String,
+                              token: String,
+                              userId: String) {
+        OkHttpHelper.getClient()
+                .newCall(getRequestForMemberList(roomId,
+                        roomType,
+                        hostname,
+                        token,
+                        userId))
+                .enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        view.showMessage(e.printStackTrace().toString())
+                    }
+
+                    @Throws(IOException::class)
+                    override fun onResponse(call: Call, response: Response) {
+                        if (response.isSuccessful) {
+                            val jSONObject = JSONObject(response.body()?.string())
+
+                            val membersJSONArray = jSONObject.get("members") as JSONArray
+
+                            val total = membersJSONArray.length()
+                            val dataSet = ArrayList<String>(total)
+                            (0 until total).mapTo(dataSet) { membersJSONArray.get(it).toString() }
+
+                            view.showMemberList(dataSet)
+                        } else {
+                            // TODO("move to strings.xml")
+                            view.showMessage("Response is not successful")
+                        }
+                    }
+                })
     }
 
     /**
-     * Returns an OkHttp3 request corresponding to the Rest API call.
+     * Returns an OkHttp3 request for file list accordingly with the room type.
      *
      * @param roomId The ID of the room.
      * @param roomType The type of the room.
@@ -78,20 +152,18 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
      * @param userId The user Id.
      * @return A OkHttp3 request.
      */
-    private fun getRequest(roomId: String,
-                           roomType: String,
-                           hostname: String,
-                           token: String,
-                           userId: String): Request {
-
-        val httpUrl = HttpUrl.Builder()
-                .scheme("http")
-                .host(getEndpointUrl(roomType, hostname))
-                .addQueryParameter("roomId", roomId)
-                .build()
+    private fun getRequestForFileList(roomId: String,
+                                        roomType: String,
+                                        hostname: String,
+                                        token: String,
+                                        userId: String): Request {
+        val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForFileList(roomType, hostname))
+                ?.newBuilder()
+                ?.addQueryParameter("roomId", roomId)
+                ?.build()
 
         return Request.Builder()
-                .url(httpUrl)
+                .url(parsedHttpUrl)
                 .get()
                 .addHeader("X-Auth-Token", token)
                 .addHeader("X-User-Id", userId)
@@ -99,17 +171,55 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
     }
 
     /**
-     * Returns an endpoint URL (without the https or http schemas) corresponding to the Rest API call.
+     * Returns an OkHttp3 request for member list accordingly with the room type.
+     *
+     * @param roomId The ID of the room.
+     * @param roomType The type of the room.
+     * @param hostname The server hostname.
+     * @param token The token.
+     * @param userId The user Id.
+     * @return A OkHttp3 request.
+     */
+    private fun getRequestForMemberList(roomId: String,
+                           roomType: String,
+                           hostname: String,
+                           token: String,
+                           userId: String): Request {
+        val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForMemberList(roomType, hostname))
+                ?.newBuilder()
+                ?.addQueryParameter("roomId", roomId)
+                ?.build()
+
+        return Request.Builder()
+                .url(parsedHttpUrl)
+                .get()
+                .addHeader("X-Auth-Token", token)
+                .addHeader("X-User-Id", userId)
+                .build()
+    }
+
+    /**
+     * Returns a Rest API endpoint URL for member list accordingly with the room type.
      *
      * @param roomType The type of the room.
      * @param hostname The server hostname.
-     * @return A Rest API URL endpoint starting with www.
+     * @return A Rest API URL endpoint.
      */
-    private fun getEndpointUrl(roomType: String, hostname: String): String  = "www." +
-            hostname.replace("http://", "")
-                    .replace("https://", "")
-                    .replace("www", "") +
+    private fun getEndpointUrlForMemberList(roomType: String, hostname: String): String  = "https://" +
+            hostname.replace("http://", "").replace("https://", "") +
             getRestApiUrlForMemberList(roomType)
+
+    /**
+     * Returns a Rest API endpoint URL for file list. accordingly with the room type
+     *
+     * @param roomType The type of the room.
+     * @param hostname The server hostname.
+     * @return A Rest API URL endpoint.
+     */
+    private fun getEndpointUrlForFileList(roomType: String, hostname: String): String  = "https://" +
+            hostname.replace("http://", "").replace("https://", "") +
+            getRestApiUrlForFileList(roomType)
+
 
     /**
      * Returns the correspondent Rest API URL accordingly with the room type to get its members list.
