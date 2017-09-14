@@ -175,6 +175,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     updateSidebarMainFragment();
 
     presenter.bindView(this);
+    presenter.loadSignedInServers(hostname);
   }
 
   private void updateSidebarMainFragment() {
