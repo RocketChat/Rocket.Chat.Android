@@ -18,7 +18,6 @@ import chat.rocket.android.layouthelper.chatroom.dialog.RoomMemberListAdapter
  */
 class RoomDialogFragment : DialogFragment(), RoomDialogContract.View {
     lateinit var roomId: String
-    lateinit var roomName: String
     lateinit var roomType: String
     lateinit var hostname: String
     lateinit var token: String
@@ -31,7 +30,6 @@ class RoomDialogFragment : DialogFragment(), RoomDialogContract.View {
 
     companion object {
         fun newInstance(roomId: String,
-                        roomName: String,
                         roomType: String,
                         hostname: String,
                         token: String,
@@ -39,7 +37,6 @@ class RoomDialogFragment : DialogFragment(), RoomDialogContract.View {
                         actionId: Int): RoomDialogFragment {
             val args = Bundle()
             args.putString("roomId", roomId)
-            args.putString("roomName", roomName)
             args.putString("roomType", roomType)
             args.putString("hostname", hostname)
             args.putString("token", token)
@@ -56,7 +53,6 @@ class RoomDialogFragment : DialogFragment(), RoomDialogContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         roomId = arguments.getString("roomId")
-        roomName = arguments.getString("roomName")
         roomType = arguments.getString("roomType")
         hostname = arguments.getString("hostname")
         token = arguments.getString("token")
@@ -79,7 +75,13 @@ class RoomDialogFragment : DialogFragment(), RoomDialogContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.getDataSet(roomId, roomName, roomType, hostname, token, userId, actionId)
+
+        presenter.getDataSet(roomId,
+                roomType,
+                hostname,
+                token,
+                userId,
+                actionId)
     }
 
     override fun showPinnedMessages() {
