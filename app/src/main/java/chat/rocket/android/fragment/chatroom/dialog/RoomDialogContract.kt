@@ -12,7 +12,6 @@ interface RoomDialogContract {
 
     interface Presenter {
         fun getDataSet(roomId: String,
-                       roomName: String,
                        roomType: String,
                        hostname: String,
                        token: String,
