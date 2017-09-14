@@ -91,27 +91,23 @@ class RoomDialogFragment : DialogFragment(), RoomDialogContract.View {
     }
 
     override fun showFileList(dataSet: ArrayList<String>) {
-        activity.runOnUiThread({
-            if (dataSet.isEmpty()) {
-                // TODO("move to strings.xml")
-                showMessage("None file to show")
-            } else {
-                recyclerView.adapter = RoomFileListAdapter(dataSet)
-                recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-            }
-        })
+        if (dataSet.isEmpty()) {
+            // TODO("move to strings.xml")
+            showMessage("None file to show")
+        } else {
+            recyclerView.adapter = RoomFileListAdapter(dataSet)
+            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        }
     }
 
     override fun showMemberList(dataSet: ArrayList<String>) {
-        activity.runOnUiThread({
-            if (dataSet.isEmpty()) {
-                // TODO("move to strings.xml")
-                showMessage("None member to show")
-            } else {
-                recyclerView.adapter = RoomMemberListAdapter(dataSet)
-                recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-            }
-        })
+        if (dataSet.isEmpty()) {
+            // TODO("move to strings.xml")
+            showMessage("None member to show")
+        } else {
+            recyclerView.adapter = RoomMemberListAdapter(dataSet)
+            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        }
     }
 
     override fun showMessage(message: String) {
