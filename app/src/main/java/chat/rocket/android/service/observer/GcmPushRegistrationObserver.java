@@ -1,26 +1,25 @@
 package chat.rocket.android.service.observer;
 
+import android.content.Context;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
-import android.content.Context;
-import io.realm.Realm;
-import io.realm.RealmResults;
-
 import java.io.IOException;
 import java.util.List;
+
 import bolts.Task;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
-import chat.rocket.core.PublicSettingsConstants;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.models.internal.GcmPushRegistration;
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * call raix:push-update if needed.
@@ -83,13 +82,6 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
   }
 
   private String getSenderId() {
-    final String senderId = RealmPublicSetting
-        .getString(realmHelper, PublicSettingsConstants.Push.GCM_PROJECT_NUMBER, "").trim();
-
-    if (senderId.length() != 0) {
-      return senderId;
-    }
-
     return context.getString(R.string.gcm_sender_id);
   }
 
