@@ -21,9 +21,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
-import chat.rocket.android.widget.RoomToolbar;
-import chat.rocket.core.models.User;
+import com.hadisatrio.optional.Optional;
+import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,7 @@ import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.MessageOptionsDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.UsersOfRoomDialogFragment;
+import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
@@ -51,6 +52,7 @@ import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
 import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
 import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
+import chat.rocket.android.layouthelper.extra_action.upload.FileUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
@@ -58,6 +60,7 @@ import chat.rocket.android.renderer.RocketChatUserStatusProvider;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
 import chat.rocket.android.service.temp.DefaultTempSpotlightUserCaller;
+import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteManager;
@@ -69,6 +72,7 @@ import chat.rocket.core.interactors.MessageInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.repositories.RealmMessageRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
@@ -77,9 +81,6 @@ import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightUserRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
-
-import com.hadisatrio.optional.Optional;
-import com.jakewharton.rxbinding2.support.v4.widget.RxDrawerLayout;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -248,10 +249,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   }
 
   private void setupMessageActions() {
-    extraActionItems = new ArrayList<>(3); // fixed number as of now
+    extraActionItems = new ArrayList<>(4); // fixed number as of now
     extraActionItems.add(new ImageUploadActionItem());
     extraActionItems.add(new AudioUploadActionItem());
     extraActionItems.add(new VideoUploadActionItem());
+    extraActionItems.add(new FileUploadActionItem());
   }
 
   private void scrollToLatestMessage() {
@@ -424,8 +426,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
                 );
               }
             },
-            throwable -> {
-            }
+            Logger::report
         );
 
     compositeDisposable.add(disposable);
@@ -536,6 +537,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       try {
         inputContentInfo.requestPermission();
       } catch (Exception e) {
+        Logger.report(e);
         return false;
       }
     }
@@ -550,6 +552,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     try {
       inputContentInfo.releasePermission();
     } catch (Exception e) {
+      Logger.report(e);
     }
 
     return true;
