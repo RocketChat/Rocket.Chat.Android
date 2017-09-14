@@ -23,6 +23,7 @@ ext {
     supportLibraryVersion = "25.4.0"
     constraintLayoutVersion = "1.0.2"
     kotlinVersion = "1.1.4-2"
+    okHttpVersion = "3.9.0"
 }
 
 task clean(type: Delete) {
