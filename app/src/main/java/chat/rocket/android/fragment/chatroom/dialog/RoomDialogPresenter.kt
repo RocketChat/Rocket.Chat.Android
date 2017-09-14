@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment.chatroom.dialog
 
 import android.content.Context
+import android.os.Handler
 import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.helper.OkHttpHelper
@@ -13,6 +14,8 @@ import org.json.JSONObject
 
 
 class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.View): RoomDialogContract.Presenter {
+    val mainHandler = Handler(context.mainLooper)
+
     override fun getDataSet(roomId: String,
                             roomName: String,
                             roomType: String,
@@ -90,14 +93,24 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
-                            Log.i("REST", " = " + jSONObject.toString())
-                            Log.i("REST", " = " + jSONObject)
                             val filesJSONArray = jSONObject.get("files") as JSONArray
 
-                            val total = filesJSONArray.length()
-                            val dataSet = ArrayList<String>(total)
-                            (0 until total).mapTo(dataSet) { filesJSONArray.get(it).toString() }
-                            view.showFileList(dataSet)
+                            val filesJSONArrayLength = filesJSONArray.length()
+                            val amazonS3JSONArray = JSONArray()
+                            for (i in 0 until filesJSONArrayLength) {
+                                amazonS3JSONArray.put(filesJSONArray.getJSONObject(i).get("AmazonS3"))
+                            }
+
+                            val pathJSONArray = JSONArray()
+                            val amazonS3JSONArrayLength = amazonS3JSONArray.length()
+                            for (i in 0 until amazonS3JSONArrayLength) {
+                                pathJSONArray.put(amazonS3JSONArray.getJSONObject(i).get("path"))
+                            }
+                            val pathJSONArrayLength = pathJSONArray.length()
+                            val dataSet = ArrayList<String>(pathJSONArrayLength)
+                            (0 until pathJSONArrayLength).mapTo(dataSet) { pathJSONArray.get(it).toString() }
+
+                            mainHandler.post { view.showFileList(dataSet) }
                         } else {
                             // TODO("move to strings.xml")
                             view.showMessage("Response is not successful")
@@ -133,7 +146,7 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                             val dataSet = ArrayList<String>(total)
                             (0 until total).mapTo(dataSet) { membersJSONArray.get(it).toString() }
 
-                            view.showMemberList(dataSet)
+                            mainHandler.post { view.showMemberList(dataSet) }
                         } else {
                             // TODO("move to strings.xml")
                             view.showMessage("Response is not successful")
