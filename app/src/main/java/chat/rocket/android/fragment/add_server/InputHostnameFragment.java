@@ -72,7 +72,7 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
   private String getHostname() {
     final TextView editor = (TextView) rootView.findViewById(R.id.editor_hostname);
 
-    return TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString();
+    return TextUtils.or(TextUtils.or(editor.getText(), editor.getHint()), "").toString().toLowerCase();
   }
 
   private void showError(String errString) {

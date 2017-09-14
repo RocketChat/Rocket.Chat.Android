@@ -44,7 +44,7 @@
       android:layout_marginTop="@dimen/margin_8"
       android:hint="@string/fragment_input_hostname_server_hint"
       android:imeOptions="actionSend"
-      android:inputType="textWebEditText"
+      android:inputType="textUri"
       android:maxLines="1"
       app:layout_constraintTop_toBottomOf="@+id/hostnameTextView"
       app:layout_constraintBottom_toTopOf="@+id/btn_connect"

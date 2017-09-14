@@ -137,7 +137,7 @@ public class RoomToolbar extends Toolbar {
     userStatusImage.setVisibility(VISIBLE);
   }
 
-  public void setUnreadBudge(int numUnreadChannels, int numMentionsSum) {
+  public void setUnreadBadge(int numUnreadChannels, int numMentionsSum) {
     if (getNavigationIcon() == null) {
       return;
     }
