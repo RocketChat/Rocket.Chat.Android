@@ -52,7 +52,7 @@ public class MethodCallHelper {
    */
   public MethodCallHelper(Context context, String hostname) {
     this.context = context.getApplicationContext();
-    this.realmHelper = RealmStore.get(hostname);
+    this.realmHelper = RealmStore.getOrCreate(hostname);
     ddpClientRef = null;
   }
 

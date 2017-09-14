@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.widget.RocketChatAvatar
-import chat.rocket.android.widget.helper.UserAvatarHelper
+import chat.rocket.android.widget.helper.AvatarHelper
 import chat.rocket.core.models.User
 
 class UserRenderer(val user: User) {
@@ -15,7 +15,7 @@ class UserRenderer(val user: User) {
     fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String) {
         val username: String? = user.username
         if (username != null) {
-            rocketChatAvatarWidget.loadImage(UserAvatarHelper.getUri(hostname, username), UserAvatarHelper.getTextDrawable(username, rocketChatAvatarWidget.context))
+            rocketChatAvatarWidget.loadImage(AvatarHelper.getUri(hostname, username), AvatarHelper.getTextDrawable(username, rocketChatAvatarWidget.context))
         } else {
             rocketChatAvatarWidget.visibility = View.GONE
         }

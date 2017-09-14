@@ -7,7 +7,7 @@ import chat.rocket.android.widget.AbsoluteUrl
 import com.amulyakhare.textdrawable.TextDrawable
 import java.net.URLEncoder
 
-object UserAvatarHelper {
+object AvatarHelper {
 
     /**
      * Returns the user avatar URI.
