@@ -143,7 +143,7 @@ dependencies {
 
     compile "com.google.android.gms:play-services-gcm:$playLibVersion"
 
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okHttpVersion"
 
     debugCompile "com.facebook.stetho:stetho:$stethoVersion"
     debugCompile "com.facebook.stetho:stetho-okhttp3:$stethoOkhttp3Version"
