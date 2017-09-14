@@ -12,12 +12,10 @@ import okhttp3.HttpUrl
 import org.json.JSONArray
 import org.json.JSONObject
 
-
 class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.View): RoomDialogContract.Presenter {
     val mainHandler = Handler(context.mainLooper)
 
     override fun getDataSet(roomId: String,
-                            roomName: String,
                             roomType: String,
                             hostname: String,
                             token: String,
@@ -60,8 +58,28 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                                   hostname: String,
                                   token: String,
                                   userId: String) {
-        // TODO("not implemented")
+        OkHttpHelper.getClient()
+                .newCall(getRequestForPinnedMessages(roomId,
+                        roomType,
+                        hostname,
+                        token,
+                        userId))
+                .enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        view.showMessage(e.printStackTrace().toString())
+                    }
 
+                    @Throws(IOException::class)
+                    override fun onResponse(call: Call, response: Response) {
+                        if (response.isSuccessful) {
+                            val jSONObject = JSONObject(response.body()?.string())
+                            Log.i("REST", "= " + jSONObject)
+                        } else {
+                            // TODO("move to strings.xml")
+                            view.showMessage("Response is not successful")
+                        }
+                    }
+                })
     }
 
     private fun getFavoriteMessages(roomId: String,
@@ -69,8 +87,28 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                                     hostname: String,
                                     token: String,
                                     userId: String) {
-        // TODO("not implemented")
+        OkHttpHelper.getClient()
+                .newCall(getRequestForFavoriteMessages(roomId,
+                        roomType,
+                        hostname,
+                        token,
+                        userId))
+                .enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        view.showMessage(e.printStackTrace().toString())
+                    }
 
+                    @Throws(IOException::class)
+                    override fun onResponse(call: Call, response: Response) {
+                        if (response.isSuccessful) {
+                            val jSONObject = JSONObject(response.body()?.string())
+                            Log.i("REST", "= " + jSONObject)
+                        } else {
+                            // TODO("move to strings.xml")
+                            view.showMessage("Response is not successful")
+                        }
+                    }
+                })
     }
 
     private fun getFileList(roomId: String,
@@ -139,6 +177,7 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
+                            Log.i("REST", "= " + jSONObject)
 
                             val membersJSONArray = jSONObject.get("members") as JSONArray
 
@@ -153,6 +192,64 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                         }
                     }
                 })
+    }
+
+    /**
+     * Returns an OkHttp3 request for pinned messages list accordingly with the room type.
+     *
+     * @param roomId The ID of the room.
+     * @param roomType The type of the room.
+     * @param hostname The server hostname.
+     * @param token The token.
+     * @param userId The user Id.
+     * @return A OkHttp3 request.
+     */
+    private fun getRequestForPinnedMessages(roomId: String,
+                                              roomType: String,
+                                              hostname: String,
+                                              token: String,
+                                              userId: String): Request {
+        val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForMessages(roomType, hostname))
+                ?.newBuilder()
+                ?.addQueryParameter("roomId", roomId)
+                ?.addQueryParameter("query", "{\"pinned\":true}")
+                ?.build()
+
+        return Request.Builder()
+                .url(parsedHttpUrl)
+                .get()
+                .addHeader("X-Auth-Token", token)
+                .addHeader("X-User-Id", userId)
+                .build()
+    }
+
+    /**
+     * Returns an OkHttp3 request for favorite messages list accordingly with the room type.
+     *
+     * @param roomId The ID of the room.
+     * @param roomType The type of the room.
+     * @param hostname The server hostname.
+     * @param token The token.
+     * @param userId The user Id.
+     * @return A OkHttp3 request.
+     */
+    private fun getRequestForFavoriteMessages(roomId: String,
+                                      roomType: String,
+                                      hostname: String,
+                                      token: String,
+                                      userId: String): Request {
+        val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForMessages(roomType, hostname))
+                ?.newBuilder()
+                ?.addQueryParameter("roomId", roomId)
+                ?.addQueryParameter("query", "{\"starred._id\":{\"\$in\":[\"$userId\"] } }")
+                ?.build()
+
+        return Request.Builder()
+                .url(parsedHttpUrl)
+                .get()
+                .addHeader("X-Auth-Token", token)
+                .addHeader("X-User-Id", userId)
+                .build()
     }
 
     /**
@@ -212,6 +309,18 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
     }
 
     /**
+     * Returns a Rest API endpoint URL for favorite or pinned messages accordingly with the room type.
+     *
+     * @param roomType The type of the room.
+     * @param hostname The server hostname.
+     * @return A Rest API URL endpoint.
+     */
+    private fun getEndpointUrlForMessages(roomType: String, hostname: String): String  = "https://" +
+            hostname.replace("http://", "").replace("https://", "") +
+            getRestApiUrlForMessages(roomType)
+
+
+    /**
      * Returns a Rest API endpoint URL for member list accordingly with the room type.
      *
      * @param roomType The type of the room.
@@ -233,21 +342,20 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
             hostname.replace("http://", "").replace("https://", "") +
             getRestApiUrlForFileList(roomType)
 
-
     /**
-     * Returns the correspondent Rest API URL accordingly with the room type to get its members list.
+     * Returns the correspondent Rest API URL accordingly with the room type to get its favorite or pinned messages.
      *
      * REMARK: To see all the REST API calls take a look at https://rocket.chat/docs/developer-guides/rest-api/.
      *
      * @param roomType The type of the room.
      * @return A Rest API URL or null if the room type does not match.
      */
-    private fun getRestApiUrlForMemberList(roomType: String): String? {
+    private fun getRestApiUrlForMessages(roomType: String): String? {
         var restApiUrl: String? = null
         when (roomType) {
-            Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.members"
-            Room.TYPE_PRIVATE -> restApiUrl=  "/api/v1/groups.members"
-            Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.members"
+            Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.messages"
+            Room.TYPE_PRIVATE -> restApiUrl=  "/api/v1/groups.messages"
+            Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.messages"
         }
         return restApiUrl
     }
@@ -266,6 +374,24 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
             Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.files"
             Room.TYPE_PRIVATE -> restApiUrl=  "/api/v1/groups.files"
             Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.files"
+        }
+        return restApiUrl
+    }
+
+    /**
+     * Returns the correspondent Rest API URL accordingly with the room type to get its members list.
+     *
+     * REMARK: To see all the REST API calls take a look at https://rocket.chat/docs/developer-guides/rest-api/.
+     *
+     * @param roomType The type of the room.
+     * @return A Rest API URL or null if the room type does not match.
+     */
+    private fun getRestApiUrlForMemberList(roomType: String): String? {
+        var restApiUrl: String? = null
+        when (roomType) {
+            Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.members"
+            Room.TYPE_PRIVATE -> restApiUrl=  "/api/v1/groups.members"
+            Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.members"
         }
         return restApiUrl
     }
