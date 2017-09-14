@@ -102,7 +102,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
   private String token;
   private String userId;
   private String roomId;
-  private String roomName;
   private String roomType;
   private LoadMoreScrollListener scrollListener;
   private MessageFormManager messageFormManager;
@@ -561,9 +560,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
   @Override
   public void render(Room room) {
-    roomName = room.getName();
     roomType = room.getType();
-    setToolbarTitle(roomName);
+    setToolbarTitle(room.getName());
 
     boolean unreadMessageExists = room.isAlert();
     if (newMessageIndicatorManager != null && previousUnreadMessageExists && !unreadMessageExists) {
@@ -657,7 +655,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
       }
       fragmentTransaction.addToBackStack(null);
 
-      DialogFragment roomDialogFragment = RoomDialogFragment.Companion.newInstance(roomId, roomName, roomType,
+      DialogFragment roomDialogFragment = RoomDialogFragment.Companion.newInstance(roomId,
+              roomType,
               hostname,
               token,
               userId,
