@@ -95,36 +95,40 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   }
 
   private void setupToolbar() {
-    pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
-      @Override
-      public void onPanelSlide(View view, float v) {
-        //Ref: ActionBarDrawerToggle#setProgress
-        toolbar.setNavigationIconProgress(v);
-      }
-
-      @Override
-      public void onPanelOpened(View view) {
-        toolbar.setNavigationIconVerticalMirror(true);
-      }
-
-      @Override
-      public void onPanelClosed(View view) {
-        toolbar.setNavigationIconVerticalMirror(false);
-        Fragment fragment = getSupportFragmentManager()
-                .findFragmentById(R.id.sidebar_fragment_container);
-        if (fragment != null && fragment instanceof SidebarMainFragment) {
-          SidebarMainFragment sidebarMainFragment = (SidebarMainFragment) fragment;
-          sidebarMainFragment.toggleUserActionContainer(false);
-          sidebarMainFragment.showUserActionContainer(false);
+    if (pane != null) {
+      pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+        @Override
+        public void onPanelSlide(View view, float v) {
+          //Ref: ActionBarDrawerToggle#setProgress
+          toolbar.setNavigationIconProgress(v);
         }
-      }
-    });
 
-    toolbar.setNavigationOnClickListener(view -> {
-      if (pane.isSlideable() && !pane.isOpen()) {
-        pane.openPane();
-      }
-    });
+        @Override
+        public void onPanelOpened(View view) {
+          toolbar.setNavigationIconVerticalMirror(true);
+        }
+
+        @Override
+        public void onPanelClosed(View view) {
+          toolbar.setNavigationIconVerticalMirror(false);
+          Fragment fragment = getSupportFragmentManager()
+                  .findFragmentById(R.id.sidebar_fragment_container);
+          if (fragment != null && fragment instanceof SidebarMainFragment) {
+            SidebarMainFragment sidebarMainFragment = (SidebarMainFragment) fragment;
+            sidebarMainFragment.toggleUserActionContainer(false);
+            sidebarMainFragment.showUserActionContainer(false);
+          }
+        }
+      });
+    }
+
+    if (toolbar != null) {
+      toolbar.setNavigationOnClickListener(view -> {
+        if (pane.isSlideable() && !pane.isOpen()) {
+          pane.openPane();
+        }
+      });
+    }
   }
 
   private boolean closeSidebarIfNeeded() {
