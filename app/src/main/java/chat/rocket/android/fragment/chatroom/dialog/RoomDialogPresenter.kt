@@ -5,12 +5,15 @@ import android.os.Handler
 import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.helper.OkHttpHelper
+import chat.rocket.core.SyncState
+import chat.rocket.core.models.Message
 import chat.rocket.core.models.Room
+import chat.rocket.core.models.User
 import okhttp3.*
-import java.io.IOException
-import okhttp3.HttpUrl
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
+import java.sql.Timestamp
 
 class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.View): RoomDialogContract.Presenter {
     val mainHandler = Handler(context.mainLooper)
@@ -73,15 +76,56 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
-                            Log.i("REST", "= " + jSONObject)
+                            val messagesJSONArray = jSONObject.get("messages") as JSONArray
+                            val messagesJSONArrayLength = messagesJSONArray.length()
+
+                            val dataSet = ArrayList<Message>(messagesJSONArrayLength)
+                            (0 until messagesJSONArrayLength).mapTo(dataSet) {
+                                val userJSONArray = JSONArray()
+                                userJSONArray.put(messagesJSONArray.getJSONObject(it).get("u"))
+
+                                val user = User.builder()
+                                        .setId(userJSONArray.getJSONObject(0).optString("_id"))
+                                        .setUsername(userJSONArray.getJSONObject(0).optString("username"))
+                                        .setUtcOffset(0.0)
+                                        .build()
+
+                                val timestampString = messagesJSONArray.getJSONObject(it).optString("ts")
+                                val timestamp = if (timestampString.isBlank()) { 0 } else {
+                                    Timestamp.valueOf(timestampString
+                                            .replace("T", " ")
+                                            .replace("Z", ""))
+                                            .time
+                                }
+
+                                val editedAtString = messagesJSONArray.getJSONObject(it).optString("_updatedAt")
+                                val editedAt = if (editedAtString.isBlank()) { 0 } else {
+                                    Timestamp.valueOf(editedAtString
+                                            .replace("T", " ")
+                                            .replace("Z", ""))
+                                            .time
+                                }
+
+                                Message.builder()
+                                        .setId(messagesJSONArray.getJSONObject(it).optString("_id"))
+                                        .setRoomId(messagesJSONArray.getJSONObject(it).optString("rid"))
+                                        .setMessage(messagesJSONArray.getJSONObject(it).optString("msg"))
+                                        .setTimestamp(timestamp)
+                                        .setEditedAt(editedAt)
+                                        .setGroupable(messagesJSONArray.getJSONObject(it).optBoolean("groupable"))
+                                        .setUser(user)
+                                        .setSyncState(SyncState.SYNCED)
+                                        .build()
+                            }
+                            mainHandler.post { view.showPinnedMessages(dataSet) }
                         } else {
-                            // TODO("move to strings.xml")
-                            view.showMessage("Response is not successful")
+                            mainHandler.post { view.showMessage(context.getString(R.string.dialog_room_could_not_load_your_request, response.message())) }
                         }
                     }
                 })
     }
 
+    // TODO (need to create a proper POJO)
     private fun getFavoriteMessages(roomId: String,
                                     roomType: String,
                                     hostname: String,
@@ -102,15 +146,14 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
-                            Log.i("REST", "= " + jSONObject)
                         } else {
-                            // TODO("move to strings.xml")
-                            view.showMessage("Response is not successful")
+                            mainHandler.post { view.showMessage(context.getString(R.string.dialog_room_could_not_load_your_request, response.message())) }
                         }
                     }
                 })
     }
 
+    // TODO (need test)
     private fun getFileList(roomId: String,
                             roomType: String,
                             hostname: String,
@@ -131,6 +174,8 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
+                            Log.i("REST", "= " + jSONObject)
+
                             val filesJSONArray = jSONObject.get("files") as JSONArray
 
                             val filesJSONArrayLength = filesJSONArray.length()
@@ -150,13 +195,13 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
 
                             mainHandler.post { view.showFileList(dataSet) }
                         } else {
-                            // TODO("move to strings.xml")
-                            view.showMessage("Response is not successful")
+                            mainHandler.post { view.showMessage(context.getString(R.string.dialog_room_could_not_load_your_request, response.message())) }
                         }
                     }
                 })
     }
 
+    // TODO (need test)
     private fun getMemberList(roomId: String,
                               roomType: String,
                               hostname: String,
@@ -187,8 +232,7 @@ class RoomDialogPresenter(val context: Context, val view: RoomDialogContract.Vie
 
                             mainHandler.post { view.showMemberList(dataSet) }
                         } else {
-                            // TODO("move to strings.xml")
-                            view.showMessage("Response is not successful")
+                            mainHandler.post { view.showMessage(context.getString(R.string.dialog_room_could_not_load_your_request, response.message())) }
                         }
                     }
                 })
