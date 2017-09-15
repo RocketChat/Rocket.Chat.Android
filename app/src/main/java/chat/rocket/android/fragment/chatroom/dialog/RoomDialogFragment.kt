@@ -12,6 +12,8 @@ import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.layouthelper.chatroom.dialog.RoomFileListAdapter
 import chat.rocket.android.layouthelper.chatroom.dialog.RoomMemberListAdapter
+import chat.rocket.android.layouthelper.chatroom.dialog.RoomPinnedMessagesAdapter
+import chat.rocket.core.models.Message
 
 /**
  * Displays a dialog containing pinned messages, favorite messages, file list or member list of a room.
@@ -84,8 +86,14 @@ class RoomDialogFragment : DialogFragment(), RoomDialogContract.View {
                 actionId)
     }
 
-    override fun showPinnedMessages() {
-        // TODO("not implemented")
+    override fun showPinnedMessages(dataSet: ArrayList<Message>) {
+        if (dataSet.isEmpty()) {
+            // TODO("move to strings.xml")
+            showMessage("None pinned message to show")
+        } else {
+            recyclerView.adapter = RoomPinnedMessagesAdapter(dataSet, hostname)
+            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        }
     }
 
     override fun showFavoriteMessages() {
