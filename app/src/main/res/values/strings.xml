@@ -13,7 +13,11 @@
     <string name="dialog_add_channel_private">private</string>
     <string name="dialog_add_channel_read_only">read only</string>
 
-    <string name="dialog_room_could_not_load_your_request">Could not load your request. \n Response was: %s</string>
+    <string name="fragment_room_list_could_not_load_your_request">Could not load your request.\nResponse was: %s</string>
+    <string name="fragment_room_list_no_pinned_message_to_show">No pinned message to show</string>
+    <string name="fragment_room_list_no_favorite_message_to_show">No favorite message to show</string>
+    <string name="fragment_room_list_no_file_list_to_show">No file list to show</string>
+    <string name="fragment_room_list_no_member_list_to_show">No member list to show</string>
 
     <string name="start_of_conversation">Start of conversation</string>
     <string name="users_of_room_title">Members List</string>
