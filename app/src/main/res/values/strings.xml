@@ -13,6 +13,10 @@
     <string name="dialog_add_channel_private">private</string>
     <string name="dialog_add_channel_read_only">read only</string>
 
+    <string name="fragment_room_list_pinned_message_title">Pinned Messages</string>
+    <string name="fragment_room_list_favorite_message_title">Favorite Messages</string>
+    <string name="fragment_room_list_file_list_title">File list</string>
+    <string name="fragment_room_list_member_list_title">Member list</string>
     <string name="fragment_room_list_could_not_load_your_request">Could not load your request.\nResponse was: %s</string>
     <string name="fragment_room_list_no_pinned_message_to_show">No pinned message to show</string>
     <string name="fragment_room_list_no_favorite_message_to_show">No favorite message to show</string>
@@ -42,6 +46,7 @@
     <string name="dialog_user_registration_email">Email</string>
     <string name="dialog_user_registration_username">Username</string>
     <string name="sub_username">\@%s</string>
+    <string name="username">\@%s</string>
     <string name="dialog_user_registration_password">Password</string>
     <string name="fragment_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
     <string name="fragment_input_hostname_hostname">Hostname</string>
