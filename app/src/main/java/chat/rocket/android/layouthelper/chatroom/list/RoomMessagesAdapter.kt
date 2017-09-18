@@ -9,7 +9,7 @@ import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
 import chat.rocket.android.widget.RocketChatAvatar
-import chat.rocket.android.widget.helper.UserAvatarHelper
+import chat.rocket.android.widget.helper.AvatarHelper
 import chat.rocket.android.widget.message.RocketChatMessageLayout
 import chat.rocket.core.models.Message
 import kotlinx.android.synthetic.main.item_room_message.view.*
@@ -29,8 +29,8 @@ class RoomMessagesAdapter(private val dataSet: List<Message>, private val hostna
 
         val username = message.user?.username
         if (username != null) {
-            val placeholderDrawable = UserAvatarHelper.getTextDrawable(username, holder.userAvatar.context)
-            holder.userAvatar.loadImage(UserAvatarHelper.getUri(hostname, username), placeholderDrawable)
+            val placeholderDrawable = AvatarHelper.getTextDrawable(username, holder.userAvatar.context)
+            holder.userAvatar.loadImage(AvatarHelper.getUri(hostname, username), placeholderDrawable)
             holder.username.text = context.getString(R.string.username, username)
         } else {
             holder.userAvatar.visibility = View.GONE
