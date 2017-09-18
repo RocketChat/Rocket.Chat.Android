@@ -4,8 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import chat.rocket.android.R
+import chat.rocket.android.widget.message.RocketChatMessageLayout
 import kotlinx.android.synthetic.main.item_room_file.view.*
 
 class RoomFileListAdapter(private val dataSet: List<String>) : RecyclerView.Adapter<RoomFileListAdapter.ViewHolder>() {
@@ -16,12 +16,12 @@ class RoomFileListAdapter(private val dataSet: List<String>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.fileNameText.text = dataSet[position]
+        holder.fileNameLink.setText(dataSet[position])
     }
 
     override fun getItemCount(): Int = dataSet.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val fileNameText : TextView = itemView.text_file_name
+        val fileNameLink : RocketChatMessageLayout = itemView.fileLink
     }
 }
