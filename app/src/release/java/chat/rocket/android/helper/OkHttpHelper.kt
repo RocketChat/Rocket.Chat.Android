@@ -26,6 +26,8 @@ object OkHttpHelper {
     fun getClientForDownloadFile(context: Context): OkHttpClient {
         if(httpClientForDownloadFile == null) {
             httpClientForDownloadFile = OkHttpClient.Builder()
+                    .followRedirects(true)
+                    .followSslRedirects(true)
                     .addInterceptor(CookieInterceptor(DefaultCookieProvider(RocketChatCache(context))))
                     .build()
         }
