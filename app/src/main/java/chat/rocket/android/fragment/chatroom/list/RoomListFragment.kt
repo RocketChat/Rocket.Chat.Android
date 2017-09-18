@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.layouthelper.chatroom.list.RoomFileListAdapter
 import chat.rocket.android.layouthelper.chatroom.list.RoomMemberListAdapter
-import chat.rocket.android.layouthelper.chatroom.list.RoomPinnedMessagesAdapter
+import chat.rocket.android.layouthelper.chatroom.list.RoomMessagesAdapter
 import chat.rocket.core.models.Message
 import chat.rocket.core.models.User
 import kotlinx.android.synthetic.main.fragment_room_list.*
@@ -60,12 +60,13 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter = RoomListPresenter(context, this)
+        requestData()
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun requestData() {
         when (actionId) {
             R.id.action_pinned_messages -> {
+                activity.title = getString(R.string.fragment_room_list_pinned_message_title)
                 presenter.requestPinnedMessages(roomId,
                         roomType,
                         hostname,
@@ -73,6 +74,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                         userId)
             }
             R.id.action_favorite_messages -> {
+                activity.title = getString(R.string.fragment_room_list_favorite_message_title)
                 presenter.requestFavoriteMessages(roomId,
                         roomType,
                         hostname,
@@ -80,6 +82,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                         userId)
             }
             R.id.action_file_list -> {
+                activity.title = getString(R.string.fragment_room_list_file_list_title)
                 presenter.requestFileList(roomId,
                         roomType,
                         hostname,
@@ -87,6 +90,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                         userId)
             }
             R.id.action_member_list -> {
+                activity.title = getString(R.string.fragment_room_list_member_list_title)
                 presenter.requestMemberList(roomId,
                         roomType,
                         hostname,
@@ -97,38 +101,42 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     }
 
     override fun showPinnedMessages(dataSet: ArrayList<Message>) {
+        waitingView.visibility = View.GONE
         if (dataSet.isEmpty()) {
             showMessage(getString(R.string.fragment_room_list_no_pinned_message_to_show))
         } else {
-            recyclerView.adapter = RoomPinnedMessagesAdapter(dataSet, hostname)
-            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+            recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context)
+            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
 
     override fun showFavoriteMessages(dataSet: ArrayList<Message>) {
+        waitingView.visibility = View.GONE
         if (dataSet.isEmpty()) {
             showMessage(getString(R.string.fragment_room_list_no_pinned_message_to_show))
         } else {
-            recyclerView.adapter = RoomPinnedMessagesAdapter(dataSet, hostname)
-            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+            recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context)
+            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
 
     override fun showFileList(dataSet: ArrayList<String>) {
+        waitingView.visibility = View.GONE
         if (dataSet.isEmpty()) {
             showMessage(getString(R.string.fragment_room_list_no_favorite_message_to_show))
         } else {
             recyclerView.adapter = RoomFileListAdapter(dataSet)
-            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
 
     override fun showMemberList(dataSet: ArrayList<User>) {
+        waitingView.visibility = View.GONE
         if (dataSet.isEmpty()) {
             showMessage(getString(R.string.fragment_room_list_no_member_list_to_show))
         } else {
-            recyclerView.adapter = RoomMemberListAdapter(dataSet)
-            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+            recyclerView.adapter = RoomMemberListAdapter(dataSet, hostname, context)
+            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
 
