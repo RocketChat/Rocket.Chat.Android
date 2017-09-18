@@ -34,26 +34,16 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                         userId))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        view.showMessage(e.printStackTrace().toString())
+                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
                     }
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
-                            val jSONObjectString: String = jSONObject.toString()
-
-                            val maxLogSize = 1000
-                            for (i in 0..jSONObjectString.length / maxLogSize) {
-                                val start = i * maxLogSize
-                                var end = (i + 1) * maxLogSize
-                                end = if (end > jSONObjectString.length) jSONObjectString.length else end
-                                Log.v("REST", jSONObjectString.substring(start, end))
-                            }
-
                             val messagesJSONArray = jSONObject.get("messages") as JSONArray
-                            val messagesJSONArrayLength = messagesJSONArray.length()
 
+                            val messagesJSONArrayLength = messagesJSONArray.length()
                             val dataSet = ArrayList<Message>(messagesJSONArrayLength)
                             (0 until messagesJSONArrayLength).mapTo(dataSet) {
                                 val userJSONArray = JSONArray()
@@ -114,26 +104,16 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                         userId))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        view.showMessage(e.printStackTrace().toString())
+                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
                     }
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
-                            val jSONObjectString: String = jSONObject.toString()
-
-                            val maxLogSize = 1000
-                            for (i in 0..jSONObjectString.length / maxLogSize) {
-                                val start = i * maxLogSize
-                                var end = (i + 1) * maxLogSize
-                                end = if (end > jSONObjectString.length) jSONObjectString.length else end
-                                Log.v("REST", jSONObjectString.substring(start, end))
-                            }
-
                             val messagesJSONArray = jSONObject.get("messages") as JSONArray
-                            val messagesJSONArrayLength = messagesJSONArray.length()
 
+                            val messagesJSONArrayLength = messagesJSONArray.length()
                             val dataSet = ArrayList<Message>(messagesJSONArrayLength)
                             (0 until messagesJSONArrayLength).mapTo(dataSet) {
                                 val userJSONArray = JSONArray()
@@ -195,7 +175,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                         userId))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        view.showMessage(e.printStackTrace().toString())
+                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
                     }
 
                     @Throws(IOException::class)
@@ -243,22 +223,24 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                         userId))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        view.showMessage(e.printStackTrace().toString())
+                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
                     }
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
-                            Log.i("REST", "= " + jSONObject)
-
                             val membersJSONArray = jSONObject.get("members") as JSONArray
 
-                            val total = membersJSONArray.length()
-                            val dataSet = ArrayList<User>(total)
-                            (0 until total).mapTo(dataSet) {
+                            val membersJSONArrayLength = membersJSONArray.length()
+                            val dataSet = ArrayList<User>(membersJSONArrayLength)
+                            (0 until membersJSONArrayLength).mapTo(dataSet) {
                                 User.builder()
+                                        .setId("")
                                         .setUsername(membersJSONArray.get(it).toString())
+                                        // Note: There is no result to UTC OFFSET but as it is a required attribute to the user we can set it as 0.
+                                        .setStatus("")
+                                        .setUtcOffset(0.0)
                                         .build()
                             }
                             mainHandler.post { view.showMemberList(dataSet) }
