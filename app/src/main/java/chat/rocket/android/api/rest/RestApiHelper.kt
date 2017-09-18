@@ -136,6 +136,16 @@ object RestApiHelper {
             hostname.replace("http://", "").replace("https://", "") +
             getRestApiUrlForMessages(roomType)
 
+    /**
+     * Returns a Rest API endpoint URL for file list accordingly with the room type and the server hostname.
+     *
+     * @param roomType The type of the room.
+     * @param hostname The server hostname.
+     * @return A Rest API URL endpoint.
+     */
+    fun getEndpointUrlForFileList(roomType: String, hostname: String): String  = "https://" +
+            hostname.replace("http://", "").replace("https://", "") +
+            getRestApiUrlForFileList(roomType)
 
     /**
      * Returns a Rest API endpoint URL for member list accordingly with the room type and the server hostname.
@@ -147,17 +157,6 @@ object RestApiHelper {
     fun getEndpointUrlForMemberList(roomType: String, hostname: String): String  = "https://" +
             hostname.replace("http://", "").replace("https://", "") +
             getRestApiUrlForMemberList(roomType)
-
-    /**
-     * Returns a Rest API endpoint URL for file list accordingly with the room type and the server hostname.
-     *
-     * @param roomType The type of the room.
-     * @param hostname The server hostname.
-     * @return A Rest API URL endpoint.
-     */
-    fun getEndpointUrlForFileList(roomType: String, hostname: String): String  = "https://" +
-            hostname.replace("http://", "").replace("https://", "") +
-            getRestApiUrlForFileList(roomType)
 
     /**
      * Returns the correspondent Rest API URL accordingly with the room type to get its favorite or pinned messages.
@@ -197,7 +196,7 @@ object RestApiHelper {
      * @param roomType The type of the room.
      * @return A Rest API URL or null if the room type does not match.
      */
-    private fun getRestApiUrlForMemberList(roomType: String): String? {
+    fun getRestApiUrlForMemberList(roomType: String): String? {
         var restApiUrl: String? = null
         when (roomType) {
             Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.members"
