@@ -219,9 +219,14 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         );
   }
 
-  private void showUserActionContainer(boolean show) {
+  public void showUserActionContainer(boolean show) {
     rootView.findViewById(R.id.user_action_outer_container)
             .setVisibility(show ? View.VISIBLE : View.GONE);
+  }
+
+  public void toggleUserActionContainer(boolean checked) {
+    CompoundButton toggleUserAction = rootView.findViewById(R.id.toggle_user_action);
+    toggleUserAction.setChecked(checked);
   }
 
   @Override

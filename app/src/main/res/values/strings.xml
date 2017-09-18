@@ -84,4 +84,6 @@
     <string name="menu_favorite_messages">Favorite messages</string>
     <string name="menu_file_list">File list</string>
     <string name="menu_member_list">Member list</string>
+
+    <string name="add_new_team">Add new Team</string>
 </resources>

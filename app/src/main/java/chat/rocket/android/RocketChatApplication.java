@@ -1,6 +1,9 @@
 package chat.rocket.android;
 
+import android.os.Build;
 import android.support.multidex.MultiDexApplication;
+import android.support.v7.app.AppCompatDelegate;
+
 import chat.rocket.android.helper.OkHttpHelper;
 import com.crashlytics.android.Crashlytics;
 
@@ -30,5 +33,9 @@ public class RocketChatApplication extends MultiDexApplication {
     }
 
     RocketChatWidgets.initialize(this, OkHttpHelper.INSTANCE.getClientForDownloadFile(this));
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
   }
 }

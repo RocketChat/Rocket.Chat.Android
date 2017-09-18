@@ -14,4 +14,6 @@
   <color name="color_user_status_busy">#FFF44336</color> <!-- Red 500-->
   <color name="color_user_status_away">#FFFFC107</color> <!-- Amber 500-->
   <color name="color_user_status_offline">#FF607D8B</color> <!-- Blue Grey 500-->
+  <color name="serverstatus_selected">#FFFFFFFF</color>
+  <color name="serverstatus_outline">#c2c2c2</color>
 </resources>
