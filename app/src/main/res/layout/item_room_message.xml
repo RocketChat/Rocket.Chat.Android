@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_16">
+
+    <include
+        android:id="@+id/dayLayout"
+        layout="@layout/day" />
+
+    <chat.rocket.android.widget.RocketChatAvatar
+        android:id="@+id/userAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/margin_24"
+        app:layout_constraintTop_toBottomOf="@+id/dayLayout"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginStart="@dimen/margin_16"
+        android:textAppearance="@style/TextAppearance.RocketChat.Message.Username"
+        app:layout_constraintTop_toBottomOf="@+id/dayLayout"
+        app:layout_constraintLeft_toRightOf="@+id/userAvatar"
+        tools:text="\@john.doe" />
+
+    <chat.rocket.android.widget.message.RocketChatMessageLayout
+        android:id="@+id/messageBody"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginStart="@dimen/margin_16"
+        app:layout_constraintTop_toBottomOf="@+id/username"
+        app:layout_constraintLeft_toRightOf="@+id/userAvatar"
+        app:layout_constraintRight_toRightOf="parent" />
+</android.support.constraint.ConstraintLayout>
