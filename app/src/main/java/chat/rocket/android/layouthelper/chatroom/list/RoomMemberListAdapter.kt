@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.widget.RocketChatAvatar
-import chat.rocket.android.widget.helper.UserAvatarHelper
+import chat.rocket.android.widget.helper.AvatarHelper
 import chat.rocket.core.models.User
 import kotlinx.android.synthetic.main.item_room_member.view.*
 
@@ -25,8 +25,8 @@ class RoomMemberListAdapter(private val dataSet: List<User>, private val hostnam
         val username = user.username
         if (username != null) {
             holder.username.text = context.getString(R.string.username, username)
-            val placeholderDrawable = UserAvatarHelper.getTextDrawable(username, holder.userAvatar.context)
-            holder.userAvatar.loadImage(UserAvatarHelper.getUri(hostname, username), placeholderDrawable)
+            val placeholderDrawable = AvatarHelper.getTextDrawable(username, holder.userAvatar.context)
+            holder.userAvatar.loadImage(AvatarHelper.getUri(hostname, username), placeholderDrawable)
         } else {
             holder.userAvatar.visibility = View.GONE
             holder.username.visibility = View.GONE
