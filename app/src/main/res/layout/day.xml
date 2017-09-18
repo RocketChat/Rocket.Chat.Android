@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dayContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:background="@color/colorDivider" />
+
+    <TextView
+        android:id="@+id/day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="@style/TextAppearance.RocketChat.Message.Day"
+        tools:text="2016/01/23" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:background="@color/colorDivider" />
+</LinearLayout>
