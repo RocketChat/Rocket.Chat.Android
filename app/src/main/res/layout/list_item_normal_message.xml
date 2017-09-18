@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:theme="@style/AppTheme">
 
-    <include layout="@layout/list_item_message_newday" />
+    <include layout="@layout/day" />
 
     <FrameLayout
         android:layout_width="match_parent"
