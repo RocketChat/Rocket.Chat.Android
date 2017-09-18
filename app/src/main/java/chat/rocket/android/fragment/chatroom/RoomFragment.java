@@ -2,7 +2,6 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.os.BuildCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -28,12 +26,10 @@ import java.util.List;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
-import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.activity.room.RoomActivity;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
 import chat.rocket.android.fragment.chatroom.dialog.MessageOptionsDialogFragment;
-import chat.rocket.android.fragment.chatroom.list.RoomListFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
