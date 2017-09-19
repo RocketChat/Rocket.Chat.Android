@@ -6,6 +6,7 @@ import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.api.rest.RestApiHelper
 import chat.rocket.android.helper.OkHttpHelper
+import chat.rocket.android.helper.UrlHelper
 import chat.rocket.core.SyncState
 import chat.rocket.core.models.Message
 import chat.rocket.core.models.User
@@ -182,8 +183,6 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
-                            Log.i("REST", "= " + jSONObject)
-
                             val filesJSONArray = jSONObject.get("files") as JSONArray
 
                             val filesJSONArrayLength = filesJSONArray.length()
@@ -199,7 +198,9 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                             }
                             val pathJSONArrayLength = pathJSONArray.length()
                             val dataSet = ArrayList<String>(pathJSONArrayLength)
-                            (0 until pathJSONArrayLength).mapTo(dataSet) { pathJSONArray.get(it).toString() }
+                            (0 until pathJSONArrayLength).mapTo(dataSet) {
+                                UrlHelper.getUrlForFile(pathJSONArray.get(it).toString(), userId, token)
+                            }
 
                             mainHandler.post { view.showFileList(dataSet) }
                         } else {
