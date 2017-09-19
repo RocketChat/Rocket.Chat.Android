@@ -22,6 +22,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     lateinit var token: String
     lateinit var userId: String
     lateinit var presenter: RoomListPresenter
+    var isDataRequested: Boolean = false
 
     companion object {
         fun newInstance(actionId: Int,
@@ -60,7 +61,14 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter = RoomListPresenter(context, this)
-        requestData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isDataRequested) {
+            requestData()
+            isDataRequested = true
+        }
     }
 
     private fun requestData() {
@@ -111,36 +119,37 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     }
 
     override fun showFavoriteMessages(dataSet: ArrayList<Message>) {
-        waitingView.visibility = View.GONE
         if (dataSet.isEmpty()) {
-            showMessage(getString(R.string.fragment_room_list_no_pinned_message_to_show))
+            showMessage(getString(R.string.fragment_room_list_no_favorite_message_to_show))
         } else {
+            waitingView.visibility = View.GONE
             recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context)
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
 
     override fun showFileList(dataSet: ArrayList<String>) {
-        waitingView.visibility = View.GONE
         if (dataSet.isEmpty()) {
-            showMessage(getString(R.string.fragment_room_list_no_favorite_message_to_show))
+            showMessage(getString(R.string.fragment_room_list_no_file_list_to_show))
         } else {
+            waitingView.visibility = View.GONE
             recyclerView.adapter = RoomFileListAdapter(dataSet)
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
 
     override fun showMemberList(dataSet: ArrayList<User>) {
-        waitingView.visibility = View.GONE
         if (dataSet.isEmpty()) {
             showMessage(getString(R.string.fragment_room_list_no_member_list_to_show))
         } else {
+            waitingView.visibility = View.GONE
             recyclerView.adapter = RoomMemberListAdapter(dataSet, hostname, context)
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
 
     override fun showMessage(message: String) {
+        waitingView.visibility = View.GONE
         messageText.text = message
         messageText.visibility = View.VISIBLE
     }
