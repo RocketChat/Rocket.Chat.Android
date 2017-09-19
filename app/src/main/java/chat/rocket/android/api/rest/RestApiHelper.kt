@@ -1,5 +1,6 @@
 package chat.rocket.android.api.rest
 
+import chat.rocket.android.helper.UrlHelper
 import chat.rocket.core.models.Room
 import okhttp3.HttpUrl
 import okhttp3.Request
@@ -132,9 +133,8 @@ object RestApiHelper {
      * @param hostname The server hostname.
      * @return A Rest API URL endpoint.
      */
-    fun getEndpointUrlForMessages(roomType: String, hostname: String): String  = "https://" +
-            hostname.replace("http://", "").replace("https://", "") +
-            getRestApiUrlForMessages(roomType)
+    fun getEndpointUrlForMessages(roomType: String, hostname: String): String =
+            UrlHelper.getSafeHostname(hostname) + getRestApiUrlForMessages(roomType)
 
     /**
      * Returns a Rest API endpoint URL for file list accordingly with the room type and the server hostname.
@@ -143,9 +143,8 @@ object RestApiHelper {
      * @param hostname The server hostname.
      * @return A Rest API URL endpoint.
      */
-    fun getEndpointUrlForFileList(roomType: String, hostname: String): String  = "https://" +
-            hostname.replace("http://", "").replace("https://", "") +
-            getRestApiUrlForFileList(roomType)
+    fun getEndpointUrlForFileList(roomType: String, hostname: String): String =
+            UrlHelper.getSafeHostname(hostname) + getRestApiUrlForFileList(roomType)
 
     /**
      * Returns a Rest API endpoint URL for member list accordingly with the room type and the server hostname.
@@ -154,9 +153,8 @@ object RestApiHelper {
      * @param hostname The server hostname.
      * @return A Rest API URL endpoint.
      */
-    fun getEndpointUrlForMemberList(roomType: String, hostname: String): String  = "https://" +
-            hostname.replace("http://", "").replace("https://", "") +
-            getRestApiUrlForMemberList(roomType)
+    fun getEndpointUrlForMemberList(roomType: String, hostname: String): String =
+            UrlHelper.getSafeHostname(hostname) + getRestApiUrlForMemberList(roomType)
 
     /**
      * Returns the correspondent Rest API URL accordingly with the room type to get its favorite or pinned messages.
