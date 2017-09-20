@@ -93,8 +93,6 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
               webSocketThreads.remove(hostname);
               // remove RealmConfiguration key from HashMap
               RealmStore.sStore.remove(hostname);
-              // clear "cache" SharedPreference
-              this.getSharedPreferences("cache", 0).edit().clear().apply();
               // start a fresh new MainActivity
               Intent intent = new Intent(this, MainActivity.class);
               intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
