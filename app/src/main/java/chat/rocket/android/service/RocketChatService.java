@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import chat.rocket.android.activity.MainActivity;
 import chat.rocket.persistence.realm.RealmStore;
 import hugo.weaving.DebugLog;
 import rx.Observable;
@@ -93,10 +92,6 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
               webSocketThreads.remove(hostname);
               // remove RealmConfiguration key from HashMap
               RealmStore.sStore.remove(hostname);
-              // start a fresh new MainActivity
-              Intent intent = new Intent(this, MainActivity.class);
-              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-              this.startActivity(intent);
             });
       } else {
         return Observable.timer(1, TimeUnit.SECONDS).toSingle()
