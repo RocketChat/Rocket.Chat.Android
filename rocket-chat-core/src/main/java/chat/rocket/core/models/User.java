@@ -16,6 +16,9 @@ public abstract class User {
   public abstract String getId();
 
   @Nullable
+  public abstract String getName();
+
+  @Nullable
   public abstract String getUsername();
 
   @Nullable
@@ -37,6 +40,8 @@ public abstract class User {
   public abstract static class Builder {
 
     public abstract Builder setId(String id);
+
+    public abstract Builder setName(String name);
 
     public abstract Builder setUsername(String username);
 
