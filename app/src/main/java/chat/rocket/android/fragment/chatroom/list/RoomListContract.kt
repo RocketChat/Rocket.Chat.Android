@@ -32,8 +32,9 @@ interface RoomListContract {
          * Shows a list of members of a room.
          *
          * @param dataSet The member data set to show.
+         * @param total The total number of members.
          */
-        fun showMemberList(dataSet: ArrayList<User>)
+        fun showMemberList(dataSet: ArrayList<User>, total: String)
 
         /**
          * Shows a message (e.g. An error or successful message after a request).
