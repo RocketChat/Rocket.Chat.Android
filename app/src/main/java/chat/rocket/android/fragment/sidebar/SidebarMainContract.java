@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 
+import bolts.Continuation;
 import chat.rocket.core.models.RoomSidebar;
 import io.reactivex.Flowable;
 import java.util.List;
@@ -42,6 +43,6 @@ public interface SidebarMainContract {
 
     void onUserOffline();
 
-    void onLogout();
+    void onLogout(Continuation continuation);
   }
 }

@@ -6,6 +6,8 @@ import android.support.v4.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+import bolts.Continuation;
+import bolts.Task;
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
@@ -131,8 +133,14 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     }
 
     @Override
-    public void onLogout() {
-        methodCallHelper.logout().continueWith(new LogIfError());
+    public void onLogout(Continuation continuation) {
+        methodCallHelper.logout().continueWith(task -> {
+            if (task.isFaulted()) {
+                Logger.report(task.getError());
+                return Task.forError(task.getError());
+            }
+            return task.continueWith(continuation);
+        });
     }
 
     @Override

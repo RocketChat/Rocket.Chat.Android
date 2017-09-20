@@ -2,11 +2,16 @@ package chat.rocket.android.api;
 
 import android.content.Context;
 import android.util.Patterns;
+
+import chat.rocket.android.RocketChatApplication;
+import chat.rocket.android.RocketChatCache;
+import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlight;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.UUID;
 
 import bolts.Continuation;
@@ -260,18 +265,25 @@ public class MethodCallHelper {
    * Logout.
    */
   public Task<Void> logout() {
-    return call("logout", TIMEOUT_MS).onSuccessTask(task ->
-        realmHelper.executeTransaction(realm -> {
-          realm.delete(RealmSession.class);
-          //check whether the server list is empty
-          if (!ConnectivityManager.getInstance(context).getServerList().isEmpty()){
-            //for each server in serverList -> remove the server
-            for (ServerInfo server: ConnectivityManager.getInstance(context).getServerList()) {
-              ConnectivityManager.getInstance(context.getApplicationContext()).removeServer(server.getHostname());
-            }
-          }
-          return null;
-        }));
+    return call("logout", TIMEOUT_MS).onSuccessTask(task -> {
+      Context appContext = context.getApplicationContext();
+      RocketChatCache rocketChatCache = new RocketChatCache(appContext);
+      String currentHostname = rocketChatCache.getSelectedServerHostname();
+      RealmHelper currentRealmHelper = RealmStore.getOrCreate(currentHostname);
+      return currentRealmHelper.executeTransaction(realm -> {
+        realm.deleteAll();
+        ConnectivityManagerApi connectivityManagerApi = ConnectivityManager.getInstance(appContext);
+        connectivityManagerApi.removeServer(currentHostname);
+        List<ServerInfo> serverList = connectivityManagerApi.getServerList();
+        String newHostname = null;
+        if (serverList != null && serverList.size() > 0) {
+          newHostname = serverList.get(0).getHostname();
+        }
+        rocketChatCache.removeHostname(currentHostname);
+        rocketChatCache.setSelectedServerHostname(newHostname);
+        return null;
+      });
+    });
   }
 
   /**

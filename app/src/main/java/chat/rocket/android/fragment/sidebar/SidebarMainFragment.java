@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import bolts.Task;
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -302,10 +303,15 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private void setupLogoutButton() {
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
-      presenter.onLogout();
+      presenter.onLogout(task -> {
+        if (task.isFaulted()) {
+          return Task.forError(task.getError());
+        }
+        // destroy Activity on logout to be able to recreate most of the environment
+        this.getActivity().recreate();
+        return null;
+      });
       closeUserActionContainer();
-      // destroy Activity on logout to be able to recreate most of the environment
-      this.getActivity().finish();
     });
   }
 
