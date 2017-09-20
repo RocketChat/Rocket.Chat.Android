@@ -89,14 +89,14 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                         token,
                         userId)
             }
-            R.id.action_file_list -> {
-                activity.title = getString(R.string.fragment_room_list_file_list_title)
-                presenter.requestFileList(roomId,
-                        roomType,
-                        hostname,
-                        token,
-                        userId)
-            }
+//            R.id.action_file_list -> {
+//                activity.title = getString(R.string.fragment_room_list_file_list_title)
+//                presenter.requestFileList(roomId,
+//                        roomType,
+//                        hostname,
+//                        token,
+//                        userId)
+//            }
             R.id.action_member_list -> {
                 activity.title = getString(R.string.fragment_room_list_member_list_title)
                 presenter.requestMemberList(roomId,
@@ -138,11 +138,12 @@ class RoomListFragment : Fragment(), RoomListContract.View {
         }
     }
 
-    override fun showMemberList(dataSet: ArrayList<User>) {
+    override fun showMemberList(dataSet: ArrayList<User>, total: String) {
         if (dataSet.isEmpty()) {
             showMessage(getString(R.string.fragment_room_list_no_member_list_to_show))
         } else {
             waitingView.visibility = View.GONE
+            activity.title = getString(R.string.fragment_room_list_member_list_title) + " (" + total + ")"
             recyclerView.adapter = RoomMemberListAdapter(dataSet, hostname, context)
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
