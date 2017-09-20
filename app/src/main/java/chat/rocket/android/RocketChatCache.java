@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.utils.Pair;
 import io.reactivex.BackpressureStrategy;
@@ -41,7 +42,11 @@ public class RocketChatCache {
   }
 
   public void setSelectedServerHostname(String hostname) {
-    setString(KEY_SELECTED_SERVER_HOSTNAME, hostname.toLowerCase());
+    String newHostname = null;
+    if (hostname != null) {
+      newHostname = hostname.toLowerCase();
+    }
+    setString(KEY_SELECTED_SERVER_HOSTNAME, newHostname);
   }
 
   public void addHostname(@NonNull String hostname, @Nullable String hostnameAvatarUri, String siteName) {
@@ -84,6 +89,20 @@ public class RocketChatCache {
       RCLog.e(e);
     }
     return Collections.emptyList();
+  }
+
+  public void removeHostname(String hostname) {
+    String json = getString(KEY_HOSTNAME_LIST, null);
+    if (TextUtils.isEmpty(json)) {
+      return;
+    }
+    try {
+      JSONObject jsonObj = new JSONObject(json);
+      jsonObj.remove(hostname);
+      setString(KEY_HOSTNAME_LIST, jsonObj.toString());
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
   }
 
   public String getSelectedRoomId() {
