@@ -162,55 +162,54 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                 })
     }
 
-    // TODO (need test)
+    // TODO (need a rest api fix)
     override fun requestFileList(roomId: String,
                                  roomType: String,
                                  hostname: String,
                                  token: String,
                                  userId: String) {
-        OkHttpHelper.getClient()
-                .newCall(RestApiHelper.getRequestForFileList(roomId,
-                        roomType,
-                        hostname,
-                        token,
-                        userId))
-                .enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
-                    }
-
-                    @Throws(IOException::class)
-                    override fun onResponse(call: Call, response: Response) {
-                        if (response.isSuccessful) {
-                            val jSONObject = JSONObject(response.body()?.string())
-                            val filesJSONArray = jSONObject.get("files") as JSONArray
-
-                            val filesJSONArrayLength = filesJSONArray.length()
-                            val amazonS3JSONArray = JSONArray()
-                            for (i in 0 until filesJSONArrayLength) {
-                                amazonS3JSONArray.put(filesJSONArray.getJSONObject(i).get("AmazonS3"))
-                            }
-
-                            val pathJSONArray = JSONArray()
-                            val amazonS3JSONArrayLength = amazonS3JSONArray.length()
-                            for (i in 0 until amazonS3JSONArrayLength) {
-                                pathJSONArray.put(amazonS3JSONArray.getJSONObject(i).get("path"))
-                            }
-                            val pathJSONArrayLength = pathJSONArray.length()
-                            val dataSet = ArrayList<String>(pathJSONArrayLength)
-                            (0 until pathJSONArrayLength).mapTo(dataSet) {
-                                UrlHelper.getUrlForFile(pathJSONArray.get(it).toString(), userId, token)
-                            }
-
-                            mainHandler.post { view.showFileList(dataSet) }
-                        } else {
-                            mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, response.message())) }
-                        }
-                    }
-                })
+//        OkHttpHelper.getClient()
+//                .newCall(RestApiHelper.getRequestForFileList(roomId,
+//                        roomType,
+//                        hostname,
+//                        token,
+//                        userId))
+//                .enqueue(object : Callback {
+//                    override fun onFailure(call: Call, e: IOException) {
+//                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
+//                    }
+//
+//                    @Throws(IOException::class)
+//                    override fun onResponse(call: Call, response: Response) {
+//                        if (response.isSuccessful) {
+//                            val jSONObject = JSONObject(response.body()?.string())
+//                            val filesJSONArray = jSONObject.get("files") as JSONArray
+//
+//                            val filesJSONArrayLength = filesJSONArray.length()
+//                            val amazonS3JSONArray = JSONArray()
+//                            for (i in 0 until filesJSONArrayLength) {
+//                                amazonS3JSONArray.put(filesJSONArray.getJSONObject(i).get("AmazonS3"))
+//                            }
+//
+//                            val pathJSONArray = JSONArray()
+//                            val amazonS3JSONArrayLength = amazonS3JSONArray.length()
+//                            for (i in 0 until amazonS3JSONArrayLength) {
+//                                pathJSONArray.put(amazonS3JSONArray.getJSONObject(i).get("path"))
+//                            }
+//                            val pathJSONArrayLength = pathJSONArray.length()
+//                            val dataSet = ArrayList<String>(pathJSONArrayLength)
+//                            (0 until pathJSONArrayLength).mapTo(dataSet) {
+//                                UrlHelper.getUrlForFile(pathJSONArray.get(it).toString(), userId, token)
+//                            }
+//
+//                            mainHandler.post { view.showFileList(dataSet) }
+//                        } else {
+//                            mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, response.message())) }
+//                        }
+//                    }
+//                })
     }
 
-    // TODO (Requires the user id ("_id) and user status ("status") to be returned from the REST API call. Check out current PR status here: https://github.com/RocketChat/Rocket.Chat/pull/8147)
     override fun requestMemberList(roomId: String,
                                    roomType: String,
                                    hostname: String,
@@ -231,20 +230,23 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
                             val jSONObject = JSONObject(response.body()?.string())
+                            Log.i("json", "= " + jSONObject)
+                            Log.i("json", "total = " + jSONObject.get("total"))
                             val membersJSONArray = jSONObject.get("members") as JSONArray
 
                             val membersJSONArrayLength = membersJSONArray.length()
                             val dataSet = ArrayList<User>(membersJSONArrayLength)
                             (0 until membersJSONArrayLength).mapTo(dataSet) {
                                 User.builder()
-                                        .setId("")
-                                        .setUsername(membersJSONArray.get(it).toString())
-                                        // Note: There is no result to UTC OFFSET but as it is a required attribute to the user we can set it as 0.
-                                        .setStatus("")
-                                        .setUtcOffset(0.0)
+                                        .setId(membersJSONArray.getJSONObject(it).optString("_id"))
+                                        .setName(membersJSONArray.getJSONObject(it).optString("name"))
+                                        .setUsername(membersJSONArray.getJSONObject(it).optString("username"))
+                                        .setStatus(membersJSONArray.getJSONObject(it).optString("status"))
+                                        .setUtcOffset(membersJSONArray.getJSONObject(it).optLong("utcOffset").toDouble())
                                         .build()
+
                             }
-                            mainHandler.post { view.showMemberList(dataSet) }
+                            mainHandler.post { view.showMemberList(dataSet, jSONObject.get("total").toString()) }
                         } else {
                             mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, response.message())) }
                         }
