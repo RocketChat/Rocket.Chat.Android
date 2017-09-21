@@ -18,21 +18,23 @@ import org.json.JSONObject
 import java.io.IOException
 import java.sql.Timestamp
 
-class RoomListPresenter(val context: Context, val view: RoomListContract.View): RoomListContract.Presenter {
+class RoomListPresenter(val context: Context, val view: RoomListContract.View) : RoomListContract.Presenter {
     val mainHandler = Handler(context.mainLooper)
 
     override fun requestPinnedMessages(roomId: String,
                                        roomType: String,
                                        hostname: String,
                                        token: String,
-                                       userId: String) {
+                                       userId: String,
+                                       offset: String) {
 
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForPinnedMessages(roomId,
                         roomType,
                         hostname,
                         token,
-                        userId))
+                        userId,
+                        offset))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
@@ -58,7 +60,9 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                                         .build()
 
                                 val timestampString = messagesJSONArray.getJSONObject(it).optString("ts")
-                                val timestamp = if (timestampString.isBlank()) { 0 } else {
+                                val timestamp = if (timestampString.isBlank()) {
+                                    0
+                                } else {
                                     Timestamp.valueOf(timestampString
                                             .replace("T", " ")
                                             .replace("Z", ""))
@@ -66,7 +70,9 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                                 }
 
                                 val editedAtString = messagesJSONArray.getJSONObject(it).optString("_updatedAt")
-                                val editedAt = if (editedAtString.isBlank()) { 0 } else {
+                                val editedAt = if (editedAtString.isBlank()) {
+                                    0
+                                } else {
                                     Timestamp.valueOf(editedAtString
                                             .replace("T", " ")
                                             .replace("Z", ""))
@@ -96,13 +102,15 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                                          roomType: String,
                                          hostname: String,
                                          token: String,
-                                         userId: String) {
+                                         userId: String,
+                                         offset: String) {
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForFavoriteMessages(roomId,
                         roomType,
                         hostname,
                         token,
-                        userId))
+                        userId,
+                        offset))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
@@ -128,7 +136,9 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                                         .build()
 
                                 val timestampString = messagesJSONArray.getJSONObject(it).optString("ts")
-                                val timestamp = if (timestampString.isBlank()) { 0 } else {
+                                val timestamp = if (timestampString.isBlank()) {
+                                    0
+                                } else {
                                     Timestamp.valueOf(timestampString
                                             .replace("T", " ")
                                             .replace("Z", ""))
@@ -136,7 +146,9 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                                 }
 
                                 val editedAtString = messagesJSONArray.getJSONObject(it).optString("_updatedAt")
-                                val editedAt = if (editedAtString.isBlank()) { 0 } else {
+                                val editedAt = if (editedAtString.isBlank()) {
+                                    0
+                                } else {
                                     Timestamp.valueOf(editedAtString
                                             .replace("T", " ")
                                             .replace("Z", ""))
@@ -167,7 +179,8 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                                  roomType: String,
                                  hostname: String,
                                  token: String,
-                                 userId: String) {
+                                 userId: String,
+                                 offset: String) {
 //        OkHttpHelper.getClient()
 //                .newCall(RestApiHelper.getRequestForFileList(roomId,
 //                        roomType,
@@ -214,13 +227,16 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View): 
                                    roomType: String,
                                    hostname: String,
                                    token: String,
-                                   userId: String) {
+                                   userId: String,
+                                   offset: String
+    ) {
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForMemberList(roomId,
                         roomType,
                         hostname,
                         token,
-                        userId))
+                        userId,
+                        offset))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
