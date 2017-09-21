@@ -90,6 +90,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   private void showAddServerActivity() {
     Intent intent = new Intent(this, AddServerActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     intent.putExtra(AddServerActivity.EXTRA_FINISH_ON_BACK_PRESS, true);
     startActivity(intent);
   }
