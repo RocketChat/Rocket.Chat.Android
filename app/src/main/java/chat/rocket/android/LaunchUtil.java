@@ -17,7 +17,7 @@ public class LaunchUtil {
    */
   public static void showMainActivity(Context context) {
     Intent intent = new Intent(context, MainActivity.class);
-    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     context.startActivity(intent);
   }
 

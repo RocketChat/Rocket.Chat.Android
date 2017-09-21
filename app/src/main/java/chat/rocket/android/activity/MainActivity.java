@@ -140,6 +140,11 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     return false;
   }
 
+  public void onLogout() {
+    onHostnameUpdated();
+    onRoomIdUpdated();
+  }
+
   @DebugLog
   @Override
   protected void onHostnameUpdated() {
@@ -257,7 +262,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         Pair<String, String> serverInfoPair = server.second;
         String logoUrl = serverInfoPair.first;
         String siteName = serverInfoPair.second;
-        if (serverListContainer.findViewWithTag(serverHostname) == null) {
+        View serverView = serverListContainer.findViewWithTag(serverHostname);
+        if (serverView == null) {
           int serverCount = serverListContainer.getChildCount();
 
           View serverRow = LayoutInflater.from(this).inflate(R.layout.server_row, serverListContainer, false);
@@ -266,23 +272,28 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
           TextView siteNameLabel = serverRow.findViewById(R.id.text_view_site_name_label);
           ImageView dotView = serverRow.findViewById(R.id.selected_server_dot);
 
-          serverButton.setTag(serverHostname);
+          serverRow.setTag(serverHostname);
           hostnameLabel.setText(serverHostname);
           siteNameLabel.setText(siteName);
 
           // Currently selected server
-          if (serverHostname.equalsIgnoreCase(hostname)) {
-            serverRow.setSelected(true);
-            dotView.setVisibility(View.VISIBLE);
-          } else {
-            dotView.setVisibility(View.GONE);
-          }
+          serverRow.setSelected(true);
+          dotView.setVisibility(View.VISIBLE);
 
           serverRow.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
 
           FrescoHelper.INSTANCE.loadImage(serverButton, logoUrl, ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
 
           serverListContainer.addView(serverRow, serverCount - 1);
+        } else {
+          View dotView = serverView.findViewById(R.id.selected_server_dot);
+          if (hostname.equalsIgnoreCase(serverHostname)) {
+            serverView.setSelected(true);
+            dotView.setVisibility(View.VISIBLE);
+          } else {
+            serverView.setSelected(false);
+            dotView.setVisibility(View.GONE);
+          }
         }
       }
     }
@@ -292,7 +303,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     if (!hostname.equalsIgnoreCase(serverHostname)) {
       RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
       rocketChatCache.setSelectedServerHostname(serverHostname);
-      recreate();
+      onHostnameUpdated();
     }
   }
 

@@ -61,6 +61,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       if (intent.hasExtra(PushConstants.ROOM_ID)) {
         rocketChatCache.setSelectedRoomId(intent.getStringExtra(PushConstants.ROOM_ID));
       }
+    } else {
+      updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
     }
 
     if (intent.hasExtra(PushConstants.NOT_ID)) {

@@ -16,6 +16,7 @@ import bolts.Task;
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
+import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
@@ -308,7 +309,9 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
           return Task.forError(task.getError());
         }
         // destroy Activity on logout to be able to recreate most of the environment
-        this.getActivity().recreate();
+        if (getActivity() instanceof MainActivity) {
+          ((MainActivity) getActivity()).onLogout();
+        }
         return null;
       });
       closeUserActionContainer();
