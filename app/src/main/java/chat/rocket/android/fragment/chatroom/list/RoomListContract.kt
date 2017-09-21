@@ -53,12 +53,14 @@ interface RoomListContract {
          * @param hostname The server hostname to process the request.
          * @param token The token to process the request.
          * @param userId The user ID to process the request.
+         * @param offset The offset to start to process the request.
          */
         fun requestPinnedMessages(roomId: String,
-                       roomType: String,
-                       hostname: String,
-                       token: String,
-                       userId: String)
+                                  roomType: String,
+                                  hostname: String,
+                                  token: String,
+                                  userId: String,
+                                  offset: String)
 
         /**
          * Requests the favorite messages of a room.
@@ -68,12 +70,14 @@ interface RoomListContract {
          * @param hostname The server hostname to process the request.
          * @param token The token to process the request.
          * @param userId The user ID to process the request.
+         * @param offset The offset to start to process the request.
          */
         fun requestFavoriteMessages(roomId: String,
-                                  roomType: String,
-                                  hostname: String,
-                                  token: String,
-                                  userId: String)
+                                    roomType: String,
+                                    hostname: String,
+                                    token: String,
+                                    userId: String,
+                                    offset: String)
 
         /**
          * Requests the file list of a room.
@@ -83,12 +87,14 @@ interface RoomListContract {
          * @param hostname The server hostname to process the request.
          * @param token The token to process the request.
          * @param userId The user ID to process the request.
+         * @param offset The offset to start to process the request.
          */
         fun requestFileList(roomId: String,
-                                  roomType: String,
-                                  hostname: String,
-                                  token: String,
-                                  userId: String)
+                            roomType: String,
+                            hostname: String,
+                            token: String,
+                            userId: String,
+                            offset: String)
 
         /**
          * Requests the member list of a room.
@@ -98,11 +104,13 @@ interface RoomListContract {
          * @param hostname The server hostname to process the request.
          * @param token The token to process the request.
          * @param userId The user ID to process the request.
+         * @param offset The offset to start to process the request.
          */
         fun requestMemberList(roomId: String,
-                                  roomType: String,
-                                  hostname: String,
-                                  token: String,
-                                  userId: String)
+                              roomType: String,
+                              hostname: String,
+                              token: String,
+                              userId: String,
+                              offset: String)
     }
 }
