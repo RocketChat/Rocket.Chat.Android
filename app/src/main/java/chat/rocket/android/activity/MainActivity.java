@@ -300,15 +300,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
           FrescoHelper.INSTANCE.loadImage(serverButton, logoUrl, ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
 
           serverListContainer.addView(newServerView);
-        } else {
-          View dotView = serverView.findViewById(R.id.selected_server_dot);
-          if (hostname.equalsIgnoreCase(serverHostname)) {
-            serverView.setSelected(true);
-            dotView.setVisibility(View.VISIBLE);
-          } else {
-            serverView.setSelected(false);
-            dotView.setVisibility(View.GONE);
-          }
         }
       }
       serverListContainer.addView(addServerButton);
