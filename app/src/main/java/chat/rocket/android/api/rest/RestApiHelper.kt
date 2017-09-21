@@ -20,17 +20,20 @@ object RestApiHelper {
      * @param hostname The server hostname.
      * @param token The token.
      * @param userId The user Id.
+     * @param offset The offset to paging which specifies the first entry to return from a collection.
      * @return An OkHttp3 request.
      */
     fun getRequestForPinnedMessages(roomId: String,
-                                            roomType: String,
-                                            hostname: String,
-                                            token: String,
-                                            userId: String): Request {
+                                    roomType: String,
+                                    hostname: String,
+                                    token: String,
+                                    userId: String,
+                                    offset: String): Request {
         val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForMessages(roomType, hostname))
                 ?.newBuilder()
                 ?.addQueryParameter("roomId", roomId)
                 ?.addQueryParameter("query", "{\"pinned\":true}")
+                ?.addQueryParameter("offset", offset)
                 ?.build()
 
         return Request.Builder()
@@ -49,17 +52,20 @@ object RestApiHelper {
      * @param hostname The server hostname.
      * @param token The token.
      * @param userId The user Id.
+     * @param offset The offset to paging which specifies the first entry to return from a collection.
      * @return An OkHttp3 request.
      */
     fun getRequestForFavoriteMessages(roomId: String,
-                                              roomType: String,
-                                              hostname: String,
-                                              token: String,
-                                              userId: String): Request {
+                                      roomType: String,
+                                      hostname: String,
+                                      token: String,
+                                      userId: String,
+                                      offset: String): Request {
         val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForMessages(roomType, hostname))
                 ?.newBuilder()
                 ?.addQueryParameter("roomId", roomId)
                 ?.addQueryParameter("query", "{\"starred._id\":{\"\$in\":[\"$userId\"] } }")
+                ?.addQueryParameter("offset", offset)
                 ?.build()
 
         return Request.Builder()
@@ -78,16 +84,19 @@ object RestApiHelper {
      * @param hostname The server hostname.
      * @param token The token.
      * @param userId The user Id.
+     * @param offset The offset to paging which specifies the first entry to return from a collection.
      * @return An OkHttp3 request.
      */
     fun getRequestForFileList(roomId: String,
-                                      roomType: String,
-                                      hostname: String,
-                                      token: String,
-                                      userId: String): Request {
+                              roomType: String,
+                              hostname: String,
+                              token: String,
+                              userId: String,
+                              offset: String): Request {
         val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForFileList(roomType, hostname))
                 ?.newBuilder()
                 ?.addQueryParameter("roomId", roomId)
+                ?.addQueryParameter("offset", offset)
                 ?.build()
 
         return Request.Builder()
@@ -106,16 +115,19 @@ object RestApiHelper {
      * @param hostname The server hostname.
      * @param token The token.
      * @param userId The user Id.
+     * @param offset The offset to paging which specifies the first entry to return from a collection.
      * @return An OkHttp3 request.
      */
     fun getRequestForMemberList(roomId: String,
-                                        roomType: String,
-                                        hostname: String,
-                                        token: String,
-                                        userId: String): Request {
+                                roomType: String,
+                                hostname: String,
+                                token: String,
+                                userId: String,
+                                offset: String): Request {
         val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForMemberList(roomType, hostname))
                 ?.newBuilder()
                 ?.addQueryParameter("roomId", roomId)
+                ?.addQueryParameter("offset", offset)
                 ?.build()
 
         return Request.Builder()
@@ -166,7 +178,7 @@ object RestApiHelper {
         var restApiUrl: String? = null
         when (roomType) {
             Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.messages"
-            Room.TYPE_PRIVATE -> restApiUrl=  "/api/v1/groups.messages"
+            Room.TYPE_PRIVATE -> restApiUrl = "/api/v1/groups.messages"
             Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.messages"
         }
         return restApiUrl
@@ -182,7 +194,7 @@ object RestApiHelper {
         var restApiUrl: String? = null
         when (roomType) {
             Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.files"
-            Room.TYPE_PRIVATE -> restApiUrl=  "/api/v1/groups.files"
+            Room.TYPE_PRIVATE -> restApiUrl = "/api/v1/groups.files"
             Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.files"
         }
         return restApiUrl
@@ -198,7 +210,7 @@ object RestApiHelper {
         var restApiUrl: String? = null
         when (roomType) {
             Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.members"
-            Room.TYPE_PRIVATE -> restApiUrl=  "/api/v1/groups.members"
+            Room.TYPE_PRIVATE -> restApiUrl = "/api/v1/groups.members"
             Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.members"
         }
         return restApiUrl
