@@ -140,9 +140,20 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     return false;
   }
 
-  public void onLogout() {
+  public void onLogout(String oldHost) {
     onHostnameUpdated();
-    onRoomIdUpdated();
+    SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
+    if (subPane != null) {
+      LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
+      serverListContainer.post(() -> {
+        View row = serverListContainer.findViewWithTag(oldHost);
+        if (row != null) {
+          serverListContainer.setLayoutTransition(null);
+          serverListContainer.removeView(row);
+        }
+      });
+
+    }
   }
 
   @DebugLog
@@ -257,6 +268,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
       View addServerButton = subPane.findViewById(R.id.btn_add_server);
       addServerButton.setOnClickListener(view -> showAddServerActivity());
+      serverListContainer.removeAllViews();
       for (Pair<String, Pair<String, String>> server : serverList) {
         String serverHostname = server.first;
         Pair<String, String> serverInfoPair = server.second;
@@ -264,27 +276,30 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         String siteName = serverInfoPair.second;
         View serverView = serverListContainer.findViewWithTag(serverHostname);
         if (serverView == null) {
-          int serverCount = serverListContainer.getChildCount();
+          View newServerView = LayoutInflater.from(this).inflate(R.layout.server_row, serverListContainer, false);
+          SimpleDraweeView serverButton = newServerView.findViewById(R.id.drawee_server_button);
+          TextView hostnameLabel = newServerView.findViewById(R.id.text_view_server_label);
+          TextView siteNameLabel = newServerView.findViewById(R.id.text_view_site_name_label);
+          ImageView dotView = newServerView.findViewById(R.id.selected_server_dot);
 
-          View serverRow = LayoutInflater.from(this).inflate(R.layout.server_row, serverListContainer, false);
-          SimpleDraweeView serverButton = serverRow.findViewById(R.id.drawee_server_button);
-          TextView hostnameLabel = serverRow.findViewById(R.id.text_view_server_label);
-          TextView siteNameLabel = serverRow.findViewById(R.id.text_view_site_name_label);
-          ImageView dotView = serverRow.findViewById(R.id.selected_server_dot);
-
-          serverRow.setTag(serverHostname);
+          newServerView.setTag(serverHostname);
           hostnameLabel.setText(serverHostname);
           siteNameLabel.setText(siteName);
 
           // Currently selected server
-          serverRow.setSelected(true);
-          dotView.setVisibility(View.VISIBLE);
+          if (hostname.equalsIgnoreCase(serverHostname)) {
+            newServerView.setSelected(true);
+            dotView.setVisibility(View.VISIBLE);
+          } else {
+            newServerView.setSelected(false);
+            dotView.setVisibility(View.GONE);
+          }
 
-          serverRow.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
+          newServerView.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
 
           FrescoHelper.INSTANCE.loadImage(serverButton, logoUrl, ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
 
-          serverListContainer.addView(serverRow, serverCount - 1);
+          serverListContainer.addView(newServerView);
         } else {
           View dotView = serverView.findViewById(R.id.selected_server_dot);
           if (hostname.equalsIgnoreCase(serverHostname)) {
@@ -296,6 +311,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
           }
         }
       }
+      serverListContainer.addView(addServerButton);
     }
   }
 

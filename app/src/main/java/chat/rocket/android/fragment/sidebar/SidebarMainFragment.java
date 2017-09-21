@@ -304,13 +304,14 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private void setupLogoutButton() {
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
+      final String oldHost = hostname;
       presenter.onLogout(task -> {
         if (task.isFaulted()) {
           return Task.forError(task.getError());
         }
-        // destroy Activity on logout to be able to recreate most of the environment
+
         if (getActivity() instanceof MainActivity) {
-          ((MainActivity) getActivity()).onLogout();
+          ((MainActivity) getActivity()).onLogout(oldHost);
         }
         return null;
       });

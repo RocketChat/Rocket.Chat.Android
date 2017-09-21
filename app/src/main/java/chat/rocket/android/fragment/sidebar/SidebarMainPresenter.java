@@ -139,7 +139,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
                 Logger.report(task.getError());
                 return Task.forError(task.getError());
             }
-            return task.continueWith(continuation);
+            return task.onSuccess(continuation);
         });
     }
 
