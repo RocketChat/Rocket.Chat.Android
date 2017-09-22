@@ -279,6 +279,7 @@ public class MethodCallHelper {
           newHostname = serverList.get(0).getHostname();
         }
         rocketChatCache.removeHostname(currentHostname);
+        rocketChatCache.removeSelectedRoomId(currentHostname);
         rocketChatCache.setSelectedServerHostname(newHostname);
         return null;
       });

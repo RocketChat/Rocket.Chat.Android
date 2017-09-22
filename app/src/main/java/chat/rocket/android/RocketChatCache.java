@@ -189,4 +189,15 @@ public class RocketChatCache {
       getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
     }, BackpressureStrategy.LATEST);
   }
+
+  public void removeSelectedRoomId(String currentHostname) {
+    try {
+      JSONObject selectedRoomIdJsonObject = getSelectedRoomIdJsonObject();
+      selectedRoomIdJsonObject.remove(currentHostname);
+      setString(KEY_SELECTED_ROOM_ID, selectedRoomIdJsonObject.toString());
+    } catch (JSONException e) {
+      Logger.report(e);
+      RCLog.e(e);
+    }
+  }
 }
