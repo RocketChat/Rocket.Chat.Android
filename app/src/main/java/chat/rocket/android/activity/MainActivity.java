@@ -142,22 +142,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     return false;
   }
 
-  public void onLogout(String oldHost) {
-    onHostnameUpdated();
-    SlidingPaneLayout subPane = (SlidingPaneLayout) findViewById(R.id.sub_sliding_pane);
-    if (subPane != null) {
-      LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
-      serverListContainer.post(() -> {
-        View row = serverListContainer.findViewWithTag(oldHost);
-        if (row != null) {
-          serverListContainer.setLayoutTransition(null);
-          serverListContainer.removeView(row);
-        }
-      });
-
-    }
-  }
-
   @DebugLog
   @Override
   protected void onHostnameUpdated() {
@@ -191,7 +175,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
             rocketChatCache,
         publicSettingRepository
     );
-
 
     updateSidebarMainFragment();
 
@@ -324,6 +307,24 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
       rocketChatCache.setSelectedServerHostname(serverHostname);
     }
+  }
+
+  @DebugLog
+  public void onLogout() {
+    if (new RocketChatCache(getApplicationContext()).getSelectedServerHostname() == null) {
+      LaunchUtil.showMainActivity(this);
+    } else {
+      onHostnameUpdated();
+    }
+  }
+
+  @DebugLog
+  public void beforeLogoutCleanup() {
+    presenter.beforeLogout();
+  }
+
+  public void onFailedLogout() {
+    onHostnameUpdated();
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.

@@ -37,5 +37,7 @@ public interface MainContract {
     void bindViewOnly(View view);
 
     void loadSignedInServers(String hostname);
+
+    void beforeLogout();
   }
 }

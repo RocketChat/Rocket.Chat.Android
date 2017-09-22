@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment.sidebar;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import bolts.Task;
 import chat.rocket.android.BuildConfig;
@@ -43,14 +50,8 @@ import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
-import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
   private SidebarMainContract.Presenter presenter;
@@ -59,6 +60,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   private TextView loadMoreResultsText;
   private List<RoomSidebar> roomSidebarList;
   private Disposable spotlightDisposable;
+  private RocketChatCache rocketChatCache;
   private String hostname;
   private static final String HOSTNAME = "hostname";
 
@@ -91,11 +93,13 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         new SessionInteractor(new RealmSessionRepository(hostname))
     );
 
+    rocketChatCache = new RocketChatCache(getContext().getApplicationContext());
+
     presenter = new SidebarMainPresenter(
         hostname,
         new RoomInteractor(new RealmRoomRepository(hostname)),
         userRepository,
-        new RocketChatCache(getContext()),
+        rocketChatCache,
         absoluteUrlHelper,
         new MethodCallHelper(getContext(), hostname),
         new RealmSpotlightRepository(hostname)
@@ -320,18 +324,24 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
 
   private void setupLogoutButton() {
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
-      final String oldHost = hostname;
+      closeUserActionContainer();
+      Activity mainActivity = getActivity();
+      if (mainActivity != null && mainActivity instanceof MainActivity) {
+        ((MainActivity) mainActivity).beforeLogoutCleanup();
+      }
       presenter.onLogout(task -> {
         if (task.isFaulted()) {
+          if (mainActivity != null && mainActivity instanceof MainActivity) {
+            ((MainActivity) mainActivity).onFailedLogout();
+          }
           return Task.forError(task.getError());
         }
 
-        if (getActivity() instanceof MainActivity) {
-          ((MainActivity) getActivity()).onLogout(oldHost);
+        if (mainActivity != null && mainActivity instanceof MainActivity) {
+          ((MainActivity) mainActivity).onLogout();
         }
         return null;
       });
-      closeUserActionContainer();
     });
   }
 
