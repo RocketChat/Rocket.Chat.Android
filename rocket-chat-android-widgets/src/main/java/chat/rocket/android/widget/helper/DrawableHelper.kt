@@ -13,8 +13,10 @@ object DrawableHelper {
      * @param drawable The drawable to wrap.
      * @see tintDrawable
      */
-    fun wrapDrawable(drawable: Drawable) {
-        DrawableCompat.wrap(drawable)
+    fun wrapDrawable(drawable: Drawable?) {
+        if (drawable != null) {
+            DrawableCompat.wrap(drawable)
+        }
     }
 
     /**
@@ -25,7 +27,9 @@ object DrawableHelper {
      * @param resId The resource id color to tint the drawable.
      * @see wrapDrawable
      */
-    fun tintDrawable(drawable: Drawable, context: Context, resId: Int) {
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resId))
+    fun tintDrawable(drawable: Drawable?, context: Context, resId: Int) {
+        if (drawable != null) {
+            DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resId))
+        }
     }
 }
