@@ -205,4 +205,18 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
             )
     );
   }
+
+  protected void subscribeToNewConfigChanges() {
+    compositeDisposable.add(
+            rocketChatCache.getSelectedRoomIdPublisher()
+                    .map(Optional::get)
+                    .distinctUntilChanged()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            this::updateRoomIdIfNeeded,
+                            Logger::report
+                    )
+    );
+  }
 }

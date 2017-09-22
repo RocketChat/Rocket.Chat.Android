@@ -75,10 +75,22 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
         .commit();
   }
 
+  protected void showFragmentWithTag(Fragment fragment, String tag) {
+    getSupportFragmentManager().beginTransaction()
+            .replace(getLayoutContainerForFragment(), fragment, tag)
+            .addToBackStack(null)
+            .commit();
+  }
+
   protected void showFragmentWithBackStack(Fragment fragment) {
     getSupportFragmentManager().beginTransaction()
         .replace(getLayoutContainerForFragment(), fragment)
         .addToBackStack(null)
         .commit();
+  }
+
+  @Nullable
+  protected Fragment findFragmentByTag(String tag) {
+    return getSupportFragmentManager().findFragmentByTag(tag);
   }
 }

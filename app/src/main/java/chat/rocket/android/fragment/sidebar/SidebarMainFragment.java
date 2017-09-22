@@ -8,7 +8,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
@@ -100,15 +102,29 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     );
   }
 
+  @Nullable
+  @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    presenter.bindView(this);
+    return view;
+  }
+
+  @Override
+  public void onDestroyView() {
+    presenter.release();
+    super.onDestroyView();
+  }
+
   @Override
   public void onResume() {
     super.onResume();
-    presenter.bindView(this);
+
   }
 
   @Override
   public void onPause() {
-    presenter.release();
+
     super.onPause();
   }
 
@@ -287,7 +303,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     ));
 
     roomListHeaders.add(new LivechatRoomListHeader(
-            getString(R.string.fragment_sidebar_main_livechat_title)
+        getString(R.string.fragment_sidebar_main_livechat_title)
     ));
 
     roomListHeaders.add(new ChannelRoomListHeader(

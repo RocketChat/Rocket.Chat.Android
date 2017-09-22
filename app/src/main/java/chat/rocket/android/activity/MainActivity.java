@@ -197,9 +197,17 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   private void updateSidebarMainFragment() {
     closeSidebarIfNeeded();
+    String selectedServerHostname = new RocketChatCache(this).getSelectedServerHostname();
+    Fragment sidebarFragment = findFragmentByTag(selectedServerHostname);
+    if (sidebarFragment == null) {
+      sidebarFragment = SidebarMainFragment.create(selectedServerHostname);
+    }
+    subscribeToNewConfigChanges();
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
+        .replace(R.id.sidebar_fragment_container, sidebarFragment, selectedServerHostname)
+        .addToBackStack(null)
         .commit();
+    getSupportFragmentManager().executePendingTransactions();
   }
 
   @Override
@@ -220,7 +228,11 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   @Override
   public void showRoom(String hostname, String roomId) {
-    showFragment(RoomFragment.create(hostname, roomId));
+    Fragment roomFragment = findFragmentByTag(roomId);
+    if (roomFragment == null) {
+      roomFragment = RoomFragment.create(hostname, roomId);
+    }
+    showFragmentWithTag(roomFragment, roomId);
     closeSidebarIfNeeded();
     KeyboardHelper.hideSoftKeyboard(this);
   }
@@ -311,7 +323,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     if (!hostname.equalsIgnoreCase(serverHostname)) {
       RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
       rocketChatCache.setSelectedServerHostname(serverHostname);
-      onHostnameUpdated();
     }
   }
 
