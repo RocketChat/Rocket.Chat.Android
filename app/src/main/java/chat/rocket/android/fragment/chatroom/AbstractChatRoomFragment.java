@@ -22,7 +22,7 @@ abstract class AbstractChatRoomFragment extends AbstractFragment {
   }
 
   protected void setToolbarTitle(CharSequence title) {
-    roomToolbar.hideChannelIcon();
+    roomToolbar.hideChannelIcons();
     roomToolbar.setTitle(title);
   }
 
