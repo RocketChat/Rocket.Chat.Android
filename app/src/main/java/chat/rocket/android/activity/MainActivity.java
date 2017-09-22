@@ -180,20 +180,25 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     PublicSettingRepository publicSettingRepository = new RealmPublicSettingRepository(hostname);
 
+    RocketChatCache rocketChatCache = new RocketChatCache(this);
+
     presenter = new MainPresenter(
         roomInteractor,
         createRoomInteractor,
         sessionInteractor,
         new MethodCallHelper(this, hostname),
         ConnectivityManager.getInstance(getApplicationContext()),
-        new RocketChatCache(this),
+            rocketChatCache,
         publicSettingRepository
     );
+
 
     updateSidebarMainFragment();
 
     presenter.bindView(this);
     presenter.loadSignedInServers(hostname);
+
+    roomId = rocketChatCache.getSelectedRoomId();
   }
 
   private void updateSidebarMainFragment() {
