@@ -84,6 +84,9 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> {
+          if (pair.first == null) {
+              return Flowable.empty();
+          }
 
           LoadMessageProcedure messageProcedure = pair.first.where(LoadMessageProcedure.class)
               .equalTo(LoadMessageProcedure.ID, roomId)

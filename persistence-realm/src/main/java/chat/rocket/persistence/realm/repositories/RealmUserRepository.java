@@ -60,11 +60,16 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
     private Flowable<RealmResults<RealmUser>> realmGetCurrent() {
         return Flowable.using(
                 () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-                pair -> RxJavaInterop.toV2Flowable(
+                pair -> {
+                    if (pair.first == null) {
+                        return Flowable.empty();
+                    }
+                    return RxJavaInterop.toV2Flowable(
                         pair.first.where(RealmUser.class)
                                 .isNotEmpty(RealmUser.EMAILS)
                                 .findAll()
-                                .<RealmResults<RealmUser>>asObservable()),
+                                .<RealmResults<RealmUser>>asObservable());
+                },
                 pair -> close(pair.first, pair.second));
     }
 
