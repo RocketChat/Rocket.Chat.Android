@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.utils.Pair;
@@ -106,11 +107,33 @@ public class RocketChatCache {
   }
 
   public String getSelectedRoomId() {
-    return getString(getSelectedServerHostname() + KEY_SELECTED_ROOM_ID, null);
+    try {
+      JSONObject jsonObject = getSelectedRoomIdJsonObject();
+      return jsonObject.optString(getSelectedServerHostname(), null);
+    } catch (JSONException e) {
+      RCLog.e(e);
+      Logger.report(e);
+    }
+    return null;
   }
 
   public void setSelectedRoomId(String roomId) {
-    setString(getSelectedServerHostname() + KEY_SELECTED_ROOM_ID, roomId);
+    try {
+      JSONObject jsonObject = getSelectedRoomIdJsonObject();
+      jsonObject.put(getSelectedServerHostname(), roomId);
+      setString(KEY_SELECTED_ROOM_ID, jsonObject.toString());
+    } catch (JSONException e) {
+      RCLog.e(e);
+      Logger.report(e);
+    }
+  }
+
+  private JSONObject getSelectedRoomIdJsonObject() throws JSONException {
+    String json = getString(KEY_SELECTED_ROOM_ID, null);
+    if (json == null) {
+      return new JSONObject();
+    }
+    return new JSONObject(json);
   }
 
   public String getOrCreatePushId() {
@@ -131,7 +154,7 @@ public class RocketChatCache {
   }
 
   public Flowable<Optional<String>> getSelectedRoomIdPublisher() {
-    return getValuePublisher(getSelectedServerHostname() + KEY_SELECTED_ROOM_ID);
+    return getValuePublisher(KEY_SELECTED_ROOM_ID);
   }
 
   private SharedPreferences getSharedPreferences() {

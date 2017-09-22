@@ -203,10 +203,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     if (sidebarFragment == null) {
       sidebarFragment = SidebarMainFragment.create(selectedServerHostname);
     }
-    subscribeToNewConfigChanges();
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.sidebar_fragment_container, sidebarFragment, selectedServerHostname)
-        .addToBackStack(null)
         .commit();
     getSupportFragmentManager().executePendingTransactions();
   }
@@ -229,11 +227,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
   @Override
   public void showRoom(String hostname, String roomId) {
-    Fragment roomFragment = findFragmentByTag(roomId);
-    if (roomFragment == null) {
-      roomFragment = RoomFragment.create(hostname, roomId);
-    }
-    showFragmentWithTag(roomFragment, roomId);
+    showFragment(RoomFragment.create(hostname, roomId));
     closeSidebarIfNeeded();
     KeyboardHelper.hideSoftKeyboard(this);
   }
