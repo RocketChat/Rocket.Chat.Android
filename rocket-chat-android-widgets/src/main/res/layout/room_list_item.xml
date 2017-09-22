@@ -10,13 +10,13 @@
     android:paddingBottom="10dp">
 
     <ImageView
-        android:id="@+id/image_room_type"
+        android:id="@+id/type"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
     <ImageView
-        android:id="@+id/image_user_status"
+        android:id="@+id/userStatus"
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
         android:layout_marginRight="5dp"
@@ -26,7 +26,7 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/text_room_name"
+        android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.9"
@@ -40,7 +40,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     <TextView
-        android:id="@+id/text_alert_count"
+        android:id="@+id/alertCount"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.1"
