@@ -10,6 +10,7 @@ import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
 import chat.rocket.android.widget.RocketChatAvatar
 import chat.rocket.android.widget.helper.AvatarHelper
+import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
 import chat.rocket.android.widget.message.RocketChatMessageLayout
 import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout
 import chat.rocket.core.models.Message
@@ -53,10 +54,19 @@ class RoomMessagesAdapter(private var dataSet: List<Message>, private val hostna
         holder.messageBody.setText(message.message)
 
         val webContents = message.webContents
-        if (webContents != null) {
-            holder.messageUrl.setUrls(message.webContents, true)
-        } else {
+        if (webContents == null || webContents.isEmpty()) {
             holder.messageUrl.visibility = View.GONE
+        } else {
+            holder.messageUrl.setUrls(message.webContents, true)
+        }
+
+        val attachments = message.attachments
+        if (attachments == null || attachments.isEmpty()) {
+            holder.messageAttachment.visibility = View.GONE
+        } else {
+//            holder.messageAttachment.setAbsoluteUrl(absoluteUrl)
+//            holder.messageAttachment.setAttachments(attachments, true)
+//            holder.messageAttachment.visibility = View.VISIBLE
         }
     }
 
@@ -74,5 +84,6 @@ class RoomMessagesAdapter(private var dataSet: List<Message>, private val hostna
         val name: TextView = itemView.name
         val messageBody: RocketChatMessageLayout = itemView.messageBody
         val messageUrl: RocketChatMessageUrlsLayout = itemView.messageUrl
+        val messageAttachment: RocketChatMessageAttachmentsLayout = itemView.messageAttachment
     }
 }
