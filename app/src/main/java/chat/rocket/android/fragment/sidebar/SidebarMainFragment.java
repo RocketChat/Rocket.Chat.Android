@@ -60,7 +60,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   private TextView loadMoreResultsText;
   private List<RoomSidebar> roomSidebarList;
   private Disposable spotlightDisposable;
-  private RocketChatCache rocketChatCache;
   private String hostname;
   private static final String HOSTNAME = "hostname";
 
@@ -93,7 +92,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         new SessionInteractor(new RealmSessionRepository(hostname))
     );
 
-    rocketChatCache = new RocketChatCache(getContext().getApplicationContext());
+    RocketChatCache rocketChatCache = new RocketChatCache(getContext().getApplicationContext());
 
     presenter = new SidebarMainPresenter(
         hostname,

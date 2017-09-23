@@ -7,11 +7,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.models.ServerInfo;
