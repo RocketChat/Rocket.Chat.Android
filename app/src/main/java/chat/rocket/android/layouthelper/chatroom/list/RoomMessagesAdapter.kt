@@ -11,11 +11,15 @@ import chat.rocket.android.helper.DateTime
 import chat.rocket.android.widget.RocketChatAvatar
 import chat.rocket.android.widget.helper.AvatarHelper
 import chat.rocket.android.widget.message.RocketChatMessageLayout
+import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout
 import chat.rocket.core.models.Message
-import kotlinx.android.synthetic.main.item_room_message.view.*
 import kotlinx.android.synthetic.main.day.view.*
+import kotlinx.android.synthetic.main.item_room_message.view.*
 
-class RoomMessagesAdapter(private val dataSet: List<Message>, private val hostname: String, private val context: Context) : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolder>() {
+/**
+ * Created by Filipe de Lima Brito (filipedelimabrito@gmail.com) on 9/22/17.
+ */
+class RoomMessagesAdapter(private var dataSet: List<Message>, private val hostname: String, private val context: Context) : RecyclerView.Adapter<RoomMessagesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_room_message, parent, false)
@@ -27,25 +31,48 @@ class RoomMessagesAdapter(private val dataSet: List<Message>, private val hostna
 
         holder.newDay.text = DateTime.fromEpocMs(message.timestamp, DateTime.Format.DATE)
 
-        val username = message.user?.username
-        if (username != null) {
-            val placeholderDrawable = AvatarHelper.getTextDrawable(username, holder.userAvatar.context)
-            holder.userAvatar.loadImage(AvatarHelper.getUri(hostname, username), placeholderDrawable)
-            holder.username.text = context.getString(R.string.username, username)
-        } else {
-            holder.userAvatar.visibility = View.GONE
-            holder.username.visibility = View.GONE
+        val user = message.user
+        if (user != null) {
+            if (user.name.isNullOrBlank()) {
+                holder.name.visibility = View.GONE
+            } else {
+                holder.name.text = message.user?.name
+            }
+
+            val username = user.username
+            if (username != null) {
+                val placeholderDrawable = AvatarHelper.getTextDrawable(username, holder.userAvatar.context)
+                holder.userAvatar.loadImage(AvatarHelper.getUri(hostname, username), placeholderDrawable)
+                holder.username.text = context.getString(R.string.username, username)
+            } else {
+                holder.userAvatar.visibility = View.GONE
+                holder.username.visibility = View.GONE
+            }
         }
 
         holder.messageBody.setText(message.message)
+
+        val webContents = message.webContents
+        if (webContents != null) {
+            holder.messageUrl.setUrls(message.webContents, true)
+        } else {
+            holder.messageUrl.visibility = View.GONE
+        }
     }
 
     override fun getItemCount(): Int = dataSet.size
+
+    fun setDataSet(dataSet: List<Message>) {
+        this.dataSet = dataSet
+        notifyDataSetChanged()
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val newDay: TextView = itemView.day
         val userAvatar: RocketChatAvatar = itemView.userAvatar
         val username: TextView = itemView.username
+        val name: TextView = itemView.name
         val messageBody: RocketChatMessageLayout = itemView.messageBody
+        val messageUrl: RocketChatMessageUrlsLayout = itemView.messageUrl
     }
 }
