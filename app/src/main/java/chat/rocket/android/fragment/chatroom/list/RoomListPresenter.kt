@@ -2,97 +2,55 @@ package chat.rocket.android.fragment.chatroom.list
 
 import android.content.Context
 import android.os.Handler
-import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.api.rest.RestApiHelper
 import chat.rocket.android.helper.OkHttpHelper
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.core.SyncState
 import chat.rocket.core.models.Message
 import chat.rocket.core.models.User
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.sql.Timestamp
 
+/**
+ * Created by Filipe de Lima Brito (filipedelimabrito@gmail.com) on 9/22/17.
+ */
 class RoomListPresenter(val context: Context, val view: RoomListContract.View) : RoomListContract.Presenter {
-    val mainHandler = Handler(context.mainLooper)
 
     override fun requestPinnedMessages(roomId: String,
                                        roomType: String,
                                        hostname: String,
                                        token: String,
                                        userId: String,
-                                       offset: String) {
-
+                                       offset: Int) {
+        view.showWaitingView(true)
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForPinnedMessages(roomId,
                         roomType,
                         hostname,
                         token,
                         userId,
-                        offset))
+                        offset.toString()))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
+                        val message = e.message
+                        if (message != null) {
+                            showErrorMessage(message)
+                        }
                     }
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
-                            val jSONObject = JSONObject(response.body()?.string())
-                            val messagesJSONArray = jSONObject.get("messages") as JSONArray
-
-                            val messagesJSONArrayLength = messagesJSONArray.length()
-                            val dataSet = ArrayList<Message>(messagesJSONArrayLength)
-                            (0 until messagesJSONArrayLength).mapTo(dataSet) {
-                                val userJSONArray = JSONArray()
-                                userJSONArray.put(messagesJSONArray.getJSONObject(it).get("u"))
-
-                                val user = User.builder()
-                                        .setId(userJSONArray.getJSONObject(0).optString("_id"))
-                                        .setUsername(userJSONArray.getJSONObject(0).optString("username"))
-                                        // Note: There is no result to UTC OFFSET but as it is a required attribute to the user we can set it as 0.
-                                        .setUtcOffset(0.0)
-                                        .build()
-
-                                val timestampString = messagesJSONArray.getJSONObject(it).optString("ts")
-                                val timestamp = if (timestampString.isBlank()) {
-                                    0
-                                } else {
-                                    Timestamp.valueOf(timestampString
-                                            .replace("T", " ")
-                                            .replace("Z", ""))
-                                            .time
-                                }
-
-                                val editedAtString = messagesJSONArray.getJSONObject(it).optString("_updatedAt")
-                                val editedAt = if (editedAtString.isBlank()) {
-                                    0
-                                } else {
-                                    Timestamp.valueOf(editedAtString
-                                            .replace("T", " ")
-                                            .replace("Z", ""))
-                                            .time
-                                }
-
-                                Message.builder()
-                                        .setId(messagesJSONArray.getJSONObject(it).optString("_id"))
-                                        .setRoomId(messagesJSONArray.getJSONObject(it).optString("rid"))
-                                        .setMessage(messagesJSONArray.getJSONObject(it).optString("msg"))
-                                        .setTimestamp(timestamp)
-                                        .setEditedAt(editedAt)
-                                        .setGroupable(messagesJSONArray.getJSONObject(it).optBoolean("groupable"))
-                                        .setUser(user)
-                                        .setSyncState(SyncState.SYNCED)
-                                        .build()
+                            val result = response.body()?.string()
+                            if (result != null) {
+                                handleMessagesJson(result, true)
                             }
-                            mainHandler.post { view.showPinnedMessages(dataSet) }
                         } else {
-                            mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, response.message())) }
+                            showErrorMessage(response.message())
                         }
                     }
                 })
@@ -103,124 +61,44 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                                          hostname: String,
                                          token: String,
                                          userId: String,
-                                         offset: String) {
+                                         offset: Int) {
+        view.showWaitingView(true)
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForFavoriteMessages(roomId,
                         roomType,
                         hostname,
                         token,
                         userId,
-                        offset))
+                        offset.toString()))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
+                        val message = e.message
+                        if (message != null) {
+                            showErrorMessage(message)
+                        }
                     }
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
-                            val jSONObject = JSONObject(response.body()?.string())
-                            val messagesJSONArray = jSONObject.get("messages") as JSONArray
-
-                            val messagesJSONArrayLength = messagesJSONArray.length()
-                            val dataSet = ArrayList<Message>(messagesJSONArrayLength)
-                            (0 until messagesJSONArrayLength).mapTo(dataSet) {
-                                val userJSONArray = JSONArray()
-                                userJSONArray.put(messagesJSONArray.getJSONObject(it).get("u"))
-
-                                val user = User.builder()
-                                        .setId(userJSONArray.getJSONObject(0).optString("_id"))
-                                        .setUsername(userJSONArray.getJSONObject(0).optString("username"))
-                                        // Note: There is no result to UTC OFFSET but as it is a required attribute to the user we can set it as 0.
-                                        .setUtcOffset(0.0)
-                                        .build()
-
-                                val timestampString = messagesJSONArray.getJSONObject(it).optString("ts")
-                                val timestamp = if (timestampString.isBlank()) {
-                                    0
-                                } else {
-                                    Timestamp.valueOf(timestampString
-                                            .replace("T", " ")
-                                            .replace("Z", ""))
-                                            .time
-                                }
-
-                                val editedAtString = messagesJSONArray.getJSONObject(it).optString("_updatedAt")
-                                val editedAt = if (editedAtString.isBlank()) {
-                                    0
-                                } else {
-                                    Timestamp.valueOf(editedAtString
-                                            .replace("T", " ")
-                                            .replace("Z", ""))
-                                            .time
-                                }
-
-                                Message.builder()
-                                        .setId(messagesJSONArray.getJSONObject(it).optString("_id"))
-                                        .setRoomId(messagesJSONArray.getJSONObject(it).optString("rid"))
-                                        .setMessage(messagesJSONArray.getJSONObject(it).optString("msg"))
-                                        .setTimestamp(timestamp)
-                                        .setEditedAt(editedAt)
-                                        .setGroupable(messagesJSONArray.getJSONObject(it).optBoolean("groupable"))
-                                        .setUser(user)
-                                        .setSyncState(SyncState.SYNCED)
-                                        .build()
+                            val result = response.body()?.string()
+                            if (result != null) {
+                                handleMessagesJson(result, false)
                             }
-                            mainHandler.post { view.showFavoriteMessages(dataSet) }
                         } else {
-                            mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, response.message())) }
+                            showErrorMessage(response.message())
                         }
                     }
                 })
     }
 
-    // TODO (need a rest api fix)
+    // TODO (after the REST api fixes)
     override fun requestFileList(roomId: String,
                                  roomType: String,
                                  hostname: String,
                                  token: String,
                                  userId: String,
-                                 offset: String) {
-//        OkHttpHelper.getClient()
-//                .newCall(RestApiHelper.getRequestForFileList(roomId,
-//                        roomType,
-//                        hostname,
-//                        token,
-//                        userId))
-//                .enqueue(object : Callback {
-//                    override fun onFailure(call: Call, e: IOException) {
-//                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
-//                    }
-//
-//                    @Throws(IOException::class)
-//                    override fun onResponse(call: Call, response: Response) {
-//                        if (response.isSuccessful) {
-//                            val jSONObject = JSONObject(response.body()?.string())
-//                            val filesJSONArray = jSONObject.get("files") as JSONArray
-//
-//                            val filesJSONArrayLength = filesJSONArray.length()
-//                            val amazonS3JSONArray = JSONArray()
-//                            for (i in 0 until filesJSONArrayLength) {
-//                                amazonS3JSONArray.put(filesJSONArray.getJSONObject(i).get("AmazonS3"))
-//                            }
-//
-//                            val pathJSONArray = JSONArray()
-//                            val amazonS3JSONArrayLength = amazonS3JSONArray.length()
-//                            for (i in 0 until amazonS3JSONArrayLength) {
-//                                pathJSONArray.put(amazonS3JSONArray.getJSONObject(i).get("path"))
-//                            }
-//                            val pathJSONArrayLength = pathJSONArray.length()
-//                            val dataSet = ArrayList<String>(pathJSONArrayLength)
-//                            (0 until pathJSONArrayLength).mapTo(dataSet) {
-//                                UrlHelper.getUrlForFile(pathJSONArray.get(it).toString(), userId, token)
-//                            }
-//
-//                            mainHandler.post { view.showFileList(dataSet) }
-//                        } else {
-//                            mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, response.message())) }
-//                        }
-//                    }
-//                })
+                                 offset: Int) {
     }
 
     override fun requestMemberList(roomId: String,
@@ -228,45 +106,154 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                                    hostname: String,
                                    token: String,
                                    userId: String,
-                                   offset: String
-    ) {
+                                   offset: Int) {
+        view.showWaitingView(true)
+
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForMemberList(roomId,
                         roomType,
                         hostname,
                         token,
                         userId,
-                        offset))
+                        offset.toString()))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, e.message)) }
+                        val message = e.message
+                        if (message != null) {
+                            showErrorMessage(message)
+                        }
                     }
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful) {
-                            val jSONObject = JSONObject(response.body()?.string())
-                            Log.i("json", "= " + jSONObject)
-                            Log.i("json", "total = " + jSONObject.get("total"))
-                            val membersJSONArray = jSONObject.get("members") as JSONArray
-
-                            val membersJSONArrayLength = membersJSONArray.length()
-                            val dataSet = ArrayList<User>(membersJSONArrayLength)
-                            (0 until membersJSONArrayLength).mapTo(dataSet) {
-                                User.builder()
-                                        .setId(membersJSONArray.getJSONObject(it).optString("_id"))
-                                        .setName(membersJSONArray.getJSONObject(it).optString("name"))
-                                        .setUsername(membersJSONArray.getJSONObject(it).optString("username"))
-                                        .setStatus(membersJSONArray.getJSONObject(it).optString("status"))
-                                        .setUtcOffset(membersJSONArray.getJSONObject(it).optLong("utcOffset").toDouble())
-                                        .build()
-
+                            val result = response.body()?.string()
+                            if (result != null) {
+                                handleMembersJson(result)
                             }
-                            mainHandler.post { view.showMemberList(dataSet, jSONObject.get("total").toString()) }
                         } else {
-                            mainHandler.post { view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, response.message())) }
+                            showErrorMessage(response.message())
                         }
                     }
                 })
     }
+
+    private fun handleMessagesJson(json: String, isPinnedMessage: Boolean) {
+        val jSONObject = JSONObject(json)
+        val messagesJSONArray = jSONObject.getJSONArray("messages")
+
+        val total = messagesJSONArray.length()
+        val dataSet = ArrayList<Message>(total)
+        (0 until total).mapTo(dataSet) {
+            val messageJsonObject = messagesJSONArray.getJSONObject(it)
+            val userJsonObject = messageJsonObject.getJSONObject("u")
+
+            val timestampString = messageJsonObject.optString("ts")
+            val timestamp = if (timestampString.isBlank()) {
+                0
+            } else {
+                Timestamp.valueOf(timestampString.replace("T", " ").replace("Z", "")).time
+            }
+
+            val editedAtString = messageJsonObject.optString("_updatedAt")
+            val editedAt = if (editedAtString.isBlank()) {
+                0
+            } else {
+                Timestamp.valueOf(editedAtString.replace("T", " ").replace("Z", "")).time
+            }
+
+            Message.builder()
+                    .setId(messageJsonObject.optString("_id"))
+                    .setRoomId(messageJsonObject.optString("rid"))
+                    .setMessage(messageJsonObject.optString("msg"))
+                    .setUser(getUserFromJsonObject(userJsonObject))
+                    .setTimestamp(timestamp)
+                    .setEditedAt(editedAt)
+                    .setGroupable(messageJsonObject.optBoolean("groupable"))
+                    .setSyncState(SyncState.SYNCED)
+                    .build()
+        }
+
+        if (dataSet.isEmpty() && previousMessageDataSet.isEmpty()) {
+            showEmptyViewMessage(context.getString(R.string.fragment_room_list_no_favorite_message_to_show))
+        } else {
+            if (dataSet.isNotEmpty()) {
+                previousMessageDataSet += dataSet
+                if (isPinnedMessage) {
+                    showPinnedMessageList(previousMessageDataSet as ArrayList<Message>, jSONObject.optString("total"))
+                } else {
+                    showFavoriteMessageList(previousMessageDataSet as ArrayList<Message>, jSONObject.optString("total"))
+                }
+            }
+        }
+    }
+
+    private fun handleMembersJson(json: String) {
+        val jsonObject = JSONObject(json)
+        val membersJsonArray = jsonObject.getJSONArray("members")
+
+        val total = membersJsonArray.length()
+        val dataSet = ArrayList<User>(total)
+        (0 until total).mapTo(dataSet) {
+            getUserFromJsonObject(membersJsonArray.getJSONObject(it))
+        }
+
+        if (dataSet.isEmpty() && previousUserDataSet.isEmpty()) {
+            showEmptyViewMessage(context.getString(R.string.fragment_room_list_no_member_list_to_show))
+        } else {
+            if (dataSet.isNotEmpty()) {
+                previousUserDataSet += dataSet
+                showMemberList(previousUserDataSet as ArrayList<User>, jsonObject.optString("total"))
+            }
+        }
+    }
+
+    private fun getUserFromJsonObject(jsonObject: JSONObject): User {
+        return User.builder()
+                .setId(jsonObject.optString("_id"))
+                .setName(jsonObject.optString("name"))
+                .setUsername(jsonObject.optString("username"))
+                .setStatus(jsonObject.optString("status"))
+                .setUtcOffset(jsonObject.optLong("utcOffset").toDouble())
+                .build()
+    }
+
+    private fun showPinnedMessageList(dataSet: ArrayList<Message>, total: String) {
+        mainHandler.post {
+            view.showWaitingView(false)
+            view.showPinnedMessages(dataSet, total)
+        }
+    }
+
+    private fun showFavoriteMessageList(dataSet: ArrayList<Message>, total: String) {
+        mainHandler.post {
+            view.showWaitingView(false)
+            view.showFavoriteMessages(dataSet, total)
+        }
+    }
+
+    private fun showMemberList(dataSet: ArrayList<User>, total: String) {
+        mainHandler.post {
+            view.showWaitingView(false)
+            view.showMemberList(dataSet, total)
+        }
+    }
+
+    private fun showEmptyViewMessage(message: String) {
+        mainHandler.post {
+            view.showWaitingView(false)
+            view.showMessage(message)
+        }
+    }
+
+    private fun showErrorMessage(message: String) {
+        mainHandler.post {
+            view.showWaitingView(false)
+            view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, message))
+        }
+    }
+
+    private val mainHandler = Handler(context.mainLooper)
+    private var previousMessageDataSet = emptyList<Message>()
+    private var previousUserDataSet = emptyList<User>()
 }
