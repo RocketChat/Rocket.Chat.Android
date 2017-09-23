@@ -87,14 +87,6 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                         userId,
                         offset)
             }
-//            R.id.action_file_list -> {
-//                activity.title = getString(R.string.fragment_room_list_file_list_title)
-//                presenter.requestFileList(roomId,
-//                        roomType,
-//                        hostname,
-//                        token,
-//                        userId)
-//            }
             R.id.action_member_list -> {
                 presenter.requestMemberList(roomId,
                         roomType,
