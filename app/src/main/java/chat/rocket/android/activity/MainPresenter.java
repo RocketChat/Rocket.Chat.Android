@@ -134,7 +134,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   }
 
   @Override
-  public void beforeLogout() {
+  public void beforeLogoutCleanUp() {
       clearSubscriptions();
   }
 

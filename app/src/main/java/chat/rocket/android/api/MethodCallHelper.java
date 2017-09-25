@@ -7,20 +7,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.UUID;
 
 import bolts.Continuation;
 import bolts.Task;
-import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.core.SyncState;
-import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
@@ -265,24 +261,10 @@ public class MethodCallHelper {
    */
   public Task<Void> logout() {
     return call("logout", TIMEOUT_MS).onSuccessTask(task -> {
-      Context appContext = context.getApplicationContext();
-      RocketChatCache rocketChatCache = new RocketChatCache(appContext);
-      String currentHostname = rocketChatCache.getSelectedServerHostname();
-      RealmHelper currentRealmHelper = RealmStore.getOrCreate(currentHostname);
-      return currentRealmHelper.executeTransaction(realm -> {
-        realm.deleteAll();
-        ConnectivityManagerApi connectivityManagerApi = ConnectivityManager.getInstance(appContext);
-        connectivityManagerApi.removeServer(currentHostname);
-        List<ServerInfo> serverList = connectivityManagerApi.getServerList();
-        String newHostname = null;
-        if (serverList != null && serverList.size() > 0) {
-          newHostname = serverList.get(0).getHostname();
-        }
-        rocketChatCache.removeHostname(currentHostname);
-        rocketChatCache.removeSelectedRoomId(currentHostname);
-        rocketChatCache.setSelectedServerHostname(newHostname);
-        return null;
-      });
+      if (task.isFaulted()) {
+        return Task.forError(task.getError());
+      }
+      return null;
     });
   }
 

@@ -23,6 +23,8 @@ public interface SidebarMainContract {
     void filterRoomSidebarList(CharSequence term);
 
     void show(User user);
+
+    void onLogoutCleanUp();
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
@@ -44,5 +46,7 @@ public interface SidebarMainContract {
     void onUserOffline();
 
     void onLogout(Continuation continuation);
+
+    void cleanUpBeforeLogout();
   }
 }

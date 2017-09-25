@@ -321,26 +321,32 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     adapter.setRoomListHeaders(roomListHeaders);
   }
 
-  private void setupLogoutButton() {
-    rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
-      closeUserActionContainer();
-      Activity mainActivity = getActivity();
-      if (mainActivity != null && mainActivity instanceof MainActivity) {
-        ((MainActivity) mainActivity).beforeLogoutCleanup();
-      }
+  @Override
+  public void onLogoutCleanUp() {
+    Activity activity = getActivity();
+    if (activity != null && activity instanceof MainActivity) {
+      ((MainActivity) activity).hideLogoutMessage();
+      ((MainActivity) activity).onLogout();
       presenter.onLogout(task -> {
         if (task.isFaulted()) {
-          if (mainActivity != null && mainActivity instanceof MainActivity) {
-            ((MainActivity) mainActivity).onFailedLogout();
-          }
           return Task.forError(task.getError());
-        }
-
-        if (mainActivity != null && mainActivity instanceof MainActivity) {
-          ((MainActivity) mainActivity).onLogout();
         }
         return null;
       });
+    }
+  }
+
+  private void setupLogoutButton() {
+    rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
+      closeUserActionContainer();
+      final Activity activity = getActivity();
+      if (activity != null && activity instanceof MainActivity) {
+        ((MainActivity) activity).showLogoutMessage();
+        // Clear subscriptions.
+        ((MainActivity) activity).cleanUpBeforeLogout();
+      }
+      // Clear relative data and set new hostname if any.
+      presenter.cleanUpBeforeLogout();
     });
   }
 

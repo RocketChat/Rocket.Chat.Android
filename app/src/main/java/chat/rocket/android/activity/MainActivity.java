@@ -252,6 +252,12 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
             R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
   }
 
+  public void showLogoutMessage() {
+    statusTicker.updateStatus(StatusTicker.STATUS_LOGGING_OUT,
+            Snackbar.make(findViewById(getLayoutContainerForFragment()),
+                    "Logging Out...", Snackbar.LENGTH_INDEFINITE));
+  }
+
   @Override
   public void showConnectionOk() {
     statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
@@ -310,6 +316,11 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   }
 
   @DebugLog
+  public void hideLogoutMessage() {
+    statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
+  }
+
+  @DebugLog
   public void onLogout() {
     if (new RocketChatCache(getApplicationContext()).getSelectedServerHostname() == null) {
       LaunchUtil.showMainActivity(this);
@@ -319,12 +330,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   }
 
   @DebugLog
-  public void beforeLogoutCleanup() {
-    presenter.beforeLogout();
-  }
-
-  public void onFailedLogout() {
-    onHostnameUpdated();
+  public void cleanUpBeforeLogout() {
+    presenter.beforeLogoutCleanUp();
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.
@@ -332,6 +339,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     public static final int STATUS_DISMISS = 0;
     public static final int STATUS_CONNECTION_ERROR = 1;
     public static final int STATUS_TOKEN_LOGIN = 2;
+    public static final int STATUS_LOGGING_OUT = 3;
 
     private int status;
     private Snackbar snackbar;
