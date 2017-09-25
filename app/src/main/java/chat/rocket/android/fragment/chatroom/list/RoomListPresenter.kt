@@ -36,9 +36,11 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                         offset.toString()))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        val message = e.message
-                        if (message != null) {
-                            showErrorMessage(message)
+                        if (!call.isCanceled) {
+                            val message = e.message
+                            if (message != null) {
+                                showErrorMessage(message)
+                            }
                         }
                     }
 
@@ -72,9 +74,11 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                         offset.toString()))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        val message = e.message
-                        if (message != null) {
-                            showErrorMessage(message)
+                        if (!call.isCanceled) {
+                            val message = e.message
+                            if (message != null) {
+                                showErrorMessage(message)
+                            }
                         }
                     }
 
@@ -98,8 +102,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                                  hostname: String,
                                  token: String,
                                  userId: String,
-                                 offset: Int) {
-    }
+                                 offset: Int) {}
 
     override fun requestMemberList(roomId: String,
                                    roomType: String,
@@ -108,7 +111,6 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                                    userId: String,
                                    offset: Int) {
         view.showWaitingView(true)
-
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForMemberList(roomId,
                         roomType,
@@ -118,9 +120,11 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                         offset.toString()))
                 .enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        val message = e.message
-                        if (message != null) {
-                            showErrorMessage(message)
+                        if (!call.isCanceled) {
+                            val message = e.message
+                            if (message != null) {
+                                showErrorMessage(message)
+                            }
                         }
                     }
 
@@ -136,6 +140,10 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                         }
                     }
                 })
+    }
+
+    override fun cancelRequest() {
+        OkHttpHelper.getClient().dispatcher().cancelAll()
     }
 
     private fun handleMessagesJson(json: String, isPinnedMessage: Boolean) {
@@ -174,15 +182,15 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                     .build()
         }
 
-        if (dataSet.isEmpty() && previousMessageDataSet.isEmpty()) {
+        if (dataSet.isEmpty() && !hasItem) {
             showEmptyViewMessage(context.getString(R.string.fragment_room_list_no_favorite_message_to_show))
         } else {
             if (dataSet.isNotEmpty()) {
-                previousMessageDataSet += dataSet
+                hasItem = true
                 if (isPinnedMessage) {
-                    showPinnedMessageList(previousMessageDataSet as ArrayList<Message>, jSONObject.optString("total"))
+                    showPinnedMessageList(dataSet, jSONObject.optString("total"))
                 } else {
-                    showFavoriteMessageList(previousMessageDataSet as ArrayList<Message>, jSONObject.optString("total"))
+                    showFavoriteMessageList(dataSet, jSONObject.optString("total"))
                 }
             }
         }
@@ -198,12 +206,12 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
             getUserFromJsonObject(membersJsonArray.getJSONObject(it))
         }
 
-        if (dataSet.isEmpty() && previousUserDataSet.isEmpty()) {
+        if (dataSet.isEmpty() && !hasItem) {
             showEmptyViewMessage(context.getString(R.string.fragment_room_list_no_member_list_to_show))
         } else {
             if (dataSet.isNotEmpty()) {
-                previousUserDataSet += dataSet
-                showMemberList(previousUserDataSet as ArrayList<User>, jsonObject.optString("total"))
+                hasItem = true
+                showMemberList(dataSet, jsonObject.optString("total"))
             }
         }
     }
@@ -254,6 +262,5 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
     }
 
     private val mainHandler = Handler(context.mainLooper)
-    private var previousMessageDataSet = emptyList<Message>()
-    private var previousUserDataSet = emptyList<User>()
+    private var hasItem: Boolean = false
 }
