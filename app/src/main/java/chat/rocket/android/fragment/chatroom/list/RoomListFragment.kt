@@ -69,6 +69,11 @@ class RoomListFragment : Fragment(), RoomListContract.View {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        presenter.cancelRequest()
+    }
+
     private fun requestData(offset: Int) {
         when (actionId) {
             R.id.action_pinned_messages -> {
@@ -112,7 +117,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                 })
             }
         } else {
-            (recyclerView.adapter as RoomMessagesAdapter).setDataSet(dataSet)
+            (recyclerView.adapter as RoomMessagesAdapter).addDataSet(dataSet)
         }
     }
 
@@ -130,7 +135,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                 })
             }
         } else {
-            (recyclerView.adapter as RoomMessagesAdapter).setDataSet(dataSet)
+            (recyclerView.adapter as RoomMessagesAdapter).addDataSet(dataSet)
         }
     }
 
@@ -151,7 +156,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                 })
             }
         } else {
-            (recyclerView.adapter as RoomMemberListAdapter).setDataSet(dataSet)
+            (recyclerView.adapter as RoomMemberListAdapter).addDataSet(dataSet)
         }
     }
 
@@ -178,6 +183,6 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     private lateinit var hostname: String
     private lateinit var token: String
     private lateinit var userId: String
-    private lateinit var presenter: RoomListPresenter
+    private lateinit var presenter: RoomListContract.Presenter
     private var isDataRequested: Boolean = false
 }
