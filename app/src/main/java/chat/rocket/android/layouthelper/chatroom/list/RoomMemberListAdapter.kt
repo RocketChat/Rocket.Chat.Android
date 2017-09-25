@@ -54,9 +54,10 @@ class RoomMemberListAdapter(private var dataSet: List<User>, private val hostnam
 
     override fun getItemCount(): Int = dataSet.size
 
-    fun setDataSet(dataSet: List<User>) {
-        this.dataSet = dataSet
-        notifyDataSetChanged()
+    fun addDataSet(dataSet: List<User>) {
+        val previousDataSetSize = this.dataSet.size
+        this.dataSet += dataSet
+        notifyItemRangeInserted(previousDataSetSize, dataSet.size)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
