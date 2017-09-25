@@ -125,5 +125,10 @@ interface RoomListContract {
                               token: String,
                               userId: String,
                               offset: Int)
+
+        /**
+         * Immediately cancels any running request.
+         */
+        fun cancelRequest()
     }
 }
