@@ -1,11 +1,43 @@
 package chat.rocket.android.widget.helper
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 
+/**
+ * Created by Filipe de Lima Brito (filipedelimabrito@gmail.com) on 8/29/17.
+ */
 object DrawableHelper {
+
+    /**
+     * Returns a bitmap from drawable.
+     *
+     * @param drawable The drawable to get the bitmap.
+     * @return A bitmap.
+     */
+    fun getBitmapFromDrawable(drawable: Drawable, intrinsicWidth: Int = 1, intrinsicHeight: Int = 1): Bitmap {
+        if (drawable is BitmapDrawable) {
+            return drawable.bitmap
+        }
+
+        val textDrawableIntrinsicWidth = drawable.intrinsicWidth
+        var textDrawableIntrinsicHeight = drawable.intrinsicHeight
+
+        val width = if (textDrawableIntrinsicWidth > 0) textDrawableIntrinsicWidth else intrinsicWidth
+        val height = if (textDrawableIntrinsicHeight > 0) textDrawableIntrinsicHeight else intrinsicHeight
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+
+        return bitmap
+    }
 
     /**
      * Wraps a drawable to be used for example for tinting.
