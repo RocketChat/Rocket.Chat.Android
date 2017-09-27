@@ -9,6 +9,13 @@ import okhttp3.OkHttpClient
 
 object OkHttpHelper {
 
+    fun getClient(): OkHttpClient {
+        if (httpClient == null) {
+            httpClient = OkHttpClient()
+        }
+        return httpClient ?: throw AssertionError("httpClient set to null by another thread")
+    }
+
     fun getClientForUploadFile(): OkHttpClient {
         if (httpClientForUploadFile == null) {
             httpClientForUploadFile = OkHttpClient.Builder().build()
@@ -19,6 +26,8 @@ object OkHttpHelper {
     fun getClientForDownloadFile(context: Context): OkHttpClient {
         if(httpClientForDownloadFile == null) {
             httpClientForDownloadFile = OkHttpClient.Builder()
+                    .followRedirects(true)
+                    .followSslRedirects(true)
                     .addInterceptor(CookieInterceptor(DefaultCookieProvider(RocketChatCache(context))))
                     .build()
         }
@@ -37,6 +46,7 @@ object OkHttpHelper {
         return httpClientForWS ?: throw AssertionError("httpClientForWS set to null by another thread")
     }
 
+    private var httpClient: OkHttpClient? = null
     private var httpClientForUploadFile: OkHttpClient? = null
     private var httpClientForDownloadFile: OkHttpClient? = null
     private var httpClientForWS: OkHttpClient? = null

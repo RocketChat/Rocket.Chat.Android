@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/messageListRelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="chat.rocket.android.fragment.chatroom.RoomFragment">
 
-    <include layout="@layout/fragment_room_main" />
-
-    <FrameLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/messageRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:clickable="true"
-        android:theme="@style/AppTheme.Dark">
+        android:scrollbars="vertical"
+        android:layout_above="@+id/messageComposer" />
 
-        <include layout="@layout/room_side_menu" />
-    </FrameLayout>
-</android.support.v4.widget.DrawerLayout>
+    <chat.rocket.android.widget.message.MessageFormLayout
+        android:id="@+id/messageComposer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:theme="@style/Theme.AppCompat.Light" />
+</RelativeLayout>

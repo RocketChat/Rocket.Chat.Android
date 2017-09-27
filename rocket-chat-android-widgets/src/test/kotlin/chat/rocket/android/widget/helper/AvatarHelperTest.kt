@@ -2,6 +2,9 @@ import chat.rocket.android.widget.helper.AvatarHelper
 import org.junit.Test
 import kotlin.test.assertEquals
 
+/**
+ * Created by Filipe de Lima Brito (filipedelimabrito@gmail.com) on 8/2/17.
+ */
 class AvatarHelperTest {
 
     @Test

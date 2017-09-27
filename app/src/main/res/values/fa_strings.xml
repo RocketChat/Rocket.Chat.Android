@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="fa_chevron_down" translatable="false">&#xf078;</string>
-    <string name="fa_twitter" translatable="false">&#xf099;</string>
-    <string name="fa_github" translatable="false">&#xf09b;</string>
-    <string name="fa_google" translatable="false">&#xf1a0;</string>
-    <string name="fa_facebook_official" translatable="false">&#xf230;</string>
     <string name="fa_plus" translatable="false">&#xf067;</string>
     <string name="fa_sign_out" translatable="false">&#xf08b;</string>
-
-    <string name="fa_search" translatable="false">&#xf002;</string>
-    <string name="fa_users" translatable="false">&#xf0c0;</string>
-    <string name="fa_at" translatable="false">&#xf1fa;</string>
 </resources>

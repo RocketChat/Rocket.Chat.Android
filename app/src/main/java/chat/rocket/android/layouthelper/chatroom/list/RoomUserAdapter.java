@@ -1,4 +1,4 @@
-package chat.rocket.android.layouthelper.chatroom.dialog;
+package chat.rocket.android.layouthelper.chatroom.list;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/margin_16"
+    android:paddingRight="@dimen/margin_16"
+    android:paddingStart="@dimen/margin_16"
+    android:paddingLeft="@dimen/margin_16"
+    android:paddingEnd="@dimen/margin_16">
+
+    <chat.rocket.android.widget.RocketChatAvatar
+        android:id="@+id/userAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginStart="@dimen/margin_16"
+        app:layout_constraintLeft_toRightOf="@+id/userAvatar" >
+
+        <ImageView
+            android:id="@+id/status"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            app:layout_constraintTop_toTopOf="@+id/name"
+            app:layout_constraintBottom_toBottomOf="@+id/name"
+            app:srcCompat="@drawable/ic_user_status_black_24dp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.RocketChat.Message.Name"
+            app:layout_constraintLeft_toRightOf="@+id/status"
+            tools:text="John Doe" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.RocketChat.Message.Username"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintLeft_toLeftOf="@+id/name"
+            tools:text="\@john.doe" />
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:background="@color/colorDivider"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/container" />
+</android.support.constraint.ConstraintLayout>

@@ -21,4 +21,12 @@ public class RocketChatAbsoluteUrl implements AbsoluteUrl {
   public String from(String url) {
     return url.startsWith("/") ? baseUrl + url + "?rc_uid=" + userId + "&rc_token=" + token : url;
   }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public String getToken() {
+    return token;
+  }
 }
