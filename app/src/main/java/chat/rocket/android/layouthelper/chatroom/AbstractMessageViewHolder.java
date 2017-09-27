@@ -34,8 +34,8 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
     subUsername = itemView.findViewById(R.id.sub_username);
     timestamp = itemView.findViewById(R.id.timestamp);
     userAndTimeContainer = itemView.findViewById(R.id.user_and_timestamp_container);
-    newDayContainer = itemView.findViewById(R.id.newday_container);
-    newDayText = itemView.findViewById(R.id.newday_text);
+    newDayContainer = itemView.findViewById(R.id.dayContainer);
+    newDayText = itemView.findViewById(R.id.day);
     this.absoluteUrl = absoluteUrl;
     this.hostname = hostname;
   }
