@@ -22,6 +22,10 @@ public interface RoomContract {
 
     void onMessageSendSuccessfully();
 
+    void disableMessageInput();
+
+    void enableMessageInput();
+
     void showUnreadCount(int count);
 
     void showMessages(List<Message> messages);
