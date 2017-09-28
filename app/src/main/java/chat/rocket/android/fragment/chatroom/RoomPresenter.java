@@ -119,6 +119,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void sendMessage(String messageText) {
+    view.disableMessageInput();
     final Disposable subscription = getRoomUserPair()
         .flatMap(pair -> messageInteractor.send(pair.first, pair.second, messageText))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
@@ -128,8 +129,12 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
               if (success) {
                 view.onMessageSendSuccessfully();
               }
+              view.enableMessageInput();
             },
-            Logger::report
+            throwable -> {
+              view.enableMessageInput();
+              Logger.report(throwable);
+            }
         );
 
     addSubscription(subscription);
@@ -148,6 +153,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void updateMessage(Message message, String content) {
+    view.disableMessageInput();
     final Disposable subscription = getCurrentUser()
         .flatMap(user -> messageInteractor.update(message, user, content))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
@@ -157,8 +163,12 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
               if (success) {
                 view.onMessageSendSuccessfully();
               }
+              view.enableMessageInput();
             },
-            Logger::report
+            throwable -> {
+              view.enableMessageInput();
+              Logger.report(throwable);
+            }
         );
 
     addSubscription(subscription);

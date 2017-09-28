@@ -608,6 +608,16 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     @Override
+    public void disableMessageInput() {
+        messageFormManager.enableComposingText(false);
+    }
+
+    @Override
+    public void enableMessageInput() {
+        messageFormManager.enableComposingText(true);
+    }
+
+    @Override
     public void showUnreadCount(int count) {
         newMessageIndicatorManager.updateNewMessageCount(count);
     }
