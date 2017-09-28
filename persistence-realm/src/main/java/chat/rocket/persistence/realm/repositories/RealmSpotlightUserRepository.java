@@ -28,20 +28,26 @@ public class RealmSpotlightUserRepository extends RealmRepository implements Spo
   public Flowable<List<SpotlightUser>> getSuggestionsFor(String name, SortDirection direction, int limit) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmSpotlightUser.class)
-                .beginGroup()
-                .like(RealmSpotlightUser.Columns.USERNAME, "*" + name + "*", Case.INSENSITIVE)
-                .isNull(RealmSpotlightUser.Columns.NAME)
-                .endGroup()
-                .or()
-                .beginGroup()
-                .like(RealmSpotlightUser.Columns.NAME, "*" + name + "*", Case.INSENSITIVE)
-                .isNotNull(RealmSpotlightUser.Columns.USERNAME)
-                .endGroup()
-                .findAllSorted(RealmSpotlightUser.Columns.USERNAME,
-                    direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
-                .asObservable()),
+        pair -> {
+          if (pair.first == null) {
+            return Flowable.empty();
+          }
+
+          return RxJavaInterop.toV2Flowable(
+                  pair.first.where(RealmSpotlightUser.class)
+                          .beginGroup()
+                          .like(RealmSpotlightUser.Columns.USERNAME, "*" + name + "*", Case.INSENSITIVE)
+                          .isNull(RealmSpotlightUser.Columns.NAME)
+                          .endGroup()
+                          .or()
+                          .beginGroup()
+                          .like(RealmSpotlightUser.Columns.NAME, "*" + name + "*", Case.INSENSITIVE)
+                          .isNotNull(RealmSpotlightUser.Columns.USERNAME)
+                          .endGroup()
+                          .findAllSorted(RealmSpotlightUser.Columns.USERNAME,
+                                  direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
+                          .asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))

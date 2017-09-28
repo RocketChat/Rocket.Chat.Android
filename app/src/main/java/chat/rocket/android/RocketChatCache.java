@@ -60,7 +60,7 @@ public class RocketChatCache {
         json = new JSONObject(hostnameList);
       }
       JSONObject serverInfoJson = new JSONObject();
-      serverInfoJson.put("hostname", hostnameAvatarUri);
+      serverInfoJson.put("avatar", hostnameAvatarUri);
       serverInfoJson.put("sitename", siteName);
       // Replace server avatar uri if exists.
       json.put(hostname, hostnameAvatarUri == null ? JSONObject.NULL : serverInfoJson);
@@ -82,7 +82,7 @@ public class RocketChatCache {
         String hostname = iter.next();
         JSONObject serverInfoJson = jsonObj.getJSONObject(hostname);
         serverList.add(new Pair<>(hostname, new Pair<>(
-                "http://" + hostname + "/" + serverInfoJson.getString("hostname"),
+                "http://" + hostname + "/" + serverInfoJson.getString("avatar"),
                 serverInfoJson.getString("sitename"))));
       }
       return serverList;
@@ -100,10 +100,28 @@ public class RocketChatCache {
     try {
       JSONObject jsonObj = new JSONObject(json);
       jsonObj.remove(hostname);
-      setString(KEY_HOSTNAME_LIST, jsonObj.toString());
+      String result = jsonObj.length() == 0 ? null : jsonObj.toString();
+      setString(KEY_HOSTNAME_LIST, result);
     } catch (JSONException e) {
       RCLog.e(e);
     }
+  }
+
+  @Nullable
+  public String getFirstLoggedHostnameIfAny() {
+    String json = getString(KEY_HOSTNAME_LIST, null);
+    if (json != null) {
+      try {
+        JSONObject jsonObj = new JSONObject(json);
+        if (jsonObj.length() > 0 && jsonObj.keys().hasNext()) {
+          // Returns the first hostname on the list.
+          return jsonObj.keys().next();
+        }
+      } catch (JSONException e) {
+        RCLog.e(e);
+      }
+    }
+    return null;
   }
 
   public String getSelectedRoomId() {
@@ -194,7 +212,9 @@ public class RocketChatCache {
     try {
       JSONObject selectedRoomIdJsonObject = getSelectedRoomIdJsonObject();
       selectedRoomIdJsonObject.remove(currentHostname);
-      setString(KEY_SELECTED_ROOM_ID, selectedRoomIdJsonObject.toString());
+      String result = selectedRoomIdJsonObject.length() == 0 ?
+              null : selectedRoomIdJsonObject.toString();
+      setString(KEY_SELECTED_ROOM_ID, result);
     } catch (JSONException e) {
       Logger.report(e);
       RCLog.e(e);

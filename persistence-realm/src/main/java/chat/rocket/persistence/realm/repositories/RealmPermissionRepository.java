@@ -26,11 +26,16 @@ public class RealmPermissionRepository extends RealmRepository implements Permis
   public Single<Optional<Permission>> getById(String id) {
     return Single.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmPermission.class)
-                .equalTo(RealmPermission.Columns.ID, id)
-                .findAll()
-                .<RealmResults<RealmPermission>>asObservable()),
+        pair -> {
+            if (pair.first == null) {
+                return Flowable.empty();
+            }
+            return RxJavaInterop.toV2Flowable(
+                pair.first.where(RealmPermission.class)
+                    .equalTo(RealmPermission.Columns.ID, id)
+                    .findAll()
+                    .<RealmResults<RealmPermission>>asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))

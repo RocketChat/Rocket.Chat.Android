@@ -329,7 +329,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   }
 
   @DebugLog
-  public void cleanUpBeforeLogout() {
+  public void beforeLogoutCleanUp() {
     presenter.beforeLogoutCleanUp();
   }
 

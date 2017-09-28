@@ -45,8 +45,8 @@ public interface SidebarMainContract {
 
     void onUserOffline();
 
-    void onLogout(Continuation continuation);
+    void onLogout(Continuation<Void, Object> continuation);
 
-    void cleanUpBeforeLogout();
+    void beforeLogoutCleanUp();
   }
 }

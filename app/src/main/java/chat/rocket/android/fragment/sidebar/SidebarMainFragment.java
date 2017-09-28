@@ -339,14 +339,14 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   private void setupLogoutButton() {
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
       closeUserActionContainer();
+      // Clear relative data and set new hostname if any.
+      presenter.beforeLogoutCleanUp();
       final Activity activity = getActivity();
       if (activity != null && activity instanceof MainActivity) {
         ((MainActivity) activity).showLogoutMessage();
-        // Clear subscriptions.
-        ((MainActivity) activity).cleanUpBeforeLogout();
+        // Clear subscriptions on MainPresenter.
+        ((MainActivity) activity).beforeLogoutCleanUp();
       }
-      // Clear relative data and set new hostname if any.
-      presenter.cleanUpBeforeLogout();
     });
   }
 

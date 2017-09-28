@@ -22,7 +22,6 @@ import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomSidebar;
-import chat.rocket.core.models.ServerInfo;
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.SpotlightRepository;
@@ -139,7 +138,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     }
 
     @Override
-    public void onLogout(Continuation continuation) {
+    public void onLogout(Continuation<Void, Object> continuation) {
         methodCallHelper.logout().continueWith(task -> {
             if (task.isFaulted()) {
                 Logger.report(task.getError());
@@ -150,21 +149,17 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     }
 
     @Override
-    public void cleanUpBeforeLogout() {
+    public void beforeLogoutCleanUp() {
+        clearSubscriptions();
         String currentHostname = rocketChatCache.getSelectedServerHostname();
         RealmHelper realmHelper = RealmStore.getOrCreate(currentHostname);
         realmHelper.executeTransaction(realm -> {
             realm.deleteAll();
             ConnectivityManagerApi connectivityManagerApi = ConnectivityManager.getInstance(RocketChatApplication.getInstance());
             connectivityManagerApi.removeServer(currentHostname);
-            List<ServerInfo> serverList = connectivityManagerApi.getServerList();
-            String newHostname = null;
-            if (serverList != null && serverList.size() > 0) {
-                newHostname = serverList.get(0).getHostname();
-            }
             rocketChatCache.removeHostname(currentHostname);
             rocketChatCache.removeSelectedRoomId(currentHostname);
-            rocketChatCache.setSelectedServerHostname(newHostname);
+            rocketChatCache.setSelectedServerHostname(rocketChatCache.getFirstLoggedHostnameIfAny());
             view.onLogoutCleanUp();
             return null;
         });
