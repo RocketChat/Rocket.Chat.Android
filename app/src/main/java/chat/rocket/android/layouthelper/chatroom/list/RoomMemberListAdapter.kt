@@ -31,7 +31,7 @@ class RoomMemberListAdapter(private var dataSet: List<User>, private val hostnam
 
         holder.name.text = user.name
 
-        val userStatusDrawable: Drawable? = VectorDrawableCompat.create(context.resources, chat.rocket.android.widget.R.drawable.ic_user_status_black_24dp, null)
+        val userStatusDrawable: Drawable? = VectorDrawableCompat.create(context.resources, chat.rocket.android.widget.R.drawable.ic_user_status_black_24dp, null)?.mutate()
         DrawableHelper.wrapDrawable(userStatusDrawable)
         when (user.status) {
             User.STATUS_ONLINE -> DrawableHelper.tintDrawable(userStatusDrawable, context, chat.rocket.android.widget.R.color.color_user_status_online)
