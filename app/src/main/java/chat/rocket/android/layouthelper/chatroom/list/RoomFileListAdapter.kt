@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
-import chat.rocket.android.widget.message.RocketChatMessageLayout
+import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
+import chat.rocket.core.models.Attachment
 import kotlinx.android.synthetic.main.item_room_file.view.*
 
 /**
  * Created by Filipe de Lima Brito (filipedelimabrito@gmail.com) on 9/22/17.
  */
-class RoomFileListAdapter(private var dataSet: List<String>) : RecyclerView.Adapter<RoomFileListAdapter.ViewHolder>() {
+class RoomFileListAdapter(private var dataSet: List<Attachment>) : RecyclerView.Adapter<RoomFileListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_room_file, parent, false)
@@ -19,17 +20,18 @@ class RoomFileListAdapter(private var dataSet: List<String>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.fileNameLink.setText(dataSet[position])
+        holder.attachment.appendAttachmentView(dataSet[position], true)
     }
 
     override fun getItemCount(): Int = dataSet.size
 
-    fun setDataSet(dataSet: List<String>) {
-        this.dataSet = dataSet
-        notifyDataSetChanged()
+    fun addDataSet(dataSet: List<Attachment>) {
+        val previousDataSetSize = this.dataSet.size
+        this.dataSet += dataSet
+        notifyItemRangeInserted(previousDataSetSize, dataSet.size)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val fileNameLink : RocketChatMessageLayout = itemView.fileLink
+        val attachment: RocketChatMessageAttachmentsLayout = itemView.attachment
     }
 }
