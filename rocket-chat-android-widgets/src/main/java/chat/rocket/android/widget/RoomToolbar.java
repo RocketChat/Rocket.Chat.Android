@@ -92,6 +92,11 @@ public class RoomToolbar extends Toolbar {
     toolbarText.setText(title);
   }
 
+  public void hideChannelIcons() {
+    roomTypeImage.setVisibility(GONE);
+    userStatusImage.setVisibility(GONE);
+  }
+
   public void showPrivateChannelIcon() {
     roomTypeImage.setImageDrawable(privateChannelDrawable);
     userStatusImage.setVisibility(GONE);

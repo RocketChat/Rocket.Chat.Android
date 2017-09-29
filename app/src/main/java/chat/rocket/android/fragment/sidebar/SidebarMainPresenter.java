@@ -6,13 +6,18 @@ import android.support.v4.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+import bolts.Continuation;
+import bolts.Task;
 import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.RocketChatApplication;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
@@ -21,6 +26,8 @@ import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.SpotlightRepository;
 import chat.rocket.core.repositories.UserRepository;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -131,8 +138,31 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     }
 
     @Override
-    public void onLogout() {
-        methodCallHelper.logout().continueWith(new LogIfError());
+    public void onLogout(Continuation<Void, Object> continuation) {
+        methodCallHelper.logout().continueWith(task -> {
+            if (task.isFaulted()) {
+                Logger.report(task.getError());
+                return Task.forError(task.getError());
+            }
+            return task.onSuccess(continuation);
+        });
+    }
+
+    @Override
+    public void beforeLogoutCleanUp() {
+        clearSubscriptions();
+        String currentHostname = rocketChatCache.getSelectedServerHostname();
+        RealmHelper realmHelper = RealmStore.getOrCreate(currentHostname);
+        realmHelper.executeTransaction(realm -> {
+            realm.deleteAll();
+            ConnectivityManagerApi connectivityManagerApi = ConnectivityManager.getInstance(RocketChatApplication.getInstance());
+            connectivityManagerApi.removeServer(currentHostname);
+            rocketChatCache.removeHostname(currentHostname);
+            rocketChatCache.removeSelectedRoomId(currentHostname);
+            rocketChatCache.setSelectedServerHostname(rocketChatCache.getFirstLoggedHostnameIfAny());
+            view.onLogoutCleanUp();
+            return null;
+        });
     }
 
     @Override

@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 
 import com.hadisatrio.optional.Optional;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import chat.rocket.android.LaunchUtil;
@@ -61,6 +64,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       if (intent.hasExtra(PushConstants.ROOM_ID)) {
         rocketChatCache.setSelectedRoomId(intent.getStringExtra(PushConstants.ROOM_ID));
       }
+    } else {
+      updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
     }
 
     if (intent.hasExtra(PushConstants.NOT_ID)) {
@@ -194,7 +199,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     compositeDisposable.add(
         rocketChatCache.getSelectedRoomIdPublisher()
             .map(Optional::get)
-            .distinctUntilChanged()
+            .map(this::convertStringToJsonObject)
+            .map(jsonObject -> jsonObject.optString(rocketChatCache.getSelectedServerHostname(), null))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -202,5 +208,12 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
                 Logger::report
             )
     );
+  }
+
+  private JSONObject convertStringToJsonObject(String json) throws JSONException {
+    if (json == null) {
+      return new JSONObject();
+    }
+    return new JSONObject(json);
   }
 }

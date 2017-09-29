@@ -34,10 +34,16 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
   public Flowable<List<Room>> getAll() {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmRoom.class)
-                .findAll()
-                .asObservable()),
+        pair -> {
+            if (pair.first == null) {
+                return Flowable.empty();
+            }
+
+            return RxJavaInterop.toV2Flowable(
+                    pair.first.where(RealmRoom.class)
+                            .findAll()
+                            .asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
@@ -51,6 +57,10 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> {
+          if (pair.first == null) {
+            return Flowable.empty();
+          }
+
           RealmRoom realmRoom = pair.first.where(RealmRoom.class)
               .equalTo(RealmRoom.ROOM_ID, roomId)
               .findFirst();
@@ -84,6 +94,9 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
         pair -> {
+          if (pair.first == null) {
+              return Flowable.empty();
+          }
 
           LoadMessageProcedure messageProcedure = pair.first.where(LoadMessageProcedure.class)
               .equalTo(LoadMessageProcedure.ID, roomId)
@@ -147,17 +160,22 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
   public Flowable<List<Room>> getSortedLikeName(String name, SortDirection direction, int limit) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmRoom.class)
-                .like(RealmRoom.NAME, "*" + name + "*", Case.INSENSITIVE)
-                .beginGroup()
-                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
-                .or()
-                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
-                .endGroup()
-                .findAllSorted(RealmRoom.NAME,
-                    direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
-                .asObservable()),
+        pair -> {
+            if (pair.first == null) {
+                return Flowable.empty();
+            }
+            return RxJavaInterop.toV2Flowable(
+                pair.first.where(RealmRoom.class)
+                    .like(RealmRoom.NAME, "*" + name + "*", Case.INSENSITIVE)
+                    .beginGroup()
+                    .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
+                    .or()
+                    .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
+                    .endGroup()
+                    .findAllSorted(RealmRoom.NAME,
+                        direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
+                    .asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
@@ -170,15 +188,20 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
   public Flowable<List<Room>> getLatestSeen(int limit) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmRoom.class)
-                .beginGroup()
-                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
-                .or()
-                .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
-                .endGroup()
-                .findAllSorted(RealmRoom.LAST_SEEN, Sort.ASCENDING)
-                .asObservable()),
+        pair -> {
+            if (pair.first == null) {
+                return Flowable.empty();
+            }
+            return RxJavaInterop.toV2Flowable(
+                pair.first.where(RealmRoom.class)
+                    .beginGroup()
+                    .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
+                    .or()
+                    .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
+                    .endGroup()
+                    .findAllSorted(RealmRoom.LAST_SEEN, Sort.ASCENDING)
+                    .asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))

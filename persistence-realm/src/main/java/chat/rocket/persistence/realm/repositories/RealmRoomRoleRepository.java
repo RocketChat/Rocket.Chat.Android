@@ -29,12 +29,17 @@ public class RealmRoomRoleRepository extends RealmRepository implements RoomRole
   public Single<Optional<RoomRole>> getFor(Room room, User user) {
     return Single.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmRoomRole.class)
-                .equalTo(RealmRoomRole.Columns.ROOM_ID, room.getId())
-                .equalTo(RealmRoomRole.Columns.USER + "." + RealmUser.ID, user.getId())
-                .findAll()
-                .<RealmResults<RealmRoomRole>>asObservable()),
+        pair -> {
+            if (pair.first == null) {
+                return Flowable.empty();
+            }
+            return RxJavaInterop.toV2Flowable(
+                pair.first.where(RealmRoomRole.class)
+                    .equalTo(RealmRoomRole.Columns.ROOM_ID, room.getId())
+                    .equalTo(RealmRoomRole.Columns.USER + "." + RealmUser.ID, user.getId())
+                    .findAll()
+                    .<RealmResults<RealmRoomRole>>asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))

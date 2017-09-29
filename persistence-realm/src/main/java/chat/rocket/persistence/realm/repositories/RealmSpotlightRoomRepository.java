@@ -29,16 +29,22 @@ public class RealmSpotlightRoomRepository extends RealmRepository implements Spo
   public Flowable<List<SpotlightRoom>> getSuggestionsFor(String name, SortDirection direction, int limit) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmSpotlightRoom.class)
-                .like(RealmSpotlightRoom.Columns.NAME, "*" + name + "*", Case.INSENSITIVE)
-                .beginGroup()
-                .equalTo(RealmSpotlightRoom.Columns.TYPE, RealmRoom.TYPE_CHANNEL)
-                .or()
-                .equalTo(RealmSpotlightRoom.Columns.TYPE, RealmRoom.TYPE_PRIVATE)
-                .endGroup()
-                .findAllSorted(RealmSpotlightRoom.Columns.NAME, direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
-                .asObservable()),
+        pair -> {
+          if (pair.first == null) {
+            return Flowable.empty();
+          }
+
+          return RxJavaInterop.toV2Flowable(
+                  pair.first.where(RealmSpotlightRoom.class)
+                          .like(RealmSpotlightRoom.Columns.NAME, "*" + name + "*", Case.INSENSITIVE)
+                          .beginGroup()
+                          .equalTo(RealmSpotlightRoom.Columns.TYPE, RealmRoom.TYPE_CHANNEL)
+                          .or()
+                          .equalTo(RealmSpotlightRoom.Columns.TYPE, RealmRoom.TYPE_PRIVATE)
+                          .endGroup()
+                          .findAllSorted(RealmSpotlightRoom.Columns.NAME, direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
+                          .asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
