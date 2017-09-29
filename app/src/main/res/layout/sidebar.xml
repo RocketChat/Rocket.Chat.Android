@@ -1,41 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/sub_sliding_pane"
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:theme="@style/AppTheme.Dark">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sub_sliding_pane"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:theme="@style/AppTheme.Dark">
 
     <android.support.v4.widget.NestedScrollView
-            android:layout_width="96dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="?attr/colorPrimaryDark">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="?attr/colorPrimaryDark">
 
         <LinearLayout
+            android:id="@+id/server_list_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/btn_add_server"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="80dp"
+                android:background="?selectableItemBackground"
+                android:descendantFocusability="afterDescendants">
 
-            <ImageButton
+                <io.github.yusukeiwaki.android.widget.FontAwesomeTextView
+                    android:id="@+id/fa_add_server"
                     style="@style/Base.Widget.AppCompat.Button.Borderless"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_margin="@dimen/margin_8"
-                    android:src="@mipmap/ic_launcher" />
+                    android:background="@null"
+                    android:clickable="false"
+                    android:duplicateParentState="true"
+                    android:text="@string/fa_plus"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <io.github.yusukeiwaki.android.widget.FontAwesomeButton
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_margin="@dimen/margin_8"
-                    android:text="@string/fa_plus" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text="@string/add_new_team"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/fa_add_server"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
         </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
     <FrameLayout
-            android:id="@+id/sidebar_fragment_container"
-            android:layout_width="280dp"
-            android:layout_height="match_parent" />
+        android:id="@+id/sidebar_fragment_container"
+        android:layout_width="280dp"
+        android:layout_height="match_parent" />
 
 </android.support.v4.widget.SlidingPaneLayout>

@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment.sidebar;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,13 +9,23 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import bolts.Task;
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
+import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.fragment.sidebar.dialog.AddChannelDialogFragment;
@@ -39,14 +50,8 @@ import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
-import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SidebarMainFragment extends AbstractFragment implements SidebarMainContract.View {
   private SidebarMainContract.Presenter presenter;
@@ -87,26 +92,42 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         new SessionInteractor(new RealmSessionRepository(hostname))
     );
 
+    RocketChatCache rocketChatCache = new RocketChatCache(getContext().getApplicationContext());
+
     presenter = new SidebarMainPresenter(
         hostname,
         new RoomInteractor(new RealmRoomRepository(hostname)),
         userRepository,
-        new RocketChatCache(getContext()),
+        rocketChatCache,
         absoluteUrlHelper,
         new MethodCallHelper(getContext(), hostname),
         new RealmSpotlightRepository(hostname)
     );
   }
 
+  @Nullable
+  @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    presenter.bindView(this);
+    return view;
+  }
+
+  @Override
+  public void onDestroyView() {
+    presenter.release();
+    super.onDestroyView();
+  }
+
   @Override
   public void onResume() {
     super.onResume();
-    presenter.bindView(this);
+
   }
 
   @Override
   public void onPause() {
-    presenter.release();
+
     super.onPause();
   }
 
@@ -219,9 +240,14 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         );
   }
 
-  private void showUserActionContainer(boolean show) {
+  public void showUserActionContainer(boolean show) {
     rootView.findViewById(R.id.user_action_outer_container)
             .setVisibility(show ? View.VISIBLE : View.GONE);
+  }
+
+  public void toggleUserActionContainer(boolean checked) {
+    CompoundButton toggleUserAction = rootView.findViewById(R.id.toggle_user_action);
+    toggleUserAction.setChecked(checked);
   }
 
   @Override
@@ -280,7 +306,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     ));
 
     roomListHeaders.add(new LivechatRoomListHeader(
-            getString(R.string.fragment_sidebar_main_livechat_title)
+        getString(R.string.fragment_sidebar_main_livechat_title)
     ));
 
     roomListHeaders.add(new ChannelRoomListHeader(
@@ -295,12 +321,32 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     adapter.setRoomListHeaders(roomListHeaders);
   }
 
+  @Override
+  public void onLogoutCleanUp() {
+    Activity activity = getActivity();
+    if (activity != null && activity instanceof MainActivity) {
+      ((MainActivity) activity).hideLogoutMessage();
+      ((MainActivity) activity).onLogout();
+      presenter.onLogout(task -> {
+        if (task.isFaulted()) {
+          return Task.forError(task.getError());
+        }
+        return null;
+      });
+    }
+  }
+
   private void setupLogoutButton() {
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
-      presenter.onLogout();
       closeUserActionContainer();
-      // destroy Activity on logout to be able to recreate most of the environment
-      this.getActivity().finish();
+      // Clear relative data and set new hostname if any.
+      presenter.beforeLogoutCleanUp();
+      final Activity activity = getActivity();
+      if (activity != null && activity instanceof MainActivity) {
+        ((MainActivity) activity).showLogoutMessage();
+        // Clear subscriptions on MainPresenter.
+        ((MainActivity) activity).beforeLogoutCleanUp();
+      }
     });
   }
 

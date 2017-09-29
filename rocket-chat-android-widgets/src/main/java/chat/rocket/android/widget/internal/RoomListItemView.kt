@@ -2,35 +2,26 @@ package chat.rocket.android.widget.internal
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.ColorRes
-import android.support.annotation.StringRes
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-
 import chat.rocket.android.widget.R
 import chat.rocket.android.widget.helper.DrawableHelper
+import kotlinx.android.synthetic.main.room_list_item.view.*
 
 /**
  * Room list-item view used in sidebar.
  */
 class RoomListItemView : FrameLayout {
     lateinit private var roomId: String
-    lateinit private var roomTypeImage: ImageView
-    lateinit private var userStatusImage: ImageView
-    lateinit private var roomNameText: TextView
-    lateinit private var alertCountText: TextView
-    lateinit private var privateChannelDrawable: Drawable
-    lateinit private var publicChannelDrawable: Drawable
-    lateinit private var livechatChannelDrawable: Drawable
-    lateinit private var userStatusDrawable: Drawable
+    private val privateChannelDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_lock_white_24dp, null)
+    private val publicChannelDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_hashtag_white_24dp, null)
+    private val liveChatChannelDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_livechat_white_24dp, null)
+    private val userStatusDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_user_status_black_24dp, null)?.mutate()
 
     constructor(context: Context) : super(context) {
         initialize(context)
@@ -50,7 +41,7 @@ class RoomListItemView : FrameLayout {
     }
 
     private fun initialize(context: Context) {
-        layoutParams = LinearLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
 
         val array = context
                 .theme
@@ -60,16 +51,6 @@ class RoomListItemView : FrameLayout {
         array.recycle()
 
         View.inflate(context, R.layout.room_list_item, this)
-
-        roomTypeImage = findViewById(R.id.image_room_type)
-        userStatusImage = findViewById(R.id.image_user_status)
-        roomNameText = findViewById(R.id.text_room_name)
-        alertCountText = findViewById(R.id.text_alert_count)
-
-        privateChannelDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_lock_white_24dp, null)!!
-        publicChannelDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_hashtag_white_24dp, null)!!
-        livechatChannelDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_livechat_white_24dp, null)!!
-        userStatusDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_user_status_black_24dp, null)!!
     }
 
     fun setRoomId(roomId: String) {
@@ -78,10 +59,10 @@ class RoomListItemView : FrameLayout {
 
     fun setUnreadCount(count: Int) {
         if (count > 0) {
-            alertCountText.text = count.toString()
-            alertCountText.visibility = View.VISIBLE
+            alertCount.text = count.toString()
+            alertCount.visibility = View.VISIBLE
         } else {
-            alertCountText.visibility = View.GONE
+            alertCount.visibility = View.GONE
         }
     }
 
@@ -90,25 +71,25 @@ class RoomListItemView : FrameLayout {
     }
 
     fun setRoomName(roomName: String) {
-        roomNameText.text = roomName
+        name.text = roomName
     }
 
     fun showPrivateChannelIcon() {
-        roomTypeImage.setImageDrawable(privateChannelDrawable)
-        userStatusImage.visibility = View.GONE
-        roomTypeImage.visibility = View.VISIBLE
+        type.setImageDrawable(privateChannelDrawable)
+        userStatus.visibility = View.GONE
+        type.visibility = View.VISIBLE
     }
 
     fun showPublicChannelIcon() {
-        roomTypeImage.setImageDrawable(publicChannelDrawable)
-        userStatusImage.visibility = View.GONE
-        roomTypeImage.visibility = View.VISIBLE
+        type.setImageDrawable(publicChannelDrawable)
+        userStatus.visibility = View.GONE
+        type.visibility = View.VISIBLE
     }
 
     fun showLivechatChannelIcon() {
-        roomTypeImage.setImageDrawable(livechatChannelDrawable)
-        userStatusImage.visibility = View.GONE
-        roomTypeImage.visibility = View.VISIBLE
+        type.setImageDrawable(liveChatChannelDrawable)
+        userStatus.visibility = View.GONE
+        type.visibility = View.VISIBLE
     }
 
     fun showOnlineUserStatusIcon() {
@@ -130,8 +111,8 @@ class RoomListItemView : FrameLayout {
     private fun prepareDrawableAndShow(@ColorRes resId: Int) {
         DrawableHelper.wrapDrawable(userStatusDrawable)
         DrawableHelper.tintDrawable(userStatusDrawable, context, resId)
-        userStatusImage.setImageDrawable(userStatusDrawable)
-        roomTypeImage.visibility = View.GONE
-        userStatusImage.visibility = View.VISIBLE
+        userStatus.setImageDrawable(userStatusDrawable)
+        type.visibility = View.GONE
+        userStatus.visibility = View.VISIBLE
     }
 }

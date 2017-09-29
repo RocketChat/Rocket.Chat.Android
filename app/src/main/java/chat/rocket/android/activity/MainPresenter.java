@@ -1,21 +1,32 @@
 package chat.rocket.android.activity;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+
+import com.hadisatrio.optional.Optional;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.Logger;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.service.ServerConnectivity;
 import chat.rocket.android.shared.BasePresenter;
+import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
+import chat.rocket.core.models.PublicSetting;
 import chat.rocket.core.models.Session;
 import chat.rocket.core.models.User;
+import chat.rocket.core.repositories.PublicSettingRepository;
+import chat.rocket.core.utils.Pair;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,19 +41,21 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   private final MethodCallHelper methodCallHelper;
   private final ConnectivityManagerApi connectivityManagerApi;
   private final RocketChatCache rocketChatCache;
+  private final PublicSettingRepository publicSettingRepository;
 
   public MainPresenter(RoomInteractor roomInteractor,
                        CanCreateRoomInteractor canCreateRoomInteractor,
                        SessionInteractor sessionInteractor,
                        MethodCallHelper methodCallHelper,
                        ConnectivityManagerApi connectivityManagerApi,
-                       RocketChatCache rocketChatCache) {
+                       RocketChatCache rocketChatCache, PublicSettingRepository publicSettingRepository) {
     this.roomInteractor = roomInteractor;
     this.canCreateRoomInteractor = canCreateRoomInteractor;
     this.sessionInteractor = sessionInteractor;
     this.methodCallHelper = methodCallHelper;
     this.connectivityManagerApi = connectivityManagerApi;
     this.rocketChatCache = rocketChatCache;
+    this.publicSettingRepository = publicSettingRepository;
   }
 
   @Override
@@ -51,6 +64,22 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     subscribeToUnreadCount();
     subscribeToSession();
     setUserOnline();
+  }
+
+  @Override
+  public void loadSignedInServers(@NonNull String hostname) {
+    final Disposable disposable = publicSettingRepository.getById(PublicSettingsConstants.Assets.LOGO)
+            .zipWith(publicSettingRepository.getById(PublicSettingsConstants.General.SITE_NAME), Pair::new)
+            .map(this::getLogoAndSiteNamePair)
+            .map(settings -> getServerList(hostname, settings))
+            .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    view::showSignedInServers,
+                    RCLog::e
+            );
+
+    addSubscription(disposable);
   }
 
   @Override
@@ -102,6 +131,32 @@ public class MainPresenter extends BasePresenter<MainContract.View>
             .subscribe();
 
     addSubscription(subscription);
+  }
+
+  @Override
+  public void beforeLogoutCleanUp() {
+      clearSubscriptions();
+  }
+
+  private Pair<String, String> getLogoAndSiteNamePair(Pair<Optional<PublicSetting>, Optional<PublicSetting>> settingsPair) {
+      String logoUrl = "";
+      String siteName = "";
+      if (settingsPair.first.isPresent()) {
+          logoUrl = settingsPair.first.get().getValue();
+      }
+      if (settingsPair.second.isPresent()) {
+          siteName = settingsPair.second.get().getValue();
+      }
+      return new Pair<>(logoUrl, siteName);
+  }
+
+  private List<Pair<String, Pair<String, String>>> getServerList(String hostname, Pair<String, String> serverInfoPair) throws JSONException {
+    JSONObject jsonObject = new JSONObject(serverInfoPair.first);
+    String logoUrl = (jsonObject.has("url")) ?
+            jsonObject.optString("url") : jsonObject.optString("defaultUrl");
+    String siteName = serverInfoPair.second;
+    rocketChatCache.addHostname(hostname.toLowerCase(), logoUrl, siteName);
+    return rocketChatCache.getServerList();
   }
 
   private void openRoom() {

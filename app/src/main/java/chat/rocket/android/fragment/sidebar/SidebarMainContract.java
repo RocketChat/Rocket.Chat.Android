@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 
+import bolts.Continuation;
 import chat.rocket.core.models.RoomSidebar;
 import io.reactivex.Flowable;
 import java.util.List;
@@ -22,6 +23,8 @@ public interface SidebarMainContract {
     void filterRoomSidebarList(CharSequence term);
 
     void show(User user);
+
+    void onLogoutCleanUp();
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
@@ -42,6 +45,8 @@ public interface SidebarMainContract {
 
     void onUserOffline();
 
-    void onLogout();
+    void onLogout(Continuation<Void, Object> continuation);
+
+    void beforeLogoutCleanUp();
   }
 }

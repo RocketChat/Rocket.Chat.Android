@@ -5,18 +5,32 @@ import android.content.SharedPreferences;
 
 import com.hadisatrio.optional.Optional;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
+import chat.rocket.android.helper.Logger;
+import chat.rocket.android.helper.TextUtils;
+import chat.rocket.android.log.RCLog;
+import chat.rocket.core.utils.Pair;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 
 /**
  * sharedpreference-based cache.
  */
 public class RocketChatCache {
-  private static final String KEY_SELECTED_SERVER_HOSTNAME = "selectedServerHostname";
-  private static final String KEY_SELECTED_ROOM_ID = "selectedRoomId";
-  private static final String KEY_PUSH_ID = "pushId";
+  private static final String KEY_SELECTED_SERVER_HOSTNAME = "KEY_SELECTED_SERVER_HOSTNAME";
+  private static final String KEY_SELECTED_ROOM_ID = "KEY_SELECTED_ROOM_ID";
+  private static final String KEY_PUSH_ID = "KEY_PUSH_ID";
+  private static final String KEY_HOSTNAME_LIST = "KEY_HOSTNAME_LIST";
 
   private Context context;
 
@@ -29,15 +43,115 @@ public class RocketChatCache {
   }
 
   public void setSelectedServerHostname(String hostname) {
-    setString(KEY_SELECTED_SERVER_HOSTNAME, hostname);
+    String newHostname = null;
+    if (hostname != null) {
+      newHostname = hostname.toLowerCase();
+    }
+    setString(KEY_SELECTED_SERVER_HOSTNAME, newHostname);
+  }
+
+  public void addHostname(@NonNull String hostname, @Nullable String hostnameAvatarUri, String siteName) {
+    String hostnameList = getString(KEY_HOSTNAME_LIST, null);
+    try {
+      JSONObject json;
+      if (hostnameList == null) {
+        json = new JSONObject();
+      } else {
+        json = new JSONObject(hostnameList);
+      }
+      JSONObject serverInfoJson = new JSONObject();
+      serverInfoJson.put("avatar", hostnameAvatarUri);
+      serverInfoJson.put("sitename", siteName);
+      // Replace server avatar uri if exists.
+      json.put(hostname, hostnameAvatarUri == null ? JSONObject.NULL : serverInfoJson);
+      setString(KEY_HOSTNAME_LIST, json.toString());
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+  }
+
+  public List<Pair<String, Pair<String, String>>> getServerList() {
+    String json = getString(KEY_HOSTNAME_LIST, null);
+    if (json == null) {
+      return Collections.emptyList();
+    }
+    try {
+      JSONObject jsonObj = new JSONObject(json);
+      List<Pair<String, Pair<String, String>>> serverList = new ArrayList<>();
+      for (Iterator<String> iter = jsonObj.keys(); iter.hasNext();) {
+        String hostname = iter.next();
+        JSONObject serverInfoJson = jsonObj.getJSONObject(hostname);
+        serverList.add(new Pair<>(hostname, new Pair<>(
+                "http://" + hostname + "/" + serverInfoJson.getString("avatar"),
+                serverInfoJson.getString("sitename"))));
+      }
+      return serverList;
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+    return Collections.emptyList();
+  }
+
+  public void removeHostname(String hostname) {
+    String json = getString(KEY_HOSTNAME_LIST, null);
+    if (TextUtils.isEmpty(json)) {
+      return;
+    }
+    try {
+      JSONObject jsonObj = new JSONObject(json);
+      jsonObj.remove(hostname);
+      String result = jsonObj.length() == 0 ? null : jsonObj.toString();
+      setString(KEY_HOSTNAME_LIST, result);
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+  }
+
+  @Nullable
+  public String getFirstLoggedHostnameIfAny() {
+    String json = getString(KEY_HOSTNAME_LIST, null);
+    if (json != null) {
+      try {
+        JSONObject jsonObj = new JSONObject(json);
+        if (jsonObj.length() > 0 && jsonObj.keys().hasNext()) {
+          // Returns the first hostname on the list.
+          return jsonObj.keys().next();
+        }
+      } catch (JSONException e) {
+        RCLog.e(e);
+      }
+    }
+    return null;
   }
 
   public String getSelectedRoomId() {
-    return getString(KEY_SELECTED_ROOM_ID, null);
+    try {
+      JSONObject jsonObject = getSelectedRoomIdJsonObject();
+      return jsonObject.optString(getSelectedServerHostname(), null);
+    } catch (JSONException e) {
+      RCLog.e(e);
+      Logger.report(e);
+    }
+    return null;
   }
 
   public void setSelectedRoomId(String roomId) {
-    setString(KEY_SELECTED_ROOM_ID, roomId);
+    try {
+      JSONObject jsonObject = getSelectedRoomIdJsonObject();
+      jsonObject.put(getSelectedServerHostname(), roomId);
+      setString(KEY_SELECTED_ROOM_ID, jsonObject.toString());
+    } catch (JSONException e) {
+      RCLog.e(e);
+      Logger.report(e);
+    }
+  }
+
+  private JSONObject getSelectedRoomIdJsonObject() throws JSONException {
+    String json = getString(KEY_SELECTED_ROOM_ID, null);
+    if (json == null) {
+      return new JSONObject();
+    }
+    return new JSONObject(json);
   }
 
   public String getOrCreatePushId() {
@@ -69,7 +183,7 @@ public class RocketChatCache {
     return getSharedPreferences().edit();
   }
 
-  private String getString(String key, String defaultValue) {
+  public String getString(String key, String defaultValue) {
     return getSharedPreferences().getString(key, defaultValue);
   }
 
@@ -92,5 +206,18 @@ public class RocketChatCache {
 
       getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
     }, BackpressureStrategy.LATEST);
+  }
+
+  public void removeSelectedRoomId(String currentHostname) {
+    try {
+      JSONObject selectedRoomIdJsonObject = getSelectedRoomIdJsonObject();
+      selectedRoomIdJsonObject.remove(currentHostname);
+      String result = selectedRoomIdJsonObject.length() == 0 ?
+              null : selectedRoomIdJsonObject.toString();
+      setString(KEY_SELECTED_ROOM_ID, result);
+    } catch (JSONException e) {
+      Logger.report(e);
+      RCLog.e(e);
+    }
   }
 }

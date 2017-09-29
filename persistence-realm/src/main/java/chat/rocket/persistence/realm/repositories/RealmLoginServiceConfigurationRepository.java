@@ -29,11 +29,17 @@ public class RealmLoginServiceConfigurationRepository extends RealmRepository
   public Single<Optional<LoginServiceConfiguration>> getByName(String serviceName) {
     return Single.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmMeteorLoginServiceConfiguration.class)
-                .equalTo(RealmMeteorLoginServiceConfiguration.SERVICE, serviceName)
-                .findAll()
-                .<RealmResults<RealmMeteorLoginServiceConfiguration>>asObservable()),
+        pair -> {
+          if (pair.first == null) {
+            return Flowable.empty();
+          }
+
+          return RxJavaInterop.toV2Flowable(
+                  pair.first.where(RealmMeteorLoginServiceConfiguration.class)
+                          .equalTo(RealmMeteorLoginServiceConfiguration.SERVICE, serviceName)
+                          .findAll()
+                          .<RealmResults<RealmMeteorLoginServiceConfiguration>>asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
@@ -46,10 +52,16 @@ public class RealmLoginServiceConfigurationRepository extends RealmRepository
   public Flowable<List<LoginServiceConfiguration>> getAll() {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop
-            .toV2Flowable(pair.first.where(RealmMeteorLoginServiceConfiguration.class)
-                .findAll()
-                .asObservable()),
+        pair -> {
+          if (pair.first == null) {
+            return Flowable.empty();
+          }
+
+          return RxJavaInterop
+                  .toV2Flowable(pair.first.where(RealmMeteorLoginServiceConfiguration.class)
+                          .findAll()
+                          .asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))

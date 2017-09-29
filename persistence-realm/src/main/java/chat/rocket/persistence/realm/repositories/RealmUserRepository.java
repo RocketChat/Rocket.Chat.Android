@@ -31,10 +31,16 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
     public Flowable<List<User>> getAll() {
         return Flowable.defer(() -> Flowable.using(
                 () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-                pair -> RxJavaInterop.toV2Flowable(
-                        pair.first.where(RealmUser.class)
-                                .findAll()
-                                .asObservable()),
+                pair -> {
+                    if (pair.first == null) {
+                        return Flowable.empty();
+                    }
+
+                    return RxJavaInterop.toV2Flowable(
+                            pair.first.where(RealmUser.class)
+                                    .findAll()
+                                    .asObservable());
+                },
                 pair -> close(pair.first, pair.second))
                 .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
                 .filter(roomSubscriptions -> roomSubscriptions != null && roomSubscriptions.isLoaded()
@@ -60,11 +66,17 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
     private Flowable<RealmResults<RealmUser>> realmGetCurrent() {
         return Flowable.using(
                 () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-                pair -> RxJavaInterop.toV2Flowable(
+                pair -> {
+                    if (pair.first == null) {
+                        return Flowable.empty();
+                    }
+
+                    return RxJavaInterop.toV2Flowable(
                         pair.first.where(RealmUser.class)
                                 .isNotEmpty(RealmUser.EMAILS)
                                 .findAll()
-                                .<RealmResults<RealmUser>>asObservable()),
+                                .<RealmResults<RealmUser>>asObservable());
+                },
                 pair -> close(pair.first, pair.second));
     }
 
@@ -90,6 +102,10 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
     }
 
     private Flowable<Optional<RealmUser>> realmQueryUsername(Realm realm, String username) {
+        if (realm == null) {
+            return Flowable.empty();
+        }
+
         RealmUser realmUser = realm.where(RealmUser.class)
                 .equalTo(RealmUser.USERNAME, username)
                 .findFirst();
@@ -118,11 +134,17 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
     private Flowable<RealmResults<RealmUser>> realmGetSortedLikeName(String name) {
         return Flowable.using(
                 () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-                pair -> RxJavaInterop.toV2Flowable(
-                        pair.first.where(RealmUser.class)
-                                .like(RealmUser.USERNAME, "*" + name + "*", Case.INSENSITIVE)
-                                .findAllSorted(RealmUser.USERNAME, Sort.DESCENDING)
-                                .asObservable()),
+                pair -> {
+                    if (pair.first == null) {
+                        return Flowable.empty();
+                    }
+
+                    return RxJavaInterop.toV2Flowable(
+                            pair.first.where(RealmUser.class)
+                                    .like(RealmUser.USERNAME, "*" + name + "*", Case.INSENSITIVE)
+                                    .findAllSorted(RealmUser.USERNAME, Sort.DESCENDING)
+                                    .asObservable());
+                },
                 pair -> close(pair.first, pair.second));
     }
 

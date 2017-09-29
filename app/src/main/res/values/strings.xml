@@ -13,12 +13,17 @@
     <string name="dialog_add_channel_private">private</string>
     <string name="dialog_add_channel_read_only">read only</string>
 
+    <string name="fragment_room_list_pinned_message_title">Pinned Messages (%s)</string>
+    <string name="fragment_room_list_favorite_message_title">Favorite Messages (%s)</string>
+    <string name="fragment_room_list_file_list_title">File list (%s)</string>
+    <string name="fragment_room_list_member_list_title">Member list (%s)</string>
+    <string name="fragment_room_list_could_not_load_your_request">Could not load your request.\n%s.</string>
+    <string name="fragment_room_list_no_pinned_message_to_show">No pinned message to show</string>
+    <string name="fragment_room_list_no_favorite_message_to_show">No favorite message to show</string>
+    <string name="fragment_room_list_no_file_list_to_show">No file list to show</string>
+    <string name="fragment_room_list_no_member_list_to_show">No member list to show</string>
+
     <string name="start_of_conversation">Start of conversation</string>
-    <string name="users_of_room_title">Members List</string>
-    <plurals name="fmt_room_user_count">
-        <item quantity="one">Total: %,d user</item>
-        <item quantity="other">Total: %,d users</item>
-    </plurals>
     <string name="sending">Sending…</string>
     <string name="not_synced">Not synced</string>
     <string name="failed_to_sync">Failed to sync</string>
@@ -36,6 +41,7 @@
     <string name="dialog_user_registration_email">Email</string>
     <string name="dialog_user_registration_username">Username</string>
     <string name="sub_username">\@%s</string>
+    <string name="username">\@%s</string>
     <string name="dialog_user_registration_password">Password</string>
     <string name="fragment_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
     <string name="fragment_input_hostname_hostname">Hostname</string>
@@ -57,6 +63,7 @@
     <string name="video_upload_message_spec_title">Attach video</string>
 
     <string name="input_hostname_invalid_server_message">Invalid server version</string>
+    <string name="make_sure_your_server_version_is_up_to_date">Make sure your Rocket.Chat server version is up to date</string>
     <string name="connection_error_try_later">There\'s a connection error. Please try later.</string>
 
     <string name="version_info_text">Version: %s</string>
@@ -68,4 +75,11 @@
     <string name="edit_message">Edit message</string>
     <string name="message_options_no_message_info">Ooops. Something\'s up!</string>
     <string name="message_options_no_permissions_info">You have no permissions</string>
+
+    <string name="menu_pinned_messages">Pinned messages</string>
+    <string name="menu_favorite_messages">Favorite messages</string>
+    <string name="menu_file_list">File list</string>
+    <string name="menu_member_list">Member list</string>
+
+    <string name="add_new_team">Add new Team</string>
 </resources>

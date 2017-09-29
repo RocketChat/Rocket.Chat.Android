@@ -20,7 +20,12 @@ class RealmSpotlightRepository(private val hostname: String) : RealmRepository()
     override fun getSuggestionsFor(term: String, limit: Int): Flowable<List<Spotlight>> {
         return Flowable.defer { Flowable.using<RealmResults<RealmSpotlight>, Pair<Realm, Looper>>({
             Pair(RealmStore.getRealm(hostname), Looper.myLooper())
-        }, { pair -> RxJavaInterop.toV2Flowable<RealmResults<RealmSpotlight>>(pair.first.where(RealmSpotlight::class.java)
+        }, { pair ->
+            if (pair.first == null) {
+                return@using Flowable.empty()
+            }
+
+            return@using RxJavaInterop.toV2Flowable<RealmResults<RealmSpotlight>>(pair.first.where(RealmSpotlight::class.java)
                 .findAllSorted(Columns.TYPE, Sort.DESCENDING)
                 .asObservable())
         }) { pair -> close(pair.first, pair.second) }

@@ -2,7 +2,7 @@ package chat.rocket.android.api;
 
 import android.content.Context;
 import android.util.Patterns;
-import chat.rocket.persistence.realm.models.ddp.RealmSpotlight;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +17,6 @@ import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.core.SyncState;
-import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
@@ -25,6 +24,7 @@ import chat.rocket.persistence.realm.models.ddp.RealmPermission;
 import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
+import chat.rocket.persistence.realm.models.ddp.RealmSpotlight;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
@@ -52,7 +52,7 @@ public class MethodCallHelper {
    */
   public MethodCallHelper(Context context, String hostname) {
     this.context = context.getApplicationContext();
-    this.realmHelper = RealmStore.get(hostname);
+    this.realmHelper = RealmStore.getOrCreate(hostname);
     ddpClientRef = null;
   }
 
@@ -260,18 +260,12 @@ public class MethodCallHelper {
    * Logout.
    */
   public Task<Void> logout() {
-    return call("logout", TIMEOUT_MS).onSuccessTask(task ->
-        realmHelper.executeTransaction(realm -> {
-          realm.delete(RealmSession.class);
-          //check whether the server list is empty
-          if (!ConnectivityManager.getInstance(context).getServerList().isEmpty()){
-            //for each server in serverList -> remove the server
-            for (ServerInfo server: ConnectivityManager.getInstance(context).getServerList()) {
-              ConnectivityManager.getInstance(context.getApplicationContext()).removeServer(server.getHostname());
-            }
-          }
-          return null;
-        }));
+    return call("logout", TIMEOUT_MS).onSuccessTask(task -> {
+      if (task.isFaulted()) {
+        return Task.forError(task.getError());
+      }
+      return null;
+    });
   }
 
   /**

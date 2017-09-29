@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingRight="@dimen/margin_16"
+    android:paddingStart="@dimen/margin_16"
+    android:paddingLeft="@dimen/margin_16"
+    android:paddingEnd="@dimen/margin_16"
+    android:paddingBottom="@dimen/margin_16">
+
+    <include
+        android:id="@+id/dayLayout"
+        layout="@layout/day" />
+
+    <chat.rocket.android.widget.RocketChatAvatar
+        android:id="@+id/userAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/dayLayout" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/userContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginStart="@dimen/margin_16"
+        app:layout_constraintTop_toBottomOf="@+id/dayLayout"
+        app:layout_constraintLeft_toRightOf="@+id/userAvatar">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.RocketChat.Message.Name"
+            tools:text="John Doe" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.RocketChat.Message.Username"
+            app:layout_constraintLeft_toLeftOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:text="\@john.doe" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/messageContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginStart="@dimen/margin_16"
+        app:layout_constraintTop_toBottomOf="@+id/userContainer"
+        app:layout_constraintLeft_toRightOf="@+id/userAvatar"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <chat.rocket.android.widget.message.RocketChatMessageLayout
+            android:id="@+id/messageBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <chat.rocket.android.widget.message.RocketChatMessageUrlsLayout
+            android:id="@+id/messageUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/messageBody"
+            app:layout_constraintTop_toBottomOf="@+id/messageBody" />
+
+        <chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
+            android:id="@+id/messageAttachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/messageUrl"
+            app:layout_constraintTop_toBottomOf="@+id/messageUrl" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

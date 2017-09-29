@@ -1,6 +1,9 @@
 package chat.rocket.android.activity;
 
+import java.util.List;
+
 import chat.rocket.android.shared.BaseContract;
+import chat.rocket.core.utils.Pair;
 
 public interface MainContract {
 
@@ -21,6 +24,8 @@ public interface MainContract {
     void showConnecting();
 
     void showConnectionOk();
+
+    void showSignedInServers(List<Pair<String, Pair<String, String>>> serverList);
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
@@ -30,5 +35,9 @@ public interface MainContract {
     void onRetryLogin();
 
     void bindViewOnly(View view);
+
+    void loadSignedInServers(String hostname);
+
+    void beforeLogoutCleanUp();
   }
 }

@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.helper.DebouncingOnClickListener;
 
 public class MessageFormLayout extends LinearLayout {
 
@@ -57,18 +58,18 @@ public class MessageFormLayout extends LinearLayout {
 
     attachButton = composer.findViewById(R.id.button_attach);
 
-    attachButton.setOnClickListener(new OnClickListener() {
+    attachButton.setOnClickListener(new DebouncingOnClickListener() {
       @Override
-      public void onClick(View view) {
+      public void doClick(View view) {
         onExtraActionSelectionClick();
       }
     });
 
     sendButton = composer.findViewById(R.id.button_send);
 
-    sendButton.setOnClickListener(new OnClickListener() {
+    sendButton.setOnClickListener(new DebouncingOnClickListener() {
       @Override
-      public void onClick(View view) {
+      public void doClick(View v) {
         String messageText = getText();
         if (messageText.length() > 0 && submitTextListener != null) {
           submitTextListener.onSubmitText(messageText);
@@ -163,8 +164,8 @@ public class MessageFormLayout extends LinearLayout {
   }
 
   public void setEnabled(boolean enabled) {
-    getEditor().setEnabled(enabled);
-    composer.findViewById(R.id.button_send).setEnabled(enabled);
+    sendButton.setEnabled(enabled);
+    attachButton.setEnabled(enabled);
   }
 
   public void setEditTextCommitContentListener(

@@ -26,11 +26,17 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
   public Flowable<Optional<Session>> getById(int id) {
     return Flowable.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmSession.class)
-                .equalTo(RealmSession.ID, id)
-                .findAll()
-                .<RealmSession>asObservable()),
+        pair -> {
+          if (pair.first == null) {
+            return Flowable.empty();
+          }
+
+          return RxJavaInterop.toV2Flowable(
+                  pair.first.where(RealmSession.class)
+                          .equalTo(RealmSession.ID, id)
+                          .findAll()
+                          .<RealmSession>asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))

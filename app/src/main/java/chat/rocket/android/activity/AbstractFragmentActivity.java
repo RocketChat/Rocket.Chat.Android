@@ -1,5 +1,6 @@
 package chat.rocket.android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -13,9 +14,16 @@ import icepick.Icepick;
 
 abstract class AbstractFragmentActivity extends RxAppCompatActivity {
 
+  public static final String EXTRA_FINISH_ON_BACK_PRESS = "EXTRA_FINISH_ON_BACK_PRESS";
+  private boolean finishOnBackPress;
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Intent intent = getIntent();
+    if (intent != null) {
+      finishOnBackPress = intent.getBooleanExtra(EXTRA_FINISH_ON_BACK_PRESS, false);
+    }
     Icepick.restoreInstanceState(this, savedInstanceState);
   }
 
@@ -30,8 +38,13 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
 
   @Override
   public final void onBackPressed() {
-    if (!onBackPress()) {
-      onBackPressedNotHandled();
+    if (finishOnBackPress) {
+      super.onBackPressed();
+      finish();
+    } else {
+      if (!onBackPress()) {
+        onBackPressedNotHandled();
+      }
     }
   }
 
@@ -62,10 +75,28 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
         .commit();
   }
 
+  protected void showFragmentWithTagWithBackStack(Fragment fragment, String tag) {
+    getSupportFragmentManager().beginTransaction()
+            .replace(getLayoutContainerForFragment(), fragment, tag)
+            .addToBackStack(null)
+            .commit();
+  }
+
+  protected void showFragmentWithTag(Fragment fragment, String tag) {
+    getSupportFragmentManager().beginTransaction()
+            .replace(getLayoutContainerForFragment(), fragment, tag)
+            .commit();
+  }
+
   protected void showFragmentWithBackStack(Fragment fragment) {
     getSupportFragmentManager().beginTransaction()
         .replace(getLayoutContainerForFragment(), fragment)
         .addToBackStack(null)
         .commit();
+  }
+
+  @Nullable
+  protected Fragment findFragmentByTag(String tag) {
+    return getSupportFragmentManager().findFragmentByTag(tag);
   }
 }

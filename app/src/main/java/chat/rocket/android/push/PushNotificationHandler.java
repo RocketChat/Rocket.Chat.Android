@@ -39,6 +39,7 @@ import java.util.Random;
 import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.helper.ServerPolicyHelper;
 import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.android.widget.helper.AvatarHelper;
 import chat.rocket.core.models.ServerInfo;
 
 public class PushNotificationHandler implements PushConstants {
@@ -497,7 +498,7 @@ public class PushNotificationHandler implements PushConstants {
       setNotification(notId, "");
 
       NotificationCompat.BigPictureStyle bigPicture = new NotificationCompat.BigPictureStyle();
-      bigPicture.bigPicture(getBitmapFromURL(extras.getString(PICTURE)));
+      bigPicture.bigPicture(getBitmapFromURL(extras.getString(PICTURE), null, null));
       bigPicture.setBigContentTitle(fromHtml(extras.getString(TITLE)));
       bigPicture.setSummaryText(fromHtml(extras.getString(SUMMARY_TEXT)));
 
@@ -566,7 +567,7 @@ public class PushNotificationHandler implements PushConstants {
       setNotification(notId, "");
 
       Notification.BigPictureStyle bigPicture = new Notification.BigPictureStyle();
-      bigPicture.bigPicture(getBitmapFromURL(extras.getString(PICTURE)));
+      bigPicture.bigPicture(getBitmapFromURL(extras.getString(PICTURE), null, null));
       bigPicture.setBigContentTitle(fromHtml(extras.getString(TITLE)));
       bigPicture.setSummaryText(fromHtml(extras.getString(SUMMARY_TEXT)));
 
@@ -726,13 +727,22 @@ public class PushNotificationHandler implements PushConstants {
 
   private void setNotificationLargeIcon(Context context, Bundle extras, String packageName,
                                         Resources resources, NotificationCompat.Builder builder) {
-    String gcmLargeIcon = extras.getString(IMAGE); // from gcm
+    String hostname = getHostname(extras);
+    String username = getSenderUsername(extras);
+    String gcmLargeIcon;
+
+    if (username != null && !username.isEmpty()) {
+      gcmLargeIcon = "https://" + hostname + "/avatar/" + username;
+    } else {
+      gcmLargeIcon = extras.getString(IMAGE); // from gcm
+    }
+
     if (gcmLargeIcon == null || "".equals(gcmLargeIcon)) {
       return;
     }
 
     if (gcmLargeIcon.startsWith("http://") || gcmLargeIcon.startsWith("https://")) {
-      builder.setLargeIcon(getBitmapFromURL(gcmLargeIcon));
+      builder.setLargeIcon(getBitmapFromURL(gcmLargeIcon, username, context));
       Log.d(LOG_TAG, "using remote large-icon from gcm");
     } else {
       AssetManager assetManager = context.getAssets();
@@ -757,13 +767,22 @@ public class PushNotificationHandler implements PushConstants {
 
   private void setNotificationLargeIcon(Context context, Bundle extras, String packageName,
                                         Resources resources, Notification.Builder builder) {
-    String gcmLargeIcon = extras.getString(IMAGE); // from gcm
+    String hostname = getHostname(extras);
+    String username = getSenderUsername(extras);
+    String gcmLargeIcon;
+
+    if (username != null && !username.isEmpty()) {
+      gcmLargeIcon = "https://" + hostname + "/avatar/" + username;
+    } else {
+      gcmLargeIcon = extras.getString(IMAGE); // from gcm
+    }
+
     if (gcmLargeIcon == null || "".equals(gcmLargeIcon)) {
       return;
     }
 
     if (gcmLargeIcon.startsWith("http://") || gcmLargeIcon.startsWith("https://")) {
-      builder.setLargeIcon(getBitmapFromURL(gcmLargeIcon));
+      builder.setLargeIcon(getBitmapFromURL(gcmLargeIcon, username, context));
       Log.d(LOG_TAG, "using remote large-icon from gcm");
     } else {
       AssetManager assetManager = context.getAssets();
@@ -854,17 +873,23 @@ public class PushNotificationHandler implements PushConstants {
     intent.putExtra(NOT_ID, notId);
   }
 
-  public Bitmap getBitmapFromURL(String strURL) {
+  public Bitmap getBitmapFromURL(String strURL, String username, Context context) {
     try {
       URL url = new URL(strURL);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setDoInput(true);
       connection.connect();
       InputStream input = connection.getInputStream();
-      return BitmapFactory.decodeStream(input);
+      Bitmap bitmap = BitmapFactory.decodeStream(input);
+
+      if (bitmap == null && username != null  && context != null) {
+        return AvatarHelper.INSTANCE.getTextBitmap(username, context);
+      }
+
+      return bitmap;
     } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+        e.printStackTrace();
+        return null;
     }
   }
 
@@ -933,6 +958,15 @@ public class PushNotificationHandler implements PushConstants {
 
       return jsonObject.getString("rid");
     } catch (Exception e) {
+      return null;
+    }
+  }
+
+  private String getSenderUsername(Bundle extras) {
+    try {
+      JSONObject jsonObject = new JSONObject(extras.getString("ejson", "[]"));
+      return jsonObject.getJSONObject("sender").optString("username");
+    } catch (JSONException e) {
       return null;
     }
   }

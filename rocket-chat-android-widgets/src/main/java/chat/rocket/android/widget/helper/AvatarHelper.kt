@@ -1,13 +1,17 @@
 package chat.rocket.android.widget.helper
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import chat.rocket.android.widget.AbsoluteUrl
 import com.amulyakhare.textdrawable.TextDrawable
 import java.net.URLEncoder
 
-object UserAvatarHelper {
+/**
+ * Created by Filipe de Lima Brito (filipedelimabrito@gmail.com) on 8/02/17.
+ */
+object AvatarHelper {
 
     /**
      * Returns the user avatar URI.
@@ -45,6 +49,7 @@ object UserAvatarHelper {
      * @param username The username.
      * @param context The context.
      * @return A drawable with username initials.
+     * @see getTextBitmap
      * @see getUsernameInitials
      */
     fun getTextDrawable(username: String, context: Context): Drawable {
@@ -55,6 +60,19 @@ object UserAvatarHelper {
                 .useFont(Typeface.SANS_SERIF)
                 .endConfig()
                 .buildRoundRect(getUsernameInitials(username), getUserAvatarBackgroundColor(username), round)
+    }
+
+    /**
+     * Returns a bitmap with username initials.
+     *
+     * @param username The username.
+     * @param context The context.
+     * @return A bitmap with username initials.
+     * @see getTextDrawable
+     */
+    fun getTextBitmap(username: String, context: Context): Bitmap {
+        val textDrawable = getTextDrawable(username, context)
+        return DrawableHelper.getBitmapFromDrawable(textDrawable, 96, 96)
     }
 
     /**
@@ -70,15 +88,15 @@ object UserAvatarHelper {
 
         val splitUsername = username.split(".")
         val splitCount = splitUsername.size
-        if (splitCount > 1 && splitUsername[0].isNotEmpty() && splitUsername[splitCount-1].isNotEmpty()) {
+        return if (splitCount > 1 && splitUsername[0].isNotEmpty() && splitUsername[splitCount-1].isNotEmpty()) {
             val firstInitial = splitUsername[0].substring(0, 1)
             val secondInitial = splitUsername[splitCount-1].substring(0, 1)
-            return (firstInitial + secondInitial).toUpperCase()
+            (firstInitial + secondInitial).toUpperCase()
         } else {
             if (username.length > 1) {
-                return username.substring(0, 2).toUpperCase()
+                username.substring(0, 2).toUpperCase()
             } else {
-                return username.substring(0, 1).toUpperCase()
+                username.substring(0, 1).toUpperCase()
             }
         }
     }

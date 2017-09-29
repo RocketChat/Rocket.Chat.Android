@@ -65,7 +65,7 @@ public class RoomToolbar extends Toolbar {
     privateChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_lock_white_24dp, null);
     publicChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_hashtag_white_24dp, null);
     livechatChannelDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_livechat_white_24dp, null);
-    userStatusDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_user_status_black_24dp, null);
+    userStatusDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_user_status_black_24dp, null).mutate();
   }
 
   private void setNavigationIcon(Context context) {
@@ -90,6 +90,11 @@ public class RoomToolbar extends Toolbar {
   @Override
   public void setTitle(CharSequence title) {
     toolbarText.setText(title);
+  }
+
+  public void hideChannelIcons() {
+    roomTypeImage.setVisibility(GONE);
+    userStatusImage.setVisibility(GONE);
   }
 
   public void showPrivateChannelIcon() {
@@ -137,7 +142,7 @@ public class RoomToolbar extends Toolbar {
     userStatusImage.setVisibility(VISIBLE);
   }
 
-  public void setUnreadBudge(int numUnreadChannels, int numMentionsSum) {
+  public void setUnreadBadge(int numUnreadChannels, int numMentionsSum) {
     if (getNavigationIcon() == null) {
       return;
     }
