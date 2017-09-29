@@ -25,7 +25,7 @@
       app:layout_constraintRight_toLeftOf="@+id/container"
       app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <android.support.constraint.ConstraintLayout
+    <FrameLayout
       android:id="@+id/container"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -53,5 +53,5 @@
           android:tint="@color/color_accent"
           app:srcCompat="@drawable/ic_send_black_24dp"
           android:background="?attr/selectableItemBackgroundBorderless"/>
-    </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>
