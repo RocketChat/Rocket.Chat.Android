@@ -9,8 +9,6 @@ import android.support.graphics.drawable.VectorDrawableCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
-
 import chat.rocket.android.widget.R
 import chat.rocket.android.widget.helper.DrawableHelper
 import kotlinx.android.synthetic.main.room_list_item.view.*
@@ -23,7 +21,7 @@ class RoomListItemView : FrameLayout {
     private val privateChannelDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_lock_white_24dp, null)
     private val publicChannelDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_hashtag_white_24dp, null)
     private val liveChatChannelDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_livechat_white_24dp, null)
-    private val userStatusDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_user_status_black_24dp, null)
+    private val userStatusDrawable: Drawable? = VectorDrawableCompat.create(resources, R.drawable.ic_user_status_black_24dp, null)?.mutate()
 
     constructor(context: Context) : super(context) {
         initialize(context)
@@ -43,7 +41,7 @@ class RoomListItemView : FrameLayout {
     }
 
     private fun initialize(context: Context) {
-        layoutParams = LinearLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
 
         val array = context
                 .theme
