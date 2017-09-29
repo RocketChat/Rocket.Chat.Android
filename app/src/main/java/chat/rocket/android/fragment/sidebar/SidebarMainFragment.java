@@ -325,7 +325,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   public void onLogoutCleanUp() {
     Activity activity = getActivity();
     if (activity != null && activity instanceof MainActivity) {
-      ((MainActivity) activity).hideLogoutMessage();
       ((MainActivity) activity).onLogout();
       presenter.onLogout(task -> {
         if (task.isFaulted()) {
@@ -343,7 +342,6 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
       presenter.beforeLogoutCleanUp();
       final Activity activity = getActivity();
       if (activity != null && activity instanceof MainActivity) {
-        ((MainActivity) activity).showLogoutMessage();
         // Clear subscriptions on MainPresenter.
         ((MainActivity) activity).beforeLogoutCleanUp();
       }
