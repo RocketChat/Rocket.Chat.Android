@@ -78,7 +78,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     }
   }
 
-  private void appendAttachmentView(Attachment attachment, boolean autoloadImages) {
+  public void appendAttachmentView(Attachment attachment, boolean autoloadImages) {
     if (attachment == null) {
       return;
     }
