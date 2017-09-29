@@ -38,5 +38,5 @@ object UrlHelper {
      * @return The attachment link.
      */
     fun getAttachmentLink(hostname: String, fileId: String, fileName: String): String =
-            getSafeHostname(hostname) + "/file-upload/" + fileId + "/" + fileName
+            getSafeUrl(getSafeHostname(hostname) + "/file-upload/" + fileId + "/" + fileName)
 }
