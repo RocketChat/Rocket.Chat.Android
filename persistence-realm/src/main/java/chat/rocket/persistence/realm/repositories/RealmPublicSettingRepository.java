@@ -27,11 +27,16 @@ public class RealmPublicSettingRepository extends RealmRepository
   public Single<Optional<PublicSetting>> getById(String id) {
     return Single.defer(() -> Flowable.using(
         () -> new Pair<>(RealmStore.getRealm(hostname), Looper.myLooper()),
-        pair -> RxJavaInterop.toV2Flowable(
-            pair.first.where(RealmPublicSetting.class)
-                .equalTo(RealmPublicSetting.ID, id)
-                .findAll()
-                .<RealmResults<RealmPublicSetting>>asObservable()),
+        pair -> {
+            if (pair.first == null) {
+              return Flowable.empty();
+            }
+            return RxJavaInterop.toV2Flowable(
+              pair.first.where(RealmPublicSetting.class)
+                  .equalTo(RealmPublicSetting.ID, id)
+                  .findAll()
+                  .<RealmResults<RealmPublicSetting>>asObservable());
+        },
         pair -> close(pair.first, pair.second)
     )
         .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))

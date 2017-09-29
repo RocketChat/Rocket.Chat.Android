@@ -7,10 +7,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.models.ServerInfo;
@@ -25,7 +26,7 @@ import rx.subjects.PublishSubject;
  */
 /*package*/ class RealmBasedConnectivityManager
     implements ConnectivityManagerApi, ConnectivityManagerInternal {
-  private final HashMap<String, Integer> serverConnectivityList = new HashMap<>();
+  private final ConcurrentHashMap<String, Integer> serverConnectivityList = new ConcurrentHashMap<>();
   private final PublishSubject<ServerConnectivity> connectivitySubject = PublishSubject.create();
   private Context appContext;
   private final ServiceConnection serviceConnection = new ServiceConnection() {

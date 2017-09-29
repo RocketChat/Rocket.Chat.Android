@@ -133,6 +133,11 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     addSubscription(subscription);
   }
 
+  @Override
+  public void beforeLogoutCleanUp() {
+      clearSubscriptions();
+  }
+
   private Pair<String, String> getLogoAndSiteNamePair(Pair<Optional<PublicSetting>, Optional<PublicSetting>> settingsPair) {
       String logoUrl = "";
       String siteName = "";

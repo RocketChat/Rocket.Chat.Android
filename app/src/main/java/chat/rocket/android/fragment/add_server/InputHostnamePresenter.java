@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment.add_server;
 
 import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.OkHttpHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -46,7 +47,10 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
                 view.showInvalidServerError();
               }
             },
-            throwable -> view.showConnectionError());
+            throwable -> {
+              Logger.report(throwable);
+              view.showConnectionError();
+            });
     addSubscription(subscription);
   }
 

@@ -255,6 +255,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
     return prepareDDPClient()
         .flatMap(_val -> Single.fromEmitter(emitter -> {
           ServerInfo info = connectivityManager.getServerInfoForHost(hostname);
+          if (info == null) {
+            emitter.onSuccess(false);
+            return;
+          }
           RCLog.d("DDPClient#connect");
           ddpClient.connect(info.getSession(), info.isSecure())
               .onSuccessTask(task -> {

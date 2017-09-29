@@ -20,6 +20,12 @@ import chat.rocket.persistence.realm.RocketChatPersistenceRealm;
  */
 public class RocketChatApplication extends MultiDexApplication {
 
+  private static RocketChatApplication instance;
+
+  public static RocketChatApplication getInstance() {
+    return instance;
+  }
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -37,5 +43,7 @@ public class RocketChatApplication extends MultiDexApplication {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
+
+    instance = this;
   }
 }

@@ -88,7 +88,9 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   }
 
   private void showAddServerActivity() {
+    closeSidebarIfNeeded();
     Intent intent = new Intent(this, AddServerActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     intent.putExtra(AddServerActivity.EXTRA_FINISH_ON_BACK_PRESS, true);
     startActivity(intent);
   }
@@ -161,13 +163,15 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     PublicSettingRepository publicSettingRepository = new RealmPublicSettingRepository(hostname);
 
+    RocketChatCache rocketChatCache = new RocketChatCache(this);
+
     presenter = new MainPresenter(
         roomInteractor,
         createRoomInteractor,
         sessionInteractor,
         new MethodCallHelper(this, hostname),
         ConnectivityManager.getInstance(getApplicationContext()),
-        new RocketChatCache(this),
+            rocketChatCache,
         publicSettingRepository
     );
 
@@ -175,13 +179,21 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     presenter.bindView(this);
     presenter.loadSignedInServers(hostname);
+
+    roomId = rocketChatCache.getSelectedRoomId();
   }
 
   private void updateSidebarMainFragment() {
     closeSidebarIfNeeded();
+    String selectedServerHostname = new RocketChatCache(this).getSelectedServerHostname();
+    Fragment sidebarFragment = findFragmentByTag(selectedServerHostname);
+    if (sidebarFragment == null) {
+      sidebarFragment = SidebarMainFragment.create(selectedServerHostname);
+    }
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.sidebar_fragment_container, SidebarMainFragment.create(hostname))
+        .replace(R.id.sidebar_fragment_container, sidebarFragment, selectedServerHostname)
         .commit();
+    getSupportFragmentManager().executePendingTransactions();
   }
 
   @Override
@@ -239,6 +251,12 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
             R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
   }
 
+  public void showLogoutMessage() {
+    statusTicker.updateStatus(StatusTicker.STATUS_LOGGING_OUT,
+            Snackbar.make(findViewById(getLayoutContainerForFragment()),
+                    "Logging Out...", Snackbar.LENGTH_INDEFINITE));
+  }
+
   @Override
   public void showConnectionOk() {
     statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
@@ -251,39 +269,41 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       LinearLayout serverListContainer = subPane.findViewById(R.id.server_list_bar);
       View addServerButton = subPane.findViewById(R.id.btn_add_server);
       addServerButton.setOnClickListener(view -> showAddServerActivity());
+      serverListContainer.removeAllViews();
       for (Pair<String, Pair<String, String>> server : serverList) {
         String serverHostname = server.first;
         Pair<String, String> serverInfoPair = server.second;
         String logoUrl = serverInfoPair.first;
         String siteName = serverInfoPair.second;
-        if (serverListContainer.findViewWithTag(serverHostname) == null) {
-          int serverCount = serverListContainer.getChildCount();
+        View serverView = serverListContainer.findViewWithTag(serverHostname);
+        if (serverView == null) {
+          View newServerView = LayoutInflater.from(this).inflate(R.layout.server_row, serverListContainer, false);
+          SimpleDraweeView serverButton = newServerView.findViewById(R.id.drawee_server_button);
+          TextView hostnameLabel = newServerView.findViewById(R.id.text_view_server_label);
+          TextView siteNameLabel = newServerView.findViewById(R.id.text_view_site_name_label);
+          ImageView dotView = newServerView.findViewById(R.id.selected_server_dot);
 
-          View serverRow = LayoutInflater.from(this).inflate(R.layout.server_row, serverListContainer, false);
-          SimpleDraweeView serverButton = serverRow.findViewById(R.id.drawee_server_button);
-          TextView hostnameLabel = serverRow.findViewById(R.id.text_view_server_label);
-          TextView siteNameLabel = serverRow.findViewById(R.id.text_view_site_name_label);
-          ImageView dotView = serverRow.findViewById(R.id.selected_server_dot);
-
-          serverButton.setTag(serverHostname);
+          newServerView.setTag(serverHostname);
           hostnameLabel.setText(serverHostname);
           siteNameLabel.setText(siteName);
 
           // Currently selected server
-          if (serverHostname.equalsIgnoreCase(hostname)) {
-            serverRow.setSelected(true);
+          if (hostname.equalsIgnoreCase(serverHostname)) {
+            newServerView.setSelected(true);
             dotView.setVisibility(View.VISIBLE);
           } else {
+            newServerView.setSelected(false);
             dotView.setVisibility(View.GONE);
           }
 
-          serverRow.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
+          newServerView.setOnClickListener(view -> changeServerIfNeeded(serverHostname));
 
           FrescoHelper.INSTANCE.loadImage(serverButton, logoUrl, ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
 
-          serverListContainer.addView(serverRow, serverCount - 1);
+          serverListContainer.addView(newServerView);
         }
       }
+      serverListContainer.addView(addServerButton);
     }
   }
 
@@ -291,8 +311,26 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     if (!hostname.equalsIgnoreCase(serverHostname)) {
       RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
       rocketChatCache.setSelectedServerHostname(serverHostname);
-      recreate();
     }
+  }
+
+  @DebugLog
+  public void hideLogoutMessage() {
+    statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
+  }
+
+  @DebugLog
+  public void onLogout() {
+    if (new RocketChatCache(getApplicationContext()).getSelectedServerHostname() == null) {
+      LaunchUtil.showMainActivity(this);
+    } else {
+      onHostnameUpdated();
+    }
+  }
+
+  @DebugLog
+  public void beforeLogoutCleanUp() {
+    presenter.beforeLogoutCleanUp();
   }
 
   //TODO: consider this class to define in layouthelper for more complicated operation.
@@ -300,6 +338,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     public static final int STATUS_DISMISS = 0;
     public static final int STATUS_CONNECTION_ERROR = 1;
     public static final int STATUS_TOKEN_LOGIN = 2;
+    public static final int STATUS_LOGGING_OUT = 3;
 
     private int status;
     private Snackbar snackbar;
