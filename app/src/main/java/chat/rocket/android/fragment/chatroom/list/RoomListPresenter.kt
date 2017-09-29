@@ -2,11 +2,13 @@ package chat.rocket.android.fragment.chatroom.list
 
 import android.content.Context
 import android.os.Handler
-import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.api.rest.RestApiHelper
 import chat.rocket.android.helper.OkHttpHelper
+import chat.rocket.android.helper.UrlHelper
 import chat.rocket.core.SyncState
+import chat.rocket.core.models.Attachment
+import chat.rocket.core.models.AttachmentTitle
 import chat.rocket.core.models.Message
 import chat.rocket.core.models.User
 import okhttp3.Call
@@ -98,13 +100,43 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                 })
     }
 
-    // TODO (after the REST api fixes)
     override fun requestFileList(roomId: String,
                                  roomType: String,
                                  hostname: String,
                                  token: String,
                                  userId: String,
-                                 offset: Int) {}
+                                 offset: Int) {
+        view.showWaitingView(true)
+        OkHttpHelper.getClient()
+                .newCall(RestApiHelper.getRequestForFileList(roomId,
+                        roomType,
+                        hostname,
+                        token,
+                        userId,
+                        offset.toString()))
+                .enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        if (!call.isCanceled) {
+                            val message = e.message
+                            if (message != null) {
+                                showErrorMessage(message)
+                            }
+                        }
+                    }
+
+                    @Throws(IOException::class)
+                    override fun onResponse(call: Call, response: Response) {
+                        if (response.isSuccessful) {
+                            val result = response.body()?.string()
+                            if (result != null) {
+                                handleFilesJson(result, hostname)
+                            }
+                        } else {
+                            showErrorMessage(response.message())
+                        }
+                    }
+                })
+    }
 
     override fun requestMemberList(roomId: String,
                                    roomType: String,
@@ -202,6 +234,51 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
         }
     }
 
+    private fun handleFilesJson(json: String, hostname: String) {
+        try {
+            val jsonObject = JSONObject(json)
+            val filesJsonArray = jsonObject.getJSONArray("files")
+
+            val total = filesJsonArray.length()
+            val dataSet = ArrayList<Attachment>(total)
+            (0 until total).mapTo(dataSet) {
+                val fileJsonObject = filesJsonArray.getJSONObject(it)
+
+                val fileLink = UrlHelper.getAttachmentLink(hostname, fileJsonObject.optString("_id"), fileJsonObject.optString("name"))
+
+                val attachmentTitle = AttachmentTitle.builder()
+                        .setTitle(fileJsonObject.optString("name"))
+                        .setLink(fileLink)
+                        .setDownloadLink(fileLink)
+                        .build()
+
+                val attachment = Attachment.builder()
+
+                val type = fileJsonObject.optString("type")
+                when {
+                    type.startsWith("image") -> attachment.setImageUrl(fileLink)
+                    type.startsWith("audio") -> attachment.setAudioUrl(fileLink)
+                    type.startsWith("video") -> attachment.setVideoUrl(fileLink)
+                }
+
+                attachment.setCollapsed(false)
+                        .setAttachmentTitle(attachmentTitle)
+                        .build()
+            }
+
+            if (dataSet.isEmpty() && !hasItem) {
+                showEmptyViewMessage(context.getString(R.string.fragment_room_list_no_file_list_to_show))
+            } else {
+                if (dataSet.isNotEmpty()) {
+                    hasItem = true
+                    showFileList(dataSet, jsonObject.optString("total"))
+                }
+            }
+        } catch (exception: JSONException) {
+            showInvalidRequest()
+        }
+    }
+
     private fun handleMembersJson(json: String) {
         try {
             val jsonObject = JSONObject(json)
@@ -221,7 +298,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                     showMemberList(dataSet, jsonObject.optString("total"))
                 }
             }
-        }catch (exception: JSONException) {
+        } catch (exception: JSONException) {
             showInvalidRequest()
         }
     }
@@ -247,6 +324,13 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
         mainHandler.post {
             view.showWaitingView(false)
             view.showFavoriteMessages(dataSet, total)
+        }
+    }
+
+    private fun showFileList(dataSet: ArrayList<Attachment>, total: String) {
+        mainHandler.post {
+            view.showWaitingView(false)
+            view.showFileList(dataSet, total)
         }
     }
 
