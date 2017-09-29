@@ -29,12 +29,9 @@ class UrlHelperTest {
     }
 
     @Test
-    fun getUrlForFileTest() {
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt?rc_uid=userId&rc_token=token", UrlHelper.getAttachmentLink("https://demo.rocket.chat/GENERAL/file.txt","userId", "token"))
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt?rc_uid=userId&rc_token=token", UrlHelper.getAttachmentLink("http://demo.rocket.chat/GENERAL/file.txt","userId", "token"))
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt?rc_uid=userId&rc_token=token", UrlHelper.getAttachmentLink("demo.rocket.chat/GENERAL/file.txt","userId", "token"))
-
-        assertEquals("https://demo.rocket.chat/GENERAL/a%20sample%20file.txt?rc_uid=userId&rc_token=token", UrlHelper.getAttachmentLink("demo.rocket.chat/GENERAL/a sample file.txt","userId", "token"))
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt?rc_uid=userId&rc_token=token", UrlHelper.getAttachmentLink("demo.rocket.chat\\/GENERAL\\/file.txt","userId", "token"))
+    fun getAttachmentLinkTest() {
+        assertEquals("https://demo.rocket.chat/file-upload/aFileId/aFileName.txt", UrlHelper.getAttachmentLink("https://demo.rocket.chat", "aFileId", "aFileName.txt"))
+        assertEquals("https://demo.rocket.chat/file-upload/aFileId/aFileName.txt", UrlHelper.getAttachmentLink("http://demo.rocket.chat", "aFileId", "aFileName.txt"))
+        assertEquals("https://demo.rocket.chat/file-upload/aFileId/aFileName.txt", UrlHelper.getAttachmentLink("demo.rocket.chat", "aFileId", "aFileName.txt"))
     }
 }
