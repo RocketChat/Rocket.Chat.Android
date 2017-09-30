@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import chat.rocket.android.helper.Logger;
 import chat.rocket.persistence.realm.RealmStore;
 import hugo.weaving.DebugLog;
 import rx.Observable;
@@ -112,6 +113,10 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
       return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
           .doOnSuccess(thread -> {
             webSocketThreads.put(hostname, thread);
+            webSocketThreadLock.release();
+          })
+          .doOnError(throwable -> {
+            Logger.report(throwable);
             webSocketThreadLock.release();
           });
     });
