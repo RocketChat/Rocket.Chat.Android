@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.chatroom.list
 
 import android.content.Context
 import android.os.Handler
+import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.api.rest.RestApiHelper
 import chat.rocket.android.helper.OkHttpHelper
@@ -191,27 +192,13 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                 val messageJsonObject = messagesJSONArray.getJSONObject(it)
                 val userJsonObject = messageJsonObject.getJSONObject("u")
 
-                val timestampString = messageJsonObject.optString("ts")
-                val timestamp = if (timestampString.isBlank()) {
-                    0
-                } else {
-                    Timestamp.valueOf(timestampString.replace("T", " ").replace("Z", "")).time
-                }
-
-                val editedAtString = messageJsonObject.optString("_updatedAt")
-                val editedAt = if (editedAtString.isBlank()) {
-                    0
-                } else {
-                    Timestamp.valueOf(editedAtString.replace("T", " ").replace("Z", "")).time
-                }
-
                 Message.builder()
                         .setId(messageJsonObject.optString("_id"))
                         .setRoomId(messageJsonObject.optString("rid"))
                         .setMessage(messageJsonObject.optString("msg"))
                         .setUser(getUserFromJsonObject(userJsonObject))
-                        .setTimestamp(timestamp)
-                        .setEditedAt(editedAt)
+                        .setTimestamp(getLongTimestamp(messageJsonObject.optString("ts")))
+                        .setEditedAt(getLongTimestamp(messageJsonObject.optString("_updatedAt")))
                         .setGroupable(messageJsonObject.optBoolean("groupable"))
                         .setSyncState(SyncState.SYNCED)
                         .build()
@@ -236,6 +223,16 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
 
     private fun handleFilesJson(json: String, hostname: String) {
         try {
+
+//            val maxLogSize = 1000
+//            val stringLength = json.length
+//            for (i in 0..stringLength / maxLogSize) {
+//                val start = i * maxLogSize
+//                var end = (i + 1) * maxLogSize
+//                end = if (end >json.length) json.length else end
+//                Log.v("TAG", json.substring(start, end))
+//            }
+
             val jsonObject = JSONObject(json)
             val filesJsonArray = jsonObject.getJSONArray("files")
 
@@ -263,6 +260,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
 
                 attachment.setCollapsed(false)
                         .setAttachmentTitle(attachmentTitle)
+                        .setTimestamp(getSafeTimestamp(fileJsonObject.optString("uploadedAt")))
                         .build()
             }
 
@@ -312,6 +310,17 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                 .setUtcOffset(jsonObject.optLong("utcOffset").toDouble())
                 .build()
     }
+
+    private fun getLongTimestamp(timestamp: String): Long {
+        return if (timestamp.isNotBlank()) {
+            Timestamp.valueOf(getSafeTimestamp(timestamp)).time
+        } else {
+            0
+        }
+    }
+
+    private fun getSafeTimestamp(timestamp: String): String =
+            timestamp.replace("T", " ").replace("Z", "")
 
     private fun showPinnedMessageList(dataSet: ArrayList<Message>, total: String) {
         mainHandler.post {
