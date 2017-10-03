@@ -39,8 +39,9 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
   @Override
   protected void onSetupDialog() {
     View buttonAddChannel = getDialog().findViewById(R.id.btn_add_channel);
+    TextInputEditText channelNameText = (TextInputEditText) getDialog().findViewById(R.id.editor_channel_name);
 
-    RxTextView.textChanges((TextView) getDialog().findViewById(R.id.editor_channel_name))
+    RxTextView.textChanges((TextView) channelNameText)
             .map(text -> !TextUtils.isEmpty(text))
             .compose(bindToLifecycle())
             .subscribe(
@@ -49,8 +50,15 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
             );
 
     buttonAddChannel.setOnClickListener(view -> createRoom());
+    requestFocus(channelNameText);
   }
 
+  private void requestFocus(View view) {
+    if (view.requestFocus()) {
+      getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    }
+  }
+  
   private boolean isChecked(int viewId) {
     CompoundButton check = (CompoundButton) getDialog().findViewById(viewId);
     return check.isChecked();
