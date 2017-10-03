@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        applicationId "chat.rocket.android"
+        minSdkVersion 21
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation libraries.appCompat
+    implementation libraries.recyclerview
+    implementation libraries.design
+
+    implementation libraries.rxjava
+    implementation libraries.rxandroid
+
+    implementation libraries.okhttp
+    implementation libraries.okhttpLogger
+
+    implementation libraries.room
+    kapt libraries.roomProcessor
+    implementation libraries.roomRxjava
+
+    implementation libraries.dagger
+    implementation libraries.daggerSupport
+    kapt libraries.daggerProcessor
+    kapt libraries.daggerAndroidApt
+
+    implementation libraries.timber
+
+    implementation libraries.kotlin
+
+    testImplementation libraries.junit
+    androidTestImplementation (libraries.expressoCore , {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+}
+repositories {
+    mavenCentral()
+}
