@@ -41,6 +41,12 @@ public abstract class AbstractAddRoomDialogFragment extends RxAppCompatDialogFra
     realmHelper = RealmStore.get(hostname);
     methodCall = new MethodCallHelper(getContext(), hostname);
   }
+  
+  protected void requestFocus(View view) {
+    if (view.requestFocus()) {
+      getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    }
+  }
 
   @Override
   public final void setupDialog(Dialog dialog, int style) {
