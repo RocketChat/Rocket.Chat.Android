@@ -80,6 +80,7 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
         );
 
     buttonAddDirectMessage.setOnClickListener(view -> createRoom());
+    requestFocus(autoCompleteTextView);
   }
 
   private void setupView(Optional<RocketChatAbsoluteUrl> rocketChatAbsoluteUrlOptional) {
