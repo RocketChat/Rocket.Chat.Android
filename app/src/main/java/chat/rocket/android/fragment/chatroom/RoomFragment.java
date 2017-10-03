@@ -34,6 +34,7 @@ import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
 import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
@@ -49,6 +50,7 @@ import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadAction
 import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.renderer.RocketChatUserStatusProvider;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
@@ -539,6 +541,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         try {
             inputContentInfo.releasePermission();
         } catch (Exception e) {
+            RCLog.e(e);
+            Logger.report(e);
         }
 
         return true;
