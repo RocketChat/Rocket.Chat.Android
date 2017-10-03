@@ -121,14 +121,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
           }
         }
       });
-    }
 
-    if (toolbar != null) {
-      toolbar.setNavigationOnClickListener(view -> {
-        if (pane.isSlideable() && !pane.isOpen()) {
-          pane.openPane();
-        }
-      });
+      if (toolbar != null) {
+        toolbar.setNavigationOnClickListener(view -> {
+          if (pane.isSlideable() && !pane.isOpen()) {
+            pane.openPane();
+          }
+        });
+      }
     }
   }
 
