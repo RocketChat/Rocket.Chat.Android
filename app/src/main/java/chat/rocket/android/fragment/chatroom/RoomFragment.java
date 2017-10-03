@@ -340,28 +340,30 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         SlidingPaneLayout subPane = getActivity().findViewById(R.id.sub_sliding_pane);
         sidebarFragment = (SidebarMainFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.sidebar_fragment_container);
 
-        pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View view, float v) {
-                messageFormManager.enableComposingText(false);
-                sidebarFragment.clearSearchViewFocus();
-                //Ref: ActionBarDrawerToggle#setProgress
-                toolbar.setNavigationIconProgress(v);
-            }
+        if (pane != null) {
+            pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View view, float v) {
+                    messageFormManager.enableComposingText(false);
+                    sidebarFragment.clearSearchViewFocus();
+                    //Ref: ActionBarDrawerToggle#setProgress
+                    toolbar.setNavigationIconProgress(v);
+                }
 
-            @Override
-            public void onPanelOpened(View view) {
-                toolbar.setNavigationIconVerticalMirror(true);
-            }
+                @Override
+                public void onPanelOpened(View view) {
+                    toolbar.setNavigationIconVerticalMirror(true);
+                }
 
-            @Override
-            public void onPanelClosed(View view) {
-                messageFormManager.enableComposingText(true);
-                toolbar.setNavigationIconVerticalMirror(false);
-                subPane.closePane();
-                closeUserActionContainer();
-            }
-        });
+                @Override
+                public void onPanelClosed(View view) {
+                    messageFormManager.enableComposingText(true);
+                    toolbar.setNavigationIconVerticalMirror(false);
+                    subPane.closePane();
+                    closeUserActionContainer();
+                }
+            });
+        }
     }
 
     public void closeUserActionContainer() {
@@ -657,12 +659,16 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     private void showRoomListFragment(int actionId) {
-        Intent intent = new Intent(getActivity(), RoomActivity.class).putExtra("actionId", actionId)
-                .putExtra("roomId", roomId)
-                .putExtra("roomType", roomType)
-                .putExtra("hostname", hostname)
-                .putExtra("token", token)
-                .putExtra("userId", userId);
-        startActivity(intent);
+        //TODO: oddly sometimes getActivity() yields null. Investigate the situations this might happen
+        //and fix it, removing this null-check
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), RoomActivity.class).putExtra("actionId", actionId)
+                    .putExtra("roomId", roomId)
+                    .putExtra("roomType", roomType)
+                    .putExtra("hostname", hostname)
+                    .putExtra("token", token)
+                    .putExtra("userId", userId);
+            startActivity(intent);
+        }
     }
 }
