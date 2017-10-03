@@ -122,7 +122,7 @@ public class RealmHelper {
     return task.getTask();
   }
 
-  private Task<Void> executeTransactionAsync(final RealmHelper.Transaction transaction) {
+  public Task<Void> executeTransactionAsync(final RealmHelper.Transaction transaction) {
     final TaskCompletionSource<Void> task = new TaskCompletionSource<>();
 
     final Realm realm = instance();
