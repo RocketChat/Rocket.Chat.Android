@@ -174,7 +174,7 @@ public class DDPClientImpl {
                                   disposables.clear();
                                 }
                               },
-                              err -> task.setError(new DDPClientCallback.Ping.Timeout(client))
+                              err -> task.trySetError(new DDPClientCallback.Ping.Timeout(client))
                       )
       );
 
@@ -213,7 +213,7 @@ public class DDPClientImpl {
                         "error")) {
                       String _id = response.optString("id");
                       if (id.equals(_id)) {
-                        task.setError(new DDPSubscription.NoSub.Error(client, id,
+                        task.trySetError(new DDPSubscription.NoSub.Error(client, id,
                             response.optJSONObject("error")));
                         disposables.clear();
                       }
@@ -284,7 +284,7 @@ public class DDPClientImpl {
                       String _id = response.optString("id");
                       if (id.equals(_id)) {
                         if (!response.isNull("error")) {
-                          task.setError(new DDPClientCallback.RPC.Error(client, id,
+                          task.trySetError(new DDPClientCallback.RPC.Error(client, id,
                               response.optJSONObject("error")));
                         } else {
                           String result = response.optString("result");
@@ -296,7 +296,7 @@ public class DDPClientImpl {
                   },
                   err -> {
                     if (err instanceof TimeoutException) {
-                      task.setError(new DDPClientCallback.RPC.Timeout(client));
+                      task.trySetError(new DDPClientCallback.RPC.Timeout(client));
                     }
                   }
               )
@@ -427,7 +427,7 @@ public class DDPClientImpl {
               }
             },
             err -> {
-              task.trySetError(new Exception(err));
+              setTaskError(task, new Exception(err));
               disposables.clear();
             }
         )
@@ -442,7 +442,10 @@ public class DDPClientImpl {
     }
   }
 
-  private void setTaskError(TaskCompletionSource<? extends RxWebSocketCallback.Base> task, Throwable throwable) {
+  private void setTaskError(TaskCompletionSource task, Throwable throwable) {
+    if (task.getTask().isCompleted()) {
+      return;
+    }
     if (throwable instanceof Exception) {
       task.setError((Exception) throwable);
     } else {

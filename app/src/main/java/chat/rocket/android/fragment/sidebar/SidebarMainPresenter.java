@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.webkit.CookieManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,7 +155,8 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         String currentHostname = rocketChatCache.getSelectedServerHostname();
         RealmHelper realmHelper = RealmStore.getOrCreate(currentHostname);
         realmHelper.executeTransaction(realm -> {
-            realm.deleteAll();
+            realm.executeTransactionAsync(realmObj -> realmObj.deleteAll());
+            CookieManager.getInstance().removeAllCookie();
             ConnectivityManagerApi connectivityManagerApi = ConnectivityManager.getInstance(RocketChatApplication.getInstance());
             connectivityManagerApi.removeServer(currentHostname);
             rocketChatCache.removeHostname(currentHostname);
