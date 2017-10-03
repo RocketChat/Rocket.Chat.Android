@@ -19,6 +19,7 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import bolts.Task;
@@ -58,7 +59,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   private RoomListAdapter adapter;
   private SearchView searchView;
   private TextView loadMoreResultsText;
-  private List<RoomSidebar> roomSidebarList;
+  private List<RoomSidebar> roomSidebarList = Collections.emptyList();
   private Disposable spotlightDisposable;
   private String hostname;
   private static final String HOSTNAME = "hostname";
