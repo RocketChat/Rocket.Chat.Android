@@ -52,12 +52,6 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
     buttonAddChannel.setOnClickListener(view -> createRoom());
     requestFocus(channelNameText);
   }
-
-  private void requestFocus(View view) {
-    if (view.requestFocus()) {
-      getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-    }
-  }
   
   private boolean isChecked(int viewId) {
     CompoundButton check = (CompoundButton) getDialog().findViewById(viewId);
