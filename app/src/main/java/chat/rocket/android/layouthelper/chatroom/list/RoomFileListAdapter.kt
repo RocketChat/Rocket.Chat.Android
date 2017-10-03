@@ -1,7 +1,6 @@
 package chat.rocket.android.layouthelper.chatroom.list
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +27,7 @@ class RoomFileListAdapter(private var dataSet: List<Attachment>) : RecyclerView.
         val attachment = dataSet[position]
 
         holder.newDay.text = DateTime.fromEpocMs(Timestamp.valueOf(attachment.timestamp).time, DateTime.Format.DATE)
-        holder.attachment.appendAttachmentView(attachment, true)
+        holder.attachment.appendAttachmentView(attachment, true, false)
     }
 
     override fun getItemCount(): Int = dataSet.size
