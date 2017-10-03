@@ -558,9 +558,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
     @Override
     public void setupWith(RocketChatAbsoluteUrl rocketChatAbsoluteUrl) {
-        token = rocketChatAbsoluteUrl.getToken();
-        userId = rocketChatAbsoluteUrl.getUserId();
-        messageListAdapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
+        if (rocketChatAbsoluteUrl != null) {
+            token = rocketChatAbsoluteUrl.getToken();
+            userId = rocketChatAbsoluteUrl.getUserId();
+            messageListAdapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
+        }
     }
 
     @Override
