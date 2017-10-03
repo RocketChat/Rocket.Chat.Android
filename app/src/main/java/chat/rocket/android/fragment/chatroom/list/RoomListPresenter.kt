@@ -2,7 +2,6 @@ package chat.rocket.android.fragment.chatroom.list
 
 import android.content.Context
 import android.os.Handler
-import android.util.Log
 import chat.rocket.android.R
 import chat.rocket.android.api.rest.RestApiHelper
 import chat.rocket.android.helper.OkHttpHelper
@@ -223,16 +222,6 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
 
     private fun handleFilesJson(json: String, hostname: String) {
         try {
-
-//            val maxLogSize = 1000
-//            val stringLength = json.length
-//            for (i in 0..stringLength / maxLogSize) {
-//                val start = i * maxLogSize
-//                var end = (i + 1) * maxLogSize
-//                end = if (end >json.length) json.length else end
-//                Log.v("TAG", json.substring(start, end))
-//            }
-
             val jsonObject = JSONObject(json)
             val filesJsonArray = jsonObject.getJSONArray("files")
 
