@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar.dialog;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
