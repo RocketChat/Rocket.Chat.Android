@@ -3,14 +3,14 @@ package chat.rocket.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import com.hadisatrio.optional.Optional;
-
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.Logger;
@@ -21,9 +21,6 @@ import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import icepick.State;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   @State protected String hostname;
@@ -32,6 +29,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   private RocketChatCache rocketChatCache;
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
   private boolean isNotification;
+
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
