@@ -34,6 +34,7 @@ import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
 import chat.rocket.android.helper.LoadMoreScrollListener;
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.OnBackPressListener;
 import chat.rocket.android.helper.RecyclerViewAutoScrollManager;
 import chat.rocket.android.helper.RecyclerViewScrolledToBottomListener;
@@ -49,6 +50,7 @@ import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadAction
 import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.renderer.RocketChatUserStatusProvider;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
@@ -340,28 +342,30 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         SlidingPaneLayout subPane = getActivity().findViewById(R.id.sub_sliding_pane);
         sidebarFragment = (SidebarMainFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.sidebar_fragment_container);
 
-        pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View view, float v) {
-                messageFormManager.enableComposingText(false);
-                sidebarFragment.clearSearchViewFocus();
-                //Ref: ActionBarDrawerToggle#setProgress
-                toolbar.setNavigationIconProgress(v);
-            }
+        if (pane != null) {
+            pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View view, float v) {
+                    messageFormManager.enableComposingText(false);
+                    sidebarFragment.clearSearchViewFocus();
+                    //Ref: ActionBarDrawerToggle#setProgress
+                    toolbar.setNavigationIconProgress(v);
+                }
 
-            @Override
-            public void onPanelOpened(View view) {
-                toolbar.setNavigationIconVerticalMirror(true);
-            }
+                @Override
+                public void onPanelOpened(View view) {
+                    toolbar.setNavigationIconVerticalMirror(true);
+                }
 
-            @Override
-            public void onPanelClosed(View view) {
-                messageFormManager.enableComposingText(true);
-                toolbar.setNavigationIconVerticalMirror(false);
-                subPane.closePane();
-                closeUserActionContainer();
-            }
-        });
+                @Override
+                public void onPanelClosed(View view) {
+                    messageFormManager.enableComposingText(true);
+                    toolbar.setNavigationIconVerticalMirror(false);
+                    subPane.closePane();
+                    closeUserActionContainer();
+                }
+            });
+        }
     }
 
     public void closeUserActionContainer() {
@@ -537,6 +541,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         try {
             inputContentInfo.releasePermission();
         } catch (Exception e) {
+            RCLog.e(e);
+            Logger.report(e);
         }
 
         return true;
@@ -552,9 +558,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
     @Override
     public void setupWith(RocketChatAbsoluteUrl rocketChatAbsoluteUrl) {
-        token = rocketChatAbsoluteUrl.getToken();
-        userId = rocketChatAbsoluteUrl.getUserId();
-        messageListAdapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
+        if (rocketChatAbsoluteUrl != null) {
+            token = rocketChatAbsoluteUrl.getToken();
+            userId = rocketChatAbsoluteUrl.getUserId();
+            messageListAdapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
+        }
     }
 
     @Override
@@ -657,12 +665,16 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     private void showRoomListFragment(int actionId) {
-        Intent intent = new Intent(getActivity(), RoomActivity.class).putExtra("actionId", actionId)
-                .putExtra("roomId", roomId)
-                .putExtra("roomType", roomType)
-                .putExtra("hostname", hostname)
-                .putExtra("token", token)
-                .putExtra("userId", userId);
-        startActivity(intent);
+        //TODO: oddly sometimes getActivity() yields null. Investigate the situations this might happen
+        //and fix it, removing this null-check
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), RoomActivity.class).putExtra("actionId", actionId)
+                    .putExtra("roomId", roomId)
+                    .putExtra("roomType", roomType)
+                    .putExtra("hostname", hostname)
+                    .putExtra("token", token)
+                    .putExtra("userId", userId);
+            startActivity(intent);
+        }
     }
 }

@@ -121,14 +121,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
           }
         }
       });
-    }
 
-    if (toolbar != null) {
-      toolbar.setNavigationOnClickListener(view -> {
-        if (pane.isSlideable() && !pane.isOpen()) {
-          pane.openPane();
-        }
-      });
+      if (toolbar != null) {
+        toolbar.setNavigationOnClickListener(view -> {
+          if (pane.isSlideable() && !pane.isOpen()) {
+            pane.openPane();
+          }
+        });
+      }
     }
   }
 
@@ -251,12 +251,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
             R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
   }
 
-  public void showLogoutMessage() {
-    statusTicker.updateStatus(StatusTicker.STATUS_LOGGING_OUT,
-            Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                    "Logging Out...", Snackbar.LENGTH_INDEFINITE));
-  }
-
   @Override
   public void showConnectionOk() {
     statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
@@ -312,11 +306,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
       RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
       rocketChatCache.setSelectedServerHostname(serverHostname);
     }
-  }
-
-  @DebugLog
-  public void hideLogoutMessage() {
-    statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
   }
 
   @DebugLog
