@@ -36,7 +36,7 @@ public class RocketChatApplicationDebug extends RocketChatApplication {
   private void enableStetho() {
     Stetho.initialize(Stetho.newInitializerBuilder(this)
         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).withLimit(Long.MAX_VALUE).build())
         .build());
   }
 }
