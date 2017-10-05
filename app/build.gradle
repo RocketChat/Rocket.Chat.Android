@@ -128,9 +128,7 @@ ext {
 }
 
 dependencies {
-    compile project(':log-wrapper')
     compile project(':android-ddp')
-    compile project(':rocket-chat-core')
     compile project(':rocket-chat-android-widgets')
     compile project(':persistence-realm')
 
