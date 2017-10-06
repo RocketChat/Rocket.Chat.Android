@@ -20,6 +20,15 @@ echo "sdk.dir="$ANDROID_HOME > local.properties
 ./gradlew assembleDebug
 ```
 
+### How to sent APK to device
+
+The following steps are only needed if running via command line. They are not needed if you are building via Android Studio.
+
+
+Ensure that that ADB recognizes your device with `$ adb devices`.
+If a single device exists, install via `$ adb install /path/to/apk.apk`.
+Assuming you used Gradle like earlier, the file will be called `module_name-debug.apk` in project_name/module_name/build/outputs/apk/.
+Alternatively, you can simply run `./gradlew installDebug` to build, deploy, and debug all in a single command.
 
 ## Bug report & Feature request
 
