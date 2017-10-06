@@ -34,7 +34,7 @@ object FrescoHelper {
         hierarchy.setPlaceholderImage(VectorDrawableCompat.create(draweeView.resources, R.drawable.image_dummy, null))
         hierarchy.setFailureImage(VectorDrawableCompat.create(draweeView.resources, R.drawable.image_error, null))
         hierarchy.roundingParams = RoundingParams().setCornersRadii(5F, 5F, 5F, 5F)
-        hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_XY
+        hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_CENTER
         hierarchy.setProgressBarImage(ProgressBarDrawable())
 
         val controller = Fresco.newDraweeControllerBuilder()
