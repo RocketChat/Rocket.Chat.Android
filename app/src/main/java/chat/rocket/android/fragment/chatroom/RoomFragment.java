@@ -96,7 +96,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class RoomFragment extends AbstractChatRoomFragment implements
         OnBackPressListener,
         ExtraActionPickerDialogFragment.Callback,
-        ModelListAdapter.OnItemClickListener<PairedMessage>,
+        ModelListAdapter.OnItemLongClickListener<PairedMessage>,
         RoomContract.View {
 
     private static final int DIALOG_ID = 1;
@@ -207,7 +207,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
         messageListAdapter = new MessageListAdapter(getContext(), hostname);
         messageRecyclerView.setAdapter(messageListAdapter);
-        messageListAdapter.setOnItemClickListener(this);
+        messageListAdapter.setOnItemLongClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
@@ -292,8 +292,9 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     @Override
-    public void onItemClick(PairedMessage pairedMessage) {
+    public boolean onItemLongClick(PairedMessage pairedMessage) {
         presenter.onMessageSelected(pairedMessage.target);
+        return true;
     }
 
     private void setupToolbar() {
