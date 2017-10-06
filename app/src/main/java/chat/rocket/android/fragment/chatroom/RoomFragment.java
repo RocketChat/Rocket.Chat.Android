@@ -35,7 +35,6 @@ import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.activity.room.RoomActivity;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
-import chat.rocket.android.fragment.chatroom.dialog.MessageOptionsDialogFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
@@ -98,7 +97,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         OnBackPressListener,
         ExtraActionPickerDialogFragment.Callback,
         ModelListAdapter.OnItemClickListener<PairedMessage>,
-        ModelListAdapter.OnItemLongClickListener<PairedMessage>,
         RoomContract.View {
 
     private static final int DIALOG_ID = 1;
@@ -210,7 +208,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         messageListAdapter = new MessageListAdapter(getContext(), hostname);
         messageRecyclerView.setAdapter(messageListAdapter);
         messageListAdapter.setOnItemClickListener(this);
-        messageListAdapter.setOnItemLongClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
@@ -297,20 +294,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     @Override
     public void onItemClick(PairedMessage pairedMessage) {
         presenter.onMessageSelected(pairedMessage.target);
-    }
-
-    @Override
-    public boolean onItemLongClick(PairedMessage pairedMessage) {
-        MessageOptionsDialogFragment messageOptionsDialogFragment = MessageOptionsDialogFragment
-                .create(pairedMessage.target);
-
-        messageOptionsDialogFragment.setOnMessageOptionSelectedListener(message -> {
-            messageOptionsDialogFragment.dismiss();
-            onEditMessage(message);
-        });
-
-        messageOptionsDialogFragment.show(getChildFragmentManager(), "MessageOptionsDialogFragment");
-        return true;
     }
 
     private void setupToolbar() {
