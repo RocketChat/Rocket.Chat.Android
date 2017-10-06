@@ -65,7 +65,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_gravity="center"
             android:background="?attr/selectableItemBackground"
             android:textAppearance="@style/TextAppearance.RocketChat.MessageAttachment.Title"
             tools:text="Attachment Example" />
@@ -98,23 +98,22 @@
 
         <FrameLayout
             android:id="@+id/image_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
             android:padding="5dp"
             android:background="@drawable/inline_attachment_background">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center" />
+                android:layout_width="200dp"
+                android:layout_height="200dp"/>
 
             <TextView
                 android:id="@+id/image_load"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:layout_gravity="center"
                 android:gravity="center_horizontal|bottom"
                 android:paddingBottom="16dp"
                 android:text="@string/click_to_load" />
