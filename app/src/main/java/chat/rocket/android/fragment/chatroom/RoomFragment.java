@@ -21,7 +21,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.hadisatrio.optional.Optional;
 
@@ -670,7 +669,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
                     .setReplyAction(presenter::replyMessage)
                     .setEditAction(this::onEditMessage)
                     .setCopyAction(msg -> onCopy(message.getMessage()))
-                    .addAction("Test", message1 -> Toast.makeText(context, "Teste", Toast.LENGTH_SHORT).show())
                     .show(context);
         }
     }

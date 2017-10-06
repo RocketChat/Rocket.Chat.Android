@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import chat.rocket.android.BackgroundLooper;
@@ -81,6 +82,7 @@ public class MessagePopup {
                                     allowedActions.add(action);
                                 }
                             }
+                            allowedActions.addAll(singleton.otherActions);
                             CharSequence[] items = new CharSequence[allowedActions.size()];
                             for (int j = 0; j < items.length; j++) {
                                 items[j] = allowedActions.get(j).actionName;
