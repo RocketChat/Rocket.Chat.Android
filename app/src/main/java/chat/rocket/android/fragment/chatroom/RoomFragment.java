@@ -60,6 +60,7 @@ import chat.rocket.android.renderer.RocketChatUserStatusProvider;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
 import chat.rocket.android.service.temp.DefaultTempSpotlightUserCaller;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
@@ -649,8 +650,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     @Override
-    public void onReply(String markdown, Message message) {
-        messageFormManager.setReply(markdown, message);
+    public void onReply(AbsoluteUrl absoluteUrl, String markdown, Message message) {
+        messageFormManager.setReply(absoluteUrl, markdown, message);
     }
 
     @Override

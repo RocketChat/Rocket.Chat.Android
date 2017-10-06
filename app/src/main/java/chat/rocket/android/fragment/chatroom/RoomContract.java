@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import chat.rocket.android.shared.BaseContract;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
@@ -37,7 +38,7 @@ public interface RoomContract {
 
     void manualLoadImages();
 
-    void onReply(String markdown, Message message);
+    void onReply(AbsoluteUrl absoluteUrl, String markdown, Message message);
 
     void onCopy(String message);
 

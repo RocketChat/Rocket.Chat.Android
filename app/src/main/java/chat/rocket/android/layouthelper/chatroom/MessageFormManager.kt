@@ -1,6 +1,8 @@
 package chat.rocket.android.layouthelper.chatroom
 
+import android.text.TextUtils
 import android.view.View
+import chat.rocket.android.widget.AbsoluteUrl
 import chat.rocket.android.widget.message.MessageFormLayout
 import chat.rocket.core.models.Message
 
@@ -34,9 +36,9 @@ class MessageFormManager(private val messageFormLayout: MessageFormLayout, val c
         messageFormLayout.isEnabled = enable
     }
 
-    fun setReply(replyMarkDown: String, message: Message) {
+    fun setReply(absoluteUrl: AbsoluteUrl, replyMarkDown: String, message: Message) {
         this.replyMarkDown = replyMarkDown
-        messageFormLayout.setReplyContent(message)
+        messageFormLayout.setReplyContent(absoluteUrl, message)
         messageFormLayout.setReplyCancelListener({
             this.replyMarkDown = ""
             messageFormLayout.clearReplyContent()

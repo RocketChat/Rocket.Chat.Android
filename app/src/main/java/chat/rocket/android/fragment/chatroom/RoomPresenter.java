@@ -24,7 +24,6 @@ import chat.rocket.core.repositories.UserRepository;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class RoomPresenter extends BasePresenter<RoomContract.View>
     implements RoomContract.Presenter {
@@ -133,7 +132,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                       serverUrl -> {
                           if (serverUrl.isPresent()) {
                               String baseUrl = serverUrl.get().getBaseUrl();
-                              view.onReply(buildReplyMarkDown(baseUrl, message), message);
+                              view.onReply(serverUrl.get(), buildReplyMarkDown(baseUrl, message), message);
                           }
                       },
                       Logger::report

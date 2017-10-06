@@ -6,7 +6,6 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import chat.rocket.android.BackgroundLooper;

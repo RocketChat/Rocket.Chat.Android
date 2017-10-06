@@ -21,8 +21,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.helper.DebouncingOnClickListener;
+import chat.rocket.android.widget.helper.FrescoHelper;
+import chat.rocket.core.models.Attachment;
+import chat.rocket.core.models.AttachmentTitle;
 import chat.rocket.core.models.Message;
 
 public class MessageFormLayout extends LinearLayout {
@@ -34,6 +40,7 @@ public class MessageFormLayout extends LinearLayout {
 
   private RelativeLayout replyBar;
   private ImageView replyCancelButton;
+  private SimpleDraweeView replyThumb;
   private TextView replyMessageText;
   private TextView replyUsernameText;
 
@@ -78,6 +85,7 @@ public class MessageFormLayout extends LinearLayout {
     replyCancelButton = composer.findViewById(R.id.reply_cancel);
     replyMessageText = composer.findViewById(R.id.reply_message);
     replyUsernameText = composer.findViewById(R.id.reply_username);
+    replyThumb = composer.findViewById(R.id.reply_thumb);
     replyBar = composer.findViewById(R.id.reply_bar);
 
     sendButton = composer.findViewById(R.id.button_send);
@@ -136,8 +144,12 @@ public class MessageFormLayout extends LinearLayout {
 
   public void clearReplyContent() {
     replyBar.setVisibility(View.GONE);
+    replyThumb.setVisibility(View.GONE);
     replyMessageText.setText("");
     replyUsernameText.setText("");
+  }
+  public void showReplyThumb() {
+    replyThumb.setVisibility(View.VISIBLE);
   }
 
   public void setReplyCancelListener(OnClickListener onClickListener) {
@@ -196,14 +208,34 @@ public class MessageFormLayout extends LinearLayout {
     this.listener = listener;
   }
 
-  public void setReplyContent(@NonNull Message message) {
+  public void setReplyContent(@NonNull AbsoluteUrl absoluteUrl, @NonNull Message message) {
     String text = message.getMessage();
+    replyUsernameText.setText(message.getUser().getUsername());
     if (!TextUtils.isEmpty(text)) {
       replyMessageText.setText(text);
-      replyUsernameText.setText(message.getUser().getUsername());
-      replyBar.setVisibility(View.VISIBLE);
-      requestFocusAndShowKeyboard();
+    } else {
+      if (message.getAttachments() != null && message.getAttachments().size() > 0) {
+        Attachment attachment = message.getAttachments().get(0);
+        AttachmentTitle attachmentTitle = attachment.getAttachmentTitle();
+        String imageUrl = null;
+        if (attachment.getImageUrl() != null) {
+          imageUrl = absoluteUrl.from(attachment.getImageUrl());
+        }
+        if (attachmentTitle != null) {
+          text = attachmentTitle.getTitle();
+        }
+        if (TextUtils.isEmpty(text)) {
+          text = "Unknown";
+        }
+        if (imageUrl != null) {
+          FrescoHelper.INSTANCE.loadImageWithCustomization(replyThumb, imageUrl);
+          showReplyThumb();
+        }
+        replyMessageText.setText(text);
+      }
     }
+    replyBar.setVisibility(View.VISIBLE);
+    requestFocusAndShowKeyboard();
   }
 
   private void requestFocusAndShowKeyboard() {
