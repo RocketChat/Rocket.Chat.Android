@@ -2,6 +2,9 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.hadisatrio.optional.Optional;
 
@@ -26,6 +30,8 @@ import java.util.List;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
+import chat.rocket.android.RocketChatApplication;
+import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.activity.room.RoomActivity;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
@@ -42,6 +48,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.AbstractNewMessageIndicatorManager;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
+import chat.rocket.android.layouthelper.chatroom.MessagePopup;
 import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
@@ -135,7 +142,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     /**
-     * create fragment with roomId.
+     * build fragment with roomId.
      */
     public static RoomFragment create(String hostname, String roomId) {
         Bundle args = new Bundle();
@@ -657,6 +664,32 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     @Override
     public void manualLoadImages() {
         messageListAdapter.setAutoloadImages(false);
+    }
+
+    @Override
+    public void onReply(String message) {
+        messageFormManager.setEditMessage(message);
+    }
+
+    @Override
+    public void onCopy(String message) {
+        RocketChatApplication context = RocketChatApplication.getInstance();
+        ClipboardManager clipboardManager =
+                (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboardManager.setPrimaryClip(ClipData.newPlainText("message", message));
+    }
+
+    @Override
+    public void showMessageActions(Message message) {
+        Activity context = getActivity();
+        if (context != null && context instanceof MainActivity) {
+            MessagePopup.with(message)
+                    .setReplyAction(presenter::replyMessage)
+                    .setEditAction(this::onEditMessage)
+                    .setCopyAction(msg -> onCopy(message.getMessage()))
+                    .addAction("Test", message1 -> Toast.makeText(context, "Teste", Toast.LENGTH_SHORT).show())
+                    .show(context);
+        }
     }
 
     private void onEditMessage(Message message) {

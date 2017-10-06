@@ -30,7 +30,7 @@ public class UserRegistrationDialogFragment extends DialogFragment {
   }
 
   /**
-   * create UserRegistrationDialogFragment with auto-detect email/username.
+   * build UserRegistrationDialogFragment with auto-detect email/username.
    */
   public static UserRegistrationDialogFragment create(String hostname,
                                                       String usernameOrEmail, String password) {
@@ -42,7 +42,7 @@ public class UserRegistrationDialogFragment extends DialogFragment {
   }
 
   /**
-   * create UserRegistrationDialogFragment.
+   * build UserRegistrationDialogFragment.
    */
   public static UserRegistrationDialogFragment create(String hostname,
                                                       String username, String email,

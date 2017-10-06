@@ -29,4 +29,8 @@ public class RocketChatAbsoluteUrl implements AbsoluteUrl {
   public String getToken() {
     return token;
   }
+
+  public String getBaseUrl() {
+    return baseUrl;
+  }
 }

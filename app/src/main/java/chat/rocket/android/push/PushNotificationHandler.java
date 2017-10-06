@@ -88,7 +88,7 @@ public class PushNotificationHandler implements PushConstants {
     if ((message != null && message.length() != 0) ||
         (title != null && title.length() != 0)) {
 
-      Log.d(LOG_TAG, "create notification");
+      Log.d(LOG_TAG, "build notification");
 
       if (title == null || title.isEmpty()) {
         extras.putString(TITLE, getAppName(context));
@@ -191,7 +191,7 @@ public class PushNotificationHandler implements PushConstants {
 
   private void createActions(Context context, Bundle extras, NotificationCompat.Builder builder,
                              Resources resources, String packageName, int notId) {
-    Log.d(LOG_TAG, "create actions: with in-line");
+    Log.d(LOG_TAG, "build actions: with in-line");
     String actions = extras.getString(ACTIONS);
     if (actions == null) {
       return;
@@ -256,7 +256,7 @@ public class PushNotificationHandler implements PushConstants {
 
         RemoteInput remoteInput;
         if (inline) {
-          Log.d(LOG_TAG, "create remote input");
+          Log.d(LOG_TAG, "build remote input");
           String replyLabel = "Enter your reply here";
           remoteInput = new RemoteInput.Builder(INLINE_REPLY)
               .setLabel(replyLabel)
@@ -287,7 +287,7 @@ public class PushNotificationHandler implements PushConstants {
   @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
   private void createActions(Context context, Bundle extras, Notification.Builder builder,
                              Resources resources, String packageName, int notId) {
-    Log.d(LOG_TAG, "create actions: with in-line");
+    Log.d(LOG_TAG, "build actions: with in-line");
     String actions = extras.getString(ACTIONS);
     if (actions == null) {
       return;
@@ -352,7 +352,7 @@ public class PushNotificationHandler implements PushConstants {
 
         android.app.RemoteInput remoteInput;
         if (inline) {
-          Log.d(LOG_TAG, "create remote input");
+          Log.d(LOG_TAG, "build remote input");
           String replyLabel = "Enter your reply here";
           remoteInput = new android.app.RemoteInput.Builder(INLINE_REPLY)
                   .setLabel(replyLabel)
