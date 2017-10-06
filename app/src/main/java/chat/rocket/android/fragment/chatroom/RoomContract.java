@@ -37,7 +37,7 @@ public interface RoomContract {
 
     void manualLoadImages();
 
-    void onReply(String message);
+    void onReply(String markdown, Message message);
 
     void onCopy(String message);
 

@@ -127,13 +127,13 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   public void replyMessage(Message message) {
       this.absoluteUrlHelper.getRocketChatAbsoluteUrl()
               .cache()
-              .observeOn(Schedulers.io())
-              .subscribeOn(AndroidSchedulers.mainThread())
+              .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+              .observeOn(AndroidSchedulers.mainThread())
               .subscribe(
                       serverUrl -> {
                           if (serverUrl.isPresent()) {
                               String baseUrl = serverUrl.get().getBaseUrl();
-                              view.onReply(buildReplyMessage(baseUrl, message));
+                              view.onReply(buildReplyMarkDown(baseUrl, message), message);
                           }
                       },
                       Logger::report
@@ -145,7 +145,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
       view.onCopy(message.getMessage());
   }
 
-  private String buildReplyMessage(String baseUrl, Message message) {
+  private String buildReplyMarkDown(String baseUrl, Message message) {
     if (currentRoom == null || message.getUser() == null) {
         return "";
     }

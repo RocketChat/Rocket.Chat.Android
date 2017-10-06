@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,10 +16,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.helper.DebouncingOnClickListener;
+import chat.rocket.core.models.Message;
 
 public class MessageFormLayout extends LinearLayout {
 
@@ -26,6 +31,11 @@ public class MessageFormLayout extends LinearLayout {
 
   private ImageButton attachButton;
   private ImageButton sendButton;
+
+  private RelativeLayout replyBar;
+  private ImageView replyCancelButton;
+  private TextView replyMessageText;
+  private TextView replyUsernameText;
 
   private ExtraActionSelectionClickListener extraActionSelectionClickListener;
   private SubmitTextListener submitTextListener;
@@ -65,6 +75,11 @@ public class MessageFormLayout extends LinearLayout {
       }
     });
 
+    replyCancelButton = composer.findViewById(R.id.reply_cancel);
+    replyMessageText = composer.findViewById(R.id.reply_message);
+    replyUsernameText = composer.findViewById(R.id.reply_username);
+    replyBar = composer.findViewById(R.id.reply_bar);
+
     sendButton = composer.findViewById(R.id.button_send);
 
     sendButton.setOnClickListener(new DebouncingOnClickListener() {
@@ -73,6 +88,7 @@ public class MessageFormLayout extends LinearLayout {
         String messageText = getText();
         if (messageText.length() > 0 && submitTextListener != null) {
           submitTextListener.onSubmitText(messageText);
+          clearReplyContent();
         }
       }
     });
@@ -118,6 +134,16 @@ public class MessageFormLayout extends LinearLayout {
     addView(composer);
   }
 
+  public void clearReplyContent() {
+    replyBar.setVisibility(View.GONE);
+    replyMessageText.setText("");
+    replyUsernameText.setText("");
+  }
+
+  public void setReplyCancelListener(OnClickListener onClickListener) {
+    replyCancelButton.setOnClickListener(onClickListener);
+  }
+
   public EditText getEditText() {
     return (EditText) composer.findViewById(R.id.editor);
   }
@@ -154,10 +180,7 @@ public class MessageFormLayout extends LinearLayout {
         if (text.length() > 0) {
           editor.setSelection(text.length());
 
-          InputMethodManager inputMethodManager = (InputMethodManager) editor.getContext()
-              .getSystemService(Context.INPUT_METHOD_SERVICE);
-          editor.requestFocus();
-          inputMethodManager.showSoftInput(editor, 0);
+          requestFocusAndShowKeyboard();
         }
       }
     });
@@ -171,6 +194,29 @@ public class MessageFormLayout extends LinearLayout {
   public void setEditTextCommitContentListener(
       ImageKeyboardEditText.OnCommitContentListener listener) {
     this.listener = listener;
+  }
+
+  public void setReplyContent(@NonNull Message message) {
+    String text = message.getMessage();
+    if (!TextUtils.isEmpty(text)) {
+      replyMessageText.setText(text);
+      replyUsernameText.setText(message.getUser().getUsername());
+      replyBar.setVisibility(View.VISIBLE);
+      requestFocusAndShowKeyboard();
+    }
+  }
+
+  private void requestFocusAndShowKeyboard() {
+    final EditText editor = getEditor();
+    editor.post(new Runnable() {
+      @Override
+      public void run() {
+        InputMethodManager inputMethodManager = (InputMethodManager) editor.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        editor.requestFocus();
+        inputMethodManager.showSoftInput(editor, 0);
+      }
+    });
   }
 
   private void animateHide(final View view) {

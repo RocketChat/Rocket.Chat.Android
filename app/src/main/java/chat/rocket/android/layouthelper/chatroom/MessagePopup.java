@@ -112,7 +112,7 @@ public class MessagePopup {
         singleton.defaultActions.add(COPY_ACTION_INFO);
     }
 
-    public static MessagePopup with(Message message) {
+    public static MessagePopup take(Message message) {
         if (singleton == null) {
             synchronized (MessagePopup.class) {
                 if (singleton == null) {
@@ -163,7 +163,7 @@ public class MessagePopup {
         return singleton;
     }
 
-    public void show(Context context) {
+    public void showWith(Context context) {
         showAvailableActionsOnly(context);
     }
 

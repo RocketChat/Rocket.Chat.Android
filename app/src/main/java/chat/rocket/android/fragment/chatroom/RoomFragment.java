@@ -649,8 +649,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     @Override
-    public void onReply(String message) {
-        messageFormManager.setEditMessage(message);
+    public void onReply(String markdown, Message message) {
+        messageFormManager.setReply(markdown, message);
     }
 
     @Override
@@ -665,11 +665,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     public void showMessageActions(Message message) {
         Activity context = getActivity();
         if (context != null && context instanceof MainActivity) {
-            MessagePopup.with(message)
+            MessagePopup.take(message)
                     .setReplyAction(presenter::replyMessage)
                     .setEditAction(this::onEditMessage)
                     .setCopyAction(msg -> onCopy(message.getMessage()))
-                    .show(context);
+                    .showWith(context);
         }
     }
 
