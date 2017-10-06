@@ -191,7 +191,7 @@ public class MessagePopup {
     }
 
     private static class Builder {
-        final Message message;
+        private final Message message;
         Builder(Message message) {
             if (message == null) {
                 throw new IllegalArgumentException("Message must not be null");
@@ -206,9 +206,9 @@ public class MessagePopup {
     }
 
     public static class Action {
-        CharSequence actionName;
-        ActionListener actionListener;
-        boolean allowed;
+        private CharSequence actionName;
+        private ActionListener actionListener;
+        private boolean allowed;
 
         public Action(CharSequence actionName, ActionListener actionListener, boolean allowed) {
             this.actionName = actionName;
