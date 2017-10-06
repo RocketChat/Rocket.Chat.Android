@@ -238,6 +238,18 @@ public class MessageFormLayout extends LinearLayout {
     requestFocusAndShowKeyboard();
   }
 
+  public void hideKeyboard() {
+    final EditText editor = getEditor();
+    editor.post(new Runnable() {
+      @Override
+      public void run() {
+        InputMethodManager inputMethodManager = (InputMethodManager) editor.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(editor.getWindowToken(), 0);
+      }
+    });
+  }
+
   private void requestFocusAndShowKeyboard() {
     final EditText editor = getEditor();
     editor.post(new Runnable() {

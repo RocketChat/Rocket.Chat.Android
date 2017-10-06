@@ -1,7 +1,5 @@
 package chat.rocket.android.layouthelper.chatroom
 
-import android.text.TextUtils
-import android.view.View
 import chat.rocket.android.widget.AbsoluteUrl
 import chat.rocket.android.widget.message.MessageFormLayout
 import chat.rocket.core.models.Message
@@ -42,6 +40,7 @@ class MessageFormManager(private val messageFormLayout: MessageFormLayout, val c
         messageFormLayout.setReplyCancelListener({
             this.replyMarkDown = ""
             messageFormLayout.clearReplyContent()
+            messageFormLayout.hideKeyboard()
         })
     }
 
