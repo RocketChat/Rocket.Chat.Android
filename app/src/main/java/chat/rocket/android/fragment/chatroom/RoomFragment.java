@@ -2,6 +2,9 @@ package chat.rocket.android.fragment.chatroom;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,10 +29,11 @@ import java.util.List;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
+import chat.rocket.android.RocketChatApplication;
+import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.activity.room.RoomActivity;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.chatroom.dialog.FileUploadProgressDialogFragment;
-import chat.rocket.android.fragment.chatroom.dialog.MessageOptionsDialogFragment;
 import chat.rocket.android.fragment.sidebar.SidebarMainFragment;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.FileUploadHelper;
@@ -42,6 +46,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.chatroom.AbstractNewMessageIndicatorManager;
 import chat.rocket.android.layouthelper.chatroom.MessageFormManager;
 import chat.rocket.android.layouthelper.chatroom.MessageListAdapter;
+import chat.rocket.android.layouthelper.chatroom.MessagePopup;
 import chat.rocket.android.layouthelper.chatroom.ModelListAdapter;
 import chat.rocket.android.layouthelper.chatroom.PairedMessage;
 import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
@@ -55,6 +60,7 @@ import chat.rocket.android.renderer.RocketChatUserStatusProvider;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.temp.DeafultTempSpotlightRoomCaller;
 import chat.rocket.android.service.temp.DefaultTempSpotlightUserCaller;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.android.widget.internal.ExtraActionPickerDialogFragment;
 import chat.rocket.android.widget.message.MessageFormLayout;
@@ -90,7 +96,6 @@ import permissions.dispatcher.RuntimePermissions;
 public class RoomFragment extends AbstractChatRoomFragment implements
         OnBackPressListener,
         ExtraActionPickerDialogFragment.Callback,
-        ModelListAdapter.OnItemClickListener<PairedMessage>,
         ModelListAdapter.OnItemLongClickListener<PairedMessage>,
         RoomContract.View {
 
@@ -135,7 +140,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     /**
-     * create fragment with roomId.
+     * build fragment with roomId.
      */
     public static RoomFragment create(String hostname, String roomId) {
         Bundle args = new Bundle();
@@ -202,7 +207,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
         messageListAdapter = new MessageListAdapter(getContext(), hostname);
         messageRecyclerView.setAdapter(messageListAdapter);
-        messageListAdapter.setOnItemClickListener(this);
         messageListAdapter.setOnItemLongClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
@@ -288,21 +292,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     @Override
-    public void onItemClick(PairedMessage pairedMessage) {
-        presenter.onMessageSelected(pairedMessage.target);
-    }
-
-    @Override
     public boolean onItemLongClick(PairedMessage pairedMessage) {
-        MessageOptionsDialogFragment messageOptionsDialogFragment = MessageOptionsDialogFragment
-                .create(pairedMessage.target);
-
-        messageOptionsDialogFragment.setOnMessageOptionSelectedListener(message -> {
-            messageOptionsDialogFragment.dismiss();
-            onEditMessage(message);
-        });
-
-        messageOptionsDialogFragment.show(getChildFragmentManager(), "MessageOptionsDialogFragment");
+        presenter.onMessageSelected(pairedMessage.target);
         return true;
     }
 
@@ -657,6 +648,31 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     @Override
     public void manualLoadImages() {
         messageListAdapter.setAutoloadImages(false);
+    }
+
+    @Override
+    public void onReply(AbsoluteUrl absoluteUrl, String markdown, Message message) {
+        messageFormManager.setReply(absoluteUrl, markdown, message);
+    }
+
+    @Override
+    public void onCopy(String message) {
+        RocketChatApplication context = RocketChatApplication.getInstance();
+        ClipboardManager clipboardManager =
+                (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboardManager.setPrimaryClip(ClipData.newPlainText("message", message));
+    }
+
+    @Override
+    public void showMessageActions(Message message) {
+        Activity context = getActivity();
+        if (context != null && context instanceof MainActivity) {
+            MessagePopup.take(message)
+                    .setReplyAction(presenter::replyMessage)
+                    .setEditAction(this::onEditMessage)
+                    .setCopyAction(msg -> onCopy(message.getMessage()))
+                    .showWith(context);
+        }
     }
 
     private void onEditMessage(Message message) {

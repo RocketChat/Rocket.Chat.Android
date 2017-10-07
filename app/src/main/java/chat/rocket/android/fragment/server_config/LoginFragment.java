@@ -100,7 +100,7 @@ public class LoginFragment extends AbstractServerConfigFragment implements Login
             try {
               fragment = info.fragmentClass.newInstance();
             } catch (Exception exception) {
-              RCLog.w(exception, "failed to create new Fragment");
+              RCLog.w(exception, "failed to build new Fragment");
             }
             if (fragment != null) {
               Bundle args = new Bundle();

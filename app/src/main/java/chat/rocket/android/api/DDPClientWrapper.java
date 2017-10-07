@@ -30,7 +30,7 @@ public class DDPClientWrapper {
   }
 
   /**
-   * create new API client instance.
+   * build new API client instance.
    */
   public static DDPClientWrapper create(String hostname) {
     return new DDPClientWrapper(hostname);
