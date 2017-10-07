@@ -10,9 +10,9 @@
         android:title="@string/menu_favorite_messages"
         app:showAsAction="never" />
 
-    <!--<item android:id="@+id/action_file_list"-->
-        <!--android:title="@string/menu_file_list"-->
-        <!--app:showAsAction="never" />-->
+    <item android:id="@+id/action_file_list"
+        android:title="@string/menu_file_list"
+        app:showAsAction="never" />
 
     <item android:id="@+id/action_member_list"
         android:title="@string/menu_member_list"

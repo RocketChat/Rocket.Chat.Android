@@ -316,9 +316,9 @@ public class RoomFragment extends AbstractChatRoomFragment implements
                 case R.id.action_favorite_messages:
                     showRoomListFragment(R.id.action_favorite_messages);
                     break;
-//                case R.id.action_file_list:
-//                    showRoomListFragment(R.id.action_file_list);
-//                    break;
+                case R.id.action_file_list:
+                    showRoomListFragment(R.id.action_file_list);
+                    break;
                 case R.id.action_member_list:
                     showRoomListFragment(R.id.action_member_list);
                     break;
