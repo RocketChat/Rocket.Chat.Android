@@ -96,6 +96,7 @@ object RestApiHelper {
         val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForFileList(roomType, hostname))
                 ?.newBuilder()
                 ?.addQueryParameter("roomId", roomId)
+                ?.addQueryParameter("sort", "{\"uploadedAt\":-1}")
                 ?.addQueryParameter("offset", offset)
                 ?.build()
 

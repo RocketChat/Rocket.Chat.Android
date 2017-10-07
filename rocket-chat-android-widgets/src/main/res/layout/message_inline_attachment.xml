@@ -1,125 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:fresco="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
 
     <View
-            android:id="@+id/attachment_strip"
-            android:layout_width="3dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:background="@color/inline_attachment_quote_line" />
+        android:id="@+id/attachment_strip"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/inline_attachment_quote_line" />
 
     <LinearLayout
-            android:id="@+id/attachment_content"
-            android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+        android:id="@+id/attachment_content"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-                android:id="@+id/author_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+            android:id="@+id/author_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/author_icon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    tools:src="@drawable/circle_black"
-                    fresco:actualImageScaleType="fitCenter" />
+                android:id="@+id/author_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                fresco:actualImageScaleType="fitCenter"
+                tools:src="@drawable/circle_black" />
 
             <android.support.v4.widget.Space
-                    android:layout_width="8dp"
-                    android:layout_height="8dp" />
+                android:layout_width="8dp"
+                android:layout_height="8dp" />
 
             <TextView
-                    android:id="@+id/author_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.RocketChat.MessageAttachment.Title.Link"
-                    tools:text="Bradley Hilton" />
+                android:id="@+id/author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.RocketChat.MessageAttachment.Title.Link"
+                tools:text="Bradley Hilton" />
 
             <android.support.v4.widget.Space
-                    android:layout_width="8dp"
-                    android:layout_height="8dp" />
+                android:layout_width="8dp"
+                android:layout_height="8dp" />
 
             <TextView
-                    android:id="@+id/timestamp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="14:53" />
+                android:id="@+id/timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="14:53" />
 
         </LinearLayout>
 
         <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.RocketChat.MessageAttachment.Title"
-                android:background="?attr/selectableItemBackground"
-                tools:text="Attachment Example" />
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:textAppearance="@style/TextAppearance.RocketChat.MessageAttachment.Title"
+            tools:text="Attachment Example" />
 
         <LinearLayout
-                android:id="@+id/ref_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+            android:id="@+id/ref_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/thumb"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    tools:src="@drawable/circle_black"
-                    fresco:actualImageScaleType="fitCenter" />
+                android:id="@+id/thumb"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                fresco:actualImageScaleType="fitCenter"
+                tools:src="@drawable/circle_black" />
 
             <android.support.v4.widget.Space
-                    android:layout_width="8dp"
-                    android:layout_height="8dp" />
+                android:layout_width="8dp"
+                android:layout_height="8dp" />
 
             <TextView
-                    android:id="@+id/text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Bradley Hilton" />
-
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Bradley Hilton" />
         </LinearLayout>
 
         <FrameLayout
-                android:id="@+id/image_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:id="@+id/image_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:padding="5dp"
+            android:background="@drawable/inline_attachment_background">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/image"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="8dp"
-                    fresco:actualImageScaleType="fitStart" />
+                android:id="@+id/image"
+                android:layout_width="200dp"
+                android:layout_height="200dp"/>
 
             <TextView
-                    android:id="@+id/image_load"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:gravity="center_horizontal|bottom"
-                    android:paddingBottom="16dp"
-                    android:text="@string/click_to_load" />
-
+                android:id="@+id/image_load"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:gravity="center_horizontal|bottom"
+                android:paddingBottom="16dp"
+                android:text="@string/click_to_load" />
         </FrameLayout>
 
         <!-- audio -->
         <!-- video -->
-
     </LinearLayout>
 </LinearLayout>
