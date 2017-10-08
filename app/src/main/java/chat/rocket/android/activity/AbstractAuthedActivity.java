@@ -6,9 +6,6 @@ import android.support.annotation.Nullable;
 
 import com.hadisatrio.optional.Optional;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 import chat.rocket.android.LaunchUtil;
@@ -198,9 +195,8 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
 
     compositeDisposable.add(
         rocketChatCache.getSelectedRoomIdPublisher()
+            .filter(Optional::isPresent)
             .map(Optional::get)
-            .map(this::convertStringToJsonObject)
-            .map(jsonObject -> jsonObject.optString(rocketChatCache.getSelectedServerHostname(), null))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -208,12 +204,5 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
                 Logger::report
             )
     );
-  }
-
-  private JSONObject convertStringToJsonObject(String json) throws JSONException {
-    if (json == null) {
-      return new JSONObject();
-    }
-    return new JSONObject(json);
   }
 }
