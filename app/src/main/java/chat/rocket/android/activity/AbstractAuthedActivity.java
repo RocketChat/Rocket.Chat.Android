@@ -7,8 +7,6 @@ import com.hadisatrio.optional.Optional;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.util.List;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
