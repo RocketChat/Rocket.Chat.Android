@@ -67,7 +67,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
   public SidebarMainFragment() {}
 
   /**
-   * create SidebarMainFragment with hostname.
+   * build SidebarMainFragment with hostname.
    */
   public static SidebarMainFragment create(String hostname) {
     Bundle args = new Bundle();

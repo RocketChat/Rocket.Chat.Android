@@ -51,7 +51,7 @@ public class MarkDown {
 
 
   private static final Pattern LINK_PATTERN = Pattern.compile(
-      "\\[([^\\]]+)\\]\\(((?:http|https):\\/\\/[^\\)]+)\\)", Pattern.MULTILINE);
+          "\\[(.*?)\\]\\(((https?):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|]?)\\)", Pattern.MULTILINE);
   private static void highlightLink1(SpannableString inputText) {
     final Matcher matcher = LINK_PATTERN.matcher(inputText);
     while (matcher.find()) {
