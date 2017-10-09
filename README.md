@@ -28,7 +28,7 @@ If a single device exists, install via `$ adb install /path/to/apk.apk`.
 
 Assuming you used Gradle like earlier, the file will be called `module_name-debug.apk` in `project_name/module_name/build/outputs/apk/`.
 
-Alternatively, you can simply run `$ ./gradlew installDebug` (`> gradlew installDebug` on Windows)to build, deploy, and debug all in a single command.
+Alternatively, you can simply run `$ ./gradlew installDebug` (`> gradlew installDebug` on Windows) to build, deploy, and debug all in a single command.
 
 ## Bug report & Feature request
 
