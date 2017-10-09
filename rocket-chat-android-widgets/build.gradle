@@ -12,7 +12,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$rootProject.ext.kotlinVersion"
     }
 }
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -43,38 +42,25 @@ ext {
     frescoVersion = '1.4.0'
     rxbindingVersion = '2.0.0'
 }
-
 dependencies {
     compile project(':rocket-chat-core')
-    compile extraDependencies.circleImageView;
     compile extraDependencies.okHTTP;
     compile supportDependencies.annotation
-    compile supportDependencies.appCompat
-    compile supportDependencies.recycleview
-    compile supportDependencies.cardview
-
+    compile supportDependencies.cardView
     compile supportDependencies.designSupportLibrary
     compile supportDependencies.constrainLayout
     compile supportDependencies.kotlin
     compile extraDependencies.textDrawable
     compile rxbindingDependencies.rxBinding
     compile rxbindingDependencies.rxBindingSupport
-
     compile "com.android.support:support-v13:$rootProject.ext.supportLibraryVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
-
     compile 'org.nibor.autolink:autolink:0.6.0'
     compile 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
     compile "com.facebook.fresco:fresco:$frescoVersion"
-    compile "com.facebook.fresco:animated-gif:$frescoVersion"
-    compile "com.facebook.fresco:animated-webp:$frescoVersion"
-    compile "com.facebook.fresco:webpsupport:$frescoVersion"
     compile "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
-
     compile 'com.caverock:androidsvg:1.2.1'
-
-
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:2.7.19"
 }

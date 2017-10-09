@@ -44,31 +44,20 @@ android {
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 }
-
 dependencies {
     compile project(':log-wrapper')
     compile project(':rocket-chat-core')
     compile extraDependencies.rxJava
     compile extraDependencies.boltTask
-
-
     compile supportDependencies.annotation
-    compile supportDependencies.appCompat
     compile supportDependencies.designSupportLibrary
     compile supportDependencies.kotlin
     compile extraDependencies.rxAndroid
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
-
     testCompile 'org.json:json:20170516'
     testCompile 'org.skyscreamer:jsonassert:1.5.0'
-
-
-
-
     compile 'com.github.akarnokd:rxjava2-interop:0.10.0'
-
     provided 'com.hadisatrio:Optional:v1.0.1'
-
     testCompile 'junit:junit:4.12'
 }
