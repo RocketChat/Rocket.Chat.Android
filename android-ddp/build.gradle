@@ -11,11 +11,9 @@ buildscript {
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     }
 }
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -33,15 +31,10 @@ android {
         }
     }
 }
-
 dependencies {
     compile project(':log-wrapper')
-
-    compile "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
-
-    compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okHttpVersion"
-
-    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
-
-    compile 'com.parse.bolts:bolts-tasks:1.4.0'
+    compile extraDependencies.okHTTP
+    compile extraDependencies.rxJava
+    compile extraDependencies.boltTask
+    compile supportDependencies.annotation
 }
