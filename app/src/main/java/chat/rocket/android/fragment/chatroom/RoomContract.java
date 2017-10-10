@@ -54,6 +54,8 @@ public interface RoomContract {
 
     void onMessageSelected(@Nullable Message message);
 
+    void onMessageTap(@Nullable Message message);
+
     void sendMessage(String messageText);
 
     void resendMessage(@NonNull Message message);

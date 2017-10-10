@@ -112,13 +112,20 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
       return;
     }
 
-    if (message.getSyncState() == SyncState.FAILED) {
-      view.showMessageSendFailure(message);
-    }
-
-    if (message.getType() == null) {
+    if (message.getType() == null && message.getSyncState() == SyncState.SYNCED) {
         // If message is not a system message show applicable actions.
         view.showMessageActions(message);
+    }
+  }
+
+  @Override
+  public void onMessageTap(@Nullable Message message) {
+    if (message == null) {
+      return;
+    }
+
+    if (message.getSyncState() == SyncState.FAILED) {
+      view.showMessageSendFailure(message);
     }
   }
 
