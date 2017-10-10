@@ -23,14 +23,14 @@ public class ChannelRoomListHeader implements RoomListHeader {
 
   @Override
   public boolean owns(RoomSidebar roomSidebar) {
-    return roomSidebar.getType().equals(Room.TYPE_CHANNEL) || roomSidebar.getType().equals(Room.TYPE_PRIVATE);
+    return roomSidebar.getType().equals(Room.TYPE_CHANNEL) || roomSidebar.getType().equals(Room.TYPE_GROUP);
   }
 
   @Override
   public boolean shouldShow(@NonNull List<RoomSidebar> roomSidebarList) {
     for (RoomSidebar roomSidebar: roomSidebarList) {
       if ((roomSidebar.getType().equals(Room.TYPE_CHANNEL)
-              || roomSidebar.getType().equals(Room.TYPE_PRIVATE))
+              || roomSidebar.getType().equals(Room.TYPE_GROUP))
               && !roomSidebar.isAlert()
               && !roomSidebar.isFavorite()) {
         return true;

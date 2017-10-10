@@ -179,7 +179,7 @@ object RestApiHelper {
         var restApiUrl: String? = null
         when (roomType) {
             Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.messages"
-            Room.TYPE_PRIVATE -> restApiUrl = "/api/v1/groups.messages"
+            Room.TYPE_GROUP -> restApiUrl = "/api/v1/groups.messages"
             Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.messages"
         }
         return restApiUrl
@@ -195,7 +195,7 @@ object RestApiHelper {
         var restApiUrl: String? = null
         when (roomType) {
             Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.files"
-            Room.TYPE_PRIVATE -> restApiUrl = "/api/v1/groups.files"
+            Room.TYPE_GROUP -> restApiUrl = "/api/v1/groups.files"
             Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.files"
         }
         return restApiUrl
@@ -211,7 +211,7 @@ object RestApiHelper {
         var restApiUrl: String? = null
         when (roomType) {
             Room.TYPE_CHANNEL -> restApiUrl = "/api/v1/channels.members"
-            Room.TYPE_PRIVATE -> restApiUrl = "/api/v1/groups.members"
+            Room.TYPE_GROUP -> restApiUrl = "/api/v1/groups.members"
             Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.members"
         }
         return restApiUrl

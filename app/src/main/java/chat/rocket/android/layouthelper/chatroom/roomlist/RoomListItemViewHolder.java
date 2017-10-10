@@ -93,7 +93,7 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
       case Room.TYPE_CHANNEL:
         itemView.showPublicChannelIcon();
         break;
-      case Room.TYPE_PRIVATE:
+      case Room.TYPE_GROUP:
         itemView.showPrivateChannelIcon();
         break;
       case Room.TYPE_LIVECHAT:
