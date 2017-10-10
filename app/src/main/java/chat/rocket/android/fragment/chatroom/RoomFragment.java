@@ -133,7 +133,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
     private RoomToolbar toolbar;
 
-    private SlidingPaneLayout pane;
+    private Optional<SlidingPaneLayout> optionalPane;
     private SidebarMainFragment sidebarFragment;
 
     public RoomFragment() {
@@ -202,7 +202,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
     @Override
     protected void onSetupView() {
-        pane = getActivity().findViewById(R.id.sliding_pane);
+        optionalPane = Optional.ofNullable(getActivity().findViewById(R.id.sliding_pane));
         messageRecyclerView = rootView.findViewById(R.id.messageRecyclerView);
 
         messageListAdapter = new MessageListAdapter(getContext(), hostname);
@@ -302,11 +302,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.menu_room);
 
-        toolbar.setNavigationOnClickListener(view -> {
+        optionalPane.ifPresent(pane -> toolbar.setNavigationOnClickListener(view -> {
             if (pane.isSlideable() && !pane.isOpen()) {
                 pane.openPane();
             }
-        });
+        }));
 
         toolbar.setOnMenuItemClickListener(menuItem -> {
             switch (menuItem.getItemId()) {
@@ -333,8 +333,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         SlidingPaneLayout subPane = getActivity().findViewById(R.id.sub_sliding_pane);
         sidebarFragment = (SidebarMainFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.sidebar_fragment_container);
 
-        if (pane != null) {
-            pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+        optionalPane.ifPresent(pane -> pane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
                 @Override
                 public void onPanelSlide(View view, float v) {
                     messageFormManager.enableComposingText(false);
@@ -355,8 +354,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
                     subPane.closePane();
                     closeUserActionContainer();
                 }
-            });
-        }
+            }));
     }
 
     public void closeUserActionContainer() {
