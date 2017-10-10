@@ -666,9 +666,10 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         Activity context = getActivity();
         if (context != null && context instanceof MainActivity) {
             MessagePopup.take(message)
-                    .setReplyAction(presenter::replyMessage)
+                    .setReplyAction(msg -> presenter.replyMessage(message, false))
                     .setEditAction(this::onEditMessage)
                     .setCopyAction(msg -> onCopy(message.getMessage()))
+                    .setQuoteAction(msg -> presenter.replyMessage(message, true))
                     .showWith(context);
         }
     }
