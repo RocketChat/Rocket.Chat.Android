@@ -4,14 +4,13 @@ import android.content.Context;
 
 import com.hadisatrio.optional.Optional;
 
-import chat.rocket.android.log.RCLog;
-import io.reactivex.disposables.CompositeDisposable;
-
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.TextUtils;
-import chat.rocket.persistence.realm.models.ddp.RealmRoom;
-import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android.service.Registrable;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class AbstractRocketChatCacheObserver implements Registrable {
   private final Context context;
@@ -50,6 +49,7 @@ public abstract class AbstractRocketChatCacheObserver implements Registrable {
     compositeDisposable.add(
         new RocketChatCache(context)
             .getSelectedRoomIdPublisher()
+            .filter(Optional::isPresent)
             .map(Optional::get)
             .subscribe(this::updateRoomIdWith, RCLog::e)
     );

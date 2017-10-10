@@ -1,14 +1,14 @@
 package chat.rocket.android_ddp;
 
-import android.support.annotation.Nullable;
 
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.annotations.Nullable;
 import org.json.JSONArray;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 import okhttp3.OkHttpClient;
 
 public class DDPClient {

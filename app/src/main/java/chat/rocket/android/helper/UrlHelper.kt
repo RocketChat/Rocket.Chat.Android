@@ -8,7 +8,8 @@ object UrlHelper {
      * @param uri The URI.
      * @return The URI whit no scheme (HTTP or HTTPS)
      */
-    fun removeUriScheme(uri: String) = uri.replace("http://", "").replace("https://", "")
+    fun removeUriScheme(uri: String) =
+            uri.replace("http://", "").replace("https://", "")
 
     /**
      * Returns the hostname with the security protocol (scheme) HTTPS.
@@ -17,7 +18,7 @@ object UrlHelper {
      * @return The hostname with the security protocol (scheme) HTTPS.
      */
     fun getSafeHostname(hostname: String): String =
-        "https://" + hostname.replace("http://", "").replace("https://", "")
+            "https://" + removeUriScheme(hostname)
 
     /**
      * Returns an URL with no spaces and inverted slashes.
@@ -25,17 +26,17 @@ object UrlHelper {
      * @param url The URL.
      * @return The URL with no spaces and inverted slashes.
      */
-    fun getUrl(url: String) =
+    fun getSafeUrl(url: String) =
             url.replace(" ", "%20").replace("\\", "")
 
     /**
-     * Returns an URL for a file.
+     * Returns an attachment link.
      *
-     * @param path The path to the file.
-     * @param userId The user ID.
-     * @param token The token.
-     * @return The URL for a file
+     * @param hostname The hostname.
+     * @param fileId The file ID.
+     * @param fileName The file name.
+     * @return The attachment link.
      */
-    fun getUrlForFile(path: String, userId: String, token: String): String =
-            "https://" + removeUriScheme(getUrl(path)) + "?rc_uid=$userId" + "&rc_token=$token"
+    fun getAttachmentLink(hostname: String, fileId: String, fileName: String): String =
+            getSafeUrl(getSafeHostname(hostname) + "/file-upload/" + fileId + "/" + fileName)
 }
