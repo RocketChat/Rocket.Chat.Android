@@ -53,6 +53,7 @@ import chat.rocket.android.layouthelper.extra_action.AbstractExtraActionItem;
 import chat.rocket.android.layouthelper.extra_action.MessageExtraActionBehavior;
 import chat.rocket.android.layouthelper.extra_action.upload.AbstractUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.AudioUploadActionItem;
+import chat.rocket.android.layouthelper.extra_action.upload.FileUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.ImageUploadActionItem;
 import chat.rocket.android.layouthelper.extra_action.upload.VideoUploadActionItem;
 import chat.rocket.android.log.RCLog;
@@ -255,10 +256,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     private void setupMessageActions() {
-        extraActionItems = new ArrayList<>(3); // fixed number as of now
+        extraActionItems = new ArrayList<>(4); // fixed number as of now
         extraActionItems.add(new ImageUploadActionItem());
         extraActionItems.add(new AudioUploadActionItem());
         extraActionItems.add(new VideoUploadActionItem());
+        extraActionItems.add(new FileUploadActionItem());
     }
 
     private void scrollToLatestMessage() {
