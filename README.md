@@ -22,7 +22,7 @@ $ ./gradlew assembleDebug
 
 The following steps are only needed if running via command line. They are not needed if you are building via Android Studio.
 
-Ensure that that ADB recognizes your device with `$ adb devices`.
+Ensure that ADB recognizes your device with `$ adb devices`.
 
 If a single device exists, install via `$ adb install /path/to/apk.apk`.
 
