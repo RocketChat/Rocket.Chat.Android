@@ -2,6 +2,7 @@ package chat.rocket.android.layouthelper.chatroom.roomlist;
 
 import android.support.v7.widget.RecyclerView;
 
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.widget.internal.RoomListItemView;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomSidebar;
@@ -92,14 +93,16 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
       case Room.TYPE_CHANNEL:
         itemView.showPublicChannelIcon();
         break;
-      case Room.TYPE_PRIVATE:
+      case Room.TYPE_GROUP:
         itemView.showPrivateChannelIcon();
         break;
       case Room.TYPE_LIVECHAT:
         itemView.showLivechatChannelIcon();
         break;
-      default:
-        throw new AssertionError("Room type doesn't satisfies the method documentation. Room type is:" + roomType);
+      default: {
+        itemView.showPrivateChannelIcon();
+        Logger.report(new AssertionError("Room type doesn't satisfies the method documentation. Room type is:" + roomType));
+      }
     }
   }
 }

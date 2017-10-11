@@ -16,7 +16,7 @@ public abstract class SpotlightRoom {
   }
 
   public boolean isPrivate() {
-    return Room.TYPE_PRIVATE.equals(getType());
+    return Room.TYPE_GROUP.equals(getType());
   }
 
   public boolean isDirectMessage() {
