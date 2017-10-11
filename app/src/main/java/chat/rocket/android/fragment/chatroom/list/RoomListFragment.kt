@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.layouthelper.chatroom.list.RoomFileListAdapter
 import chat.rocket.android.layouthelper.chatroom.list.RoomMemberListAdapter
 import chat.rocket.android.layouthelper.chatroom.list.RoomMessagesAdapter
+import chat.rocket.core.models.Attachment
 import chat.rocket.core.models.Message
 import chat.rocket.core.models.User
 import kotlinx.android.synthetic.main.fragment_room_list.*
@@ -84,6 +86,14 @@ class RoomListFragment : Fragment(), RoomListContract.View {
                         userId,
                         offset)
             }
+            R.id.action_file_list -> {
+                presenter.requestFileList(roomId,
+                        roomType,
+                        hostname,
+                        token,
+                        userId,
+                        offset)
+            }
             R.id.action_favorite_messages -> {
                 presenter.requestFavoriteMessages(roomId,
                         roomType,
@@ -139,8 +149,23 @@ class RoomListFragment : Fragment(), RoomListContract.View {
         }
     }
 
-    // TODO (after REST api fixes)
-    override fun showFileList(dataSet: ArrayList<String>, total: String) {}
+    override fun showFileList(dataSet: ArrayList<Attachment>, total: String) {
+        activity.title = getString(R.string.fragment_room_list_file_list_title, total)
+        if (recyclerView.adapter == null) {
+            recyclerView.adapter = RoomFileListAdapter(dataSet)
+            val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            recyclerView.layoutManager = linearLayoutManager
+            if (dataSet.size >= 50) {
+                recyclerView.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                    override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
+                        loadNextDataFromApi(page)
+                    }
+                })
+            }
+        } else {
+            (recyclerView.adapter as RoomFileListAdapter).addDataSet(dataSet)
+        }
+    }
 
     override fun showMemberList(dataSet: ArrayList<User>, total: String) {
         activity.title = getString(R.string.fragment_room_list_member_list_title, total)

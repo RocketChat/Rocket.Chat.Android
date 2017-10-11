@@ -71,21 +71,21 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       return;
     }
     this.attachments = attachments;
-    removeAllViews();
 
     for (int i = 0, size = attachments.size(); i < size; i++) {
-      appendAttachmentView(attachments.get(i), autoloadImages);
+      appendAttachmentView(attachments.get(i), autoloadImages, true);
     }
   }
 
-  private void appendAttachmentView(Attachment attachment, boolean autoloadImages) {
+  public void appendAttachmentView(Attachment attachment, boolean autoloadImages, boolean showAttachmentStrip) {
     if (attachment == null) {
       return;
     }
 
+    removeAllViews();
     View attachmentView = inflater.inflate(R.layout.message_inline_attachment, this, false);
 
-    colorizeAttachmentBar(attachment, attachmentView);
+    colorizeAttachmentBar(attachment, attachmentView, showAttachmentStrip);
     showAuthorAttachment(attachment, attachmentView);
     showTitleAttachment(attachment, attachmentView);
     showReferenceAttachment(attachment, attachmentView);
@@ -97,19 +97,23 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     addView(attachmentView);
   }
 
-  private void colorizeAttachmentBar(Attachment attachment, View attachmentView) {
+  private void colorizeAttachmentBar(Attachment attachment, View attachmentView, boolean showAttachmentStrip) {
     final View attachmentStrip = attachmentView.findViewById(R.id.attachment_strip);
 
-    final String colorString = attachment.getColor();
-    if (TextUtils.isEmpty(colorString)) {
-      attachmentStrip.setBackgroundResource(R.color.inline_attachment_quote_line);
-      return;
-    }
+    if (showAttachmentStrip) {
+      final String colorString = attachment.getColor();
+      if (TextUtils.isEmpty(colorString)) {
+        attachmentStrip.setBackgroundResource(R.color.inline_attachment_quote_line);
+        return;
+      }
 
-    try {
-      attachmentStrip.setBackgroundColor(Color.parseColor(colorString));
-    } catch (Exception e) {
-      attachmentStrip.setBackgroundResource(R.color.inline_attachment_quote_line);
+      try {
+        attachmentStrip.setBackgroundColor(Color.parseColor(colorString));
+      } catch (Exception e) {
+        attachmentStrip.setBackgroundResource(R.color.inline_attachment_quote_line);
+      }
+    } else {
+      attachmentStrip.setVisibility(GONE);
     }
   }
 
@@ -204,8 +208,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
     }
   }
 
-  private void showImageAttachment(Attachment attachment, View attachmentView,
-                                   boolean autoloadImages) {
+  private void showImageAttachment(Attachment attachment, View attachmentView, boolean autoloadImages) {
     final View imageContainer = attachmentView.findViewById(R.id.image_container);
     if (attachment.getImageUrl() == null) {
       imageContainer.setVisibility(GONE);

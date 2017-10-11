@@ -1,12 +1,15 @@
 package chat.rocket.android.fragment.chatroom;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import chat.rocket.core.models.User;
 import java.util.List;
+
 import chat.rocket.android.shared.BaseContract;
+import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
 
 public interface RoomContract {
 
@@ -35,6 +38,12 @@ public interface RoomContract {
     void autoloadImages();
 
     void manualLoadImages();
+
+    void onReply(AbsoluteUrl absoluteUrl, String markdown, Message message);
+
+    void onCopy(String message);
+
+    void showMessageActions(Message message);
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
@@ -45,18 +54,22 @@ public interface RoomContract {
 
     void onMessageSelected(@Nullable Message message);
 
+    void onMessageTap(@Nullable Message message);
+
     void sendMessage(String messageText);
 
-    void resendMessage(Message message);
+    void resendMessage(@NonNull Message message);
 
-    void updateMessage(Message message, String content);
+    void updateMessage(@NonNull Message message, String content);
 
-    void deleteMessage(Message message);
+    void deleteMessage(@NonNull Message message);
 
     void onUnreadCount();
 
     void onMarkAsRead();
 
     void refreshRoom();
+
+    void replyMessage(@NonNull Message message, boolean justQuote);
   }
 }

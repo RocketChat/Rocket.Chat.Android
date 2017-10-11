@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.chatroom.list
 
+import chat.rocket.core.models.Attachment
 import chat.rocket.core.models.Message
 import chat.rocket.core.models.User
 
@@ -32,7 +33,7 @@ interface RoomListContract {
          * @param dataSet The file data set to show.
          * @param total The total number of files.
          */
-        fun showFileList(dataSet: ArrayList<String>, total: String)
+        fun showFileList(dataSet: ArrayList<Attachment>, total: String)
 
         /**
          * Shows a list of members of a room.

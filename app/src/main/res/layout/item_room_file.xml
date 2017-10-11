@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/margin_16">
+    android:paddingRight="@dimen/margin_16"
+    android:paddingStart="@dimen/margin_16"
+    android:paddingLeft="@dimen/margin_16"
+    android:paddingEnd="@dimen/margin_16"
+    android:paddingBottom="@dimen/margin_16">
 
-    <chat.rocket.android.widget.message.RocketChatMessageLayout
-        android:id="@+id/fileLink"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/dayLayout"
+        layout="@layout/day" />
+
+    <chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
+        android:id="@+id/attachment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_16"
-        android:layout_marginStart="@dimen/margin_16" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1"
-        android:background="@color/colorDivider"
-        android:layout_marginTop="@dimen/margin_8"
-        app:layout_constraintTop_toBottomOf="@+id/fileLink" />
+        android:layout_marginTop="@dimen/margin_16"
+        app:layout_constraintTop_toBottomOf="@+id/dayLayout" />
 </android.support.constraint.ConstraintLayout>

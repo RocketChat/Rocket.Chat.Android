@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.activity_room.*
 
 class RoomActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_room)
@@ -35,8 +34,7 @@ class RoomActivity : AppCompatActivity() {
     }
 
     private fun addFragment(fragment: Fragment, tag: String) {
-        supportFragmentManager
-                .beginTransaction()
+        supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, fragment, tag)
                 .commit()
     }
