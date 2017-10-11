@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.chatroom;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.List;
@@ -53,13 +54,15 @@ public interface RoomContract {
 
     void onMessageSelected(@Nullable Message message);
 
+    void onMessageTap(@Nullable Message message);
+
     void sendMessage(String messageText);
 
-    void resendMessage(Message message);
+    void resendMessage(@NonNull Message message);
 
-    void updateMessage(Message message, String content);
+    void updateMessage(@NonNull Message message, String content);
 
-    void deleteMessage(Message message);
+    void deleteMessage(@NonNull Message message);
 
     void onUnreadCount();
 
@@ -67,8 +70,6 @@ public interface RoomContract {
 
     void refreshRoom();
 
-    void replyMessage(Message message);
-
-    void copyMessage(Message message);
+    void replyMessage(@NonNull Message message, boolean justQuote);
   }
 }

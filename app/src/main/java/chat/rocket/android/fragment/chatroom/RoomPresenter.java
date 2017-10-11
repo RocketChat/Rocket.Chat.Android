@@ -112,18 +112,25 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
       return;
     }
 
-    if (message.getSyncState() == SyncState.FAILED) {
-      view.showMessageSendFailure(message);
-    }
-
-    if (message.getType() == null) {
+    if (message.getType() == null && message.getSyncState() == SyncState.SYNCED) {
         // If message is not a system message show applicable actions.
         view.showMessageActions(message);
     }
   }
 
   @Override
-  public void replyMessage(Message message) {
+  public void onMessageTap(@Nullable Message message) {
+    if (message == null) {
+      return;
+    }
+
+    if (message.getSyncState() == SyncState.FAILED) {
+      view.showMessageSendFailure(message);
+    }
+  }
+
+  @Override
+  public void replyMessage(@NonNull Message message, boolean justQuote) {
       this.absoluteUrlHelper.getRocketChatAbsoluteUrl()
               .cache()
               .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
@@ -131,20 +138,16 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
               .subscribe(
                       serverUrl -> {
                           if (serverUrl.isPresent()) {
-                              String baseUrl = serverUrl.get().getBaseUrl();
-                              view.onReply(serverUrl.get(), buildReplyMarkDown(baseUrl, message), message);
+                              RocketChatAbsoluteUrl absoluteUrl = serverUrl.get();
+                              String baseUrl = absoluteUrl.getBaseUrl();
+                              view.onReply(absoluteUrl, buildReplyOrQuoteMarkdown(baseUrl, message, justQuote), message);
                           }
                       },
                       Logger::report
               );
   }
 
-  @Override
-  public void copyMessage(Message message) {
-      view.onCopy(message.getMessage());
-  }
-
-  private String buildReplyMarkDown(String baseUrl, Message message) {
+  private String buildReplyOrQuoteMarkdown(String baseUrl, Message message, boolean justQuote) {
     if (currentRoom == null || message.getUser() == null) {
         return "";
     }
@@ -154,10 +157,10 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                 message.getUser().getUsername(),
                 message.getId());
     } else {
-        return String.format("[ ](%s/channel/%s?msg=%s) @%s ", baseUrl,
+        return String.format("[ ](%s/channel/%s?msg=%s) %s", baseUrl,
                 currentRoom.getName(),
                 message.getId(),
-                message.getUser().getUsername());
+                justQuote ? "" : "@" + message.getUser().getUsername() + " ");
     }
   }
 
@@ -185,7 +188,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   @Override
-  public void resendMessage(Message message) {
+  public void resendMessage(@NonNull Message message) {
     final Disposable subscription = getCurrentUser()
         .flatMap(user -> messageInteractor.resend(message, user))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
@@ -196,7 +199,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   @Override
-  public void updateMessage(Message message, String content) {
+  public void updateMessage(@NonNull Message message, String content) {
     view.disableMessageInput();
     final Disposable subscription = getCurrentUser()
         .flatMap(user -> messageInteractor.update(message, user, content))
@@ -219,7 +222,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   @Override
-  public void deleteMessage(Message message) {
+  public void deleteMessage(@NonNull Message message) {
     final Disposable subscription = messageInteractor.delete(message)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())

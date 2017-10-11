@@ -98,6 +98,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         OnBackPressListener,
         ExtraActionPickerDialogFragment.Callback,
         ModelListAdapter.OnItemLongClickListener<PairedMessage>,
+        ModelListAdapter.OnItemClickListener<PairedMessage>,
         RoomContract.View {
 
     private static final int DIALOG_ID = 1;
@@ -209,6 +210,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         messageListAdapter = new MessageListAdapter(getContext(), hostname);
         messageRecyclerView.setAdapter(messageListAdapter);
         messageListAdapter.setOnItemLongClickListener(this);
+        messageListAdapter.setOnItemClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
@@ -297,6 +299,11 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     public boolean onItemLongClick(PairedMessage pairedMessage) {
         presenter.onMessageSelected(pairedMessage.target);
         return true;
+    }
+
+    @Override
+    public void onItemClick(PairedMessage pairedMessage) {
+        presenter.onMessageTap(pairedMessage.target);
     }
 
     private void setupToolbar() {
@@ -668,9 +675,10 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         Activity context = getActivity();
         if (context != null && context instanceof MainActivity) {
             MessagePopup.take(message)
-                    .setReplyAction(presenter::replyMessage)
+                    .setReplyAction(msg -> presenter.replyMessage(message, false))
                     .setEditAction(this::onEditMessage)
                     .setCopyAction(msg -> onCopy(message.getMessage()))
+                    .setQuoteAction(msg -> presenter.replyMessage(message, true))
                     .showWith(context);
         }
     }

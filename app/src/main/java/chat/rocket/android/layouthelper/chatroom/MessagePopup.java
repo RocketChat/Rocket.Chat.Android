@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chat.rocket.android.BackgroundLooper;
-import chat.rocket.android.RocketChatApplication;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.core.interactors.EditMessageInteractor;
@@ -35,9 +34,10 @@ import io.reactivex.disposables.Disposable;
 public class MessagePopup {
     private static volatile MessagePopup singleton = null;
     private static final Action REPLY_ACTION_INFO = new Action("Reply", null, true);
+    private static final Action QUOTE_ACTION_INFO = new Action("Quote", null, true);
     private static final Action EDIT_ACTION_INFO = new Action("Edit", null, true);
     private static final Action COPY_ACTION_INFO = new Action("Copy", null, true);
-    private final List<Action> defaultActions = new ArrayList<>(3);
+    private final List<Action> defaultActions = new ArrayList<>(4);
     private final List<Action> otherActions = new ArrayList<>();
     private Message message;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -47,7 +47,7 @@ public class MessagePopup {
     }
 
     private void showAvailableActionsOnly(Context context) {
-        RocketChatCache cache = new RocketChatCache(RocketChatApplication.getInstance());
+        RocketChatCache cache = new RocketChatCache(context.getApplicationContext());
 
         String hostname = cache.getSelectedServerHostname();
 
@@ -107,6 +107,7 @@ public class MessagePopup {
 
     private void addDefaultActions() {
         singleton.defaultActions.add(REPLY_ACTION_INFO);
+        singleton.defaultActions.add(QUOTE_ACTION_INFO);
         singleton.defaultActions.add(EDIT_ACTION_INFO);
         singleton.defaultActions.add(COPY_ACTION_INFO);
     }
@@ -148,17 +149,22 @@ public class MessagePopup {
     }
 
     public MessagePopup setReplyAction(ActionListener actionListener) {
-        REPLY_ACTION_INFO.actionListener= actionListener;
+        REPLY_ACTION_INFO.actionListener = actionListener;
         return singleton;
     }
 
     public MessagePopup setEditAction(ActionListener actionListener) {
-        EDIT_ACTION_INFO.actionListener= actionListener;
+        EDIT_ACTION_INFO.actionListener = actionListener;
         return singleton;
     }
 
     public MessagePopup setCopyAction(ActionListener actionListener) {
-        COPY_ACTION_INFO.actionListener= actionListener;
+        COPY_ACTION_INFO.actionListener = actionListener;
+        return singleton;
+    }
+
+    public MessagePopup setQuoteAction(ActionListener actionListener) {
+        QUOTE_ACTION_INFO.actionListener = actionListener;
         return singleton;
     }
 
@@ -192,6 +198,7 @@ public class MessagePopup {
 
     private static class Builder {
         private final Message message;
+
         Builder(Message message) {
             if (message == null) {
                 throw new IllegalArgumentException("Message must not be null");
