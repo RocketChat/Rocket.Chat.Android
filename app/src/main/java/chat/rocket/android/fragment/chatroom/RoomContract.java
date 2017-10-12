@@ -35,6 +35,8 @@ public interface RoomContract {
 
     void showMessageSendFailure(Message message);
 
+    void showMessageDeleteFailure(Message message);
+
     void autoloadImages();
 
     void manualLoadImages();
@@ -71,5 +73,7 @@ public interface RoomContract {
     void refreshRoom();
 
     void replyMessage(@NonNull Message message, boolean justQuote);
+
+    void acceptMessageDeleteFailure(Message message);
   }
 }

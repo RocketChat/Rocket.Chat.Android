@@ -76,7 +76,11 @@ class MessageInteractor(private val messageRepository: MessageRepository,
     }
 
     fun delete(message: Message): Single<Boolean> {
-        return messageRepository.delete(message)
+        return messageRepository.save(message.withSyncState(SyncState.DELETE_NOT_SYNCED))
+    }
+
+    fun acceptDeleteFailure(message: Message): Single<Boolean> {
+        return messageRepository.save(message.withSyncState(SyncState.SYNCED))
     }
 
     fun unreadCountFor(room: Room, user: User): Single<Int> {

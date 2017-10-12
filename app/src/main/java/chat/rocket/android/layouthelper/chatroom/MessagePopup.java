@@ -37,7 +37,8 @@ public class MessagePopup {
     private static final Action QUOTE_ACTION_INFO = new Action("Quote", null, true);
     private static final Action EDIT_ACTION_INFO = new Action("Edit", null, true);
     private static final Action COPY_ACTION_INFO = new Action("Copy", null, true);
-    private final List<Action> defaultActions = new ArrayList<>(4);
+    private static final Action DELETE_ACTION_INFO = new Action("Delete", null, true);
+    private final List<Action> defaultActions = new ArrayList<>(5);
     private final List<Action> otherActions = new ArrayList<>();
     private Message message;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -110,6 +111,7 @@ public class MessagePopup {
         singleton.defaultActions.add(QUOTE_ACTION_INFO);
         singleton.defaultActions.add(EDIT_ACTION_INFO);
         singleton.defaultActions.add(COPY_ACTION_INFO);
+        singleton.defaultActions.add(DELETE_ACTION_INFO);
     }
 
     public static MessagePopup take(Message message) {
@@ -160,6 +162,11 @@ public class MessagePopup {
 
     public MessagePopup setCopyAction(ActionListener actionListener) {
         COPY_ACTION_INFO.actionListener = actionListener;
+        return singleton;
+    }
+
+    public MessagePopup setDeleteAction(ActionListener actionListener) {
+        DELETE_ACTION_INFO.actionListener= actionListener;
         return singleton;
     }
 
