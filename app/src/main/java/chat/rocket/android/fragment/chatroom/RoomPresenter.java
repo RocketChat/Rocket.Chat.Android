@@ -113,8 +113,9 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
     }
 
     if (message.getSyncState() == SyncState.DELETE_FAILED) {
-      view.showMessageDeleteFailure(message);
+        view.showMessageDeleteFailure(message);
     } else if (message.getSyncState() == SyncState.FAILED) {
+        view.showMessageSendFailure(message);
     } else if (message.getType() == null && message.getSyncState() == SyncState.SYNCED) {
         // If message is not a system message show applicable actions.
         view.showMessageActions(message);
