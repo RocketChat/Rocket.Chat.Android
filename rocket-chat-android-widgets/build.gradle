@@ -50,7 +50,6 @@ dependencies {
     compile supportDependencies.designSupportLibrary
     compile supportDependencies.constrainLayout
     compile supportDependencies.kotlin
-    compile extraDependencies.textDrawable
     compile rxbindingDependencies.rxBinding
     compile rxbindingDependencies.rxBindingSupport
     compile "com.android.support:support-v13:$rootProject.ext.supportLibraryVersion"
