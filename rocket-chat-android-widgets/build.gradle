@@ -44,7 +44,8 @@ ext {
 }
 dependencies {
     compile project(':rocket-chat-core')
-    compile extraDependencies.okHTTP;
+    compile extraDependencies.okHTTP
+    compile extraDependencies.textDrawable
     compile supportDependencies.annotation
     compile supportDependencies.cardView
     compile supportDependencies.designSupportLibrary
