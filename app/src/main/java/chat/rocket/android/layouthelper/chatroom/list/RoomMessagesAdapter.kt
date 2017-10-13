@@ -80,9 +80,9 @@ class RoomMessagesAdapter(private var dataSet: List<Message>, private val hostna
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val newDay: TextView = itemView.day
-        val userAvatar: RocketChatAvatar = itemView.userAvatar
+        val userAvatar: RocketChatAvatar = itemView.avatar
         val username: TextView = itemView.username
-        val name: TextView = itemView.name
+        val name: TextView = itemView.realName
         val messageBody: RocketChatMessageLayout = itemView.messageBody
         val messageUrl: RocketChatMessageUrlsLayout = itemView.messageUrl
         val messageAttachment: RocketChatMessageAttachmentsLayout = itemView.messageAttachment
