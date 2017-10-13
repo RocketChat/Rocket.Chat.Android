@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:alpha="0.62"
-            android:text="@string/fragment_sidebar_main_channels_title"
+            android:text="@string/fragment_sidebar_main_channels"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textStyle="bold" />
 
