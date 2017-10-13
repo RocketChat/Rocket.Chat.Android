@@ -81,14 +81,10 @@ public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessa
 
   @Override
   protected int getRealmModelLayout(int viewType) {
-    switch (viewType) {
-      case VIEW_TYPE_NORMAL_MESSAGE:
-        return R.layout.list_item_normal_message;
-      case VIEW_TYPE_SYSTEM_MESSAGE:
-        return R.layout.list_item_system_message;
-      default:
-        return R.layout.simple_screen;
+    if (viewType == VIEW_TYPE_NORMAL_MESSAGE || viewType == VIEW_TYPE_SYSTEM_MESSAGE) {
+      return R.layout.item_room_message;
     }
+    return R.layout.simple_screen;
   }
 
   @Override
