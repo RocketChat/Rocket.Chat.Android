@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
+import chat.rocket.android.layouthelper.chatroom.MessageType
 import chat.rocket.android.widget.AbsoluteUrl
 import chat.rocket.android.widget.RocketChatAvatar
 import chat.rocket.android.widget.helper.AvatarHelper
@@ -13,10 +14,10 @@ import chat.rocket.android.widget.message.RocketChatMessageUrlsLayout
 import chat.rocket.core.SyncState
 import chat.rocket.core.models.Message
 
-class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
+class MessageRenderer(private val message: Message, private val autoLoadImage: Boolean) {
 
     /**
-     * Show user's avatar image in RocketChatAvatar widget.
+     * Shows the avatar image on the RocketChatAvatar widget.
      */
     fun showAvatar(rocketChatAvatarWidget: RocketChatAvatar, hostname: String) {
         val username: String? = message.user?.username
@@ -34,44 +35,57 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
     }
 
     /**
-     * Show username in textView.
+     * Shows the user real name on the TextView.
      */
-    fun showUsername(usernameTextView: TextView, subUsernameTextView: TextView?) {
+    fun showRealName(textView: TextView) {
+        val realName: String? = message.user?.name
+        if (realName != null) {
+            textView.text = realName
+        } else {
+            textView.visibility = View.GONE
+        }
+    }
+
+    /**
+     * Shows the username on the TextView.
+     */
+    fun showUsername(textView: TextView) {
         val username: String? = message.user?.username
         if (username != null) {
-            if (message.alias == null) {
-                usernameTextView.text = username
-            } else {
-                usernameTextView.text = message.alias
-                if (subUsernameTextView != null) {
-                    subUsernameTextView.text = subUsernameTextView.context.getString(R.string.sub_username, username)
-                    subUsernameTextView.visibility = View.VISIBLE
-                }
-            }
+            textView.text = textView.context.getString(R.string.sub_username, username)
+        } else {
+            textView.visibility = View.GONE
         }
     }
 
     /**
-     * Show timestamp or message state in textView.
+     * Shows message timestamp.
      */
-    fun showTimestampOrMessageState(textView: TextView) {
-        when (message.syncState) {
-            SyncState.SYNCING -> textView.text = textView.context.getText(R.string.sending)
-            SyncState.NOT_SYNCED -> textView.text = textView.context.getText(R.string.not_synced)
-            SyncState.FAILED -> textView.text = textView.context.getText(R.string.failed_to_sync)
-            else -> textView.text = DateTime.fromEpocMs(message.timestamp, DateTime.Format.TIME)
+    fun showMessageTimestamp(timestamp: TextView) {
+        if (message.syncState == SyncState.SYNCED) {
+            timestamp.text = DateTime.fromEpocMs(message.timestamp, DateTime.Format.TIME)
+            timestamp.visibility = View.VISIBLE
+        } else {
+            timestamp.visibility = View.GONE
         }
     }
 
     /**
-     * Show body in RocketChatMessageLayout widget.
+     * Shows the system's message on the TextView.
+     */
+    fun showSystemBody(textView: TextView) {
+        textView.text = MessageType.parse(message.type).getString(textView.context, message)
+    }
+
+    /**
+     * Shows message body on the RocketChatMessageLayout widget.
      */
     fun showBody(rocketChatMessageLayout: RocketChatMessageLayout) {
         rocketChatMessageLayout.setText(message.message)
     }
 
     /**
-     * Show urls in RocketChatMessageUrlsLayout widget.
+     * Shows message urls on the RocketChatMessageUrlsLayout widget.
      */
     fun showUrl(rocketChatMessageUrlsLayout: RocketChatMessageUrlsLayout) {
         val webContents = message.webContents
@@ -84,7 +98,7 @@ class MessageRenderer(val message: Message, val autoLoadImage: Boolean) {
     }
 
     /**
-     * show attachments in RocketChatMessageAttachmentsLayout widget.
+     * Shows message attachments on the RocketChatMessageAttachmentsLayout widget.
      */
     fun showAttachment(rocketChatMessageAttachmentsLayout: RocketChatMessageAttachmentsLayout, absoluteUrl: AbsoluteUrl?) {
         val attachments = message.attachments
