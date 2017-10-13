@@ -1,32 +1,69 @@
 <resources>
     <string name="app_name">Rocket.Chat+</string>
-    <string name="fragment_sidebar_main_favorite_title">FAVORITES</string>
-    <string name="fragment_sidebar_main_channels_title">CHANNELS</string>
-    <string name="fragment_sidebar_main_direct_messages_title">DIRECT MESSAGES</string>
-    <string name="fragment_sidebar_main_livechat_title">LIVECHAT</string>
-    <string name="user_status_online">Online</string>
-    <string name="user_status_away">Away</string>
-    <string name="user_status_busy">Busy</string>
-    <string name="user_status_invisible">Invisible</string>
-    <string name="fragment_sidebar_main_logout_title">Logout</string>
-    <string name="dialog_add_channel_name">name</string>
-    <string name="dialog_add_channel_private">private</string>
-    <string name="dialog_add_channel_read_only">read only</string>
 
-    <string name="fragment_room_list_pinned_message_title">Pinned Messages (%s)</string>
-    <string name="fragment_room_list_favorite_message_title">Favorite Messages (%s)</string>
+    <string name="menu_pinned_messages">Pinned messages</string>
+    <string name="menu_favorite_messages">Favorite messages</string>
+    <string name="menu_file_list">File list</string>
+    <string name="menu_member_list">Member list</string>
+
+    <string name="fragment_sidebar_main_unread_rooms">UNREAD ROOMS</string>
+    <string name="fragment_sidebar_main_favorites">FAVORITES</string>
+    <string name="fragment_sidebar_main_channels">CHANNELS</string>
+    <string name="fragment_sidebar_main_direct_messages">DIRECT MESSAGES</string>
+    <string name="fragment_sidebar_main_livechat">LIVECHAT</string>
+    <string name="fragment_sidebar_main_spotlight_search">Search</string>
+    <string name="fragment_sidebar_main_spotlight_load_more_results">Load more results</string>
+    <string name="fragment_sidebar_main_add_new_team">Add new Team</string>
+    <string name="fragment_sidebar_main_logout">Logout</string>
+
+    <string name="fragment_room_list_pinned_messages_title">Pinned Messages (%s)</string>
+    <string name="fragment_room_list_favorite_messages_title">Favorite Messages (%s)</string>
     <string name="fragment_room_list_file_list_title">File list (%s)</string>
     <string name="fragment_room_list_member_list_title">Member list (%s)</string>
-    <string name="fragment_room_list_could_not_load_your_request">Could not load your request.\n%s.</string>
     <string name="fragment_room_list_no_pinned_message_to_show">No pinned message to show</string>
     <string name="fragment_room_list_no_favorite_message_to_show">No favorite message to show</string>
     <string name="fragment_room_list_no_file_list_to_show">No file list to show</string>
     <string name="fragment_room_list_no_member_list_to_show">No member list to show</string>
+    <string name="fragment_room_list_could_not_load_your_request">Could not load your request.\n%s.</string>
+    <string name="fragment_room_list_make_sure_your_server_version_is_up_to_date">Make sure your Rocket.Chat server version is up to date</string>
+
+    <string name="fragment_home_title">Rocket.Chat - Home</string>
+    <string name="fragment_home_welcome_message">Welcome to Rocket.Chat+\nSelect a channel from the drawer.</string>
+
+    <string name="fragment_input_hostname_hostname">Hostname</string>
+    <string name="fragment_input_hostname_server_hint">demo.rocket.chat</string>
+    <string name="fragment_input_hostname_connect">CONNECT</string>
+    <string name="fragment_input_hostname_invalid_server_message">Invalid server version</string>
+
+    <string name="fragment_login_username_or_email">Username or email</string>
+    <string name="fragment_login_password">Password</string>
+    <string name="fragment_login_sign_up">SIGN UP</string>
+    <string name="fragment_login_sign_in">SIGN IN</string>
+
+    <string name="fragment_retry_login_retry_title">RETRY</string>
+    <string name="fragment_retry_login_error_title">Connection Error</string>
+
+    <string name="dialog_add_channel_name">name</string>
+    <string name="dialog_add_channel_private">private</string>
+    <string name="dialog_add_channel_read_only">read only</string>
+
+    <string name="dialog_user_registration_email">Email</string>
+    <string name="dialog_user_registration_username">Username</string>
+    <string name="dialog_user_registration_password">Password</string>
+
+    <string name="dialog_view_latest_message_action">View</string>
+
+    <string name="user_status_online">Online</string>
+    <string name="user_status_away">Away</string>
+    <string name="user_status_busy">Busy</string>
+    <string name="user_status_invisible">Invisible</string>
+
+    <string name="image_upload_message_spec_title">Attach image</string>
+    <string name="audio_upload_message_spec_title">Attach audio</string>
+    <string name="video_upload_message_spec_title">Attach video</string>
+    <string name="doc_upload_message_spec_title">Attach file</string>
 
     <string name="start_of_conversation">Start of conversation</string>
-    <string name="sending">Sending…</string>
-    <string name="not_synced">Not synced</string>
-    <string name="failed_to_sync">Failed to sync</string>
     <string name="resend">Resend</string>
     <string name="discard">Discard</string>
 
@@ -34,52 +71,17 @@
         <item quantity="one">New %d message</item>
         <item quantity="other">New %d messages</item>
     </plurals>
-    <string name="dialog_view_latest_message_action">View</string>
 
     <string name="file_uploading_title">Uploading…</string>
-
-    <string name="dialog_user_registration_email">Email</string>
-    <string name="dialog_user_registration_username">Username</string>
     <string name="sub_username">\@%s</string>
     <string name="username">\@%s</string>
-    <string name="dialog_user_registration_password">Password</string>
-    <string name="fragment_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
-    <string name="fragment_input_hostname_hostname">Hostname</string>
-    <string name="fragment_input_hostname_server_hint">demo.rocket.chat</string>
-    <string name="fragment_input_hostname_connect">CONNECT</string>
-    <string name="fragment_login_username_or_email">Username or email</string>
-    <string name="fragment_login_password">Password</string>
-    <string name="fragment_login_sign_up">SIGN UP</string>
-    <string name="fragment_login_sign_in">SIGN IN</string>
-    <string name="fragment_retry_login_retry_title">RETRY</string>
-    <string name="fragment_retry_login_error_title">Connection Error</string>
     <string name="server_config_activity_authenticating">Authenticating…</string>
-    <string name="home_fragment_title">Rocket.Chat - Home</string>
-    <string name="fragment_sidebar_main_unread_rooms_title">UNREAD ROOMS</string>
-
-    <string name="doc_upload_message_spec_title">Attach file</string>
-    <string name="image_upload_message_spec_title">Attach image</string>
-    <string name="audio_upload_message_spec_title">Attach audio</string>
-    <string name="video_upload_message_spec_title">Attach video</string>
-
-    <string name="input_hostname_invalid_server_message">Invalid server version</string>
-    <string name="make_sure_your_server_version_is_up_to_date">Make sure your Rocket.Chat server version is up to date</string>
     <string name="connection_error_try_later">There\'s a connection error. Please try later.</string>
-
     <string name="version_info_text">Version: %s</string>
     <string name="two_factor_authentication_title">Two-factor authentication</string>
     <string name="open_your_authentication_app_and_enter_the_code">Open your authentication app and enter the code</string>
     <string name="two_factor_code">Two-factor code</string>
-    <string name="spotlight_search">Search</string>
-    <string name="spotlight_load_more_results">Load more results</string>
     <string name="edit_message">Edit message</string>
     <string name="message_options_no_message_info">Ooops. Something\'s up!</string>
     <string name="message_options_no_permissions_info">You have no permissions</string>
-
-    <string name="menu_pinned_messages">Pinned messages</string>
-    <string name="menu_favorite_messages">Favorite messages</string>
-    <string name="menu_file_list">File list</string>
-    <string name="menu_member_list">Member list</string>
-
-    <string name="add_new_team">Add new Team</string>
 </resources>
