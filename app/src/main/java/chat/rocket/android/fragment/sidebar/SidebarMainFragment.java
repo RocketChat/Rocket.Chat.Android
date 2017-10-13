@@ -299,23 +299,23 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     final List<RoomListHeader> roomListHeaders = new ArrayList<>();
 
     roomListHeaders.add(new UnreadRoomListHeader(
-        getString(R.string.fragment_sidebar_main_unread_rooms_title)
+        getString(R.string.fragment_sidebar_main_unread_rooms)
     ));
 
     roomListHeaders.add(new FavoriteRoomListHeader(
-        getString(R.string.fragment_sidebar_main_favorite_title)
+        getString(R.string.fragment_sidebar_main_favorites)
     ));
 
     roomListHeaders.add(new LivechatRoomListHeader(
-        getString(R.string.fragment_sidebar_main_livechat_title)
+        getString(R.string.fragment_sidebar_main_livechat)
     ));
 
     roomListHeaders.add(new ChannelRoomListHeader(
-        getString(R.string.fragment_sidebar_main_channels_title),
+        getString(R.string.fragment_sidebar_main_channels),
         () -> showAddRoomDialog(AddChannelDialogFragment.create(hostname))
     ));
     roomListHeaders.add(new DirectMessageRoomListHeader(
-        getString(R.string.fragment_sidebar_main_direct_messages_title),
+        getString(R.string.fragment_sidebar_main_direct_messages),
         () -> showAddRoomDialog(AddDirectMessageDialogFragment.create(hostname))
     ));
 
