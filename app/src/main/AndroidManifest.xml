@@ -41,7 +41,7 @@
             android:name=".activity.AddServerActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
 
         <activity
             android:name=".activity.LoginActivity"
