@@ -5,7 +5,6 @@ import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
 import chat.rocket.android.layouthelper.chatroom.MessageType
-import chat.rocket.android.widget.AbsoluteUrl
 import chat.rocket.android.widget.RocketChatAvatar
 import chat.rocket.android.widget.helper.AvatarHelper
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
@@ -100,12 +99,11 @@ class MessageRenderer(private val message: Message, private val autoLoadImage: B
     /**
      * Shows message attachments on the RocketChatMessageAttachmentsLayout widget.
      */
-    fun showAttachment(rocketChatMessageAttachmentsLayout: RocketChatMessageAttachmentsLayout, absoluteUrl: AbsoluteUrl?) {
+    fun showAttachment(rocketChatMessageAttachmentsLayout: RocketChatMessageAttachmentsLayout) {
         val attachments = message.attachments
         if (attachments == null || attachments.isEmpty()) {
             rocketChatMessageAttachmentsLayout.visibility = View.GONE
         } else {
-            rocketChatMessageAttachmentsLayout.setAbsoluteUrl(absoluteUrl)
             rocketChatMessageAttachmentsLayout.setAttachments(attachments, autoLoadImage)
             rocketChatMessageAttachmentsLayout.visibility = View.VISIBLE
         }
