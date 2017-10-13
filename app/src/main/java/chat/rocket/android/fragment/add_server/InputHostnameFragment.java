@@ -93,7 +93,7 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
 
   @Override
   public void showInvalidServerError() {
-    showError(getString(R.string.input_hostname_invalid_server_message));
+    showError(getString(R.string.fragment_input_hostname_invalid_server_message));
   }
 
   @Override
