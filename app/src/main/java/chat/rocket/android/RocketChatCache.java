@@ -172,7 +172,10 @@ public class RocketChatCache {
   }
 
   public Flowable<Optional<String>> getSelectedRoomIdPublisher() {
-    return getValuePublisher(KEY_SELECTED_ROOM_ID);
+    return getValuePublisher(KEY_SELECTED_ROOM_ID)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(roomValue -> Optional.ofNullable(new JSONObject(roomValue).optString(getSelectedServerHostname(), null)));
   }
 
   private SharedPreferences getSharedPreferences() {

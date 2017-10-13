@@ -2,6 +2,7 @@ package chat.rocket.android.fragment.sidebar.dialog;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -39,8 +40,9 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
   @Override
   protected void onSetupDialog() {
     View buttonAddChannel = getDialog().findViewById(R.id.btn_add_channel);
+    TextInputEditText channelNameText = (TextInputEditText) getDialog().findViewById(R.id.editor_channel_name);
 
-    RxTextView.textChanges((TextView) getDialog().findViewById(R.id.editor_channel_name))
+    RxTextView.textChanges((TextView) channelNameText)
             .map(text -> !TextUtils.isEmpty(text))
             .compose(bindToLifecycle())
             .subscribe(
@@ -49,8 +51,9 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
             );
 
     buttonAddChannel.setOnClickListener(view -> createRoom());
+    requestFocus(channelNameText);
   }
-
+  
   private boolean isChecked(int viewId) {
     CompoundButton check = (CompoundButton) getDialog().findViewById(viewId);
     return check.isChecked();

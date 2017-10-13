@@ -6,15 +6,12 @@ import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.Logger;
+import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.interactors.MessageInteractor;
@@ -24,7 +21,9 @@ import chat.rocket.core.models.Settings;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
-import chat.rocket.android.service.ConnectivityManagerApi;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class RoomPresenter extends BasePresenter<RoomContract.View>
     implements RoomContract.Presenter {
@@ -36,8 +35,9 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   private final AbsoluteUrlHelper absoluteUrlHelper;
   private final MethodCallHelper methodCallHelper;
   private final ConnectivityManagerApi connectivityManagerApi;
+  private Room currentRoom;
 
-  public RoomPresenter(String roomId,
+    public RoomPresenter(String roomId,
                        UserRepository userRepository,
                        MessageInteractor messageInteractor,
                        RoomRepository roomRepository,
@@ -112,8 +112,55 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
       return;
     }
 
+    if (message.getType() == null && message.getSyncState() == SyncState.SYNCED) {
+        // If message is not a system message show applicable actions.
+        view.showMessageActions(message);
+    }
+  }
+
+  @Override
+  public void onMessageTap(@Nullable Message message) {
+    if (message == null) {
+      return;
+    }
+
     if (message.getSyncState() == SyncState.FAILED) {
       view.showMessageSendFailure(message);
+    }
+  }
+
+  @Override
+  public void replyMessage(@NonNull Message message, boolean justQuote) {
+      this.absoluteUrlHelper.getRocketChatAbsoluteUrl()
+              .cache()
+              .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(
+                      serverUrl -> {
+                          if (serverUrl.isPresent()) {
+                              RocketChatAbsoluteUrl absoluteUrl = serverUrl.get();
+                              String baseUrl = absoluteUrl.getBaseUrl();
+                              view.onReply(absoluteUrl, buildReplyOrQuoteMarkdown(baseUrl, message, justQuote), message);
+                          }
+                      },
+                      Logger::report
+              );
+  }
+
+  private String buildReplyOrQuoteMarkdown(String baseUrl, Message message, boolean justQuote) {
+    if (currentRoom == null || message.getUser() == null) {
+        return "";
+    }
+
+    if (currentRoom.isDirectMessage()) {
+        return String.format("[ ](%s/direct/%s?msg=%s) ", baseUrl,
+                message.getUser().getUsername(),
+                message.getId());
+    } else {
+        return String.format("[ ](%s/channel/%s?msg=%s) %s", baseUrl,
+                currentRoom.getName(),
+                message.getId(),
+                justQuote ? "" : "@" + message.getUser().getUsername() + " ");
     }
   }
 
@@ -141,7 +188,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   @Override
-  public void resendMessage(Message message) {
+  public void resendMessage(@NonNull Message message) {
     final Disposable subscription = getCurrentUser()
         .flatMap(user -> messageInteractor.resend(message, user))
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
@@ -152,7 +199,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   @Override
-  public void updateMessage(Message message, String content) {
+  public void updateMessage(@NonNull Message message, String content) {
     view.disableMessageInput();
     final Disposable subscription = getCurrentUser()
         .flatMap(user -> messageInteractor.update(message, user, content))
@@ -175,7 +222,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   @Override
-  public void deleteMessage(Message message) {
+  public void deleteMessage(@NonNull Message message) {
     final Disposable subscription = messageInteractor.delete(message)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
@@ -233,6 +280,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   private void processRoom(Room room) {
+      this.currentRoom = room;
     view.render(room);
 
     if (room.isDirectMessage()) {
