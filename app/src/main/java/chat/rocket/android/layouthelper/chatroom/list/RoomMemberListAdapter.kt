@@ -61,8 +61,8 @@ class RoomMemberListAdapter(private var dataSet: List<User>, private val hostnam
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val userAvatar: RocketChatAvatar = itemView.userAvatar
-        val name: TextView = itemView.name
+        val userAvatar: RocketChatAvatar = itemView.avatar
+        val name: TextView = itemView.realName
         val status: ImageView = itemView.status
         val username: TextView = itemView.username
     }
