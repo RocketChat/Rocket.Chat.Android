@@ -1,18 +1,17 @@
 package chat.rocket.android.fragment.chatroom.dialog;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import chat.rocket.android.R;
-import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.models.internal.FileUploading;
-import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.android.renderer.FileUploadingRenderer;
+import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.RealmObjectObserver;
+import chat.rocket.persistence.realm.models.internal.FileUploading;
 
 /**
  * dialog fragment to display progress of file uploading.
@@ -76,11 +75,14 @@ public class FileUploadProgressDialogFragment extends AbstractChatRoomDialogFrag
       //TODO: prompt retry.
       dismiss();
     } else {
-      new FileUploadingRenderer(getContext(), state)
-          .progressInto((ProgressBar) getDialog().findViewById(R.id.progressBar))
-          .progressTextInto(
-              (TextView) getDialog().findViewById(R.id.txt_filesize_uploaded),
-              (TextView) getDialog().findViewById(R.id.txt_filesize_total));
+      final Dialog dialog = getDialog();
+      if (dialog != null) {
+        new FileUploadingRenderer(getContext(), state)
+                .progressInto(dialog.findViewById(R.id.progressBar))
+                .progressTextInto(
+                        dialog.findViewById(R.id.txt_filesize_uploaded),
+                        dialog.findViewById(R.id.txt_filesize_total));
+      }
     }
   }
 
