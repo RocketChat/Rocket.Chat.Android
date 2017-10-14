@@ -33,8 +33,7 @@ class MessageViewHolder(itemView: View, private val hostname: String, private va
         val messageRenderer = MessageRenderer(target, autoLoadImage)
 
         messageRenderer.showAvatar(avatar, hostname)
-        messageRenderer.showRealName(realName)
-        messageRenderer.showUsername(username)
+        messageRenderer.showUserNames(realName, username)
         messageRenderer.showMessageTimestamp(timestamp)
 
         if (viewType == MessageListAdapter.VIEW_TYPE_NORMAL_MESSAGE) {
