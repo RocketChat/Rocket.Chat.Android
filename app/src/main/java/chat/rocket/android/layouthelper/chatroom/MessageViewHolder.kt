@@ -1,6 +1,5 @@
 package chat.rocket.android.layouthelper.chatroom
 
-import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,7 +16,6 @@ class MessageViewHolder(itemView: View, private val hostname: String, private va
     private val dayLayout: View by lazy { itemView.dayLayout }
     private val day: TextView by lazy { itemView.day }
     private val avatar: RocketChatAvatar by lazy { itemView.avatar }
-    private val middleContainer: ConstraintLayout by lazy { itemView.middleContainer }
     private val realName: TextView by lazy { itemView.realName }
     private val username: TextView by lazy { itemView.username }
     private val timestamp: TextView by lazy { itemView.timestamp }
