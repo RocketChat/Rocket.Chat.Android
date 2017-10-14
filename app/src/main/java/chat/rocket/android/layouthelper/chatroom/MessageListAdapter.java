@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.v7.util.DiffUtil;
 import android.view.View;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,22 +11,17 @@ import java.util.List;
 import chat.rocket.android.R;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.ExtModelListAdapter;
-import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.core.models.Message;
 
 /**
- * target list adapter for chat room.
+ * Target list adapter for chat room.
  */
-public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessage, AbstractMessageViewHolder> {
-
-    private static final int VIEW_TYPE_UNKNOWN = 0;
-    private static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
-    private static final int VIEW_TYPE_SYSTEM_MESSAGE = 2;
-
+public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessage, MessageViewHolder> {
+    public static final int VIEW_TYPE_UNKNOWN = 0;
+    public static final int VIEW_TYPE_NORMAL_MESSAGE = 1;
+    public static final int VIEW_TYPE_SYSTEM_MESSAGE = 2;
     private String hostname;
-    private AbsoluteUrl absoluteUrl;
-
-    private boolean autoloadImages = false;
+    private boolean autoLoadImage = false;
     private boolean hasNext;
     private boolean isLoaded;
 
@@ -38,13 +31,8 @@ public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessa
         this.hasNext = true;
     }
 
-    public void setAbsoluteUrl(AbsoluteUrl absoluteUrl) {
-        this.absoluteUrl = absoluteUrl;
-        notifyDataSetChanged();
-    }
-
-    public void setAutoloadImages(boolean autoloadImages) {
-        this.autoloadImages = autoloadImages;
+    public void setAutoLoadImage(boolean autoLoadImage) {
+        this.autoLoadImage = autoLoadImage;
     }
 
     /**
@@ -91,18 +79,8 @@ public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessa
     }
 
     @Override
-    protected AbstractMessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
-        switch (viewType) {
-            case VIEW_TYPE_NORMAL_MESSAGE:
-                return new MessageNormalViewHolder(itemView, hostname);
-            case VIEW_TYPE_SYSTEM_MESSAGE:
-                return new MessageSystemViewHolder(itemView, hostname);
-            default:
-                return new AbstractMessageViewHolder(itemView, hostname) {
-                    @Override
-                    protected void bindMessage(@NotNull PairedMessage pairedMessage, boolean autoLoadImage) {}
-                };
-        }
+    protected MessageViewHolder onCreateRealmModelViewHolder(int viewType, View itemView) {
+        return new MessageViewHolder(itemView, hostname, viewType);
     }
 
     @Override
@@ -122,7 +100,7 @@ public class MessageListAdapter extends ExtModelListAdapter<Message, PairedMessa
 
     @Override
     protected boolean shouldAutoloadImages() {
-        return autoloadImages;
+        return autoLoadImage;
     }
 
     @Override
