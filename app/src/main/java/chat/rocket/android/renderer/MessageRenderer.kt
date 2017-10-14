@@ -35,26 +35,22 @@ class MessageRenderer(private val message: Message, private val autoLoadImage: B
     }
 
     /**
-     * Shows the user real name on the TextView.
+     * Shows the user real name or its username on the TextView widgets.
      */
-    fun showRealName(textView: TextView) {
+    fun showUserNames(realNameTextView: TextView, usernameTextView: TextView) {
         val realName: String? = message.user?.name
-        if (realName != null) {
-            textView.text = realName
-        } else {
-            textView.visibility = View.GONE
-        }
-    }
-
-    /**
-     * Shows the username on the TextView.
-     */
-    fun showUsername(textView: TextView) {
         val username: String? = message.user?.username
-        if (username != null) {
-            textView.text = textView.context.getString(R.string.sub_username, username)
+
+        if (realName.isNullOrBlank()) {
+            if (username != null) {
+                usernameTextView.text = usernameTextView.context.getString(R.string.sub_username, username)
+                realNameTextView.visibility = View.GONE
+                usernameTextView.visibility = View.VISIBLE
+            }
         } else {
-            textView.visibility = View.GONE
+            realNameTextView.text = realName
+            usernameTextView.visibility = View.GONE
+            realNameTextView.visibility = View.VISIBLE
         }
     }
 
