@@ -6,7 +6,6 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import chat.rocket.android.widget.AbsoluteUrl
 import com.amulyakhare.textdrawable.TextDrawable
-
 import java.net.URLEncoder
 
 /**

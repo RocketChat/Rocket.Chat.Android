@@ -1,6 +1,8 @@
 package chat.rocket.android.widget.helper
 
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.ShapeDrawable
 import android.net.Uri
 import android.support.graphics.drawable.VectorDrawableCompat
 import chat.rocket.android.widget.R
@@ -14,6 +16,10 @@ import com.facebook.drawee.view.SimpleDraweeView
 object FrescoHelper {
 
     fun loadImage(simpleDraweeView: SimpleDraweeView, imageUri: String, placeholderDrawable: Drawable) {
+        // ref: https://github.com/facebook/fresco/issues/501
+        if (placeholderDrawable is ShapeDrawable) {
+            placeholderDrawable.setPadding(Rect())
+        }
         simpleDraweeView.hierarchy.setPlaceholderImage(placeholderDrawable)
         simpleDraweeView.controller = Fresco.newDraweeControllerBuilder().setUri(imageUri).setAutoPlayAnimations(true).build()
     }
