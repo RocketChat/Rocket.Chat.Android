@@ -12,6 +12,9 @@ import chat.rocket.core.SyncState
 import kotlinx.android.synthetic.main.day.view.*
 import kotlinx.android.synthetic.main.item_room_message.view.*
 
+/**
+ * Created by Filipe de Lima Brito (filipedelimabrito@gmail.com) on 10/14/17.
+ */
 class MessageViewHolder(itemView: View, private val hostname: String, private val viewType: Int) : ModelViewHolder<PairedMessage>(itemView) {
     private val dayLayout: View by lazy { itemView.dayLayout }
     private val day: TextView by lazy { itemView.day }
