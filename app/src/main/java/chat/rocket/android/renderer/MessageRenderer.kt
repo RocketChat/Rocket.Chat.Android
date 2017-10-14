@@ -1,6 +1,7 @@
 package chat.rocket.android.renderer
 
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
@@ -107,5 +108,34 @@ class MessageRenderer(private val message: Message, private val autoLoadImage: B
             rocketChatMessageAttachmentsLayout.setAttachments(attachments, autoLoadImage)
             rocketChatMessageAttachmentsLayout.visibility = View.VISIBLE
         }
+    }
+
+    /**
+     * Shows a error view in case of a failure to send or update (after a edition) a message.
+     *
+     * @param errorImageView The ImageView to show.
+     */
+    fun showErrorView(errorImageView: ImageView) {
+        errorImageView.visibility = View.VISIBLE
+    }
+
+    /**
+     * Shows a view that indicates a new day.
+     *
+     * @param dayLayout The layout of the view to show.
+     * @param date The date to show.
+     */
+    fun showNewDay(dayLayout: View, date: TextView) {
+        date.text = DateTime.fromEpocMs(message.timestamp, DateTime.Format.DATE)
+        dayLayout.visibility = View.VISIBLE
+    }
+
+    /**
+     * Hides views.
+     *
+     * @param views The views to hide.
+     */
+    fun hideViews(views: Array<View>) {
+        views.forEach { view -> view.visibility = View.GONE }
     }
 }
