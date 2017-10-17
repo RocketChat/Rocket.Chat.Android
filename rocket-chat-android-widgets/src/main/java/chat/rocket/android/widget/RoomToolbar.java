@@ -16,10 +16,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import chat.rocket.android.widget.helper.DrawableHelper;
+
 import com.amulyakhare.textdrawable.TextDrawable;
 
 import java.lang.reflect.Field;
+
+import chat.rocket.android.widget.helper.DrawableHelper;
 
 public class RoomToolbar extends Toolbar {
   private TextView toolbarText;
