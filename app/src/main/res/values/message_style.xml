@@ -10,16 +10,17 @@
     </style>
 
     <style name="TextAppearance.RocketChat.Message.Name" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/colorPrimaryTextDark</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textColor">@color/colorPrimaryTextDark</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="TextAppearance.RocketChat.Message.Username" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/colorSecondaryTextDark</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textColor">@color/colorSecondaryTextDark</item>
         <item name="android:textSize">14sp</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>

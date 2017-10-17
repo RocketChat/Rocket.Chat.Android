@@ -75,7 +75,7 @@
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:queryHint="@string/spotlight_search"
+            app:queryHint="@string/fragment_sidebar_main_spotlight_search"
             app:iconifiedByDefault="false" />
     </FrameLayout>
 
@@ -92,7 +92,7 @@
         android:layout_height="40dp"
         android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:text="@string/spotlight_load_more_results"
+        android:text="@string/fragment_sidebar_main_spotlight_load_more_results"
         android:background="?attr/colorPrimary"
         android:visibility="gone" />
 
@@ -173,7 +173,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fragment_sidebar_main_logout_title"
+                    android:text="@string/fragment_sidebar_main_logout"
                     android:textAppearance="?attr/textAppearanceListItemSmall" />
             </LinearLayout>
 

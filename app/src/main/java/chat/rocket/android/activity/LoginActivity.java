@@ -1,9 +1,11 @@
 package chat.rocket.android.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.LoginFragment;
@@ -28,6 +30,10 @@ public class LoginActivity extends AbstractFragmentActivity implements LoginCont
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+    }
 
     String hostname = null;
     Intent intent = getIntent();

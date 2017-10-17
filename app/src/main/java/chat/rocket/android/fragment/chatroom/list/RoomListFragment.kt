@@ -114,7 +114,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     }
 
     override fun showPinnedMessages(dataSet: ArrayList<Message>, total: String) {
-        activity.title = getString(R.string.fragment_room_list_pinned_message_title, total)
+        activity.title = getString(R.string.fragment_room_list_pinned_messages_title, total)
         if (recyclerView.adapter == null) {
             recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context)
             val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -132,7 +132,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     }
 
     override fun showFavoriteMessages(dataSet: ArrayList<Message>, total: String) {
-        activity.title = getString(R.string.fragment_room_list_favorite_message_title, total)
+        activity.title = getString(R.string.fragment_room_list_favorite_messages_title, total)
         if (recyclerView.adapter == null) {
             recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context)
             val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

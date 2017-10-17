@@ -71,7 +71,7 @@ class RoomListItemView : FrameLayout {
     }
 
     fun setRoomName(roomName: String) {
-        name.text = roomName
+        realName.text = roomName
     }
 
     fun showPrivateChannelIcon() {

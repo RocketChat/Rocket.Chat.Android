@@ -559,7 +559,6 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         if (rocketChatAbsoluteUrl != null) {
             token = rocketChatAbsoluteUrl.getToken();
             userId = rocketChatAbsoluteUrl.getUserId();
-            messageListAdapter.setAbsoluteUrl(rocketChatAbsoluteUrl);
         }
     }
 
@@ -649,12 +648,12 @@ public class RoomFragment extends AbstractChatRoomFragment implements
 
     @Override
     public void autoloadImages() {
-        messageListAdapter.setAutoloadImages(true);
+        messageListAdapter.setAutoLoadImage(true);
     }
 
     @Override
     public void manualLoadImages() {
-        messageListAdapter.setAutoloadImages(false);
+        messageListAdapter.setAutoLoadImage(false);
     }
 
     @Override

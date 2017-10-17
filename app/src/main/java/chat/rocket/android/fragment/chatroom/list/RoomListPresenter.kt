@@ -342,7 +342,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
     private fun showInvalidRequest() {
         mainHandler.post {
             view.showWaitingView(false)
-            view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, context.getString(R.string.make_sure_your_server_version_is_up_to_date)))
+            view.showMessage(context.getString(R.string.fragment_room_list_could_not_load_your_request, context.getString(R.string.fragment_room_list_make_sure_your_server_version_is_up_to_date)))
         }
     }
 

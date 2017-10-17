@@ -31,6 +31,7 @@ class RoomMessagesAdapter(private var dataSet: List<Message>, private val hostna
         val message = dataSet[position]
 
         holder.newDay.text = DateTime.fromEpocMs(message.timestamp, DateTime.Format.DATE)
+        holder.dayLayout.visibility = View.VISIBLE
 
         val user = message.user
         if (user != null) {
@@ -79,10 +80,11 @@ class RoomMessagesAdapter(private var dataSet: List<Message>, private val hostna
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val dayLayout: View = itemView.dayLayout
         val newDay: TextView = itemView.day
-        val userAvatar: RocketChatAvatar = itemView.userAvatar
+        val userAvatar: RocketChatAvatar = itemView.avatar
         val username: TextView = itemView.username
-        val name: TextView = itemView.name
+        val name: TextView = itemView.realName
         val messageBody: RocketChatMessageLayout = itemView.messageBody
         val messageUrl: RocketChatMessageUrlsLayout = itemView.messageUrl
         val messageAttachment: RocketChatMessageAttachmentsLayout = itemView.messageAttachment
