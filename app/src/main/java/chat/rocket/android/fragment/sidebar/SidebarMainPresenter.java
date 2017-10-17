@@ -20,6 +20,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
+import chat.rocket.core.interactors.CheckUpdateInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomSidebar;
@@ -41,7 +42,8 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     private final RocketChatCache rocketChatCache;
     private final AbsoluteUrlHelper absoluteUrlHelper;
     private final MethodCallHelper methodCallHelper;
-    private SpotlightRepository realmSpotlightRepository;
+    private final SpotlightRepository realmSpotlightRepository;
+    private final CheckUpdateInteractor updateInteractor;
     private List<RoomSidebar> roomSidebarList;
 
     public SidebarMainPresenter(String hostname,
@@ -50,7 +52,8 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
                                 RocketChatCache rocketChatCache,
                                 AbsoluteUrlHelper absoluteUrlHelper,
                                 MethodCallHelper methodCallHelper,
-                                RealmSpotlightRepository realmSpotlightRepository) {
+                                RealmSpotlightRepository realmSpotlightRepository,
+                                CheckUpdateInteractor updateInteractor) {
         this.hostname = hostname;
         this.roomInteractor = roomInteractor;
         this.userRepository = userRepository;
@@ -58,6 +61,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         this.absoluteUrlHelper = absoluteUrlHelper;
         this.methodCallHelper = methodCallHelper;
         this.realmSpotlightRepository = realmSpotlightRepository;
+        this.updateInteractor = updateInteractor;
     }
 
     @Override
@@ -72,6 +76,8 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         view.showScreen();
 
         subscribeToRooms();
+
+        subscribeToUpdates();
 
         final Disposable subscription = Flowable.combineLatest(
                 userRepository.getCurrent().distinctUntilChanged(),
@@ -181,6 +187,15 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         addSubscription(subscription);
     }
 
+    private void subscribeToUpdates() {
+        Disposable subscription = updateInteractor.check()
+                .distinctUntilChanged()
+                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::processUpdate, Logger::report);
+        addSubscription(subscription);
+    }
+
     private void processRooms(List<Room> roomList) {
         roomSidebarList = new ArrayList<>();
         List<String> userToObserverList = new ArrayList<>();
@@ -211,6 +226,14 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
             view.showRoomSidebarList(roomSidebarList);
         } else {
             getUsersStatus();
+        }
+    }
+
+    private void processUpdate(Boolean updateAvailable) {
+        if (updateAvailable) {
+            view.showUpdateAvailable();
+        } else {
+            view.showNoUpdateAvailable();
         }
     }
 

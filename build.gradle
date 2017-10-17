@@ -8,7 +8,7 @@ allprojects {
         maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
         maven { url 'http://dl.bintray.com/amulyakhare/maven' } //for TextDrawable.
         maven { url "https://clojars.org/repo/" } //for icepick.
-        maven { url 'https://jitpack.io' } //for widget-fontawesome.
+        maven { url 'https://jitpack.io' } //for widget-fontawesome & AppUpdater.
         maven { url "https://maven.google.com" } // for Support Library.
     }
 }

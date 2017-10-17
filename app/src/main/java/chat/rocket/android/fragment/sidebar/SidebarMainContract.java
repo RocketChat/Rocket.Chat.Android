@@ -25,6 +25,11 @@ public interface SidebarMainContract {
     void show(User user);
 
     void onLogoutCleanUp();
+
+    void showUpdateAvailable();
+
+    void showNoUpdateAvailable();
+
   }
 
   interface Presenter extends BaseContract.Presenter<View> {

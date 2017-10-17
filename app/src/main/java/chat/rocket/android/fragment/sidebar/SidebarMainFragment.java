@@ -2,6 +2,8 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,6 +43,9 @@ import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListAdapter;
 import chat.rocket.android.layouthelper.chatroom.roomlist.RoomListHeader;
 import chat.rocket.android.layouthelper.chatroom.roomlist.UnreadRoomListHeader;
 import chat.rocket.android.renderer.UserRenderer;
+import chat.rocket.android.update.UpdateRepositoryImpl;
+import chat.rocket.android.widget.DownUpToggleView;
+import chat.rocket.core.interactors.CheckUpdateInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.RoomSidebar;
@@ -102,7 +107,8 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         rocketChatCache,
         absoluteUrlHelper,
         new MethodCallHelper(getContext(), hostname),
-        new RealmSpotlightRepository(hostname)
+        new RealmSpotlightRepository(hostname),
+        new CheckUpdateInteractor(new UpdateRepositoryImpl(getContext()))
     );
   }
 
@@ -334,6 +340,24 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
         return null;
       });
     }
+  }
+
+  @Override
+  public void showUpdateAvailable() {
+    ((DownUpToggleView)rootView.findViewById(R.id.toggle_user_action)).showIndicator();
+    View button = rootView.findViewById(R.id.btn_update);
+    button.setVisibility(View.VISIBLE);
+    button.setOnClickListener(view -> {
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setData(Uri.parse("market://details?id=com.konecty.rocket.chat"));
+      startActivity(intent);
+    });
+  }
+
+  @Override
+  public void showNoUpdateAvailable() {
+    ((DownUpToggleView)rootView.findViewById(R.id.toggle_user_action)).hideIndicator();
+    rootView.findViewById(R.id.btn_update).setVisibility(View.GONE);
   }
 
   private void setupLogoutButton() {
