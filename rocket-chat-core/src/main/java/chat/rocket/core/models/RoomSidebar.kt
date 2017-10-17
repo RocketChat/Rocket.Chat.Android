@@ -2,9 +2,10 @@ package chat.rocket.core.models
 
 class RoomSidebar {
     lateinit var id: String
-    lateinit var roomId: String
     lateinit var roomName: String
-    lateinit var type: String
+    lateinit var roomId: String
+    var type: String? = null
+        get() = RoomType.get(field) ?: Room.TYPE_GROUP
     var userStatus: String? = null
     var isAlert: Boolean = false
     var isFavorite: Boolean = false

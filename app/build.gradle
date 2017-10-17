@@ -22,7 +22,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$rootProject.ext.kotlinVersion"
-
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'me.tatarka:gradle-retrolambda:3.5.0'
@@ -46,8 +45,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 16
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 41
-        versionName "1.0.21"
+        versionCode 44
+        versionName "1.0.22"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -115,7 +114,6 @@ play {
     jsonFile = file('rocket-chat.json')
     track = "${track}"
 }
-
 ext {
     playLibVersion = '11.0.4'
     stethoVersion = '1.5.0'
@@ -128,67 +126,53 @@ ext {
 }
 
 dependencies {
-    compile project(':log-wrapper')
     compile project(':android-ddp')
-    compile project(':rocket-chat-core')
     compile project(':rocket-chat-android-widgets')
     compile project(':persistence-realm')
-
-    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-    compile "com.android.support:design:$rootProject.ext.supportLibraryVersion"
-    compile "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
-    compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
+    compile extraDependencies.okHTTP
+    compile extraDependencies.rxJava
+    compile extraDependencies.boltTask
+    compile supportDependencies.designSupportLibrary
+    compile supportDependencies.annotation
+    compile supportDependencies.kotlin;
+    compile rxbindingDependencies.rxBinding
+    compile rxbindingDependencies.rxBindingSupport
+    compile rxbindingDependencies.rxBindingAppcompact
     compile 'com.android.support:multidex:1.0.1'
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
-
     compile "com.google.firebase:firebase-core:$playLibVersion"
     compile "com.google.firebase:firebase-crash:$playLibVersion"
-
     compile "com.google.android.gms:play-services-gcm:$playLibVersion"
-
-    compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okHttpVersion"
-
     debugCompile "com.facebook.stetho:stetho:$stethoVersion"
     debugCompile "com.facebook.stetho:stetho-okhttp3:$stethoOkhttp3Version"
     debugCompile "com.uphyca:stetho_realm:$stethoRealmVersion"
-
-    compile "com.jakewharton.rxbinding2:rxbinding:$rxbindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxbindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxbindingVersion"
-
     compile "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
     compile "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycleVersion"
     compile "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
-
     compile 'nl.littlerobots.rxlint:rxlint:1.2'
-
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
     compile "frankiesardo:icepick:$icepickVersion"
     provided "frankiesardo:icepick-processor:$icepickVersion"
-
     compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
-
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-
     debugCompile "com.tspoon.traceur:traceur:1.0.1"
-
-    provided 'com.parse.bolts:bolts-tasks:1.4.0'
-    provided 'io.reactivex.rxjava2:rxjava:2.1.0'
+    compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
+    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.6@aar') {
+        transitive = true
+    }
+    compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1@aar'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.jakewharton.timber:timber:4.5.1'
+    compile 'com.github.matrixxun:MaterialBadgeTextView:c5a27e8243'
+    compile 'com.github.chrisbanes:PhotoView:2.0.0'
     provided 'io.reactivex:rxjava:1.3.0'
     provided "com.github.akarnokd:rxjava2-interop:0.10.2"
     provided 'com.hadisatrio:Optional:v1.0.1'
-
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:2.7.19"
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
 }
-
 apply plugin: 'com.google.gms.google-services'

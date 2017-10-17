@@ -48,7 +48,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   private SlidingPaneLayout pane;
   private MainContract.Presenter presenter;
 
-  protected int getLayoutContainerForFragment() {
+  @Override
+  public int getLayoutContainerForFragment() {
     return R.id.activity_main_container;
   }
 

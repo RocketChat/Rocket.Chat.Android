@@ -20,10 +20,7 @@ ext {
     compileSdkVersion = 26
     targetSdkVersion = 26
     buildToolsVersion = "26.0.0"
-    supportLibraryVersion = "25.4.0"
-    constraintLayoutVersion = "1.0.2"
-    kotlinVersion = "1.1.4-3"
-    okHttpVersion = "3.9.0"
+
 }
 
 task clean(type: Delete) {

@@ -109,7 +109,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   /**
-   * create new Thread.
+   * build new Thread.
    */
   @DebugLog
   public static Single<RocketChatWebSocketThread> getStarted(Context appContext, String hostname) {
@@ -241,11 +241,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private Single<Boolean> prepareDDPClient() {
     // TODO: temporarily replaced checkIfConnectionAlive() call for this single checking if ddpClient is
-    // null or not. In case it is, create a new client, otherwise just keep connecting with existing one.
+    // null or not. In case it is, build a new client, otherwise just keep connecting with existing one.
     return Single.just(ddpClient != null)
         .doOnSuccess(alive -> {
           if (!alive) {
-            RCLog.d("DDPClient#create");
+            RCLog.d("DDPClient#build");
             ddpClient = DDPClientWrapper.create(hostname);
           }
         });
@@ -392,7 +392,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
               )
       );
     } else {
-      // if we don't have any session then just create the observers and register normally
+      // if we don't have any session then just build the observers and register normally
       createObserversAndRegister();
     }
   }

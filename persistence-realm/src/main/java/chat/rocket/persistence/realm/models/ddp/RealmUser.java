@@ -1,24 +1,25 @@
 package chat.rocket.persistence.realm.models.ddp;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import chat.rocket.core.models.Email;
+import chat.rocket.core.models.User;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
 
-import java.util.ArrayList;
-import java.util.List;
-import chat.rocket.core.models.Email;
-import chat.rocket.core.models.User;
-
 /**
  * RealmUser.
  */
 @SuppressWarnings({"PMD.ShortClassName", "PMD.ShortVariable",
-    "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
+        "PMD.MethodNamingConventions", "PMD.VariableNamingConventions"})
 public class RealmUser extends RealmObject {
 
   public static final String ID = "_id";
+  public static final String NAME = "name";
   public static final String USERNAME = "username";
   public static final String STATUS = "status";
   public static final String UTC_OFFSET = "utcOffset";
@@ -31,6 +32,7 @@ public class RealmUser extends RealmObject {
   public static final String STATUS_OFFLINE = "offline";
 
   @PrimaryKey private String _id;
+  private String name;
   private String username;
   private String status;
   private double utcOffset;
@@ -55,6 +57,14 @@ public class RealmUser extends RealmObject {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getStatus() {
@@ -95,25 +105,27 @@ public class RealmUser extends RealmObject {
     }
 
     return User.builder()
-        .setId(_id)
-        .setUsername(username)
-        .setStatus(status)
-        .setUtcOffset(utcOffset)
-        .setEmails(coreEmails)
-        .setSettings(settings != null ? settings.asSettings() : null)
-        .build();
+            .setId(_id)
+            .setName(name)
+            .setUsername(username)
+            .setStatus(status)
+            .setUtcOffset(utcOffset)
+            .setEmails(coreEmails)
+            .setSettings(settings != null ? settings.asSettings() : null)
+            .build();
   }
 
   @Override
   public String toString() {
     return "RealmUser{" +
-        "_id='" + _id + '\'' +
-        ", username='" + username + '\'' +
-        ", status='" + status + '\'' +
-        ", utcOffset=" + utcOffset +
-        ", emails=" + emails +
-        ", settings=" + settings +
-        '}';
+            "_id='" + _id + '\'' +
+            ", name='" + name + '\'' +
+            ", username='" + username + '\'' +
+            ", status='" + status + '\'' +
+            ", utcOffset=" + utcOffset +
+            ", emails=" + emails +
+            ", settings=" + settings +
+            '}';
   }
 
   @Override
@@ -131,6 +143,9 @@ public class RealmUser extends RealmObject {
       return false;
     }
     if (_id != null ? !_id.equals(user._id) : user._id != null) {
+      return false;
+    }
+    if (name != null ? !name.equals(user.name) : user.name != null) {
       return false;
     }
     if (username != null ? !username.equals(user.username) : user.username != null) {
@@ -151,6 +166,7 @@ public class RealmUser extends RealmObject {
     int result;
     long temp;
     result = _id != null ? _id.hashCode() : 0;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
     result = 31 * result + (username != null ? username.hashCode() : 0);
     result = 31 * result + (status != null ? status.hashCode() : 0);
     temp = Double.doubleToLongBits(utcOffset);

@@ -10,16 +10,25 @@
 
 Retrolambda needs java8 to be installed on your system
 ```
-export ANDROID_HOME=/path/to/android/sdk
-
-git clone https://github.com/RocketChat/Rocket.Chat.Android.git
-cd Rocket.Chat.Android
-
-echo "sdk.dir="$ANDROID_HOME > local.properties
-
-./gradlew assembleDebug
+$ export ANDROID_HOME=/path/to/android/sdk
+$ git clone https://github.com/RocketChat/Rocket.Chat.Android.git
+$ cd Rocket.Chat.Android
+$ echo "sdk.dir="$ANDROID_HOME > local.properties
+$ ./gradlew assembleDebug
+(> gradlew assembleDebug on Windows)
 ```
 
+### How to send APK to device
+
+The following steps are only needed if running via command line. They are not needed if you are building via Android Studio.
+
+Ensure that ADB recognizes your device with `$ adb devices`.
+
+If a single device exists, install via `$ adb install /path/to/apk.apk`.
+
+Assuming you used Gradle like earlier, the file will be called `module_name-debug.apk` in `project_name/module_name/build/outputs/apk/`.
+
+Alternatively, you can simply run `$ ./gradlew installDebug` (`> gradlew installDebug` on Windows) to build, deploy, and debug all in a single command.
 
 ## Bug report & Feature request
 
@@ -27,4 +36,4 @@ Please report via [GitHub issue](https://github.com/RocketChat/Rocket.Chat.Andro
 
 ## Coding Style
 
-Please follow our [coding style](https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/CODING_STYLE.md) when contributing.
+Please follow our [coding style](https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md) when contributing.

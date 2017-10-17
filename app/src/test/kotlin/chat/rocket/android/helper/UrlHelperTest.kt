@@ -21,20 +21,17 @@ class UrlHelperTest {
 
     @Test
     fun getUrlTest() {
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt", UrlHelper.getUrl("https://demo.rocket.chat/GENERAL/file.txt"))
-        assertEquals("http://demo.rocket.chat/GENERAL/file.txt", UrlHelper.getUrl("http://demo.rocket.chat/GENERAL/file.txt"))
-        assertEquals("demo.rocket.chat/GENERAL/file.txt", UrlHelper.getUrl("demo.rocket.chat/GENERAL/file.txt"))
-        assertEquals("demo.rocket.chat/GENERAL/a%20sample%20file.txt", UrlHelper.getUrl("demo.rocket.chat/GENERAL/a sample file.txt"))
-        assertEquals("demo.rocket.chat/GENERAL/file.txt", UrlHelper.getUrl("demo.rocket.chat\\/GENERAL\\/file.txt"))
+        assertEquals("https://demo.rocket.chat/GENERAL/file.txt", UrlHelper.getSafeUrl("https://demo.rocket.chat/GENERAL/file.txt"))
+        assertEquals("http://demo.rocket.chat/GENERAL/file.txt", UrlHelper.getSafeUrl("http://demo.rocket.chat/GENERAL/file.txt"))
+        assertEquals("demo.rocket.chat/GENERAL/file.txt", UrlHelper.getSafeUrl("demo.rocket.chat/GENERAL/file.txt"))
+        assertEquals("demo.rocket.chat/GENERAL/a%20sample%20file.txt", UrlHelper.getSafeUrl("demo.rocket.chat/GENERAL/a sample file.txt"))
+        assertEquals("demo.rocket.chat/GENERAL/file.txt", UrlHelper.getSafeUrl("demo.rocket.chat\\/GENERAL\\/file.txt"))
     }
 
     @Test
-    fun getUrlForFileTest() {
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt?rc_uid=userId&rc_token=token", UrlHelper.getUrlForFile("https://demo.rocket.chat/GENERAL/file.txt","userId", "token"))
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt?rc_uid=userId&rc_token=token", UrlHelper.getUrlForFile("http://demo.rocket.chat/GENERAL/file.txt","userId", "token"))
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt?rc_uid=userId&rc_token=token", UrlHelper.getUrlForFile("demo.rocket.chat/GENERAL/file.txt","userId", "token"))
-
-        assertEquals("https://demo.rocket.chat/GENERAL/a%20sample%20file.txt?rc_uid=userId&rc_token=token", UrlHelper.getUrlForFile("demo.rocket.chat/GENERAL/a sample file.txt","userId", "token"))
-        assertEquals("https://demo.rocket.chat/GENERAL/file.txt?rc_uid=userId&rc_token=token", UrlHelper.getUrlForFile("demo.rocket.chat\\/GENERAL\\/file.txt","userId", "token"))
+    fun getAttachmentLinkTest() {
+        assertEquals("https://demo.rocket.chat/file-upload/aFileId/aFileName.txt", UrlHelper.getAttachmentLink("https://demo.rocket.chat", "aFileId", "aFileName.txt"))
+        assertEquals("https://demo.rocket.chat/file-upload/aFileId/aFileName.txt", UrlHelper.getAttachmentLink("http://demo.rocket.chat", "aFileId", "aFileName.txt"))
+        assertEquals("https://demo.rocket.chat/file-upload/aFileId/aFileName.txt", UrlHelper.getAttachmentLink("demo.rocket.chat", "aFileId", "aFileName.txt"))
     }
 }
