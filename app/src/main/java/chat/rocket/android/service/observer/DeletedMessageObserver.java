@@ -44,7 +44,6 @@ public class DeletedMessageObserver  extends AbstractModelObserver<RealmMessage>
     public RealmResults<RealmMessage> queryItems(Realm realm) {
         return realm.where(RealmMessage.class)
                 .equalTo(RealmMessage.SYNC_STATE, SyncState.DELETE_NOT_SYNCED)
-                .equalTo(RealmMessage.SYNC_STATE, SyncState.DELETING)
                 .isNotNull(RealmMessage.ROOM_ID)
                 .findAll();
     }
