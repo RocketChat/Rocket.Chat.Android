@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.text.Html
@@ -21,16 +22,22 @@ object PushManager {
     val messageStack = SparseArray<ArrayList<String>>()
 
     fun handle(context: Context, data: Bundle) {
-        val now = System.currentTimeMillis()
         val appContext = context.applicationContext
+        val message = data["message"] as String
+        val image = data["image"] as String
+        val ejson = data["ejson"] as String
         val notificationId = data["notId"] as String
         val style = data["style"] as String
         val summaryText = data["summaryText"] as String
         val count = data["count"] as String
         val pushMessage = PushMessage(data["title"] as String,
-                data["message"] as String,
-                data["image"] as String,
-                data["ejson"] as String)
+                message,
+                image,
+                ejson,
+                count,
+                notificationId,
+                summaryText,
+                style)
 
         val res = appContext.resources
 
@@ -38,72 +45,85 @@ object PushManager {
 
         stackMessage(notificationId.toInt(), pushMessage.message)
 
+        val notificationManager: NotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val notification: Notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManager: NotificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            with(pushMessage) {
-                val channel = NotificationChannel(notificationId, sender.username, NotificationManager.IMPORTANCE_HIGH)
-                val notification = Notification.Builder(appContext, pushMessage.rid)
-                        .setAutoCancel(true)
-                        .setShowWhen(true)
-                        .setWhen(now)
-                        .setContentTitle(title.fromHtml())
-                        .setContentText(message.fromHtml())
-                        .setNumber(count.toInt())
-                        .setSmallIcon(smallIcon)
-                        .build()
-
-                channel.enableLights(true)
-                channel.enableVibration(true)
-
-                notificationManager.createNotificationChannel(channel)
-                notificationManager.notify(notificationId.toInt(), notification)
-            }
+            notification = createNotificationForOreoAndAbove(appContext, pushMessage, smallIcon)
+            notificationManager.notify(notificationId.toInt(), notification)
         } else {
-            with(pushMessage) {
-                val notificationBuilder = NotificationCompat.Builder(appContext)
-                        .setAutoCancel(true)
-                        .setShowWhen(true)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setWhen(now)
-                        .setContentTitle(title.fromHtml())
-                        .setContentText(message.fromHtml())
-                        .setNumber(count.toInt())
-                        .setSmallIcon(smallIcon)
-                        .setDeleteIntent(getDismissIntent(appContext, notificationId.toInt()))
-
-                if ("inbox" == style) {
-                    val messages = messageStack.get(notificationId.toInt())
-                    val messageCount = messages.size
-                    if (messageCount > 1) {
-                        val summary = summaryText.replace("%n%", messageCount.toString())
-                                .fromHtml()
-                        val inbox = NotificationCompat.InboxStyle()
-                                .setBigContentTitle(title.fromHtml())
-                                .setSummaryText(summary)
-                        messages.forEach { msg ->
-                            inbox.addLine(msg.fromHtml())
-                        }
-                        notificationBuilder.setStyle(inbox)
-                    } else {
-                        val bigText = NotificationCompat.BigTextStyle()
-                                .bigText(message.fromHtml())
-                                .setBigContentTitle(title.fromHtml())
-                        notificationBuilder.setStyle(bigText)
-                    }
-                } else {
-                    notificationBuilder.setContentText(message.fromHtml())
-                }
-
-                val notification = notificationBuilder.build()
-                NotificationManagerCompat.from(appContext).notify(notificationId.toInt(), notification)
-            }
+            notification = createCompatNotification(appContext, pushMessage, smallIcon)
+            NotificationManagerCompat.from(appContext).notify(notificationId.toInt(), notification)
         }
     }
 
     fun clearStack(notificationId: Int) {
         messageStack.delete(notificationId)
+    }
+
+    private fun createCompatNotification(context: Context, pushMessage: PushMessage, smallIcon: Int): Notification {
+        with(pushMessage) {
+            val notificationBuilder = NotificationCompat.Builder(context)
+                    .setAutoCancel(true)
+                    .setShowWhen(true)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setWhen(createdAt)
+                    .setContentTitle(title.fromHtml())
+                    .setContentText(message.fromHtml())
+                    .setNumber(count.toInt())
+                    .setSmallIcon(smallIcon)
+                    .setDeleteIntent(getDismissIntent(context, notificationId.toInt()))
+
+            if ("inbox" == style) {
+                val messages = chat.rocket.android.push.PushManager.messageStack.get(notificationId.toInt())
+                val messageCount = messages.size
+                if (messageCount > 1) {
+                    val summary = summaryText.replace("%n%", messageCount.toString())
+                            .fromHtml()
+                    val inbox = android.support.v4.app.NotificationCompat.InboxStyle()
+                            .setBigContentTitle(title.fromHtml())
+                            .setSummaryText(summary)
+                    messages.forEach { msg ->
+                        inbox.addLine(msg.fromHtml())
+                    }
+                    notificationBuilder.setStyle(inbox)
+                } else {
+                    val bigText = android.support.v4.app.NotificationCompat.BigTextStyle()
+                            .bigText(message.fromHtml())
+                            .setBigContentTitle(title.fromHtml())
+                    notificationBuilder.setStyle(bigText)
+                }
+            } else {
+                notificationBuilder.setContentText(message.fromHtml())
+            }
+
+            return notificationBuilder.build()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationForOreoAndAbove(context: Context, pushMessage: PushMessage, smallIcon: Int): Notification {
+        val notificationManager: NotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        with(pushMessage) {
+            val channel = NotificationChannel(notificationId, sender.username, NotificationManager.IMPORTANCE_HIGH)
+            val notification = Notification.Builder(context, pushMessage.rid)
+                    .setAutoCancel(true)
+                    .setShowWhen(true)
+                    .setWhen(createdAt)
+                    .setContentTitle(title.fromHtml())
+                    .setContentText(message.fromHtml())
+                    .setNumber(count.toInt())
+                    .setSmallIcon(smallIcon)
+                    .build()
+
+            channel.enableLights(true)
+            channel.enableVibration(true)
+            notificationManager.createNotificationChannel(channel)
+            return notification
+        }
     }
 
     private fun stackMessage(id: Int, message: String) {
@@ -124,12 +144,20 @@ object PushManager {
         return PendingIntent.getBroadcast(context, notificationId, deleteIntent, 0)
     }
 
-    data class PushMessage(val title: String, val message: String, val image: String?, val ejson: String) {
+    data class PushMessage(val title: String,
+                           val message: String,
+                           val image: String?,
+                           val ejson: String,
+                           val count: String,
+                           val notificationId: String,
+                           val summaryText: String,
+                           val style: String) {
         val host: String
         val rid: String
         val type: String
         val name: String?
         val sender: Sender
+        val createdAt: Long
 
         init {
             val json = JSONObject(ejson)
@@ -138,6 +166,7 @@ object PushManager {
             type = json.getString("type")
             name = json.optString("name")
             sender = Sender(json.getString("sender"))
+            createdAt = System.currentTimeMillis()
         }
 
         data class Sender(val sender: String) {
