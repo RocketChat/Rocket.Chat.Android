@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import com.hadisatrio.optional.Optional;
+
+import chat.rocket.android.push.PushManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -65,8 +67,10 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
 
     if (intent.hasExtra(PushConstants.NOT_ID)) {
       isNotification = true;
+      int notificationId = intent.getIntExtra(PushConstants.NOT_ID, 0);
       PushNotificationHandler
-          .cleanUpNotificationStack(intent.getIntExtra(PushConstants.NOT_ID, 0));
+          .cleanUpNotificationStack(notificationId);
+      PushManager.INSTANCE.clearStack(notificationId);
     }
   }
 

@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import chat.rocket.android.push.PushConstants;
+import chat.rocket.android.push.PushManager;
 import chat.rocket.android.push.PushNotificationHandler;
 
 @SuppressLint("NewApi")
@@ -35,7 +36,8 @@ public class GCMIntentService extends GcmListenerService implements PushConstant
 
     PushNotificationHandler pushNotificationHandler = new PushNotificationHandler();
 
-    pushNotificationHandler.showNotificationIfPossible(applicationContext, extras);
+//    pushNotificationHandler.showNotificationIfPossible(applicationContext, extras);
+    PushManager.INSTANCE.handle(applicationContext, extras);
   }
 
   /*
