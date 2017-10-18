@@ -14,12 +14,18 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.text.Html
 import android.text.Spanned
+import android.util.Log
 import android.util.SparseArray
+import chat.rocket.android.BuildConfig
+import chat.rocket.android.activity.MainActivity
 import org.json.JSONObject
+import java.util.*
 
 object PushManager {
 
+    // A map associating a notification id to a list of corresponding messages.
     val messageStack = SparseArray<ArrayList<String>>()
+    val randomizer = Random()
 
     fun handle(context: Context, data: Bundle) {
         val appContext = context.applicationContext
@@ -39,6 +45,11 @@ object PushManager {
                 summaryText,
                 style)
 
+        // We should use Timber here
+        if (BuildConfig.DEBUG) {
+            Log.d(PushMessage::class.java.simpleName, pushMessage.toString())
+        }
+
         val res = appContext.resources
 
         val smallIcon = res.getIdentifier("rocket_chat_notification", "drawable", appContext.packageName)
@@ -50,20 +61,24 @@ object PushManager {
 
         val notification: Notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notification = createNotificationForOreoAndAbove(appContext, pushMessage, smallIcon)
+            notification = createNotificationForOreoAndAbove(appContext, pushMessage, smallIcon, data)
             notificationManager.notify(notificationId.toInt(), notification)
         } else {
-            notification = createCompatNotification(appContext, pushMessage, smallIcon)
+            notification = createCompatNotification(appContext, pushMessage, smallIcon, data)
             NotificationManagerCompat.from(appContext).notify(notificationId.toInt(), notification)
         }
     }
 
-    fun clearStack(notificationId: Int) {
+    fun clearMessageStack(notificationId: Int) {
         messageStack.delete(notificationId)
     }
 
-    private fun createCompatNotification(context: Context, pushMessage: PushMessage, smallIcon: Int): Notification {
+    private fun createCompatNotification(context: Context, pushMessage: PushMessage, smallIcon: Int, data: Bundle): Notification {
         with(pushMessage) {
+            val id = notificationId.toInt()
+            val contentIntent = getContentIntent(context, id, data, pushMessage)
+            val deleteIntent = getDismissIntent(context, id)
+
             val notificationBuilder = NotificationCompat.Builder(context)
                     .setAutoCancel(true)
                     .setShowWhen(true)
@@ -73,25 +88,29 @@ object PushManager {
                     .setContentText(message.fromHtml())
                     .setNumber(count.toInt())
                     .setSmallIcon(smallIcon)
-                    .setDeleteIntent(getDismissIntent(context, notificationId.toInt()))
+                    .setDeleteIntent(deleteIntent)
+                    .setContentIntent(contentIntent)
 
             if ("inbox" == style) {
-                val messages = chat.rocket.android.push.PushManager.messageStack.get(notificationId.toInt())
+                val messages = messageStack.get(notificationId.toInt())
                 val messageCount = messages.size
                 if (messageCount > 1) {
                     val summary = summaryText.replace("%n%", messageCount.toString())
                             .fromHtml()
-                    val inbox = android.support.v4.app.NotificationCompat.InboxStyle()
+                    val inbox = NotificationCompat.InboxStyle()
                             .setBigContentTitle(title.fromHtml())
                             .setSummaryText(summary)
+
                     messages.forEach { msg ->
                         inbox.addLine(msg.fromHtml())
                     }
+
                     notificationBuilder.setStyle(inbox)
                 } else {
-                    val bigText = android.support.v4.app.NotificationCompat.BigTextStyle()
+                    val bigText = NotificationCompat.BigTextStyle()
                             .bigText(message.fromHtml())
                             .setBigContentTitle(title.fromHtml())
+
                     notificationBuilder.setStyle(bigText)
                 }
             } else {
@@ -103,11 +122,15 @@ object PushManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationForOreoAndAbove(context: Context, pushMessage: PushMessage, smallIcon: Int): Notification {
+    private fun createNotificationForOreoAndAbove(context: Context, pushMessage: PushMessage, smallIcon: Int, data: Bundle): Notification {
         val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         with(pushMessage) {
+            val id = notificationId.toInt()
+            val contentIntent = getContentIntent(context, id, data, pushMessage)
+            val deleteIntent = getDismissIntent(context, id)
+
             val channel = NotificationChannel(notificationId, sender.username, NotificationManager.IMPORTANCE_HIGH)
             val notification = Notification.Builder(context, pushMessage.rid)
                     .setAutoCancel(true)
@@ -117,6 +140,8 @@ object PushManager {
                     .setContentText(message.fromHtml())
                     .setNumber(count.toInt())
                     .setSmallIcon(smallIcon)
+                    .setDeleteIntent(deleteIntent)
+                    .setContentIntent(contentIntent)
                     .build()
 
             channel.enableLights(true)
@@ -142,6 +167,17 @@ object PushManager {
         val deleteIntent = Intent(context, DeleteReceiver::class.java)
         deleteIntent.putExtra("notId", notificationId)
         return PendingIntent.getBroadcast(context, notificationId, deleteIntent, 0)
+    }
+
+    private fun getContentIntent(context: Context, notificationId: Int, extras: Bundle, pushMessage: PushMessage): PendingIntent {
+        val notificationIntent = Intent(context, MainActivity::class.java)
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        notificationIntent.putExtra(PushConstants.PUSH_BUNDLE, extras)
+        notificationIntent.putExtra(PushConstants.NOT_ID, notificationId)
+        notificationIntent.putExtra(PushConstants.HOSTNAME, pushMessage.host)
+        notificationIntent.putExtra(PushConstants.ROOM_ID, pushMessage.rid)
+
+        return PendingIntent.getActivity(context, randomizer.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     data class PushMessage(val title: String,
@@ -187,7 +223,7 @@ object PushManager {
         override fun onReceive(context: Context?, intent: Intent?) {
             val notificationId = intent?.extras?.getInt("notId")
             if (notificationId != null) {
-                PushManager.clearStack(notificationId)
+                PushManager.clearMessageStack(notificationId)
             }
         }
     }
