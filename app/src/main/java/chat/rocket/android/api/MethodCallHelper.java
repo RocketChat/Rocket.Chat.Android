@@ -415,23 +415,30 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
-  public Task<Void> getPublicSettings() {
+  public Task<Void> getPublicSettings(String currentHostname) {
     return call("public-settings/get", TIMEOUT_MS)
         .onSuccessTask(CONVERT_TO_JSON_ARRAY)
         .onSuccessTask(task -> {
           final JSONArray settings = task.getResult();
+          String siteUrl = null;
+          String siteName = null;
           for (int i = 0; i < settings.length(); i++) {
             JSONObject jsonObject = settings.getJSONObject(i);
             RealmPublicSetting.customizeJson(jsonObject);
             if (isPublicSetting(jsonObject, PublicSettingsConstants.General.SITE_URL)) {
-              String siteUrl = jsonObject.getString(RealmPublicSetting.VALUE);
-              HttpUrl httpUrl = HttpUrl.parse(siteUrl);
-              if (httpUrl != null) {
-                new RocketChatCache(context).addHostnameSiteUrl(httpUrl.host());
-              }
+              siteUrl = jsonObject.getString(RealmPublicSetting.VALUE);
             } else if (isPublicSetting(jsonObject, PublicSettingsConstants.General.SITE_NAME)) {
-              String siteName = jsonObject.getString(RealmPublicSetting.VALUE);
-              new RocketChatCache(context).addHostSiteName(siteName);
+              siteName = jsonObject.getString(RealmPublicSetting.VALUE);
+            }
+          }
+
+          if (siteName != null && siteUrl != null) {
+            HttpUrl httpSiteUrl = HttpUrl.parse(siteUrl);
+            if (httpSiteUrl != null) {
+              String host = httpSiteUrl.host();
+              RocketChatCache rocketChatCache = new RocketChatCache(context);
+              rocketChatCache.addHostnameSiteUrl(host, currentHostname);
+              rocketChatCache.addHostSiteName(currentHostname, siteName);
             }
           }
 

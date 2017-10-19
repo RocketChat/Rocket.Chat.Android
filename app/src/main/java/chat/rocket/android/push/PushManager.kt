@@ -21,11 +21,16 @@ import chat.rocket.android.RocketChatCache
 import chat.rocket.android.activity.MainActivity
 import org.json.JSONObject
 import java.util.*
+import kotlin.collections.HashMap
 
 object PushManager {
 
-    // A map associating a notification id to a list of corresponding messages.
+    // Map associating a notification id to a list of corresponding messages ie. an id corresponds
+    // to a user and the corresponding list is all the messages sent by him.
     val messageStack = SparseArray<ArrayList<String>>()
+    // Notifications received from the same server are grouped in a single bundled notification.
+    // This map associates a host to a group id.
+    val groupMap = HashMap<String, Int>()
     val randomizer = Random()
 
     fun handle(context: Context, data: Bundle) {
@@ -60,13 +65,45 @@ object PushManager {
         val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        // Create notification group.
+        addGroupToBundle(pushMessage.host)
+        val id = pushMessage.notificationId.toInt()
+        val contentIntent = getContentIntent(context, id, data, pushMessage)
+        val deleteIntent = getDismissIntent(context, id)
+        val notGroupBuilder = NotificationCompat.Builder(context)
+                .setAutoCancel(true)
+                .setShowWhen(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(pushMessage.createdAt)
+                .setContentTitle(pushMessage.title.fromHtml())
+                .setContentText(pushMessage.message.fromHtml())
+                .setGroup(pushMessage.host)
+                .setGroupSummary(true)
+                .setSmallIcon(smallIcon)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(pushMessage.message.fromHtml()))
+                .setContentIntent(contentIntent)
+                .setDeleteIntent(deleteIntent)
+
+        val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
+        if (subText.isNotEmpty()) {
+            notGroupBuilder.setSubText(subText)
+        }
+
         val notification: Notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notification = createNotificationForOreoAndAbove(appContext, pushMessage, smallIcon, data)
             notificationManager.notify(notificationId.toInt(), notification)
         } else {
             notification = createCompatNotification(appContext, pushMessage, smallIcon, data)
+            NotificationManagerCompat.from(appContext).notify(groupMap.get(pushMessage.host)!!, notGroupBuilder.build())
             NotificationManagerCompat.from(appContext).notify(notificationId.toInt(), notification)
+        }
+    }
+
+    private fun addGroupToBundle(host: String) {
+        val size = groupMap.size
+        if (groupMap.get(host) == null) {
+            groupMap.put(host, size + 1)
         }
     }
 
@@ -88,6 +125,7 @@ object PushManager {
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
                     .setNumber(count.toInt())
+                    .setGroup(host)
                     .setSmallIcon(smallIcon)
                     .setDeleteIntent(deleteIntent)
                     .setContentIntent(contentIntent)

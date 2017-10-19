@@ -343,7 +343,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Task<Void> fetchPublicSettings() {
-    return new MethodCallHelper(appContext, realmHelper, ddpClientRef).getPublicSettings();
+    return new MethodCallHelper(appContext, realmHelper, ddpClientRef).getPublicSettings(hostname);
   }
 
   private Task<Void> fetchPermissions() {

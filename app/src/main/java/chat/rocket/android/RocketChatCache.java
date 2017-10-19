@@ -53,12 +53,12 @@ public class RocketChatCache {
     setString(KEY_SELECTED_SERVER_HOSTNAME, newHostname);
   }
 
-  public void addHostSiteName(@NonNull String siteName) {
+  public void addHostSiteName(@NonNull String currentHostname, @NonNull String siteName) {
     try {
       String hostSiteNamesJson = getHostSiteNamesJson();
       JSONObject jsonObject = (hostSiteNamesJson == null) ?
               new JSONObject() : new JSONObject(hostSiteNamesJson);
-      jsonObject.put(getSelectedServerHostname(), siteName);
+      jsonObject.put(currentHostname, siteName);
       setString(KEY_SELECTED_SITE_NAME, jsonObject.toString());
     } catch (JSONException e) {
       RCLog.e(e);
@@ -88,7 +88,7 @@ public class RocketChatCache {
     return getString(KEY_SELECTED_SITE_NAME, null);
   }
 
-  public void addHostnameSiteUrl(@Nullable String hostnameAlias) {
+  public void addHostnameSiteUrl(@Nullable String hostnameAlias, @NonNull String currentHostname) {
     String alias = null;
     if (hostnameAlias != null) {
       alias = hostnameAlias.toLowerCase();
@@ -97,8 +97,7 @@ public class RocketChatCache {
       String selectedHostnameAliasJson = getLoginHostnamesJson();
       JSONObject jsonObject = selectedHostnameAliasJson == null ?
               new JSONObject() : new JSONObject(selectedHostnameAliasJson);
-      String selectedServerHostname = getSelectedServerHostname();
-      jsonObject.put(alias, selectedServerHostname);
+      jsonObject.put(alias, currentHostname);
       setString(KEY_SELECTED_SITE_URL, jsonObject.toString());
     } catch (JSONException e) {
       RCLog.e(e);
