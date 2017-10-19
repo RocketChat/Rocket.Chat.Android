@@ -42,14 +42,8 @@ object PushManager {
         val style = data["style"] as String
         val summaryText = data["summaryText"] as String
         val count = data["count"] as String
-        val pushMessage = PushMessage(data["title"] as String,
-                message,
-                image,
-                ejson,
-                count,
-                notificationId,
-                summaryText,
-                style)
+        val title = data["title"] as String
+        val pushMessage = PushMessage(title, message, image, ejson, count, notificationId, summaryText, style)
 
         // We should use Timber here
         if (BuildConfig.DEBUG) {
@@ -65,6 +59,39 @@ object PushManager {
         val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        val groupNotification = createGroupNotification(context, pushMessage, data, smallIcon)
+
+        val groupId = groupMap.get(pushMessage.host)
+        val notification: Notification
+        if (isAndroidVersionAtLeast(Build.VERSION_CODES.O)) {
+            notification = createNotificationForOreoAndAbove(appContext, pushMessage, smallIcon, data)
+            if (groupId != null) {
+                notificationManager.notify(groupId, notification)
+            }
+            notificationManager.notify(notificationId.toInt(), notification)
+        } else {
+            notification = createCompatNotification(appContext, pushMessage, smallIcon, data)
+            if (groupId != null) {
+                NotificationManagerCompat.from(appContext).notify(groupId, groupNotification)
+            }
+            NotificationManagerCompat.from(appContext).notify(notificationId.toInt(), notification)
+        }
+    }
+
+    private fun isAndroidVersionAtLeast(minVersion: Int) = Build.VERSION.SDK_INT >= minVersion
+
+    private fun addGroupToBundle(host: String) {
+        val size = groupMap.size
+        if (groupMap.get(host) == null) {
+            groupMap.put(host, size + 1)
+        }
+    }
+
+    fun clearMessageStack(notificationId: Int) {
+        messageStack.delete(notificationId)
+    }
+
+    private fun createGroupNotification(context: Context, pushMessage: PushMessage, data: Bundle, smallIcon: Int): Notification {
         // Create notification group.
         addGroupToBundle(pushMessage.host)
         val id = pushMessage.notificationId.toInt()
@@ -89,26 +116,7 @@ object PushManager {
             notGroupBuilder.setSubText(subText)
         }
 
-        val notification: Notification
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notification = createNotificationForOreoAndAbove(appContext, pushMessage, smallIcon, data)
-            notificationManager.notify(notificationId.toInt(), notification)
-        } else {
-            notification = createCompatNotification(appContext, pushMessage, smallIcon, data)
-            NotificationManagerCompat.from(appContext).notify(groupMap.get(pushMessage.host)!!, notGroupBuilder.build())
-            NotificationManagerCompat.from(appContext).notify(notificationId.toInt(), notification)
-        }
-    }
-
-    private fun addGroupToBundle(host: String) {
-        val size = groupMap.size
-        if (groupMap.get(host) == null) {
-            groupMap.put(host, size + 1)
-        }
-    }
-
-    fun clearMessageStack(notificationId: Int) {
-        messageStack.delete(notificationId)
+        return notGroupBuilder.build()
     }
 
     private fun createCompatNotification(context: Context, pushMessage: PushMessage, smallIcon: Int, data: Bundle): Notification {
@@ -176,22 +184,27 @@ object PushManager {
             val deleteIntent = getDismissIntent(context, id)
 
             val channel = NotificationChannel(notificationId, sender.username, NotificationManager.IMPORTANCE_HIGH)
-            val notification = Notification.Builder(context, pushMessage.rid)
+            val notificationBuilder = Notification.Builder(context, pushMessage.rid)
                     .setAutoCancel(true)
                     .setShowWhen(true)
                     .setWhen(createdAt)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
                     .setNumber(count.toInt())
+                    .setGroup(host)
                     .setSmallIcon(smallIcon)
                     .setDeleteIntent(deleteIntent)
                     .setContentIntent(contentIntent)
-                    .build()
+
+            val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
+            if (subText.isNotEmpty()) {
+                notificationBuilder.setSubText(subText)
+            }
 
             channel.enableLights(true)
             channel.enableVibration(true)
             notificationManager.createNotificationChannel(channel)
-            return notification
+            return notificationBuilder.build()
         }
     }
 
@@ -224,7 +237,7 @@ object PushManager {
         return PendingIntent.getActivity(context, randomizer.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    data class PushMessage(val title: String,
+    private data class PushMessage(val title: String,
                            val message: String,
                            val image: String?,
                            val ejson: String,
