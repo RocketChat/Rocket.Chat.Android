@@ -11,11 +11,13 @@ import java.util.UUID;
 
 import bolts.Continuation;
 import bolts.Task;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
@@ -30,6 +32,7 @@ import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import hugo.weaving.DebugLog;
+import okhttp3.HttpUrl;
 
 /**
  * Utility class for creating/handling MethodCall or RPC.
@@ -61,6 +64,12 @@ public class MethodCallHelper {
    */
   public MethodCallHelper(RealmHelper realmHelper, DDPClientRef ddpClientRef) {
     this.context = null;
+    this.realmHelper = realmHelper;
+    this.ddpClientRef = ddpClientRef;
+  }
+
+  public MethodCallHelper(Context context, RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    this.context = context.getApplicationContext();
     this.realmHelper = realmHelper;
     this.ddpClientRef = ddpClientRef;
   }
@@ -412,7 +421,15 @@ public class MethodCallHelper {
         .onSuccessTask(task -> {
           final JSONArray settings = task.getResult();
           for (int i = 0; i < settings.length(); i++) {
-            RealmPublicSetting.customizeJson(settings.getJSONObject(i));
+            JSONObject jsonObject = settings.getJSONObject(i);
+            RealmPublicSetting.customizeJson(jsonObject);
+            if (jsonObject.getString(RealmPublicSetting.ID).equalsIgnoreCase(PublicSettingsConstants.General.SITE_URL)) {
+              String siteUrl = jsonObject.getString(RealmPublicSetting.VALUE);
+              HttpUrl httpUrl = HttpUrl.parse(siteUrl);
+              if (httpUrl != null) {
+                new RocketChatCache(context).setSelectedServerHostnameAlias(httpUrl.host());
+              }
+            }
           }
 
           return realmHelper.executeTransaction(realm -> {

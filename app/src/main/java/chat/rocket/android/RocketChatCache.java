@@ -28,6 +28,7 @@ import io.reactivex.annotations.Nullable;
  */
 public class RocketChatCache {
   private static final String KEY_SELECTED_SERVER_HOSTNAME = "KEY_SELECTED_SERVER_HOSTNAME";
+  private static final String KEY_SELECTED_SITE_URL = "KEY_SELECTED_SITE_URL";
   private static final String KEY_SELECTED_ROOM_ID = "KEY_SELECTED_ROOM_ID";
   private static final String KEY_PUSH_ID = "KEY_PUSH_ID";
   private static final String KEY_HOSTNAME_LIST = "KEY_HOSTNAME_LIST";
@@ -48,6 +49,38 @@ public class RocketChatCache {
       newHostname = hostname.toLowerCase();
     }
     setString(KEY_SELECTED_SERVER_HOSTNAME, newHostname);
+  }
+
+  public void setSelectedServerHostnameAlias(@Nullable String hostnameAlias) {
+    String alias = null;
+    if (hostnameAlias != null) {
+      alias = hostnameAlias.toLowerCase();
+    }
+    try {
+      String selectedHostnameAliasJson = getLoginHostnamesJson();
+      JSONObject jsonObject = selectedHostnameAliasJson == null ?
+              new JSONObject() : new JSONObject(selectedHostnameAliasJson);
+      String selectedServerHostname = getSelectedServerHostname();
+      jsonObject.put(alias, selectedServerHostname);
+      setString(KEY_SELECTED_SITE_URL, jsonObject.toString());
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+  }
+
+  public @NonNull String getLoginHostnameFrom(String hostname) {
+    try {
+      String selectedServerHostname = getSelectedServerHostname();
+      return new JSONObject(getLoginHostnamesJson())
+              .optString(hostname, selectedServerHostname);
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+    return null;
+  }
+
+  private @Nullable String getLoginHostnamesJson() {
+    return getString(KEY_SELECTED_SITE_URL, null);
   }
 
   public void addHostname(@NonNull String hostname, @Nullable String hostnameAvatarUri, String siteName) {
