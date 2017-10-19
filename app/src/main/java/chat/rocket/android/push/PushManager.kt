@@ -17,6 +17,7 @@ import android.text.Spanned
 import android.util.Log
 import android.util.SparseArray
 import chat.rocket.android.BuildConfig
+import chat.rocket.android.RocketChatCache
 import chat.rocket.android.activity.MainActivity
 import org.json.JSONObject
 import java.util.*
@@ -90,6 +91,11 @@ object PushManager {
                     .setSmallIcon(smallIcon)
                     .setDeleteIntent(deleteIntent)
                     .setContentIntent(contentIntent)
+
+            val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
+            if (subText.isNotEmpty()) {
+                notificationBuilder.setSubText(subText)
+            }
 
             if ("inbox" == style) {
                 val messages = messageStack.get(notificationId.toInt())

@@ -22,6 +22,7 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
+import okhttp3.HttpUrl;
 
 /**
  * sharedpreference-based cache.
@@ -29,6 +30,7 @@ import io.reactivex.annotations.Nullable;
 public class RocketChatCache {
   private static final String KEY_SELECTED_SERVER_HOSTNAME = "KEY_SELECTED_SERVER_HOSTNAME";
   private static final String KEY_SELECTED_SITE_URL = "KEY_SELECTED_SITE_URL";
+  private static final String KEY_SELECTED_SITE_NAME = "KEY_SELECTED_SITE_NAME";
   private static final String KEY_SELECTED_ROOM_ID = "KEY_SELECTED_ROOM_ID";
   private static final String KEY_PUSH_ID = "KEY_PUSH_ID";
   private static final String KEY_HOSTNAME_LIST = "KEY_HOSTNAME_LIST";
@@ -51,7 +53,42 @@ public class RocketChatCache {
     setString(KEY_SELECTED_SERVER_HOSTNAME, newHostname);
   }
 
-  public void setSelectedServerHostnameAlias(@Nullable String hostnameAlias) {
+  public void addHostSiteName(@NonNull String siteName) {
+    try {
+      String hostSiteNamesJson = getHostSiteNamesJson();
+      JSONObject jsonObject = (hostSiteNamesJson == null) ?
+              new JSONObject() : new JSONObject(hostSiteNamesJson);
+      jsonObject.put(getSelectedServerHostname(), siteName);
+      setString(KEY_SELECTED_SITE_NAME, jsonObject.toString());
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+  }
+
+  public @NonNull String getHostSiteName(@NonNull String host) {
+    if (host.startsWith("http")) {
+      HttpUrl url = HttpUrl.parse(host);
+      if (url != null) {
+        host = url.host();
+      }
+    }
+    try {
+      String hostSiteNamesJson = getHostSiteNamesJson();
+      JSONObject jsonObject = (hostSiteNamesJson == null) ?
+              new JSONObject() : new JSONObject(hostSiteNamesJson);
+      host = getSiteUrlFor(host);
+      return jsonObject.optString(host);
+    } catch (JSONException e) {
+      RCLog.e(e);
+    }
+    return "";
+  }
+
+  private @Nullable String getHostSiteNamesJson() {
+    return getString(KEY_SELECTED_SITE_NAME, null);
+  }
+
+  public void addHostnameSiteUrl(@Nullable String hostnameAlias) {
     String alias = null;
     if (hostnameAlias != null) {
       alias = hostnameAlias.toLowerCase();
@@ -68,7 +105,7 @@ public class RocketChatCache {
     }
   }
 
-  public @NonNull String getLoginHostnameFrom(String hostname) {
+  public @NonNull String getSiteUrlFor(String hostname) {
     try {
       String selectedServerHostname = getSelectedServerHostname();
       return new JSONObject(getLoginHostnamesJson())

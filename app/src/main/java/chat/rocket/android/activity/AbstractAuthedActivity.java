@@ -62,7 +62,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       HttpUrl url = HttpUrl.parse(hostname);
       if (url != null) {
         String hostnameFromPush = url.host();
-        String loginHostname = rocketChatCache.getLoginHostnameFrom(hostnameFromPush);
+        String loginHostname = rocketChatCache.getSiteUrlFor(hostnameFromPush);
         rocketChatCache.setSelectedServerHostname(loginHostname);
 
         if (intent.hasExtra(PushConstants.ROOM_ID)) {

@@ -423,12 +423,15 @@ public class MethodCallHelper {
           for (int i = 0; i < settings.length(); i++) {
             JSONObject jsonObject = settings.getJSONObject(i);
             RealmPublicSetting.customizeJson(jsonObject);
-            if (jsonObject.getString(RealmPublicSetting.ID).equalsIgnoreCase(PublicSettingsConstants.General.SITE_URL)) {
+            if (isPublicSetting(jsonObject, PublicSettingsConstants.General.SITE_URL)) {
               String siteUrl = jsonObject.getString(RealmPublicSetting.VALUE);
               HttpUrl httpUrl = HttpUrl.parse(siteUrl);
               if (httpUrl != null) {
-                new RocketChatCache(context).setSelectedServerHostnameAlias(httpUrl.host());
+                new RocketChatCache(context).addHostnameSiteUrl(httpUrl.host());
               }
+            } else if (isPublicSetting(jsonObject, PublicSettingsConstants.General.SITE_NAME)) {
+              String siteName = jsonObject.getString(RealmPublicSetting.VALUE);
+              new RocketChatCache(context).addHostSiteName(siteName);
             }
           }
 
@@ -438,6 +441,10 @@ public class MethodCallHelper {
             return null;
           });
         });
+  }
+
+  private boolean isPublicSetting(JSONObject jsonObject, String id) {
+    return jsonObject.optString(RealmPublicSetting.ID).equalsIgnoreCase(id);
   }
 
   public Task<Void> getPermissions() {
