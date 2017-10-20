@@ -246,6 +246,33 @@ object PushManager {
             channel.enableLights(true)
             channel.enableVibration(true)
             notificationManager.createNotificationChannel(channel)
+
+            if ("inbox" == style) {
+                val messages = messageStack.get(notificationId.toInt())
+                val messageCount = messages.size
+                if (messageCount > 1) {
+                    val summary = summaryText.replace("%n%", messageCount.toString())
+                            .fromHtml()
+                    val inbox = NotificationCompat.InboxStyle()
+                            .setBigContentTitle(title.fromHtml())
+                            .setSummaryText(summary)
+
+                    messages.forEach { msg ->
+                        inbox.addLine(msg.fromHtml())
+                    }
+
+                    notificationBuilder.setStyle(inbox)
+                } else {
+                    val bigText = NotificationCompat.BigTextStyle()
+                            .bigText(message.fromHtml())
+                            .setBigContentTitle(title.fromHtml())
+
+                    notificationBuilder.setStyle(bigText)
+                }
+            } else {
+                notificationBuilder.setContentText(message.fromHtml())
+            }
+
             return notificationBuilder.build()
         }
     }
@@ -407,28 +434,31 @@ object PushManager {
             if (context == null) {
                 return
             }
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val message: CharSequence? = extractMessage(intent)
-            val pushMessage = intent?.extras?.getSerializable("push") as PushMessage?
 
-            if (pushMessage != null) {
-                val singleNotId = pushMessage.notificationId.toInt()
-                val groupTuple = groupMap.get(pushMessage.host)
-                for (msg in messageStack[singleNotId]) {
-                    manager.cancel(singleNotId)
-                    groupTuple?.second?.decrementAndGet()
-                    println("Decremented")
-                }
-                clearMessageBundle(singleNotId)
-                if (groupTuple != null) {
-                    val groupNotId = groupTuple.first
-                    val totalNot = groupTuple.second.get()
-                    if (totalNot == 0) {
-                        manager.cancel(groupNotId)
+            synchronized(this) {
+                val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val message: CharSequence? = extractMessage(intent)
+                val pushMessage = intent?.extras?.getSerializable("push") as PushMessage?
+
+                if (pushMessage != null) {
+                    val singleNotId = pushMessage.notificationId.toInt()
+                    val groupTuple = groupMap.get(pushMessage.host)
+                    for (msg in messageStack[singleNotId]) {
+                        manager.cancel(singleNotId)
+                        groupTuple?.second?.decrementAndGet()
+                        println("Decremented")
                     }
-                }
-                if (message != null) {
-                    sendMessage(context, message, pushMessage.rid)
+                    clearMessageBundle(singleNotId)
+                    if (groupTuple != null) {
+                        val groupNotId = groupTuple.first
+                        val totalNot = groupTuple.second.get()
+                        if (totalNot == 0) {
+                            manager.cancel(groupNotId)
+                        }
+                    }
+                    if (message != null) {
+                        sendMessage(context, message, pushMessage.rid)
+                    }
                 }
             }
         }
