@@ -39,7 +39,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.collections.HashMap
 
-typealias HostTotalMsgTuple<A, B> = Pair<A, B>
+typealias HostIdAndMessageCountTuple = Pair<Int, AtomicInteger>
 
 object PushManager {
     const val REPLY_LABEL = "REPLY"
@@ -49,7 +49,7 @@ object PushManager {
     private val messageStack = SparseArray<ArrayList<CharSequence>>()
     // Notifications received from the same server are grouped in a single bundled notification.
     // This map associates a host to a group id.
-    private val groupMap = HashMap<String, HostTotalMsgTuple<Int, AtomicInteger>>()
+    private val groupMap = HashMap<String, HostIdAndMessageCountTuple<Int, AtomicInteger>>()
     private val randomizer = Random()
 
     /**
@@ -114,16 +114,16 @@ object PushManager {
 
     private fun isAndroidVersionAtLeast(minVersion: Int) = Build.VERSION.SDK_INT >= minVersion
 
-    private fun addGroupToBundle(host: String) {
+    private fun bundleNotificationsToHost(host: String) {
         val size = groupMap.size
         if (groupMap.get(host) == null) {
-            groupMap.put(host, HostTotalMsgTuple(size + 1, AtomicInteger(0)))
+            groupMap.put(host, HostIdAndMessageCountTuple(size + 1, AtomicInteger(0)))
         }
     }
 
     private fun createGroupNotification(context: Context, pushMessage: PushMessage): Notification {
         // Create notification group.
-        addGroupToBundle(pushMessage.host)
+        bundleNotificationsToHost(pushMessage.host)
         val id = pushMessage.notificationId.toInt()
         val contentIntent = getContentIntent(context, id, pushMessage, group = true)
         val deleteIntent = getDismissIntent(context, id)
@@ -253,7 +253,7 @@ object PushManager {
                 if (messageCount > 1) {
                     val summary = summaryText.replace("%n%", messageCount.toString())
                             .fromHtml()
-                    val inbox = NotificationCompat.InboxStyle()
+                    val inbox = Notification.InboxStyle()
                             .setBigContentTitle(title.fromHtml())
                             .setSummaryText(summary)
 
@@ -263,7 +263,7 @@ object PushManager {
 
                     notificationBuilder.setStyle(inbox)
                 } else {
-                    val bigText = NotificationCompat.BigTextStyle()
+                    val bigText = Notification.BigTextStyle()
                             .bigText(message.fromHtml())
                             .setBigContentTitle(title.fromHtml())
 
@@ -489,10 +489,10 @@ object PushManager {
                     .firstElement()
                     .toSingle()
 
-            val roomUserTuple: Single<HostTotalMsgTuple<Room, User>> = Single.zip(
+            val roomUserTuple: Single<HostIdAndMessageCountTuple<Room, User>> = Single.zip(
                     singleRoom,
                     singleUser,
-                    BiFunction { room, user -> HostTotalMsgTuple(room, user) })
+                    BiFunction { room, user -> HostIdAndMessageCountTuple(room, user) })
 
             roomUserTuple.flatMap { tuple -> messageInteractor.send(tuple.first, tuple.second, message as String) }
                     .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
