@@ -39,7 +39,8 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.collections.HashMap
 
-typealias HostIdAndMessageCountTuple = Pair<Int, AtomicInteger>
+typealias TupleRoomUser = Pair<Room, User>
+typealias TupleIntAtomicInt = Pair<Int, AtomicInteger>
 
 object PushManager {
     const val REPLY_LABEL = "REPLY"
@@ -49,7 +50,7 @@ object PushManager {
     private val messageStack = SparseArray<ArrayList<CharSequence>>()
     // Notifications received from the same server are grouped in a single bundled notification.
     // This map associates a host to a group id.
-    private val groupMap = HashMap<String, HostIdAndMessageCountTuple<Int, AtomicInteger>>()
+    private val groupMap = HashMap<String, TupleIntAtomicInt>()
     private val randomizer = Random()
 
     /**
@@ -117,7 +118,7 @@ object PushManager {
     private fun bundleNotificationsToHost(host: String) {
         val size = groupMap.size
         if (groupMap.get(host) == null) {
-            groupMap.put(host, HostIdAndMessageCountTuple(size + 1, AtomicInteger(0)))
+            groupMap.put(host, TupleIntAtomicInt(size + 1, AtomicInteger(0)))
         }
     }
 
@@ -489,10 +490,10 @@ object PushManager {
                     .firstElement()
                     .toSingle()
 
-            val roomUserTuple: Single<HostIdAndMessageCountTuple<Room, User>> = Single.zip(
+            val roomUserTuple: Single<TupleRoomUser> = Single.zip(
                     singleRoom,
                     singleUser,
-                    BiFunction { room, user -> HostIdAndMessageCountTuple(room, user) })
+                    BiFunction { room, user -> TupleRoomUser(room, user) })
 
             roomUserTuple.flatMap { tuple -> messageInteractor.send(tuple.first, tuple.second, message as String) }
                     .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
