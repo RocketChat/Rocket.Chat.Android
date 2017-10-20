@@ -24,7 +24,6 @@ import chat.rocket.android.R
 import chat.rocket.android.RocketChatCache
 import chat.rocket.android.activity.MainActivity
 import chat.rocket.android.helper.Logger
-import chat.rocket.android.push.PushManager.fromHtml
 import chat.rocket.core.interactors.MessageInteractor
 import chat.rocket.core.models.Room
 import chat.rocket.core.models.User
@@ -353,14 +352,6 @@ object PushManager {
         return this
     }
 
-    private data class MessageGroup(val id: Int, val host: String) {
-        val messageStack: SparseArray<ArrayList<String>>
-
-        init {
-            messageStack = SparseArray()
-        }
-    }
-
     private data class PushMessage(val title: String,
                                    val message: String,
                                    val image: String?,
@@ -414,7 +405,7 @@ object PushManager {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             if (context == null) {
-                return;
+                return
             }
             val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val message: CharSequence? = extractMessage(intent)
