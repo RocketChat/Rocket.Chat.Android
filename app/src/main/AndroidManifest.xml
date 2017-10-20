@@ -77,8 +77,10 @@
         </service>
 
         <receiver android:name=".push.PushManager$DeleteReceiver"
-            android:exported="false">
-        </receiver>
+            android:exported="false" />
+
+        <receiver android:name=".push.PushManager$ReplyReceiver"
+            android:exported="false" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

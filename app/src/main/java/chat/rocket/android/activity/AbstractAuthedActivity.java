@@ -76,7 +76,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     if (intent.hasExtra(PushConstants.NOT_ID)) {
       isNotification = true;
       int notificationId = intent.getIntExtra(PushConstants.NOT_ID, 0);
-      PushManager.INSTANCE.clearMessageStack(notificationId);
+      PushManager.INSTANCE.clearMessageBundle(notificationId);
     }
   }
 

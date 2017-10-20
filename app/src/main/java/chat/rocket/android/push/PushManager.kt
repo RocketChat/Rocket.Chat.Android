@@ -7,74 +7,109 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import android.support.v4.app.RemoteInput
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.util.SparseArray
+import chat.rocket.android.BackgroundLooper
 import chat.rocket.android.BuildConfig
+import chat.rocket.android.R
 import chat.rocket.android.RocketChatCache
 import chat.rocket.android.activity.MainActivity
+import chat.rocket.android.helper.Logger
+import chat.rocket.android.push.PushManager.fromHtml
+import chat.rocket.core.interactors.MessageInteractor
+import chat.rocket.core.models.Room
+import chat.rocket.core.models.User
+import chat.rocket.persistence.realm.repositories.RealmMessageRepository
+import chat.rocket.persistence.realm.repositories.RealmRoomRepository
+import chat.rocket.persistence.realm.repositories.RealmUserRepository
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.BiFunction
 import org.json.JSONObject
+import java.io.Serializable
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.collections.HashMap
 
-object PushManager {
+typealias HostTotalMsgTuple<A, B> = Pair<A, B>
 
+object PushManager {
+    const val REPLY_LABEL = "REPLY"
+    const val REMOTE_INPUT_REPLY = "REMOTE_INPUT_REPLY"
     // Map associating a notification id to a list of corresponding messages ie. an id corresponds
     // to a user and the corresponding list is all the messages sent by him.
-    val messageStack = SparseArray<ArrayList<String>>()
+    private val messageStack = SparseArray<ArrayList<CharSequence>>()
     // Notifications received from the same server are grouped in a single bundled notification.
     // This map associates a host to a group id.
-    val groupMap = HashMap<String, Int>()
-    val randomizer = Random()
+    private val groupMap = HashMap<String, HostTotalMsgTuple<Int, AtomicInteger>>()
+    private val randomizer = Random()
 
+    /**
+     * Handles a receiving push by creating and displaying an appropriate notification based
+     * on the *data* param bundle received.
+     */
+    @Synchronized
     fun handle(context: Context, data: Bundle) {
         val appContext = context.applicationContext
         val message = data["message"] as String
         val image = data["image"] as String
         val ejson = data["ejson"] as String
-        val notificationId = data["notId"] as String
+        val notId = data["notId"] as String
         val style = data["style"] as String
         val summaryText = data["summaryText"] as String
         val count = data["count"] as String
         val title = data["title"] as String
-        val pushMessage = PushMessage(title, message, image, ejson, count, notificationId, summaryText, style)
+        val pushMessage = PushMessage(title, message, image, ejson, count, notId, summaryText, style)
 
         // We should use Timber here
         if (BuildConfig.DEBUG) {
             Log.d(PushMessage::class.java.simpleName, pushMessage.toString())
         }
 
-        val res = appContext.resources
+        bundleMessage(notId.toInt(), pushMessage.message)
 
-        val smallIcon = res.getIdentifier("rocket_chat_notification", "drawable", appContext.packageName)
+        showNotification(appContext, pushMessage)
+    }
 
-        stackMessage(notificationId.toInt(), pushMessage.message)
+    /**
+     * Clear all messages corresponding to a specific notification id (aka specific user)
+     */
+    fun clearMessageBundle(notificationId: Int) {
+        messageStack.delete(notificationId)
+    }
 
+    private fun showNotification(context: Context, pushMessage: PushMessage) {
         val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val groupNotification = createGroupNotification(context, pushMessage, data, smallIcon)
+        val notId = pushMessage.notificationId.toInt()
+        val groupNotification = createGroupNotification(context, pushMessage)
 
-        val groupId = groupMap.get(pushMessage.host)
+        val groupTuple = groupMap[pushMessage.host]
         val notification: Notification
         if (isAndroidVersionAtLeast(Build.VERSION_CODES.O)) {
-            notification = createNotificationForOreoAndAbove(appContext, pushMessage, smallIcon, data)
-            if (groupId != null) {
-                notificationManager.notify(groupId, notification)
+            notification = createNotificationForOreoAndAbove(context, pushMessage)
+            if (groupTuple != null) {
+                notificationManager.notify(groupTuple.first, groupNotification)
+                groupTuple.second.incrementAndGet()
             }
-            notificationManager.notify(notificationId.toInt(), notification)
+            notificationManager.notify(notId, notification)
         } else {
-            notification = createCompatNotification(appContext, pushMessage, smallIcon, data)
-            if (groupId != null) {
-                NotificationManagerCompat.from(appContext).notify(groupId, groupNotification)
+            notification = createCompatNotification(context, pushMessage)
+            if (groupTuple != null) {
+                NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
+                groupTuple.second.incrementAndGet()
             }
-            NotificationManagerCompat.from(appContext).notify(notificationId.toInt(), notification)
+            NotificationManagerCompat.from(context).notify(notId, notification)
         }
     }
 
@@ -83,60 +118,69 @@ object PushManager {
     private fun addGroupToBundle(host: String) {
         val size = groupMap.size
         if (groupMap.get(host) == null) {
-            groupMap.put(host, size + 1)
+            groupMap.put(host, HostTotalMsgTuple(size + 1, AtomicInteger(0)))
         }
     }
 
-    fun clearMessageStack(notificationId: Int) {
-        messageStack.delete(notificationId)
-    }
-
-    private fun createGroupNotification(context: Context, pushMessage: PushMessage, data: Bundle, smallIcon: Int): Notification {
+    private fun createGroupNotification(context: Context, pushMessage: PushMessage): Notification {
         // Create notification group.
         addGroupToBundle(pushMessage.host)
         val id = pushMessage.notificationId.toInt()
-        val contentIntent = getContentIntent(context, id, data, pushMessage)
+        val contentIntent = getContentIntent(context, id, pushMessage, group = true)
         val deleteIntent = getDismissIntent(context, id)
         val notGroupBuilder = NotificationCompat.Builder(context)
-                .setAutoCancel(true)
-                .setShowWhen(true)
-                .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(pushMessage.createdAt)
                 .setContentTitle(pushMessage.title.fromHtml())
                 .setContentText(pushMessage.message.fromHtml())
                 .setGroup(pushMessage.host)
                 .setGroupSummary(true)
-                .setSmallIcon(smallIcon)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(pushMessage.message.fromHtml()))
                 .setContentIntent(contentIntent)
                 .setDeleteIntent(deleteIntent)
+                .setMessageNotification()
 
         val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
         if (subText.isNotEmpty()) {
             notGroupBuilder.setSubText(subText)
         }
 
+        val messages = messageStack.get(pushMessage.notificationId.toInt())
+        val messageCount = messages.size
+
+        if (messageCount > 1) {
+            val summary = pushMessage.summaryText.replace("%n%", messageCount.toString())
+            val inbox = NotificationCompat.InboxStyle()
+                    .setBigContentTitle(pushMessage.title.fromHtml())
+                    .setSummaryText(summary)
+
+            notGroupBuilder.setStyle(inbox)
+        } else{
+           val bigText = NotificationCompat.BigTextStyle()
+                    .bigText(pushMessage.message.fromHtml())
+                    .setBigContentTitle(pushMessage.title.fromHtml())
+
+            notGroupBuilder.setStyle(bigText)
+        }
+
         return notGroupBuilder.build()
     }
 
-    private fun createCompatNotification(context: Context, pushMessage: PushMessage, smallIcon: Int, data: Bundle): Notification {
+    private fun createCompatNotification(context: Context, pushMessage: PushMessage): Notification {
         with(pushMessage) {
             val id = notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, data, pushMessage)
+            val contentIntent = getContentIntent(context, id, pushMessage)
             val deleteIntent = getDismissIntent(context, id)
 
             val notificationBuilder = NotificationCompat.Builder(context)
-                    .setAutoCancel(true)
-                    .setShowWhen(true)
-                    .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(createdAt)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
                     .setNumber(count.toInt())
                     .setGroup(host)
-                    .setSmallIcon(smallIcon)
                     .setDeleteIntent(deleteIntent)
                     .setContentIntent(contentIntent)
+                    .setMessageNotification()
+                    .addReplyAction(pushMessage)
 
             val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
             if (subText.isNotEmpty()) {
@@ -174,27 +218,26 @@ object PushManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationForOreoAndAbove(context: Context, pushMessage: PushMessage, smallIcon: Int, data: Bundle): Notification {
+    private fun createNotificationForOreoAndAbove(context: Context, pushMessage: PushMessage): Notification {
         val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         with(pushMessage) {
             val id = notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, data, pushMessage)
+            val contentIntent = getContentIntent(context, id, pushMessage)
             val deleteIntent = getDismissIntent(context, id)
 
             val channel = NotificationChannel(notificationId, sender.username, NotificationManager.IMPORTANCE_HIGH)
             val notificationBuilder = Notification.Builder(context, pushMessage.rid)
-                    .setAutoCancel(true)
-                    .setShowWhen(true)
                     .setWhen(createdAt)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
                     .setNumber(count.toInt())
                     .setGroup(host)
-                    .setSmallIcon(smallIcon)
                     .setDeleteIntent(deleteIntent)
                     .setContentIntent(contentIntent)
+                    .setMessageNotification(context)
+                    .addReplyAction(context, pushMessage)
 
             val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
             if (subText.isNotEmpty()) {
@@ -208,11 +251,11 @@ object PushManager {
         }
     }
 
-    private fun stackMessage(id: Int, message: String) {
-        val existingStack: ArrayList<String>? = messageStack[id]
+    private fun bundleMessage(id: Int, message: CharSequence) {
+        val existingStack: ArrayList<CharSequence>? = messageStack[id]
 
         if (existingStack == null) {
-            val newStack = arrayListOf<String>()
+            val newStack = arrayListOf<CharSequence>()
             newStack.add(message)
             messageStack.put(id, newStack)
         } else {
@@ -226,25 +269,106 @@ object PushManager {
         return PendingIntent.getBroadcast(context, notificationId, deleteIntent, 0)
     }
 
-    private fun getContentIntent(context: Context, notificationId: Int, extras: Bundle, pushMessage: PushMessage): PendingIntent {
+    private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, group: Boolean = false): PendingIntent {
         val notificationIntent = Intent(context, MainActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        notificationIntent.putExtra(PushConstants.PUSH_BUNDLE, extras)
         notificationIntent.putExtra(PushConstants.NOT_ID, notificationId)
         notificationIntent.putExtra(PushConstants.HOSTNAME, pushMessage.host)
-        notificationIntent.putExtra(PushConstants.ROOM_ID, pushMessage.rid)
-
+        if (!group) {
+            notificationIntent.putExtra(PushConstants.ROOM_ID, pushMessage.rid)
+        }
         return PendingIntent.getActivity(context, randomizer.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
+    // CharSequence extensions
+    fun CharSequence.fromHtml(): Spanned {
+        return Html.fromHtml(this as String)
+    }
+
+    //Notification.Builder extensions
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun Notification.Builder.addReplyAction(ctx: Context, pushMessage: PushMessage): Notification.Builder {
+        val replyRemoteInput = android.app.RemoteInput.Builder(REMOTE_INPUT_REPLY)
+                .setLabel(REPLY_LABEL)
+                .build()
+        val replyIntent = Intent(ctx, ReplyReceiver::class.java)
+        replyIntent.putExtra("push", pushMessage as Serializable)
+        val pendingIntent = PendingIntent.getBroadcast(
+                ctx, randomizer.nextInt(), replyIntent, 0)
+        val replyAction =
+                Notification.Action.Builder(
+                        Icon.createWithResource(ctx, R.drawable.ic_reply), REPLY_LABEL, pendingIntent)
+                        .addRemoteInput(replyRemoteInput)
+                        .setAllowGeneratedReplies(true)
+                        .build()
+        this.addAction(replyAction)
+        return this
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun Notification.Builder.setMessageNotification(ctx: Context): Notification.Builder {
+        val res = ctx.resources
+        val smallIcon = res.getIdentifier(
+                "rocket_chat_notification", "drawable", ctx.packageName)
+        with(this, {
+            setAutoCancel(true)
+            setShowWhen(true)
+            setDefaults(Notification.DEFAULT_ALL)
+            setSmallIcon(smallIcon)
+        })
+        return this
+    }
+
+    // NotificationCompat.Builder extensions
+    private fun NotificationCompat.Builder.addReplyAction(pushMessage: PushMessage): NotificationCompat.Builder {
+        val context = this.mContext
+        val replyRemoteInput = RemoteInput.Builder(REMOTE_INPUT_REPLY)
+                .setLabel(REPLY_LABEL)
+                .build()
+        val replyIntent = Intent(context, ReplyReceiver::class.java)
+        replyIntent.putExtra("push", pushMessage as Serializable)
+        val pendingIntent = PendingIntent.getBroadcast(
+                context, randomizer.nextInt(), replyIntent, 0)
+        val replyAction =
+                NotificationCompat.Action.Builder(
+                        R.drawable.ic_reply, REPLY_LABEL, pendingIntent)
+                        .addRemoteInput(replyRemoteInput)
+                        .setAllowGeneratedReplies(true)
+                        .build()
+        this.addAction(replyAction)
+        return this
+    }
+
+    fun NotificationCompat.Builder.setMessageNotification(): NotificationCompat.Builder {
+        val ctx = this.mContext
+        val res = ctx.resources
+        val smallIcon = res.getIdentifier(
+                "rocket_chat_notification", "drawable", ctx.packageName)
+        with(this, {
+            setAutoCancel(true)
+            setShowWhen(true)
+            setDefaults(Notification.DEFAULT_ALL)
+            setSmallIcon(smallIcon)
+        })
+        return this
+    }
+
+    private data class MessageGroup(val id: Int, val host: String) {
+        val messageStack: SparseArray<ArrayList<String>>
+
+        init {
+            messageStack = SparseArray()
+        }
+    }
+
     private data class PushMessage(val title: String,
-                           val message: String,
-                           val image: String?,
-                           val ejson: String,
-                           val count: String,
-                           val notificationId: String,
-                           val summaryText: String,
-                           val style: String) {
+                                   val message: String,
+                                   val image: String?,
+                                   val ejson: String,
+                                   val count: String,
+                                   val notificationId: String,
+                                   val summaryText: String,
+                                   val style: String) : Serializable {
         val host: String
         val rid: String
         val type: String
@@ -262,7 +386,7 @@ object PushManager {
             createdAt = System.currentTimeMillis()
         }
 
-        data class Sender(val sender: String) {
+        data class Sender(val sender: String) : Serializable {
             val _id: String
             val username: String
             val name: String
@@ -280,13 +404,85 @@ object PushManager {
         override fun onReceive(context: Context?, intent: Intent?) {
             val notificationId = intent?.extras?.getInt("notId")
             if (notificationId != null) {
-                PushManager.clearMessageStack(notificationId)
+                PushManager.clearMessageBundle(notificationId)
             }
         }
     }
 
-    // String extensions
-    fun String.fromHtml(): Spanned {
-        return Html.fromHtml(this)
+    // EXPERIMENTAL
+    class ReplyReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (context == null) {
+                return;
+            }
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val message: CharSequence? = extractMessage(intent)
+            val pushMessage = intent?.extras?.getSerializable("push") as PushMessage?
+
+            if (pushMessage != null) {
+                val singleNotId = pushMessage.notificationId.toInt()
+                val groupTuple = groupMap.get(pushMessage.host)
+                for (msg in messageStack[singleNotId]) {
+                    manager.cancel(singleNotId)
+                    groupTuple?.second?.decrementAndGet()
+                    println("Decremented")
+                }
+                clearMessageBundle(singleNotId)
+                if (groupTuple != null) {
+                    val groupNotId = groupTuple.first
+                    val totalNot = groupTuple.second.get()
+                    if (totalNot == 0) {
+                        manager.cancel(groupNotId)
+                    }
+                }
+                if (message != null) {
+                    sendMessage(context, message, pushMessage.rid)
+                }
+            }
+        }
+
+        private fun extractMessage(intent: Intent?): CharSequence? {
+            val remoteInput: Bundle? =
+                    RemoteInput.getResultsFromIntent(intent)
+            return remoteInput?.getCharSequence(REMOTE_INPUT_REPLY)
+        }
+
+        // Just kept for reference. We should use this on rewrite with job schedulers
+        private fun sendMessage(ctx: Context, message: CharSequence, roomId: String) {
+            val hostname = RocketChatCache(ctx).selectedServerHostname
+            val roomRepository = RealmRoomRepository(hostname)
+            val userRepository = RealmUserRepository(hostname)
+            val messageRepository = RealmMessageRepository(hostname)
+            val messageInteractor = MessageInteractor(messageRepository, roomRepository)
+
+            val singleRoom: Single<Room> = roomRepository.getById(roomId)
+                    .filter({ it.isPresent })
+                    .map({ it.get() })
+                    .firstElement()
+                    .toSingle()
+
+            val singleUser: Single<User> = userRepository.getCurrent()
+                    .filter({ it.isPresent })
+                    .map({ it.get() })
+                    .firstElement()
+                    .toSingle()
+
+            val roomUserTuple: Single<HostTotalMsgTuple<Room, User>> = Single.zip(
+                    singleRoom,
+                    singleUser,
+                    BiFunction { room, user -> HostTotalMsgTuple(room, user) })
+
+            roomUserTuple.flatMap { tuple -> messageInteractor.send(tuple.first, tuple.second, message as String) }
+                    .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            { success ->
+                                // Empty
+                            },
+                            { throwable ->
+                                Logger.report(throwable)
+                            })
+        }
     }
 }
