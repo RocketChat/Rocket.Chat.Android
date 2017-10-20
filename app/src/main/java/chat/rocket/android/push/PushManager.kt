@@ -441,24 +441,25 @@ object PushManager {
                 val message: CharSequence? = extractMessage(intent)
                 val pushMessage = intent?.extras?.getSerializable("push") as PushMessage?
 
-                if (pushMessage != null) {
-                    val singleNotId = pushMessage.notificationId.toInt()
+                pushMessage?.let {
+                    val userNotId = pushMessage.notificationId.toInt()
                     val groupTuple = groupMap.get(pushMessage.host)
-                    for (msg in messageStack[singleNotId]) {
-                        manager.cancel(singleNotId)
-                        groupTuple?.second?.decrementAndGet()
-                        println("Decremented")
-                    }
-                    clearMessageBundle(singleNotId)
-                    if (groupTuple != null) {
-                        val groupNotId = groupTuple.first
-                        val totalNot = groupTuple.second.get()
-                        if (totalNot == 0) {
-                            manager.cancel(groupNotId)
+                    messageStack[userNotId]?.let {
+                        for (msg in messageStack[userNotId]) {
+                            manager.cancel(userNotId)
+                            groupTuple?.second?.decrementAndGet()
                         }
-                    }
-                    if (message != null) {
-                        sendMessage(context, message, pushMessage.rid)
+                        clearMessageBundle(userNotId)
+                        groupTuple?.let {
+                            val groupNotId = groupTuple.first
+                            val totalNot = groupTuple.second.get()
+                            if (totalNot == 0) {
+                                manager.cancel(groupNotId)
+                            }
+                        }
+                        message?.let {
+                            sendMessage(context, message, pushMessage.rid)
+                        }
                     }
                 }
             }
