@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.collections.HashMap
 
 typealias TupleRoomUser = Pair<Room, User>
-typealias TupleIntAtomicInt = Pair<Int, AtomicInteger>
+typealias TupleGroupIdMessageCount = Pair<Int, AtomicInteger>
 
 object PushManager {
     const val REPLY_LABEL = "REPLY"
@@ -50,7 +50,7 @@ object PushManager {
     private val messageStack = SparseArray<ArrayList<CharSequence>>()
     // Notifications received from the same server are grouped in a single bundled notification.
     // This map associates a host to a group id.
-    private val groupMap = HashMap<String, TupleIntAtomicInt>()
+    private val groupMap = HashMap<String, TupleGroupIdMessageCount>()
     private val randomizer = Random()
 
     /**
@@ -98,14 +98,14 @@ object PushManager {
         val notification: Notification
         if (isAndroidVersionAtLeast(Build.VERSION_CODES.O)) {
             notification = createNotificationForOreoAndAbove(context, pushMessage)
-            if (groupTuple != null) {
+            groupTuple?.let {
                 notificationManager.notify(groupTuple.first, groupNotification)
                 groupTuple.second.incrementAndGet()
             }
             notificationManager.notify(notId, notification)
         } else {
             notification = createCompatNotification(context, pushMessage)
-            if (groupTuple != null) {
+            groupTuple?.let {
                 NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
                 groupTuple.second.incrementAndGet()
             }
@@ -117,8 +117,8 @@ object PushManager {
 
     private fun bundleNotificationsToHost(host: String) {
         val size = groupMap.size
-        if (groupMap.get(host) == null) {
-            groupMap.put(host, TupleIntAtomicInt(size + 1, AtomicInteger(0)))
+        groupMap.get(host)?.let {
+            groupMap.put(host, TupleGroupIdMessageCount(size + 1, AtomicInteger(0)))
         }
     }
 
@@ -154,8 +154,8 @@ object PushManager {
                     .setSummaryText(summary)
 
             notGroupBuilder.setStyle(inbox)
-        } else{
-           val bigText = NotificationCompat.BigTextStyle()
+        } else {
+            val bigText = NotificationCompat.BigTextStyle()
                     .bigText(pushMessage.message.fromHtml())
                     .setBigContentTitle(pushMessage.title.fromHtml())
 
@@ -308,7 +308,7 @@ object PushManager {
     }
 
     // CharSequence extensions
-    fun CharSequence.fromHtml(): Spanned {
+    private fun CharSequence.fromHtml(): Spanned {
         return Html.fromHtml(this as String)
     }
 
@@ -333,13 +333,14 @@ object PushManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun Notification.Builder.setMessageNotification(ctx: Context): Notification.Builder {
+    private fun Notification.Builder.setMessageNotification(ctx: Context): Notification.Builder {
         val res = ctx.resources
         val smallIcon = res.getIdentifier(
                 "rocket_chat_notification", "drawable", ctx.packageName)
         with(this, {
             setAutoCancel(true)
             setShowWhen(true)
+            setColor(res.getColor(R.color.colorRed400, ctx.theme))
             setDefaults(Notification.DEFAULT_ALL)
             setSmallIcon(smallIcon)
         })
@@ -366,7 +367,7 @@ object PushManager {
         return this
     }
 
-    fun NotificationCompat.Builder.setMessageNotification(): NotificationCompat.Builder {
+    private fun NotificationCompat.Builder.setMessageNotification(): NotificationCompat.Builder {
         val ctx = this.mContext
         val res = ctx.resources
         val smallIcon = res.getIdentifier(
@@ -374,6 +375,7 @@ object PushManager {
         with(this, {
             setAutoCancel(true)
             setShowWhen(true)
+            setColor(ctx.resources.getColor(R.color.colorRed400))
             setDefaults(Notification.DEFAULT_ALL)
             setSmallIcon(smallIcon)
         })
@@ -419,6 +421,9 @@ object PushManager {
         }
     }
 
+    /**
+     * BroadcastReceiver for dismissed notifications.
+     */
     class DeleteReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val notificationId = intent?.extras?.getInt("notId")
@@ -428,7 +433,11 @@ object PushManager {
         }
     }
 
-    // EXPERIMENTAL
+    /**
+     * *EXPERIMENTAL*
+     *
+     * BroadcastReceiver for notifications' replies.
+     */
     class ReplyReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
