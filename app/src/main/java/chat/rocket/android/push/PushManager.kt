@@ -92,13 +92,13 @@ object PushManager {
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val notId = pushMessage.notificationId.toInt()
-        val groupNotification = createGroupNotification(context, pushMessage)
 
         val groupTuple = groupMap[pushMessage.host]
         val notification: Notification
         if (isAndroidVersionAtLeast(Build.VERSION_CODES.O)) {
             notification = createNotificationForOreoAndAbove(context, pushMessage)
             groupTuple?.let {
+                val groupNotification = createOreoGroupNotification(context, pushMessage)
                 notificationManager.notify(groupTuple.first, groupNotification)
                 groupTuple.second.incrementAndGet()
             }
@@ -106,6 +106,7 @@ object PushManager {
         } else {
             notification = createCompatNotification(context, pushMessage)
             groupTuple?.let {
+                val groupNotification = createCompatGroupNotification(context, pushMessage)
                 NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
                 groupTuple.second.incrementAndGet()
             }
@@ -122,7 +123,7 @@ object PushManager {
         }
     }
 
-    private fun createGroupNotification(context: Context, pushMessage: PushMessage): Notification {
+    private fun createCompatGroupNotification(context: Context, pushMessage: PushMessage): Notification {
         // Create notification group.
         bundleNotificationsToHost(pushMessage.host)
         val id = pushMessage.notificationId.toInt()
@@ -156,6 +157,51 @@ object PushManager {
             notGroupBuilder.setStyle(inbox)
         } else {
             val bigText = NotificationCompat.BigTextStyle()
+                    .bigText(pushMessage.message.fromHtml())
+                    .setBigContentTitle(pushMessage.title.fromHtml())
+
+            notGroupBuilder.setStyle(bigText)
+        }
+
+        return notGroupBuilder.build()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createOreoGroupNotification(context: Context, pushMessage: PushMessage): Notification {
+        // Create notification group.
+        bundleNotificationsToHost(pushMessage.host)
+        val id = pushMessage.notificationId.toInt()
+        val contentIntent = getContentIntent(context, id, pushMessage, group = true)
+        val deleteIntent = getDismissIntent(context, id)
+        val notGroupBuilder = Notification.Builder(context, pushMessage.notificationId)
+                .setWhen(pushMessage.createdAt)
+                .setChannelId(pushMessage.notificationId)
+                .setContentTitle(pushMessage.title.fromHtml())
+                .setContentText(pushMessage.message.fromHtml())
+                .setGroup(pushMessage.host)
+                .setGroupSummary(true)
+                .setStyle(Notification.BigTextStyle().bigText(pushMessage.message.fromHtml()))
+                .setContentIntent(contentIntent)
+                .setDeleteIntent(deleteIntent)
+                .setMessageNotification(context)
+
+        val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
+        if (subText.isNotEmpty()) {
+            notGroupBuilder.setSubText(subText)
+        }
+
+        val messages = messageStack.get(pushMessage.notificationId.toInt())
+        val messageCount = messages.size
+
+        if (messageCount > 1) {
+            val summary = pushMessage.summaryText.replace("%n%", messageCount.toString())
+            val inbox = Notification.InboxStyle()
+                    .setBigContentTitle(pushMessage.title.fromHtml())
+                    .setSummaryText(summary)
+
+            notGroupBuilder.setStyle(inbox)
+        } else {
+            val bigText = Notification.BigTextStyle()
                     .bigText(pushMessage.message.fromHtml())
                     .setBigContentTitle(pushMessage.title.fromHtml())
 
@@ -219,7 +265,7 @@ object PushManager {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationForOreoAndAbove(context: Context, pushMessage: PushMessage): Notification {
-        val notificationManager: NotificationManager =
+        val manager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         with(pushMessage) {
@@ -228,8 +274,14 @@ object PushManager {
             val deleteIntent = getDismissIntent(context, id)
 
             val channel = NotificationChannel(notificationId, sender.username, NotificationManager.IMPORTANCE_HIGH)
-            val notificationBuilder = Notification.Builder(context, pushMessage.rid)
+            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            channel.enableLights(true)
+            channel.enableVibration(true)
+            channel.setShowBadge(true)
+            manager.createNotificationChannel(channel)
+            val notificationBuilder = Notification.Builder(context, notificationId)
                     .setWhen(createdAt)
+                    .setChannelId(notificationId)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
                     .setNumber(count.toInt())
@@ -246,7 +298,6 @@ object PushManager {
 
             channel.enableLights(true)
             channel.enableVibration(true)
-            notificationManager.createNotificationChannel(channel)
 
             if ("inbox" == style) {
                 val messages = messageStack.get(notificationId.toInt())

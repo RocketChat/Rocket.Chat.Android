@@ -36,7 +36,7 @@ public class GCMIntentService extends GcmListenerService implements PushConstant
 
     PushNotificationHandler pushNotificationHandler = new PushNotificationHandler();
 
-//    pushNotificationHandler.showNotificationIfPossible(applicationContext, extras);
+    pushNotificationHandler.showNotificationIfPossible(applicationContext, extras);
     PushManager.INSTANCE.handle(applicationContext, extras);
   }
 
