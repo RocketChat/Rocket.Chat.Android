@@ -33,6 +33,7 @@ import chat.rocket.persistence.realm.repositories.RealmUserRepository
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
+import okhttp3.HttpUrl
 import org.json.JSONObject
 import java.io.Serializable
 import java.util.*
@@ -215,16 +216,18 @@ object PushManager {
             val id = notificationId.toInt()
             val contentIntent = getContentIntent(context, id, lastPushMessage, singleConversation = true)
             val deleteIntent = getDismissIntent(context, lastPushMessage)
-            val channelGroup = NotificationChannel(host, host, NotificationManager.IMPORTANCE_DEFAULT)
-            manager.createNotificationChannel(channelGroup)
+            val groupChannel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
+            groupChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            groupChannel.enableLights(true)
+            groupChannel.enableVibration(true)
+            groupChannel.setShowBadge(true)
+            manager.createNotificationChannel(groupChannel)
             val builder = Notification.Builder(context, host)
                     .setWhen(createdAt)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
                     .setGroup(host)
                     .setGroupSummary(true)
-                    .setNumber(count.toInt())
-                    .setCategory(Notification.CATEGORY_MESSAGE)
                     .setContentIntent(contentIntent)
                     .setDeleteIntent(deleteIntent)
                     .setMessageNotification(context)
@@ -234,16 +237,40 @@ object PushManager {
                 builder.setSubText(subText)
             }
 
-            val messages = messageStack.get(notificationId.toInt())
-            val messageCount = messages.size
+            if (style == "inbox") {
+                val pushMessageList = hostToPushMessageList.get(host)
 
-            if (messageCount > 1) {
-                val summary = summaryText.replace("%n%", messageCount.toString())
-                val inbox = Notification.InboxStyle()
-                        .setBigContentTitle(title.fromHtml())
-                        .setSummaryText(summary)
+                pushMessageList?.let {
+                    val messageCount = pushMessageList.size
+                    val summary = summaryText.replace("%n%", messageCount.toString())
+                            .fromHtml()
+                    builder.setNumber(messageCount)
+                    if (messageCount > 1) {
+                        val firstPush = pushMessageList[0]
+                        val singleConversation = pushMessageList.filter {
+                            firstPush.sender.username != it.sender.username
+                        }.isEmpty()
 
-                builder.setStyle(inbox)
+                        val inbox = Notification.InboxStyle()
+                                .setBigContentTitle(if (singleConversation) title else summary)
+
+                        for (push in pushMessageList) {
+                            if (singleConversation) {
+                                inbox.addLine(push.message)
+                            } else {
+                                inbox.addLine("<font color='black'>${push.title}</font> <font color='gray'>${push.message}</font>".fromHtml())
+                            }
+                        }
+
+                        builder.setStyle(inbox)
+                    } else {
+                        val bigText = Notification.BigTextStyle()
+                                .bigText(pushMessageList[0].message.fromHtml())
+                                .setBigContentTitle(pushMessageList[0].title.fromHtml())
+
+                        builder.setStyle(bigText)
+                    }
+                }
             } else {
                 val bigText = Notification.BigTextStyle()
                         .bigText(message.fromHtml())
@@ -251,6 +278,24 @@ object PushManager {
 
                 builder.setStyle(bigText)
             }
+
+//            val messages = messageStack.get(notificationId.toInt())
+//            val messageCount = messages.size
+//
+//            if (messageCount > 1) {
+//                val summary = summaryText.replace("%n%", messageCount.toString())
+//                val inbox = Notification.InboxStyle()
+//                        .setBigContentTitle(title.fromHtml())
+//                        .setSummaryText(summary)
+//
+//                builder.setStyle(inbox)
+//            } else {
+//                val bigText = Notification.BigTextStyle()
+//                        .bigText(message.fromHtml())
+//                        .setBigContentTitle(title.fromHtml())
+//
+//                builder.setStyle(bigText)
+//            }
 
             return builder.build()
         }
@@ -305,7 +350,7 @@ object PushManager {
             val contentIntent = getContentIntent(context, id, lastPushMessage)
             val deleteIntent = getDismissIntent(context, lastPushMessage)
 
-            val channel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
             channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             channel.enableLights(true)
             channel.enableVibration(true)
@@ -551,7 +596,10 @@ object PushManager {
                             }
                         }
                         message?.let {
-                            sendMessage(context, message, pushMessage.rid)
+                            val httpUrl = HttpUrl.parse(pushMessage.host)
+                            httpUrl?.let {
+                                sendMessage(RocketChatCache(context).getSiteUrlFor(httpUrl.host()), message, pushMessage.rid)
+                            }
                         }
                     }
                 }
@@ -564,9 +612,15 @@ object PushManager {
             return remoteInput?.getCharSequence(REMOTE_INPUT_REPLY)
         }
 
+        private fun inspect(variable: String, value: CharSequence) {
+            println("$variable = ${value}")
+        }
+
         // Just kept for reference. We should use this on rewrite with job schedulers
-        private fun sendMessage(ctx: Context, message: CharSequence, roomId: String) {
-            val hostname = RocketChatCache(ctx).selectedServerHostname
+        private fun sendMessage(hostname: String, message: CharSequence, roomId: String) {
+            inspect("hostname", hostname)
+            inspect("message", message)
+            inspect("roomId", roomId)
             val roomRepository = RealmRoomRepository(hostname)
             val userRepository = RealmUserRepository(hostname)
             val messageRepository = RealmMessageRepository(hostname)
@@ -597,6 +651,7 @@ object PushManager {
                                 // Empty
                             },
                             { throwable ->
+                                throwable.printStackTrace()
                                 Logger.report(throwable)
                             })
         }
