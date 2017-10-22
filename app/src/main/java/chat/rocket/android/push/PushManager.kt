@@ -43,8 +43,12 @@ typealias TupleRoomUser = Pair<Room, User>
 typealias TupleGroupIdMessageCount = Pair<Int, AtomicInteger>
 
 object PushManager {
-    const val REPLY_LABEL = "REPLY"
-    const val REMOTE_INPUT_REPLY = "REMOTE_INPUT_REPLY"
+    const val EXTRA_NOT_ID = "chat.rocket.android.EXTRA_NOT_ID"
+    const val EXTRA_HOSTNAME = "chat.rocket.android.EXTRA_HOSTNAME"
+    const val EXTRA_PUSH_MESSAGE = "chat.rocket.android.EXTRA_PUSH_MESSAGE"
+    const val EXTRA_ROOM_ID = "chat.rocket.android.EXTRA_ROOM_ID"
+    private const val REPLY_LABEL = "REPLY"
+    private const val REMOTE_INPUT_REPLY = "REMOTE_INPUT_REPLY"
 
     // Map associating a notification id to a list of corresponding messages ie. an id corresponds
     // to a user and the corresponding list is all the messages sent by him.
@@ -367,18 +371,18 @@ object PushManager {
 
     private fun getDismissIntent(context: Context, pushMessage: PushMessage): PendingIntent {
         val deleteIntent = Intent(context, DeleteReceiver::class.java)
-        deleteIntent.putExtra("notId", pushMessage.notificationId.toInt())
-        deleteIntent.putExtra("host", pushMessage.host)
+        deleteIntent.putExtra(EXTRA_NOT_ID, pushMessage.notificationId.toInt())
+        deleteIntent.putExtra(EXTRA_HOSTNAME, pushMessage.host)
         return PendingIntent.getBroadcast(context, pushMessage.notificationId.toInt(), deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, singleConversation: Boolean = true): PendingIntent {
         val notificationIntent = Intent(context, MainActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        notificationIntent.putExtra(PushConstants.NOT_ID, notificationId)
-        notificationIntent.putExtra(PushConstants.HOSTNAME, pushMessage.host)
+        notificationIntent.putExtra(EXTRA_NOT_ID, notificationId)
+        notificationIntent.putExtra(EXTRA_HOSTNAME, pushMessage.host)
         if (singleConversation) {
-            notificationIntent.putExtra(PushConstants.ROOM_ID, pushMessage.rid)
+            notificationIntent.putExtra(EXTRA_ROOM_ID, pushMessage.rid)
         }
         return PendingIntent.getActivity(context, randomizer.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
@@ -429,7 +433,7 @@ object PushManager {
                 .setLabel(REPLY_LABEL)
                 .build()
         val replyIntent = Intent(context, ReplyReceiver::class.java)
-        replyIntent.putExtra("push", pushMessage as Serializable)
+        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Serializable)
         val pendingIntent = PendingIntent.getBroadcast(
                 context, randomizer.nextInt(), replyIntent, 0)
         val replyAction =
@@ -457,14 +461,15 @@ object PushManager {
         return this
     }
 
-    private data class PushMessage(val title: String,
-                                   val message: String,
-                                   val image: String?,
-                                   val ejson: String,
-                                   val count: String,
-                                   val notificationId: String,
-                                   val summaryText: String,
-                                   val style: String) : Serializable {
+    private data class PushMessage(
+           val title: String,
+           val message: String,
+           val image: String?,
+           val ejson: String,
+           val count: String,
+           val notificationId: String,
+           val summaryText: String,
+           val style: String) : Serializable {
         val host: String
         val rid: String
         val type: String
@@ -501,8 +506,8 @@ object PushManager {
      */
     class DeleteReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val notificationId = intent?.extras?.getInt("notId")
-            val host = intent?.extras?.getString("host")
+            val notificationId = intent?.extras?.getInt(EXTRA_NOT_ID)
+            val host = intent?.extras?.getString(EXTRA_HOSTNAME)
             notificationId?.let {
                 clearNotificationIdStack(notificationId)
             }
@@ -527,7 +532,7 @@ object PushManager {
             synchronized(this) {
                 val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 val message: CharSequence? = extractMessage(intent)
-                val pushMessage = intent?.extras?.getSerializable("push") as PushMessage?
+                val pushMessage = intent?.extras?.getSerializable(EXTRA_PUSH_MESSAGE) as PushMessage?
 
                 pushMessage?.let {
                     val userNotId = pushMessage.notificationId.toInt()

@@ -11,7 +11,6 @@ import java.util.List;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.Logger;
-import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.push.PushManager;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.core.models.ServerInfo;
@@ -57,16 +56,16 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       return;
     }
 
-    if (intent.hasExtra(PushConstants.HOSTNAME)) {
-      String hostname = intent.getStringExtra(PushConstants.HOSTNAME);
+    if (intent.hasExtra(PushManager.EXTRA_HOSTNAME)) {
+      String hostname = intent.getStringExtra(PushManager.EXTRA_HOSTNAME);
       HttpUrl url = HttpUrl.parse(hostname);
       if (url != null) {
         String hostnameFromPush = url.host();
         String loginHostname = rocketChatCache.getSiteUrlFor(hostnameFromPush);
         rocketChatCache.setSelectedServerHostname(loginHostname);
 
-        if (intent.hasExtra(PushConstants.ROOM_ID)) {
-          rocketChatCache.setSelectedRoomId(intent.getStringExtra(PushConstants.ROOM_ID));
+        if (intent.hasExtra(PushManager.EXTRA_ROOM_ID)) {
+          rocketChatCache.setSelectedRoomId(intent.getStringExtra(PushManager.EXTRA_ROOM_ID));
         }
       }
       PushManager.INSTANCE.clearHostNotifications(hostname);
@@ -74,9 +73,9 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
     }
 
-    if (intent.hasExtra(PushConstants.NOT_ID)) {
+    if (intent.hasExtra(PushManager.EXTRA_NOT_ID)) {
       isNotification = true;
-      int notificationId = intent.getIntExtra(PushConstants.NOT_ID, 0);
+      int notificationId = intent.getIntExtra(PushManager.EXTRA_NOT_ID, 0);
       PushManager.INSTANCE.clearNotificationIdStack(notificationId);
     }
   }
