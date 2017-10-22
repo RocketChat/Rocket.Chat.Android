@@ -19,4 +19,4 @@ git clone https://github.com/RocketChat/Rocket.Chat.Android
 
 ### Code style guide
 
-Before submitting a PR you should follow our [Coding Style](https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/CODING_STYLE.md).
+Before submitting a PR you should follow our [Coding Style](https://github.com/RocketChat/java-code-styles/blob/master/CODING_STYLE.md).
