@@ -45,12 +45,17 @@ typealias TupleGroupIdMessageCount = Pair<Int, AtomicInteger>
 object PushManager {
     const val REPLY_LABEL = "REPLY"
     const val REMOTE_INPUT_REPLY = "REMOTE_INPUT_REPLY"
+
     // Map associating a notification id to a list of corresponding messages ie. an id corresponds
     // to a user and the corresponding list is all the messages sent by him.
-    private val messageStack = SparseArray<ArrayList<CharSequence>>()
+    private val messageStack = SparseArray<MutableList<CharSequence>>()
+
     // Notifications received from the same server are grouped in a single bundled notification.
     // This map associates a host to a group id.
     private val groupMap = HashMap<String, TupleGroupIdMessageCount>()
+
+    // Map a hostname to a list of push messages that pertain to it.
+    private val hostToPushMessageList = HashMap<String, MutableList<PushMessage>>()
     private val randomizer = Random()
 
     /**
@@ -68,236 +73,255 @@ object PushManager {
         val summaryText = data["summaryText"] as String
         val count = data["count"] as String
         val title = data["title"] as String
-        val pushMessage = PushMessage(title, message, image, ejson, count, notId, summaryText, style)
+        val lastPushMessage = PushMessage(title, message, image, ejson, count, notId, summaryText, style)
 
         // We should use Timber here
         if (BuildConfig.DEBUG) {
-            Log.d(PushMessage::class.java.simpleName, pushMessage.toString())
+            Log.d(PushMessage::class.java.simpleName, lastPushMessage.toString())
         }
 
-        bundleMessage(notId.toInt(), pushMessage.message)
+        bundleMessage(notId.toInt(), lastPushMessage.message)
 
-        showNotification(appContext, pushMessage)
+        showNotification(appContext, lastPushMessage)
     }
 
     /**
      * Clear all messages corresponding to a specific notification id (aka specific user)
      */
-    fun clearMessageBundle(notificationId: Int) {
+    fun clearNotificationIdStack(notificationId: Int) {
         messageStack.delete(notificationId)
     }
 
-    private fun showNotification(context: Context, pushMessage: PushMessage) {
-        val notificationManager: NotificationManager =
+    fun clearHostNotifications(host: String) {
+        hostToPushMessageList.remove(host)
+    }
+
+    private fun showNotification(context: Context, lastPushMessage: PushMessage) {
+        val manager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val notId = pushMessage.notificationId.toInt()
+        val notId = lastPushMessage.notificationId.toInt()
+        val host = lastPushMessage.host
+        val groupTuple = getGroupForHost(host)
 
-        val groupTuple = groupMap[pushMessage.host]
-        val notification: Notification
+        groupTuple.second.incrementAndGet()
         if (isAndroidVersionAtLeast(Build.VERSION_CODES.O)) {
-            notification = createNotificationForOreoAndAbove(context, pushMessage)
-            groupTuple?.let {
-                val groupNotification = createOreoGroupNotification(context, pushMessage)
-                notificationManager.notify(groupTuple.first, groupNotification)
-                groupTuple.second.incrementAndGet()
-            }
-            notificationManager.notify(notId, notification)
+            val notification = createSingleNotificationForOreo(context, lastPushMessage)
+            val groupNotification = createGroupNotificationForOreo(context, lastPushMessage)
+            manager.notify(notId, notification)
+            manager.notify(groupTuple.first, groupNotification)
         } else {
-            notification = createCompatNotification(context, pushMessage)
-            groupTuple?.let {
-                val groupNotification = createCompatGroupNotification(context, pushMessage)
-                NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
-                groupTuple.second.incrementAndGet()
+            val notIdListForHostname: MutableList<PushMessage>? = hostToPushMessageList.get(host)
+            if (notIdListForHostname == null) {
+                hostToPushMessageList.put(host, arrayListOf(lastPushMessage))
+            } else {
+                notIdListForHostname.add(lastPushMessage)
             }
+
+            val notification = createSingleNotification(context, lastPushMessage)
+            val groupNotification = createGroupNotification(context, lastPushMessage)
             NotificationManagerCompat.from(context).notify(notId, notification)
+            NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
         }
     }
 
     private fun isAndroidVersionAtLeast(minVersion: Int) = Build.VERSION.SDK_INT >= minVersion
 
-    private fun bundleNotificationsToHost(host: String) {
+    private fun getGroupForHost(host: String): TupleGroupIdMessageCount {
         val size = groupMap.size
-        groupMap.get(host)?.let {
-            groupMap.put(host, TupleGroupIdMessageCount(size + 1, AtomicInteger(0)))
+        var group = groupMap.get(host)
+        if (group == null) {
+            group = TupleGroupIdMessageCount(size + 1, AtomicInteger(0))
+            groupMap.put(host, group)
         }
+        return group
     }
 
-    private fun createCompatGroupNotification(context: Context, pushMessage: PushMessage): Notification {
-        // Create notification group.
-        bundleNotificationsToHost(pushMessage.host)
-        val id = pushMessage.notificationId.toInt()
-        val contentIntent = getContentIntent(context, id, pushMessage, group = true)
-        val deleteIntent = getDismissIntent(context, id)
-        val notGroupBuilder = NotificationCompat.Builder(context)
-                .setWhen(pushMessage.createdAt)
-                .setContentTitle(pushMessage.title.fromHtml())
-                .setContentText(pushMessage.message.fromHtml())
-                .setGroup(pushMessage.host)
-                .setGroupSummary(true)
-                .setStyle(NotificationCompat.BigTextStyle().bigText(pushMessage.message.fromHtml()))
-                .setContentIntent(contentIntent)
-                .setDeleteIntent(deleteIntent)
-                .setMessageNotification()
-
-        val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
-        if (subText.isNotEmpty()) {
-            notGroupBuilder.setSubText(subText)
-        }
-
-        val messages = messageStack.get(pushMessage.notificationId.toInt())
-        val messageCount = messages.size
-
-        if (messageCount > 1) {
-            val summary = pushMessage.summaryText.replace("%n%", messageCount.toString())
-            val inbox = NotificationCompat.InboxStyle()
-                    .setBigContentTitle(pushMessage.title.fromHtml())
-                    .setSummaryText(summary)
-
-            notGroupBuilder.setStyle(inbox)
-        } else {
-            val bigText = NotificationCompat.BigTextStyle()
-                    .bigText(pushMessage.message.fromHtml())
-                    .setBigContentTitle(pushMessage.title.fromHtml())
-
-            notGroupBuilder.setStyle(bigText)
-        }
-
-        return notGroupBuilder.build()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createOreoGroupNotification(context: Context, pushMessage: PushMessage): Notification {
-        // Create notification group.
-        bundleNotificationsToHost(pushMessage.host)
-        val id = pushMessage.notificationId.toInt()
-        val contentIntent = getContentIntent(context, id, pushMessage, group = true)
-        val deleteIntent = getDismissIntent(context, id)
-        val notGroupBuilder = Notification.Builder(context, pushMessage.notificationId)
-                .setWhen(pushMessage.createdAt)
-                .setChannelId(pushMessage.notificationId)
-                .setContentTitle(pushMessage.title.fromHtml())
-                .setContentText(pushMessage.message.fromHtml())
-                .setGroup(pushMessage.host)
-                .setGroupSummary(true)
-                .setStyle(Notification.BigTextStyle().bigText(pushMessage.message.fromHtml()))
-                .setContentIntent(contentIntent)
-                .setDeleteIntent(deleteIntent)
-                .setMessageNotification(context)
-
-        val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
-        if (subText.isNotEmpty()) {
-            notGroupBuilder.setSubText(subText)
-        }
-
-        val messages = messageStack.get(pushMessage.notificationId.toInt())
-        val messageCount = messages.size
-
-        if (messageCount > 1) {
-            val summary = pushMessage.summaryText.replace("%n%", messageCount.toString())
-            val inbox = Notification.InboxStyle()
-                    .setBigContentTitle(pushMessage.title.fromHtml())
-                    .setSummaryText(summary)
-
-            notGroupBuilder.setStyle(inbox)
-        } else {
-            val bigText = Notification.BigTextStyle()
-                    .bigText(pushMessage.message.fromHtml())
-                    .setBigContentTitle(pushMessage.title.fromHtml())
-
-            notGroupBuilder.setStyle(bigText)
-        }
-
-        return notGroupBuilder.build()
-    }
-
-    private fun createCompatNotification(context: Context, pushMessage: PushMessage): Notification {
-        with(pushMessage) {
-            val id = notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, pushMessage)
-            val deleteIntent = getDismissIntent(context, id)
-
-            val notificationBuilder = NotificationCompat.Builder(context)
+    private fun createGroupNotification(context: Context, lastPushMessage: PushMessage): Notification {
+        with(lastPushMessage) {
+            val id = lastPushMessage.notificationId.toInt()
+            val contentIntent = getContentIntent(context, id, lastPushMessage, singleConversation = true)
+            val deleteIntent = getDismissIntent(context, lastPushMessage)
+            val builder = NotificationCompat.Builder(context)
                     .setWhen(createdAt)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
+                    .setGroup(host)
+                    .setGroupSummary(true)
+                    .setContentIntent(contentIntent)
+                    .setDeleteIntent(deleteIntent)
+                    .setMessageNotification()
+
+            val subText = RocketChatCache(context).getHostSiteName(host)
+            if (subText.isNotEmpty()) {
+                builder.setSubText(subText)
+            }
+
+            if (style == "inbox") {
+                val pushMessageList = hostToPushMessageList.get(host)
+
+                pushMessageList?.let {
+                    val messageCount = pushMessageList.size
+                    val summary = summaryText.replace("%n%", messageCount.toString())
+                            .fromHtml()
+                    builder.setNumber(messageCount)
+                    if (messageCount > 1) {
+                        val firstPush = pushMessageList[0]
+                        val singleConversation = pushMessageList.filter {
+                            firstPush.sender.username != it.sender.username
+                        }.isEmpty()
+
+                        val inbox = NotificationCompat.InboxStyle()
+                                .setBigContentTitle(if (singleConversation) title else summary)
+
+                        for (push in pushMessageList) {
+                            if (singleConversation) {
+                                inbox.addLine(push.message)
+                            } else {
+                                inbox.addLine("<font color='black'>${push.title}</font> <font color='gray'>${push.message}</font>".fromHtml())
+                            }
+                        }
+
+                        builder.setStyle(inbox)
+                    } else {
+                        val bigText = NotificationCompat.BigTextStyle()
+                                .bigText(pushMessageList[0].message.fromHtml())
+                                .setBigContentTitle(pushMessageList[0].title.fromHtml())
+
+                        builder.setStyle(bigText)
+                    }
+                }
+            } else {
+                val bigText = NotificationCompat.BigTextStyle()
+                        .bigText(message.fromHtml())
+                        .setBigContentTitle(title.fromHtml())
+
+                builder.setStyle(bigText)
+            }
+
+            return builder.build()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createGroupNotificationForOreo(context: Context, lastPushMessage: PushMessage): Notification {
+        with(lastPushMessage) {
+            val manager: NotificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val id = notificationId.toInt()
+            val contentIntent = getContentIntent(context, id, lastPushMessage, singleConversation = true)
+            val deleteIntent = getDismissIntent(context, lastPushMessage)
+            val channelGroup = NotificationChannel(host, host, NotificationManager.IMPORTANCE_DEFAULT)
+            manager.createNotificationChannel(channelGroup)
+            val builder = Notification.Builder(context, host)
+                    .setWhen(createdAt)
+                    .setContentTitle(title.fromHtml())
+                    .setContentText(message.fromHtml())
+                    .setGroup(host)
+                    .setGroupSummary(true)
                     .setNumber(count.toInt())
+                    .setCategory(Notification.CATEGORY_MESSAGE)
+                    .setContentIntent(contentIntent)
+                    .setDeleteIntent(deleteIntent)
+                    .setMessageNotification(context)
+
+            val subText = RocketChatCache(context).getHostSiteName(host)
+            if (subText.isNotEmpty()) {
+                builder.setSubText(subText)
+            }
+
+            val messages = messageStack.get(notificationId.toInt())
+            val messageCount = messages.size
+
+            if (messageCount > 1) {
+                val summary = summaryText.replace("%n%", messageCount.toString())
+                val inbox = Notification.InboxStyle()
+                        .setBigContentTitle(title.fromHtml())
+                        .setSummaryText(summary)
+
+                builder.setStyle(inbox)
+            } else {
+                val bigText = Notification.BigTextStyle()
+                        .bigText(message.fromHtml())
+                        .setBigContentTitle(title.fromHtml())
+
+                builder.setStyle(bigText)
+            }
+
+            return builder.build()
+        }
+    }
+
+    private fun createSingleNotification(context: Context, lastPushMessage: PushMessage): Notification {
+        with(lastPushMessage) {
+            val id = notificationId.toInt()
+            val contentIntent = getContentIntent(context, id, lastPushMessage)
+            val deleteIntent = getDismissIntent(context, lastPushMessage)
+
+            val builder = NotificationCompat.Builder(context)
+                    .setWhen(createdAt)
+                    .setContentTitle(title.fromHtml())
+                    .setContentText(message.fromHtml())
+                    .setGroupSummary(false)
                     .setGroup(host)
                     .setDeleteIntent(deleteIntent)
                     .setContentIntent(contentIntent)
                     .setMessageNotification()
-                    .addReplyAction(pushMessage)
+                    .addReplyAction(lastPushMessage)
 
-            val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
+            val subText = RocketChatCache(context).getHostSiteName(lastPushMessage.host)
             if (subText.isNotEmpty()) {
-                notificationBuilder.setSubText(subText)
+                builder.setSubText(subText)
             }
 
-            if ("inbox" == style) {
-                val messages = messageStack.get(notificationId.toInt())
-                val messageCount = messages.size
-                if (messageCount > 1) {
-                    val summary = summaryText.replace("%n%", messageCount.toString())
-                            .fromHtml()
-                    val inbox = NotificationCompat.InboxStyle()
-                            .setBigContentTitle(title.fromHtml())
-                            .setSummaryText(summary)
+            val pushMessageList = hostToPushMessageList.get(host)
 
-                    messages.forEach { msg ->
-                        inbox.addLine(msg.fromHtml())
-                    }
-
-                    notificationBuilder.setStyle(inbox)
-                } else {
+            pushMessageList?.let {
+                if (pushMessageList.isNotEmpty()) {
+                    val messageCount = pushMessageList.size
                     val bigText = NotificationCompat.BigTextStyle()
-                            .bigText(message.fromHtml())
-                            .setBigContentTitle(title.fromHtml())
+                            .bigText(pushMessageList.last().message.fromHtml())
+                            .setBigContentTitle(pushMessageList.last().title.fromHtml())
 
-                    notificationBuilder.setStyle(bigText)
+                    builder.setStyle(bigText).setNumber(messageCount)
                 }
-            } else {
-                notificationBuilder.setContentText(message.fromHtml())
             }
 
-            return notificationBuilder.build()
+            return builder.build()
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationForOreoAndAbove(context: Context, pushMessage: PushMessage): Notification {
+    private fun createSingleNotificationForOreo(context: Context, lastPushMessage: PushMessage): Notification {
         val manager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        with(pushMessage) {
+        with(lastPushMessage) {
             val id = notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, pushMessage)
-            val deleteIntent = getDismissIntent(context, id)
+            val contentIntent = getContentIntent(context, id, lastPushMessage)
+            val deleteIntent = getDismissIntent(context, lastPushMessage)
 
-            val channel = NotificationChannel(notificationId, sender.username, NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_DEFAULT)
             channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             channel.enableLights(true)
             channel.enableVibration(true)
             channel.setShowBadge(true)
             manager.createNotificationChannel(channel)
-            val notificationBuilder = Notification.Builder(context, notificationId)
+            val builder = Notification.Builder(context, host)
                     .setWhen(createdAt)
-                    .setChannelId(notificationId)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
-                    .setNumber(count.toInt())
                     .setGroup(host)
+                    .setGroupSummary(false)
                     .setDeleteIntent(deleteIntent)
                     .setContentIntent(contentIntent)
                     .setMessageNotification(context)
-                    .addReplyAction(context, pushMessage)
+                    .addReplyAction(context, lastPushMessage)
 
-            val subText = RocketChatCache(context).getHostSiteName(pushMessage.host)
+            val subText = RocketChatCache(context).getHostSiteName(lastPushMessage.host)
             if (subText.isNotEmpty()) {
-                notificationBuilder.setSubText(subText)
+                builder.setSubText(subText)
             }
-
-            channel.enableLights(true)
-            channel.enableVibration(true)
 
             if ("inbox" == style) {
                 val messages = messageStack.get(notificationId.toInt())
@@ -313,24 +337,24 @@ object PushManager {
                         inbox.addLine(msg.fromHtml())
                     }
 
-                    notificationBuilder.setStyle(inbox)
+                    builder.setStyle(inbox)
                 } else {
                     val bigText = Notification.BigTextStyle()
                             .bigText(message.fromHtml())
                             .setBigContentTitle(title.fromHtml())
 
-                    notificationBuilder.setStyle(bigText)
+                    builder.setStyle(bigText)
                 }
             } else {
-                notificationBuilder.setContentText(message.fromHtml())
+                builder.setContentText(message.fromHtml())
             }
 
-            return notificationBuilder.build()
+            return builder.build()
         }
     }
 
     private fun bundleMessage(id: Int, message: CharSequence) {
-        val existingStack: ArrayList<CharSequence>? = messageStack[id]
+        val existingStack: MutableList<CharSequence>? = messageStack[id]
 
         if (existingStack == null) {
             val newStack = arrayListOf<CharSequence>()
@@ -341,18 +365,19 @@ object PushManager {
         }
     }
 
-    private fun getDismissIntent(context: Context, notificationId: Int): PendingIntent {
+    private fun getDismissIntent(context: Context, pushMessage: PushMessage): PendingIntent {
         val deleteIntent = Intent(context, DeleteReceiver::class.java)
-        deleteIntent.putExtra("notId", notificationId)
-        return PendingIntent.getBroadcast(context, notificationId, deleteIntent, 0)
+        deleteIntent.putExtra("notId", pushMessage.notificationId.toInt())
+        deleteIntent.putExtra("host", pushMessage.host)
+        return PendingIntent.getBroadcast(context, pushMessage.notificationId.toInt(), deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, group: Boolean = false): PendingIntent {
+    private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, singleConversation: Boolean = true): PendingIntent {
         val notificationIntent = Intent(context, MainActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         notificationIntent.putExtra(PushConstants.NOT_ID, notificationId)
         notificationIntent.putExtra(PushConstants.HOSTNAME, pushMessage.host)
-        if (!group) {
+        if (singleConversation) {
             notificationIntent.putExtra(PushConstants.ROOM_ID, pushMessage.rid)
         }
         return PendingIntent.getActivity(context, randomizer.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -392,7 +417,6 @@ object PushManager {
             setAutoCancel(true)
             setShowWhen(true)
             setColor(res.getColor(R.color.colorRed400, ctx.theme))
-            setDefaults(Notification.DEFAULT_ALL)
             setSmallIcon(smallIcon)
         })
         return this
@@ -478,8 +502,12 @@ object PushManager {
     class DeleteReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val notificationId = intent?.extras?.getInt("notId")
-            if (notificationId != null) {
-                PushManager.clearMessageBundle(notificationId)
+            val host = intent?.extras?.getString("host")
+            notificationId?.let {
+                clearNotificationIdStack(notificationId)
+            }
+            host?.let {
+                clearHostNotifications(host)
             }
         }
     }
@@ -487,7 +515,7 @@ object PushManager {
     /**
      * *EXPERIMENTAL*
      *
-     * BroadcastReceiver for notifications' replies.
+     * BroadcastReceiver for notifications' replies using Direct Reply feature (Android >= 7).
      */
     class ReplyReceiver : BroadcastReceiver() {
 
@@ -509,7 +537,7 @@ object PushManager {
                             manager.cancel(userNotId)
                             groupTuple?.second?.decrementAndGet()
                         }
-                        clearMessageBundle(userNotId)
+                        clearNotificationIdStack(userNotId)
                         groupTuple?.let {
                             val groupNotId = groupTuple.first
                             val totalNot = groupTuple.second.get()

@@ -1,21 +1,22 @@
 package chat.rocket.android.push.gcm;
 
-import com.google.android.gms.gcm.GcmListenerService;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.google.android.gms.gcm.GcmListenerService;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import chat.rocket.android.push.PushConstants;
 import chat.rocket.android.push.PushManager;
-import chat.rocket.android.push.PushNotificationHandler;
 
 @SuppressLint("NewApi")
 public class GCMIntentService extends GcmListenerService implements PushConstants {
@@ -34,9 +35,6 @@ public class GCMIntentService extends GcmListenerService implements PushConstant
 
     extras = normalizeExtras(applicationContext, extras);
 
-    PushNotificationHandler pushNotificationHandler = new PushNotificationHandler();
-
-    pushNotificationHandler.showNotificationIfPossible(applicationContext, extras);
     PushManager.INSTANCE.handle(applicationContext, extras);
   }
 
