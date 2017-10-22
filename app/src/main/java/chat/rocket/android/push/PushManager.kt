@@ -399,7 +399,7 @@ object PushManager {
                 .setLabel(REPLY_LABEL)
                 .build()
         val replyIntent = Intent(ctx, ReplyReceiver::class.java)
-        replyIntent.putExtra("push", pushMessage as Serializable)
+        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Serializable)
         val pendingIntent = PendingIntent.getBroadcast(
                 ctx, randomizer.nextInt(), replyIntent, 0)
         val replyAction =
