@@ -68,7 +68,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
           rocketChatCache.setSelectedRoomId(intent.getStringExtra(PushManager.EXTRA_ROOM_ID));
         }
       }
-      PushManager.INSTANCE.clearHostNotifications(hostname);
+      PushManager.INSTANCE.clearNotificationsByHost(hostname);
     } else {
       updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
     }
@@ -76,7 +76,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     if (intent.hasExtra(PushManager.EXTRA_NOT_ID)) {
       isNotification = true;
       int notificationId = intent.getIntExtra(PushManager.EXTRA_NOT_ID, 0);
-      PushManager.INSTANCE.clearNotificationIdStack(notificationId);
+      PushManager.INSTANCE.clearNotificationsByNotificationId(notificationId);
     }
   }
 
