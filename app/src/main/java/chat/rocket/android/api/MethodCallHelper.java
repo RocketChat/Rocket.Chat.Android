@@ -394,6 +394,17 @@ public class MethodCallHelper {
     }
   }
 
+  public Task<Void> deleteMessage(String messageID) {
+    try {
+      JSONObject messageJson = new JSONObject()
+              .put("_id", messageID);
+
+      return deleteMessage(messageJson);
+    } catch(JSONException exception) {
+      return Task.forError(exception);
+    }
+  }
+
   /**
    * Send message object.
    */
@@ -405,6 +416,11 @@ public class MethodCallHelper {
   private Task<Void> updateMessage(final JSONObject messageJson) {
     return call("updateMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
         .onSuccessTask(task -> Task.forResult(null));
+  }
+
+  private Task<Void> deleteMessage(final JSONObject messageJson) {
+    return call("deleteMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
+            .onSuccessTask(task -> Task.forResult(null));
   }
 
   /**
