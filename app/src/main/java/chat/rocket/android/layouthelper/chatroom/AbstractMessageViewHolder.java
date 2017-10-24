@@ -44,7 +44,8 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    * bind the view model.
    */
   public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
-    if (pairedMessage.target.getSyncState() == SyncState.FAILED) {
+    if (pairedMessage.target.getSyncState() == SyncState.FAILED ||
+        pairedMessage.target.getSyncState() == SyncState.DELETE_FAILED) {
       errorImageView.setVisibility(View.VISIBLE);
     } else {
       errorImageView.setVisibility(View.GONE);
