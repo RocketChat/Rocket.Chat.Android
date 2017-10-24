@@ -93,12 +93,9 @@ object PushManager {
     fun clearNotificationsByNotificationId(notificationId: Int) {
         if (hostToPushMessageList.isNotEmpty()) {
             for (entry in hostToPushMessageList.entries) {
-                println("state: ${entry.value.size} -> ${entry.value}")
-                println("Removing from ${entry.key}")
                 entry.value.removeAll {
                     it.notificationId.toInt() == notificationId
                 }
-                println("state: ${entry.value.size} -> ${entry.value}")
             }
         }
     }
@@ -356,7 +353,8 @@ object PushManager {
                     val inbox = Notification.InboxStyle()
 
                     val userMessages = pushMessageList.filter {
-                        it.notificationId == lastPushMessage.notificationId }
+                        it.notificationId == lastPushMessage.notificationId
+                    }
 
                     val count = pushMessageList.filter {
                         it.title == title
@@ -476,14 +474,14 @@ object PushManager {
     }
 
     private data class PushMessage(
-           val title: String,
-           val message: String,
-           val image: String?,
-           val ejson: String,
-           val count: String,
-           val notificationId: String,
-           val summaryText: String,
-           val style: String) : Serializable {
+            val title: String,
+            val message: String,
+            val image: String?,
+            val ejson: String,
+            val count: String,
+            val notificationId: String,
+            val summaryText: String,
+            val style: String) : Serializable {
         val host: String
         val rid: String
         val type: String
@@ -581,15 +579,8 @@ object PushManager {
             return remoteInput?.getCharSequence(REMOTE_INPUT_REPLY)
         }
 
-        private fun inspect(variable: String, value: CharSequence) {
-            println("$variable = ${value}")
-        }
-
         // Just kept for reference. We should use this on rewrite with job schedulers
         private fun sendMessage(hostname: String, message: CharSequence, roomId: String) {
-            inspect("hostname", hostname)
-            inspect("message", message)
-            inspect("roomId", roomId)
             val roomRepository = RealmRoomRepository(hostname)
             val userRepository = RealmUserRepository(hostname)
             val messageRepository = RealmMessageRepository(hostname)
@@ -616,11 +607,11 @@ object PushManager {
                     .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ success ->
-                                // Empty
-                            }, { throwable ->
-                                throwable.printStackTrace()
-                                Logger.report(throwable)
-                            })
+                        // Empty
+                    }, { throwable ->
+                        throwable.printStackTrace()
+                        Logger.report(throwable)
+                    })
         }
     }
 }
