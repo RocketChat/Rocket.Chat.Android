@@ -348,8 +348,8 @@ object PushManager {
                     val userMessages = pushMessageList.filter {
                         it.notificationId == lastPushMessage.notificationId }
 
-                    builder.setContentTitle(getTitle(userMessages.size, title))
-                    inbox.setBigContentTitle(getTitle(userMessages.size, title))
+                    builder.setContentTitle(getTitle(messageCount, title))
+                    inbox.setBigContentTitle(getTitle(messageCount, title))
 
                     for (push in userMessages) {
                         inbox.addLine(push.message)
@@ -601,11 +601,9 @@ object PushManager {
             roomUserTuple.flatMap { tuple -> messageInteractor.send(tuple.first, tuple.second, message as String) }
                     .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            { success ->
+                    .subscribe({ success ->
                                 // Empty
-                            },
-                            { throwable ->
+                            }, { throwable ->
                                 throwable.printStackTrace()
                                 Logger.report(throwable)
                             })

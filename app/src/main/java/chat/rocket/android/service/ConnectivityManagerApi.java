@@ -1,5 +1,6 @@
 package chat.rocket.android.service;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface ConnectivityManagerApi {
   List<ServerInfo> getServerList();
 
   Observable<ServerConnectivity> getServerConnectivityAsObservable();
+
+  int getConnectivityState(@NonNull String hostname);
 }

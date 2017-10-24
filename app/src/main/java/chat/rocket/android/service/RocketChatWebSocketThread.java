@@ -209,6 +209,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
             if (task.isFaulted()) {
               Exception error = task.getError();
               RCLog.e(error);
+              connectivityManager.notifyConnectionLost(
+                      hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR);
               emitter.onError(error);
             } else {
               keepAliveTimer.update();

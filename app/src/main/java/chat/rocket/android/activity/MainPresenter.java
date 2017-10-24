@@ -225,6 +225,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                     connectivity -> {
                       if (connectivity.state == ServerConnectivity.STATE_CONNECTED) {
                         view.showConnectionOk();
+                        view.refreshRoom();
                         return;
                       }
                       view.showConnecting();

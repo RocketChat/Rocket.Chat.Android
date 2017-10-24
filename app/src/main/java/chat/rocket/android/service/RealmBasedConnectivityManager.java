@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -146,6 +147,11 @@ import rx.subjects.PublishSubject;
   @Override
   public Observable<ServerConnectivity> getServerConnectivityAsObservable() {
     return Observable.concat(Observable.from(getCurrentConnectivityList()), connectivitySubject);
+  }
+
+  @Override
+  public int getConnectivityState(@NonNull String hostname) {
+    return serverConnectivityList.get(hostname);
   }
 
   @DebugLog
