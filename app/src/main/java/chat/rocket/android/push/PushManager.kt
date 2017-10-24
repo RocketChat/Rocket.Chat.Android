@@ -100,6 +100,17 @@ object PushManager {
         }
     }
 
+    fun clearNotificationsByHostAndNotificationId(host: String, notificationId: Int) {
+        if (hostToPushMessageList.isNotEmpty()) {
+            val notifications = hostToPushMessageList[host]
+            notifications?.let {
+                notifications.removeAll {
+                    it.notificationId.toInt() == notificationId
+                }
+            }
+        }
+    }
+
     private fun isAndroidVersionAtLeast(minVersion: Int) = Build.VERSION.SDK_INT >= minVersion
 
     private fun getGroupForHost(host: String): TupleGroupIdMessageCount {
@@ -519,8 +530,9 @@ object PushManager {
     class DeleteReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val notId = intent?.extras?.getInt(EXTRA_NOT_ID)
-            notId?.let {
-                clearNotificationsByNotificationId(notId)
+            val host = intent?.extras?.getString(EXTRA_HOSTNAME)
+            if (host != null && notId != null) {
+                clearNotificationsByHostAndNotificationId(host, notId)
             }
         }
     }

@@ -73,10 +73,19 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
     }
 
-    if (intent.hasExtra(PushManager.EXTRA_NOT_ID)) {
+    if (intent.hasExtra(PushManager.EXTRA_NOT_ID) && intent.hasExtra(PushManager.EXTRA_HOSTNAME)) {
       isNotification = true;
       int notificationId = intent.getIntExtra(PushManager.EXTRA_NOT_ID, 0);
-      PushManager.INSTANCE.clearNotificationsByNotificationId(notificationId);
+      String hostname = intent.getStringExtra(PushManager.EXTRA_HOSTNAME);
+      HttpUrl url = HttpUrl.parse(hostname);
+      if (url != null) {
+        String hostnameFromPush = url.host();
+        String loginHostname = rocketChatCache.getSiteUrlFor(hostnameFromPush);
+        PushManager.INSTANCE.clearNotificationsByHostAndNotificationId(loginHostname, notificationId);
+      } else {
+        PushManager.INSTANCE.clearNotificationsByNotificationId(notificationId);
+      }
+
     }
   }
 
