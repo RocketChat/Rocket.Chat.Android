@@ -5,6 +5,7 @@ import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
 
+import chat.rocket.core.SyncState;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -145,6 +146,8 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
           }
 
           return RxJavaInterop.toV2Flowable(pair.first.where(RealmMessage.class)
+                  .notEqualTo(RealmMessage.SYNC_STATE, SyncState.DELETE_NOT_SYNCED)
+                  .notEqualTo(RealmMessage.SYNC_STATE, SyncState.DELETING)
                   .equalTo(RealmMessage.ROOM_ID, room.getRoomId())
                   .isNotNull(RealmMessage.USER)
                   .findAllSorted(RealmMessage.TIMESTAMP, Sort.DESCENDING)
