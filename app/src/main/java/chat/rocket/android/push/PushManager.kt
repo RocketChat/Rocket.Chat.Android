@@ -383,16 +383,16 @@ object PushManager {
 
     private fun getDismissIntent(context: Context, pushMessage: PushMessage): PendingIntent {
         val deleteIntent = Intent(context, DeleteReceiver::class.java)
-        deleteIntent.putExtra(EXTRA_NOT_ID, pushMessage.notificationId.toInt())
-        deleteIntent.putExtra(EXTRA_HOSTNAME, pushMessage.host)
+                .putExtra(EXTRA_NOT_ID, pushMessage.notificationId.toInt())
+                .putExtra(EXTRA_HOSTNAME, pushMessage.host)
         return PendingIntent.getBroadcast(context, pushMessage.notificationId.toInt(), deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, grouped: Boolean = false): PendingIntent {
         val notificationIntent = Intent(context, MainActivity::class.java)
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        notificationIntent.putExtra(EXTRA_NOT_ID, notificationId)
-        notificationIntent.putExtra(EXTRA_HOSTNAME, pushMessage.host)
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra(EXTRA_NOT_ID, notificationId)
+                .putExtra(EXTRA_HOSTNAME, pushMessage.host)
         if (!grouped) {
             notificationIntent.putExtra(EXTRA_ROOM_ID, pushMessage.rid)
         }
