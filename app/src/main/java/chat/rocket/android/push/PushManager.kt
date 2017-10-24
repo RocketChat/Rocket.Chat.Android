@@ -143,7 +143,7 @@ object PushManager {
     private fun createGroupNotification(context: Context, lastPushMessage: PushMessage): Notification {
         with(lastPushMessage) {
             val id = lastPushMessage.notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, lastPushMessage, singleConversation = true)
+            val contentIntent = getContentIntent(context, id, lastPushMessage, grouped = true)
             val deleteIntent = getDismissIntent(context, lastPushMessage)
             val builder = NotificationCompat.Builder(context)
                     .setWhen(createdAt)
@@ -212,7 +212,7 @@ object PushManager {
             val manager: NotificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val id = notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, lastPushMessage, singleConversation = true)
+            val contentIntent = getContentIntent(context, id, lastPushMessage, grouped = true)
             val deleteIntent = getDismissIntent(context, lastPushMessage)
 
             val builder = Notification.Builder(context)
@@ -388,12 +388,12 @@ object PushManager {
         return PendingIntent.getBroadcast(context, pushMessage.notificationId.toInt(), deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, singleConversation: Boolean = true): PendingIntent {
+    private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, grouped: Boolean = false): PendingIntent {
         val notificationIntent = Intent(context, MainActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         notificationIntent.putExtra(EXTRA_NOT_ID, notificationId)
         notificationIntent.putExtra(EXTRA_HOSTNAME, pushMessage.host)
-        if (singleConversation) {
+        if (!grouped) {
             notificationIntent.putExtra(EXTRA_ROOM_ID, pushMessage.rid)
         }
         return PendingIntent.getActivity(context, randomizer.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
