@@ -130,9 +130,9 @@ object PushManager {
         } else {
             notIdListForHostname.add(0, lastPushMessage)
         }
-        if (isAndroidVersionAtLeast(Build.VERSION_CODES.O)) {
-            val notification = createSingleNotificationForOreo(context, lastPushMessage)
-            val groupNotification = createGroupNotificationForOreo(context, lastPushMessage)
+        if (isAndroidVersionAtLeast(Build.VERSION_CODES.N)) {
+            val notification = createSingleNotificationForNougatAndAbove(context, lastPushMessage)
+            val groupNotification = createGroupNotificationForNougatAndAbove(context, lastPushMessage)
             manager.notify(notId, notification)
             manager.notify(groupTuple.first, groupNotification)
         } else {
@@ -209,21 +209,16 @@ object PushManager {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createGroupNotificationForOreo(context: Context, lastPushMessage: PushMessage): Notification {
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun createGroupNotificationForNougatAndAbove(context: Context, lastPushMessage: PushMessage): Notification {
         with(lastPushMessage) {
             val manager: NotificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val id = notificationId.toInt()
             val contentIntent = getContentIntent(context, id, lastPushMessage, singleConversation = true)
             val deleteIntent = getDismissIntent(context, lastPushMessage)
-            val groupChannel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
-            groupChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            groupChannel.enableLights(true)
-            groupChannel.enableVibration(true)
-            groupChannel.setShowBadge(true)
-            manager.createNotificationChannel(groupChannel)
-            val builder = Notification.Builder(context, host)
+
+            val builder = Notification.Builder(context)
                     .setWhen(createdAt)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
@@ -232,6 +227,16 @@ object PushManager {
                     .setContentIntent(contentIntent)
                     .setDeleteIntent(deleteIntent)
                     .setMessageNotification(context)
+
+            if (isAndroidVersionAtLeast(Build.VERSION_CODES.O)) {
+                builder.setChannelId(host)
+                val groupChannel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
+                groupChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                groupChannel.enableLights(false)
+                groupChannel.enableVibration(true)
+                groupChannel.setShowBadge(true)
+                manager.createNotificationChannel(groupChannel)
+            }
 
             val subText = RocketChatCache(context).getHostSiteName(host)
             if (subText.isNotEmpty()) {
@@ -308,8 +313,8 @@ object PushManager {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createSingleNotificationForOreo(context: Context, lastPushMessage: PushMessage): Notification {
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun createSingleNotificationForNougatAndAbove(context: Context, lastPushMessage: PushMessage): Notification {
         val manager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -318,13 +323,7 @@ object PushManager {
             val contentIntent = getContentIntent(context, id, lastPushMessage)
             val deleteIntent = getDismissIntent(context, lastPushMessage)
 
-            val channel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
-            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            channel.enableLights(true)
-            channel.enableVibration(true)
-            channel.setShowBadge(true)
-            manager.createNotificationChannel(channel)
-            val builder = Notification.Builder(context, host)
+            val builder = Notification.Builder(context)
                     .setWhen(createdAt)
                     .setContentTitle(title.fromHtml())
                     .setContentText(message.fromHtml())
@@ -335,6 +334,16 @@ object PushManager {
                     .setMessageNotification(context)
                     .addReplyAction(context, lastPushMessage)
 
+            if (isAndroidVersionAtLeast(android.os.Build.VERSION_CODES.O)) {
+                builder.setChannelId(host)
+                val channel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
+                channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                channel.enableLights(false)
+                channel.enableVibration(true)
+                channel.setShowBadge(true)
+                manager.createNotificationChannel(channel)
+            }
+
             val subText = RocketChatCache(context).getHostSiteName(lastPushMessage.host)
             if (subText.isNotEmpty()) {
                 builder.setSubText(subText)
@@ -344,8 +353,6 @@ object PushManager {
                 val pushMessageList = hostToPushMessageList.get(host)
 
                 pushMessageList?.let {
-                    val messageCount = pushMessageList.size
-
                     val inbox = Notification.InboxStyle()
 
                     val userMessages = pushMessageList.filter {
@@ -419,7 +426,7 @@ object PushManager {
         return this
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun Notification.Builder.setMessageNotification(ctx: Context): Notification.Builder {
         val res = ctx.resources
         val smallIcon = res.getIdentifier(
