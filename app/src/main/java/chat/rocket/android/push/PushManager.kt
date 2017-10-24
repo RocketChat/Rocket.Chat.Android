@@ -242,14 +242,17 @@ object PushManager {
                 val pushMessageList = hostToPushMessageList.get(host)
 
                 pushMessageList?.let {
-                    val messageCount = pushMessageList.size
-                    builder.setContentTitle(getTitle(messageCount, title))
+                    val count = pushMessageList.filter {
+                        it.title == title
+                    }.size
+
+                    builder.setContentTitle(getTitle(count, title))
 
                     val inbox = Notification.InboxStyle()
-                            .setBigContentTitle(getTitle(messageCount, title))
+                            .setBigContentTitle(getTitle(count, title))
 
                     for (push in pushMessageList) {
-                        inbox.addLine("AAAA")
+                        inbox.addLine(push.message)
                     }
 
                     builder.setStyle(inbox)
@@ -348,8 +351,12 @@ object PushManager {
                     val userMessages = pushMessageList.filter {
                         it.notificationId == lastPushMessage.notificationId }
 
-                    builder.setContentTitle(getTitle(messageCount, title))
-                    inbox.setBigContentTitle(getTitle(messageCount, title))
+                    val count = pushMessageList.filter {
+                        it.title == title
+                    }.size
+
+                    builder.setContentTitle(getTitle(count, title))
+                    inbox.setBigContentTitle(getTitle(count, title))
 
                     for (push in userMessages) {
                         inbox.addLine(push.message)
