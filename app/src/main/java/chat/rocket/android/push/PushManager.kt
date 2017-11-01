@@ -145,16 +145,21 @@ object PushManager {
             manager.notify(groupTuple.first, groupNotification)
         } else {
             val notification = createSingleNotification(context, lastPushMessage)
-            val groupNotification = createGroupNotification(context, lastPushMessage)
+            val pushMessageList = hostToPushMessageList.get(host)
             NotificationManagerCompat.from(context).notify(notId, notification)
-            NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
+            pushMessageList?.let {
+                if (pushMessageList.size > 1) {
+                    val groupNotification = createGroupNotification(context, lastPushMessage)
+                    NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
+                }
+            }
         }
     }
 
     private fun createGroupNotification(context: Context, lastPushMessage: PushMessage): Notification {
         with(lastPushMessage) {
             val id = lastPushMessage.notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, lastPushMessage, grouped = true)
+            val contentIntent = getContentIntent(context, id, lastPushMessage)
             val deleteIntent = getDismissIntent(context, lastPushMessage)
             val builder = NotificationCompat.Builder(context)
                     .setWhen(createdAt)
@@ -297,7 +302,6 @@ object PushManager {
                     .setDeleteIntent(deleteIntent)
                     .setContentIntent(contentIntent)
                     .setMessageNotification()
-                    .addReplyAction(lastPushMessage)
 
             val subText = RocketChatCache(context).getHostSiteName(lastPushMessage.host)
             if (subText.isNotEmpty()) {
@@ -309,10 +313,10 @@ object PushManager {
             pushMessageList?.let {
                 if (pushMessageList.isNotEmpty()) {
                     val messageCount = pushMessageList.size
+
                     val bigText = NotificationCompat.BigTextStyle()
                             .bigText(pushMessageList.last().message.fromHtml())
                             .setBigContentTitle(pushMessageList.last().title.fromHtml())
-
                     builder.setStyle(bigText).setNumber(messageCount)
                 }
             }
