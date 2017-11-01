@@ -211,6 +211,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
             if (task.isFaulted()) {
               Exception error = task.getError();
               RCLog.e(error);
+              connectivityManager.notifyConnectionLost(
+                      hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR);
               emitter.onError(error);
             } else {
               keepAliveTimer.update();
@@ -345,7 +347,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Task<Void> fetchPublicSettings() {
-    return new MethodCallHelper(realmHelper, ddpClientRef).getPublicSettings();
+    return new MethodCallHelper(appContext, realmHelper, ddpClientRef).getPublicSettings(hostname);
   }
 
   private Task<Void> fetchPermissions() {

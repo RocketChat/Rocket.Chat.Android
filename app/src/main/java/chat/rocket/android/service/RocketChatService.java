@@ -105,11 +105,14 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
   private Single<RocketChatWebSocketThread> getOrCreateWebSocketThread(String hostname) {
     return Single.defer(() -> {
       webSocketThreadLock.acquire();
-      if (webSocketThreads.containsKey(hostname)) {
+      int connectivityState = ConnectivityManager.getInstance(getApplicationContext()).getConnectivityState(hostname);
+      boolean isConnected = connectivityState == ServerConnectivity.STATE_CONNECTED;
+      if (webSocketThreads.containsKey(hostname) && isConnected) {
         RocketChatWebSocketThread thread = webSocketThreads.get(hostname);
         webSocketThreadLock.release();
         return Single.just(thread);
       }
+      connectivityManager.notifyConnecting(hostname);
       return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
           .doOnSuccess(thread -> {
             webSocketThreads.put(hostname, thread);

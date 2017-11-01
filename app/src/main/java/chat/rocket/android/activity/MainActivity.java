@@ -74,8 +74,10 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         onHostnameUpdated();
       }
     } else {
-      presenter.bindViewOnly(this);
+      ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
+      presenter.bindView(this);
       presenter.loadSignedInServers(hostname);
+      roomId = new RocketChatCache(getApplicationContext()).getSelectedRoomId();
     }
   }
 
@@ -172,7 +174,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         sessionInteractor,
         new MethodCallHelper(this, hostname),
         ConnectivityManager.getInstance(getApplicationContext()),
-            rocketChatCache,
+        rocketChatCache,
         publicSettingRepository
     );
 
@@ -302,6 +304,15 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     }
   }
 
+  @Override
+  public void refreshRoom() {
+    Fragment fragment = getSupportFragmentManager().findFragmentById(getLayoutContainerForFragment());
+    if (fragment != null && fragment instanceof RoomFragment) {
+      RoomFragment roomFragment = (RoomFragment) fragment;
+      roomFragment.loadMessages();
+    }
+  }
+
   private void changeServerIfNeeded(String serverHostname) {
     if (!hostname.equalsIgnoreCase(serverHostname)) {
       RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
@@ -328,7 +339,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     public static final int STATUS_DISMISS = 0;
     public static final int STATUS_CONNECTION_ERROR = 1;
     public static final int STATUS_TOKEN_LOGIN = 2;
-    public static final int STATUS_LOGGING_OUT = 3;
 
     private int status;
     private Snackbar snackbar;

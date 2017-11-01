@@ -715,4 +715,8 @@ public class RoomFragment extends AbstractChatRoomFragment implements
             startActivity(intent);
         }
     }
+
+    public void loadMessages() {
+        presenter.loadMessages();
+    }
 }

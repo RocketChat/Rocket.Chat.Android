@@ -11,11 +11,13 @@ import java.util.UUID;
 
 import bolts.Continuation;
 import bolts.Task;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
@@ -30,6 +32,7 @@ import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import hugo.weaving.DebugLog;
+import okhttp3.HttpUrl;
 
 /**
  * Utility class for creating/handling MethodCall or RPC.
@@ -61,6 +64,12 @@ public class MethodCallHelper {
    */
   public MethodCallHelper(RealmHelper realmHelper, DDPClientRef ddpClientRef) {
     this.context = null;
+    this.realmHelper = realmHelper;
+    this.ddpClientRef = ddpClientRef;
+  }
+
+  public MethodCallHelper(Context context, RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+    this.context = context.getApplicationContext();
     this.realmHelper = realmHelper;
     this.ddpClientRef = ddpClientRef;
   }
@@ -422,13 +431,31 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
-  public Task<Void> getPublicSettings() {
+  public Task<Void> getPublicSettings(String currentHostname) {
     return call("public-settings/get", TIMEOUT_MS)
         .onSuccessTask(CONVERT_TO_JSON_ARRAY)
         .onSuccessTask(task -> {
           final JSONArray settings = task.getResult();
+          String siteUrl = null;
+          String siteName = null;
           for (int i = 0; i < settings.length(); i++) {
-            RealmPublicSetting.customizeJson(settings.getJSONObject(i));
+            JSONObject jsonObject = settings.getJSONObject(i);
+            RealmPublicSetting.customizeJson(jsonObject);
+            if (isPublicSetting(jsonObject, PublicSettingsConstants.General.SITE_URL)) {
+              siteUrl = jsonObject.getString(RealmPublicSetting.VALUE);
+            } else if (isPublicSetting(jsonObject, PublicSettingsConstants.General.SITE_NAME)) {
+              siteName = jsonObject.getString(RealmPublicSetting.VALUE);
+            }
+          }
+
+          if (siteName != null && siteUrl != null) {
+            HttpUrl httpSiteUrl = HttpUrl.parse(siteUrl);
+            if (httpSiteUrl != null) {
+              String host = httpSiteUrl.host();
+              RocketChatCache rocketChatCache = new RocketChatCache(context);
+              rocketChatCache.addHostnameSiteUrl(host, currentHostname);
+              rocketChatCache.addHostSiteName(currentHostname, siteName);
+            }
           }
 
           return realmHelper.executeTransaction(realm -> {
@@ -437,6 +464,10 @@ public class MethodCallHelper {
             return null;
           });
         });
+  }
+
+  private boolean isPublicSetting(JSONObject jsonObject, String id) {
+    return jsonObject.optString(RealmPublicSetting.ID).equalsIgnoreCase(id);
   }
 
   public Task<Void> getPermissions() {
