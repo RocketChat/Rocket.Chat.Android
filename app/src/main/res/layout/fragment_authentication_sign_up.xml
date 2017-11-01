@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_headline"
+        style="@style/HeadlineTextView"
+        android:layout_centerHorizontal="true"
+        android:text="@string/title_sign_up" />
+
+    <EditText
+        android:id="@+id/text_name"
+        style="@style/AuthenticationEditText"
+        android:layout_below="@id/text_headline"
+        android:layout_marginTop="32dp"
+        android:hint="@string/msg_name"
+        android:imeOptions="actionDone"
+        android:inputType="textUri" />
+
+    <EditText
+        android:id="@+id/text_username"
+        style="@style/AuthenticationEditText"
+        android:layout_below="@id/text_name"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@drawable/ic_person_black_24dp"
+        android:hint="@string/msg_username"
+        android:imeOptions="actionNext"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/text_password"
+        style="@style/AuthenticationEditText"
+        android:layout_below="@id/text_username"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@drawable/ic_lock_black_24dp"
+        android:hint="@string/msg_password"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/button_sign_up"
+        style="@style/AuthenticationButton"
+        android:layout_alignParentBottom="true"
+        android:text="@string/title_sign_up" />
+
+</RelativeLayout>
