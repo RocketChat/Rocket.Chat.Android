@@ -21,7 +21,7 @@ class AuthenticationServerFragment : Fragment() {
 
         text_server_url.setSelection(text_server_url.length())
 
-        val window = activity.window
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+
+        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
     }
 }
