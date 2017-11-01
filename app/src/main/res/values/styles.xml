@@ -8,4 +8,35 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AuthenticationTheme" parent="android:Theme.Material.NoActionBar.Fullscreen">
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- Widget styles. -->
+    <style name="HeadlineTextView" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:layout_marginEnd">@dimen/screen_edge_left_and_right_margins</item>
+    </style>
+
+    <style name="AuthenticationEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:layout_marginEnd">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:paddingStart">@dimen/edit_text_margin</item>
+        <item name="android:paddingEnd">@dimen/edit_text_margin</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
+        <item name="android:background">@drawable/style_edit_text</item>
+    </style>
+
+    <style name="AuthenticationButton" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/effect_ripple</item>
+    </style>
+
 </resources>
