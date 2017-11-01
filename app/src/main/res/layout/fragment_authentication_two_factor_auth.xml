@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_headline"
+        style="@style/HeadlineTextView"
+        android:layout_centerHorizontal="true"
+        android:text="@string/title_log_in" />
+
+    <EditText
+        android:id="@+id/text_two_factor_auth"
+        style="@style/AuthenticationEditText"
+        android:layout_below="@id/text_headline"
+        android:layout_marginTop="32dp"
+        android:drawableStart="@drawable/ic_lock_black_24dp"
+        android:hint="@string/msg_2fa_code"
+        android:imeOptions="actionDone"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/button_log_in"
+        style="@style/AuthenticationButton"
+        android:layout_alignParentBottom="true"
+        android:text="@string/title_log_in" />
+
+</RelativeLayout>
