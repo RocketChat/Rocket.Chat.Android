@@ -12,7 +12,8 @@
     <!-- Regular information messages -->
     <string name="msg_username">nome de usuário</string>
     <string name="msg_password">senha</string>
-    <string name="msg_name">nome</string>
+    <string name="msg_name_and_surname">nome e sobrenome</string>
+    <string name="msg_email">email</string>
     <string name="msg_new_in_rocket_chat">Novo no Rocket Chat?</string>
     <string name="msg_2fa_code">Código 2FA</string>
 
