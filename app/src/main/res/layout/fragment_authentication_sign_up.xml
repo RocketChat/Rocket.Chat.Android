@@ -14,16 +14,17 @@
         style="@style/AuthenticationEditText"
         android:layout_below="@id/text_headline"
         android:layout_marginTop="32dp"
-        android:hint="@string/msg_name"
-        android:imeOptions="actionDone"
-        android:inputType="textUri" />
+        android:drawableStart="@drawable/ic_person_black_24dp"
+        android:hint="@string/msg_name_and_surname"
+        android:imeOptions="actionNext"
+        android:inputType="textCapWords" />
 
     <EditText
         android:id="@+id/text_username"
         style="@style/AuthenticationEditText"
         android:layout_below="@id/text_name"
-        android:layout_marginTop="20dp"
-        android:drawableStart="@drawable/ic_person_black_24dp"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_at_black_24dp"
         android:hint="@string/msg_username"
         android:imeOptions="actionNext"
         android:inputType="text" />
@@ -32,11 +33,21 @@
         android:id="@+id/text_password"
         style="@style/AuthenticationEditText"
         android:layout_below="@id/text_username"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_lock_black_24dp"
         android:hint="@string/msg_password"
-        android:imeOptions="actionDone"
+        android:imeOptions="actionNext"
         android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/text_email"
+        style="@style/AuthenticationEditText"
+        android:layout_below="@id/text_password"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_email_black_24dp"
+        android:hint="@string/msg_email"
+        android:imeOptions="actionDone"
+        android:inputType="textEmailAddress" />
 
     <Button
         android:id="@+id/button_sign_up"
