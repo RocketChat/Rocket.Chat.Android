@@ -1,3 +1,20 @@
 <resources>
-    <string name="app_name">Rocket Chat</string>
+    <string name="app_name" translatable="false">Rocket Chat</string>
+
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">Sign in your server</string>
+    <string name="title_log_in">Log in</string>
+    <string name="title_sign_up">Sign up</string>
+
+    <!-- Actions -->
+    <string name="action_connect">Connect</string>
+
+    <!-- Regular information messages -->
+    <string name="msg_https" translatable="false">https://</string>
+    <string name="msg_username">username</string>
+    <string name="msg_password">password</string>
+    <string name="msg_name">name</string>
+    <string name="msg_new_in_rocket_chat">New in Rocket Chat?</string>
+    <string name="msg_2fa_code">2FA Code</string>
+
 </resources>
