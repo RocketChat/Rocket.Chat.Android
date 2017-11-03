@@ -11,6 +11,7 @@
 
     <!-- Regular information messages -->
     <string name="msg_username">nome de usuário</string>
+    <string name="msg_username_or_email">nome de usuário ou email</string>
     <string name="msg_password">senha</string>
     <string name="msg_name_and_surname">nome e sobrenome</string>
     <string name="msg_email">email</string>
