@@ -64,7 +64,6 @@
         android:id="@+id/text_new_user_agreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
         android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
