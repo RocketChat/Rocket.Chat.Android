@@ -16,6 +16,7 @@
     <string name="msg_name_and_surname">nome e sobrenome</string>
     <string name="msg_email">email</string>
     <string name="msg_new_in_rocket_chat">Novo no Rocket Chat?</string>
+    <string name="msg_new_user_agreement">Ao proceder você concorda com nossos\n<font color='#FF1976D2'>Termos de Serviço</font> e <font color='#FF1976D2'>Política de Privacidade</font></string>
     <string name="msg_2fa_code">Código 2FA</string>
 
 </resources>
