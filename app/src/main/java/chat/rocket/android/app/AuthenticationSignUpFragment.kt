@@ -1,5 +1,6 @@
 package chat.rocket.android.app
 
+import DrawableHelper
 import android.app.Fragment
 import android.os.Build
 import android.os.Bundle
@@ -8,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import chat.rocket.android.R
-import chat.rocket.android.widget.helper.DrawableHelper
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 
 /**
