@@ -38,30 +38,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_username" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/text_new_in_rocket_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:text="@string/msg_new_in_rocket_chat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <TextView
-            android:id="@+id/text_new_in_rocket_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/msg_new_in_rocket_chat" />
-
-        <TextView
-            android:id="@+id/text_sign_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/title_sign_up"
-            android:textColor="@color/colorAccent" />
-    </LinearLayout>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/button_log_in"
