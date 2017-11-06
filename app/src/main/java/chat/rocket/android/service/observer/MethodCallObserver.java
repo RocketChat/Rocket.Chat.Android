@@ -8,7 +8,7 @@ import java.util.List;
 
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.LogIfError;
-import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.RealmHelper;
@@ -27,8 +27,8 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
    * constructor.
    */
   public MethodCallObserver(Context context, String hostname,
-                            RealmHelper realmHelper, DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
+                            RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
       RealmResults<MethodCall> pendingMethodCalls = realm.where(MethodCall.class)
@@ -99,7 +99,7 @@ public class MethodCallObserver extends AbstractModelObserver<MethodCall> {
             .put(MethodCall.ID, methodCallId)
             .put(MethodCall.SYNC_STATE, SyncState.SYNCING))
     ).onSuccessTask(task ->
-        ddpClientRef.get().rpc(methodCallId, methodName, params, timeout)
+            DDPClient.get().rpc(methodCallId, methodName, params, timeout)
             .onSuccessTask(_task -> realmHelper.executeTransaction(realm -> {
               String json = _task.getResult().result;
               return realm.createOrUpdateObjectFromJson(MethodCall.class, new JSONObject()

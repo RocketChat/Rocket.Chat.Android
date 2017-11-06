@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import bolts.Task;
-import chat.rocket.android.api.DDPClientWrapper;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.RxHelper;
@@ -33,6 +32,7 @@ import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
+import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmHelper;
@@ -73,14 +73,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final ArrayList<Registrable> listeners = new ArrayList<>();
   private final CompositeDisposable hearbeatDisposable = new CompositeDisposable();
   private final CompositeSubscription reconnectSubscription = new CompositeSubscription();
-  private DDPClientWrapper ddpClient;
   private boolean listenersRegistered;
-  private final DDPClientRef ddpClientRef = new DDPClientRef() {
-    @Override
-    public DDPClientWrapper get() {
-      return ddpClient;
-    }
-  };
 
   private static class KeepAliveTimer {
     private long lastTime;
@@ -194,7 +187,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   @DebugLog
   private Single<Boolean> checkIfConnectionAlive() {
-    if (ddpClient == null) {
+    if (DDPClient.get() == null) {
       return Single.just(false);
     }
 
@@ -207,7 +200,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
       new Thread() {
         @Override
         public void run() {
-          ddpClient.ping().continueWith(task -> {
+          DDPClient.get().ping().continueWith(task -> {
             if (task.isFaulted()) {
               Exception error = task.getError();
               RCLog.e(error);
@@ -229,7 +222,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private Flowable<Boolean> heartbeat(long interval) {
     return Flowable.interval(interval, TimeUnit.MILLISECONDS)
             .onBackpressureDrop()
-            .flatMap(tick -> ddpClient.doPing().toFlowable())
+            .flatMap(tick -> DDPClient.get().doPing().toFlowable())
             .map(callback -> {
               if (callback instanceof DDPClientCallback.Ping) {
                 return true;
@@ -246,11 +239,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private Single<Boolean> prepareDDPClient() {
     // TODO: temporarily replaced checkIfConnectionAlive() call for this single checking if ddpClient is
     // null or not. In case it is, build a new client, otherwise just keep connecting with existing one.
-    return Single.just(ddpClient != null)
+    return Single.just(DDPClient.get() != null)
         .doOnSuccess(alive -> {
           if (!alive) {
             RCLog.d("DDPClient#build");
-            ddpClient = DDPClientWrapper.create(hostname);
           }
         });
   }
@@ -264,7 +256,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
             return;
           }
           RCLog.d("DDPClient#connect");
-          ddpClient.connect(info.getSession(), info.isSecure())
+          DDPClient.get().connect(hostname, info.getSession(), info.isSecure())
               .onSuccessTask(task -> {
                 final String newSession = task.getResult().session;
                 connectivityManager.notifyConnectionEstablished(hostname, newSession);
@@ -307,7 +299,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     if (reconnectSubscription.hasSubscriptions()) {
       return;
     }
-    ddpClient.close();
+    DDPClient.get().close();
     forceInvalidateTokens();
     connectivityManager.notifyConnecting(hostname);
     // Needed to use subscriptions because of legacy code.
@@ -347,11 +339,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Task<Void> fetchPublicSettings() {
-    return new MethodCallHelper(appContext, realmHelper, ddpClientRef).getPublicSettings(hostname);
+    return new MethodCallHelper(appContext, realmHelper).getPublicSettings(hostname);
   }
 
   private Task<Void> fetchPermissions() {
-    return new MethodCallHelper(realmHelper, ddpClientRef).getPermissions();
+    return new MethodCallHelper(realmHelper).getPermissions();
   }
 
   @DebugLog
@@ -377,7 +369,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
       // if we have a session try to resume it. At this point we're probably recovering from
       // a disconnection state
       final CompositeSubscription subscriptions = new CompositeSubscription();
-      MethodCallHelper methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
+      MethodCallHelper methodCall = new MethodCallHelper(realmHelper);
       subscriptions.add(
               Completable.defer(() -> {
                 Task<Void> result = methodCall.loginWithToken(sessions.get(0).getToken());
@@ -405,9 +397,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private void createObserversAndRegister() {
     for (Class clazz : REGISTERABLE_CLASSES) {
       try {
-        Constructor ctor = clazz.getConstructor(Context.class, String.class, RealmHelper.class,
-                DDPClientRef.class);
-        Object obj = ctor.newInstance(appContext, hostname, realmHelper, ddpClientRef);
+        Constructor ctor = clazz.getConstructor(Context.class, String.class, RealmHelper.class);
+        Object obj = ctor.newInstance(appContext, hostname, realmHelper);
 
         if (obj instanceof Registrable) {
           Registrable registrable = (Registrable) obj;
@@ -448,9 +439,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @DebugLog
   private void unregisterListenersAndClose() {
    unregisterListeners();
-    if (ddpClient != null) {
-      ddpClient.close();
-      ddpClient = null;
+    if (DDPClient.get() != null) {
+      DDPClient.get().close();
     }
   }
 

@@ -1,21 +1,21 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 import java.util.List;
+
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.service.internal.StreamRoomMessageManager;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
-import chat.rocket.android.service.internal.StreamRoomMessageManager;
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Observes user is logged into server.
@@ -29,13 +29,13 @@ public class SessionObserver extends AbstractModelObserver<RealmSession> {
    * constructor.
    */
   public SessionObserver(Context context, String hostname,
-                         RealmHelper realmHelper, DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
+                         RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
     count = 0;
 
     streamNotifyMessage =
-        new StreamRoomMessageManager(context, hostname, realmHelper, ddpClientRef);
-    pushHelper = new RaixPushHelper(realmHelper, ddpClientRef);
+        new StreamRoomMessageManager(context, hostname, realmHelper);
+    pushHelper = new RaixPushHelper(realmHelper);
   }
 
   @Override

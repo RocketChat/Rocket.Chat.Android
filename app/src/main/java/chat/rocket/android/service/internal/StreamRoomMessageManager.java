@@ -5,10 +5,9 @@ import android.os.Handler;
 import android.os.Looper;
 
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.Registrable;
 import chat.rocket.android.service.ddp.stream.StreamRoomMessage;
+import chat.rocket.persistence.realm.RealmHelper;
 
 /**
  * wrapper for managing stream-notify-message depending on RocketChatCache.
@@ -17,18 +16,16 @@ public class StreamRoomMessageManager implements Registrable {
   private final Context context;
   private final String hostname;
   private final RealmHelper realmHelper;
-  private final DDPClientRef ddpClientRef;
   private final AbstractRocketChatCacheObserver cacheObserver;
   private final Handler handler;
   private final RocketChatCache rocketChatCache;
   private StreamRoomMessage streamRoomMessage;
 
   public StreamRoomMessageManager(Context context, String hostname,
-                                  RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+                                  RealmHelper realmHelper) {
     this.context = context;
     this.hostname = hostname;
     this.realmHelper = realmHelper;
-    this.ddpClientRef = ddpClientRef;
     this.rocketChatCache = new RocketChatCache(context);
 
     cacheObserver = new AbstractRocketChatCacheObserver(context, realmHelper) {
@@ -43,7 +40,7 @@ public class StreamRoomMessageManager implements Registrable {
 
   private void registerStreamNotifyMessage(String roomId) {
     handler.post(() -> {
-      streamRoomMessage = new StreamRoomMessage(context, hostname, realmHelper, ddpClientRef, roomId);
+      streamRoomMessage = new StreamRoomMessage(context, hostname, realmHelper, roomId);
       streamRoomMessage.register();
     });
   }

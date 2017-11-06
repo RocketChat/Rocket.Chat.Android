@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatDelegate;
 import chat.rocket.android.helper.OkHttpHelper;
 import com.crashlytics.android.Crashlytics;
 
+import chat.rocket.android_ddp.DDPClient;
 import io.fabric.sdk.android.Fabric;
 import java.util.List;
 import chat.rocket.persistence.realm.RealmStore;
@@ -29,6 +30,7 @@ public class RocketChatApplication extends MultiDexApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    DDPClient.initialize(OkHttpHelper.INSTANCE.getClientForWebSocket());
     Fabric.with(this, new Crashlytics());
 
     RocketChatPersistenceRealm.init(this);

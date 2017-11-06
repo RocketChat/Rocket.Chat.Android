@@ -1,9 +1,13 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
+
+import org.json.JSONObject;
+
+import java.util.List;
+
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
@@ -11,8 +15,6 @@ import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import java.util.List;
-import org.json.JSONObject;
 
 /**
  * Background process for loading messages.
@@ -22,9 +24,9 @@ public class LoadMessageProcedureObserver extends AbstractModelObserver<LoadMess
   private final MethodCallHelper methodCall;
 
   public LoadMessageProcedureObserver(Context context, String hostname,
-                                      RealmHelper realmHelper, DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
-    methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
+                                      RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
+    methodCall = new MethodCallHelper(realmHelper);
   }
 
   @Override

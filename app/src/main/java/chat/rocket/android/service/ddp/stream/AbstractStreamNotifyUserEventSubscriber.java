@@ -3,15 +3,13 @@ package chat.rocket.android.service.ddp.stream;
 import android.content.Context;
 
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
 
 abstract class AbstractStreamNotifyUserEventSubscriber extends AbstractStreamNotifyEventSubscriber {
   protected final String userId;
 
   protected AbstractStreamNotifyUserEventSubscriber(Context context, String hostname,
-                                                    RealmHelper realmHelper,
-                                                    DDPClientRef ddpClientRef, String userId) {
-    super(context, hostname, realmHelper, ddpClientRef);
+                                                    RealmHelper realmHelper, String userId) {
+    super(context, hostname, realmHelper);
     this.userId = userId;
   }
 

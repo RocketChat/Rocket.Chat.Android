@@ -1,18 +1,19 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import io.realm.Realm;
-import io.realm.RealmResults;
+
 import org.json.JSONObject;
 
 import java.util.List;
+
 import bolts.Task;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Model observer for executing getUsersOfRooms.
@@ -23,9 +24,9 @@ public class GetUsersOfRoomsProcedureObserver
   private final MethodCallHelper methodCall;
 
   public GetUsersOfRoomsProcedureObserver(Context context, String hostname,
-                                          RealmHelper realmHelper, DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
-    methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
+                                          RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
+    methodCall = new MethodCallHelper(realmHelper);
   }
 
   @Override

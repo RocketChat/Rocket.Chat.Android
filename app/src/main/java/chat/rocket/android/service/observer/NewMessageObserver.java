@@ -1,18 +1,19 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import io.realm.Realm;
-import io.realm.RealmResults;
+
 import org.json.JSONObject;
 
 import java.util.List;
+
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
-import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Observe messages for sending.
@@ -21,9 +22,9 @@ public class NewMessageObserver extends AbstractModelObserver<RealmMessage> {
 
   private final MethodCallHelper methodCall;
 
-  public NewMessageObserver(Context context, String hostname, RealmHelper realmHelper, DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
-    methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
+  public NewMessageObserver(Context context, String hostname, RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
+    methodCall = new MethodCallHelper(realmHelper);
 
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.
