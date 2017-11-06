@@ -263,7 +263,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
                 // handling WebSocket#onClose() callback.
                 task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
-                  reconnect();
+                  if (_task.getResult().code != 1000) {
+                    reconnect();
+                  }
                   return null;
                 });
 

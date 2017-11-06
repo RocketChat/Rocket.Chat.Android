@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.models.ServerInfo;
@@ -68,11 +69,10 @@ import rx.subjects.PublishSubject;
   @DebugLog
   @Override
   public void ensureConnections() {
-    for (String hostname : serverConnectivityList.keySet()) {
-      connectToServerIfNeeded(hostname, true/* force connect */)
+    String hostname = new RocketChatCache(appContext).getSelectedServerHostname();
+    connectToServerIfNeeded(hostname, true/* force connect */)
           .subscribe(_val -> {
           }, RCLog::e);
-    }
   }
 
   @Override

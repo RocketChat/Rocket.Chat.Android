@@ -103,7 +103,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       }
 
       if (assertServerRealmStoreExists(newHostname)) {
-        updateHostname(newHostname);
+        recreate();
       } else {
         recoverFromHostnameError();
       }

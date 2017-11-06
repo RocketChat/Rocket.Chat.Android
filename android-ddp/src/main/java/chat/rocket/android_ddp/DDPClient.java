@@ -3,19 +3,20 @@ package chat.rocket.android_ddp;
 
 import android.text.TextUtils;
 
-import chat.rocket.android.log.RCLog;
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import chat.rocket.android.log.RCLog;
 import chat.rocket.android_ddp.rx.RxWebSocketCallback;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import okhttp3.OkHttpClient;
 
 public class DDPClient {
@@ -24,6 +25,7 @@ public class DDPClient {
   private static volatile DDPClient singleton;
   private static OkHttpClient client;
   private final DDPClientImpl impl;
+  private final AtomicReference<String> hostname = new AtomicReference<>();
 
   public static void initialize(OkHttpClient okHttpClient) {
     client = okHttpClient;
@@ -47,6 +49,11 @@ public class DDPClient {
   }
 
   public Task<DDPClientCallback.Connect> connect(String url, String session) {
+    String oldHostname = hostname.get();
+    hostname.set(url);
+    if (oldHostname != null && !url.equalsIgnoreCase(oldHostname)) {
+      close();
+    }
     TaskCompletionSource<DDPClientCallback.Connect> task = new TaskCompletionSource<>();
     impl.connect(task, url, session);
     return task.getTask();
