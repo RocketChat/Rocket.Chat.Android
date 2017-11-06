@@ -13,7 +13,6 @@ import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogIfError;
-import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
@@ -26,9 +25,8 @@ import io.realm.RealmResults;
  */
 public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRegistration> {
   public GcmPushRegistrationObserver(Context context, String hostname,
-                                     RealmHelper realmHelper,
-                                     DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
+                                     RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
   }
 
   @Override
@@ -72,7 +70,7 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
     final String userId = currentUser != null ? currentUser.getId() : null;
     final String pushId = new RocketChatCache(context).getOrCreatePushId();
 
-    return new RaixPushHelper(realmHelper, ddpClientRef)
+    return new RaixPushHelper(realmHelper)
         .pushUpdate(pushId, gcmToken, userId);
   }
 

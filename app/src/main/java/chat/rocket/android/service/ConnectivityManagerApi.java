@@ -25,4 +25,6 @@ public interface ConnectivityManagerApi {
   Observable<ServerConnectivity> getServerConnectivityAsObservable();
 
   int getConnectivityState(@NonNull String hostname);
+
+  void resetConnectivityStateList();
 }

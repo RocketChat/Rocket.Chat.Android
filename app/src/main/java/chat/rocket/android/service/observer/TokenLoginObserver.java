@@ -1,24 +1,24 @@
 package chat.rocket.android.service.observer;
 
 import android.content.Context;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 import java.util.List;
+
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
-import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class TokenLoginObserver extends AbstractModelObserver<RealmSession> {
 
   private final MethodCallHelper methodCall;
 
   public TokenLoginObserver(Context context, String hostname,
-                            RealmHelper realmHelper, DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
-    methodCall = new MethodCallHelper(realmHelper, ddpClientRef);
+                            RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
+    methodCall = new MethodCallHelper(realmHelper);
   }
 
   @Override

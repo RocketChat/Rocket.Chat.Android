@@ -67,11 +67,16 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
   protected void onResume() {
     super.onResume();
     if (hostname == null || presenter == null) {
+      String previousHostname = hostname;
       hostname = new RocketChatCache(getApplicationContext()).getSelectedServerHostname();
       if (hostname == null) {
         showAddServerScreen();
       } else {
         onHostnameUpdated();
+        if (!hostname.equalsIgnoreCase(previousHostname)) {
+          ConnectivityManager.getInstance(getApplicationContext()).resetConnectivityStateList();
+          ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
+        }
       }
     } else {
       ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();

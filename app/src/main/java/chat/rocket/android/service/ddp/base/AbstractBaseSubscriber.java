@@ -1,16 +1,15 @@
 package chat.rocket.android.service.ddp.base;
 
 import android.content.Context;
+
 import org.json.JSONArray;
 
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
 import chat.rocket.android.service.ddp.AbstractDDPDocEventSubscriber;
+import chat.rocket.persistence.realm.RealmHelper;
 
 abstract class AbstractBaseSubscriber extends AbstractDDPDocEventSubscriber {
-  protected AbstractBaseSubscriber(Context context, String hostname, RealmHelper realmHelper,
-                                   DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
+  protected AbstractBaseSubscriber(Context context, String hostname, RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
   }
 
   @Override

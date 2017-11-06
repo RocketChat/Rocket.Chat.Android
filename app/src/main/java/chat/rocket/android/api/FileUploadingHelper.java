@@ -1,13 +1,13 @@
 package chat.rocket.android.api;
 
 import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import bolts.Task;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
 
 /**
  * MethodCall for uploading file.
@@ -17,8 +17,8 @@ public class FileUploadingHelper extends MethodCallHelper {
     super(context, hostname);
   }
 
-  public FileUploadingHelper(RealmHelper realmHelper, DDPClientRef ddpClientRef) {
-    super(realmHelper, ddpClientRef);
+  public FileUploadingHelper(RealmHelper realmHelper) {
+    super(realmHelper);
   }
 
   public Task<JSONObject> uploadS3Request(String filename, long filesize, String mimeType,

@@ -15,7 +15,7 @@ import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.SyncState;
@@ -48,7 +48,6 @@ public class MethodCallHelper {
       task -> Task.forResult(new JSONArray(task.getResult()));
   protected final Context context;
   protected final RealmHelper realmHelper;
-  protected final DDPClientRef ddpClientRef;
 
   /**
    * initialize with Context and hostname.
@@ -56,28 +55,25 @@ public class MethodCallHelper {
   public MethodCallHelper(Context context, String hostname) {
     this.context = context.getApplicationContext();
     this.realmHelper = RealmStore.getOrCreate(hostname);
-    ddpClientRef = null;
   }
 
   /**
    * initialize with RealmHelper and DDPClient.
    */
-  public MethodCallHelper(RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+  public MethodCallHelper(RealmHelper realmHelper) {
     this.context = null;
     this.realmHelper = realmHelper;
-    this.ddpClientRef = ddpClientRef;
   }
 
-  public MethodCallHelper(Context context, RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+  public MethodCallHelper(Context context, RealmHelper realmHelper) {
     this.context = context.getApplicationContext();
     this.realmHelper = realmHelper;
-    this.ddpClientRef = ddpClientRef;
   }
 
   @DebugLog
   private Task<String> executeMethodCall(String methodName, String param, long timeout) {
-    if (ddpClientRef != null) {
-      return ddpClientRef.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
+    if (DDPClient.get() != null) {
+      return DDPClient.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
           .onSuccessTask(task -> Task.forResult(task.getResult().result));
     } else {
       return MethodCall.execute(realmHelper, methodName, param, timeout)
