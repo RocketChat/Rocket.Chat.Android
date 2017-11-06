@@ -9,6 +9,7 @@
     <string name="user_status_busy">Busy</string>
     <string name="user_status_invisible">Invisible</string>
     <string name="fragment_sidebar_main_logout_title">Logout</string>
+    <string name="fragment_sidebar_main_update_title">Update RocketChat</string>
     <string name="dialog_add_channel_name">name</string>
     <string name="dialog_add_channel_private">private</string>
     <string name="dialog_add_channel_read_only">read only</string>

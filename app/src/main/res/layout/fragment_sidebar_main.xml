@@ -181,6 +181,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <LinearLayout
+                android:id="@+id/btn_update"
+                style="@style/sidebar_list_item"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <FrameLayout
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent">
+
+                    <io.github.yusukeiwaki.android.widget.FontAwesomeTextView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/fa_wrench"
+                        android:textSize="14dp"/>
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fragment_sidebar_main_update_title"
+                    android:textAppearance="?attr/textAppearanceListItemSmall"/>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/version_info"
                 android:layout_width="wrap_content"
