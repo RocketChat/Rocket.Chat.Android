@@ -46,10 +46,6 @@ public class DDPClient {
     impl = new DDPClientImpl(this, client);
   }
 
-  public Task<DDPClientCallback.Connect> connect(String url) {
-    return connect(url, null);
-  }
-
   public Task<DDPClientCallback.Connect> connect(String url, String session) {
     TaskCompletionSource<DDPClientCallback.Connect> task = new TaskCompletionSource<>();
     impl.connect(task, url, session);
@@ -64,13 +60,6 @@ public class DDPClient {
 
   public Maybe<DDPClientCallback.Base> doPing(@Nullable String id) {
     return impl.ping(id);
-  }
-
-  public Task<DDPClientCallback.RPC> rpc(String method, JSONArray params, String id,
-                                         long timeoutMs) {
-    TaskCompletionSource<DDPClientCallback.RPC> task = new TaskCompletionSource<>();
-    impl.rpc(task, method, params, id, timeoutMs);
-    return task.getTask();
   }
 
   public Task<DDPSubscription.Ready> sub(String id, String name, JSONArray params) {
