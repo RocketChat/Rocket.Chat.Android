@@ -123,20 +123,6 @@ public class MethodCallHelper {
     });
   }
 
-  private Task<Exception> extractError(Exception exception) throws JSONException {
-    String errMessageJson = exception.getMessage();
-    if (TextUtils.isEmpty(errMessageJson)) {
-      return Task.forError(exception);
-    }
-    String errType = new JSONObject(errMessageJson).optString("error");
-    String errMessage = new JSONObject(errMessageJson).getString("message");
-
-    if (TwoStepAuthException.TYPE.equals(errType)) {
-      return Task.forError(new TwoStepAuthException(errMessage));
-    }
-    return Task.forError(new Exception(errMessage));
-  }
-
   protected final Task<String> call(String methodName, long timeout) {
     return injectErrorHandler(executeMethodCall(methodName, null, timeout));
   }
