@@ -74,7 +74,13 @@ public class MethodCallHelper {
   private Task<String> executeMethodCall(String methodName, String param, long timeout) {
     if (DDPClient.get() != null) {
       return DDPClient.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
-          .onSuccessTask(task -> Task.forResult(task.getResult().result));
+          .onSuccessTask(task -> Task.forResult(task.getResult().result))
+          .continueWithTask(task_ -> {
+            if (task_.isFaulted()) {
+               return Task.forError(task_.getError());
+            }
+            return Task.forResult(task_.getResult());
+          });
     } else {
       return MethodCall.execute(realmHelper, methodName, param, timeout)
           .onSuccessTask(task -> {
@@ -89,8 +95,13 @@ public class MethodCallHelper {
     return task.continueWithTask(_task -> {
       if (_task.isFaulted()) {
         Exception exception = _task.getError();
-        if (exception instanceof MethodCall.Error) {
-          String errMessageJson = exception.getMessage();
+        if (exception instanceof MethodCall.Error || exception instanceof DDPClientCallback.RPC.Error) {
+          String errMessageJson;
+          if (exception instanceof DDPClientCallback.RPC.Error) {
+            errMessageJson = ((DDPClientCallback.RPC.Error) exception).error.toString();
+          } else {
+            errMessageJson = exception.getMessage();
+          }
           if (TextUtils.isEmpty(errMessageJson)) {
             return Task.forError(exception);
           }
@@ -101,9 +112,6 @@ public class MethodCallHelper {
             return Task.forError(new TwoStepAuthException(errMessage));
           }
           return Task.forError(new Exception(errMessage));
-        } else if (exception instanceof DDPClientCallback.RPC.Error) {
-          String errMessage = ((DDPClientCallback.RPC.Error) exception).error.getString("message");
-          return Task.forError(new Exception(errMessage));
         } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
           return Task.forError(new MethodCall.Timeout());
         } else {
@@ -113,6 +121,20 @@ public class MethodCallHelper {
         return _task;
       }
     });
+  }
+
+  private Task<Exception> extractError(Exception exception) throws JSONException {
+    String errMessageJson = exception.getMessage();
+    if (TextUtils.isEmpty(errMessageJson)) {
+      return Task.forError(exception);
+    }
+    String errType = new JSONObject(errMessageJson).optString("error");
+    String errMessage = new JSONObject(errMessageJson).getString("message");
+
+    if (TwoStepAuthException.TYPE.equals(errType)) {
+      return Task.forError(new TwoStepAuthException(errMessage));
+    }
+    return Task.forError(new Exception(errMessage));
   }
 
   protected final Task<String> call(String methodName, long timeout) {
@@ -184,8 +206,8 @@ public class MethodCallHelper {
           .put("algorithm", "sha-256"));
       return new JSONArray().put(param);
     }).onSuccessTask(CONVERT_TO_JSON_OBJECT)
-        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
-        .onSuccessTask(this::saveToken);
+      .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+      .onSuccessTask(this::saveToken);
   }
 
   public Task<Void> loginWithLdap(final String username, final String password) {
