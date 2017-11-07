@@ -8,34 +8,9 @@ repositories {
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.github.triplet.play'
 apply from: '../config/quality/quality.gradle'
-
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$rootProject.ext.kotlinVersion"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
-        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
-        classpath 'io.realm:realm-gradle-plugin:2.3.1'
-        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-
-    // Exclude the version that the android plugin depends on.
-    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
-}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -115,7 +90,7 @@ play {
     track = "${track}"
 }
 ext {
-    playLibVersion = '11.0.4'
+    playLibVersion = '11.6.0'
     stethoVersion = '1.5.0'
     stethoOkhttp3Version = '1.5.0'
     stethoRealmVersion = '2.1.0'
@@ -138,7 +113,7 @@ dependencies {
     compile rxbindingDependencies.rxBinding
     compile rxbindingDependencies.rxBindingSupport
     compile rxbindingDependencies.rxBindingAppcompact
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
     compile "com.google.firebase:firebase-core:$playLibVersion"
     compile "com.google.firebase:firebase-crash:$playLibVersion"
     compile "com.google.android.gms:play-services-gcm:$playLibVersion"
@@ -150,7 +125,7 @@ dependencies {
     compile "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
     compile 'nl.littlerobots.rxlint:rxlint:1.2'
     compile "frankiesardo:icepick:$icepickVersion"
-    provided "frankiesardo:icepick-processor:$icepickVersion"
+    annotationProcessor "frankiesardo:icepick-processor:$icepickVersion"
     compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
@@ -162,16 +137,13 @@ dependencies {
         transitive = true
     }
     compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1@aar'
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'com.jakewharton.timber:timber:4.5.1'
     compile 'com.github.matrixxun:MaterialBadgeTextView:c5a27e8243'
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
-    provided 'io.reactivex:rxjava:1.3.0'
-    provided "com.github.akarnokd:rxjava2-interop:0.10.2"
-    provided 'com.hadisatrio:Optional:v1.0.1'
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.7.19"
+    testCompile "org.mockito:mockito-core:2.8.9"
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
 }
