@@ -12,8 +12,13 @@
 
         <item name="actionModeBackground">?attr/colorPrimaryDark</item>
         <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textViewStyle">@style/AppTheme.TextViewStyle</item>
+    </style>
+
+    <style name="AppTheme.TextViewStyle" parent="@android:style/Widget.TextView">
+        <item name="android:fontFamily">@font/lato_regular</item>
+        <item name="android:typeface">monospace</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
@@ -27,7 +32,6 @@
 
         <item name="actionModeBackground">?attr/colorPrimaryDark</item>
         <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">

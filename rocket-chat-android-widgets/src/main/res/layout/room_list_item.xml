@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingStart="?attr/listPreferredItemPaddingLeft"
+    android:paddingBottom="10dp"
     android:paddingEnd="?attr/listPreferredItemPaddingRight"
     android:paddingLeft="?attr/listPreferredItemPaddingLeft"
     android:paddingRight="?attr/listPreferredItemPaddingRight"
-    android:paddingBottom="10dp">
+    android:paddingStart="?attr/listPreferredItemPaddingLeft"
+    android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/type"
@@ -17,36 +17,38 @@
 
     <ImageView
         android:id="@+id/userStatus"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
         android:layout_width="10dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.9"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:maxLines="1"
+        android:layout_marginStart="16dp"
+        android:layout_weight="0.9"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+        android:maxLines="1"
+        android:fontFamily="@font/lato_regular"
+        android:typeface="monospace"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/alertCount"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.1"
-        android:gravity="center"
-        android:textSize="14sp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:background="@drawable/style_alert_count"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="14sp"
         android:visibility="gone" />
 </LinearLayout>

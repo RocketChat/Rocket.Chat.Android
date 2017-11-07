@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/AppTheme.Dark"
     android:background="?attr/colorPrimary"
+    android:theme="@style/AppTheme.Dark"
     tools:context="chat.rocket.android.fragment.sidebar.SidebarMainFragment">
 
     <LinearLayout
@@ -19,9 +19,9 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_8"
-        android:paddingTop="@dimen/margin_8"
         android:paddingLeft="@dimen/margin_16"
-        android:paddingRight="@dimen/margin_16">
+        android:paddingRight="@dimen/margin_16"
+        android:paddingTop="@dimen/margin_8">
 
         <ImageView
             android:id="@+id/current_user_status"
@@ -46,7 +46,10 @@
             android:layout_marginLeft="@dimen/margin_8"
             android:layout_marginRight="@dimen/margin_8"
             android:layout_weight="1"
-            android:textSize="14sp"
+            android:ellipsize="end"
+            android:fontFamily="@font/lato_regular"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
             tools:text="John Doe" />
 
         <chat.rocket.android.widget.DownUpToggleView
@@ -59,24 +62,24 @@
         android:id="@+id/search_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_8"
-        android:paddingTop="@dimen/margin_8"
-        android:elevation="2dp"
         android:layout_below="@+id/user_info_container"
-        android:background="?attr/colorPrimaryDark">
+        android:background="?attr/colorPrimaryDark"
+        android:elevation="2dp"
+        android:paddingBottom="@dimen/margin_8"
+        android:paddingTop="@dimen/margin_8">
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:focusableInTouchMode="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
 
         <android.support.v7.widget.SearchView
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:queryHint="@string/spotlight_search"
-            app:iconifiedByDefault="false" />
+            app:iconifiedByDefault="false"
+            app:queryHint="@string/spotlight_search" />
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -90,10 +93,10 @@
         android:id="@+id/text_load_more_results"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:text="@string/spotlight_load_more_results"
         android:background="?attr/colorPrimary"
+        android:gravity="center"
+        android:text="@string/spotlight_load_more_results"
         android:visibility="gone" />
 
     <android.support.v4.widget.NestedScrollView

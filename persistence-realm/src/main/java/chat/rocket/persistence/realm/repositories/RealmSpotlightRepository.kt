@@ -25,7 +25,7 @@ class RealmSpotlightRepository(private val hostname: String) : RealmRepository()
                 return@using Flowable.empty()
             }
 
-            return@using RxJavaInterop.toV2Flowable<RealmResults<RealmSpotlight>>(pair.first.where(RealmSpotlight::class.java)
+            return@using RxJavaInterop.toV2Flowable<RealmResults<RealmSpotlight>>(pair.first!!.where(RealmSpotlight::class.java)
                 .findAllSorted(Columns.TYPE, Sort.DESCENDING)
                 .asObservable())
         }) { pair -> close(pair.first, pair.second) }
