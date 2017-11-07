@@ -9,6 +9,7 @@ import com.hadisatrio.optional.Optional;
 import java.util.List;
 
 import chat.rocket.android.LaunchUtil;
+import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.push.PushManager;
@@ -104,7 +105,10 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       }
 
       if (assertServerRealmStoreExists(newHostname)) {
-        recreate();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
       } else {
         recoverFromHostnameError();
       }
