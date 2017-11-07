@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import bolts.Task;
 import chat.rocket.android.api.MethodCallHelper;
@@ -301,7 +302,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
     if (reconnectSubscription.hasSubscriptions()) {
       return;
     }
-    DDPClient.get().close();
     forceInvalidateTokens();
     connectivityManager.notifyConnecting(hostname);
     // Needed to use subscriptions because of legacy code.
@@ -315,7 +315,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
                               }
                               reconnectSubscription.clear();
                             },
-                            err -> logErrorAndUnsubscribe(reconnectSubscription, err)
+                            err -> {
+                              logErrorAndUnsubscribe(reconnectSubscription, err);
+                              connectivityManager.notifyConnectionLost(hostname,
+                                      ConnectivityManagerInternal.REASON_NETWORK_ERROR);
+                            }
                     )
     );
   }
@@ -326,7 +330,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Single<Boolean> connectWithExponentialBackoff() {
-    return connect().retryWhen(RxHelper.exponentialBackoff(Integer.MAX_VALUE, 500, TimeUnit.MILLISECONDS));
+    return connect().retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
   }
 
   @DebugLog
@@ -429,7 +433,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
                       RCLog.e(error);
                       // Stop pinging
                       hearbeatDisposable.clear();
-                      if (error instanceof DDPClientCallback.Closed) {
+                      if (error instanceof DDPClientCallback.Closed || error instanceof TimeoutException) {
                         RCLog.d("Hearbeat failure: retrying connection...");
                         reconnect();
                       }

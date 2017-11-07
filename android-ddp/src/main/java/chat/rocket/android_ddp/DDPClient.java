@@ -23,7 +23,7 @@ public class DDPClient {
   // reference: https://github.com/eddflrs/meteor-ddp/blob/master/meteor-ddp.js
 
   private static volatile DDPClient singleton;
-  private static OkHttpClient client;
+  private static volatile OkHttpClient client;
   private final DDPClientImpl impl;
   private final AtomicReference<String> hostname = new AtomicReference<>();
 
@@ -49,9 +49,8 @@ public class DDPClient {
   }
 
   public Task<DDPClientCallback.Connect> connect(String url, String session) {
-    String oldHostname = hostname.get();
-    hostname.set(url);
-    if (oldHostname != null && !url.equalsIgnoreCase(oldHostname)) {
+    String oldHostname = hostname.getAndSet(url);
+    if (oldHostname != null && !oldHostname.equalsIgnoreCase(url)) {
       close();
     }
     TaskCompletionSource<DDPClientCallback.Connect> task = new TaskCompletionSource<>();

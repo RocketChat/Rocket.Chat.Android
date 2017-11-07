@@ -8,7 +8,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -24,8 +24,8 @@ import rx.Single;
 public class RocketChatService extends Service implements ConnectivityServiceInterface {
 
   private ConnectivityManagerInternal connectivityManager;
-  private HashMap<String, RocketChatWebSocketThread> webSocketThreads;
-  private Semaphore webSocketThreadLock = new Semaphore(1);
+  private static volatile ConcurrentHashMap<String, RocketChatWebSocketThread> webSocketThreads;
+  private static volatile Semaphore webSocketThreadLock = new Semaphore(1);
 
   public class LocalBinder extends Binder {
     ConnectivityServiceInterface getServiceInterface() {
@@ -57,7 +57,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
     super.onCreate();
     connectivityManager = ConnectivityManager.getInstanceForInternal(getApplicationContext());
     connectivityManager.resetConnectivityStateList();
-    webSocketThreads = new HashMap<>();
+    webSocketThreads = new ConcurrentHashMap<>();
   }
 
   @DebugLog
@@ -71,8 +71,9 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
   public Single<Boolean> ensureConnectionToServer(String hostname) { //called via binder.
     return getOrCreateWebSocketThread(hostname)
         .doOnError(err -> {
+          err.printStackTrace();
           webSocketThreads.remove(hostname);
-          connectivityManager.notifyConnectionLost(hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR);
+//          connectivityManager.notifyConnectionLost(hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR);
         })
         .flatMap(webSocketThreads -> webSocketThreads.keepAlive());
   }

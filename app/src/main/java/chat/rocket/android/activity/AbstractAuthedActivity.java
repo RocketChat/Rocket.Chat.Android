@@ -42,7 +42,6 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     }
 
     updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
-    updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
   }
 
   @Override
@@ -93,12 +92,14 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     if (hostname == null) {
       if (newHostname != null && assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
+        updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
       } else {
         recoverFromHostnameError();
       }
     } else {
       if (hostname.equals(newHostname)) {
         updateHostname(newHostname);
+        updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
         return;
       }
 
