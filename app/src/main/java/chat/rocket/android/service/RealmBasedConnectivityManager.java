@@ -185,7 +185,6 @@ import rx.subjects.PublishSubject;
       }
 
       return connectToServer(hostname);
-//          .retryWhen(RxHelper.exponentialBackoff(1, 500, TimeUnit.MILLISECONDS));
     });
   }
 

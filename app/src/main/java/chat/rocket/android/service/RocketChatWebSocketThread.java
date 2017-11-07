@@ -122,7 +122,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         }
       }.start();
     }).flatMap(webSocket ->
-        webSocket.connect().map(_val -> webSocket));
+        webSocket.connectWithExponentialBackoff().map(_val -> webSocket));
   }
 
   @Override

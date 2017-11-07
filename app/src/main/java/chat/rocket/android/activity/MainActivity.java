@@ -61,7 +61,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     statusTicker = new StatusTicker();
     pane = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
     setupToolbar();
-    closeSidebarIfNeeded();
   }
 
   @Override
@@ -139,6 +138,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         });
       }
     }
+    closeSidebarIfNeeded();
   }
 
   private boolean closeSidebarIfNeeded() {
