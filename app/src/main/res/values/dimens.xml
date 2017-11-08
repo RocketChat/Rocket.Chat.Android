@@ -7,4 +7,6 @@
     <dimen name="edit_text_margin">10dp</dimen>
     <dimen name="edit_text_drawable_padding">16dp</dimen>
 
+    <dimen name="fab_elevation">6dp</dimen>
+
 </resources>
