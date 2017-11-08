@@ -8,6 +8,7 @@ machine:
   environment:
     ANDROID_HOME: /usr/local/android-sdk-linux
     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError"'
+    JAVA_OPTS: "-Xms518m -Xmx1536m"
 
 dependencies:
   pre:
