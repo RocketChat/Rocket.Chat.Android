@@ -4,7 +4,7 @@ apply from: rootProject.file('dependencies.gradle')
 ext {
     compileSdkVersion = 26
     targetSdkVersion = 26
-    buildToolsVersion = "26.0.0"
+    buildToolsVersion = "26.0.2"
 }
 
 buildscript {
