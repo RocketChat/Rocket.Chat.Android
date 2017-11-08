@@ -28,8 +28,13 @@ class AuthenticationLoginFragment : Fragment() {
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
 
-        if (KeyboardHelper.isHardKeyboardShown(newConfig)) hideSocialAccountsAndSignUpMsgViews()
-        else showSocialAccountsAndSignUpMsgViews()
+        if (KeyboardHelper.isHardKeyboardShown(newConfig)) {
+            shouldShowSocialAccountsAndSignUpMsgViews(false)
+        } else {
+            if (isEditTextNullOrBlank()) {
+                shouldShowSocialAccountsAndSignUpMsgViews(true)
+            }
+        }
     }
 
     private fun tintEditTextDrawableStart() {
@@ -46,27 +51,42 @@ class AuthenticationLoginFragment : Fragment() {
 
     private fun setupEditTextListener() {
         text_username_or_email.viewTreeObserver.addOnGlobalLayoutListener({
-            if (KeyboardHelper.isSoftKeyboardShown(text_username_or_email.rootView)) hideSocialAccountsAndSignUpMsgViews()
-            else showSocialAccountsAndSignUpMsgViews()
+            if (KeyboardHelper.isSoftKeyboardShown(text_username_or_email.rootView)) {
+                shouldShowSocialAccountsAndSignUpMsgViews(false)
+            } else {
+                if (isEditTextNullOrBlank()) {
+                    shouldShowSocialAccountsAndSignUpMsgViews(true)
+                }
+            }
         })
 
         text_password.viewTreeObserver.addOnGlobalLayoutListener({
-            if (KeyboardHelper.isSoftKeyboardShown(text_username_or_email.rootView)) hideSocialAccountsAndSignUpMsgViews()
-            else showSocialAccountsAndSignUpMsgViews()
+            if (KeyboardHelper.isSoftKeyboardShown(text_username_or_email.rootView)) {
+                shouldShowSocialAccountsAndSignUpMsgViews(false)
+            } else {
+                if (isEditTextNullOrBlank()) {
+                    shouldShowSocialAccountsAndSignUpMsgViews(true)
+                }
+            }
         })
     }
 
-    private fun hideSocialAccountsAndSignUpMsgViews() {
-        social_accounts_container.visibility = View.GONE
-        text_new_in_rocket_chat.visibility = View.GONE
-        button_fab.visibility = View.GONE
-        button_log_in.visibility = View.VISIBLE
+    private fun shouldShowSocialAccountsAndSignUpMsgViews(show: Boolean) {
+        if (show) {
+            social_accounts_container.visibility = View.VISIBLE
+            text_new_in_rocket_chat.visibility = View.VISIBLE
+            button_fab.visibility = View.VISIBLE
+            button_log_in.visibility = View.GONE
+        } else {
+            social_accounts_container.visibility = View.GONE
+            text_new_in_rocket_chat.visibility = View.GONE
+            button_fab.visibility = View.GONE
+            button_log_in.visibility = View.VISIBLE
+        }
     }
 
-    private fun showSocialAccountsAndSignUpMsgViews() {
-        social_accounts_container.visibility = View.VISIBLE
-        text_new_in_rocket_chat.visibility = View.VISIBLE
-        button_fab.visibility = View.VISIBLE
-        button_log_in.visibility = View.GONE
+    // Returns true if *all* EditText are null or blank.
+    private fun isEditTextNullOrBlank(): Boolean {
+        return text_username_or_email.text.isNullOrBlank() && text_password.text.isNullOrBlank()
     }
 }
