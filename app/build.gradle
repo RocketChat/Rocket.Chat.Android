@@ -83,6 +83,13 @@ android {
             androidTest.java.srcDirs += 'src/androidTest/kotlin'
         }
     }
+
+    dexOptions {
+        if(System.getenv()["CIRCLECI"] as boolean) {
+            javaMaxHeapSize "2048M"
+            preDexLibraries false
+        }
+    }
 }
 
 play {
