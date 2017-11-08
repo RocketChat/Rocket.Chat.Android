@@ -21,7 +21,9 @@ class AuthenticationLoginFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) tintEditTextDrawableStart()
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            tintEditTextDrawableStart()
+        }
         setupEditTextListener()
     }
 
