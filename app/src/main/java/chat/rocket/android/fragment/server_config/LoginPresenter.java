@@ -85,7 +85,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
             }
           }
           return null;
-        });
+        }, Task.UI_THREAD_EXECUTOR);
   }
 
   private Task<Void> call(String username, String password, Optional<PublicSetting> optional) {
