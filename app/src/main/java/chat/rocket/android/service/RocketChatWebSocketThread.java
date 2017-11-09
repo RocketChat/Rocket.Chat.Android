@@ -307,20 +307,21 @@ public class RocketChatWebSocketThread extends HandlerThread {
     // Needed to use subscriptions because of legacy code.
     // TODO: Should update to RxJava 2
     reconnectSubscription.add(
-            connectWithExponentialBackoff()
-                    .subscribe(
-                            connected -> {
-                              if (!connected) {
-                                connectivityManager.notifyConnecting(hostname);
-                              }
-                              reconnectSubscription.clear();
-                            },
-                            err -> {
-                              logErrorAndUnsubscribe(reconnectSubscription, err);
-                              connectivityManager.notifyConnectionLost(hostname,
-                                      ConnectivityManagerInternal.REASON_NETWORK_ERROR);
-                            }
-                    )
+        connectWithExponentialBackoff()
+            .subscribe(
+                  connected -> {
+                    if (!connected) {
+                      connectivityManager.notifyConnecting(hostname);
+                    }
+                    reconnectSubscription.clear();
+                  },
+                  error -> {
+                    logErrorAndUnsubscribe(reconnectSubscription, error);
+                    connectivityManager.notifyConnectionLost(hostname,
+                            ConnectivityManagerInternal.REASON_NETWORK_ERROR);
+                    new Handler(getLooper()).post(this::unregisterListeners);
+                  }
+            )
     );
   }
 
