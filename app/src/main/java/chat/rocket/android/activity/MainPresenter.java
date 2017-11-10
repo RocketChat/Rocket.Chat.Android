@@ -18,6 +18,7 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.service.ServerConnectivity;
 import chat.rocket.android.shared.BasePresenter;
+import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
@@ -227,7 +228,9 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                         view.showConnectionOk();
                         view.refreshRoom();
                       } else if (connectivity.state == ServerConnectivity.STATE_DISCONNECTED) {
-                          view.showConnectionError();
+                          if (connectivity.code == DDPClient.REASON_NETWORK_ERROR) {
+                              view.showConnectionError();
+                          }
                       } else {
                           view.showConnecting();
                       }

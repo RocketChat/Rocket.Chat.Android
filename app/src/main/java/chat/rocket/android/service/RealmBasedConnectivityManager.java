@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.models.RealmBasedServerInfo;
 import hugo.weaving.DebugLog;
@@ -79,7 +80,7 @@ import rx.subjects.PublishSubject;
           .subscribe(_val -> {
           }, error -> {
             RCLog.e(error);
-            notifyConnectionLost(hostname, REASON_NETWORK_ERROR);
+            notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR);
           });
   }
 
@@ -138,10 +139,10 @@ import rx.subjects.PublishSubject;
 
   @DebugLog
   @Override
-  public void notifyConnectionLost(String hostname, int reason) {
+  public void notifyConnectionLost(String hostname, int code) {
     serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
     connectivitySubject.onNext(
-        new ServerConnectivity(hostname, ServerConnectivity.STATE_DISCONNECTED));
+        new ServerConnectivity(hostname, ServerConnectivity.STATE_DISCONNECTED, code));
   }
 
   @DebugLog
@@ -197,7 +198,7 @@ import rx.subjects.PublishSubject;
 
       if (connectivity == ServerConnectivity.STATE_CONNECTING) {
         return waitForConnected(hostname)
-            .doOnError(err -> notifyConnectionLost(hostname, REASON_NETWORK_ERROR))
+            .doOnError(err -> notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR))
             .flatMap(_val -> disconnectFromServerIfNeeded(hostname));
       }
 
