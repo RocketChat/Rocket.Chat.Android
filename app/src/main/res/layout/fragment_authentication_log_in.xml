@@ -1,97 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/text_headline"
-        style="@style/HeadlineTextView"
-        android:text="@string/title_log_in"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/text_username_or_email"
-        style="@style/AuthenticationEditText"
-        android:layout_marginTop="32dp"
-        android:drawableStart="@drawable/ic_assignment_ind_black_24dp"
-        android:hint="@string/msg_username_or_email"
-        android:imeOptions="actionNext"
-        android:inputType="text"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_headline" />
-
-    <EditText
-        android:id="@+id/text_password"
-        style="@style/AuthenticationEditText"
-        android:layout_marginTop="16dp"
-        android:drawableStart="@drawable/ic_lock_black_24dp"
-        android:hint="@string/msg_password"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_username_or_email" />
-
-    <LinearLayout
-        android:id="@+id/social_accounts_container"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-        android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-        android:layout_marginTop="16dp"
-        android:background="@color/colorPrimaryDark"
-        android:orientation="vertical"
-        android:paddingBottom="32dp"
-        android:paddingTop="@dimen/screen_edge_left_and_right_margins"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_password">
+        android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/text_headline"
+            style="@style/HeadlineTextView"
+            android:text="@string/title_log_in"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/text_username_or_email"
+            style="@style/AuthenticationEditText"
+            android:layout_marginTop="32dp"
+            android:drawableStart="@drawable/ic_assignment_ind_black_24dp"
+            android:hint="@string/msg_username_or_email"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress|text"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_headline" />
+
+        <EditText
+            android:id="@+id/text_password"
+            style="@style/AuthenticationEditText"
+            android:layout_marginTop="16dp"
+            android:drawableStart="@drawable/ic_lock_black_24dp"
+            android:hint="@string/msg_password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_username_or_email" />
+
+        <LinearLayout
+            android:id="@+id/social_accounts_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginTop="16dp"
+            android:animateLayoutChanges="true"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="32dp"
+            android:paddingTop="@dimen/screen_edge_left_and_right_margins"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_password"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/msg_or_continue_using_social_accounts" />
+
+            <ImageButton
+                android:id="@+id/button_facebook"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/msg_content_description_log_in_using_facebook"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_facebook"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/button_github"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/msg_content_description_log_in_using_github"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_github"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/button_google"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/msg_content_description_log_in_using_google"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_google"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/button_linkedin"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/msg_content_description_log_in_using_linkedin"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_linkedin"
+                android:visibility="gone"
+                tools:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/button_meteor"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/msg_content_description_log_in_using_meteor"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_meteor"
+                android:visibility="gone"
+                tools:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/button_twitter"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/msg_content_description_log_in_using_twitter"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_twitter"
+                android:visibility="gone"
+                tools:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/button_gitlab"
+                android:layout_width="290dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/msg_content_description_log_in_using_gitlab"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_gitlab"
+                android:visibility="gone"
+                tools:visibility="gone" />
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/button_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/msg_or_continue_using_social_accounts" />
+            android:src="@drawable/ic_expand_more_black_24dp"
+            android:theme="@style/Theme.AppCompat"
+            android:tint="@color/white"
+            android:visibility="gone"
+            app:backgroundTint="@color/colorAccent"
+            app:elevation="@dimen/fab_elevation"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="@+id/social_accounts_container"
+            app:layout_constraintLeft_toLeftOf="@+id/social_accounts_container"
+            app:layout_constraintRight_toRightOf="@+id/social_accounts_container"
+            app:layout_constraintTop_toBottomOf="@+id/social_accounts_container"
+            tools:visibility="visible" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/text_new_in_rocket_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/msg_new_in_rocket_chat"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/social_accounts_container"
+            tools:visibility="visible" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_expand_more_black_24dp"
-        android:theme="@style/Theme.AppCompat"
-        android:tint="@color/white"
-        app:backgroundTint="@color/colorAccent"
-        app:elevation="@dimen/fab_elevation"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/social_accounts_container"
-        app:layout_constraintLeft_toLeftOf="@+id/social_accounts_container"
-        app:layout_constraintRight_toRightOf="@+id/social_accounts_container"
-        app:layout_constraintTop_toBottomOf="@+id/social_accounts_container" />
-
-    <TextView
-        android:id="@+id/text_new_in_rocket_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-        android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-        android:gravity="center"
-        android:text="@string/msg_new_in_rocket_chat"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <Button
-        android:id="@+id/button_log_in"
-        style="@style/AuthenticationButton"
-        android:text="@string/title_log_in"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-</android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/button_log_in"
+            style="@style/AuthenticationButton"
+            android:text="@string/title_log_in"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="gone" />
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
