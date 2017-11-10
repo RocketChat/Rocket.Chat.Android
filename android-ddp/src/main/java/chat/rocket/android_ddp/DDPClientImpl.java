@@ -59,7 +59,7 @@ public class DDPClientImpl {
       CompositeDisposable disposables = new CompositeDisposable();
 
       disposables.add(
-          flowable.retry().filter(callback -> callback instanceof RxWebSocketCallback.Open)
+          flowable.filter(callback -> callback instanceof RxWebSocketCallback.Open)
               .subscribe(
                   callback ->
                     sendMessage("connect",
@@ -115,6 +115,7 @@ public class DDPClientImpl {
 
     if (requested) {
       return flowable.filter(callback -> callback instanceof RxWebSocketCallback.Message)
+              .timeout(8, TimeUnit.SECONDS)
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
               .filter(response -> "pong".equalsIgnoreCase(extractMsg(response)))

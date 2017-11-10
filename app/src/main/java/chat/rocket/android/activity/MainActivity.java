@@ -138,6 +138,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         });
       }
     }
+    closeSidebarIfNeeded();
   }
 
   private boolean closeSidebarIfNeeded() {
@@ -249,7 +250,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         Snackbar.make(findViewById(getLayoutContainerForFragment()),
             R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
             .setAction(R.string.fragment_retry_login_retry_title, view ->
-                presenter.onRetryLogin()));
+                ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer()));
   }
 
   @Override

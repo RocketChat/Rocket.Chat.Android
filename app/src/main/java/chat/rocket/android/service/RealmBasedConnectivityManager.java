@@ -16,11 +16,13 @@ import java.util.concurrent.TimeUnit;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.models.RealmBasedServerInfo;
 import hugo.weaving.DebugLog;
 import rx.Observable;
 import rx.Single;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -28,7 +30,7 @@ import rx.subjects.PublishSubject;
  */
 /*package*/ class RealmBasedConnectivityManager
     implements ConnectivityManagerApi, ConnectivityManagerInternal {
-  private final ConcurrentHashMap<String, Integer> serverConnectivityList = new ConcurrentHashMap<>();
+  private volatile ConcurrentHashMap<String, Integer> serverConnectivityList = new ConcurrentHashMap<>();
   private final PublishSubject<ServerConnectivity> connectivitySubject = PublishSubject.create();
   private Context appContext;
   private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -70,9 +72,16 @@ import rx.subjects.PublishSubject;
   @Override
   public void ensureConnections() {
     String hostname = new RocketChatCache(appContext).getSelectedServerHostname();
+    if (hostname == null) {
+      return;
+    }
     connectToServerIfNeeded(hostname, true/* force connect */)
+          .subscribeOn(Schedulers.io())
           .subscribe(_val -> {
-          }, RCLog::e);
+          }, error -> {
+            RCLog.e(error);
+            notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR);
+          });
   }
 
   @Override
@@ -130,10 +139,10 @@ import rx.subjects.PublishSubject;
 
   @DebugLog
   @Override
-  public void notifyConnectionLost(String hostname, int reason) {
+  public void notifyConnectionLost(String hostname, int code) {
     serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
     connectivitySubject.onNext(
-        new ServerConnectivity(hostname, ServerConnectivity.STATE_DISCONNECTED));
+        new ServerConnectivity(hostname, ServerConnectivity.STATE_DISCONNECTED, code));
   }
 
   @DebugLog
@@ -167,13 +176,16 @@ import rx.subjects.PublishSubject;
             .flatMap(_val -> connectToServerIfNeeded(hostname, forceConnect));
       }
 
-      if (connectivity == ServerConnectivity.STATE_CONNECTING) {
-        return waitForConnected(hostname);
+//      if (connectivity == ServerConnectivity.STATE_CONNECTING) {
+//        return waitForConnected(hostname)
+//                .doOnError(error -> notifyConnectionLost(hostname, REASON_NETWORK_ERROR));
+//      }
+
+      if (connectivity == ServerConnectivity.STATE_DISCONNECTED) {
+        notifyConnecting(hostname);
       }
 
-      return connectToServer(hostname)
-          .doOnError(RCLog::e)
-          .retryWhen(RxHelper.exponentialBackoff(Integer.MAX_VALUE, 500, TimeUnit.MILLISECONDS));
+      return connectToServer(hostname);
     });
   }
 
@@ -186,7 +198,7 @@ import rx.subjects.PublishSubject;
 
       if (connectivity == ServerConnectivity.STATE_CONNECTING) {
         return waitForConnected(hostname)
-            .onErrorReturn(err -> true)
+            .doOnError(err -> notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR))
             .flatMap(_val -> disconnectFromServerIfNeeded(hostname));
       }
 
@@ -195,8 +207,7 @@ import rx.subjects.PublishSubject;
       }
 
       return disconnectFromServer(hostname)
-          //.doOnError(RCLog::e)
-          .retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
+          .retryWhen(RxHelper.exponentialBackoff(1, 500, TimeUnit.MILLISECONDS));
     });
   }
 
@@ -237,7 +248,7 @@ import rx.subjects.PublishSubject;
       if (serverConnectivityList.get(hostname) != ServerConnectivity.STATE_CONNECTED) {
         // Mark as CONNECTING except for the case [forceConnect && connected] because
         // ensureConnectionToServer doesn't notify ConnectionEstablished/Lost is already connected.
-        serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTING);
+//        serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTING);
       }
 
       if (serviceInterface != null) {

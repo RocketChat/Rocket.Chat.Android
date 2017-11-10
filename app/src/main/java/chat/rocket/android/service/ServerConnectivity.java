@@ -11,10 +11,18 @@ public class ServerConnectivity {
 
   public final String hostname;
   public final int state;
+  public final int code;
 
-  public ServerConnectivity(String hostname, int state) {
+  ServerConnectivity(String hostname, int state) {
     this.hostname = hostname;
     this.state = state;
+    this.code = -1;
+  }
+
+  ServerConnectivity(String hostname, int state, int code) {
+    this.hostname = hostname;
+    this.state = state;
+    this.code = code;
   }
 
   /**

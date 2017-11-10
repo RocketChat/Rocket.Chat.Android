@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import bolts.Task;
 import chat.rocket.android.api.MethodCallHelper;
@@ -34,6 +35,7 @@ import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
 import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.android_ddp.rx.RxWebSocketCallback;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
@@ -121,7 +123,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
         }
       }.start();
     }).flatMap(webSocket ->
-        webSocket.connect().map(_val -> webSocket));
+        webSocket.connectWithExponentialBackoff().map(_val -> webSocket));
   }
 
   @Override
@@ -154,14 +156,14 @@ public class RocketChatWebSocketThread extends HandlerThread {
           RCLog.d("thread %s: terminated()", Thread.currentThread().getId());
           unregisterListenersAndClose();
           connectivityManager.notifyConnectionLost(hostname,
-              ConnectivityManagerInternal.REASON_CLOSED_BY_USER);
+              DDPClient.REASON_CLOSED_BY_USER);
           RocketChatWebSocketThread.super.quit();
           emitter.onSuccess(true);
         });
       });
     } else {
       connectivityManager.notifyConnectionLost(hostname,
-          ConnectivityManagerInternal.REASON_NETWORK_ERROR);
+              DDPClient.REASON_NETWORK_ERROR);
       super.quit();
       return Single.just(true);
     }
@@ -205,7 +207,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
               Exception error = task.getError();
               RCLog.e(error);
               connectivityManager.notifyConnectionLost(
-                      hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR);
+                      hostname, DDPClient.REASON_CLOSED_BY_USER);
               emitter.onError(error);
             } else {
               keepAliveTimer.update();
@@ -257,42 +259,43 @@ public class RocketChatWebSocketThread extends HandlerThread {
           }
           RCLog.d("DDPClient#connect");
           DDPClient.get().connect(hostname, info.getSession(), info.isSecure())
-              .onSuccessTask(task -> {
-                final String newSession = task.getResult().session;
-                connectivityManager.notifyConnectionEstablished(hostname, newSession);
+                  .onSuccessTask(task -> {
+                    final String newSession = task.getResult().session;
+                    connectivityManager.notifyConnectionEstablished(hostname, newSession);
 
-                // handling WebSocket#onClose() callback.
-                task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
-                  if (_task.getResult().code != 1000) {
-                    reconnect();
-                  }
-                  return null;
-                });
+                    // handling WebSocket#onClose() callback.
+                    task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
+                      RxWebSocketCallback.Close result = _task.getResult();
+                      if (result.code == DDPClient.REASON_NETWORK_ERROR) {
+                        reconnect();
+                      }
+                      return null;
+                    });
 
-                return realmHelper.executeTransaction(realm -> {
-                  RealmSession sessionObj = RealmSession.queryDefaultSession(realm).findFirst();
-                  if (sessionObj == null) {
-                    realm.createOrUpdateObjectFromJson(RealmSession.class,
-                        new JSONObject().put(RealmSession.ID, RealmSession.DEFAULT_ID));
-                  } else {
-                    // invalidate login token.
-                    if (!TextUtils.isEmpty(sessionObj.getToken()) && sessionObj.isTokenVerified()) {
-                      sessionObj.setTokenVerified(false);
-                      sessionObj.setError(null);
+                    return realmHelper.executeTransaction(realm -> {
+                      RealmSession sessionObj = RealmSession.queryDefaultSession(realm).findFirst();
+                      if (sessionObj == null) {
+                        realm.createOrUpdateObjectFromJson(RealmSession.class,
+                                new JSONObject().put(RealmSession.ID, RealmSession.DEFAULT_ID));
+                      } else {
+                        // invalidate login token.
+                        if (!TextUtils.isEmpty(sessionObj.getToken()) && sessionObj.isTokenVerified()) {
+                          sessionObj.setTokenVerified(false);
+                          sessionObj.setError(null);
+                        }
+
+                      }
+                      return null;
+                    });
+                  })
+                  .continueWith(task -> {
+                    if (task.isFaulted()) {
+                      emitter.onError(task.getError());
+                    } else {
+                      emitter.onSuccess(true);
                     }
-
-                  }
-                  return null;
-                });
-              })
-              .continueWith(task -> {
-                if (task.isFaulted()) {
-                  emitter.onError(task.getError());
-                } else {
-                  emitter.onSuccess(true);
-                }
-                return null;
-              });
+                    return null;
+                  });
         }));
   }
 
@@ -301,22 +304,25 @@ public class RocketChatWebSocketThread extends HandlerThread {
     if (reconnectSubscription.hasSubscriptions()) {
       return;
     }
-    DDPClient.get().close();
     forceInvalidateTokens();
     connectivityManager.notifyConnecting(hostname);
     // Needed to use subscriptions because of legacy code.
     // TODO: Should update to RxJava 2
     reconnectSubscription.add(
-            connectWithExponentialBackoff()
-                    .subscribe(
-                            connected -> {
-                              if (!connected) {
-                                connectivityManager.notifyConnecting(hostname);
-                              }
-                              reconnectSubscription.clear();
-                            },
-                            err -> logErrorAndUnsubscribe(reconnectSubscription, err)
-                    )
+        connectWithExponentialBackoff()
+            .subscribe(
+                  connected -> {
+                    if (!connected) {
+                      connectivityManager.notifyConnecting(hostname);
+                    }
+                    reconnectSubscription.clear();
+                  },
+                  error -> {
+                    logErrorAndUnsubscribe(reconnectSubscription, error);
+                    connectivityManager.notifyConnectionLost(hostname,
+                            DDPClient.REASON_NETWORK_ERROR);
+                  }
+            )
     );
   }
 
@@ -326,7 +332,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   }
 
   private Single<Boolean> connectWithExponentialBackoff() {
-    return connect().retryWhen(RxHelper.exponentialBackoff(Integer.MAX_VALUE, 500, TimeUnit.MILLISECONDS));
+    return connect().retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
   }
 
   @DebugLog
@@ -429,7 +435,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
                       RCLog.e(error);
                       // Stop pinging
                       hearbeatDisposable.clear();
-                      if (error instanceof DDPClientCallback.Closed) {
+                      if (error instanceof DDPClientCallback.Closed || error instanceof TimeoutException) {
                         RCLog.d("Hearbeat failure: retrying connection...");
                         reconnect();
                       }
@@ -440,10 +446,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   @DebugLog
   private void unregisterListenersAndClose() {
-   unregisterListeners();
-    if (DDPClient.get() != null) {
-      DDPClient.get().close();
-    }
+    unregisterListeners();
+    DDPClient.get().close();
   }
 
   @DebugLog
