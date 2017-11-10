@@ -80,7 +80,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
   @Override
   public Single<Boolean> disconnectFromServer(String hostname) { //called via binder.
     return Single.defer(() -> {
-      if (!threadCreatedForHostname(hostname)) {
+      if (!existsThreadForHostname(hostname)) {
         return Single.just(true);
       }
 
@@ -104,8 +104,8 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
     return Single.defer(() -> {
       webSocketThreadLock.acquire();
       int connectivityState = ConnectivityManager.getInstance(getApplicationContext()).getConnectivityState(hostname);
-      boolean isConnected = connectivityState == ServerConnectivity.STATE_CONNECTED;
-      if (currentWebSocketThread != null && threadCreatedForHostname(hostname)) {
+      boolean isDisconnected = connectivityState != ServerConnectivity.STATE_CONNECTED;
+      if (currentWebSocketThread != null && existsThreadForHostname(hostname) && !isDisconnected) {
         webSocketThreadLock.release();
         return Single.just(currentWebSocketThread);
       }
@@ -114,6 +114,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
 
       if (currentWebSocketThread != null) {
         return currentWebSocketThread.terminate()
+              .doAfterTerminate(() -> currentWebSocketThread = null)
               .doOnError(RCLog::e)
               .flatMap(terminated ->
                   RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
@@ -144,7 +145,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
     });
   }
 
-  private boolean threadCreatedForHostname(String hostname) {
+  private boolean existsThreadForHostname(String hostname) {
     if (hostname == null || currentWebSocketThread == null) {
       return false;
     }

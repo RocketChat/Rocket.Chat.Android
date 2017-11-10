@@ -320,10 +320,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
                   error -> {
                     logErrorAndUnsubscribe(reconnectSubscription, error);
                     connectivityManager.notifyConnectionLost(hostname,
-                            DDPClient.REASON_CLOSED_BY_USER);
-                    if (isAlive()) {
-                      new Handler(getLooper()).post(this::unregisterListeners);
-                    }
+                            DDPClient.REASON_NETWORK_ERROR);
                   }
             )
     );
