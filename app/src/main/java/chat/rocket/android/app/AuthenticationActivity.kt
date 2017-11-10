@@ -14,7 +14,7 @@ class AuthenticationActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
 
-        addFragment(AuthenticationServerFragment(), "authenticationServerFragment")
+        addFragment(AuthenticationLoginFragment(), "authenticationServerFragment")
     }
 
     private fun addFragment(fragment: Fragment, tag: String) {
