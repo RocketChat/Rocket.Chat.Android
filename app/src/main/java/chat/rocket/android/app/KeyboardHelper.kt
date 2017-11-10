@@ -33,7 +33,9 @@ object KeyboardHelper {
      * @return true if the hard keyboard is shown, false otherwise.
      */
     fun isHardKeyboardShown(newConfig: Configuration?): Boolean {
-        if (newConfig?.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) return true
+        if (newConfig?.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
+            return true
+        }
         return false
     }
 }
