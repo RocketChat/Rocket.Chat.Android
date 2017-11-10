@@ -14,6 +14,7 @@ class AuthenticationActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
 
+        LayoutHelper.androidBug5497Workaround(this)
         addFragment(AuthenticationLoginFragment(), "authenticationServerFragment")
     }
 
