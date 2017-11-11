@@ -20,8 +20,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 16
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 45
-        versionName "1.0.23"
+        versionCode 47
+        versionName "1.0.24"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -81,6 +81,13 @@ android {
         test {
             test.java.srcDirs += 'src/test/kotlin'
             androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        }
+    }
+
+    dexOptions {
+        if(System.getenv()["CIRCLECI"] as boolean) {
+            javaMaxHeapSize "1536M"
+            preDexLibraries false
         }
     }
 }

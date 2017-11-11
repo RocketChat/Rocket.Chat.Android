@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.server_config;
 
+import bolts.Task;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.shared.BasePresenter;
 
@@ -29,6 +30,6 @@ public class TwoStepAuthPresenter extends BasePresenter<TwoStepAuthContract.View
             view.showError(task.getError().getMessage());
           }
           return null;
-        });
+        }, Task.UI_THREAD_EXECUTOR);
   }
 }
