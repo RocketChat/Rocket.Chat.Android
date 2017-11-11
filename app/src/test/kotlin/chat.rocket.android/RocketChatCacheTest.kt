@@ -27,7 +27,7 @@ class RocketChatCacheTest {
     @Test
     fun getServerList_ShouldReturnHostnameList() {
         val hostnameList = JSONObject()
-                .put("http://demo.rocket.chat", "images/logo/logo.png")
+                .put("http://open.rocket.chat", "images/logo/logo.png")
                 .put("http://192.168.0.6:3000", "images/icon.svg")
                 .toString()
 
@@ -35,7 +35,7 @@ class RocketChatCacheTest {
 
         val expectedServerList = mutableListOf(
                 Pair("http://192.168.0.6:3000", "http://192.168.0.6:3000/images/icon.svg"),
-                Pair("http://demo.rocket.chat", "http://demo.rocket.chat/images/logo/logo.png"))
+                Pair("http://open.rocket.chat", "http://open.rocket.chat/images/logo/logo.png"))
         val serverList = cache.serverList
         assertThat(serverList, equalTo(expectedServerList))
     }

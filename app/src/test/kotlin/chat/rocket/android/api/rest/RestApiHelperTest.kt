@@ -8,83 +8,83 @@ class RestApiHelperTest {
 
     @Test
     fun getEndpointUrlForMessagesTest() {
-        assertEquals("https://demo.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "open.rocket.chat"))
 
-        assertEquals("https://demo.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "https://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "https://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "https://demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "https://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "https://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "https://open.rocket.chat"))
 
-        assertEquals("https://demo.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "http://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "http://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "http://demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "http://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "http://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "http://open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "www.open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "https://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "https://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "https://www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "https://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "https://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "https://www.open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "http://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "http://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "http://www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_CHANNEL, "http://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_GROUP, "http://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.messages", RestApiHelper.getEndpointUrlForMessages(Room.TYPE_DIRECT_MESSAGE, "http://www.open.rocket.chat"))
     }
 
     @Test
     fun getEndpointUrlForFileListTest() {
-        assertEquals("https://demo.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "open.rocket.chat"))
 
-        assertEquals("https://demo.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "https://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "https://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "https://demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "https://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "https://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "https://open.rocket.chat"))
 
-        assertEquals("https://demo.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "http://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "http://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "http://demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "http://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "http://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "http://open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "www.open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "https://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "https://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "https://www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "https://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "https://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "https://www.open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "http://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "http://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "http://www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_CHANNEL, "http://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_GROUP, "http://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.files", RestApiHelper.getEndpointUrlForFileList(Room.TYPE_DIRECT_MESSAGE, "http://www.open.rocket.chat"))
     }
 
     @Test
     fun getEndpointUrlForMemberListTest() {
-        assertEquals("https://demo.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "open.rocket.chat"))
 
-        assertEquals("https://demo.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "https://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "https://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "https://demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "https://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "https://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "https://open.rocket.chat"))
 
-        assertEquals("https://demo.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "http://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "http://demo.rocket.chat"))
-        assertEquals("https://demo.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "http://demo.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "http://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "http://open.rocket.chat"))
+        assertEquals("https://open.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "http://open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "www.open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "https://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "https://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "https://www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "https://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "https://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "https://www.open.rocket.chat"))
 
-        assertEquals("https://www.demo.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "http://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "http://www.demo.rocket.chat"))
-        assertEquals("https://www.demo.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "http://www.demo.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/channels.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_CHANNEL, "http://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/groups.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_GROUP, "http://www.open.rocket.chat"))
+        assertEquals("https://www.open.rocket.chat/api/v1/dm.members", RestApiHelper.getEndpointUrlForMemberList(Room.TYPE_DIRECT_MESSAGE, "http://www.open.rocket.chat"))
     }
 
     @Test
