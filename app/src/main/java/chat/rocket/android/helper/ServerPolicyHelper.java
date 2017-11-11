@@ -12,7 +12,7 @@ public class ServerPolicyHelper {
 
   public static String enforceHostname(String hostname) {
     if (hostname == null) {
-      return "demo.rocket.chat";
+      return "open.rocket.chat";
     }
 
     return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));
