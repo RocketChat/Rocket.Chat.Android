@@ -528,9 +528,9 @@ object PushManager {
 
             init {
                 val json = JSONObject(sender)
-                _id = json.getString("_id")
+                _id = json.optString("_id")
                 username = json.getString("username")
-                name = json.getString("name")
+                name = json.optString("name")
             }
         }
     }
