@@ -33,6 +33,7 @@ ext {
         annotations      : "com.android.support:support-annotations:${versions.support}",
         recyclerview     : "com.android.support:recyclerview-v7:${versions.support}",
         design           : "com.android.support:design:${versions.support}",
+        constraintLayout : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
         autoValue        : "com.google.auto.value:auto-value:${versions.autoValue}",
         moshi            : "com.squareup.moshi:moshi:${versions.moshi}",
         dagger           : "com.google.dagger:dagger:${versions.dagger}",
