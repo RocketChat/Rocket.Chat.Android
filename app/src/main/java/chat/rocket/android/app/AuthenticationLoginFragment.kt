@@ -116,9 +116,9 @@ class AuthenticationLoginFragment : Fragment() {
 
     private fun shouldShowSignUpMsgView(show: Boolean) {
         if (show) {
-            text_new_in_rocket_chat.visibility = View.VISIBLE
+            text_new_to_rocket_chat.visibility = View.VISIBLE
         } else {
-            text_new_in_rocket_chat.visibility = View.GONE
+            text_new_to_rocket_chat.visibility = View.GONE
         }
     }
 
