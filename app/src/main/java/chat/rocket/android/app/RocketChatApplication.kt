@@ -5,6 +5,7 @@ import android.app.Application
 import chat.rocket.android.BuildConfig
 
 import chat.rocket.android.dagger.DaggerApplicationComponent
+import com.facebook.drawee.backends.pipeline.Fresco
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -22,6 +23,8 @@ class RocketChatApplication : Application(), HasActivityInjector {
                 .application(this)
                 .build()
                 .inject(this)
+
+        Fresco.initialize(this)
 
         setupTimber()
     }
