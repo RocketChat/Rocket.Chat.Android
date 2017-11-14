@@ -176,7 +176,6 @@ class AuthenticationLoginFragment : Fragment() {
     }
 
     private fun scrollToBottom() {
-//        scroll_view.postDelayed({ scroll_view.smoothScrollTo(0, view.top) }, 1000)
         scroll_view.postDelayed({ scroll_view.fullScroll(ScrollView.FOCUS_DOWN); }, 1000)
     }
 
