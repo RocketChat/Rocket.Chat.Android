@@ -2,13 +2,14 @@ package chat.rocket.android.app
 
 import android.app.Activity
 import android.graphics.Rect
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 
 /**
  * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
  */
-//TODO Check if this code has memory leak.
+//TODO: check if this code has memory leak.
 object LayoutHelper {
     private lateinit var childOfContent: View
     private var usableHeightPrevious: Int = 0
@@ -25,10 +26,15 @@ object LayoutHelper {
      * @param activity The Activity to adjust the layout.
      */
     fun androidBug5497Workaround(activity: Activity) {
-        val content = activity.findViewById<View>(android.R.id.content) as FrameLayout
-        childOfContent = content.getChildAt(0)
-        childOfContent.viewTreeObserver.addOnGlobalLayoutListener({ resizeChildOfContent() })
-        frameLayoutParams = childOfContent.layoutParams as FrameLayout.LayoutParams
+        try {
+            val content = activity.findViewById<View>(android.R.id.content) as FrameLayout
+            childOfContent = content.getChildAt(0)
+            childOfContent.viewTreeObserver.addOnGlobalLayoutListener({ resizeChildOfContent() })
+            frameLayoutParams = childOfContent.layoutParams as FrameLayout.LayoutParams
+        } catch (exception : ClassCastException) {
+            // TODO: are we using the android.util.Log for logging that type of errors?
+            Log.e("ERROR", exception.message)
+        }
     }
 
     private fun resizeChildOfContent() {
