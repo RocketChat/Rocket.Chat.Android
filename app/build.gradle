@@ -47,6 +47,8 @@ dependencies {
 
     implementation libraries.timber
 
+    implementation libraries.fresco
+
     implementation libraries.kotlin
 
     testImplementation libraries.junit
