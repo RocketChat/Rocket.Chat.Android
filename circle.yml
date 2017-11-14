@@ -24,8 +24,9 @@ dependencies:
     - echo $ROCKET_PLAY_JSON | base64 --decode > app/rocket-chat.json
 
     - mkdir -p app/src/release/res/values
-    - echo $GOOGLE_SERVICES_BASE64 | base64 --decode > app/src/release/google-services.json
-    - echo $API_KEY_STRINGS_BASE64 | base64 --decode > app/src/release/res/values/api_key_strings.xml
+# TODO: remove the comment when using that file on the project
+#    - echo $GOOGLE_SERVICES_BASE64 | base64 --decode > app/src/release/google-services.json
+#   - echo $API_KEY_STRINGS_BASE64 | base64 --decode > app/src/release/res/values/api_key_strings.xml
 
     - echo y | android update sdk --no-ui --all --filter tools,platform-tools
     - echo y | android update sdk --no-ui --all --filter android-27

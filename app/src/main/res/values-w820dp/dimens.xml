@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Customization of dimensions originally defined in res/values/dimens.xml for screens with more than 820dp
+         of available width. This would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="screen_edge_left_and_right_margins">24dp</dimen>
+
+</resources>

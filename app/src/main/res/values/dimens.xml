@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="screen_edge_left_and_right_margins">16dp</dimen>
+
+    <dimen name="edit_text_margin">10dp</dimen>
+    <dimen name="edit_text_drawable_padding">16dp</dimen>
+
+    <dimen name="fab_elevation">6dp</dimen>
+
+</resources>

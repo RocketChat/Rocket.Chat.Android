@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Titles -->
+    <string name="title_sign_in_your_server">Faça login no seu servidor</string>
+    <string name="title_log_in">Entrar</string>
+    <string name="title_sign_up">Inscreva-se</string>
+
+    <!-- Actions -->
+    <string name="action_connect">Conectar</string>
+
+    <!-- Regular information messages -->
+    <string name="msg_username">nome de usuário</string>
+    <string name="msg_username_or_email">nome de usuário ou email</string>
+    <string name="msg_password">senha</string>
+    <string name="msg_name_and_surname">nome e sobrenome</string>
+    <string name="msg_email">email</string>
+    <string name="msg_or_continue_using_social_accounts">Ou continue através de contas sociais</string>
+    <string name="msg_new_to_rocket_chat">Novo no Rocket Chat? <font color='#FF1976D2'>Inscreva-se</font></string>
+    <string name="msg_new_user_agreement">Ao proceder você concorda com nossos\n<font color='#FF1976D2'>Termos de Serviço</font> e <font color='#FF1976D2'>Política de Privacidade</font></string>
+    <string name="msg_2fa_code">Código 2FA</string>
+    <string name="msg_content_description_log_in_using_facebook">Fazer login através do Facebook</string>
+    <string name="msg_content_description_log_in_using_github">Fazer login através do Github</string>
+    <string name="msg_content_description_log_in_using_google">Fazer login através do Google</string>
+    <string name="msg_content_description_log_in_using_linkedin">Fazer login através do Linkedin</string>
+    <string name="msg_content_description_log_in_using_meteor">Fazer login através do Meteor</string>
+    <string name="msg_content_description_log_in_using_twitter">Fazer login através do Twitter</string>
+    <string name="msg_content_description_log_in_using_gitlab">Fazer login através do Gitlab</string>
+
+</resources>

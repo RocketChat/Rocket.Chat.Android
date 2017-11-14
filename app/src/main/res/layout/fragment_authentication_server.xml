@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_headline"
+        style="@style/HeadlineTextView"
+        android:layout_centerHorizontal="true"
+        android:text="@string/title_sign_in_your_server" />
+
+    <EditText
+        android:id="@+id/text_server_url"
+        style="@style/AuthenticationEditText"
+        android:layout_below="@id/text_headline"
+        android:layout_marginTop="32dp"
+        android:imeOptions="actionDone"
+        android:inputType="textUri"
+        android:text="@string/msg_https" />
+
+    <Button
+        android:id="@+id/button_connect"
+        style="@style/AuthenticationButton"
+        android:layout_alignParentBottom="true"
+        android:text="@string/action_connect" />
+
+</RelativeLayout>

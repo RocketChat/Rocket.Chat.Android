@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#FF303030</color> <!-- Material Grey 850 -->
+    <color name="colorPrimaryDark">#ff212121</color> <!-- Material Grey 900 -->
+    <color name="colorAccent">#FF1976D2</color> <!-- Material Blue 700 -->
+
+    <color name="colorDrawableTintGrey">#9FA2A8</color>
+
+    <color name="white">#FFFFFFFF</color>
 </resources>
