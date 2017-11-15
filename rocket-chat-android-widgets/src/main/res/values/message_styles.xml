@@ -4,7 +4,9 @@
     <style name="TextAppearance.RocketChat" parent="TextAppearance.AppCompat" />
 
     <style name="TextAppearance.RocketChat.MessageBody" parent="TextAppearance.AppCompat.Body1">
-
+        <item name="android:fontFamily">@font/lato_regular</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="TextAppearance.RocketChat.MessageBody.Highlight">

@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:theme="@style/AppTheme">
 
     <include layout="@layout/day" />
@@ -23,10 +25,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="48dp"
-            android:orientation="vertical"
+            android:layout_marginLeft="48dp"
             android:layout_marginRight="8dp"
-            android:layout_marginLeft="48dp">
+            android:layout_marginStart="48dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/user_and_timestamp_container"
@@ -38,7 +40,9 @@
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.RocketChat.Message.Username"
+                    android:fontFamily="@font/lato_black"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
                     tools:text="John Doe" />
 
                 <Space
@@ -65,17 +69,17 @@
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:tint="@color/colorRed400"
-                    app:srcCompat="@drawable/ic_error_black_24dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_error_black_24dp" />
             </LinearLayout>
 
             <TextView
-            android:id="@+id/message_body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textStyle="italic"
-            android:enabled="false" />
+                android:id="@+id/message_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textSize="16sp"
+                android:fontFamily="@font/lato_italic" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

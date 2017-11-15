@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:theme="@style/AppTheme">
 
     <include layout="@layout/day" />
@@ -24,10 +26,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="48dp"
-            android:orientation="vertical"
+            android:layout_marginLeft="48dp"
             android:layout_marginRight="8dp"
-            android:layout_marginLeft="48dp">
+            android:layout_marginStart="48dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/user_and_timestamp_container"
@@ -39,7 +41,9 @@
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.RocketChat.Message.Username"
+                    android:fontFamily="@font/lato_black"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
                     tools:text="John Doe" />
 
                 <Space
@@ -51,8 +55,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.RocketChat.Message.SubUsername"
-                    tools:text="\@John Doe"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:text="\@John Doe" />
 
                 <Space
                     android:layout_width="@dimen/margin_8"
@@ -63,6 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
+                    android:fontFamily="@font/lato_regular"
                     android:textColor="@color/color_timestamp"
                     tools:text="12:34" />
 
@@ -78,24 +83,24 @@
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:tint="@color/colorRed400"
-                    app:srcCompat="@drawable/ic_error_black_24dp"
-                    android:visibility="gone" />
-        </LinearLayout>
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_error_black_24dp" />
+            </LinearLayout>
 
             <chat.rocket.android.widget.message.RocketChatMessageLayout
-            android:id="@+id/message_body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                android:id="@+id/message_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <chat.rocket.android.widget.message.RocketChatMessageUrlsLayout
-            android:id="@+id/message_urls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                android:id="@+id/message_urls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
-            android:id="@+id/message_attachments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                android:id="@+id/message_attachments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

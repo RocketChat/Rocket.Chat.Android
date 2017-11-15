@@ -2,10 +2,12 @@ package chat.rocket.android.widget.internal
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.ColorRes
 import android.support.graphics.drawable.VectorDrawableCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -67,7 +69,11 @@ class RoomListItemView : FrameLayout {
     }
 
     fun setAlert(alert: Boolean) {
-        alpha = if (alert) 1.0f else 0.62f
+        if (alert) {
+            name.typeface = Typeface.DEFAULT_BOLD
+        } else {
+            name.typeface = Typeface.DEFAULT
+        }
     }
 
     fun setRoomName(roomName: String) {
