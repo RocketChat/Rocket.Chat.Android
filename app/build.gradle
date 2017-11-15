@@ -150,8 +150,11 @@ dependencies {
     compile 'com.github.matrixxun:MaterialBadgeTextView:c5a27e8243'
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.8.9"
+    testCompile 'org.robolectric:robolectric:3.3'
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
+    testCompile "com.nhaarman:mockito-kotlin:1.1.0"
+    testCompile 'org.amshove.kluent:kluent:1.14'
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$rootProject.ext.kotlinVersion"
 }
 apply plugin: 'com.google.gms.google-services'

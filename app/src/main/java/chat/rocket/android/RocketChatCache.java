@@ -17,6 +17,7 @@ import java.util.UUID;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
+import chat.rocket.android.push.PushManager;
 import chat.rocket.core.utils.Pair;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -104,9 +105,12 @@ public class RocketChatCache {
     }
   }
 
-  public @NonNull String getSiteUrlFor(String hostname) {
+  public @Nullable String getSiteUrlFor(String hostname) {
     try {
       String selectedServerHostname = getSelectedServerHostname();
+      if (getLoginHostnamesJson() == null || getLoginHostnamesJson().isEmpty()) {
+        return null;
+      }
       return new JSONObject(getLoginHostnamesJson())
               .optString(hostname, selectedServerHostname);
     } catch (JSONException e) {
