@@ -2,17 +2,14 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
+
 import com.hadisatrio.optional.Optional;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.realm.Case;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
+
+import org.intellij.lang.annotations.Flow;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomHistoryState;
@@ -21,6 +18,14 @@ import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.Case;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
+import io.realm.log.RealmLog;
 
 public class RealmRoomRepository extends RealmRepository implements RoomRepository {
 
@@ -142,10 +147,21 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
       loadMessage.setHasNext(!roomHistoryState.isComplete());
       loadMessage.setTimestamp(roomHistoryState.getTimestamp());
 
-      realm.beginTransaction();
-
-      return RxJavaInterop.toV2Flowable(realm.copyToRealmOrUpdate(loadMessage)
-          .asObservable())
+      return Flowable.defer(() -> {
+          realm.beginTransaction();
+          try {
+              LoadMessageProcedure loadMessageProcedure = realm.copyToRealmOrUpdate(loadMessage);
+              realm.commitTransaction();
+              return Flowable.just(loadMessageProcedure);
+          } catch (Throwable e) {
+              if (realm.isInTransaction()) {
+                  realm.cancelTransaction();
+              } else {
+                  RealmLog.warn("Could not cancel transaction, not currently in a transaction.");
+              }
+              throw e;
+          }
+      })
           .filter(realmObject -> realmObject.isLoaded() && realmObject.isValid())
           .firstElement()
           .doOnSuccess(it -> realm.commitTransaction())
