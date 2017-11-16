@@ -162,7 +162,6 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
       })
           .filter(realmObject -> realmObject.isLoaded() && realmObject.isValid())
           .firstElement()
-          .doOnSuccess(it -> realm.commitTransaction())
           .doOnError(throwable -> realm.cancelTransaction())
           .doOnEvent((realmObject, throwable) -> close(realm, looper))
           .toSingle()
