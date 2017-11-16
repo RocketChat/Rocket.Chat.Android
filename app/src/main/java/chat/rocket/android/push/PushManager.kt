@@ -105,7 +105,10 @@ object PushManager {
         }
     }
 
-    fun clearNotificationsByHostAndNotificationId(host: String, notificationId: Int) {
+    fun clearNotificationsByHostAndNotificationId(host: String?, notificationId: Int?) {
+        if (host == null || notificationId == null) {
+            return
+        }
         if (hostToPushMessageList.isNotEmpty()) {
             val notifications = hostToPushMessageList[host]
             notifications?.let {
