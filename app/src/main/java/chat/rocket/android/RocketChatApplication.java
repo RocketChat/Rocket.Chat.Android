@@ -9,9 +9,7 @@ import com.crashlytics.android.Crashlytics;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.OkHttpHelper;
-import chat.rocket.android.log.RCLog;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RocketChatWidgets;
 import chat.rocket.android_ddp.DDPClient;

@@ -5,8 +5,6 @@ import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
 
-import org.intellij.lang.annotations.Flow;
-
 import java.util.ArrayList;
 import java.util.List;
 
