@@ -8,16 +8,18 @@ import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.webkit.MimeTypeMap;
+
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
+
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
 import chat.rocket.persistence.realm.models.internal.FileUploading;
-import chat.rocket.persistence.realm.RealmHelper;
 
 /**
  * utility class for uploading file.

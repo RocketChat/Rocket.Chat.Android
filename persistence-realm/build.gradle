@@ -37,7 +37,6 @@ dependencies {
     compile supportDependencies.annotation
     compile supportDependencies.designSupportLibrary
     compile extraDependencies.rxAndroid
-    compile 'com.github.akarnokd:rxjava2-interop:0.10.2'
     provided extraDependencies.optional
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"

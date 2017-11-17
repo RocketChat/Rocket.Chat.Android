@@ -20,10 +20,10 @@ import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.models.RealmBasedServerInfo;
 import hugo.weaving.DebugLog;
-import rx.Observable;
-import rx.Single;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Connectivity management implementation.
@@ -155,7 +155,7 @@ import rx.subjects.PublishSubject;
 
   @Override
   public Observable<ServerConnectivity> getServerConnectivityAsObservable() {
-    return Observable.concat(Observable.from(getCurrentConnectivityList()), connectivitySubject);
+    return Observable.concat(Observable.fromIterable(getCurrentConnectivityList()), connectivitySubject);
   }
 
   @Override
@@ -175,11 +175,6 @@ import rx.subjects.PublishSubject;
         return waitForDisconnected(hostname)
             .flatMap(_val -> connectToServerIfNeeded(hostname, forceConnect));
       }
-
-//      if (connectivity == ServerConnectivity.STATE_CONNECTING) {
-//        return waitForConnected(hostname)
-//                .doOnError(error -> notifyConnectionLost(hostname, REASON_NETWORK_ERROR));
-//      }
 
       if (connectivity == ServerConnectivity.STATE_DISCONNECTED) {
         notifyConnecting(hostname);
@@ -219,7 +214,7 @@ import rx.subjects.PublishSubject;
         .filter(state ->
             state == ServerConnectivity.STATE_CONNECTED
                 || state == ServerConnectivity.STATE_DISCONNECTED)
-        .first()
+        .firstElement()
         .toSingle()
         .flatMap(state ->
             state == ServerConnectivity.STATE_CONNECTED
@@ -233,7 +228,7 @@ import rx.subjects.PublishSubject;
         .filter(serverConnectivity -> hostname.equals(serverConnectivity.hostname))
         .map(serverConnectivity -> serverConnectivity.state)
         .filter(state -> state == ServerConnectivity.STATE_DISCONNECTED)
-        .first()
+        .firstElement()
         .toSingle()
         .map(state -> true);
   }

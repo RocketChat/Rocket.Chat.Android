@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.message.MessageExtraActionItemPresenter;
 

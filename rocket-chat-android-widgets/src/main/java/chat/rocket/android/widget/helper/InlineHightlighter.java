@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import chat.rocket.android.widget.R;
 
 public class InlineHightlighter {

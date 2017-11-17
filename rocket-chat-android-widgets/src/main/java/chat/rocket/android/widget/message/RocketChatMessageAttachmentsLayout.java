@@ -16,6 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+
+import java.util.List;
+
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.helper.FrescoHelper;
@@ -23,10 +29,6 @@ import chat.rocket.core.models.Attachment;
 import chat.rocket.core.models.AttachmentAuthor;
 import chat.rocket.core.models.AttachmentField;
 import chat.rocket.core.models.AttachmentTitle;
-
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.SimpleDraweeView;
-import java.util.List;
 
 /**
  */

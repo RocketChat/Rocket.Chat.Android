@@ -1,6 +1,7 @@
 package chat.rocket.android.layouthelper.chatroom;
 
 import android.view.View;
+
 import chat.rocket.android.R;
 import chat.rocket.android.renderer.MessageRenderer;
 import chat.rocket.android.widget.AbsoluteUrl;

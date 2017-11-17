@@ -1,11 +1,11 @@
 package chat.rocket.android.helper;
 
+import java.util.List;
+
+import chat.rocket.core.PublicSettingsConstants;
+import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
 import io.realm.Realm;
 import io.realm.RealmResults;
-
-import java.util.List;
-import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
-import chat.rocket.core.PublicSettingsConstants;
 
 /**
  * utility class for getting value comprehensibly from public settings list.

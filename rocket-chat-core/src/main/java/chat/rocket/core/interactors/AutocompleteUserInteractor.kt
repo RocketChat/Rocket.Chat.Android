@@ -12,7 +12,7 @@ import chat.rocket.core.temp.TempSpotlightUserCaller
 import chat.rocket.core.utils.Triple
 import io.reactivex.Flowable
 import io.reactivex.functions.Function3
-import java.util.ArrayList
+import java.util.*
 
 class AutocompleteUserInteractor(private val room: Room,
                                  private val userRepository: UserRepository,

@@ -5,14 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import chat.rocket.core.models.RoomSidebar;
-import chat.rocket.core.models.Spotlight;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import chat.rocket.android.R;
 import chat.rocket.android.widget.internal.RoomListItemView;
+import chat.rocket.core.models.RoomSidebar;
+import chat.rocket.core.models.Spotlight;
 
 public class RoomListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

@@ -3,6 +3,7 @@ package chat.rocket.android.widget.helper;
 import android.support.annotation.StringRes;
 
 import java.util.HashMap;
+
 import chat.rocket.android.widget.R;
 
 public class IconProvider {

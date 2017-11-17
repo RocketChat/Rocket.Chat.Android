@@ -2,12 +2,13 @@ package chat.rocket.android.api.rest;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

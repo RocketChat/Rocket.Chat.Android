@@ -3,18 +3,20 @@ package chat.rocket.persistence.realm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Looper;
+
+import org.json.JSONException;
+
+import java.util.Collections;
+import java.util.List;
+
+import bolts.Task;
+import bolts.TaskCompletionSource;
+import chat.rocket.android.log.RCLog;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import org.json.JSONException;
-
-import java.util.Collections;
-import java.util.List;
-import bolts.Task;
-import bolts.TaskCompletionSource;
-import chat.rocket.android.log.RCLog;
 
 @SuppressLint("NewApi")
 public class RealmHelper {

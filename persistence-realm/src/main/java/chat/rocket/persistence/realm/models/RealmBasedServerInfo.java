@@ -2,17 +2,18 @@ package chat.rocket.persistence.realm.models;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import io.realm.Realm;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Backend implementation to store ServerInfo.
@@ -41,7 +42,7 @@ public class RealmBasedServerInfo extends RealmObject {
         .build();
   }
 
-  public static Realm getRealm() {
+  public static Realm getServerRealm() {
     return RealmStore.getRealm(DB_NAME);
   }
 

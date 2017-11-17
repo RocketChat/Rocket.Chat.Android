@@ -1,8 +1,5 @@
 package chat.rocket.core.interactors
 
-import io.reactivex.Flowable
-
-import java.util.ArrayList
 import chat.rocket.core.SortDirection
 import chat.rocket.core.models.Room
 import chat.rocket.core.models.SpotlightRoom
@@ -11,8 +8,10 @@ import chat.rocket.core.repositories.SpotlightRoomRepository
 import chat.rocket.core.temp.TempSpotlightRoomCaller
 import chat.rocket.core.utils.Pair
 import chat.rocket.core.utils.Triple
+import io.reactivex.Flowable
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
+import java.util.*
 
 class AutocompleteChannelInteractor(private val roomRepository: RoomRepository,
                                     private val spotlightRoomRepository: SpotlightRoomRepository,

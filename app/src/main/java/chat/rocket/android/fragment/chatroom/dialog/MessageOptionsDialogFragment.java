@@ -10,11 +10,6 @@ import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -34,6 +29,10 @@ import chat.rocket.persistence.realm.repositories.RealmPublicSettingRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRoleRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class MessageOptionsDialogFragment extends BottomSheetDialogFragment {
 

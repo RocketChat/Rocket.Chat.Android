@@ -1,9 +1,9 @@
 package chat.rocket.core.interactors
 
-import io.reactivex.Flowable
 import chat.rocket.core.SortDirection
 import chat.rocket.core.models.Room
 import chat.rocket.core.repositories.RoomRepository
+import io.reactivex.Flowable
 
 class RoomInteractor(private val roomRepository: RoomRepository) {
 

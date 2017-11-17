@@ -1,17 +1,16 @@
 package chat.rocket.persistence.realm;
 
-import io.realm.DynamicRealm;
-import io.realm.FieldAttribute;
-import io.realm.RealmMigration;
-import io.realm.RealmObjectSchema;
-import io.realm.RealmSchema;
-
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmPermission;
 import chat.rocket.persistence.realm.models.ddp.RealmRole;
 import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
+import io.realm.DynamicRealm;
+import io.realm.FieldAttribute;
+import io.realm.RealmMigration;
+import io.realm.RealmObjectSchema;
+import io.realm.RealmSchema;
 
 public class Migration implements RealmMigration {
   @Override

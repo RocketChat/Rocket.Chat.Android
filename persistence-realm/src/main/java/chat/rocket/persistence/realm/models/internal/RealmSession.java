@@ -1,16 +1,17 @@
 package chat.rocket.persistence.realm.models.internal;
 
 import android.text.TextUtils;
-import io.realm.Realm;
-import io.realm.RealmObject;
-import io.realm.RealmQuery;
-import io.realm.annotations.PrimaryKey;
+
 import org.json.JSONObject;
 
 import chat.rocket.core.models.Session;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.helpers.LogcatIfError;
 import hugo.weaving.DebugLog;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.RealmQuery;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Login session info.

@@ -7,8 +7,10 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
-import chat.rocket.android.widget.helper.FrescoHelper;
+
 import com.facebook.drawee.view.SimpleDraweeView;
+
+import chat.rocket.android.widget.helper.FrescoHelper;
 
 public class RocketChatAvatar extends FrameLayout {
 

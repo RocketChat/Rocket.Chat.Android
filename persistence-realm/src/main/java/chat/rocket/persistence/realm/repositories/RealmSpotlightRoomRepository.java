@@ -2,20 +2,20 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.realm.Case;
-import io.realm.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.SpotlightRoom;
 import chat.rocket.core.repositories.SpotlightRoomRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.Case;
+import io.realm.Sort;
 
 public class RealmSpotlightRoomRepository extends RealmRepository implements SpotlightRoomRepository {
 
@@ -34,8 +34,7 @@ public class RealmSpotlightRoomRepository extends RealmRepository implements Spo
             return Flowable.empty();
           }
 
-          return RxJavaInterop.toV2Flowable(
-                  pair.first.where(RealmSpotlightRoom.class)
+          return pair.first.where(RealmSpotlightRoom.class)
                           .like(RealmSpotlightRoom.Columns.NAME, "*" + name + "*", Case.INSENSITIVE)
                           .beginGroup()
                           .equalTo(RealmSpotlightRoom.Columns.TYPE, RealmRoom.TYPE_CHANNEL)
@@ -43,7 +42,7 @@ public class RealmSpotlightRoomRepository extends RealmRepository implements Spo
                           .equalTo(RealmSpotlightRoom.Columns.TYPE, RealmRoom.TYPE_PRIVATE)
                           .endGroup()
                           .findAllSorted(RealmSpotlightRoom.Columns.NAME, direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
-                          .asObservable());
+                          .asFlowable();
         },
         pair -> close(pair.first, pair.second)
     )

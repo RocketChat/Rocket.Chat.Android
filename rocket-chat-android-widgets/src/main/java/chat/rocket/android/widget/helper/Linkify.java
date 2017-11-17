@@ -3,6 +3,7 @@ package chat.rocket.android.widget.helper;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.widget.TextView;
+
 import org.nibor.autolink.LinkExtractor;
 import org.nibor.autolink.LinkSpan;
 import org.nibor.autolink.LinkType;

@@ -2,8 +2,9 @@ package chat.rocket.android.helper;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.Flowable;
 import org.json.JSONObject;
+
+import io.reactivex.Flowable;
 
 public class ServerPolicyHelper {
 

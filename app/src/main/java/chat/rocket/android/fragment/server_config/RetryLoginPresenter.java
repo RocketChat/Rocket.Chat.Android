@@ -3,7 +3,6 @@ package chat.rocket.android.fragment.server_config;
 import android.support.annotation.NonNull;
 
 import com.hadisatrio.optional.Optional;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.api.MethodCallHelper;
@@ -12,6 +11,7 @@ import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.models.Session;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class RetryLoginPresenter extends BasePresenter<RetryLoginContract.View>
     implements RetryLoginContract.Presenter {

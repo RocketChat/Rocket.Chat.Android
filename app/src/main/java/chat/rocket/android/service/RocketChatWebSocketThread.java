@@ -41,11 +41,10 @@ import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import hugo.weaving.DebugLog;
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
-import rx.Completable;
-import rx.Single;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Thread for handling WebSocket connection.
@@ -74,7 +73,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
   private final ConnectivityManagerInternal connectivityManager;
   private final ArrayList<Registrable> listeners = new ArrayList<>();
   private final CompositeDisposable hearbeatDisposable = new CompositeDisposable();
-  private final CompositeSubscription reconnectSubscription = new CompositeSubscription();
+  private final CompositeDisposable reconnectSubscription = new CompositeDisposable();
   private boolean listenersRegistered;
 
   private static class KeepAliveTimer {
@@ -110,13 +109,14 @@ public class RocketChatWebSocketThread extends HandlerThread {
    */
   @DebugLog
   public static Single<RocketChatWebSocketThread> getStarted(Context appContext, String hostname) {
-    return Single.<RocketChatWebSocketThread>fromEmitter(objectSingleEmitter -> {
+    return Single.<RocketChatWebSocketThread>fromPublisher(objectSingleEmitter -> {
       new RocketChatWebSocketThread(appContext, hostname) {
         @Override
         protected void onLooperPrepared() {
           try {
             super.onLooperPrepared();
-            objectSingleEmitter.onSuccess(this);
+            objectSingleEmitter.onNext(this);
+            objectSingleEmitter.onComplete();
           } catch (Exception exception) {
             objectSingleEmitter.onError(exception);
           }
@@ -151,14 +151,15 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @DebugLog
   public Single<Boolean> terminate() {
     if (isAlive()) {
-      return Single.fromEmitter(emitter -> {
+      return Single.fromPublisher(emitter -> {
         new Handler(getLooper()).post(() -> {
           RCLog.d("thread %s: terminated()", Thread.currentThread().getId());
           unregisterListenersAndClose();
           connectivityManager.notifyConnectionLost(hostname,
               DDPClient.REASON_CLOSED_BY_USER);
           RocketChatWebSocketThread.super.quit();
-          emitter.onSuccess(true);
+          emitter.onNext(true);
+          emitter.onComplete();
         });
       });
     } else {
@@ -198,7 +199,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
     keepAliveTimer.update();
 
-    return Single.fromEmitter(emitter -> {
+    return Single.fromPublisher(emitter -> {
       new Thread() {
         @Override
         public void run() {
@@ -211,7 +212,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
               emitter.onError(error);
             } else {
               keepAliveTimer.update();
-              emitter.onSuccess(true);
+              emitter.onNext(true);
+              emitter.onComplete();
             }
             return null;
           });
@@ -251,10 +253,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private Single<Boolean> connectDDPClient() {
     return prepareDDPClient()
-        .flatMap(_val -> Single.fromEmitter(emitter -> {
+        .flatMap(_val -> Single.fromPublisher(emitter -> {
           ServerInfo info = connectivityManager.getServerInfoForHost(hostname);
           if (info == null) {
-            emitter.onSuccess(false);
+            emitter.onNext(false);
+            emitter.onComplete();
             return;
           }
           RCLog.d("DDPClient#connect");
@@ -292,7 +295,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
                     if (task.isFaulted()) {
                       emitter.onError(task.getError());
                     } else {
-                      emitter.onSuccess(true);
+                      emitter.onNext(true);
+                      emitter.onComplete();
                     }
                     return null;
                   });
@@ -301,13 +305,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
   private void reconnect() {
     // if we are already trying to reconnect then return.
-    if (reconnectSubscription.hasSubscriptions()) {
+    if (reconnectSubscription.size() > 0) {
       return;
     }
     forceInvalidateTokens();
     connectivityManager.notifyConnecting(hostname);
-    // Needed to use subscriptions because of legacy code.
-    // TODO: Should update to RxJava 2
     reconnectSubscription.add(
         connectWithExponentialBackoff()
             .subscribe(
@@ -326,9 +328,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
     );
   }
 
-  private void logErrorAndUnsubscribe(CompositeSubscription subscriptions, Throwable err) {
+  private void logErrorAndUnsubscribe(CompositeDisposable disposables, Throwable err) {
     RCLog.e(err);
-    subscriptions.clear();
+    disposables.clear();
   }
 
   private Single<Boolean> connectWithExponentialBackoff() {
@@ -338,11 +340,12 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @DebugLog
   private Single<Boolean> connect() {
     return connectDDPClient()
-        .flatMap(_val -> Single.fromEmitter(emitter -> {
+        .flatMap(_val -> Single.fromPublisher(emitter -> {
           fetchPublicSettings();
           fetchPermissions();
           registerListeners();
-          emitter.onSuccess(true);
+          emitter.onNext(true);
+          emitter.onComplete();
         }));
   }
 
@@ -376,9 +379,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
     if (sessions != null && sessions.size() > 0) {
       // if we have a session try to resume it. At this point we're probably recovering from
       // a disconnection state
-      final CompositeSubscription subscriptions = new CompositeSubscription();
+      final CompositeDisposable disposables = new CompositeDisposable();
       MethodCallHelper methodCall = new MethodCallHelper(realmHelper);
-      subscriptions.add(
+      disposables.add(
               Completable.defer(() -> {
                 Task<Void> result = methodCall.loginWithToken(sessions.get(0).getToken());
                 if (result.isFaulted()) {
@@ -390,9 +393,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 .subscribe(
                       () -> {
                         createObserversAndRegister();
-                        subscriptions.clear();
+                        disposables.clear();
                       },
-                      error -> logErrorAndUnsubscribe(subscriptions, error)
+                      error -> logErrorAndUnsubscribe(disposables, error)
               )
       );
     } else {

@@ -1,7 +1,6 @@
 package chat.rocket.android_ddp.rx;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import chat.rocket.android.log.RCLog;
 import io.reactivex.BackpressureStrategy;
