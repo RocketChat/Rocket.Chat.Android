@@ -21,7 +21,6 @@ import chat.rocket.core.models.Settings;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
-import io.reactivex.BackpressureStrategy;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;

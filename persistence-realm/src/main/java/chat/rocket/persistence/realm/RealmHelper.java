@@ -8,8 +8,6 @@ import org.json.JSONException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
