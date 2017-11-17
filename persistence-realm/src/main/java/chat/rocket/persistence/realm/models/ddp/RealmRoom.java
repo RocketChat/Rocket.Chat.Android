@@ -142,7 +142,7 @@ public class RealmRoom extends RealmObject {
     return Room.builder()
         .setId(_id)
         .setRoomId(rid)
-        .setName(name)
+        .setName(name == null ? "" : name)
         .setType(t)
         .setOpen(open)
         .setAlert(alert)
