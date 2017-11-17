@@ -192,7 +192,7 @@ public class RealmMessage extends RealmObject {
         .setRoomId(rid)
         .setSyncState(syncstate)
         .setTimestamp(ts)
-        .setMessage(msg)
+        .setMessage(msg == null ? "" : msg)
         .setUser(u != null ? u.asUser() : null)
         .setGroupable(groupable)
         .setAlias(alias)
