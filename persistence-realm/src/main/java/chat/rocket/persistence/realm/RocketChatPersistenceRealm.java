@@ -1,6 +1,7 @@
 package chat.rocket.persistence.realm;
 
 import android.content.Context;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 

@@ -1,9 +1,5 @@
 package chat.rocket.core.interactors;
 
-import static org.mockito.Mockito.*;
-
-import io.reactivex.Flowable;
-import io.reactivex.subscribers.TestSubscriber;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,12 +8,23 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import chat.rocket.core.SortDirection;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.SpotlightRoom;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.SpotlightRoomRepository;
 import chat.rocket.core.temp.TempSpotlightRoomCaller;
+import io.reactivex.Flowable;
+import io.reactivex.subscribers.TestSubscriber;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AutocompleteChannelInteractorTest {

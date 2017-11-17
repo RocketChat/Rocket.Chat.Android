@@ -1,7 +1,8 @@
 package chat.rocket.android.api.rest;
 
-import io.reactivex.Flowable;
 import org.json.JSONObject;
+
+import io.reactivex.Flowable;
 
 public interface ServerPolicyApi {
 

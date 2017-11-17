@@ -28,7 +28,6 @@ import chat.rocket.core.models.Session;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.PublicSettingRepository;
 import chat.rocket.core.utils.Pair;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -220,7 +219,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
   }
 
   private void subscribeToNetworkChanges() {
-    Disposable disposable = RxJavaInterop.toV2Flowable(connectivityManagerApi.getServerConnectivityAsObservable())
+    Disposable disposable = connectivityManagerApi.getServerConnectivityAsObservable()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                     connectivity -> {

@@ -7,10 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.DateTime
+import chat.rocket.android.helper.Logger
+import chat.rocket.android.log.RCLog
 import chat.rocket.android.widget.message.RocketChatMessageAttachmentsLayout
 import chat.rocket.core.models.Attachment
 import kotlinx.android.synthetic.main.day.view.*
 import kotlinx.android.synthetic.main.item_room_file.view.*
+import java.lang.IllegalArgumentException
 import java.sql.Timestamp
 
 /**
@@ -26,8 +29,16 @@ class RoomFileListAdapter(private var dataSet: List<Attachment>) : RecyclerView.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val attachment = dataSet[position]
 
-        holder.newDay.text = DateTime.fromEpocMs(Timestamp.valueOf(attachment.timestamp).time, DateTime.Format.DATE)
-        holder.attachment.appendAttachmentView(attachment, true, false)
+        val timestamp: Timestamp?
+        try {
+            timestamp = Timestamp.valueOf(attachment.timestamp)
+            // If we don't have a timestamp we can parse let's be safe and stop here.
+            holder.newDay.text = DateTime.fromEpocMs(timestamp.time, DateTime.Format.DATE)
+            holder.attachment.appendAttachmentView(attachment, true, false)
+        } catch (e: IllegalArgumentException) {
+            RCLog.e(e)
+            Logger.report(e)
+        }
     }
 
     override fun getItemCount(): Int = dataSet.size

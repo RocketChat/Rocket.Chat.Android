@@ -1,11 +1,11 @@
 package chat.rocket.persistence.realm;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-
 import java.util.HashMap;
+
 import chat.rocket.persistence.realm.modules.RocketChatLibraryModule;
 import chat.rocket.persistence.realm.modules.RocketChatServerModule;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class RealmStore {
   public static HashMap<String, RealmConfiguration> sStore = new HashMap<>();

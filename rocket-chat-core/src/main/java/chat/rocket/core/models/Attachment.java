@@ -3,6 +3,7 @@ package chat.rocket.core.models;
 import com.google.auto.value.AutoValue;
 
 import java.util.List;
+
 import javax.annotation.Nullable;
 
 @AutoValue

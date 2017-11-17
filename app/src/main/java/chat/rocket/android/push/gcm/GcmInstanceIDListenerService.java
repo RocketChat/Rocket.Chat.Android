@@ -3,13 +3,14 @@ package chat.rocket.android.push.gcm;
 import com.google.android.gms.iid.InstanceIDListenerService;
 
 import java.util.List;
+
 import chat.rocket.android.helper.GcmPushSettingHelper;
-import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
-import chat.rocket.persistence.realm.models.internal.GcmPushRegistration;
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.core.models.ServerInfo;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
+import chat.rocket.persistence.realm.models.internal.GcmPushRegistration;
 
 public class GcmInstanceIDListenerService extends InstanceIDListenerService {
 

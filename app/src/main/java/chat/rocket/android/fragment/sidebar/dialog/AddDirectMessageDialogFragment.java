@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
+
 import com.hadisatrio.optional.Optional;
 import com.jakewharton.rxbinding2.widget.RxTextView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.realm.Case;
 
 import bolts.Task;
 import chat.rocket.android.BackgroundLooper;
@@ -20,11 +18,14 @@ import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.layouthelper.sidebar.dialog.SuggestUserAdapter;
 import chat.rocket.core.interactors.SessionInteractor;
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmAutoCompleteAdapter;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.realm.Case;
 
 /**
  * add Direct RealmMessage.

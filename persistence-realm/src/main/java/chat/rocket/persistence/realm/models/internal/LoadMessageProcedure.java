@@ -1,9 +1,8 @@
 package chat.rocket.persistence.realm.models.internal;
 
+import chat.rocket.core.models.RoomHistoryState;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-
-import chat.rocket.core.models.RoomHistoryState;
 
 /**
  * Load messages in the room.

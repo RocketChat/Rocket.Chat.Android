@@ -1,11 +1,10 @@
 package chat.rocket.core.interactors
 
+import chat.rocket.core.models.Session
+import chat.rocket.core.repositories.SessionRepository
 import com.hadisatrio.optional.Optional
 import io.reactivex.Flowable
 import io.reactivex.Single
-
-import chat.rocket.core.models.Session
-import chat.rocket.core.repositories.SessionRepository
 
 class SessionInteractor(private val sessionRepository: SessionRepository) {
 

@@ -3,18 +3,23 @@ package chat.rocket.persistence.realm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Looper;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmObject;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
+
 import org.json.JSONException;
 
 import java.util.Collections;
 import java.util.List;
+
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.log.RCLog;
+import io.reactivex.Flowable;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmModel;
+import io.realm.RealmObject;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import io.realm.log.RealmLog;
 
 @SuppressLint("NewApi")
 public class RealmHelper {
@@ -162,6 +167,25 @@ public class RealmHelper {
       RealmAutoCompleteAdapter.RealmFilter<T> filter,
       RealmAutoCompleteAdapter.Constructor constructor) {
     return constructor.getNewInstance(context).initializeWith(this, filter);
+  }
+
+  public static <T extends RealmModel> Flowable<T> copyToRealmOrUpdate(Realm realm, T objectToCopy) {
+          return Flowable.defer(() -> {
+        realm.beginTransaction();
+        try {
+          T object = realm.copyToRealmOrUpdate(objectToCopy);
+          realm.commitTransaction();
+          return Flowable.just(object);
+        } catch (Throwable e) {
+          if (realm.isInTransaction()) {
+            realm.cancelTransaction();
+          } else {
+            RealmLog.warn("Could not cancel transaction, not currently in a transaction.");
+          }
+          throw e;
+        }
+      });
+
   }
 
   public interface Transaction<T> {

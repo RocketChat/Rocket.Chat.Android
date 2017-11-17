@@ -2,6 +2,7 @@ package chat.rocket.android_ddp;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import org.json.JSONObject;
 
 public class DDPClientCallback {

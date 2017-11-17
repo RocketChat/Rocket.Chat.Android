@@ -12,11 +12,12 @@ buildscript {
         google()
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.51"
-        classpath 'io.realm:realm-gradle-plugin:3.0.0'
+        classpath 'io.realm:realm-gradle-plugin:4.2.0-SNAPSHOT'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
@@ -35,6 +36,7 @@ allprojects {
         maven { url 'http://dl.bintray.com/amulyakhare/maven' } //for TextDrawable.
         maven { url "https://clojars.org/repo/" } //for icepick.
         maven { url 'https://jitpack.io' } //for widget-fontawesome.
+        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local' } //for widget-fontawesome.
     }
 }
 

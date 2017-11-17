@@ -15,8 +15,8 @@ import chat.rocket.android.helper.Logger;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.persistence.realm.RealmStore;
 import hugo.weaving.DebugLog;
-import rx.Observable;
-import rx.Single;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Background service for Rocket.Chat.Application class.
@@ -72,7 +72,6 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
         .doOnError(err -> {
           err.printStackTrace();
           currentWebSocketThread = null;
-//          connectivityManager.notifyConnectionLost(hostname, ConnectivityManagerInternal.REASON_NETWORK_ERROR);
         })
         .flatMap(webSocketThreads -> webSocketThreads.keepAlive());
   }
@@ -93,7 +92,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
               RealmStore.sStore.remove(hostname);
             });
       } else {
-        return Observable.timer(1, TimeUnit.SECONDS).toSingle()
+        return Observable.timer(1, TimeUnit.SECONDS).singleOrError()
             .flatMap(_val -> disconnectFromServer(hostname));
       }
     });

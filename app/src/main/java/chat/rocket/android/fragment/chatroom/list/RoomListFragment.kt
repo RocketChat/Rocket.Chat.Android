@@ -47,20 +47,23 @@ class RoomListFragment : Fragment(), RoomListContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity.title = ""
-        actionId = arguments.getInt("actionId")
-        roomId = arguments.getString("roomId")
-        roomType = arguments.getString("roomType")
-        hostname = arguments.getString("hostname")
-        token = arguments.getString("token")
-        userId = arguments.getString("userId")
+        activity?.title = ""
+        val args = arguments
+        args?.let {
+            actionId = args.getInt("actionId")
+            roomId = args.getString("roomId")
+            roomType = args.getString("roomType")
+            hostname = args.getString("hostname")
+            token = args.getString("token")
+            userId = args.getString("userId")
+        }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater?.inflate(R.layout.fragment_room_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_room_list, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter = RoomListPresenter(context, this)
+        presenter = RoomListPresenter(context!!, this)
     }
 
     override fun onResume() {
@@ -114,9 +117,9 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     }
 
     override fun showPinnedMessages(dataSet: ArrayList<Message>, total: String) {
-        activity.title = getString(R.string.fragment_room_list_pinned_message_title, total)
+        activity?.title = getString(R.string.fragment_room_list_pinned_message_title, total)
         if (recyclerView.adapter == null) {
-            recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context)
+            recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context!!)
             val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             recyclerView.layoutManager = linearLayoutManager
             if (dataSet.size >= 50) {
@@ -132,9 +135,9 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     }
 
     override fun showFavoriteMessages(dataSet: ArrayList<Message>, total: String) {
-        activity.title = getString(R.string.fragment_room_list_favorite_message_title, total)
+        activity?.title = getString(R.string.fragment_room_list_favorite_message_title, total)
         if (recyclerView.adapter == null) {
-            recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context)
+            recyclerView.adapter = RoomMessagesAdapter(dataSet, hostname, context!!)
             val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             recyclerView.layoutManager = linearLayoutManager
             if (dataSet.size >= 50) {
@@ -150,7 +153,7 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     }
 
     override fun showFileList(dataSet: ArrayList<Attachment>, total: String) {
-        activity.title = getString(R.string.fragment_room_list_file_list_title, total)
+        activity?.title = getString(R.string.fragment_room_list_file_list_title, total)
         if (recyclerView.adapter == null) {
             recyclerView.adapter = RoomFileListAdapter(dataSet)
             val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -168,9 +171,9 @@ class RoomListFragment : Fragment(), RoomListContract.View {
     }
 
     override fun showMemberList(dataSet: ArrayList<User>, total: String) {
-        activity.title = getString(R.string.fragment_room_list_member_list_title, total)
+        activity?.title = getString(R.string.fragment_room_list_member_list_title, total)
         if (recyclerView.adapter == null) {
-            recyclerView.adapter = RoomMemberListAdapter(dataSet, hostname, context)
+            recyclerView.adapter = RoomMemberListAdapter(dataSet, hostname, context!!)
             val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             recyclerView.layoutManager = linearLayoutManager
             if (dataSet.size >= 50) {

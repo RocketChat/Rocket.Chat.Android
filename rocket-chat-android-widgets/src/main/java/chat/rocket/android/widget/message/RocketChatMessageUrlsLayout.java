@@ -11,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import chat.rocket.android.widget.helper.FrescoHelper;
+
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 import java.util.Map;
+
 import chat.rocket.android.widget.R;
+import chat.rocket.android.widget.helper.FrescoHelper;
 import chat.rocket.android.widget.helper.ImageFormat;
 import chat.rocket.core.models.WebContent;
 import chat.rocket.core.models.WebContentHeaders;

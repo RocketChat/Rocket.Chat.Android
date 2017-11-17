@@ -2,17 +2,17 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
+
 import com.hadisatrio.optional.Optional;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.realm.RealmResults;
 
 import chat.rocket.core.models.PublicSetting;
 import chat.rocket.core.repositories.PublicSettingRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.RealmResults;
 
 public class RealmPublicSettingRepository extends RealmRepository
     implements PublicSettingRepository {
@@ -31,11 +31,10 @@ public class RealmPublicSettingRepository extends RealmRepository
             if (pair.first == null) {
               return Flowable.empty();
             }
-            return RxJavaInterop.toV2Flowable(
-              pair.first.where(RealmPublicSetting.class)
+            return pair.first.where(RealmPublicSetting.class)
                   .equalTo(RealmPublicSetting.ID, id)
                   .findAll()
-                  .<RealmResults<RealmPublicSetting>>asObservable());
+                  .<RealmResults<RealmPublicSetting>>asFlowable();
         },
         pair -> close(pair.first, pair.second)
     )

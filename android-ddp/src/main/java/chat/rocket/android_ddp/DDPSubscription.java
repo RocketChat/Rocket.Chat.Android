@@ -1,6 +1,7 @@
 package chat.rocket.android_ddp;
 
 import android.support.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 

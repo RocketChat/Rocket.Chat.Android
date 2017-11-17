@@ -17,7 +17,6 @@ import java.util.UUID;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
-import chat.rocket.android.push.PushManager;
 import chat.rocket.core.utils.Pair;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;

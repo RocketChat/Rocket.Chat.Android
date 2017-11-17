@@ -2,11 +2,12 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Handler;
 import android.os.Looper;
+
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
-
-import java.util.List;
 
 public class RealmRepository {
 

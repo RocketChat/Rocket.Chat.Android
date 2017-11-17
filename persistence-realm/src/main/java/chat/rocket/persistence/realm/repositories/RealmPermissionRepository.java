@@ -2,17 +2,17 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
+
 import com.hadisatrio.optional.Optional;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.realm.RealmResults;
 
 import chat.rocket.core.models.Permission;
 import chat.rocket.core.repositories.PermissionRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmPermission;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.RealmResults;
 
 public class RealmPermissionRepository extends RealmRepository implements PermissionRepository {
 
@@ -30,11 +30,10 @@ public class RealmPermissionRepository extends RealmRepository implements Permis
             if (pair.first == null) {
                 return Flowable.empty();
             }
-            return RxJavaInterop.toV2Flowable(
-                pair.first.where(RealmPermission.class)
+            return pair.first.where(RealmPermission.class)
                     .equalTo(RealmPermission.Columns.ID, id)
                     .findAll()
-                    .<RealmResults<RealmPermission>>asObservable());
+                    .<RealmResults<RealmPermission>>asFlowable();
         },
         pair -> close(pair.first, pair.second)
     )

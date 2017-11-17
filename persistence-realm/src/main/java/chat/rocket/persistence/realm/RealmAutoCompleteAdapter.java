@@ -8,12 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
-import io.realm.Realm;
-import io.realm.RealmObject;
-import io.realm.RealmResults;
 
 import java.util.Collections;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 /**
  * ListAdapter for AutoCompleteTextView.

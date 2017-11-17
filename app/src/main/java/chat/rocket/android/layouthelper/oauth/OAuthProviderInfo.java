@@ -3,6 +3,7 @@ package chat.rocket.android.layouthelper.oauth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.oauth.AbstractOAuthFragment;
 import chat.rocket.android.fragment.oauth.FacebookOAuthFragment;

@@ -5,8 +5,8 @@ import chat.rocket.android.RocketChatCache
 import chat.rocket.android.api.rest.CookieInterceptor
 import chat.rocket.android.api.rest.DefaultCookieProvider
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 
 object OkHttpHelper {
 

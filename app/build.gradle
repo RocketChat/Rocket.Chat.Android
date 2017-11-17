@@ -20,8 +20,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 16
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 49
-        versionName "1.0.26"
+        versionCode 50
+        versionName "1.0.27"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -114,19 +114,16 @@ dependencies {
     compile extraDependencies.okHTTP
     compile extraDependencies.rxJava
     compile extraDependencies.boltTask
+    compile supportDependencies.multidex
     compile supportDependencies.designSupportLibrary
     compile supportDependencies.annotation
-    compile supportDependencies.kotlin;
     compile rxbindingDependencies.rxBinding
     compile rxbindingDependencies.rxBindingSupport
     compile rxbindingDependencies.rxBindingAppcompact
-    compile 'com.android.support:multidex:1.0.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
     compile "com.google.firebase:firebase-core:$playLibVersion"
     compile "com.google.firebase:firebase-crash:$playLibVersion"
     compile "com.google.android.gms:play-services-gcm:$playLibVersion"
-    debugCompile "com.facebook.stetho:stetho:$stethoVersion"
-    debugCompile "com.facebook.stetho:stetho-okhttp3:$stethoOkhttp3Version"
-    debugCompile "com.uphyca:stetho_realm:$stethoRealmVersion"
     compile "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
     compile "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycleVersion"
     compile "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
@@ -138,23 +135,16 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    debugCompile "com.facebook.stetho:stetho:$stethoVersion"
+    debugCompile "com.facebook.stetho:stetho-okhttp3:$stethoOkhttp3Version"
+    debugCompile "com.uphyca:stetho_realm:$stethoRealmVersion"
     debugCompile "com.tspoon.traceur:traceur:1.0.1"
-    compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
-    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.6@aar') {
-        transitive = true
-    }
-    compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1@aar'
-    compile 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
-    compile 'com.jakewharton.timber:timber:4.5.1'
-    compile 'com.github.matrixxun:MaterialBadgeTextView:c5a27e8243'
-    compile 'com.github.chrisbanes:PhotoView:2.0.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.3'
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$rootProject.ext.kotlinVersion"
     testCompile "com.nhaarman:mockito-kotlin:1.1.0"
     testCompile 'org.amshove.kluent:kluent:1.14'
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$rootProject.ext.kotlinVersion"
 }
 apply plugin: 'com.google.gms.google-services'

@@ -8,8 +8,8 @@ import android.support.v4.app.Fragment;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.LoginFragment;
 import chat.rocket.android.fragment.server_config.RetryLoginFragment;
-import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.android.service.ConnectivityManager;
+import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 
 /**

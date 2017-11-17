@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
+
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.layouthelper.MessageExtraActionListAdapter;
 import chat.rocket.android.widget.message.MessageExtraActionItemPresenter;

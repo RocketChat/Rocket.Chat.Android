@@ -95,6 +95,9 @@ object PushManager {
         hostToPushMessageList.remove(host)
     }
 
+    /**
+     * Remove a notification solely by it's unique id.
+     */
     fun clearNotificationsByNotificationId(notificationId: Int) {
         if (hostToPushMessageList.isNotEmpty()) {
             for (entry in hostToPushMessageList.entries) {
@@ -105,7 +108,13 @@ object PushManager {
         }
     }
 
-    fun clearNotificationsByHostAndNotificationId(host: String, notificationId: Int) {
+    /**
+     * Clear notifications by the host they belong to and its unique id.
+     */
+    fun clearNotificationsByHostAndNotificationId(host: String?, notificationId: Int?) {
+        if (host == null || notificationId == null) {
+            return
+        }
         if (hostToPushMessageList.isNotEmpty()) {
             val notifications = hostToPushMessageList[host]
             notifications?.let {

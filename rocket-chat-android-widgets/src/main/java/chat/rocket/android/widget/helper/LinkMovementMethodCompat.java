@@ -5,7 +5,6 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
-import android.text.method.Touch;
 import android.text.style.ClickableSpan;
 import android.view.MotionEvent;
 import android.widget.TextView;

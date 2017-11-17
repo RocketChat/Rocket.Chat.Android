@@ -1,6 +1,5 @@
 package chat.rocket.android.fragment.oauth;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import org.json.JSONObject;
 
 import chat.rocket.android.BackgroundLooper;
@@ -10,6 +9,7 @@ import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.repositories.LoginServiceConfigurationRepository;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class OAuthPresenter extends BasePresenter<OAuthContract.View>
     implements OAuthContract.Presenter {

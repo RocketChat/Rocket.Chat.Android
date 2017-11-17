@@ -2,11 +2,10 @@ package chat.rocket.core.interactors
 
 import chat.rocket.core.models.Session
 import chat.rocket.core.models.User
-import io.reactivex.Flowable
-import io.reactivex.Single
-
 import chat.rocket.core.repositories.UserRepository
 import com.hadisatrio.optional.Optional
+import io.reactivex.Flowable
+import io.reactivex.Single
 import io.reactivex.functions.Function3
 
 class CanCreateRoomInteractor(private val userRepository: UserRepository,
