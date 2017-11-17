@@ -67,7 +67,7 @@ class PushManagerTest {
             on { getColor(any()) } doReturn 0
 
             on { getIdentifier(
-                    anyString(), anyString(), any()) } doReturn R.drawable.notification_background
+                    anyString(), anyString(), any()) } doReturn R.drawable.notification_icon_background
 
             on { getConfiguration() } doReturn RuntimeEnvironment.application.resources.configuration
         }

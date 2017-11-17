@@ -1,7 +1,6 @@
 package chat.rocket.persistence.realm.repositories
 
 import android.os.Looper
-import android.support.v4.util.Pair
 import chat.rocket.core.models.Spotlight
 import chat.rocket.core.repositories.SpotlightRepository
 import chat.rocket.persistence.realm.RealmStore
