@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
+    android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+    android:layout_marginTop="16dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image_user_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/middle_container"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/middle_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toRightOf="@id/image_user_avatar"
+        app:layout_constraintRight_toLeftOf="@id/right_container">
+
+        <TextView
+            android:id="@+id/text_room_name"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Ronald Perkins" />
+
+        <TextView
+            android:id="@+id/text_last_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintLeft_toLeftOf="@id/text_room_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_room_name"
+            tools:text="Type something" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/right_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="22dp" />
+
+        <TextView
+            android:id="@+id/text_last_message_timestamp"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/guideline_one"
+            tools:text="11:45" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="44dp" />
+
+        <TextView
+            android:id="@+id/text_unread_message"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/style_unread_message"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/guideline_two"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="99+" />
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.constraint.ConstraintLayout>
