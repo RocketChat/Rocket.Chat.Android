@@ -13,6 +13,7 @@ import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.MessageRepository;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
@@ -89,16 +90,12 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
       }
       realmMessage.setUser(realmUser);
 
-      realm.beginTransaction();
+      final RealmMessage messageToSave = realmMessage;
 
-      return realm.copyToRealmOrUpdate(realmMessage)
-          .asFlowable()
+      return RealmHelper.copyToRealmOrUpdate(realm, messageToSave)
           .filter(it -> it.isLoaded() && it.isValid())
-          .firstElement()
-          .doOnSuccess(it -> realm.commitTransaction())
-          .doOnError(throwable -> realm.cancelTransaction())
+          .first(new RealmMessage())
           .doOnEvent((realmObject, throwable) -> close(realm, looper))
-          .toSingle()
           .map(realmObject -> true);
     });
   }
