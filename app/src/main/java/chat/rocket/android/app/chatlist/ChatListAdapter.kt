@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import chat.rocket.android.R
+import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_chat.view.*
 
 class ChatListAdapter(private var dataSet: List<Chat>, private val context: Context) : RecyclerView.Adapter<ChatListAdapter.ViewHolder>() {
@@ -39,10 +41,10 @@ class ChatListAdapter(private var dataSet: List<Chat>, private val context: Cont
     override fun getItemCount(): Int = dataSet.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val userAvatar = itemView.image_user_avatar
-        val roomName = itemView.text_room_name
-        val lastMessage = itemView.text_last_message
-        val lastMessageTimestamp = itemView.text_last_message_timestamp
-        val unreadMessage = itemView.text_unread_message
+        val userAvatar: SimpleDraweeView = itemView.image_user_avatar
+        val roomName: TextView = itemView.text_room_name
+        val lastMessage: TextView = itemView.text_last_message
+        val lastMessageTimestamp: TextView = itemView.text_last_message_timestamp
+        val unreadMessage: TextView = itemView.text_unread_message
     }
 }
