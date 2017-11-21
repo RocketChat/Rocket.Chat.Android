@@ -9,6 +9,7 @@ import chat.rocket.core.models.PublicSetting;
 import chat.rocket.core.repositories.PublicSettingRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmPublicSetting;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,10 +32,10 @@ public class RealmPublicSettingRepository extends RealmRepository
             if (pair.first == null) {
               return Flowable.empty();
             }
-            return pair.first.where(RealmPublicSetting.class)
+            return RxJavaInterop.toV2Flowable(pair.first.where(RealmPublicSetting.class)
                   .equalTo(RealmPublicSetting.ID, id)
                   .findAll()
-                  .<RealmResults<RealmPublicSetting>>asFlowable();
+                  .<RealmResults<RealmPublicSetting>>asObservable());
         },
         pair -> close(pair.first, pair.second)
     )

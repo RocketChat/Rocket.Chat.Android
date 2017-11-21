@@ -166,7 +166,11 @@ import io.reactivex.subjects.PublishSubject;
   @DebugLog
   private Single<Boolean> connectToServerIfNeeded(String hostname, boolean forceConnect) {
     return Single.defer(() -> {
-      final int connectivity = serverConnectivityList.get(hostname);
+      Integer state = serverConnectivityList.get(hostname);
+      if (state == null) {
+        state = ServerConnectivity.STATE_DISCONNECTED;
+      }
+      final int connectivity = state;
       if (!forceConnect && connectivity == ServerConnectivity.STATE_CONNECTED) {
         return Single.just(true);
       }

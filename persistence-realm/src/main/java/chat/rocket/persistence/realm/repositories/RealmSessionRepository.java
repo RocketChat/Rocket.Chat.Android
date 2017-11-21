@@ -9,6 +9,7 @@ import chat.rocket.core.models.Session;
 import chat.rocket.core.repositories.SessionRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,10 +32,10 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
             return Flowable.empty();
           }
 
-          return pair.first.where(RealmSession.class)
+          return RxJavaInterop.toV2Flowable(pair.first.where(RealmSession.class)
                           .equalTo(RealmSession.ID, id)
                           .findAll()
-                          .<RealmSession>asFlowable();
+                          .<RealmSession>asObservable());
         },
         pair -> close(pair.first, pair.second)
     )
@@ -75,8 +76,8 @@ public class RealmSessionRepository extends RealmRepository implements SessionRe
 
       realm.beginTransaction();
 
-      return realm.copyToRealmOrUpdate(realmSession)
-          .asFlowable()
+      return RxJavaInterop.toV2Flowable(realm.copyToRealmOrUpdate(realmSession)
+          .asObservable())
           .filter(it -> it != null && it.isLoaded() && it.isValid())
           .firstElement()
           .doOnSuccess(it -> realm.commitTransaction())

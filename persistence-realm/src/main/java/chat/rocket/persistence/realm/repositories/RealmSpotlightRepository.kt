@@ -6,6 +6,7 @@ import chat.rocket.core.repositories.SpotlightRepository
 import chat.rocket.persistence.realm.RealmStore
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlight
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlight.Columns
+import hu.akarnokd.rxjava.interop.RxJavaInterop
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
@@ -23,9 +24,9 @@ class RealmSpotlightRepository(private val hostname: String) : RealmRepository()
                 return@using Flowable.empty()
             }
 
-            return@using pair.first.where(RealmSpotlight::class.java)
-                .findAllSorted(Columns.TYPE, Sort.DESCENDING)
-                .asFlowable()
+            return@using RxJavaInterop.toV2Flowable(pair.first.where(RealmSpotlight::class.java)
+                    .findAllSorted(Columns.TYPE, Sort.DESCENDING)
+                    .asObservable())
         }) { pair -> close(pair.first, pair.second) }
                 .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()!!))
                 .filter { realmSpotlightResults -> realmSpotlightResults.isLoaded && realmSpotlightResults.isValid }

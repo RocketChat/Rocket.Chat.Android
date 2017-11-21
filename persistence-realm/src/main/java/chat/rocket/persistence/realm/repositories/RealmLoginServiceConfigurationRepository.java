@@ -12,6 +12,7 @@ import chat.rocket.core.models.LoginServiceConfiguration;
 import chat.rocket.core.repositories.LoginServiceConfigurationRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmMeteorLoginServiceConfiguration;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,10 +36,10 @@ public class RealmLoginServiceConfigurationRepository extends RealmRepository
             return Flowable.empty();
           }
 
-          return pair.first.where(RealmMeteorLoginServiceConfiguration.class)
+          return RxJavaInterop.toV2Flowable(pair.first.where(RealmMeteorLoginServiceConfiguration.class)
                           .equalTo(RealmMeteorLoginServiceConfiguration.SERVICE, serviceName)
                           .findAll()
-                          .<RealmResults<RealmMeteorLoginServiceConfiguration>>asFlowable();
+                          .<RealmResults<RealmMeteorLoginServiceConfiguration>>asObservable());
         },
         pair -> close(pair.first, pair.second)
     )
@@ -57,9 +58,9 @@ public class RealmLoginServiceConfigurationRepository extends RealmRepository
             return Flowable.empty();
           }
 
-          return pair.first.where(RealmMeteorLoginServiceConfiguration.class)
+          return RxJavaInterop.toV2Flowable(pair.first.where(RealmMeteorLoginServiceConfiguration.class)
                           .findAll()
-                          .asFlowable();
+                          .asObservable());
         },
         pair -> close(pair.first, pair.second)
     )

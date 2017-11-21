@@ -11,6 +11,7 @@ import chat.rocket.core.models.SpotlightUser;
 import chat.rocket.core.repositories.SpotlightUserRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Case;
@@ -33,7 +34,7 @@ public class RealmSpotlightUserRepository extends RealmRepository implements Spo
             return Flowable.empty();
           }
 
-          return pair.first.where(RealmSpotlightUser.class)
+          return RxJavaInterop.toV2Flowable(pair.first.where(RealmSpotlightUser.class)
                           .beginGroup()
                           .like(RealmSpotlightUser.Columns.USERNAME, "*" + name + "*", Case.INSENSITIVE)
                           .isNull(RealmSpotlightUser.Columns.NAME)
@@ -45,7 +46,7 @@ public class RealmSpotlightUserRepository extends RealmRepository implements Spo
                           .endGroup()
                           .findAllSorted(RealmSpotlightUser.Columns.USERNAME,
                                   direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
-                          .asFlowable();
+                          .asObservable());
         },
         pair -> close(pair.first, pair.second)
     )

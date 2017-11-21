@@ -16,6 +16,7 @@ import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,9 +42,9 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
                 return Flowable.empty();
             }
 
-            return pair.first.where(RealmRoom.class)
+            return RxJavaInterop.toV2Flowable(pair.first.where(RealmRoom.class)
                             .findAll()
-                            .asFlowable();
+                            .asObservable());
         },
         pair -> close(pair.first, pair.second)
     )
@@ -70,7 +71,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
             return Flowable.just(Optional.<RealmRoom>absent());
           }
 
-          return realmRoom.<RealmRoom>asFlowable()
+          return RxJavaInterop.toV2Flowable(realmRoom.<RealmRoom>asObservable())
                   .filter(
                       roomSubscription -> roomSubscription.isLoaded()
                           && roomSubscription.isValid())
@@ -105,7 +106,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
             return Flowable.just(Optional.<LoadMessageProcedure>absent());
           }
 
-          return messageProcedure.<LoadMessageProcedure>asFlowable()
+          return RxJavaInterop.toV2Flowable(messageProcedure.<LoadMessageProcedure>asObservable())
                   .filter(loadMessageProcedure -> loadMessageProcedure.isLoaded()
                       && loadMessageProcedure.isValid())
                   .map(Optional::of);
@@ -156,7 +157,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
             if (pair.first == null) {
                 return Flowable.empty();
             }
-            return pair.first.where(RealmRoom.class)
+            return RxJavaInterop.toV2Flowable(pair.first.where(RealmRoom.class)
                     .like(RealmRoom.NAME, "*" + name + "*", Case.INSENSITIVE)
                     .beginGroup()
                     .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
@@ -165,7 +166,7 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
                     .endGroup()
                     .findAllSorted(RealmRoom.NAME,
                         direction.equals(SortDirection.ASC) ? Sort.ASCENDING : Sort.DESCENDING)
-                    .asFlowable();
+                    .asObservable());
         },
         pair -> close(pair.first, pair.second)
     )
@@ -183,14 +184,14 @@ public class RealmRoomRepository extends RealmRepository implements RoomReposito
             if (pair.first == null) {
                 return Flowable.empty();
             }
-            return pair.first.where(RealmRoom.class)
+            return RxJavaInterop.toV2Flowable(pair.first.where(RealmRoom.class)
                     .beginGroup()
                     .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_CHANNEL)
                     .or()
                     .equalTo(RealmRoom.TYPE, RealmRoom.TYPE_PRIVATE)
                     .endGroup()
                     .findAllSorted(RealmRoom.LAST_SEEN, Sort.ASCENDING)
-                    .asFlowable();
+                    .asObservable());
         },
         pair -> close(pair.first, pair.second)
     )
