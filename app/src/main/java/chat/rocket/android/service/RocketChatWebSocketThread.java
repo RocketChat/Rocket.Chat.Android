@@ -129,7 +129,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
   @Override
   protected void onLooperPrepared() {
     super.onLooperPrepared();
-    forceInvalidateTokens();
   }
 
   private void forceInvalidateTokens() {
@@ -308,7 +307,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
     if (reconnectSubscription.size() > 0) {
       return;
     }
-    forceInvalidateTokens();
     connectivityManager.notifyConnecting(hostname);
     reconnectSubscription.add(
         connectWithExponentialBackoff()
