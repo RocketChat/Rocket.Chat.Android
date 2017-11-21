@@ -17,7 +17,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.60"
-        classpath 'io.realm:realm-gradle-plugin:3.7.2'
+        classpath 'io.realm:realm-gradle-plugin:2.3.2'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
