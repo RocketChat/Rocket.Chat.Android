@@ -3,6 +3,7 @@ import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.widget.EditText
+import android.widget.TextView
 
 /**
  * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
@@ -40,7 +41,6 @@ object DrawableHelper {
      */
     fun wrapDrawable(drawable: Drawable) = DrawableCompat.wrap(drawable)
 
-
     /**
      * Tints an array of Drawable.
      *
@@ -72,30 +72,30 @@ object DrawableHelper {
     fun tintDrawable(drawable: Drawable, context: Context, resId: Int) = DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resId))
 
     /**
-     * Compounds an array of Drawable (to appear to the left of the text) into an array of EditText.
+     * Compounds an array of Drawable (to appear to the left of the text) into an array of TextView.
      *
      * REMARK: the number of elements in both array of Drawable and EditText MUST be equal.
      *
-     * @param editTexts The array of EditText.
+     * @param textView The array of TextView.
      * @param drawables The array of Drawable.
      * @see compoundDrawable
      */
-    fun compoundDrawables(editTexts: Array<EditText>, drawables: Array<Drawable>) {
-        if (editTexts.size != drawables.size) {
+    fun compoundDrawables(textView: Array<EditText>, drawables: Array<Drawable>) {
+        if (textView.size != drawables.size) {
             return
         } else {
-            for (i in editTexts.indices) {
-                editTexts[i].setCompoundDrawablesWithIntrinsicBounds(drawables[i], null, null, null)
+            for (i in textView.indices) {
+                textView[i].setCompoundDrawablesWithIntrinsicBounds(drawables[i], null, null, null)
             }
         }
     }
 
     /**
-     * Compounds a Drawable (to appear to the left of the text) into an EditText.
+     * Compounds a Drawable (to appear to the left of the text) into a TextView.
      *
-     * @param editText The EditText.
+     * @param textView The TextView.
      * @param drawable The Drawable.
      * @see compoundDrawables
      */
-    fun compoundDrawable(editText: EditText, drawable: Drawable) = editText.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+    fun compoundDrawable(textView: TextView, drawable: Drawable) = textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 }
