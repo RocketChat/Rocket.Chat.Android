@@ -10,24 +10,33 @@ import android.view.ViewGroup
 import chat.rocket.android.R
 import kotlinx.android.synthetic.main.fragment_chat_list.*
 
+/**
+ * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
+ */
 class ChatListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater?.inflate(R.layout.fragment_chat_list, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        showChatList()
+        showChatList(createDumpData())
     }
 
-    fun showChatList() {
-        val dumpUser1 = Chat("https://open.rocket.chat/avatar/filipe.brito", "Filipe Brito", "Type something...Type something...Type something", "11:45", 150)
-        val dumpUser2 = Chat("https://open.rocket.chat/avatar/leonardo.aramaki", "Leonardo Aramaki", "Type something", "11:44", 1)
-        val dumpUser3 = Chat("https://open.rocket.chat/avatar/lucio.maciel", "Lucio Maciel", "Type something", "11:40", 0)
+    // This is just a sample showing 8 chat rooms (aka user subscription). We need to get it rid in a real word. REMARK: remove this comment and this method.
+    private fun createDumpData(): MutableList<Chat> {
+        val dumpChat1 = Chat("https://open.rocket.chat/avatar/filipe.brito", "Filipe Brito", "d", "online", "Type something...Type something...Type something", "11:45", 150)
+        val dumpChat2 = Chat("https://open.rocket.chat/avatar/leonardo.aramaki", "Leonardo Aramaki", "d", "busy", "Type something", "11:44", 1)
+        val dumpChat3 = Chat("https://open.rocket.chat/avatar/lucio.maciel", "Lucio Maciel", "d", "away", "Type something", "11:40", 0)
+        val dumpChat4 = Chat("https://open.rocket.chat/avatar/sing.li", "mobile-internal", "p", null, "@aaron.ogle @rafael.kellermann same problem over here. Although all the servers show up on the selection.", "11:40", 0)
+        val dumpChat5 = Chat("https://open.rocket.chat/avatar/matheus.cardoso", "androidnativeapp", "c", null, "Yes @sttyru, but you'll need to implement from the ground up following the docs at docs.rocket.chat where you can see the REST (HTTP) and Real-Time (WebSockets) calls.", "11:40", 0)
+        val dumpChat6 = Chat("https://open.rocket.chat/avatar/hetal", "general", "c", null, "Has joined the channel.", "11:40", 0)
+        return arrayListOf(dumpChat1, dumpChat2, dumpChat3, dumpChat4, dumpChat5, dumpChat6)
+    }
 
-        val dumpData = arrayListOf(dumpUser1, dumpUser2, dumpUser3)
+    // REMARK: The presenter should call this method. The presenter also need to sort the chat list by latest message (compared by its timestamp).
+    private fun showChatList(dataSet: MutableList<Chat>) {
         val context = activity.applicationContext
-        recycler_view.adapter = ChatListAdapter(dumpData, context)
+        recycler_view.adapter = ChatListAdapter(dataSet, context)
         recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recycler_view.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
     }
