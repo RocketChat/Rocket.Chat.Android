@@ -12,7 +12,6 @@ import chat.rocket.core.repositories.RoomRoleRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -34,11 +33,11 @@ public class RealmRoomRoleRepository extends RealmRepository implements RoomRole
             if (pair.first == null) {
                 return Flowable.empty();
             }
-            return RxJavaInterop.toV2Flowable(pair.first.where(RealmRoomRole.class)
+            return pair.first.where(RealmRoomRole.class)
                     .equalTo(RealmRoomRole.Columns.ROOM_ID, room.getId())
                     .equalTo(RealmRoomRole.Columns.USER + "." + RealmUser.ID, user.getId())
                     .findAll()
-                    .<RealmResults<RealmRoomRole>>asObservable());
+                    .<RealmResults<RealmRoomRole>>asFlowable();
         },
         pair -> close(pair.first, pair.second)
     )

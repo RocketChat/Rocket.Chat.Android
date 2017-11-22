@@ -12,7 +12,6 @@ import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Case;
@@ -36,9 +35,9 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
                         return Flowable.empty();
                     }
 
-                    return RxJavaInterop.toV2Flowable(pair.first.where(RealmUser.class)
+                    return pair.first.where(RealmUser.class)
                                     .findAll()
-                                    .asObservable());
+                                    .asFlowable();
                 },
                 pair -> close(pair.first, pair.second))
                 .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
@@ -70,10 +69,10 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
                         return Flowable.empty();
                     }
 
-                    return RxJavaInterop.toV2Flowable(pair.first.where(RealmUser.class)
+                    return pair.first.where(RealmUser.class)
                                 .isNotEmpty(RealmUser.EMAILS)
                                 .findAll()
-                                .<RealmResults<RealmUser>>asObservable());
+                                .<RealmResults<RealmUser>>asFlowable();
                 },
                 pair -> close(pair.first, pair.second));
     }
@@ -112,7 +111,7 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
             return Flowable.just(Optional.absent());
         }
 
-        return RxJavaInterop.toV2Flowable(realmUser.<RealmUser>asObservable())
+        return realmUser.<RealmUser>asFlowable()
                         .filter(user -> user.isLoaded() && user.isValid())
                         .map(Optional::of);
     }
@@ -135,10 +134,10 @@ public class RealmUserRepository extends RealmRepository implements UserReposito
                         return Flowable.empty();
                     }
 
-                    return RxJavaInterop.toV2Flowable(pair.first.where(RealmUser.class)
+                    return pair.first.where(RealmUser.class)
                                     .like(RealmUser.USERNAME, "*" + name + "*", Case.INSENSITIVE)
                                     .findAllSorted(RealmUser.USERNAME, Sort.DESCENDING)
-                                    .asObservable());
+                                    .asFlowable();
                 },
                 pair -> close(pair.first, pair.second));
     }

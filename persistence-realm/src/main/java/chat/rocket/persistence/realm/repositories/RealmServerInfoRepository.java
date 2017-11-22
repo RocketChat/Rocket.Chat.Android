@@ -8,7 +8,6 @@ import com.hadisatrio.optional.Optional;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.core.repositories.ServerInfoRepository;
 import chat.rocket.persistence.realm.models.RealmBasedServerInfo;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -27,7 +26,7 @@ public class RealmServerInfoRepository extends RealmRepository implements Server
             return Flowable.just(Optional.<RealmBasedServerInfo>absent());
           }
 
-          return RxJavaInterop.toV2Flowable(info.<RealmBasedServerInfo>asObservable())
+          return info.<RealmBasedServerInfo>asFlowable()
               .filter(it -> it.isLoaded() && it.isValid())
               .map(Optional::of);
         },

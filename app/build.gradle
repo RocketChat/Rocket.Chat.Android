@@ -120,7 +120,6 @@ dependencies {
     compile rxbindingDependencies.rxBinding
     compile rxbindingDependencies.rxBindingSupport
     compile rxbindingDependencies.rxBindingAppcompact
-    compile "com.github.akarnokd:rxjava2-interop:0.11.0"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
     compile "com.google.firebase:firebase-core:$playLibVersion"
     compile "com.google.firebase:firebase-crash:$playLibVersion"
@@ -145,7 +144,7 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$rootProject.ext.kotlinVersion"
-    testCompile "com.nhaarman:mockito-kotlin:1.1.0"
+    testCompile "com.nhaarman:mockito-kotlin:1.5.0"
     testCompile 'org.amshove.kluent:kluent:1.14'
 }
 apply plugin: 'com.google.gms.google-services'
