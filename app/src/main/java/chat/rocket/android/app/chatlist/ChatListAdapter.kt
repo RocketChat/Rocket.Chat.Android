@@ -27,21 +27,16 @@ class ChatListAdapter(private var dataSet: MutableList<Chat>, private val contex
         holder.userAvatar.setImageURI(chat.userAvatarUri)
         holder.chatName.text = chat.name
         holder.lastMessage.text = chat.lastMessage
-        holder.lastMessageTimestamp.text = chat.lastMessageTimestamp
+        holder.lastMessageTimestamp.text = DateTimeHelper.getDate(chat.lastMessageDateTime, context)
 
         when (chat.type) {
             "p" -> DrawableHelper.compoundDrawable(holder.chatName, DrawableHelper.getDrawableFromId(R.drawable.ic_lock_outline_black, context))
             "c" -> DrawableHelper.compoundDrawable(holder.chatName, DrawableHelper.getDrawableFromId(R.drawable.ic_hashtag_black, context))
             "d" -> {
-                val userStatusDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_user_status_black, context).mutate()
-                DrawableHelper.wrapDrawable(userStatusDrawable)
-                when (chat.userStatus) {
-                    "online" -> DrawableHelper.tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOnline)
-                    "busy" -> DrawableHelper.tintDrawable(userStatusDrawable, context, R.color.colorUserStatusBusy)
-                    "away" -> DrawableHelper.tintDrawable(userStatusDrawable, context, R.color.colorUserStatusAway)
-                    "offline" -> DrawableHelper.tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOffline)
+                val userStatus = chat.userStatus
+                if (userStatus != null) {
+                    DrawableHelper.compoundDrawable(holder.chatName, DrawableHelper.getUserStatusDrawable(userStatus, context))
                 }
-                DrawableHelper.compoundDrawable(holder.chatName, userStatusDrawable)
             }
         }
 
