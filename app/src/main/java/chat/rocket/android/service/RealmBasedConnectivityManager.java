@@ -1,5 +1,6 @@
 package chat.rocket.android.service;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -68,6 +69,7 @@ import io.reactivex.subjects.PublishSubject;
     }
   }
 
+  @SuppressLint("RxLeakedSubscription")
   @DebugLog
   @Override
   public void ensureConnections() {
@@ -84,6 +86,7 @@ import io.reactivex.subjects.PublishSubject;
           });
   }
 
+  @SuppressLint("RxLeakedSubscription")
   @Override
   public void addOrUpdateServer(String hostname, @Nullable String name, boolean insecure) {
     RealmBasedServerInfo.addOrUpdate(hostname, name, insecure);
@@ -95,6 +98,7 @@ import io.reactivex.subjects.PublishSubject;
         }, RCLog::e);
   }
 
+  @SuppressLint("RxLeakedSubscription")
   @Override
   public void removeServer(String hostname) {
     RealmBasedServerInfo.remove(hostname);
