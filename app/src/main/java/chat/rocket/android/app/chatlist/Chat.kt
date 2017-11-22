@@ -1,5 +1,7 @@
 package chat.rocket.android.app.chatlist
 
+import org.threeten.bp.LocalDateTime
+
 /**
  * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
  */
@@ -8,5 +10,5 @@ data class Chat(val userAvatarUri: String,
                 val type: String,
                 val userStatus: String?,
                 val lastMessage: String,
-                val lastMessageTimestamp: String,
+                val lastMessageDateTime: LocalDateTime,
                 val totalUnreadMessages: Int)
