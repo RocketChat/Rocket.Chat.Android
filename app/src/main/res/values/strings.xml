@@ -28,5 +28,6 @@
     <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
+    <string name="msg_content_description_chat_icon">Chat icon</string>
 
 </resources>
