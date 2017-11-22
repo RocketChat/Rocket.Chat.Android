@@ -4,6 +4,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.widget.EditText
 import android.widget.TextView
+import chat.rocket.android.R
 
 /**
  * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
@@ -98,4 +99,24 @@ object DrawableHelper {
      * @see compoundDrawables
      */
     fun compoundDrawable(textView: TextView, drawable: Drawable) = textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+
+    /**
+     * Returns the user status drawable.
+     *
+     * @param userStatus The user status.
+     * @param context The context.
+     * @return The user status drawable.
+     */
+    fun getUserStatusDrawable(userStatus: String, context: Context): Drawable {
+        val userStatusDrawable = getDrawableFromId(R.drawable.ic_user_status_black, context).mutate()
+        wrapDrawable(userStatusDrawable)
+        when (userStatus) {
+            // TODO: create a enum or check if it will come from the SDK
+            "online" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOnline)
+            "busy" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusBusy)
+            "away" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusAway)
+            "offline" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOffline)
+        }
+        return userStatusDrawable
+    }
 }
