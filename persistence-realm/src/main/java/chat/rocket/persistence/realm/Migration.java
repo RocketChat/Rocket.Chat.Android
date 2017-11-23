@@ -77,7 +77,9 @@ public class Migration implements RealmMigration {
       try {
         userSchema.addField(RealmUser.NAME, String.class);
       } catch (IllegalArgumentException e) {
-        e.printStackTrace();
+        if (BuildConfig.DEBUG) {
+          e.printStackTrace();
+        }
         // ignore; it makes here if the schema for this model was already update before without migration
       }
     }
