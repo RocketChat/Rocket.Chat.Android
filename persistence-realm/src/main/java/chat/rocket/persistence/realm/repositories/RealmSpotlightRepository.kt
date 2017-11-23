@@ -24,8 +24,8 @@ class RealmSpotlightRepository(private val hostname: String) : RealmRepository()
             }
 
             return@using pair.first.where(RealmSpotlight::class.java)
-                .findAllSorted(Columns.TYPE, Sort.DESCENDING)
-                .asFlowable()
+                    .findAllSorted(Columns.TYPE, Sort.DESCENDING)
+                    .asFlowable()
         }) { pair -> close(pair.first, pair.second) }
                 .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()!!))
                 .filter { realmSpotlightResults -> realmSpotlightResults.isLoaded && realmSpotlightResults.isValid }

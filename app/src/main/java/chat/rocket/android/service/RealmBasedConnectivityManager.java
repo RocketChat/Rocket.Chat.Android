@@ -1,5 +1,6 @@
 package chat.rocket.android.service;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -68,6 +69,7 @@ import io.reactivex.subjects.PublishSubject;
     }
   }
 
+  @SuppressLint("RxLeakedSubscription")
   @DebugLog
   @Override
   public void ensureConnections() {
@@ -84,6 +86,7 @@ import io.reactivex.subjects.PublishSubject;
           });
   }
 
+  @SuppressLint("RxLeakedSubscription")
   @Override
   public void addOrUpdateServer(String hostname, @Nullable String name, boolean insecure) {
     RealmBasedServerInfo.addOrUpdate(hostname, name, insecure);
@@ -95,6 +98,7 @@ import io.reactivex.subjects.PublishSubject;
         }, RCLog::e);
   }
 
+  @SuppressLint("RxLeakedSubscription")
   @Override
   public void removeServer(String hostname) {
     RealmBasedServerInfo.remove(hostname);
@@ -166,7 +170,11 @@ import io.reactivex.subjects.PublishSubject;
   @DebugLog
   private Single<Boolean> connectToServerIfNeeded(String hostname, boolean forceConnect) {
     return Single.defer(() -> {
-      final int connectivity = serverConnectivityList.get(hostname);
+      Integer state = serverConnectivityList.get(hostname);
+      if (state == null) {
+        state = ServerConnectivity.STATE_DISCONNECTED;
+      }
+      final int connectivity = state;
       if (!forceConnect && connectivity == ServerConnectivity.STATE_CONNECTED) {
         return Single.just(true);
       }

@@ -15,9 +15,9 @@ buildscript {
         maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.51"
-        classpath 'io.realm:realm-gradle-plugin:4.2.0-SNAPSHOT'
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.60"
+        classpath 'io.realm:realm-gradle-plugin:4.2.0'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'

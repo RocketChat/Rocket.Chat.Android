@@ -20,8 +20,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 16
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 50
-        versionName "1.0.27"
+        versionCode 52
+        versionName "1.0.29"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -144,7 +144,7 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$rootProject.ext.kotlinVersion"
-    testCompile "com.nhaarman:mockito-kotlin:1.1.0"
+    testCompile "com.nhaarman:mockito-kotlin:1.5.0"
     testCompile 'org.amshove.kluent:kluent:1.14'
 }
 apply plugin: 'com.google.gms.google-services'

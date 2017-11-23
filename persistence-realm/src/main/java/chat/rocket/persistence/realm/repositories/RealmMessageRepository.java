@@ -41,8 +41,7 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
               return Flowable.empty();
             }
 
-            return
-              pair.first.where(RealmMessage.class)
+            return pair.first.where(RealmMessage.class)
                   .equalTo(RealmMessage.ID, messageId)
                   .findAll()
                   .<RealmResults<RealmMessage>>asFlowable();
