@@ -74,7 +74,12 @@ public class Migration implements RealmMigration {
 
     if (oldVersion == 5) {
       RealmObjectSchema userSchema = schema.get("RealmUser");
-      userSchema.addField(RealmUser.NAME, String.class);
+      try {
+        userSchema.addField(RealmUser.NAME, String.class);
+      } catch (IllegalArgumentException e) {
+        e.printStackTrace();
+        // ignore; it makes here if the schema for this model was already update before without migration
+      }
     }
   }
 
