@@ -1,5 +1,6 @@
 package chat.rocket.android.app.chatlist
 
+import DateTimeHelper
 import DrawableHelper
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -27,7 +28,7 @@ class ChatListAdapter(private var dataSet: MutableList<Chat>, private val contex
         holder.userAvatar.setImageURI(chat.userAvatarUri)
         holder.chatName.text = chat.name
         holder.lastMessage.text = chat.lastMessage
-        holder.lastMessageTimestamp.text = DateTimeHelper.getDate(chat.lastMessageDateTime, context)
+        holder.lastMessageDateTime.text = DateTimeHelper.getDate(chat.lastMessageDateTime, context)
 
         when (chat.type) {
             "p" -> DrawableHelper.compoundDrawable(holder.chatName, DrawableHelper.getDrawableFromId(R.drawable.ic_lock_outline_black, context))
@@ -59,7 +60,7 @@ class ChatListAdapter(private var dataSet: MutableList<Chat>, private val contex
         val userAvatar: SimpleDraweeView = itemView.image_user_avatar
         val chatName: TextView = itemView.text_chat_name
         val lastMessage: TextView = itemView.text_last_message
-        val lastMessageTimestamp: TextView = itemView.text_last_message_timestamp
+        val lastMessageDateTime: TextView = itemView.text_last_message_date_time
         val unreadMessage: TextView = itemView.text_total_unread_messages
     }
 }
