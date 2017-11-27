@@ -195,6 +195,7 @@ import io.reactivex.subjects.BehaviorSubject;
             }
 
             return connectToServer(hostname)
+                    .retry(exception -> exception instanceof ThreadLooperNotPreparedException)
                     .onErrorResumeNext(Single.just(false));
         });
     }
@@ -264,7 +265,7 @@ import io.reactivex.subjects.BehaviorSubject;
             if (serviceInterface != null) {
                 return serviceInterface.ensureConnectionToServer(hostname);
             } else {
-                return Single.error(new IllegalStateException("not prepared"));
+                return Single.error(new ThreadLooperNotPreparedException("not prepared"));
             }
         });
     }
@@ -284,5 +285,11 @@ import io.reactivex.subjects.BehaviorSubject;
                 return Single.error(new IllegalStateException("not prepared"));
             }
         });
+    }
+
+    private static class ThreadLooperNotPreparedException extends IllegalStateException {
+        ThreadLooperNotPreparedException(String message) {
+            super(message);
+        }
     }
 }

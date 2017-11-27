@@ -251,6 +251,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     @Override
     public synchronized void showConnectionError() {
+        System.out.println("ERROR");
         dismissStatusTickerIfShowing();
         statusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
                 R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)

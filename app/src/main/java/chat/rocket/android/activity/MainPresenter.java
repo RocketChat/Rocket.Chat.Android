@@ -230,8 +230,6 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                             } else if (connectivity.state == ServerConnectivity.STATE_DISCONNECTED) {
                                 if (connectivity.code == DDPClient.REASON_NETWORK_ERROR) {
                                     view.showConnectionError();
-                                } else {
-                                    view.showConnectionOk();
                                 }
                             } else {
                                 view.showConnecting();
