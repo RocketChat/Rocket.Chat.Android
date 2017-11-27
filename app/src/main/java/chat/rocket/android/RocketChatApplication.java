@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatDelegate;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
+import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RocketChatWidgets;
@@ -54,13 +54,10 @@ public class RocketChatApplication extends MultiDexApplication {
             if (e instanceof UndeliverableException) {
                 e = e.getCause();
             }
-            if (e instanceof TimeoutException) {
-                // Some work timed-out after a server change is most probable.
-                return;
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
             }
-
-            Thread.currentThread().getUncaughtExceptionHandler()
-                    .uncaughtException(Thread.currentThread(), e);
+            Logger.report(e);
         });
 
         instance = this;
