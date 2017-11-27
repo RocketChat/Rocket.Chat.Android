@@ -6,16 +6,13 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.widget.RocketChatWidgets;
 import chat.rocket.android_ddp.DDPClient;
-import chat.rocket.android_ddp.DDPClientCallback;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.RocketChatPersistenceRealm;
