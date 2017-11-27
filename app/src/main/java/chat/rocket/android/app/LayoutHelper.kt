@@ -6,9 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 
-/**
- * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
- */
 //TODO: check if this code has memory leak.
 object LayoutHelper {
     private lateinit var childOfContent: View

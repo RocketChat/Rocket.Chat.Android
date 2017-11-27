@@ -11,9 +11,6 @@ import android.view.WindowManager
 import chat.rocket.android.R
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 
-/**
- * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
- */
 class AuthenticationTwoFAFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater?.inflate(R.layout.fragment_authentication_two_fa, container, false)

@@ -6,9 +6,6 @@ import android.widget.EditText
 import android.widget.TextView
 import chat.rocket.android.R
 
-/**
- * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
- */
 object DrawableHelper {
 
     /**

@@ -11,9 +11,6 @@ import chat.rocket.android.R
 import kotlinx.android.synthetic.main.fragment_chat_list.*
 import org.threeten.bp.LocalDateTime
 
-/**
- * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
- */
 class ChatListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater?.inflate(R.layout.fragment_chat_list, container, false)
