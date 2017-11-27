@@ -12,7 +12,6 @@ import bolts.Task;
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.RocketChatApplication;
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.AbsoluteUrlHelper;
 import chat.rocket.android.helper.LogIfError;
@@ -243,11 +242,11 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::processUsers, Logger::report);
         addSubscription(subscription);
-  }
+    }
 
     private void processUsers(List<User> userList) {
-        for (User user: userList) {
-            for(RoomSidebar roomSidebar: roomSidebarList) {
+        for (User user : userList) {
+            for (RoomSidebar roomSidebar : roomSidebarList) {
                 if (roomSidebar.getRoomName().equals(user.getUsername())) {
                     roomSidebar.setUserStatus(user.getStatus());
                 }
