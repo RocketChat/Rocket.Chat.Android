@@ -80,7 +80,11 @@ import io.reactivex.subjects.BehaviorSubject;
         }
         connectToServerIfNeeded(hostname, true/* force connect */)
                 .subscribeOn(Schedulers.io())
-                .subscribe(_val -> {
+                .subscribe(connected -> {
+                    System.out.println(connected);
+                    if (!connected) {
+                        notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR);
+                    }
                 }, error -> {
                     RCLog.e(error);
                     notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR);
@@ -95,7 +99,7 @@ import io.reactivex.subjects.BehaviorSubject;
             serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
         }
         connectToServerIfNeeded(hostname, false)
-                .subscribe(_val -> {
+                .subscribe(connected -> {
                 }, RCLog::e);
     }
 
@@ -191,7 +195,8 @@ import io.reactivex.subjects.BehaviorSubject;
 //              notifyConnecting(hostname);
             }
 
-            return connectToServer(hostname);
+            return connectToServer(hostname)
+                    .onErrorResumeNext(Single.just(false));
         });
     }
 

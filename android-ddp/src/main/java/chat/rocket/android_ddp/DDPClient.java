@@ -50,30 +50,30 @@ public class DDPClient {
         impl = new DDPClientImpl(this, client);
     }
 
-    public Task<DDPClientCallback.Connect> connect(String url, String session) {
+    private Task<DDPClientCallback.Connect> connect(String url, String session) {
         hostname.set(url);
         TaskCompletionSource<DDPClientCallback.Connect> task = new TaskCompletionSource<>();
         impl.connect(task, url, session);
         return task.getTask();
     }
 
-    public Task<DDPClientCallback.Ping> ping(@Nullable String id) {
+    private Task<DDPClientCallback.Ping> ping(@Nullable String id) {
         TaskCompletionSource<DDPClientCallback.Ping> task = new TaskCompletionSource<>();
         impl.ping(task, id);
         return task.getTask();
     }
 
-    public Maybe<DDPClientCallback.Base> doPing(@Nullable String id) {
+    private Maybe<DDPClientCallback.Base> doPing(@Nullable String id) {
         return impl.ping(id);
     }
 
-    public Task<DDPSubscription.Ready> sub(String id, String name, JSONArray params) {
+    private Task<DDPSubscription.Ready> sub(String id, String name, JSONArray params) {
         TaskCompletionSource<DDPSubscription.Ready> task = new TaskCompletionSource<>();
         impl.sub(task, name, params, id);
         return task.getTask();
     }
 
-    public Task<DDPSubscription.NoSub> unsub(String id) {
+    private Task<DDPSubscription.NoSub> unsub(String id) {
         TaskCompletionSource<DDPSubscription.NoSub> task = new TaskCompletionSource<>();
         impl.unsub(task, id);
         return task.getTask();

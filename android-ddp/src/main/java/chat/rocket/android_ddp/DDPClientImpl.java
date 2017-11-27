@@ -52,7 +52,7 @@ public class DDPClientImpl {
     }
   }
 
-  public void connect(final TaskCompletionSource<DDPClientCallback.Connect> task, final String url,
+  /* package */ void connect(final TaskCompletionSource<DDPClientCallback.Connect> task, final String url,
                       String session) {
     try {
       flowable = websocket.connect(url).autoConnect(2);
