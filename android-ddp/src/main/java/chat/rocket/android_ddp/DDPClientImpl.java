@@ -77,10 +77,6 @@ public class DDPClientImpl {
               callback -> callback instanceof RxWebSocketCallback.Message)
               .map(callback -> ((RxWebSocketCallback.Message) callback).responseBodyString)
               .map(DDPClientImpl::toJson)
-              .map(jsonObject -> {
-                if (true) throw new IllegalAccessException();
-                return jsonObject;
-              })
               .timeout(7, TimeUnit.SECONDS)
               .subscribe(response -> {
                     String msg = extractMsg(response);
