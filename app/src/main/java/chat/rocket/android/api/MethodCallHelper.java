@@ -114,6 +114,8 @@ public class MethodCallHelper {
           return Task.forError(new Exception(errMessage));
         } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
           return Task.forError(new MethodCall.Timeout());
+        } else if (exception instanceof DDPClientCallback.Closed) {
+          return Task.forError(new Exception("Oops, your connection seems off..."));
         } else {
           return Task.forError(exception);
         }
