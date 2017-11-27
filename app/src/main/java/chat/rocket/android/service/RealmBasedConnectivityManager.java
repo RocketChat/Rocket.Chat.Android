@@ -109,6 +109,7 @@ import io.reactivex.subjects.BehaviorSubject;
         if (serverConnectivityList.containsKey(hostname)) {
             disconnectFromServerIfNeeded(hostname)
                     .subscribe(_val -> {
+                        System.out.println("Disconnected " + _val);
                     }, RCLog::e);
         }
     }
@@ -279,8 +280,11 @@ import io.reactivex.subjects.BehaviorSubject;
 
             if (serviceInterface != null) {
                 return serviceInterface.disconnectFromServer(hostname)
-                        // //after disconnection from server, remove HOSTNAME key from HashMap
-                        .doAfterTerminate(() -> serverConnectivityList.remove(hostname));
+                         //after disconnection from server, remove HOSTNAME key from HashMap
+                        .doAfterTerminate(() -> {
+                            serverConnectivityList.remove(hostname);
+                            serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
+                        });
             } else {
                 return Single.error(new IllegalStateException("not prepared"));
             }

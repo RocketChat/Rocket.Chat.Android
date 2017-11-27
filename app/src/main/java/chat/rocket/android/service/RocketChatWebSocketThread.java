@@ -229,6 +229,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
                             RxWebSocketCallback.Close result = _task.getResult();
                             if (result.code == DDPClient.REASON_NETWORK_ERROR) {
                                 reconnect();
+                            } else {
+                                unregisterListeners();
                             }
                             return null;
                         });

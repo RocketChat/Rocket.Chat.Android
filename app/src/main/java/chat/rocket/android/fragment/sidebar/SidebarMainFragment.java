@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import bolts.Task;
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -51,6 +50,7 @@ import chat.rocket.persistence.realm.repositories.RealmServerInfoRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
+import hugo.weaving.DebugLog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -323,17 +323,12 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     adapter.setRoomListHeaders(roomListHeaders);
   }
 
+  @DebugLog
   @Override
-  public void onLogoutCleanUp() {
-    Activity activity = getActivity();
+  public void onPreparedToLogOut() {
+    final Activity activity = getActivity();
     if (activity != null && activity instanceof MainActivity) {
       ((MainActivity) activity).onLogout();
-      presenter.onLogout(task -> {
-        if (task.isFaulted()) {
-          return Task.forError(task.getError());
-        }
-        return null;
-      });
     }
   }
 
@@ -341,12 +336,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
     rootView.findViewById(R.id.btn_logout).setOnClickListener(view -> {
       closeUserActionContainer();
       // Clear relative data and set new hostname if any.
-      presenter.beforeLogoutCleanUp();
-      final Activity activity = getActivity();
-      if (activity != null && activity instanceof MainActivity) {
-        // Clear subscriptions on MainPresenter.
-        ((MainActivity) activity).beforeLogoutCleanUp();
-      }
+      presenter.prepareToLogOut();
     });
   }
 
