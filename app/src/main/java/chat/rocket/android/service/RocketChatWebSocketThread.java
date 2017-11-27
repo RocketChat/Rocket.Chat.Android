@@ -245,11 +245,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 return;
             }
             RCLog.d("DDPClient#connect");
+            connectivityManager.notifyConnecting(hostname);
             DDPClient.get().connect(hostname, info.getSession(), info.isSecure())
                     .onSuccessTask(task -> {
                         final String newSession = task.getResult().session;
                         connectivityManager.notifyConnectionEstablished(hostname, newSession);
-
                         // handling WebSocket#onClose() callback.
                         task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
                             RxWebSocketCallback.Close result = _task.getResult();
@@ -292,18 +292,18 @@ public class RocketChatWebSocketThread extends HandlerThread {
             return;
         }
         forceInvalidateTokens();
-        connectivityManager.notifyConnecting(hostname);
         reconnectDisposable.add(
                 connectWithExponentialBackoff()
                         .subscribe(connected -> {
                                     if (!connected) {
-                                        connectivityManager.notifyConnecting(hostname);
+                                        connectivityManager.notifyConnectionLost(hostname,
+                                                DDPClient.REASON_NETWORK_ERROR);
                                     }
                                     reconnectDisposable.clear();
                                 }, error -> {
-                                    logErrorAndUnsubscribe(reconnectDisposable, error);
                                     connectivityManager.notifyConnectionLost(hostname,
                                             DDPClient.REASON_NETWORK_ERROR);
+                                    logErrorAndUnsubscribe(reconnectDisposable, error);
                                 }
                         )
         );
@@ -315,7 +315,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
 
     private Single<Boolean> connectWithExponentialBackoff() {
-        return connect().retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
+        return connect()
+                .retryWhen(RxHelper.exponentialBackoff(1, 250, TimeUnit.MILLISECONDS))
+                .onErrorResumeNext(Single.just(false));
     }
 
     @DebugLog

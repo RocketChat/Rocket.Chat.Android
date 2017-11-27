@@ -47,9 +47,9 @@ import hugo.weaving.DebugLog;
  */
 public class MainActivity extends AbstractAuthedActivity implements MainContract.View {
     private RoomToolbar toolbar;
-    private StatusTicker statusTicker;
     private SlidingPaneLayout pane;
     private MainContract.Presenter presenter;
+    private volatile Snackbar statusTicker;
 
     @Override
     public int getLayoutContainerForFragment() {
@@ -61,7 +61,6 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.activity_main_toolbar);
-        statusTicker = new StatusTicker();
         pane = findViewById(R.id.sliding_pane);
         setupToolbar();
     }
@@ -95,6 +94,8 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         if (presenter != null) {
             presenter.release();
         }
+        // Dismiss any status ticker
+        if (statusTicker != null) statusTicker.dismiss();
 
         super.onPause();
     }
@@ -245,28 +246,36 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     @Override
     public void showLoginScreen() {
         LaunchUtil.showLoginActivity(this, hostname);
-        statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
+        showConnectionOk();
     }
 
     @Override
-    public void showConnectionError() {
-        statusTicker.updateStatus(StatusTicker.STATUS_CONNECTION_ERROR,
-                Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                        R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.fragment_retry_login_retry_title, view ->
-                                ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer()));
+    public synchronized void showConnectionError() {
+        dismissStatusTickerIfShowing();
+        statusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
+                R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.fragment_retry_login_retry_title, view ->
+                        ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer());
+        statusTicker.show();
     }
 
     @Override
-    public void showConnecting() {
-        statusTicker.updateStatus(StatusTicker.STATUS_TOKEN_LOGIN,
-                Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                        R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE));
+    public synchronized void showConnecting() {
+        dismissStatusTickerIfShowing();
+        statusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
+                R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE);
+        statusTicker.show();
     }
 
     @Override
-    public void showConnectionOk() {
-        statusTicker.updateStatus(StatusTicker.STATUS_DISMISS, null);
+    public synchronized void showConnectionOk() {
+        dismissStatusTickerIfShowing();
+    }
+
+    private void dismissStatusTickerIfShowing() {
+        if (statusTicker != null) {
+            statusTicker.dismiss();
+        }
     }
 
     @Override
@@ -348,35 +357,5 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     @DebugLog
     public void beforeLogoutCleanUp() {
         presenter.beforeLogoutCleanUp();
-    }
-
-    //TODO: consider this class to define in layouthelper for more complicated operation.
-    private static class StatusTicker {
-        static final int STATUS_DISMISS = 0;
-        static final int STATUS_CONNECTION_ERROR = 1;
-        static final int STATUS_TOKEN_LOGIN = 2;
-
-        private int status;
-        private Snackbar snackbar;
-
-        StatusTicker() {
-            status = STATUS_DISMISS;
-        }
-
-        void updateStatus(int status, Snackbar snackbar) {
-            if (status == this.status) {
-                return;
-            }
-            this.status = status;
-            if (this.snackbar != null) {
-                this.snackbar.dismiss();
-            }
-            if (status != STATUS_DISMISS) {
-                this.snackbar = snackbar;
-                if (this.snackbar != null) {
-                    this.snackbar.show();
-                }
-            }
-        }
     }
 }

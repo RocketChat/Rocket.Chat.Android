@@ -220,6 +220,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
   private void subscribeToNetworkChanges() {
     Disposable disposable = connectivityManagerApi.getServerConnectivityAsObservable()
+            .distinctUntilChanged()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                     connectivity -> {
@@ -229,6 +230,8 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                       } else if (connectivity.state == ServerConnectivity.STATE_DISCONNECTED) {
                           if (connectivity.code == DDPClient.REASON_NETWORK_ERROR) {
                               view.showConnectionError();
+                          } else {
+                              view.showConnectionOk();
                           }
                       } else {
                           view.showConnecting();

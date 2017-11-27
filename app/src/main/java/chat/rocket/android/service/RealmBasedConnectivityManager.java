@@ -21,9 +21,12 @@ import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.models.RealmBasedServerInfo;
 import hugo.weaving.DebugLog;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -32,7 +35,7 @@ import io.reactivex.subjects.PublishSubject;
 /*package*/ class RealmBasedConnectivityManager
     implements ConnectivityManagerApi, ConnectivityManagerInternal {
   private volatile ConcurrentHashMap<String, Integer> serverConnectivityList = new ConcurrentHashMap<>();
-  private final PublishSubject<ServerConnectivity> connectivitySubject = PublishSubject.create();
+  private volatile BehaviorSubject<ServerConnectivity> connectivitySubject = BehaviorSubject.createDefault(ServerConnectivity.CONNECTED);
   private Context appContext;
   private final ServiceConnection serviceConnection = new ServiceConnection() {
     @Override
@@ -135,7 +138,9 @@ import io.reactivex.subjects.PublishSubject;
   @DebugLog
   @Override
   public void notifyConnectionEstablished(String hostname, String session) {
-    RealmBasedServerInfo.updateSession(hostname, session);
+    if (session != null) {
+      RealmBasedServerInfo.updateSession(hostname, session);
+    }
     serverConnectivityList.put(hostname, ServerConnectivity.STATE_CONNECTED);
     connectivitySubject.onNext(
         new ServerConnectivity(hostname, ServerConnectivity.STATE_CONNECTED));
@@ -158,8 +163,8 @@ import io.reactivex.subjects.PublishSubject;
   }
 
   @Override
-  public Observable<ServerConnectivity> getServerConnectivityAsObservable() {
-    return Observable.concat(Observable.fromIterable(getCurrentConnectivityList()), connectivitySubject);
+  public Flowable<ServerConnectivity> getServerConnectivityAsObservable() {
+    return connectivitySubject.toFlowable(BackpressureStrategy.LATEST);
   }
 
   @Override
@@ -185,7 +190,7 @@ import io.reactivex.subjects.PublishSubject;
       }
 
       if (connectivity == ServerConnectivity.STATE_DISCONNECTED) {
-        notifyConnecting(hostname);
+//        notifyConnecting(hostname);
       }
 
       return connectToServer(hostname);

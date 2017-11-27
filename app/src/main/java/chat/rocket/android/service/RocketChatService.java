@@ -69,11 +69,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
   @Override
   public Single<Boolean> ensureConnectionToServer(String hostname) { //called via binder.
     return getOrCreateWebSocketThread(hostname)
-        .doOnError(err -> {
-          err.printStackTrace();
-          currentWebSocketThread = null;
-        })
-        .flatMap(webSocketThreads -> webSocketThreads.keepAlive());
+        .flatMap(RocketChatWebSocketThread::keepAlive);
   }
 
   @Override
@@ -109,12 +105,9 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
         return Single.just(currentWebSocketThread);
       }
 
-      connectivityManager.notifyConnecting(hostname);
-
       if (currentWebSocketThread != null) {
         return currentWebSocketThread.terminate()
               .doAfterTerminate(() -> currentWebSocketThread = null)
-              .doOnError(RCLog::e)
               .flatMap(terminated ->
                   RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
                           .doOnSuccess(thread -> {

@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import chat.rocket.core.models.ServerInfo;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 /**
@@ -23,7 +23,7 @@ public interface ConnectivityManagerApi {
 
   List<ServerInfo> getServerList();
 
-  Observable<ServerConnectivity> getServerConnectivityAsObservable();
+  Flowable<ServerConnectivity> getServerConnectivityAsObservable();
 
   int getConnectivityState(@NonNull String hostname);
 
