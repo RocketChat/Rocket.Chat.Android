@@ -81,7 +81,6 @@ import io.reactivex.subjects.BehaviorSubject;
         connectToServerIfNeeded(hostname, true/* force connect */)
                 .subscribeOn(Schedulers.io())
                 .subscribe(connected -> {
-                    System.out.println(connected);
                     if (!connected) {
                         notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR);
                     }
