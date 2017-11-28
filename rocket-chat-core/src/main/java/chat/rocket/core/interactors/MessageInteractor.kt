@@ -19,7 +19,7 @@ class MessageInteractor(private val messageRepository: MessageRepository,
         val roomHistoryState = RoomHistoryState.builder()
                 .setRoomId(room.roomId)
                 .setSyncState(SyncState.NOT_SYNCED)
-                .setCount(100)
+                .setCount(50)
                 .setReset(true)
                 .setComplete(false)
                 .setTimestamp(0)
