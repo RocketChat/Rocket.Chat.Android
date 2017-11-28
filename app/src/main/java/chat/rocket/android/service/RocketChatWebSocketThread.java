@@ -76,26 +76,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
     private final CompositeDisposable reconnectDisposable = new CompositeDisposable();
     private boolean listenersRegistered;
 
-    private static class KeepAliveTimer {
-        private long lastTime;
-        private final long thresholdMs;
-
-        public KeepAliveTimer(long thresholdMs) {
-            this.thresholdMs = thresholdMs;
-            lastTime = System.currentTimeMillis();
-        }
-
-        public boolean shouldCheckPrecisely() {
-            return lastTime + thresholdMs < System.currentTimeMillis();
-        }
-
-        public void update() {
-            lastTime = System.currentTimeMillis();
-        }
-    }
-
-    private final KeepAliveTimer keepAliveTimer = new KeepAliveTimer(20000);
-
     private RocketChatWebSocketThread(Context appContext, String hostname) {
         super("RC_thread_" + hostname);
         this.appContext = appContext;
@@ -108,7 +88,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
      * build new Thread.
      */
     @DebugLog
-    public static Single<RocketChatWebSocketThread> getStarted(Context appContext, String hostname) {
+    /* package */ static Single<RocketChatWebSocketThread> getStarted(Context appContext, String hostname) {
         return Single.<RocketChatWebSocketThread>create(objectSingleEmitter -> {
             new RocketChatWebSocketThread(appContext, hostname) {
                 @Override
@@ -148,7 +128,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
      * terminate WebSocket thread.
      */
     @DebugLog
-    public Single<Boolean> terminate() {
+    /* package */ Single<Boolean> terminate() {
         if (isAlive()) {
             return Single.create(emitter -> {
                 new Handler(getLooper()).post(() -> {
@@ -181,7 +161,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
      * synchronize the state of the thread with ServerConfig.
      */
     @DebugLog
-    public Single<Boolean> keepAlive() {
+    /* package */ Single<Boolean> keepAlive() {
         return checkIfConnectionAlive()
                 .flatMap(alive -> alive ? Single.just(true) : connectWithExponentialBackoff());
     }
@@ -191,11 +171,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
         if (DDPClient.get() == null) {
             return Single.just(false);
         }
-
-        if (!keepAliveTimer.shouldCheckPrecisely()) {
-            return Single.just(true);
-        }
-        keepAliveTimer.update();
 
         return Single.create(emitter -> {
             new Thread() {
@@ -207,9 +182,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
                             RCLog.e(error);
                             connectivityManager.notifyConnectionLost(
                                     hostname, DDPClient.REASON_CLOSED_BY_USER);
-                            emitter.onError(error);
+                            emitter.onSuccess(false);
                         } else {
-                            keepAliveTimer.update();
                             emitter.onSuccess(true);
                         }
                         return null;
@@ -245,11 +219,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 return;
             }
             RCLog.d("DDPClient#connect");
+            connectivityManager.notifyConnecting(hostname);
             DDPClient.get().connect(hostname, info.getSession(), info.isSecure())
                     .onSuccessTask(task -> {
                         final String newSession = task.getResult().session;
                         connectivityManager.notifyConnectionEstablished(hostname, newSession);
-
                         // handling WebSocket#onClose() callback.
                         task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
                             RxWebSocketCallback.Close result = _task.getResult();
@@ -292,18 +266,18 @@ public class RocketChatWebSocketThread extends HandlerThread {
             return;
         }
         forceInvalidateTokens();
-        connectivityManager.notifyConnecting(hostname);
         reconnectDisposable.add(
                 connectWithExponentialBackoff()
                         .subscribe(connected -> {
                                     if (!connected) {
-                                        connectivityManager.notifyConnecting(hostname);
+                                        connectivityManager.notifyConnectionLost(hostname,
+                                                DDPClient.REASON_NETWORK_ERROR);
                                     }
                                     reconnectDisposable.clear();
                                 }, error -> {
-                                    logErrorAndUnsubscribe(reconnectDisposable, error);
                                     connectivityManager.notifyConnectionLost(hostname,
                                             DDPClient.REASON_NETWORK_ERROR);
+                                    logErrorAndUnsubscribe(reconnectDisposable, error);
                                 }
                         )
         );
@@ -315,7 +289,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
 
     private Single<Boolean> connectWithExponentialBackoff() {
-        return connect().retryWhen(RxHelper.exponentialBackoff(3, 500, TimeUnit.MILLISECONDS));
+        return connect()
+                .retryWhen(RxHelper.exponentialBackoff(1, 250, TimeUnit.MILLISECONDS))
+                .onErrorResumeNext(Single.just(false));
     }
 
     @DebugLog

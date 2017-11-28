@@ -6,26 +6,26 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import chat.rocket.core.models.ServerInfo;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 /**
  * interfaces used for Activity/Fragment and other UI-related logic.
  */
 public interface ConnectivityManagerApi {
-  void keepAliveServer();
+    void keepAliveServer();
 
-  void addOrUpdateServer(String hostname, @Nullable String name, boolean insecure);
+    void addOrUpdateServer(String hostname, @Nullable String name, boolean insecure);
 
-  void removeServer(String hostname);
+    void removeServer(String hostname);
 
-  Single<Boolean> connect(String hostname);
+    Single<Boolean> connect(String hostname);
 
-  List<ServerInfo> getServerList();
+    List<ServerInfo> getServerList();
 
-  Observable<ServerConnectivity> getServerConnectivityAsObservable();
+    Flowable<ServerConnectivity> getServerConnectivityAsObservable();
 
-  int getConnectivityState(@NonNull String hostname);
+    int getConnectivityState(@NonNull String hostname);
 
-  void resetConnectivityStateList();
+    void resetConnectivityStateList();
 }
