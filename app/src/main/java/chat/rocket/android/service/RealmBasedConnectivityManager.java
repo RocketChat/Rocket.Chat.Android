@@ -109,7 +109,6 @@ import io.reactivex.subjects.BehaviorSubject;
         if (serverConnectivityList.containsKey(hostname)) {
             disconnectFromServerIfNeeded(hostname)
                     .subscribe(_val -> {
-                        System.out.println("Disconnected " + _val);
                     }, RCLog::e);
         }
     }

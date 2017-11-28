@@ -18,9 +18,7 @@ import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
-import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.core.interactors.RoomInteractor;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomSidebar;
@@ -30,16 +28,11 @@ import chat.rocket.core.repositories.SpotlightRepository;
 import chat.rocket.core.repositories.UserRepository;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
-import chat.rocket.persistence.realm.models.ddp.RealmEmail;
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
-import chat.rocket.persistence.realm.models.internal.LoadMessageProcedure;
-import chat.rocket.persistence.realm.models.internal.MethodCall;
-import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.repositories.RealmSpotlightRepository;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.realm.Realm;
 
 public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View> implements SidebarMainContract.Presenter {
     private final String hostname;
@@ -164,23 +157,17 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
             }
 
             clearSubscriptions();
-            DDPClient.get().close();
             String currentHostname = rocketChatCache.getSelectedServerHostname();
             RealmHelper realmHelper = RealmStore.getOrCreate(currentHostname);
             return realmHelper.executeTransaction(realm -> {
-                CookieManager.getInstance().removeAllCookie();
-                ConnectivityManagerApi connectivityManagerApi = ConnectivityManager.getInstance(RocketChatApplication.getInstance());
-                connectivityManagerApi.removeServer(currentHostname);
                 rocketChatCache.removeHostname(currentHostname);
                 rocketChatCache.removeSelectedRoomId(currentHostname);
                 rocketChatCache.setSelectedServerHostname(rocketChatCache.getFirstLoggedHostnameIfAny());
-                realm.delete(RealmEmail.class);
-                realm.delete(RealmUser.class);
-                realm.delete(RealmSession.class);
-                realm.delete(MethodCall.class);
-                realm.delete(LoadMessageProcedure.class);
-                realm.delete(GetUsersOfRoomsProcedure.class);
+                realm.executeTransactionAsync(Realm::deleteAll);
                 view.onPreparedToLogOut();
+                ConnectivityManager.getInstance(RocketChatApplication.getInstance())
+                        .removeServer(hostname);
+                CookieManager.getInstance().removeAllCookie();
                 return null;
             });
         });

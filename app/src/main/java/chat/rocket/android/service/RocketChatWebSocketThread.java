@@ -230,7 +230,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
                             if (result.code == DDPClient.REASON_NETWORK_ERROR) {
                                 reconnect();
                             } else {
-                                unregisterListeners();
+                                unregisterListenersAndClose();
                             }
                             return null;
                         });
@@ -335,8 +335,8 @@ public class RocketChatWebSocketThread extends HandlerThread {
                         .findAll());
 
         if (sessions != null && sessions.size() > 0) {
-            // if we have a session try to resume it. At this point we're probably recovering from
-            // a disconnection state
+            // If we have a session try to resume it. At this point we're probably recovering from
+            // a disconnection state.
             final CompositeDisposable disposables = new CompositeDisposable();
             MethodCallHelper methodCall = new MethodCallHelper(realmHelper);
             disposables.add(
@@ -353,7 +353,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
                                         createObserversAndRegister();
                                         disposables.clear();
                                     },
-                                    error -> logErrorAndUnsubscribe(disposables, error)
+                                    error -> {
+                                        logErrorAndUnsubscribe(disposables, error);
+                                        connectivityManager.notifyConnectionLost(hostname,
+                                                DDPClient.REASON_NETWORK_ERROR);
+                                    }
                             )
             );
         } else {
