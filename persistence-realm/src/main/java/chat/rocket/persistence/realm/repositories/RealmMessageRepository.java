@@ -5,24 +5,24 @@ import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import chat.rocket.core.SyncState;
+import chat.rocket.core.models.Message;
+import chat.rocket.core.models.Room;
+import chat.rocket.core.models.User;
+import chat.rocket.core.repositories.MessageRepository;
+import chat.rocket.persistence.realm.RealmHelper;
+import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmMessage;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import chat.rocket.core.models.Message;
-import chat.rocket.core.models.Room;
-import chat.rocket.core.models.User;
-import chat.rocket.core.repositories.MessageRepository;
-import chat.rocket.persistence.realm.RealmStore;
-import chat.rocket.persistence.realm.models.ddp.RealmMessage;
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 public class RealmMessageRepository extends RealmRepository implements MessageRepository {
 
@@ -41,11 +41,10 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
               return Flowable.empty();
             }
 
-            return RxJavaInterop.toV2Flowable(
-              pair.first.where(RealmMessage.class)
+            return pair.first.where(RealmMessage.class)
                   .equalTo(RealmMessage.ID, messageId)
                   .findAll()
-                  .<RealmResults<RealmMessage>>asObservable());
+                  .<RealmResults<RealmMessage>>asFlowable();
         },
         pair -> close(pair.first, pair.second)
     )
@@ -90,16 +89,12 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
       }
       realmMessage.setUser(realmUser);
 
-      realm.beginTransaction();
+      final RealmMessage messageToSave = realmMessage;
 
-      return RxJavaInterop.toV2Flowable(realm.copyToRealmOrUpdate(realmMessage)
-          .asObservable())
+      return RealmHelper.copyToRealmOrUpdate(realm, messageToSave)
           .filter(it -> it.isLoaded() && it.isValid())
-          .firstElement()
-          .doOnSuccess(it -> realm.commitTransaction())
-          .doOnError(throwable -> realm.cancelTransaction())
+          .first(new RealmMessage())
           .doOnEvent((realmObject, throwable) -> close(realm, looper))
-          .toSingle()
           .map(realmObject -> true);
     });
   }
@@ -116,10 +111,10 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
 
       realm.beginTransaction();
 
-      return RxJavaInterop.toV2Flowable(realm.where(RealmMessage.class)
+      return realm.where(RealmMessage.class)
           .equalTo(RealmMessage.ID, message.getId())
           .findAll()
-          .<RealmResults<RealmMessage>>asObservable())
+          .<RealmResults<RealmMessage>>asFlowable()
           .filter(realmObject -> realmObject.isLoaded() && realmObject.isValid())
           .firstElement()
           .toSingle()
@@ -144,11 +139,13 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
             return Flowable.empty();
           }
 
-          return RxJavaInterop.toV2Flowable(pair.first.where(RealmMessage.class)
+          return pair.first.where(RealmMessage.class)
+                  .notEqualTo(RealmMessage.SYNC_STATE, SyncState.DELETE_NOT_SYNCED)
+                  .notEqualTo(RealmMessage.SYNC_STATE, SyncState.DELETING)
                   .equalTo(RealmMessage.ROOM_ID, room.getRoomId())
                   .isNotNull(RealmMessage.USER)
                   .findAllSorted(RealmMessage.TIMESTAMP, Sort.DESCENDING)
-                  .asObservable());
+                  .asFlowable();
         },
         pair -> close(pair.first, pair.second)
     )
@@ -167,12 +164,12 @@ public class RealmMessageRepository extends RealmRepository implements MessageRe
             return Flowable.empty();
           }
 
-          return RxJavaInterop.toV2Flowable(pair.first.where(RealmMessage.class)
+          return pair.first.where(RealmMessage.class)
                   .equalTo(RealmMessage.ROOM_ID, room.getId())
                   .greaterThanOrEqualTo(RealmMessage.TIMESTAMP, room.getLastSeen())
                   .notEqualTo(RealmMessage.USER_ID, user.getId())
                   .findAll()
-                  .asObservable());
+                  .asFlowable();
         },
         pair -> close(pair.first, pair.second)
     )

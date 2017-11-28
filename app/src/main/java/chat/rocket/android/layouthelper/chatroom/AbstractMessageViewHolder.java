@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import chat.rocket.android.R;
 import chat.rocket.android.helper.DateTime;
 import chat.rocket.android.helper.TextUtils;
@@ -44,7 +45,8 @@ public abstract class AbstractMessageViewHolder extends ModelViewHolder<PairedMe
    * bind the view model.
    */
   public final void bind(PairedMessage pairedMessage, boolean autoloadImages) {
-    if (pairedMessage.target.getSyncState() == SyncState.FAILED) {
+    if (pairedMessage.target.getSyncState() == SyncState.FAILED ||
+        pairedMessage.target.getSyncState() == SyncState.DELETE_FAILED) {
       errorImageView.setVisibility(View.VISIBLE);
     } else {
       errorImageView.setVisibility(View.GONE);

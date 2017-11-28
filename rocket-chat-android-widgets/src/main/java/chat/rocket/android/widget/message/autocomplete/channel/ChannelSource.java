@@ -2,19 +2,19 @@ package chat.rocket.android.widget.message.autocomplete.channel;
 
 import android.support.annotation.NonNull;
 
+import org.reactivestreams.Publisher;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import chat.rocket.android.widget.message.autocomplete.AutocompleteSource;
+import chat.rocket.core.interactors.AutocompleteChannelInteractor;
+import chat.rocket.core.models.SpotlightRoom;
 import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-
-import org.reactivestreams.Publisher;
-
-import java.util.ArrayList;
-import java.util.List;
-import chat.rocket.android.widget.message.autocomplete.AutocompleteSource;
-import chat.rocket.core.interactors.AutocompleteChannelInteractor;
-import chat.rocket.core.models.SpotlightRoom;
 
 public class ChannelSource extends AutocompleteSource<ChannelAdapter, ChannelItem> {
 

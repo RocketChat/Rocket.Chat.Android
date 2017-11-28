@@ -3,21 +3,25 @@ package chat.rocket.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
 import com.hadisatrio.optional.Optional;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+
 import java.util.List;
+
 import chat.rocket.android.LaunchUtil;
+import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.Logger;
-import chat.rocket.android.push.PushConstants;
-import chat.rocket.android.push.PushNotificationHandler;
+import chat.rocket.android.push.PushManager;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import icepick.State;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.HttpUrl;
 
 abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
   @State protected String hostname;
@@ -39,7 +43,6 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     }
 
     updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
-    updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
   }
 
   @Override
@@ -53,20 +56,36 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
       return;
     }
 
-    if (intent.hasExtra(PushConstants.HOSTNAME)) {
-      rocketChatCache.setSelectedServerHostname(intent.getStringExtra(PushConstants.HOSTNAME));
+    if (intent.hasExtra(PushManager.EXTRA_HOSTNAME)) {
+      String hostname = intent.getStringExtra(PushManager.EXTRA_HOSTNAME);
+      HttpUrl url = HttpUrl.parse(hostname);
+      if (url != null) {
+        String hostnameFromPush = url.host();
+        String loginHostname = rocketChatCache.getSiteUrlFor(hostnameFromPush);
+        rocketChatCache.setSelectedServerHostname(loginHostname);
 
-      if (intent.hasExtra(PushConstants.ROOM_ID)) {
-        rocketChatCache.setSelectedRoomId(intent.getStringExtra(PushConstants.ROOM_ID));
+        if (intent.hasExtra(PushManager.EXTRA_ROOM_ID)) {
+          rocketChatCache.setSelectedRoomId(intent.getStringExtra(PushManager.EXTRA_ROOM_ID));
+        }
       }
+      PushManager.INSTANCE.clearNotificationsByHost(hostname);
     } else {
       updateHostnameIfNeeded(rocketChatCache.getSelectedServerHostname());
     }
 
-    if (intent.hasExtra(PushConstants.NOT_ID)) {
+    if (intent.hasExtra(PushManager.EXTRA_NOT_ID) && intent.hasExtra(PushManager.EXTRA_HOSTNAME)) {
       isNotification = true;
-      PushNotificationHandler
-          .cleanUpNotificationStack(intent.getIntExtra(PushConstants.NOT_ID, 0));
+      int notificationId = intent.getIntExtra(PushManager.EXTRA_NOT_ID, 0);
+      String hostname = intent.getStringExtra(PushManager.EXTRA_HOSTNAME);
+      HttpUrl url = HttpUrl.parse(hostname);
+      if (url != null) {
+        String hostnameFromPush = url.host();
+        String loginHostname = rocketChatCache.getSiteUrlFor(hostnameFromPush);
+        PushManager.INSTANCE.clearNotificationsByHostAndNotificationId(loginHostname, notificationId);
+      } else {
+        PushManager.INSTANCE.clearNotificationsByNotificationId(notificationId);
+      }
+
     }
   }
 
@@ -74,17 +93,22 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
     if (hostname == null) {
       if (newHostname != null && assertServerRealmStoreExists(newHostname)) {
         updateHostname(newHostname);
+        updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
       } else {
         recoverFromHostnameError();
       }
     } else {
       if (hostname.equals(newHostname)) {
         updateHostname(newHostname);
+        updateRoomIdIfNeeded(rocketChatCache.getSelectedRoomId());
         return;
       }
 
       if (assertServerRealmStoreExists(newHostname)) {
-        updateHostname(newHostname);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
       } else {
         recoverFromHostnameError();
       }

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.fragment.chatroom.list.RoomListFragment
+import chat.rocket.core.models.Room
 import kotlinx.android.synthetic.main.activity_room.*
 
 class RoomActivity : AppCompatActivity() {
@@ -20,7 +21,7 @@ class RoomActivity : AppCompatActivity() {
         val extras = intent.extras
         val roomListFragment = RoomListFragment.newInstance(extras.getInt("actionId"),
                 extras.getString("roomId"),
-                extras.getString("roomType"),
+                extras.getString("roomType", Room.TYPE_GROUP),
                 extras.getString("hostname"),
                 extras.getString("token"),
                 extras.getString("userId"))

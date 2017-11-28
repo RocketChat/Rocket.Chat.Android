@@ -1,13 +1,13 @@
 package chat.rocket.android.helper;
 
 import com.hadisatrio.optional.Optional;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 import chat.rocket.android.fragment.chatroom.RocketChatAbsoluteUrl;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.core.repositories.ServerInfoRepository;
 import chat.rocket.core.repositories.UserRepository;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public class AbsoluteUrlHelper {
 

@@ -1,21 +1,20 @@
 package chat.rocket.android.service.ddp.base;
 
 import android.content.Context;
-import io.realm.RealmObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import io.realm.RealmObject;
 
 /**
  * "activeUsers" subscriber.
  */
 public class ActiveUsersSubscriber extends AbstractBaseSubscriber {
-  public ActiveUsersSubscriber(Context context, String hostname, RealmHelper realmHelper,
-                               DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
+  public ActiveUsersSubscriber(Context context, String hostname, RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
   }
 
   @Override

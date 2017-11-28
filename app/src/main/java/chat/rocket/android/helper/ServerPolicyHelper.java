@@ -2,8 +2,9 @@ package chat.rocket.android.helper;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.Flowable;
 import org.json.JSONObject;
+
+import io.reactivex.Flowable;
 
 public class ServerPolicyHelper {
 
@@ -12,7 +13,7 @@ public class ServerPolicyHelper {
 
   public static String enforceHostname(String hostname) {
     if (hostname == null) {
-      return "demo.rocket.chat";
+      return "open.rocket.chat";
     }
 
     return removeTrailingSlash(removeProtocol(enforceDefaultHost(hostname)));

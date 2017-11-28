@@ -2,13 +2,14 @@ package chat.rocket.android.fragment.sidebar;
 
 import android.support.annotation.NonNull;
 
-import bolts.Continuation;
-import chat.rocket.core.models.RoomSidebar;
-import io.reactivex.Flowable;
 import java.util.List;
+
+import bolts.Continuation;
 import chat.rocket.android.shared.BaseContract;
+import chat.rocket.core.models.RoomSidebar;
 import chat.rocket.core.models.Spotlight;
 import chat.rocket.core.models.User;
+import io.reactivex.Flowable;
 
 public interface SidebarMainContract {
 

@@ -1,23 +1,26 @@
 ext {
     preDexLibs = "true" != System.getenv("CI")
-    supportLibraryVersion = "25.4.0"
+    supportLibraryVersion = "27.0.1"
     constraintLayoutVersion = "1.0.2"
-    kotlinVersion = "1.1.4-2"
+    kotlinVersion = "1.1.51"
     okHttpVersion = "3.9.0"
     rxbindingVersion = '2.0.0'
+
     supportDependencies = [
             designSupportLibrary: "com.android.support:design:${supportLibraryVersion}",
             annotation          : "com.android.support:support-annotations:${supportLibraryVersion}",
-            constrainLayout     : "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
-            kotlin              : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
+            constraintLayout    : "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
             cardView            : "com.android.support:cardview-v7:${supportLibraryVersion}",
+            supportV13          : "com.android.support:support-v13:${supportLibraryVersion}",
+            multidex            : "com.android.support:multidex:1.0.2"
     ]
     extraDependencies = [
-            okHTTP         : "com.squareup.okhttp3:okhttp:3.8.0",
+            okHTTP         : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
             rxJava         : "io.reactivex.rxjava2:rxjava:2.1.0",
             boltTask       : "com.parse.bolts:bolts-tasks:1.4.0",
             rxAndroid      : "io.reactivex.rxjava2:rxandroid:2.0.1",
-            textDrawable   : "com.github.rocketchat:textdrawable:1.0.2"
+            textDrawable   : "com.github.rocketchat:textdrawable:1.0.2",
+            optional       : "com.hadisatrio:Optional:v1.0.1"
     ]
     rxbindingDependencies = [
             rxBinding          : "com.jakewharton.rxbinding2:rxbinding:${rxbindingVersion}",
@@ -25,6 +28,7 @@ ext {
             rxBindingAppcompact: "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rxbindingVersion}",
     ]
 }
+
 subprojects {
     project.plugins.whenPluginAdded { plugin ->
         if ("com.android.build.gradle.AppPlugin" == plugin.class.name) {

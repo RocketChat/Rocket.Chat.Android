@@ -648,6 +648,15 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     }
 
     @Override
+    public void showMessageDeleteFailure(Message message) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(getContext().getString(R.string.failed_to_delete))
+                .setMessage(getContext().getString(R.string.failed_to_delete_message))
+                .setPositiveButton(R.string.ok, (dialog, which) -> presenter.acceptMessageDeleteFailure(message))
+                .show();
+    }
+
+    @Override
     public void autoloadImages() {
         messageListAdapter.setAutoloadImages(true);
     }
@@ -679,6 +688,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
                     .setEditAction(this::onEditMessage)
                     .setCopyAction(msg -> onCopy(message.getMessage()))
                     .setQuoteAction(msg -> presenter.replyMessage(message, true))
+                    .setDeleteAction(this::onDeleteMessage)
                     .showWith(context);
         }
     }
@@ -686,6 +696,10 @@ public class RoomFragment extends AbstractChatRoomFragment implements
     private void onEditMessage(Message message) {
         edittingMessage = message;
         messageFormManager.setEditMessage(message.getMessage());
+    }
+
+    public void onDeleteMessage(Message message) {
+        presenter.deleteMessage(message);
     }
 
     private void showRoomListFragment(int actionId) {
@@ -700,5 +714,9 @@ public class RoomFragment extends AbstractChatRoomFragment implements
                     .putExtra("userId", userId);
             startActivity(intent);
         }
+    }
+
+    public void loadMessages() {
+        presenter.loadMessages();
     }
 }

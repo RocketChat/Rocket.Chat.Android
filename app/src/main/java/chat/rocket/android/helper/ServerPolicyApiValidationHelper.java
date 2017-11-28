@@ -2,9 +2,8 @@ package chat.rocket.android.helper;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.Flowable;
-
 import chat.rocket.android.api.rest.ServerPolicyApi;
+import io.reactivex.Flowable;
 
 public class ServerPolicyApiValidationHelper {
 

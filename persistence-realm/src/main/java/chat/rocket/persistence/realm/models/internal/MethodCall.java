@@ -1,12 +1,12 @@
 package chat.rocket.persistence.realm.models.internal;
 
 import android.text.TextUtils;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.UUID;
+
 import bolts.Task;
 import bolts.TaskCompletionSource;
 import chat.rocket.android.log.RCLog;
@@ -14,6 +14,8 @@ import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmObjectObserver;
 import chat.rocket.persistence.realm.helpers.LogcatIfError;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class MethodCall extends RealmObject {
 

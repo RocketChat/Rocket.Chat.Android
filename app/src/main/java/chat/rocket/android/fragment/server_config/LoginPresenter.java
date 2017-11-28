@@ -3,7 +3,6 @@ package chat.rocket.android.fragment.server_config;
 import android.support.annotation.NonNull;
 
 import com.hadisatrio.optional.Optional;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import bolts.Task;
 import chat.rocket.android.BackgroundLooper;
@@ -16,6 +15,7 @@ import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.models.PublicSetting;
 import chat.rocket.core.repositories.LoginServiceConfigurationRepository;
 import chat.rocket.core.repositories.PublicSettingRepository;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View>
     implements LoginContract.Presenter {
@@ -85,7 +85,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
             }
           }
           return null;
-        });
+        }, Task.UI_THREAD_EXECUTOR);
   }
 
   private Task<Void> call(String username, String password, Optional<PublicSetting> optional) {

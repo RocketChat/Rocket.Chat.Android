@@ -2,11 +2,8 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
+
 import com.hadisatrio.optional.Optional;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.realm.RealmResults;
 
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.RoomRole;
@@ -15,7 +12,10 @@ import chat.rocket.core.repositories.RoomRoleRepository;
 import chat.rocket.persistence.realm.RealmStore;
 import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.RealmResults;
 
 public class RealmRoomRoleRepository extends RealmRepository implements RoomRoleRepository {
 
@@ -33,12 +33,11 @@ public class RealmRoomRoleRepository extends RealmRepository implements RoomRole
             if (pair.first == null) {
                 return Flowable.empty();
             }
-            return RxJavaInterop.toV2Flowable(
-                pair.first.where(RealmRoomRole.class)
+            return pair.first.where(RealmRoomRole.class)
                     .equalTo(RealmRoomRole.Columns.ROOM_ID, room.getId())
                     .equalTo(RealmRoomRole.Columns.USER + "." + RealmUser.ID, user.getId())
                     .findAll()
-                    .<RealmResults<RealmRoomRole>>asObservable());
+                    .<RealmResults<RealmRoomRole>>asFlowable();
         },
         pair -> close(pair.first, pair.second)
     )

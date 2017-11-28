@@ -1,19 +1,19 @@
 package chat.rocket.android.service.ddp.stream;
 
 import android.content.Context;
-import io.realm.RealmObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.persistence.realm.models.ddp.RealmRoom;
+import io.realm.RealmObject;
 
 public class StreamNotifyUserSubscriptionsChanged extends AbstractStreamNotifyUserEventSubscriber {
   public StreamNotifyUserSubscriptionsChanged(Context context, String hostname,
-                                              RealmHelper realmHelper, DDPClientRef ddpClientRef,
+                                              RealmHelper realmHelper,
                                               String userId) {
-    super(context, hostname, realmHelper, ddpClientRef, userId);
+    super(context, hostname, realmHelper, userId);
   }
 
   @Override

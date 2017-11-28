@@ -1,14 +1,15 @@
 package chat.rocket.persistence.realm.models.ddp;
 
 import android.support.annotation.Nullable;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import chat.rocket.core.JsonConstants;
 import chat.rocket.core.models.PublicSetting;
 import chat.rocket.persistence.realm.RealmHelper;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * public setting model.

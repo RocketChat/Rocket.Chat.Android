@@ -6,12 +6,14 @@ import chat.rocket.core.models.Message
 import chat.rocket.core.models.PublicSetting
 import chat.rocket.core.models.Room
 import chat.rocket.core.models.User
-import chat.rocket.core.repositories.*
+import chat.rocket.core.repositories.MessageRepository
+import chat.rocket.core.repositories.PublicSettingRepository
+import chat.rocket.core.repositories.RoomRepository
+import chat.rocket.core.repositories.UserRepository
 import com.hadisatrio.optional.Optional
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
-
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

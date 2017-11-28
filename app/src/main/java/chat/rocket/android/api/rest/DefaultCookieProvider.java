@@ -1,10 +1,10 @@
 package chat.rocket.android.api.rest;
 
 import chat.rocket.android.RocketChatCache;
-import chat.rocket.persistence.realm.models.ddp.RealmUser;
-import chat.rocket.persistence.realm.models.internal.RealmSession;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import chat.rocket.persistence.realm.models.internal.RealmSession;
 
 public class DefaultCookieProvider implements CookieProvider {
 

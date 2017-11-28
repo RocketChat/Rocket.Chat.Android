@@ -2,14 +2,13 @@ package chat.rocket.android.activity;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-
 import chat.rocket.android.BackgroundLooper;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.core.interactors.SessionInteractor;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View>
     implements LoginContract.Presenter {

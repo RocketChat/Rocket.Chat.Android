@@ -1,19 +1,17 @@
 package chat.rocket.persistence.realm.repositories
 
 import android.os.Looper
-import android.support.v4.util.Pair
 import chat.rocket.core.models.Spotlight
 import chat.rocket.core.repositories.SpotlightRepository
 import chat.rocket.persistence.realm.RealmStore
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlight
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlight.Columns
-import hu.akarnokd.rxjava.interop.RxJavaInterop
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
-import java.util.ArrayList
+import java.util.*
 
 class RealmSpotlightRepository(private val hostname: String) : RealmRepository(), SpotlightRepository {
 
@@ -25,9 +23,9 @@ class RealmSpotlightRepository(private val hostname: String) : RealmRepository()
                 return@using Flowable.empty()
             }
 
-            return@using RxJavaInterop.toV2Flowable<RealmResults<RealmSpotlight>>(pair.first.where(RealmSpotlight::class.java)
-                .findAllSorted(Columns.TYPE, Sort.DESCENDING)
-                .asObservable())
+            return@using pair.first.where(RealmSpotlight::class.java)
+                    .findAllSorted(Columns.TYPE, Sort.DESCENDING)
+                    .asFlowable()
         }) { pair -> close(pair.first, pair.second) }
                 .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()!!))
                 .filter { realmSpotlightResults -> realmSpotlightResults.isLoaded && realmSpotlightResults.isValid }

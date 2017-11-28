@@ -1,17 +1,17 @@
 package chat.rocket.persistence.realm;
 
-import io.realm.DynamicRealm;
-import io.realm.FieldAttribute;
-import io.realm.RealmMigration;
-import io.realm.RealmObjectSchema;
-import io.realm.RealmSchema;
-
 import chat.rocket.persistence.realm.models.ddp.RealmMessage;
 import chat.rocket.persistence.realm.models.ddp.RealmPermission;
 import chat.rocket.persistence.realm.models.ddp.RealmRole;
 import chat.rocket.persistence.realm.models.ddp.RealmRoomRole;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightRoom;
 import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
+import chat.rocket.persistence.realm.models.ddp.RealmUser;
+import io.realm.DynamicRealm;
+import io.realm.FieldAttribute;
+import io.realm.RealmMigration;
+import io.realm.RealmObjectSchema;
+import io.realm.RealmSchema;
 
 public class Migration implements RealmMigration {
   @Override
@@ -68,6 +68,20 @@ public class Migration implements RealmMigration {
     if (oldVersion == 4) {
       RealmObjectSchema messageSchema = schema.get("RealmMessage");
       messageSchema.addField(RealmMessage.EDITED_AT, long.class);
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 5) {
+      RealmObjectSchema userSchema = schema.get("RealmUser");
+      try {
+        userSchema.addField(RealmUser.NAME, String.class);
+      } catch (IllegalArgumentException e) {
+        if (BuildConfig.DEBUG) {
+          e.printStackTrace();
+        }
+        // ignore; it makes here if the schema for this model was already update before without migration
+      }
     }
   }
 

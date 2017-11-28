@@ -1,9 +1,5 @@
 package chat.rocket.core.interactors
 
-import com.hadisatrio.optional.Optional
-import io.reactivex.Flowable
-import io.reactivex.Single
-import java.util.UUID
 import chat.rocket.core.SyncState
 import chat.rocket.core.models.Message
 import chat.rocket.core.models.Room
@@ -11,6 +7,10 @@ import chat.rocket.core.models.RoomHistoryState
 import chat.rocket.core.models.User
 import chat.rocket.core.repositories.MessageRepository
 import chat.rocket.core.repositories.RoomRepository
+import com.hadisatrio.optional.Optional
+import io.reactivex.Flowable
+import io.reactivex.Single
+import java.util.*
 
 class MessageInteractor(private val messageRepository: MessageRepository,
                         private val roomRepository: RoomRepository) {
@@ -76,7 +76,14 @@ class MessageInteractor(private val messageRepository: MessageRepository,
     }
 
     fun delete(message: Message): Single<Boolean> {
-        return messageRepository.delete(message)
+        return messageRepository.save(message.withSyncState(SyncState.DELETE_NOT_SYNCED))
+    }
+
+    /**
+     * Resets the message syncstate to SYNCED after a user has accepted a failed delete
+     */
+    fun acceptDeleteFailure(message: Message): Single<Boolean> {
+        return messageRepository.save(message.withSyncState(SyncState.SYNCED))
     }
 
     fun unreadCountFor(room: Room, user: User): Single<Int> {

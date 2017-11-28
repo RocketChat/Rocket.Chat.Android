@@ -3,7 +3,9 @@ package chat.rocket.core.interactors
 import chat.rocket.core.models.Permission
 import chat.rocket.core.models.Room
 import chat.rocket.core.models.RoomRole
-import chat.rocket.core.repositories.*
+import chat.rocket.core.repositories.PermissionRepository
+import chat.rocket.core.repositories.RoomRoleRepository
+import chat.rocket.core.repositories.UserRepository
 import chat.rocket.core.utils.Pair
 import com.hadisatrio.optional.Optional
 import io.reactivex.Single

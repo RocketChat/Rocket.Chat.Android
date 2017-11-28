@@ -1,7 +1,5 @@
 package chat.rocket.persistence.realm.models.ddp;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import chat.rocket.core.JsonConstants;
 import chat.rocket.core.SyncState;
 import chat.rocket.core.models.Attachment;
@@ -21,6 +20,8 @@ import chat.rocket.core.models.WebContent;
 import chat.rocket.core.models.WebContentHeaders;
 import chat.rocket.core.models.WebContentMeta;
 import chat.rocket.core.models.WebContentParsedUrl;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * RealmMessage.
@@ -191,7 +192,7 @@ public class RealmMessage extends RealmObject {
         .setRoomId(rid)
         .setSyncState(syncstate)
         .setTimestamp(ts)
-        .setMessage(msg)
+        .setMessage(msg == null ? "" : msg)
         .setUser(u != null ? u.asUser() : null)
         .setGroupable(groupable)
         .setAlias(alias)

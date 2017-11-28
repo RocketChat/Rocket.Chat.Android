@@ -26,6 +26,8 @@ public interface MainContract {
     void showConnectionOk();
 
     void showSignedInServers(List<Pair<String, Pair<String, String>>> serverList);
+
+    void refreshRoom();
   }
 
   interface Presenter extends BaseContract.Presenter<View> {

@@ -1,10 +1,10 @@
 package chat.rocket.core.repositories;
 
 import com.hadisatrio.optional.Optional;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 import chat.rocket.core.models.Session;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public interface SessionRepository {
 

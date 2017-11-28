@@ -1,6 +1,7 @@
 package chat.rocket.android.api.rest;
 
 import java.io.IOException;
+
 import chat.rocket.android.helper.TextUtils;
 import okhttp3.Interceptor;
 import okhttp3.Request;

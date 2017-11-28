@@ -1,13 +1,14 @@
 package chat.rocket.core.repositories;
 
 import com.hadisatrio.optional.Optional;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 import java.util.List;
+
 import chat.rocket.core.models.Message;
 import chat.rocket.core.models.Room;
 import chat.rocket.core.models.User;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public interface MessageRepository {
 

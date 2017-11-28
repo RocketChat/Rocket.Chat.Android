@@ -6,9 +6,11 @@ import android.text.format.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+
 import chat.rocket.android.log.RCLog;
 
 /**
@@ -55,7 +57,7 @@ public class DateTime {
       case DAY:
         return DAY_FORMAT.format(cal.getTime());
       case DATE:
-        return DATE_FORMAT.format(cal.getTime());
+        return getDateFormat(cal.getTime());
       case TIME:
         return TIME_FORMAT.format(cal.getTime());
       case DATE_TIME:
@@ -78,6 +80,22 @@ public class DateTime {
       default:
         throw new IllegalArgumentException();
     }
+  }
+
+  private static String getDateFormat(Date dateTime) {
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(dateTime);
+      Calendar today = Calendar.getInstance();
+      Calendar yesterday = Calendar.getInstance();
+      yesterday.add(Calendar.DATE, -1);
+
+      if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+        return "Today";
+      } else if (calendar.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)) {
+        return "Yesterday";
+      } else {
+        return DATE_FORMAT.format(dateTime);
+      }
   }
 
   /**

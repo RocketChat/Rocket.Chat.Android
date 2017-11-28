@@ -2,23 +2,24 @@ package chat.rocket.android.service.observer;
 
 import android.content.Context;
 import android.net.Uri;
-import chat.rocket.android.helper.OkHttpHelper;
-import io.realm.Realm;
-import io.realm.RealmResults;
+
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.List;
+
 import bolts.Task;
 import chat.rocket.android.api.FileUploadingHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.helper.OkHttpHelper;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.SyncState;
+import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.models.ddp.RealmUser;
 import chat.rocket.persistence.realm.models.internal.FileUploading;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
-import chat.rocket.persistence.realm.RealmHelper;
-import chat.rocket.android.service.DDPClientRef;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -31,9 +32,9 @@ public class FileUploadingWithUfsObserver extends AbstractModelObserver<FileUplo
   private FileUploadingHelper methodCall;
 
   public FileUploadingWithUfsObserver(Context context, String hostname,
-                                      RealmHelper realmHelper, DDPClientRef ddpClientRef) {
-    super(context, hostname, realmHelper, ddpClientRef);
-    methodCall = new FileUploadingHelper(realmHelper, ddpClientRef);
+                                      RealmHelper realmHelper) {
+    super(context, hostname, realmHelper);
+    methodCall = new FileUploadingHelper(realmHelper);
 
     realmHelper.executeTransaction(realm -> {
       // resume pending operations.

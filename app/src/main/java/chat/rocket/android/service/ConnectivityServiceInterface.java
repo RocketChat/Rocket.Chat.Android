@@ -1,6 +1,6 @@
 package chat.rocket.android.service;
 
-import rx.Single;
+import io.reactivex.Single;
 
 public interface ConnectivityServiceInterface {
   Single<Boolean> ensureConnectionToServer(String hostname);

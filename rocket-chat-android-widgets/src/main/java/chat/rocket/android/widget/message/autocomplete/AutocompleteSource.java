@@ -1,6 +1,7 @@
 package chat.rocket.android.widget.message.autocomplete;
 
 import android.support.annotation.NonNull;
+
 import io.reactivex.disposables.Disposable;
 
 public abstract class AutocompleteSource<A extends AutocompleteAdapter, I extends AutocompleteItem> {

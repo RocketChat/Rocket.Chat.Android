@@ -27,8 +27,11 @@
     <string name="sending">Sending…</string>
     <string name="not_synced">Not synced</string>
     <string name="failed_to_sync">Failed to sync</string>
+    <string name="failed_to_delete">Failed to delete</string>
+    <string name="failed_to_delete_message">The message could not be deleted at this time. Please try again later</string>
     <string name="resend">Resend</string>
     <string name="discard">Discard</string>
+    <string name="ok">OK</string>
 
     <plurals name="fmt_dialog_view_latest_message_title">
         <item quantity="one">New %d message</item>
@@ -45,7 +48,7 @@
     <string name="dialog_user_registration_password">Password</string>
     <string name="fragment_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
     <string name="fragment_input_hostname_hostname">Hostname</string>
-    <string name="fragment_input_hostname_server_hint">demo.rocket.chat</string>
+    <string name="fragment_input_hostname_server_hint">open.rocket.chat</string>
     <string name="fragment_input_hostname_connect">CONNECT</string>
     <string name="fragment_login_username_or_email">Username or email</string>
     <string name="fragment_login_password">Password</string>

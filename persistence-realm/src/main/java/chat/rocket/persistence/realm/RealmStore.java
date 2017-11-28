@@ -1,11 +1,11 @@
 package chat.rocket.persistence.realm;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-
 import java.util.HashMap;
+
 import chat.rocket.persistence.realm.modules.RocketChatLibraryModule;
 import chat.rocket.persistence.realm.modules.RocketChatServerModule;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class RealmStore {
   public static HashMap<String, RealmConfiguration> sStore = new HashMap<>();
@@ -15,9 +15,7 @@ public class RealmStore {
         .name(name + ".realm")
         .modules(new RocketChatLibraryModule())
         .migration(new Migration())
-        .schemaVersion(5)
-        // Just in case
-        .deleteRealmIfMigrationNeeded()
+        .schemaVersion(6)
         .build();
   }
 
@@ -49,7 +47,7 @@ public class RealmStore {
       sStore.put(name, new RealmConfiguration.Builder()
           .name(name + ".realm")
           .modules(new RocketChatServerModule())
-          .deleteRealmIfMigrationNeeded().build());
+          .build());
     }
     return new RealmHelper(sStore.get(name));
   }

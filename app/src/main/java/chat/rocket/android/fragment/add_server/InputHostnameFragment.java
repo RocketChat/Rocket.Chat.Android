@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
+
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;

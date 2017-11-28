@@ -2,8 +2,9 @@ package chat.rocket.android.layouthelper.chatroom.roomlist;
 
 import android.support.annotation.NonNull;
 
-import chat.rocket.core.models.RoomSidebar;
 import java.util.List;
+
+import chat.rocket.core.models.RoomSidebar;
 
 public class UnreadRoomListHeader implements RoomListHeader {
 

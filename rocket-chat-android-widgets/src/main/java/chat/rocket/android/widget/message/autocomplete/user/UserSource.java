@@ -1,21 +1,22 @@
 package chat.rocket.android.widget.message.autocomplete.user;
 
 import android.support.annotation.NonNull;
-import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.helper.UserStatusProvider;
 import chat.rocket.android.widget.message.autocomplete.AutocompleteSource;
 import chat.rocket.core.interactors.AutocompleteUserInteractor;
 import chat.rocket.core.models.SpotlightUser;
+import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class UserSource extends AutocompleteSource<UserAdapter, UserItem> {
 

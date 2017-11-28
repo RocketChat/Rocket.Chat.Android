@@ -1,6 +1,7 @@
 package chat.rocket.android;
 
 import android.os.StrictMode;
+
 import com.facebook.stetho.Stetho;
 import com.tspoon.traceur.Traceur;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;

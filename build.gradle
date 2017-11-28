@@ -1,27 +1,48 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply from: rootProject.file('dependencies.gradle')
 
+ext {
+    compileSdkVersion = 26
+    targetSdkVersion = 26
+    buildToolsVersion = "26.0.2"
+}
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.60"
+        classpath 'io.realm:realm-gradle-plugin:4.2.0'
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+
+    // Exclude the version that the android plugin depends on.
+    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
+}
+
 allprojects {
     repositories {
+        google()
         jcenter()
-        mavenCentral()
         maven { url 'https://github.com/lijingle1/stetho-realm/raw/master/maven-repo' }
         maven { url 'http://dl.bintray.com/amulyakhare/maven' } //for TextDrawable.
         maven { url "https://clojars.org/repo/" } //for icepick.
         maven { url 'https://jitpack.io' } //for widget-fontawesome.
-        maven { url "https://maven.google.com" } // for Support Library.
+        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local' } //for widget-fontawesome.
     }
 }
 
 // This block encapsulates custom properties and makes them available to all modules in the project.
 // You can also create properties to specify versions for dependencies.
 // Having consistent versions between modules can avoid conflicts with behavior.
-ext {
-    compileSdkVersion = 26
-    targetSdkVersion = 26
-    buildToolsVersion = "26.0.0"
-
-}
 
 task clean(type: Delete) {
     delete rootProject.buildDir

@@ -1,6 +1,7 @@
 package chat.rocket.android.fragment.server_config;
 
 import java.util.List;
+
 import chat.rocket.android.shared.BaseContract;
 import chat.rocket.core.models.LoginServiceConfiguration;
 

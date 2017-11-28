@@ -11,11 +11,13 @@ import java.util.UUID;
 
 import bolts.Continuation;
 import bolts.Task;
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
-import chat.rocket.android.service.DDPClientRef;
+import chat.rocket.android_ddp.DDPClient;
 import chat.rocket.android_ddp.DDPClientCallback;
+import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.SyncState;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.RealmStore;
@@ -30,6 +32,7 @@ import chat.rocket.persistence.realm.models.ddp.RealmSpotlightUser;
 import chat.rocket.persistence.realm.models.internal.MethodCall;
 import chat.rocket.persistence.realm.models.internal.RealmSession;
 import hugo.weaving.DebugLog;
+import okhttp3.HttpUrl;
 
 /**
  * Utility class for creating/handling MethodCall or RPC.
@@ -45,7 +48,6 @@ public class MethodCallHelper {
       task -> Task.forResult(new JSONArray(task.getResult()));
   protected final Context context;
   protected final RealmHelper realmHelper;
-  protected final DDPClientRef ddpClientRef;
 
   /**
    * initialize with Context and hostname.
@@ -53,23 +55,32 @@ public class MethodCallHelper {
   public MethodCallHelper(Context context, String hostname) {
     this.context = context.getApplicationContext();
     this.realmHelper = RealmStore.getOrCreate(hostname);
-    ddpClientRef = null;
   }
 
   /**
    * initialize with RealmHelper and DDPClient.
    */
-  public MethodCallHelper(RealmHelper realmHelper, DDPClientRef ddpClientRef) {
+  public MethodCallHelper(RealmHelper realmHelper) {
     this.context = null;
     this.realmHelper = realmHelper;
-    this.ddpClientRef = ddpClientRef;
+  }
+
+  public MethodCallHelper(Context context, RealmHelper realmHelper) {
+    this.context = context.getApplicationContext();
+    this.realmHelper = realmHelper;
   }
 
   @DebugLog
   private Task<String> executeMethodCall(String methodName, String param, long timeout) {
-    if (ddpClientRef != null) {
-      return ddpClientRef.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
-          .onSuccessTask(task -> Task.forResult(task.getResult().result));
+    if (DDPClient.get() != null) {
+      return DDPClient.get().rpc(UUID.randomUUID().toString(), methodName, param, timeout)
+          .onSuccessTask(task -> Task.forResult(task.getResult().result))
+          .continueWithTask(task_ -> {
+            if (task_.isFaulted()) {
+               return Task.forError(task_.getError());
+            }
+            return Task.forResult(task_.getResult());
+          });
     } else {
       return MethodCall.execute(realmHelper, methodName, param, timeout)
           .onSuccessTask(task -> {
@@ -84,8 +95,13 @@ public class MethodCallHelper {
     return task.continueWithTask(_task -> {
       if (_task.isFaulted()) {
         Exception exception = _task.getError();
-        if (exception instanceof MethodCall.Error) {
-          String errMessageJson = exception.getMessage();
+        if (exception instanceof MethodCall.Error || exception instanceof DDPClientCallback.RPC.Error) {
+          String errMessageJson;
+          if (exception instanceof DDPClientCallback.RPC.Error) {
+            errMessageJson = ((DDPClientCallback.RPC.Error) exception).error.toString();
+          } else {
+            errMessageJson = exception.getMessage();
+          }
           if (TextUtils.isEmpty(errMessageJson)) {
             return Task.forError(exception);
           }
@@ -96,11 +112,10 @@ public class MethodCallHelper {
             return Task.forError(new TwoStepAuthException(errMessage));
           }
           return Task.forError(new Exception(errMessage));
-        } else if (exception instanceof DDPClientCallback.RPC.Error) {
-          String errMessage = ((DDPClientCallback.RPC.Error) exception).error.getString("message");
-          return Task.forError(new Exception(errMessage));
         } else if (exception instanceof DDPClientCallback.RPC.Timeout) {
           return Task.forError(new MethodCall.Timeout());
+        } else if (exception instanceof DDPClientCallback.Closed) {
+          return Task.forError(new Exception("Oops, your connection seems off..."));
         } else {
           return Task.forError(exception);
         }
@@ -179,8 +194,8 @@ public class MethodCallHelper {
           .put("algorithm", "sha-256"));
       return new JSONArray().put(param);
     }).onSuccessTask(CONVERT_TO_JSON_OBJECT)
-        .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
-        .onSuccessTask(this::saveToken);
+      .onSuccessTask(task -> Task.forResult(task.getResult().getString("token")))
+      .onSuccessTask(this::saveToken);
   }
 
   public Task<Void> loginWithLdap(final String username, final String password) {
@@ -385,6 +400,17 @@ public class MethodCallHelper {
     }
   }
 
+  public Task<Void> deleteMessage(String messageID) {
+    try {
+      JSONObject messageJson = new JSONObject()
+              .put("_id", messageID);
+
+      return deleteMessage(messageJson);
+    } catch(JSONException exception) {
+      return Task.forError(exception);
+    }
+  }
+
   /**
    * Send message object.
    */
@@ -398,6 +424,11 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
+  private Task<Void> deleteMessage(final JSONObject messageJson) {
+    return call("deleteMessage", TIMEOUT_MS, () -> new JSONArray().put(messageJson))
+            .onSuccessTask(task -> Task.forResult(null));
+  }
+
   /**
    * mark all messages are read in the room.
    */
@@ -406,13 +437,31 @@ public class MethodCallHelper {
         .onSuccessTask(task -> Task.forResult(null));
   }
 
-  public Task<Void> getPublicSettings() {
+  public Task<Void> getPublicSettings(String currentHostname) {
     return call("public-settings/get", TIMEOUT_MS)
         .onSuccessTask(CONVERT_TO_JSON_ARRAY)
         .onSuccessTask(task -> {
           final JSONArray settings = task.getResult();
+          String siteUrl = null;
+          String siteName = null;
           for (int i = 0; i < settings.length(); i++) {
-            RealmPublicSetting.customizeJson(settings.getJSONObject(i));
+            JSONObject jsonObject = settings.getJSONObject(i);
+            RealmPublicSetting.customizeJson(jsonObject);
+            if (isPublicSetting(jsonObject, PublicSettingsConstants.General.SITE_URL)) {
+              siteUrl = jsonObject.getString(RealmPublicSetting.VALUE);
+            } else if (isPublicSetting(jsonObject, PublicSettingsConstants.General.SITE_NAME)) {
+              siteName = jsonObject.getString(RealmPublicSetting.VALUE);
+            }
+          }
+
+          if (siteName != null && siteUrl != null) {
+            HttpUrl httpSiteUrl = HttpUrl.parse(siteUrl);
+            if (httpSiteUrl != null) {
+              String host = httpSiteUrl.host();
+              RocketChatCache rocketChatCache = new RocketChatCache(context);
+              rocketChatCache.addHostnameSiteUrl(host, currentHostname);
+              rocketChatCache.addHostSiteName(currentHostname, siteName);
+            }
           }
 
           return realmHelper.executeTransaction(realm -> {
@@ -421,6 +470,10 @@ public class MethodCallHelper {
             return null;
           });
         });
+  }
+
+  private boolean isPublicSetting(JSONObject jsonObject, String id) {
+    return jsonObject.optString(RealmPublicSetting.ID).equalsIgnoreCase(id);
   }
 
   public Task<Void> getPermissions() {

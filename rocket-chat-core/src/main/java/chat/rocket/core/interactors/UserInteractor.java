@@ -1,10 +1,10 @@
 package chat.rocket.core.interactors;
 
-import io.reactivex.Flowable;
-
 import java.util.List;
+
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.UserRepository;
+import io.reactivex.Flowable;
 
 public class UserInteractor {
 

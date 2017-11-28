@@ -2,21 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
 apply plugin: 'com.jakewharton.hugo'
-apply plugin: 'me.tatarka.retrolambda'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$rootProject.ext.kotlinVersion"
-        classpath 'io.realm:realm-gradle-plugin:2.3.2'
-        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
-        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
-        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-    }
-}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -51,13 +36,11 @@ dependencies {
     compile extraDependencies.boltTask
     compile supportDependencies.annotation
     compile supportDependencies.designSupportLibrary
-    compile supportDependencies.kotlin
     compile extraDependencies.rxAndroid
+    provided extraDependencies.optional
     testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
     testCompile 'org.json:json:20170516'
     testCompile 'org.skyscreamer:jsonassert:1.5.0'
-    compile 'com.github.akarnokd:rxjava2-interop:0.10.0'
-    provided 'com.hadisatrio:Optional:v1.0.1'
     testCompile 'junit:junit:4.12'
 }

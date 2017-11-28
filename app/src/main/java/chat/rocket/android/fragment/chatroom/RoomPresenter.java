@@ -112,7 +112,11 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
       return;
     }
 
-    if (message.getType() == null && message.getSyncState() == SyncState.SYNCED) {
+    if (message.getSyncState() == SyncState.DELETE_FAILED) {
+        view.showMessageDeleteFailure(message);
+    } else if (message.getSyncState() == SyncState.FAILED) {
+        view.showMessageSendFailure(message);
+    } else if (message.getType() == null && message.getSyncState() == SyncState.SYNCED) {
         // If message is not a system message show applicable actions.
         view.showMessageActions(message);
     }
@@ -145,6 +149,15 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                       },
                       Logger::report
               );
+  }
+
+  public void acceptMessageDeleteFailure(Message message) {
+    final Disposable subscription = messageInteractor.acceptDeleteFailure(message)
+            .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe();
+
+    addSubscription(subscription);
   }
 
   private String buildReplyOrQuoteMarkdown(String baseUrl, Message message, boolean justQuote) {

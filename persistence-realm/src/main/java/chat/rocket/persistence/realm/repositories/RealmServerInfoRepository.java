@@ -2,21 +2,21 @@ package chat.rocket.persistence.realm.repositories;
 
 import android.os.Looper;
 import android.support.v4.util.Pair;
+
 import com.hadisatrio.optional.Optional;
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import chat.rocket.core.models.ServerInfo;
 import chat.rocket.core.repositories.ServerInfoRepository;
 import chat.rocket.persistence.realm.models.RealmBasedServerInfo;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class RealmServerInfoRepository extends RealmRepository implements ServerInfoRepository {
 
   @Override
   public Flowable<Optional<ServerInfo>> getByHostname(String hostname) {
     return Flowable.defer(() -> Flowable.using(
-        () -> new Pair<>(RealmBasedServerInfo.getRealm(), Looper.myLooper()),
+        () -> new Pair<>(RealmBasedServerInfo.getServerRealm(), Looper.myLooper()),
         pair -> {
           RealmBasedServerInfo info = pair.first.where(RealmBasedServerInfo.class)
               .equalTo(RealmBasedServerInfo.ColumnName.HOSTNAME, hostname)
@@ -26,10 +26,9 @@ public class RealmServerInfoRepository extends RealmRepository implements Server
             return Flowable.just(Optional.<RealmBasedServerInfo>absent());
           }
 
-          return RxJavaInterop.toV2Flowable(info
-              .<RealmBasedServerInfo>asObservable()
+          return info.<RealmBasedServerInfo>asFlowable()
               .filter(it -> it.isLoaded() && it.isValid())
-              .map(Optional::of));
+              .map(Optional::of);
         },
         pair -> close(pair.first, pair.second)
     )

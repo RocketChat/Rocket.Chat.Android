@@ -1,9 +1,8 @@
 package chat.rocket.persistence.realm.models.ddp;
 
+import chat.rocket.core.models.SpotlightUser;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-
-import chat.rocket.core.models.SpotlightUser;
 
 public class RealmSpotlightUser extends RealmObject {
 

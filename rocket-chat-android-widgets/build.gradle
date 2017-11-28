@@ -2,16 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$rootProject.ext.kotlinVersion"
-    }
-}
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -21,7 +11,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1"
-
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -40,7 +29,6 @@ android {
 
 ext {
     frescoVersion = '1.4.0'
-    rxbindingVersion = '2.0.0'
 }
 dependencies {
     compile project(':rocket-chat-core')
@@ -49,18 +37,18 @@ dependencies {
     compile supportDependencies.annotation
     compile supportDependencies.cardView
     compile supportDependencies.designSupportLibrary
-    compile supportDependencies.constrainLayout
-    compile supportDependencies.kotlin
+    compile supportDependencies.constraintLayout
+    compile supportDependencies.supportV13
     compile rxbindingDependencies.rxBinding
     compile rxbindingDependencies.rxBindingSupport
-    compile "com.android.support:support-v13:$rootProject.ext.supportLibraryVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
     compile 'org.nibor.autolink:autolink:0.6.0'
     compile 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
     compile "com.facebook.fresco:fresco:$frescoVersion"
     compile "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
     compile 'com.caverock:androidsvg:1.2.1'
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:2.7.19"
 }
