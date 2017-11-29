@@ -10,7 +10,6 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.drawable.ProgressBarDrawable
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.generic.GenericDraweeHierarchy
-import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
 
 object FrescoHelper {
@@ -39,7 +38,6 @@ object FrescoHelper {
         val hierarchy: GenericDraweeHierarchy = draweeView.hierarchy
         hierarchy.setPlaceholderImage(VectorDrawableCompat.create(draweeView.resources, R.drawable.image_dummy, null))
         hierarchy.setFailureImage(VectorDrawableCompat.create(draweeView.resources, R.drawable.image_error, null))
-        hierarchy.roundingParams = RoundingParams().setCornersRadii(5F, 5F, 5F, 5F)
         hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_CENTER
         hierarchy.setProgressBarImage(ProgressBarDrawable())
 

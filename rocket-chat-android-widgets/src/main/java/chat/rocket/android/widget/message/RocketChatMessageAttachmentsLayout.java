@@ -17,8 +17,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
+import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.request.ImageRequest;
 
 import java.util.List;
 
@@ -131,7 +135,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     FrescoHelper.INSTANCE.loadImageWithCustomization((SimpleDraweeView) attachmentView.findViewById(R.id.author_icon), absolutize(author.getIconUrl()));
 
-    final TextView authorName = (TextView) attachmentView.findViewById(R.id.author_name);
+    final TextView authorName = attachmentView.findViewById(R.id.author_name);
     authorName.setText(author.getName());
 
     final String link = absolutize(author.getLink());
@@ -148,7 +152,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
   }
 
   private void showTitleAttachment(Attachment attachment, View attachmentView) {
-    TextView titleView = (TextView) attachmentView.findViewById(R.id.title);
+    TextView titleView = attachmentView.findViewById(R.id.title);
     AttachmentTitle title = attachment.getAttachmentTitle();
     if (title == null || title.getTitle() == null) {
       titleView.setVisibility(View.GONE);
@@ -189,7 +193,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     refBox.setVisibility(VISIBLE);
 
-    final SimpleDraweeView thumbImage = (SimpleDraweeView) refBox.findViewById(R.id.thumb);
+    final SimpleDraweeView thumbImage = refBox.findViewById(R.id.thumb);
 
     final String thumbUrl = attachment.getThumbUrl();
     if (TextUtils.isEmpty(thumbUrl)) {
@@ -199,7 +203,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       FrescoHelper.INSTANCE.loadImageWithCustomization(thumbImage, absolutize(thumbUrl));
     }
 
-    final TextView refText = (TextView) refBox.findViewById(R.id.text);
+    final TextView refText = refBox.findViewById(R.id.text);
 
     final String refString = attachment.getText();
     if (TextUtils.isEmpty(refString)) {
@@ -242,8 +246,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       return;
     }
 
-    final ViewGroup attachmentContent =
-        (ViewGroup) attachmentView.findViewById(R.id.attachment_content);
+    final ViewGroup attachmentContent = attachmentView.findViewById(R.id.attachment_content);
 
     for (int i = 0, size = fields.size(); i < size; i++) {
       final AttachmentField attachmentField = fields.get(i);
@@ -268,7 +271,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
   private void loadImage(final String url, final SimpleDraweeView drawee, final View load,
                          boolean autoloadImage) {
-    if (autoloadImage) {
+    if (autoloadImage || isCached(Uri.parse(url))) {
       load.setVisibility(GONE);
       FrescoHelper.INSTANCE.loadImageWithCustomization(drawee, url);
       return;
@@ -283,4 +286,16 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       }
     });
   }
+
+  private boolean isCached(Uri loadUri) {
+    if (loadUri == null) {
+      return false;
+    }
+    ImageRequest imageRequest = ImageRequest.fromUri(loadUri);
+    CacheKey cacheKey = DefaultCacheKeyFactory.getInstance()
+            .getEncodedCacheKey(imageRequest, null);
+    return ImagePipelineFactory.getInstance()
+            .getMainFileCache().hasKey(cacheKey);
+  }
+
 }
