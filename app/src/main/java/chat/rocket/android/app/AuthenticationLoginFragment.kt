@@ -173,10 +173,14 @@ class AuthenticationLoginFragment : Fragment() {
     }
 
     private fun scrollToBottom() {
-        scroll_view.postDelayed({ scroll_view.fullScroll(ScrollView.FOCUS_DOWN); }, 1000)
+        scroll_view.postDelayed({
+            scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
+        }, 1000)
     }
 
     private fun hideFab() {
-        button_fab.postDelayed({button_fab.hide() }, 1500)
+        button_fab.postDelayed({
+            button_fab.hide()
+        }, 1500)
     }
 }
