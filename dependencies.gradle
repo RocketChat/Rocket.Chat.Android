@@ -6,7 +6,7 @@ ext {
         compileSdk        : 27,
         targetSdk         : 27,
         buildTools        : '27.0.0',
-        kotlin            : '1.1.51',
+        kotlin            : '1.2.0',
 
         // Main dependencies
         support           : '27.0.0',
