@@ -25,10 +25,22 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation libraries.kotlin
+
     implementation libraries.appCompat
     implementation libraries.recyclerview
     implementation libraries.design
     implementation libraries.constraintLayout
+
+    implementation libraries.dagger
+    implementation libraries.daggerSupport
+    kapt libraries.daggerProcessor
+    kapt libraries.daggerAndroidApt
+
+    implementation libraries.room
+    kapt libraries.roomProcessor
+    implementation libraries.roomRxjava
 
     implementation libraries.rxjava
     implementation libraries.rxandroid
@@ -36,24 +48,13 @@ dependencies {
     implementation libraries.okhttp
     implementation libraries.okhttpLogger
 
-    implementation libraries.room
-    kapt libraries.roomProcessor
-    implementation libraries.roomRxjava
-
-    implementation libraries.dagger
-    implementation libraries.daggerSupport
-    kapt libraries.daggerProcessor
-    kapt libraries.daggerAndroidApt
-
-    implementation libraries.timber
-    implementation libraries.threeTenABP
-
     implementation libraries.fresco
     implementation libraries.frescoAnimatedGif
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
 
-    implementation libraries.kotlin
+    implementation libraries.timber
+    implementation libraries.threeTenABP
 
     implementation libraries.floatingSearchView
 
