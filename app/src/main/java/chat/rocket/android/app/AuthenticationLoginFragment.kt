@@ -2,7 +2,6 @@ package chat.rocket.android.app
 
 import DrawableHelper
 import android.app.Fragment
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,8 +27,8 @@ class AuthenticationLoginFragment : Fragment() {
 
         // Just an example: if the server allow the login via social accounts (oauth authentication) then show the respective interface.
         shouldShowOauthView(true)
-        // In this case we need to setup the text_username_or_email and text_password EditText to hide and show the oauth interface when the user touch the respective fields.
-        setupEditTextListener()
+        // In this case we need to setup the layout to hide and show the oauth interface when the soft keyboard is shown (means that the user touched the text_username_or_email and text_password EditText).
+        setupGlobalLayoutListener()
 
         // Show the first three social account's ImageButton (REMARK: we must show at maximum *three* views)
         showLoginUsingFacebookImageButton()
@@ -55,23 +54,9 @@ class AuthenticationLoginFragment : Fragment() {
         DrawableHelper.compoundDrawables(arrayOf(text_username_or_email, text_password), drawables)
     }
 
-    private fun setupEditTextListener() {
-        text_username_or_email.viewTreeObserver.addOnGlobalLayoutListener({
-            if (KeyboardHelper.isSoftKeyboardShown(text_username_or_email.rootView)) {
-                shouldShowOauthView(false)
-                shouldShowSignUpMsgView(false)
-                shouldShowLoginButton(true)
-            } else {
-                if (isEditTextNullOrBlank()) {
-                    shouldShowOauthView(true)
-                    shouldShowSignUpMsgView(true)
-                    shouldShowLoginButton(false)
-                }
-            }
-        })
-
-        text_password.viewTreeObserver.addOnGlobalLayoutListener({
-            if (KeyboardHelper.isSoftKeyboardShown(text_password.rootView)) {
+    private fun setupGlobalLayoutListener() {
+        scroll_view.viewTreeObserver.addOnGlobalLayoutListener({
+            if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
                 shouldShowOauthView(false)
                 shouldShowSignUpMsgView(false)
                 shouldShowLoginButton(true)
