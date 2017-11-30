@@ -32,9 +32,9 @@ class AuthenticationLoginFragment : Fragment() {
         setupEditTextListener()
 
         // Show the first three social account's ImageButton (REMARK: we must show at maximum *three* views)
-        showLoginUsingFacebookImagebutton()
-        showLoginUsingGithubImagebutton()
-        showLoginUsingGoogleImagebutton()
+        showLoginUsingFacebookImageButton()
+        showLoginUsingGithubImageButton()
+        showLoginUsingGoogleImageButton()
 
         // Setup the FloatingActionButton to show more social account's ImageButton (it expands the social accounts interface to show more views).
         setupFabListener()
@@ -127,40 +127,40 @@ class AuthenticationLoginFragment : Fragment() {
         }
     }
 
-    private fun showLoginUsingFacebookImagebutton() {
+    private fun showLoginUsingFacebookImageButton() {
         button_facebook.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingGithubImagebutton() {
+    private fun showLoginUsingGithubImageButton() {
         button_github.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingGoogleImagebutton() {
+    private fun showLoginUsingGoogleImageButton() {
         button_google.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingLinkedinImagebutton() {
+    private fun showLoginUsingLinkedinImageButton() {
         button_linkedin.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingMeteorImagebutton() {
+    private fun showLoginUsingMeteorImageButton() {
         button_meteor.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingTwitterImagebutton() {
+    private fun showLoginUsingTwitterImageButton() {
         button_twitter.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingGitlabImagebutton() {
+    private fun showLoginUsingGitlabImageButton() {
         button_gitlab.visibility = View.VISIBLE
     }
 
     private fun setupFabListener() {
         button_fab.setOnClickListener({
-            showLoginUsingLinkedinImagebutton()
-            showLoginUsingMeteorImagebutton()
-            showLoginUsingTwitterImagebutton()
-            showLoginUsingGitlabImagebutton()
+            showLoginUsingLinkedinImageButton()
+            showLoginUsingMeteorImageButton()
+            showLoginUsingTwitterImageButton()
+            showLoginUsingGitlabImageButton()
 
             scrollToBottom()
             hideFab()
