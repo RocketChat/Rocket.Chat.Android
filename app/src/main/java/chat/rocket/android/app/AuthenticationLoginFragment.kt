@@ -43,22 +43,6 @@ class AuthenticationLoginFragment : Fragment() {
         shouldShowSignUpMsgView(true)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-
-        if (KeyboardHelper.isHardKeyboardShown(newConfig)) {
-            shouldShowOauthView(false)
-            shouldShowSignUpMsgView(false)
-            shouldShowLoginButton(true)
-        } else {
-            if (isEditTextNullOrBlank()) {
-                shouldShowOauthView(true)
-                shouldShowSignUpMsgView(true)
-                shouldShowLoginButton(false)
-            }
-        }
-    }
-
     private fun tintEditTextDrawableStart() {
         val context = activity.applicationContext
 

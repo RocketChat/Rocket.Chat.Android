@@ -1,6 +1,5 @@
 package chat.rocket.android.app
 
-import android.content.res.Configuration
 import android.graphics.Rect
 import android.view.View
 
@@ -21,18 +20,5 @@ object KeyboardHelper {
         val dm = rootView.resources.displayMetrics
         val heightDiff = rootView.bottom - rect.bottom
         return heightDiff > softKeyboardHeight * dm.density
-    }
-
-    /**
-     * Returns true if the hard keyboard is shown, false otherwise.
-     *
-     * @param newConfig The configuration.
-     * @return true if the hard keyboard is shown, false otherwise.
-     */
-    fun isHardKeyboardShown(newConfig: Configuration?): Boolean {
-        if (newConfig?.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
-            return true
-        }
-        return false
     }
 }
