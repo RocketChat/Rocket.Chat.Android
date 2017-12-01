@@ -47,6 +47,11 @@ dependencies {
 
     implementation libraries.timber
 
+    implementation libraries.fresco
+    implementation libraries.frescoAnimatedGif
+    implementation libraries.frescoWebP
+    implementation libraries.frescoAnimatedWebP
+
     implementation libraries.kotlin
 
     testImplementation libraries.junit
