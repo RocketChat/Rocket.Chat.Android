@@ -11,6 +11,7 @@
         <item name="android:maxLines">1</item>
         <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
         <item name="android:drawableTint">@color/colorDrawableTintGrey</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:background">@drawable/style_edit_text</item>
     </style>
 
