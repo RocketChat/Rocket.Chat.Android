@@ -28,6 +28,7 @@ import chat.rocket.core.models.Session;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.PublicSettingRepository;
 import chat.rocket.core.utils.Pair;
+import hugo.weaving.DebugLog;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -133,8 +134,9 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         addSubscription(subscription);
     }
 
+    @DebugLog
     @Override
-    public void beforeLogoutCleanUp() {
+    public void prepareToLogout() {
         clearSubscriptions();
     }
 

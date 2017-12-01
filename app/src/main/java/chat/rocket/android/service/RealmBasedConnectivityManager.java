@@ -279,8 +279,11 @@ import io.reactivex.subjects.BehaviorSubject;
 
             if (serviceInterface != null) {
                 return serviceInterface.disconnectFromServer(hostname)
-                        // //after disconnection from server, remove HOSTNAME key from HashMap
-                        .doAfterTerminate(() -> serverConnectivityList.remove(hostname));
+                         //after disconnection from server, remove HOSTNAME key from HashMap
+                        .doAfterTerminate(() -> {
+                            serverConnectivityList.remove(hostname);
+                            serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
+                        });
             } else {
                 return Single.error(new IllegalStateException("not prepared"));
             }

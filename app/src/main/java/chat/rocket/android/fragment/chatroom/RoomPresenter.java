@@ -77,7 +77,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             success -> {
-              if (success) {
+              if (!success) {
                 connectivityManagerApi.keepAliveServer();
               }
             },
@@ -89,14 +89,13 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void loadMoreMessages() {
-
     final Disposable subscription = getSingleRoom()
         .flatMap(messageInteractor::loadMoreMessages)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             success -> {
-              if (success) {
+              if (!success) {
                 connectivityManagerApi.keepAliveServer();
               }
             },

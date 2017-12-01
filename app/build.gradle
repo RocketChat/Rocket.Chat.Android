@@ -3,7 +3,8 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
-    maven { url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo' }
+//    maven { url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo' }
+    maven { url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo' }
 }
 
 apply plugin: 'kotlin-android'
@@ -100,7 +101,7 @@ ext {
     playLibVersion = '11.6.0'
     stethoVersion = '1.5.0'
     stethoOkhttp3Version = '1.5.0'
-    stethoRealmVersion = '2.1.0'
+    stethoRealmVersion = '2.2.2'
     rxbindingVersion = '2.0.0'
     rxlifecycleVersion = '2.1.0'
     icepickVersion = '3.2.0'
