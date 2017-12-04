@@ -9,7 +9,7 @@
     android:fillViewport="true">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/container"
+        android:id="@+id/middle_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -190,4 +190,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:visibility="gone" />
     </android.support.constraint.ConstraintLayout>
+
 </ScrollView>

@@ -20,6 +20,8 @@
     <string name="msg_new_to_rocket_chat">New to Rocket Chat? <font color='#FF1976D2'>Sign up</font></string>
     <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n<font color='#FF1976D2'>Terms of Service</font> and <font color='#FF1976D2'>Privacy Policy</font></string>
     <string name="msg_2fa_code">2FA Code</string>
+    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
+    <string name="msg_yesterday">Yesterday</string>
     <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string>
     <string name="msg_content_description_log_in_using_github">Login using Github</string>
     <string name="msg_content_description_log_in_using_google">Login using Google</string>
@@ -27,5 +29,6 @@
     <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
+    <string name="msg_content_description_chat_icon">Chat icon</string>
 
 </resources>

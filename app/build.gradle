@@ -46,6 +46,7 @@ dependencies {
     kapt libraries.daggerAndroidApt
 
     implementation libraries.timber
+    implementation libraries.threeTenABP
 
     implementation libraries.fresco
     implementation libraries.frescoAnimatedGif
