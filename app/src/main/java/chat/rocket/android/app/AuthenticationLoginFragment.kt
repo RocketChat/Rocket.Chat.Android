@@ -13,9 +13,6 @@ import android.widget.ScrollView
 import chat.rocket.android.R
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 
-/**
- * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
- */
 class AuthenticationLoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater?.inflate(R.layout.fragment_authentication_log_in, container, false)

@@ -12,9 +12,6 @@ import chat.rocket.android.R
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_chat.view.*
 
-/**
- * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
- */
 class ChatListAdapter(private var dataSet: MutableList<Chat>, private val context: Context) : RecyclerView.Adapter<ChatListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

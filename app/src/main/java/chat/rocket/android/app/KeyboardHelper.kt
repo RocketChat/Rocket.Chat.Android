@@ -4,9 +4,6 @@ import android.content.res.Configuration
 import android.graphics.Rect
 import android.view.View
 
-/**
- * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
- */
 object KeyboardHelper {
 
     /**

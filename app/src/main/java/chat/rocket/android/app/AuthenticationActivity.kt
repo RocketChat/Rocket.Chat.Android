@@ -4,9 +4,6 @@ import android.os.Bundle
 import chat.rocket.android.BaseActivity
 import chat.rocket.android.R
 
-/**
- * @author Filipe de Lima Brito (filipedelimabrito@gmail.com)
- */
 class AuthenticationActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
