@@ -21,6 +21,7 @@ ext {
         dagger            : '2.11',
         fresco            : '1.5.0',
         threeTenABP       : '1.0.5',
+        floatingSearchView: '2.1.1',
 
         // For testing
         expresso          : '3.0.1',
@@ -55,6 +56,7 @@ ext {
         frescoAnimatedWebP  : "com.facebook.fresco:animated-webp:${versions.fresco}",
         timber              : "com.jakewharton.timber:timber:${versions.timber}",
         threeTenABP         : "com.jakewharton.threetenabp:threetenabp:${versions.threeTenABP}",
+        floatingSearchView  : "com.github.arimorty:floatingsearchview:${versions.floatingSearchView}",
 
         // For testing
         junit         : "junit:junit:$versions.junit",
