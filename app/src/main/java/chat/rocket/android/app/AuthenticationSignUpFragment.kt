@@ -23,6 +23,8 @@ class AuthenticationSignUpFragment : Fragment() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
         }
+
+        setupGlobalLayoutListener()
     }
 
     private fun tintEditTextDrawableStart() {
@@ -37,5 +39,15 @@ class AuthenticationSignUpFragment : Fragment() {
         DrawableHelper.wrapDrawables(drawables)
         DrawableHelper.tintDrawables(drawables, context, R.color.colorDrawableTintGrey)
         DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_password, text_email), drawables)
+    }
+
+    private fun setupGlobalLayoutListener() {
+        constraint_layout.viewTreeObserver.addOnGlobalLayoutListener {
+            if (KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)) {
+                text_new_user_agreement.visibility = View.GONE
+            } else {
+                text_new_user_agreement.visibility = View.VISIBLE
+            }
+        }
     }
 }

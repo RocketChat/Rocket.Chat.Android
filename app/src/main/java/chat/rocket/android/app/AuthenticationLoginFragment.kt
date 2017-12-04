@@ -2,7 +2,6 @@ package chat.rocket.android.app
 
 import DrawableHelper
 import android.app.Fragment
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,35 +27,19 @@ class AuthenticationLoginFragment : Fragment() {
 
         // Just an example: if the server allow the login via social accounts (oauth authentication) then show the respective interface.
         shouldShowOauthView(true)
-        // In this case we need to setup the text_username_or_email and text_password EditText to hide and show the oauth interface when the user touch the respective fields.
-        setupEditTextListener()
+        // In this case we need to setup the layout to hide and show the oauth interface when the soft keyboard is shown (means that the user touched the text_username_or_email and text_password EditText).
+        setupGlobalLayoutListener()
 
         // Show the first three social account's ImageButton (REMARK: we must show at maximum *three* views)
-        showLoginUsingFacebookImagebutton()
-        showLoginUsingGithubImagebutton()
-        showLoginUsingGoogleImagebutton()
+        showLoginUsingFacebookImageButton()
+        showLoginUsingGithubImageButton()
+        showLoginUsingGoogleImageButton()
 
         // Setup the FloatingActionButton to show more social account's ImageButton (it expands the social accounts interface to show more views).
         setupFabListener()
 
         // Just an example: if the server allow the new users registration then show the respective interface.
         shouldShowSignUpMsgView(true)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-
-        if (KeyboardHelper.isHardKeyboardShown(newConfig)) {
-            shouldShowOauthView(false)
-            shouldShowSignUpMsgView(false)
-            shouldShowLoginButton(true)
-        } else {
-            if (isEditTextNullOrBlank()) {
-                shouldShowOauthView(true)
-                shouldShowSignUpMsgView(true)
-                shouldShowLoginButton(false)
-            }
-        }
     }
 
     private fun tintEditTextDrawableStart() {
@@ -71,23 +54,9 @@ class AuthenticationLoginFragment : Fragment() {
         DrawableHelper.compoundDrawables(arrayOf(text_username_or_email, text_password), drawables)
     }
 
-    private fun setupEditTextListener() {
-        text_username_or_email.viewTreeObserver.addOnGlobalLayoutListener({
-            if (KeyboardHelper.isSoftKeyboardShown(text_username_or_email.rootView)) {
-                shouldShowOauthView(false)
-                shouldShowSignUpMsgView(false)
-                shouldShowLoginButton(true)
-            } else {
-                if (isEditTextNullOrBlank()) {
-                    shouldShowOauthView(true)
-                    shouldShowSignUpMsgView(true)
-                    shouldShowLoginButton(false)
-                }
-            }
-        })
-
-        text_password.viewTreeObserver.addOnGlobalLayoutListener({
-            if (KeyboardHelper.isSoftKeyboardShown(text_password.rootView)) {
+    private fun setupGlobalLayoutListener() {
+        scroll_view.viewTreeObserver.addOnGlobalLayoutListener({
+            if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
                 shouldShowOauthView(false)
                 shouldShowSignUpMsgView(false)
                 shouldShowLoginButton(true)
@@ -127,40 +96,40 @@ class AuthenticationLoginFragment : Fragment() {
         }
     }
 
-    private fun showLoginUsingFacebookImagebutton() {
+    private fun showLoginUsingFacebookImageButton() {
         button_facebook.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingGithubImagebutton() {
+    private fun showLoginUsingGithubImageButton() {
         button_github.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingGoogleImagebutton() {
+    private fun showLoginUsingGoogleImageButton() {
         button_google.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingLinkedinImagebutton() {
+    private fun showLoginUsingLinkedinImageButton() {
         button_linkedin.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingMeteorImagebutton() {
+    private fun showLoginUsingMeteorImageButton() {
         button_meteor.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingTwitterImagebutton() {
+    private fun showLoginUsingTwitterImageButton() {
         button_twitter.visibility = View.VISIBLE
     }
 
-    private fun showLoginUsingGitlabImagebutton() {
+    private fun showLoginUsingGitlabImageButton() {
         button_gitlab.visibility = View.VISIBLE
     }
 
     private fun setupFabListener() {
         button_fab.setOnClickListener({
-            showLoginUsingLinkedinImagebutton()
-            showLoginUsingMeteorImagebutton()
-            showLoginUsingTwitterImagebutton()
-            showLoginUsingGitlabImagebutton()
+            showLoginUsingLinkedinImageButton()
+            showLoginUsingMeteorImageButton()
+            showLoginUsingTwitterImageButton()
+            showLoginUsingGitlabImageButton()
 
             scrollToBottom()
             hideFab()
@@ -173,10 +142,14 @@ class AuthenticationLoginFragment : Fragment() {
     }
 
     private fun scrollToBottom() {
-        scroll_view.postDelayed({ scroll_view.fullScroll(ScrollView.FOCUS_DOWN); }, 1000)
+        scroll_view.postDelayed({
+            scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
+        }, 1000)
     }
 
     private fun hideFab() {
-        button_fab.postDelayed({button_fab.hide() }, 1500)
+        button_fab.postDelayed({
+            button_fab.hide()
+        }, 1500)
     }
 }
