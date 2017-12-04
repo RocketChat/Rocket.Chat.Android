@@ -6,65 +6,69 @@ ext {
         compileSdk        : 27,
         targetSdk         : 27,
         buildTools        : '27.0.0',
-        kotlin            : '1.1.51',
+        kotlin            : '1.2.0',
 
         // Main dependencies
         support           : '27.0.0',
         constraintLayout  : '1.0.2',
-        autoValue         : '1.3',
-        moshi             : '1.5.0',
-        okhttp            : '3.9.0',
+        dagger            : '2.11',
         room              : '1.0.0-beta1',
         rxjava            : '2.1.4',
         rxandroid         : '2.0.1',
-        timber            : '4.5.1',
-        dagger            : '2.11',
+        moshi             : '1.5.0',
+        okhttp            : '3.9.0',
         fresco            : '1.5.0',
+        timber            : '4.5.1',
         threeTenABP       : '1.0.5',
         floatingSearchView: '2.1.1',
 
         // For testing
-        expresso          : '3.0.1',
         junit             : '4.12',
-        mockito           : '2.10.0',
-        truth             : '0.36'
+        truth             : '0.36',
+        expresso          : '3.0.1',
+        mockito           : '2.10.0'
     ]
 
     libraries = [
         kotlin              : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${versions.kotlin}",
+
         appCompat           : "com.android.support:appcompat-v7:${versions.support}",
         annotations         : "com.android.support:support-annotations:${versions.support}",
         recyclerview        : "com.android.support:recyclerview-v7:${versions.support}",
         design              : "com.android.support:design:${versions.support}",
         constraintLayout    : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
-        autoValue           : "com.google.auto.value:auto-value:${versions.autoValue}",
+
         dagger              : "com.google.dagger:dagger:${versions.dagger}",
         daggerSupport       : "com.google.dagger:dagger-android-support:${versions.dagger}",
         daggerProcessor     : "com.google.dagger:dagger-compiler:${versions.dagger}",
         daggerAndroidApt    : "com.google.dagger:dagger-android-processor:${versions.dagger}",
+
         room                : "android.arch.persistence.room:runtime:${versions.room}",
         roomProcessor       : "android.arch.persistence.room:compiler:${versions.room}",
         roomRxjava          : "android.arch.persistence.room:rxjava2:${versions.room}",
+
         rxjava              : "io.reactivex.rxjava2:rxjava:${versions.rxjava}",
         rxandroid           : "io.reactivex.rxjava2:rxandroid:${versions.rxandroid}",
+
         moshi               : "com.squareup.moshi:moshi:${versions.moshi}",
         okhttp              : "com.squareup.okhttp3:okhttp:${versions.okhttp}",
         okhttpLogger        : "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}",
+
         fresco              : "com.facebook.fresco:fresco:${versions.fresco}",
         frescoAnimatedGif   : "com.facebook.fresco:animated-gif:${versions.fresco}",
         frescoWebP          : "com.facebook.fresco:webpsupport:${versions.fresco}",
         frescoAnimatedWebP  : "com.facebook.fresco:animated-webp:${versions.fresco}",
+
         timber              : "com.jakewharton.timber:timber:${versions.timber}",
         threeTenABP         : "com.jakewharton.threetenabp:threetenabp:${versions.threeTenABP}",
+
         floatingSearchView  : "com.github.arimorty:floatingsearchview:${versions.floatingSearchView}",
 
         // For testing
-        junit         : "junit:junit:$versions.junit",
-        truth         : "com.google.truth:truth:$versions.truth",
-        compileTesting: "com.google.testing.compile:compile-testing:$versions.compileTesting",
         toolsJar      : files(Jvm.current().getToolsJar()),
-        assertJ       : "org.assertj:assertj-core:$versions.assertJ",
+        junit         : "junit:junit:$versions.junit",
+        expressoCore  : "com.android.support.test.espresso:espresso-core:${versions.expresso}",
         roomTest      : "android.arch.persistence.room:testing:${versions.room}",
-        expressoCore  : "com.android.support.test.espresso:espresso-core:${versions.expresso}"
+        truth         : "com.google.truth:truth:$versions.truth",
     ]
 }
