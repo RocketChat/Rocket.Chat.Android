@@ -21,6 +21,7 @@ import chat.rocket.core.models.Settings;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.RoomRepository;
 import chat.rocket.core.repositories.UserRepository;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -66,7 +67,6 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
     getRoomHistoryStateInfo();
     getMessages();
     getUserPreferences();
-    getAbsoluteUrl();
   }
 
   @Override
@@ -134,7 +134,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
 
   @Override
   public void replyMessage(@NonNull Message message, boolean justQuote) {
-      this.absoluteUrlHelper.getRocketChatAbsoluteUrl()
+      final Disposable subscription = this.absoluteUrlHelper.getRocketChatAbsoluteUrl()
               .cache()
               .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
               .observeOn(AndroidSchedulers.mainThread())
@@ -333,14 +333,21 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
   }
 
   private void getMessages() {
-    final Disposable subscription = roomRepository.getById(roomId)
+    final Disposable subscription = Flowable.zip(roomRepository.getById(roomId),
+            absoluteUrlHelper.getRocketChatAbsoluteUrl().toFlowable().cache(), Pair::new)
+        .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+        .observeOn(AndroidSchedulers.mainThread())
+        .map(pair -> {
+            view.setupWith(pair.second.orNull());
+            return pair.first;
+        })
         .filter(Optional::isPresent)
         .map(Optional::get)
         .flatMap(messageInteractor::getAllFrom)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
-            messages -> view.showMessages(messages),
+            view::showMessages,
             Logger::report
         );
 
