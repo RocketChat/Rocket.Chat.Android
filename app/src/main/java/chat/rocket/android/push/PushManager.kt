@@ -503,6 +503,7 @@ object PushManager {
             setAutoCancel(true)
             setShowWhen(true)
             setColor(res.getColor(R.color.colorRed400, ctx.theme))
+            setDefaults(Notification.DEFAULT_ALL)
             setSmallIcon(smallIcon)
         })
         return this
