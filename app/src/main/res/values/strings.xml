@@ -8,6 +8,7 @@
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
+    <string name="action_send">Send</string>
 
     <!-- Regular information messages -->
     <string name="msg_https" translatable="false">https://</string>
@@ -22,6 +23,7 @@
     <string name="msg_2fa_code">2FA Code</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Yesterday</string>
+    <string name="msg_message">Message</string>
     <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string>
     <string name="msg_content_description_log_in_using_github">Login using Github</string>
     <string name="msg_content_description_log_in_using_google">Login using Google</string>
