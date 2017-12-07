@@ -11,10 +11,10 @@ ext {
         dokka             : '0.9.15',
 
         // Main dependencies
-        support           : '27.0.0',
+        support           : '27.0.2',
         constraintLayout  : '1.0.2',
-        dagger            : '2.11',
-        room              : '1.0.0-beta1',
+        dagger            : '2.13',
+        room              : '1.0.0',
         rxjava            : '2.1.4',
         rxandroid         : '2.0.1',
         moshi             : '1.6.0-SNAPSHOT',
@@ -41,6 +41,7 @@ ext {
         recyclerview        : "com.android.support:recyclerview-v7:${versions.support}",
         design              : "com.android.support:design:${versions.support}",
         constraintLayout    : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
+        cardView            : "com.android.support:cardview-v7:${versions.support}",
 
         dagger              : "com.google.dagger:dagger:${versions.dagger}",
         daggerSupport       : "com.google.dagger:dagger-android-support:${versions.dagger}",

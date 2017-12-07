@@ -40,6 +40,7 @@ dependencies {
     implementation libraries.recyclerview
     implementation libraries.design
     implementation libraries.constraintLayout
+    implementation libraries.cardView
 
     implementation libraries.dagger
     implementation libraries.daggerSupport
