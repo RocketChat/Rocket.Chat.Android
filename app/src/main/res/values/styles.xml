@@ -14,6 +14,11 @@
         <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
+    <style name="ChatListTheme" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item> <!-- We need this item because of this FloatingSearchView's issue: https://github.com/arimorty/floatingsearchview/issues/222 -->
+    </style>
+
     <!-- Widget styles. -->
     <style name="HeadlineTextView" parent="TextAppearance.AppCompat.Headline">
         <item name="android:layout_width">wrap_content</item>
