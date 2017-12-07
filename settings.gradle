@@ -1,1 +1,3 @@
-include ':app'
+include ':app', 'common', 'core'
+project(':common').projectDir = new File(settingsDir, '../Rocket.Chat.Kotlin.Sdk/common')
+project(':core').projectDir = new File(settingsDir, '../Rocket.Chat.Kotlin.Sdk/core')

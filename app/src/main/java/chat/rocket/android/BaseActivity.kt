@@ -1,11 +1,13 @@
 package chat.rocket.android
 
-import android.app.Activity
-import android.app.Fragment
 
-abstract class BaseActivity : Activity() {
+import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 
-    protected fun addFragment(fragment: Fragment, tag: String, layoutId: Int) {
-        fragmentManager.beginTransaction().add(layoutId, fragment, tag).commit()
+abstract class BaseActivity : AppCompatActivity() {
+
+    protected fun addFragment(tag: String, layoutId: Int, block: (Unit) -> Fragment) {
+        val fragment = supportFragmentManager.findFragmentByTag(tag) ?: block(Unit)
+        supportFragmentManager.beginTransaction().replace(layoutId, fragment, tag).commit()
     }
 }

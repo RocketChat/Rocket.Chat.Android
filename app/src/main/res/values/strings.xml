@@ -10,7 +10,6 @@
     <string name="action_connect">Connect</string>
 
     <!-- Regular information messages -->
-    <string name="msg_https" translatable="false">https://</string>
     <string name="msg_username">username</string>
     <string name="msg_username_or_email">username or email</string>
     <string name="msg_password">password</string>
