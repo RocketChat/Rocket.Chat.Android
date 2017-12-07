@@ -148,6 +148,8 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                       },
                       Logger::report
               );
+
+      addSubscription(subscription);
   }
 
   public void acceptMessageDeleteFailure(Message message) {
