@@ -212,7 +212,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                                 return;
                             }
 
-                            view.showConnectionOk();
+//                            view.showConnectionOk();
                         },
                         Logger::report
                 );
@@ -227,12 +227,15 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                 .subscribe(
                         connectivity -> {
                             if (connectivity.state == ServerConnectivity.STATE_CONNECTED) {
-                                view.showConnectionOk();
-                                view.refreshRoom();
+                                //TODO: notify almost connected or something like that.
+//                                view.showConnectionOk();
                             } else if (connectivity.state == ServerConnectivity.STATE_DISCONNECTED) {
                                 if (connectivity.code == DDPClient.REASON_NETWORK_ERROR) {
                                     view.showConnectionError();
                                 }
+                            } else if (connectivity.state == ServerConnectivity.STATE_SESSION_ESTABLISHED) {
+                                view.refreshRoom();
+                                view.showConnectionOk();
                             } else {
                                 view.showConnecting();
                             }

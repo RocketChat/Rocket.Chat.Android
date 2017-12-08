@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
@@ -49,7 +50,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     private RoomToolbar toolbar;
     private SlidingPaneLayout pane;
     private MainContract.Presenter presenter;
-    private volatile Snackbar statusTicker;
+    private volatile AtomicReference<Snackbar> statusTicker = new AtomicReference<>();
 
     @Override
     public int getLayoutContainerForFragment() {
@@ -95,7 +96,9 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
             presenter.release();
         }
         // Dismiss any status ticker
-        if (statusTicker != null) statusTicker.dismiss();
+        if (statusTicker.get() != null) {
+            statusTicker.get().dismiss();
+        }
 
         super.onPause();
     }
@@ -250,31 +253,47 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     }
 
     @Override
-    public synchronized void showConnectionError() {
-        dismissStatusTickerIfShowing();
-        statusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.fragment_retry_login_retry_title, view ->
-                        ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer());
-        statusTicker.show();
+    public void showConnectionError() {
+        if (statusTicker.get() != null && statusTicker.get().isShown()) {
+            statusTicker.get().setText(R.string.fragment_retry_login_error_title)
+                .setAction(R.string.fragment_retry_login_retry_title, view -> {
+                            statusTicker.set(null);
+                            showConnecting();
+                            ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
+                        });
+        } else {
+            Snackbar newStatusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
+                    R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.fragment_retry_login_retry_title, view -> {
+                        statusTicker.set(null);
+                        showConnecting();
+                        ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
+                    });
+            statusTicker.set(newStatusTicker);
+            statusTicker.get().show();
+        }
     }
 
     @Override
-    public synchronized void showConnecting() {
-        dismissStatusTickerIfShowing();
-        statusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE);
-        statusTicker.show();
+    public void showConnecting() {
+        if (statusTicker.get() != null && statusTicker.get().isShown()) {
+            statusTicker.get().setText(R.string.server_config_activity_authenticating);
+        } else {
+            Snackbar newStatusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
+                    R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE);
+            statusTicker.set(newStatusTicker);
+            statusTicker.get().show();
+        }
     }
 
     @Override
-    public synchronized void showConnectionOk() {
+    public void showConnectionOk() {
         dismissStatusTickerIfShowing();
     }
 
     private void dismissStatusTickerIfShowing() {
         if (statusTicker != null) {
-            statusTicker.dismiss();
+            statusTicker.get().dismiss();
         }
     }
 
@@ -334,7 +353,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         Fragment fragment = getSupportFragmentManager().findFragmentById(getLayoutContainerForFragment());
         if (fragment != null && fragment instanceof RoomFragment) {
             RoomFragment roomFragment = (RoomFragment) fragment;
-            roomFragment.loadMessages();
+            roomFragment.loadMissedMessages();
         }
     }
 

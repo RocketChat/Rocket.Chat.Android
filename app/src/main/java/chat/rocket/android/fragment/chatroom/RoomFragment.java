@@ -716,7 +716,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
         }
     }
 
-    public void loadMessages() {
-        presenter.loadMessages();
+    public void loadMissedMessages() {
+        presenter.loadMissedMessages();
     }
 }
