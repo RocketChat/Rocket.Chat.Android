@@ -7,6 +7,7 @@ import java.util.List;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.RaixPushHelper;
 import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.internal.StreamRoomMessageManager;
 import chat.rocket.persistence.realm.RealmHelper;
 import chat.rocket.persistence.realm.models.internal.GetUsersOfRoomsProcedure;
@@ -75,6 +76,8 @@ public class SessionObserver extends AbstractModelObserver<RealmSession> {
     pushHelper
         .pushSetUser(new RocketChatCache(context).getOrCreatePushId())
         .continueWith(new LogIfError());
+
+    ConnectivityManager.getInstance(context).notifySessionEstablished(hostname);
   }
 
   @DebugLog
