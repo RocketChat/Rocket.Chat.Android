@@ -15,7 +15,7 @@
         android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/middle_container"
+        app:layout_constraintRight_toLeftOf="@+id/middle_container"
         app:layout_constraintTop_toTopOf="parent"
         app:roundAsCircle="true" />
 
@@ -25,8 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toRightOf="@id/image_user_avatar"
-        app:layout_constraintRight_toLeftOf="@id/right_container">
+        app:layout_constraintLeft_toRightOf="@+id/image_user_avatar"
+        app:layout_constraintRight_toLeftOf="@+id/right_container">
 
         <TextView
             android:id="@+id/text_chat_name"
