@@ -28,4 +28,6 @@ public interface ConnectivityManagerApi {
     int getConnectivityState(@NonNull String hostname);
 
     void resetConnectivityStateList();
+
+    void notifySessionEstablished(String hostname);
 }

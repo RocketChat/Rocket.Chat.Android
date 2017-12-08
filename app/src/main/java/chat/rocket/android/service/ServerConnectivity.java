@@ -6,10 +6,10 @@ package chat.rocket.android.service;
 public class ServerConnectivity {
 
   public static final int STATE_CONNECTED = 1;
-
   public static final int STATE_DISCONNECTED = 2;
   public static final int STATE_CONNECTING = 3;
   /*package*/ static final int STATE_DISCONNECTING = 4;
+  public static final int STATE_SESSION_ESTABLISHED = 5;
   public static final ServerConnectivity CONNECTED = new ServerConnectivity(null, STATE_CONNECTED);
 
   public final String hostname;
