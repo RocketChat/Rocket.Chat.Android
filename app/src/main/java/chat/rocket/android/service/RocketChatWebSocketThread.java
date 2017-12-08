@@ -55,7 +55,6 @@ public class RocketChatWebSocketThread extends HandlerThread {
             ActiveUsersSubscriber.class,
             UserDataSubscriber.class,
             MethodCallObserver.class,
-            SessionObserver.class,
             LoadMessageProcedureObserver.class,
             GetUsersOfRoomsProcedureObserver.class,
             NewMessageObserver.class,
@@ -368,6 +367,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
 
     @DebugLog
     private void createObserversAndRegister() {
+        SessionObserver sessionObserver = new SessionObserver(appContext, hostname, realmHelper);
+        sessionObserver.register();
+        listeners.add(sessionObserver);
         for (Class clazz : REGISTERABLE_CLASSES) {
             try {
                 Constructor ctor = clazz.getConstructor(Context.class, String.class, RealmHelper.class);
