@@ -256,19 +256,11 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     public void showConnectionError() {
         if (statusTicker.get() != null && statusTicker.get().isShown()) {
             statusTicker.get().setText(R.string.fragment_retry_login_error_title)
-                    .setAction(R.string.fragment_retry_login_retry_title, view -> {
-                        statusTicker.set(null);
-                        showConnecting();
-                        ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
-                    });
+                    .setAction(R.string.fragment_retry_login_retry_title, view -> retryConnection());
         } else {
             Snackbar newStatusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
                     R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.fragment_retry_login_retry_title, view -> {
-                        statusTicker.set(null);
-                        showConnecting();
-                        ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
-                    });
+                    .setAction(R.string.fragment_retry_login_retry_title, view -> retryConnection());
             statusTicker.set(newStatusTicker);
             statusTicker.get().show();
         }
@@ -296,6 +288,11 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         if (statusTicker != null) {
             statusTicker.get().dismiss();
         }
+    }
+
+    private void retryConnection() {
+        statusTicker.set(null);
+        ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
     }
 
     @Override
