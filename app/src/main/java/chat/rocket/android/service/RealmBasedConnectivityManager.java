@@ -137,6 +137,12 @@ import io.reactivex.subjects.BehaviorSubject;
     }
 
     @Override
+    public void notifyRetryingConnection(String hostname) {
+        connectivitySubject.onNext(
+                new ServerConnectivity(hostname, ServerConnectivity.STATE_RETRYING_CONNECTION));
+    }
+
+    @Override
     public void notifySessionEstablished(String hostname) {
         serverConnectivityList.put(hostname, ServerConnectivity.STATE_SESSION_ESTABLISHED);
         connectivitySubject.onNext(

@@ -30,4 +30,8 @@ public interface ConnectivityManagerApi {
     void resetConnectivityStateList();
 
     void notifySessionEstablished(String hostname);
+
+    void notifyRetryingConnection(String hostname);
+
+    void notifyConnecting(String hostname);
 }
