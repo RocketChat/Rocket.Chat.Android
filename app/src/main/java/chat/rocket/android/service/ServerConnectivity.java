@@ -7,10 +7,11 @@ public class ServerConnectivity {
 
   public static final int STATE_CONNECTED = 1;
   public static final int STATE_DISCONNECTED = 2;
-  public static final int STATE_CONNECTING = 3;
-  /*package*/ static final int STATE_DISCONNECTING = 4;
+  /* package */ static final int STATE_CONNECTING = 3;
+  /* package */ static final int STATE_DISCONNECTING = 4;
   public static final int STATE_SESSION_ESTABLISHED = 5;
-  public static final ServerConnectivity CONNECTED = new ServerConnectivity(null, STATE_CONNECTED);
+  /* package */ static final int STATE_RETRYING_CONNECTION = 6;
+  /* package */ static final ServerConnectivity CONNECTED = new ServerConnectivity(null, STATE_CONNECTED);
 
   public final String hostname;
   public final int state;
@@ -46,8 +47,8 @@ public class ServerConnectivity {
   /**
    * This exception should be thrown when connection is lost during waiting for CONNECTED.
    */
-  public static class DisconnectedException extends Exception {
-    public DisconnectedException() {
+  /* package */static class DisconnectedException extends Exception {
+    /* package */DisconnectedException() {
       super("Disconnected");
     }
   }
