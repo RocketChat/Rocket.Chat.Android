@@ -26,8 +26,11 @@ class KeepAliveJob : Job() {
                     .schedule()
         }
 
-        fun cancel() {
-            JobManager.instance().cancelAllForTag(TAG)
+        fun cancelPendingJobRequests() {
+            val allJobRequests = JobManager.instance().getAllJobRequestsForTag(TAG)
+            allJobRequests.forEach { jobRequest ->
+                jobRequest.cancelAndEdit()
+            }
         }
     }
 
