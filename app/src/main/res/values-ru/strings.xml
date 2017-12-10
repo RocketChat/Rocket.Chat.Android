@@ -17,11 +17,11 @@
     <string name="fragment_room_list_favorite_message_title">Избранные сообщения (%с)</string>
     <string name="fragment_room_list_file_list_title">Список файлов (%с)</string>
     <string name="fragment_room_list_member_list_title">Список (%с)</string>
-    <string name="fragment_room_list_could_not_load_your_request">Не удалось загрузить запрос.\n%s.</string>
-    <string name="fragment_room_list_no_pinned_message_to_show">Не прикололо сообщение, чтобы показать,</string>
-    <string name="fragment_room_list_no_favorite_message_to_show">Нет любимого сообщения для отображения</string>
-    <string name="fragment_room_list_no_file_list_to_show">Список файлов для отображения отсутствует</string>
-    <string name="fragment_room_list_no_member_list_to_show">Не список, чтобы показать,</string>
+    <string name="fragment_room_list_could_not_load_your_request">Не удалось обработать запрос.\n%s.</string>
+    <string name="fragment_room_list_no_pinned_message_to_show">Нет закрепленных сообщений</string>
+    <string name="fragment_room_list_no_favorite_message_to_show">Нет избранных сообщений</string>
+    <string name="fragment_room_list_no_file_list_to_show">Нет файлов для показа</string>
+    <string name="fragment_room_list_no_member_list_to_show">Нет участников для отображения</string>
 
     <string name="start_of_conversation">Начало переписки</string>
     <string name="sending">Отправить</string>
