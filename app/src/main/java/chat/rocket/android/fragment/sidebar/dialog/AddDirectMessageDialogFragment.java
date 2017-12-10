@@ -68,7 +68,7 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 this::setupView,
-                Logger::report
+                Logger.INSTANCE::report
             )
     );
 
@@ -77,7 +77,7 @@ public class AddDirectMessageDialogFragment extends AbstractAddRoomDialogFragmen
         .compose(bindToLifecycle())
         .subscribe(
             buttonAddDirectMessage::setEnabled,
-            Logger::report
+            Logger.INSTANCE::report
         );
 
     buttonAddDirectMessage.setOnClickListener(view -> createRoom());

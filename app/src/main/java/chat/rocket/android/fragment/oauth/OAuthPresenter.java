@@ -37,7 +37,7 @@ public class OAuthPresenter extends BasePresenter<OAuthContract.View>
                     view.close();
                   }
                 },
-                Logger::report
+                Logger.INSTANCE::report
             )
     );
   }

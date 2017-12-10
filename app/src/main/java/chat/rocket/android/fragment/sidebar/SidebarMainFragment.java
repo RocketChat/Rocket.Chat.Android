@@ -239,7 +239,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
                 .compose(bindToLifecycle())
                 .subscribe(
                         this::showUserActionContainer,
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
     }
 

@@ -211,7 +211,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 this::updateHostnameIfNeeded,
-                Logger::report
+                Logger.INSTANCE::report
             )
     );
 
@@ -223,7 +223,7 @@ abstract class AbstractAuthedActivity extends AbstractFragmentActivity {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 this::updateRoomIdIfNeeded,
-                Logger::report
+                Logger.INSTANCE::report
             )
     );
   }

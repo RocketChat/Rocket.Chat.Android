@@ -102,7 +102,7 @@ public class MessagePopup {
                                     .create()
                                     .show();
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
         compositeDisposable.add(disposable);
     }

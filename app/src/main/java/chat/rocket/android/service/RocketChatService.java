@@ -99,7 +99,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
         return Single.defer(() -> {
             webSocketThreadLock.acquire();
             int connectivityState = ConnectivityManager.getInstance(getApplicationContext()).getConnectivityState(hostname);
-            boolean isDisconnected = connectivityState != ServerConnectivity.STATE_CONNECTED;
+            boolean isDisconnected = connectivityState < ServerConnectivity.STATE_CONNECTED ;
             if (currentWebSocketThread != null && existsThreadForHostname(hostname) && !isDisconnected) {
                 webSocketThreadLock.release();
                 return Single.just(currentWebSocketThread);
@@ -117,7 +117,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
                                         .doOnError(throwable -> {
                                             currentWebSocketThread = null;
                                             RCLog.e(throwable);
-                                            Logger.report(throwable);
+                                            Logger.INSTANCE.report(throwable);
                                             webSocketThreadLock.release();
                                         })
                         );
@@ -131,7 +131,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
                     .doOnError(throwable -> {
                         currentWebSocketThread = null;
                         RCLog.e(throwable);
-                        Logger.report(throwable);
+                        Logger.INSTANCE.report(throwable);
                         webSocketThreadLock.release();
                     });
         });

@@ -66,7 +66,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
                   view.closeView();
               }
             },
-            Logger::report
+            Logger.INSTANCE::report
         );
 
     addSubscription(subscription);

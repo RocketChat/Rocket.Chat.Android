@@ -47,7 +47,7 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
               }
             },
             throwable -> {
-              Logger.report(throwable);
+              Logger.INSTANCE.report(throwable);
               view.showConnectionError();
             });
     addSubscription(subscription);

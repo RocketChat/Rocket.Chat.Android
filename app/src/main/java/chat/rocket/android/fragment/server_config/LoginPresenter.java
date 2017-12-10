@@ -53,7 +53,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 publicSettingOptional -> doLogin(username, password, publicSettingOptional),
-                                Logger::report
+                                Logger.INSTANCE::report
                         )
         );
     }
@@ -65,7 +65,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View>
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 loginServiceConfigurations -> view.showLoginServices(loginServiceConfigurations),
-                                Logger::report
+                                Logger.INSTANCE::report
                         )
         );
     }

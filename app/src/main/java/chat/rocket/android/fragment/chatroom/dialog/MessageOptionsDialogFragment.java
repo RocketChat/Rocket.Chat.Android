@@ -132,7 +132,7 @@ public class MessageOptionsDialogFragment extends BottomSheetDialogFragment {
               ((TextView) bottomSheetDialog.findViewById(R.id.message_options_info))
                   .setText(R.string.message_options_no_message_info);
 
-              Logger.report(throwable);
+              Logger.INSTANCE.report(throwable);
             }
         );
 

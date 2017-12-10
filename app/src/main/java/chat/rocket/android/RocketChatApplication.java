@@ -59,7 +59,7 @@ public class RocketChatApplication extends MultiDexApplication {
             if (BuildConfig.DEBUG) {
                 e.printStackTrace();
             }
-            Logger.report(e);
+            Logger.INSTANCE.report(e);
         });
 
         instance = this;

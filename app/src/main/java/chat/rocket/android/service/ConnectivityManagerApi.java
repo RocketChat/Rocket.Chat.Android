@@ -31,7 +31,5 @@ public interface ConnectivityManagerApi {
 
     void notifySessionEstablished(String hostname);
 
-    void notifyRetryingConnection(String hostname);
-
     void notifyConnecting(String hostname);
 }

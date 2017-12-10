@@ -97,12 +97,13 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         subscribeToNetworkChanges();
         subscribeToUnreadCount();
         subscribeToSession();
-        setUserOnline();
     }
 
     @Override
     public void release() {
-        setUserAway();
+        if (rocketChatCache.getSessionToken() != null) {
+            setUserAway();
+        }
 
         super.release();
     }
@@ -120,7 +121,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                                 view.showHome();
                             }
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -183,7 +184,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pair -> view.showUnreadCount(pair.first, pair.second),
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -213,8 +214,9 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                             }
                             // TODO: Should we remove below and above calls to view?
                             // view.showConnectionOk();
+                            rocketChatCache.setSessionToken(session.getToken());
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -234,6 +236,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                                     view.showConnectionError();
                                 }
                             } else if (connectivity.state == ServerConnectivity.STATE_SESSION_ESTABLISHED) {
+                                setUserOnline();
                                 view.refreshRoom();
                                 view.showConnectionOk();
                             } else {

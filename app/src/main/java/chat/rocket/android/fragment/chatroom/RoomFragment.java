@@ -540,7 +540,7 @@ public class RoomFragment extends AbstractChatRoomFragment implements
             inputContentInfo.releasePermission();
         } catch (Exception e) {
             RCLog.e(e);
-            Logger.report(e);
+            Logger.INSTANCE.report(e);
         }
 
         return true;

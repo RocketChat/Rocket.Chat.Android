@@ -1,5 +1,6 @@
 package chat.rocket.android.service
 
+import chat.rocket.android.ConnectionStatusManager
 import chat.rocket.android.RocketChatApplication
 import chat.rocket.android.RocketChatCache
 import com.evernote.android.job.Job
@@ -41,7 +42,15 @@ class KeepAliveJob : Job() {
     }
 
     override fun onRunJob(params: Params): Result {
-        connectivityManager.keepAliveServer()
+        if (ConnectionStatusManager.transitionCount() == 0L) {
+            return Result.SUCCESS
+        }
+        when (ConnectionStatusManager.currentState()) {
+            ConnectionStatusManager.State.CONNECTING, ConnectionStatusManager.State.ONLINE -> {
+                cancel()
+            }
+            else -> connectivityManager.keepAliveServer()
+        }
         return Result.SUCCESS
     }
 }

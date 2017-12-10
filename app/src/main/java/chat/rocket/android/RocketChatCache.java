@@ -2,6 +2,7 @@ package chat.rocket.android;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.hadisatrio.optional.Optional;
 
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.UUID;
 
 import chat.rocket.android.helper.Logger;
-import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.core.utils.Pair;
 import io.reactivex.BackpressureStrategy;
@@ -35,8 +35,10 @@ public class RocketChatCache {
     private static final String KEY_PUSH_ID = "KEY_PUSH_ID";
     private static final String KEY_HOSTNAME_LIST = "KEY_HOSTNAME_LIST";
     private static final String KEY_OPENED_ROOMS = "KEY_OPENED_ROOMS";
+    private static final String KEY_SESSION_TOKEN = "KEY_SESSION_TOKEN";
 
     private Context context;
+    private String session;
 
     public RocketChatCache(Context context) {
         this.context = context.getApplicationContext();
@@ -239,7 +241,7 @@ public class RocketChatCache {
             return jsonObject.optString(getSelectedServerHostname(), null);
         } catch (JSONException e) {
             RCLog.e(e);
-            Logger.report(e);
+            Logger.INSTANCE.report(e);
         }
         return null;
     }
@@ -251,7 +253,7 @@ public class RocketChatCache {
             setString(KEY_SELECTED_ROOM_ID, jsonObject.toString());
         } catch (JSONException e) {
             RCLog.e(e);
-            Logger.report(e);
+            Logger.INSTANCE.report(e);
         }
     }
 
@@ -328,8 +330,41 @@ public class RocketChatCache {
                     null : selectedRoomIdJsonObject.toString();
             setString(KEY_SELECTED_ROOM_ID, result);
         } catch (JSONException e) {
-            Logger.report(e);
+            Logger.INSTANCE.report(e);
             RCLog.e(e);
         }
+    }
+
+    public void setSessionToken(String sessionToken) {
+        String selectedServerHostname = getSelectedServerHostname();
+        if (selectedServerHostname == null) {
+            throw new IllegalStateException("Trying to set sessionToken to null hostname");
+        }
+        String sessions = getSessionToken();
+        try {
+            JSONObject jsonObject = (sessions == null) ? new JSONObject() : new JSONObject(sessions);
+            jsonObject.put(selectedServerHostname, sessionToken);
+            setString(KEY_SESSION_TOKEN, jsonObject.toString());
+        } catch (JSONException e) {
+            RCLog.e(e);
+        }
+    }
+
+    public String getSessionToken() {
+        String selectedServerHostname = getSelectedServerHostname();
+        String sessions = getString(KEY_SESSION_TOKEN, null);
+        if (sessions == null || selectedServerHostname == null) {
+            return null;
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(sessions);
+            if (jsonObject.has(selectedServerHostname)) {
+                return jsonObject.optString(selectedServerHostname, null);
+            }
+        } catch (JSONException e) {
+            RCLog.e(e);
+        }
+
+        return null;
     }
 }

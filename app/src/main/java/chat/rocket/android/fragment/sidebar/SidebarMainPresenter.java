@@ -80,7 +80,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         )
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pair -> view.show(pair.first.orNull()), Logger::report);
+                .subscribe(pair -> view.show(pair.first.orNull()), Logger.INSTANCE::report);
 
         addSubscription(subscription);
     }
@@ -142,7 +142,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     public void onLogout(Continuation<Void, Object> continuation) {
         methodCallHelper.logout().continueWith(task -> {
             if (task.isFaulted()) {
-                Logger.report(task.getError());
+                Logger.INSTANCE.report(task.getError());
                 return Task.forError(task.getError());
             }
             return task.onSuccess(continuation);
@@ -183,7 +183,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
                 .distinctUntilChanged()
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::processRooms, Logger::report);
+                .subscribe(this::processRooms, Logger.INSTANCE::report);
         addSubscription(subscription);
     }
 
@@ -227,7 +227,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
                 .distinctUntilChanged()
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::processUsers, Logger::report);
+                .subscribe(this::processUsers, Logger.INSTANCE::report);
         addSubscription(subscription);
     }
 

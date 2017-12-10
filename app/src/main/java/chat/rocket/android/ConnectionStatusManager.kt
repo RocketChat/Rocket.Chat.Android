@@ -1,5 +1,6 @@
 package chat.rocket.android
 
+import chat.rocket.android.extensions.printStackTraceOnDebug
 import chat.rocket.android.service.KeepAliveJob
 import unquietcode.tools.esm.EnumStateMachine
 import unquietcode.tools.esm.TransitionException
@@ -19,6 +20,9 @@ object ConnectionStatusManager {
         stateMachine.addTransitions(State.CONNECTING, State.ONLINE, State.OFFLINE)
         stateMachine.addTransitions(State.ONLINE, State.OFFLINE)
     }
+
+    @Synchronized
+    fun transitionCount() = stateMachine.transitionCount()
 
     @Synchronized
     fun currentState() = stateMachine.currentState()
@@ -47,7 +51,7 @@ object ConnectionStatusManager {
             callback.onTransitioned(true)
         } catch (e: TransitionException) {
             if (DEBUG) {
-                e.printStackTrace()
+                e.printStackTraceOnDebug()
             }
             callback.onTransitioned(false)
         }

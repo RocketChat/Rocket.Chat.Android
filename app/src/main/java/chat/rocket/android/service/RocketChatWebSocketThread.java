@@ -29,7 +29,6 @@ import chat.rocket.android.service.observer.FileUploadingWithUfsObserver;
 import chat.rocket.android.service.observer.GcmPushRegistrationObserver;
 import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
-import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
@@ -167,7 +166,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     @DebugLog
     /* package */ Single<Boolean> keepAlive() {
         return checkIfConnectionAlive()
-                .flatMap(alive -> connectWithExponentialBackoff());
+                .flatMap(alive -> alive ? Single.just(true) : connectWithExponentialBackoff());
     }
 
     @DebugLog

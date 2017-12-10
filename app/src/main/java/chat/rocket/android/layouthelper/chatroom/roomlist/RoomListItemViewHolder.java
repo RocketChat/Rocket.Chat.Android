@@ -101,7 +101,7 @@ public class RoomListItemViewHolder extends RecyclerView.ViewHolder {
         break;
       default: {
         itemView.showPrivateChannelIcon();
-        Logger.report(new AssertionError("Room type doesn't satisfies the method documentation. Room type is:" + roomType));
+        Logger.INSTANCE.report(new AssertionError("Room type doesn't satisfies the method documentation. Room type is:" + roomType));
       }
     }
   }

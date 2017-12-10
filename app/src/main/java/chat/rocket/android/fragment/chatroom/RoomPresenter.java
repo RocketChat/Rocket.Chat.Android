@@ -87,7 +87,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                                 connectivityManagerApi.keepAliveServer();
                             }
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -105,7 +105,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                                 connectivityManagerApi.keepAliveServer();
                             }
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -152,7 +152,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                                 view.onReply(absoluteUrl, buildReplyOrQuoteMarkdown(baseUrl, message, justQuote), message);
                             }
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -217,7 +217,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                         },
                         throwable -> {
                             view.enableMessageInput();
-                            Logger.report(throwable);
+                            Logger.INSTANCE.report(throwable);
                         }
                 );
 
@@ -251,7 +251,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                         },
                         throwable -> {
                             view.enableMessageInput();
-                            Logger.report(throwable);
+                            Logger.INSTANCE.report(throwable);
                         }
                 );
 
@@ -277,7 +277,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         count -> view.showUnreadCount(count),
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -295,7 +295,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                 .subscribe(
                         room -> methodCallHelper.readMessages(room.getRoomId())
                                 .continueWith(new LogIfError()),
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -312,7 +312,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                 .map(Optional::get)
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::processRoom, Logger::report);
+                .subscribe(this::processRoom, Logger.INSTANCE::report);
         addSubscription(subscription);
     }
 
@@ -332,7 +332,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                 .map(Optional::get)
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view::showUserStatus, Logger::report);
+                .subscribe(view::showUserStatus, Logger.INSTANCE::report);
         addSubscription(disposable);
     }
 
@@ -351,7 +351,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                                     syncState == SyncState.SYNCED || syncState == SyncState.FAILED
                             );
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -378,7 +378,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         view::showMessages,
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -403,7 +403,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                                 view.manualLoadImages();
                             }
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -415,7 +415,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         it -> view.setupWith(it.orNull()),
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
