@@ -33,6 +33,7 @@ dependencies {
     api project(':log-wrapper')
     api project(':rocket-chat-core')
     implementation extraDependencies.rxJava
+    implementation extraDependencies.rxKotlin
     implementation extraDependencies.boltTask
     implementation supportDependencies.annotation
     implementation supportDependencies.designSupportLibrary

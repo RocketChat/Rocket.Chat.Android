@@ -1,7 +1,6 @@
 package chat.rocket.android.fragment.server_config
 
-import com.hadisatrio.optional.Optional
-
+import bolts.Continuation
 import bolts.Task
 import chat.rocket.android.BackgroundLooper
 import chat.rocket.android.api.MethodCallHelper
@@ -13,7 +12,9 @@ import chat.rocket.core.PublicSettingsConstants
 import chat.rocket.core.models.PublicSetting
 import chat.rocket.core.repositories.LoginServiceConfigurationRepository
 import chat.rocket.core.repositories.PublicSettingRepository
+import com.hadisatrio.optional.Optional
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
 
 class LoginPresenter(private val loginServiceConfigurationRepository: LoginServiceConfigurationRepository,
                      private val publicSettingRepository: PublicSettingRepository,
@@ -36,9 +37,9 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
                 publicSettingRepository.getById(PublicSettingsConstants.LDAP.ENABLE)
                         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                { publicSettingOptional -> doLogin(username, password, publicSettingOptional) },
-                                Consumer<Throwable> { Logger.report(it) }
+                        .subscribeBy(
+                                onSuccess = { publicSettingOptional -> doLogin(username, password, publicSettingOptional) },
+                                onError = { Logger.report(it) }
                         )
         )
     }
@@ -48,28 +49,32 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
                 loginServiceConfigurationRepository.all
                         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                { loginServiceConfigurations -> view.showLoginServices(loginServiceConfigurations) },
-                                Consumer<Throwable> { Logger.report(it) }
+                        .subscribeBy(
+                                onNext = { loginServiceConfigurations -> view.showLoginServices(loginServiceConfigurations) },
+                                onError = { Logger.report(it) }
                         )
         )
     }
 
     private fun doLogin(username: String, password: String, optional: Optional<PublicSetting>) {
         call(username, password, optional)
-                .continueWith<Any>({ task ->
-                    if (task.isFaulted()) {
-                        view.hideLoader()
+                .continueWith(object : Continuation<Void, Any?> {
+                    override fun then(task: Task<Void>?): Any? {
+                        if (task != null && task.isFaulted()) {
+                            view.hideLoader()
 
-                        val error = task.getError()
+                            val error = task.getError()
 
-                        if (error is TwoStepAuthException) {
-                            view.showTwoStepAuth()
-                        } else {
-                            view.showError(error.message)
+                            error?.let {
+                                if (error is TwoStepAuthException) {
+                                    view.showTwoStepAuth()
+                                } else {
+                                    view.showError(error.message)
+                                }
+                            }
                         }
+                        return null
                     }
-                    null
                 }, Task.UI_THREAD_EXECUTOR)
     }
 

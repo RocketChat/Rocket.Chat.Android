@@ -4,6 +4,7 @@ apply plugin: 'java'
 
 dependencies {
     compile extraDependencies.rxJava
+    compile extraDependencies.rxKotlin
     compile extraDependencies.optional
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$rootProject.ext.kotlinVersion"
     compile 'com.google.code.findbugs:jsr305:3.0.2'

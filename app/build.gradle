@@ -113,6 +113,7 @@ dependencies {
     api project(':persistence-realm')
     implementation extraDependencies.okHTTP
     implementation extraDependencies.rxJava
+    implementation extraDependencies.rxKotlin
     implementation extraDependencies.boltTask
     implementation supportDependencies.multidex
     implementation supportDependencies.designSupportLibrary
