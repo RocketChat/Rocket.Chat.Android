@@ -98,7 +98,6 @@ play {
     track = "${track}"
 }
 ext {
-    playLibVersion = '11.6.0'
     stethoVersion = '1.5.0'
     stethoOkhttp3Version = '1.5.0'
     stethoRealmVersion = '2.2.2'
@@ -122,9 +121,9 @@ dependencies {
     implementation rxbindingDependencies.rxBindingSupport
     implementation rxbindingDependencies.rxBindingAppcompact
     api "org.jetbrains.kotlin:kotlin-stdlib-jre8:$rootProject.ext.kotlinVersion"
-    implementation "com.google.firebase:firebase-core:$playLibVersion"
-    implementation "com.google.firebase:firebase-crash:$playLibVersion"
-    implementation "com.google.android.gms:play-services-gcm:$playLibVersion"
+    implementation "com.google.firebase:firebase-core:$rootProject.ext.playLibVersion"
+    implementation "com.google.firebase:firebase-crash:$rootProject.ext.playLibVersion"
+    implementation "com.google.android.gms:play-services-gcm:$rootProject.ext.playLibVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycleVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
@@ -136,7 +135,11 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    implementation(extraDependencies.crouton) {
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
     implementation extraDependencies.androidJob
+    implementation extraDependencies.jstate
     debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
     debugCompile "com.facebook.stetho:stetho-okhttp3:$stethoOkhttp3Version"
     debugCompile "com.uphyca:stetho_realm:$stethoRealmVersion"

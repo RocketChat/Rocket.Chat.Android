@@ -1,6 +1,7 @@
 ext {
     preDexLibs = "true" != System.getenv("CI")
     supportLibraryVersion = "27.0.1"
+    playLibVersion = '11.6.2'
     constraintLayoutVersion = "1.0.2"
     kotlinVersion = "1.2.0"
     okHttpVersion = "3.9.0"
@@ -23,7 +24,9 @@ ext {
             rxAndroid      : "io.reactivex.rxjava2:rxandroid:2.0.1",
             textDrawable   : "com.github.rocketchat:textdrawable:1.0.2",
             optional       : "com.hadisatrio:Optional:v1.0.1",
-            androidJob     : "com.evernote:android-job:1.2.1"
+            androidJob     : "com.evernote:android-job:1.2.1",
+            jstate         : "com.unquietcode.tools.jstate:jstate:2.1",
+            crouton        : "de.keyboardsurfer.android.widget:crouton:1.8.5@aar"
     ]
 
     rxbindingDependencies = [
