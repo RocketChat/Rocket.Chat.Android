@@ -16,7 +16,6 @@ import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.Logger;
 import chat.rocket.android.log.RCLog;
 import chat.rocket.android.service.ConnectivityManagerApi;
-import chat.rocket.android.service.KeepAliveJob;
 import chat.rocket.android.service.ServerConnectivity;
 import chat.rocket.android.shared.BasePresenter;
 import chat.rocket.android_ddp.DDPClient;
@@ -228,13 +227,10 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                 .subscribe(
                         connectivity -> {
                             if (connectivity.state == ServerConnectivity.STATE_CONNECTED) {
-                                KeepAliveJob.Companion.cancel();
                                 //TODO: notify almost connected or something like that.
 //                                view.showConnectionOk();
                             } else if (connectivity.state == ServerConnectivity.STATE_DISCONNECTED) {
-                                KeepAliveJob.Companion.cancel();
                                 if (connectivity.code == DDPClient.REASON_NETWORK_ERROR) {
-                                    KeepAliveJob.Companion.schedule();
                                     view.showConnectionError();
                                 }
                             } else if (connectivity.state == ServerConnectivity.STATE_SESSION_ESTABLISHED) {

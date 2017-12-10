@@ -80,7 +80,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
             }
 
             if (currentWebSocketThread != null) {
-                return currentWebSocketThread.terminate()
+                return currentWebSocketThread.terminate(false)
                         // after disconnection from server
                         .doAfterTerminate(() -> {
                             currentWebSocketThread = null;
@@ -106,7 +106,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
             }
 
             if (currentWebSocketThread != null) {
-                return currentWebSocketThread.terminate()
+                return currentWebSocketThread.terminate(isDisconnected)
                         .doAfterTerminate(() -> currentWebSocketThread = null)
                         .flatMap(terminated ->
                                 RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)

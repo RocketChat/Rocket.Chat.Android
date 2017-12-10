@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -20,6 +20,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import chat.rocket.android.ConnectionStatusManager;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
 import chat.rocket.android.RocketChatCache;
@@ -31,6 +32,7 @@ import chat.rocket.android.helper.KeyboardHelper;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.android.service.ConnectivityManagerApi;
 import chat.rocket.android.widget.RoomToolbar;
+import chat.rocket.android.widget.helper.DebouncingOnClickListener;
 import chat.rocket.android.widget.helper.FrescoHelper;
 import chat.rocket.core.interactors.CanCreateRoomInteractor;
 import chat.rocket.core.interactors.RoomInteractor;
@@ -41,6 +43,8 @@ import chat.rocket.persistence.realm.repositories.RealmPublicSettingRepository;
 import chat.rocket.persistence.realm.repositories.RealmRoomRepository;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
 import chat.rocket.persistence.realm.repositories.RealmUserRepository;
+import de.keyboardsurfer.android.widget.crouton.Configuration;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 import hugo.weaving.DebugLog;
 
 /**
@@ -50,7 +54,11 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
     private RoomToolbar toolbar;
     private SlidingPaneLayout pane;
     private MainContract.Presenter presenter;
-    private volatile AtomicReference<Snackbar> statusTicker = new AtomicReference<>();
+    private volatile AtomicReference<Crouton> croutonStatusTicker = new AtomicReference<>();
+    private View croutonView;
+    private ImageView croutonTryAgainImage;
+    private TextView croutonText;
+    private AnimatedVectorDrawableCompat tryAgainSpinnerAnimatedDrawable;
 
     @Override
     public int getLayoutContainerForFragment() {
@@ -63,6 +71,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.activity_main_toolbar);
         pane = findViewById(R.id.sliding_pane);
+        loadCroutonViewIfNeeded();
         setupToolbar();
     }
 
@@ -95,10 +104,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         if (presenter != null) {
             presenter.release();
         }
-        // Dismiss any status ticker
-        if (statusTicker.get() != null) {
-            statusTicker.get().dismiss();
-        }
+        Crouton.cancelAllCroutons();
 
         super.onPause();
     }
@@ -254,44 +260,80 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     @Override
     public void showConnectionError() {
-        if (statusTicker.get() != null && statusTicker.get().isShown()) {
-            statusTicker.get().setText(R.string.fragment_retry_login_error_title)
-                    .setAction(R.string.fragment_retry_login_retry_title, view -> retryConnection());
-        } else {
-            Snackbar newStatusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                    R.string.fragment_retry_login_error_title, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.fragment_retry_login_retry_title, view -> retryConnection());
-            statusTicker.set(newStatusTicker);
-            statusTicker.get().show();
-        }
+        ConnectionStatusManager.INSTANCE.setConnectionError(this::showConnectionErrorCrouton);
     }
 
     @Override
     public void showConnecting() {
-        if (statusTicker.get() != null && statusTicker.get().isShown()) {
-            statusTicker.get().setText(R.string.server_config_activity_authenticating)
-                .setAction(null, null);
-        } else {
-            Snackbar newStatusTicker = Snackbar.make(findViewById(getLayoutContainerForFragment()),
-                    R.string.server_config_activity_authenticating, Snackbar.LENGTH_INDEFINITE);
-            statusTicker.set(newStatusTicker);
-            statusTicker.get().show();
-        }
+        ConnectionStatusManager.INSTANCE.setConnecting(this::showConnectingCrouton);
     }
 
     @Override
     public void showConnectionOk() {
-        dismissStatusTickerIfShowing();
+        ConnectionStatusManager.INSTANCE.setOnline(this::dismissStatusTickerIfShowing);
     }
 
-    private void dismissStatusTickerIfShowing() {
-        if (statusTicker != null) {
-            statusTicker.get().dismiss();
+    private void showConnectingCrouton(boolean success) {
+        if (success) {
+            croutonText.setText(R.string.server_config_activity_authenticating);
+            croutonTryAgainImage.setOnClickListener(null);
+            tryAgainSpinnerAnimatedDrawable.start();
+            Crouton.cancelAllCroutons();
+            updateCrouton();
+            croutonStatusTicker.get().show();
+        }
+    }
+
+    private void showConnectionErrorCrouton(boolean success) {
+        if (success) {
+            tryAgainSpinnerAnimatedDrawable.stop();
+            croutonText.setText(R.string.fragment_retry_login_error_title);
+
+            croutonTryAgainImage.setOnClickListener(new DebouncingOnClickListener() {
+                @Override
+                public void doClick(View v) {
+                    retryConnection();
+                }
+            });
+
+            Crouton.cancelAllCroutons();
+            updateCrouton();
+            croutonStatusTicker.get().show();
+        }
+    }
+
+    private void loadCroutonViewIfNeeded() {
+        if (croutonView == null) {
+            croutonView = LayoutInflater.from(this).inflate(R.layout.crouton_status_ticker, null);
+            croutonTryAgainImage = croutonView.findViewById(R.id.try_again_image);
+            croutonText = croutonView.findViewById(R.id.text_view_status);
+            tryAgainSpinnerAnimatedDrawable =
+                    AnimatedVectorDrawableCompat.create(this, R.drawable.ic_loading_animated);
+            croutonTryAgainImage.setImageDrawable(tryAgainSpinnerAnimatedDrawable);
+
+            updateCrouton();
+        }
+    }
+
+    private void updateCrouton() {
+        Configuration configuration = new Configuration.Builder()
+                .setDuration(Configuration.DURATION_INFINITE).build();
+
+        Crouton crouton = Crouton.make(this, croutonView, getLayoutContainerForFragment())
+                .setConfiguration(configuration);
+
+        croutonStatusTicker.set(crouton);
+    }
+
+    private void dismissStatusTickerIfShowing(boolean success) {
+        if (success && croutonStatusTicker.get() != null) {
+            croutonStatusTicker.get().hide();
         }
     }
 
     private void retryConnection() {
-        statusTicker.set(null);
+        croutonStatusTicker.set(null);
+        showConnecting();
         ConnectivityManager.getInstance(getApplicationContext()).keepAliveServer();
     }
 
