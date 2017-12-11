@@ -1,10 +1,7 @@
 package chat.rocket.android.dagger.module
 
 import chat.rocket.android.app.MainActivity
-import chat.rocket.android.authentication.di.AuthenticationModule
-import chat.rocket.android.authentication.di.LoginFragmentProvider
-import chat.rocket.android.authentication.di.ServerFragmentProvider
-import chat.rocket.android.authentication.di.SignupFragmentProvider
+import chat.rocket.android.authentication.di.*
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.dagger.scope.PerActivity
 import dagger.Module
@@ -18,7 +15,8 @@ abstract class ActivityBuilder {
         AuthenticationModule::class,
         LoginFragmentProvider::class,
         ServerFragmentProvider::class,
-        SignupFragmentProvider::class
+        SignupFragmentProvider::class,
+        TwoFAFragmentProvider::class
     ))
     abstract fun bindAuthenticationActivity(): AuthenticationActivity
 

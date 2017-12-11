@@ -1,7 +1,6 @@
 package chat.rocket.android.authentication.presentation
 
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
-import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
@@ -13,7 +12,7 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
-class LoginPresenter @Inject constructor(private val view: LoginView,
+class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                                          private val navigator: AuthenticationNavigator,
                                          private val okHttpClient: OkHttpClient,
                                          private val logger: PlatformLogger,
@@ -28,24 +27,18 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         platformLogger = logger
     }
 
-    fun authenticate(username: String, password: String) {
+    fun authenticate(username: String, password: String, pin: String) {
         // TODO - validate input
 
         job = launch(UI) {
             view.showProgress()
             try {
-                val token = client.login(username, password)
+                val token = client.login(username, password, pin)
 
                 view.hideProgress()
                 navigator.toChatList()
             } catch (ex: RocketChatException) {
                 view.hideProgress()
-                when(ex) {
-                    is RocketChatAuthException ->
-                        if (ex.error?.contentEquals("totp-required") == true) {
-                            navigator.toTwoFA(navigator.currentServer!!, username, password)
-                        }
-                }
                 view.onLoginError(ex.message)
             }
         }

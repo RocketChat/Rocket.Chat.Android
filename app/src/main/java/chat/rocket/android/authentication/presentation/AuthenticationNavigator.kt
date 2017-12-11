@@ -6,6 +6,7 @@ import chat.rocket.android.app.MainActivity
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.authentication.ui.LoginFragment
 import chat.rocket.android.authentication.ui.SignupFragment
+import chat.rocket.android.authentication.ui.TwoFAFragment
 import chat.rocket.android.util.addFragmentBackStack
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
@@ -26,7 +27,15 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         activity.finish()
     }
 
+    fun toTwoFA(server: String, username: String, password: String) {
+        currentServer = server
+        activity.addFragmentBackStack("twoFAFragment", R.id.fragment_container) {
+            TwoFAFragment.newInstance(server, username, password)
+        }
+    }
+
     fun toSignUp(server: String) {
+        currentServer = server
         activity.addFragmentBackStack("signupFragment", R.id.fragment_container) {
             SignupFragment.newInstance(server)
         }
