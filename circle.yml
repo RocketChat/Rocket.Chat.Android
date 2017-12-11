@@ -35,6 +35,7 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter extra-android-m2repository,extra-android-support
     - echo y | android update sdk --no-ui --all --filter extra-google-m2repository,extra-google-google_play_services
     - echo y | android update sdk --no-ui --all --filter build-tools-27.0.0
+    - yes | sdkmanager --licenses  
   cache_directories:
     - /usr/local/android-sdk-linux/tools
     - /usr/local/android-sdk-linux/build-tools/27.0.0
