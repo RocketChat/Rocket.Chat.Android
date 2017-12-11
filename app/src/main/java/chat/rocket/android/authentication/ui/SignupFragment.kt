@@ -1,18 +1,49 @@
 package chat.rocket.android.authentication.ui
 
 import DrawableHelper
+import android.app.ProgressDialog
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
+import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.app.KeyboardHelper
+import chat.rocket.android.authentication.presentation.SignupPresenter
+import chat.rocket.android.authentication.presentation.SignupView
+import chat.rocket.android.util.content
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
+import javax.inject.Inject
 
-class SignUpFragment : Fragment() {
+class SignupFragment : Fragment(), SignupView {
 
     companion object {
-        fun newInstance() = SignUpFragment()
+        private const val SERVER_URL = "server_url"
+
+        fun newInstance(url: String) = SignupFragment().apply {
+            arguments = Bundle(1).apply {
+                putString(SERVER_URL, url)
+            }
+        }
+    }
+
+    @Inject
+    lateinit var presenter: SignupPresenter
+    var progress: ProgressDialog? = null
+    lateinit var serverUrl: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
+
+        // TODO - research a better way to initialize parameters on fragments.
+        serverUrl = arguments?.getString(SERVER_URL) ?: "https://open.rocket.chat"
+    }
+
+    override fun onDestroy() {
+        presenter.unbind()
+        super.onDestroy()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_sign_up, container, false)
@@ -27,6 +58,15 @@ class SignUpFragment : Fragment() {
         }
 
         setupGlobalLayoutListener()
+
+        button_sign_up.setOnClickListener {
+            val email = text_email.content
+            val name = text_name.content
+            val username = text_username.content
+            val password = text_password.content
+
+            presenter.signup(email, name, username, password)
+        }
     }
 
     override fun onDestroyView() {
@@ -59,4 +99,22 @@ class SignUpFragment : Fragment() {
             text_new_user_agreement.visibility = View.VISIBLE
         }
     }
+
+    override fun showProgress() {
+        // TODO - change for a proper progress indicator
+        progress = ProgressDialog.show(activity, "Authenticating", "Registering user")
+    }
+
+    override fun hideProgress() {
+        progress?.apply {
+            cancel()
+        }
+        progress = null
+    }
+
+    override fun onSignupError(message: String?) {
+        // TODO - show a proper error message
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
+    }
+
 }

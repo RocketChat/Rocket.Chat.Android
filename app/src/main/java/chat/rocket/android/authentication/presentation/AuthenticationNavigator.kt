@@ -5,7 +5,7 @@ import chat.rocket.android.R
 import chat.rocket.android.app.MainActivity
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.authentication.ui.LoginFragment
-import chat.rocket.android.authentication.ui.SignUpFragment
+import chat.rocket.android.authentication.ui.SignupFragment
 import chat.rocket.android.util.addFragmentBackStack
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
@@ -18,7 +18,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         }
     }
 
-    fun toChatRoom() {
+    fun toChatList() {
         val chatRoom = Intent(activity, MainActivity::class.java).apply {
             //TODO any parameter to pass
         }
@@ -26,9 +26,9 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         activity.finish()
     }
 
-    fun toSignUp() {
+    fun toSignUp(server: String) {
         activity.addFragmentBackStack("signupFragment", R.id.fragment_container) {
-            SignUpFragment.newInstance()
+            SignupFragment.newInstance(server)
         }
     }
 }
