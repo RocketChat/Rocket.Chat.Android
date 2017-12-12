@@ -1,0 +1,86 @@
+<resources>
+    <string name="app_name">Rocket.Chat+</string>
+    <string name="fragment_sidebar_main_favorite_title">Избранное</string>
+    <string name="fragment_sidebar_main_channels_title">Каналы</string>
+    <string name="fragment_sidebar_main_direct_messages_title">Личные сообщения</string>
+    <string name="fragment_sidebar_main_livechat_title">Чат</string>
+    <string name="user_status_online">Онлайн</string>
+    <string name="user_status_away">Отошел</string>
+    <string name="user_status_busy">Занят</string>
+    <string name="user_status_invisible">Невидимый</string>
+    <string name="fragment_sidebar_main_logout_title">Выход</string>
+    <string name="dialog_add_channel_name">Название</string>
+    <string name="dialog_add_channel_private">Закрытый</string>
+    <string name="dialog_add_channel_read_only">Только для чтения</string>
+
+    <string name="fragment_room_list_pinned_message_title">Закрепленные сообщения (%s)</string>
+    <string name="fragment_room_list_favorite_message_title">Избранные сообщения (%s)</string>
+    <string name="fragment_room_list_file_list_title">Список файлов (%s)</string>
+    <string name="fragment_room_list_member_list_title">Список (%s)</string>
+    <string name="fragment_room_list_could_not_load_your_request">Не удалось обработать запрос.\n%s.</string>
+    <string name="fragment_room_list_no_pinned_message_to_show">Нет закрепленных сообщений</string>
+    <string name="fragment_room_list_no_favorite_message_to_show">Нет избранных сообщений</string>
+    <string name="fragment_room_list_no_file_list_to_show">Нет файлов для показа</string>
+    <string name="fragment_room_list_no_member_list_to_show">Нет участников для отображения</string>
+
+    <string name="start_of_conversation">Начало переписки</string>
+    <string name="sending">Отправить</string>
+    <string name="not_synced">Не синхронизировано</string>
+    <string name="failed_to_sync">Ошибка синхронизации</string>
+    <string name="failed_to_delete">Ошибка удаления</string>
+    <string name="failed_to_delete_message">Сообщение не может быть удалено в это время. Повторите попытку позже</string>
+    <string name="resend">Повторить</string>
+    <string name="discard">Удалить</string>
+    <string name="ok">ОК</string>
+    <plurals name="fmt_dialog_view_latest_message_title">
+        <item quantity="one">%d новое сообщение</item>
+        <item quantity="few">%d новых сообщения</item>
+        <item quantity="many">%d новых сообщений</item>
+    </plurals>
+    <string name="dialog_view_latest_message_action">посмотреть</string>
+
+    <string name="file_uploading_title">Загрузка...</string>
+
+    <string name="dialog_user_registration_email">Почта</string>
+    <string name="dialog_user_registration_username">Имя пользователя</string>
+    <string name="sub_username">\@%s</string>
+    <string name="username">\@%s</string>
+    <string name="dialog_user_registration_password">Пароль</string>
+    <string name="fragment_home_welcome_message">Добро пожаловать в Чат.\nВыберите канал из меню.</string>
+    <string name="fragment_input_hostname_hostname">Адрес сервера</string>
+    <string name="fragment_input_hostname_server_hint">open.rocket.chat</string>
+    <string name="fragment_input_hostname_connect">Подключиться</string>
+    <string name="fragment_login_username_or_email">Имя пользователя или email</string>
+    <string name="fragment_login_password">Пароль</string>
+    <string name="fragment_login_sign_up">Зарегистрироваться</string>
+    <string name="fragment_login_sign_in">Войти</string>
+    <string name="fragment_retry_login_retry_title">Повторить</string>
+    <string name="fragment_retry_login_error_title">Ошибка соединения</string>
+    <string name="server_config_activity_authenticating">Вход...</string>
+    <string name="home_fragment_title">Rocket.Chat - Главная</string>
+    <string name="fragment_sidebar_main_unread_rooms_title">Непрочитанные каналы</string>
+
+    <string name="doc_upload_message_spec_title">Прикрепить файл</string>
+    <string name="image_upload_message_spec_title">Прикрепить изображения</string>
+    <string name="audio_upload_message_spec_title">Вложить аудио</string>
+    <string name="video_upload_message_spec_title">Прикрепить видео</string>
+
+    <string name="input_hostname_invalid_server_message">Сервер не найден</string>
+    <string name="make_sure_your_server_version_is_up_to_date">Убедитесь, что ваш сервер Rocket.Chat обновлен до последней версии</string>
+    <string name="connection_error_try_later">Ошибка соединения. Попробуйте позже.</string>
+
+    <string name="version_info_text">Версия: %s</string>
+    <string name="two_factor_authentication_title">Двухфакторная аутентификация</string>
+    <string name="open_your_authentication_app_and_enter_the_code">Откройте приложение для проверки подлинности и введите код</string>
+    <string name="two_factor_code">Код авторизации</string>
+    <string name="spotlight_search">Поиск</string>
+    <string name="spotlight_load_more_results">Еще...</string>
+    <string name="edit_message">Текст сообщения</string>
+    <string name="message_options_no_message_info">Ooops. Что-то не работает!</string>
+    <string name="message_options_no_permissions_info">У Вас не достаточно прав</string>
+    <string name="menu_pinned_messages">Закрепленные сообщения</string>
+    <string name="menu_favorite_messages">Избранные сообщения</string>
+    <string name="menu_file_list">Список файлов</string>
+    <string name="menu_member_list">Список коллег</string>
+    <string name="add_new_team">Добавить новую команду</string>
+</resources>
