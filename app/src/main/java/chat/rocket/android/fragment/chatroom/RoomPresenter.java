@@ -170,7 +170,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
     @Override
     public void loadMissedMessages() {
         RocketChatApplication appContext = RocketChatApplication.getInstance();
-        JSONObject openedRooms = new RocketChatCache(appContext).getOpenedRooms();
+        JSONObject openedRooms = RocketChatCache.INSTANCE.getOpenedRooms();
         if (openedRooms.has(roomId)) {
             try {
                 JSONObject room = openedRooms.getJSONObject(roomId);
@@ -369,8 +369,7 @@ public class RoomPresenter extends BasePresenter<RoomContract.View>
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(room -> {
-                    new RocketChatCache(RocketChatApplication.getInstance())
-                            .addOpenedRoom(room.getRoomId(), room.getLastSeen());
+                    RocketChatCache.INSTANCE.addOpenedRoom(room.getRoomId(), room.getLastSeen());
                     return room;
                 })
                 .flatMap(messageInteractor::getAllFrom)

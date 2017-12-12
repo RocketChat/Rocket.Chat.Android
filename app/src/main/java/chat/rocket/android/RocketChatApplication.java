@@ -35,6 +35,7 @@ public class RocketChatApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        RocketChatCache.INSTANCE.initialize(this);
         JobManager.create(this).addJobCreator(new RocketChatJobCreator());
         DDPClient.initialize(OkHttpHelper.INSTANCE.getClientForWebSocket());
         Fabric.with(this, new Crashlytics());
@@ -46,7 +47,7 @@ public class RocketChatApplication extends MultiDexApplication {
             RealmStore.put(serverInfo.getHostname());
         }
 
-        RocketChatWidgets.initialize(this, OkHttpHelper.INSTANCE.getClientForDownloadFile(this));
+        RocketChatWidgets.initialize(this, OkHttpHelper.INSTANCE.getClientForDownloadFile());
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);

@@ -30,17 +30,14 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
         getLoginServices()
     }
 
-    override fun release() {
+    override fun goBack() {
         val context = RocketChatApplication.getInstance()
-        val rocketChatCache = RocketChatCache(context)
-        val hostname = rocketChatCache.selectedServerHostname
-
+        val hostname = RocketChatCache.getSelectedServerHostname()
         hostname?.let {
             ConnectivityManager.getInstance(context).removeServer(hostname)
-            rocketChatCache.clearSelectedHostnameReferences()
+            RocketChatCache.clearSelectedHostnameReferences()
 
         }
-        super.release()
         LaunchUtil.showMainActivity(context)
     }
 

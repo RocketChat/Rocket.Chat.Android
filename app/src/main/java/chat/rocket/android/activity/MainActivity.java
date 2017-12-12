@@ -81,7 +81,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         ConnectivityManagerApi connectivityManager = ConnectivityManager.getInstance(getApplicationContext());
         if (hostname == null || presenter == null) {
             String previousHostname = hostname;
-            hostname = new RocketChatCache(getApplicationContext()).getSelectedServerHostname();
+            hostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
             if (hostname == null) {
                 showAddServerScreen();
             } else {
@@ -95,7 +95,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
             connectivityManager.keepAliveServer();
             presenter.bindView(this);
             presenter.loadSignedInServers(hostname);
-            roomId = new RocketChatCache(getApplicationContext()).getSelectedRoomId();
+            roomId = RocketChatCache.INSTANCE.getSelectedRoomId();
         }
     }
 
@@ -186,15 +186,12 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
         PublicSettingRepository publicSettingRepository = new RealmPublicSettingRepository(hostname);
 
-        RocketChatCache rocketChatCache = new RocketChatCache(this);
-
         presenter = new MainPresenter(
                 roomInteractor,
                 createRoomInteractor,
                 sessionInteractor,
                 new MethodCallHelper(this, hostname),
                 ConnectivityManager.getInstance(getApplicationContext()),
-                rocketChatCache,
                 publicSettingRepository
         );
 
@@ -203,12 +200,12 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         presenter.bindView(this);
         presenter.loadSignedInServers(hostname);
 
-        roomId = rocketChatCache.getSelectedRoomId();
+        roomId = RocketChatCache.INSTANCE.getSelectedRoomId();
     }
 
     private void updateSidebarMainFragment() {
         closeSidebarIfNeeded();
-        String selectedServerHostname = new RocketChatCache(this).getSelectedServerHostname();
+        String selectedServerHostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
         Fragment sidebarFragment = findFragmentByTag(selectedServerHostname);
         if (sidebarFragment == null) {
             sidebarFragment = SidebarMainFragment.create(selectedServerHostname);
@@ -399,15 +396,14 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
 
     private void changeServerIfNeeded(String serverHostname) {
         if (!hostname.equalsIgnoreCase(serverHostname)) {
-            RocketChatCache rocketChatCache = new RocketChatCache(getApplicationContext());
-            rocketChatCache.setSelectedServerHostname(serverHostname);
+            RocketChatCache.INSTANCE.setSelectedServerHostname(serverHostname);
         }
     }
 
     @DebugLog
     public void onLogout() {
         presenter.prepareToLogout();
-        if (new RocketChatCache(getApplicationContext()).getSelectedServerHostname() == null) {
+        if (RocketChatCache.INSTANCE.getSelectedServerHostname() == null) {
             finish();
             LaunchUtil.showMainActivity(this);
         } else {

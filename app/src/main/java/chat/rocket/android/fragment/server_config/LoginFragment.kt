@@ -50,9 +50,9 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
         txtPasswd = rootView.findViewById(R.id.editor_passwd)
         waitingView = rootView.findViewById(R.id.waiting)
 
-        btnEmail.setOnClickListener { view -> presenter.login(txtUsername.text.toString(), txtPasswd.text.toString()) }
+        btnEmail.setOnClickListener { _ -> presenter.login(txtUsername.text.toString(), txtPasswd.text.toString()) }
 
-        btnUserRegistration.setOnClickListener { view ->
+        btnUserRegistration.setOnClickListener { _ ->
             UserRegistrationDialogFragment.create(hostname, txtUsername.text.toString(), txtPasswd.text.toString())
                     .show(fragmentManager!!, "UserRegistrationDialogFragment")
         }
@@ -84,7 +84,7 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
             for (info in OAuthProviderInfo.LIST) {
                 if (supportedMap[info.serviceName] == false && info.serviceName == authProvider.service) {
                     supportedMap.put(info.serviceName, true)
-                    viewMap[info.serviceName]?.setOnClickListener { view ->
+                    viewMap[info.serviceName]?.setOnClickListener { _ ->
                         var fragment: Fragment? = null
                         try {
                             fragment = info.fragmentClass.newInstance()
@@ -125,5 +125,9 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
     override fun onPause() {
         presenter.release()
         super.onPause()
+    }
+
+    override fun goBack() {
+        presenter.goBack()
     }
 }

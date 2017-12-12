@@ -41,7 +41,6 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     private final SessionInteractor sessionInteractor;
     private final MethodCallHelper methodCallHelper;
     private final ConnectivityManagerApi connectivityManagerApi;
-    private final RocketChatCache rocketChatCache;
     private final PublicSettingRepository publicSettingRepository;
 
     public MainPresenter(RoomInteractor roomInteractor,
@@ -49,13 +48,12 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                          SessionInteractor sessionInteractor,
                          MethodCallHelper methodCallHelper,
                          ConnectivityManagerApi connectivityManagerApi,
-                         RocketChatCache rocketChatCache, PublicSettingRepository publicSettingRepository) {
+                         PublicSettingRepository publicSettingRepository) {
         this.roomInteractor = roomInteractor;
         this.canCreateRoomInteractor = canCreateRoomInteractor;
         this.sessionInteractor = sessionInteractor;
         this.methodCallHelper = methodCallHelper;
         this.connectivityManagerApi = connectivityManagerApi;
-        this.rocketChatCache = rocketChatCache;
         this.publicSettingRepository = publicSettingRepository;
     }
 
@@ -101,7 +99,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
 
     @Override
     public void release() {
-        if (rocketChatCache.getSessionToken() != null) {
+        if (RocketChatCache.INSTANCE.getSessionToken() != null) {
             setUserAway();
         }
 
@@ -158,13 +156,13 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         String logoUrl = (jsonObject.has("url")) ?
                 jsonObject.optString("url") : jsonObject.optString("defaultUrl");
         String siteName = serverInfoPair.second;
-        rocketChatCache.addHostname(hostname.toLowerCase(), logoUrl, siteName);
-        return rocketChatCache.getServerList();
+        RocketChatCache.INSTANCE.addHostname(hostname.toLowerCase(), logoUrl, siteName);
+        return RocketChatCache.INSTANCE.getServerList();
     }
 
     private void openRoom() {
-        String hostname = rocketChatCache.getSelectedServerHostname();
-        String roomId = rocketChatCache.getSelectedRoomId();
+        String hostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
+        String roomId = RocketChatCache.INSTANCE.getSelectedRoomId();
 
         if (roomId == null || roomId.length() == 0) {
             view.showHome();
@@ -214,7 +212,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                             }
                             // TODO: Should we remove below and above calls to view?
                             // view.showConnectionOk();
-                            rocketChatCache.setSessionToken(session.getToken());
+                            RocketChatCache.INSTANCE.setSessionToken(session.getToken());
                         },
                         Logger.INSTANCE::report
                 );

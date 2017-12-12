@@ -94,13 +94,11 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
                 new SessionInteractor(new RealmSessionRepository(hostname))
         );
 
-        RocketChatCache rocketChatCache = new RocketChatCache(getContext().getApplicationContext());
 
         presenter = new SidebarMainPresenter(
                 hostname,
                 new RoomInteractor(new RealmRoomRepository(hostname)),
                 userRepository,
-                rocketChatCache,
                 absoluteUrlHelper,
                 new MethodCallHelper(getContext(), hostname),
                 new RealmSpotlightRepository(hostname)

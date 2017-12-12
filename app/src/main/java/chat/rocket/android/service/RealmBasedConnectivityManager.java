@@ -74,7 +74,7 @@ import io.reactivex.subjects.BehaviorSubject;
     @DebugLog
     @Override
     public void ensureConnections() {
-        String hostname = new RocketChatCache(appContext).getSelectedServerHostname();
+        String hostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
         if (hostname == null) {
             return;
         }

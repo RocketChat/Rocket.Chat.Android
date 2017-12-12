@@ -106,21 +106,24 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
             }
 
             if (currentWebSocketThread != null) {
-                return currentWebSocketThread.terminate(isDisconnected)
-                        .doAfterTerminate(() -> currentWebSocketThread = null)
-                        .flatMap(terminated ->
-                                RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
-                                        .doOnSuccess(thread -> {
-                                            currentWebSocketThread = thread;
-                                            webSocketThreadLock.release();
-                                        })
-                                        .doOnError(throwable -> {
-                                            currentWebSocketThread = null;
-                                            RCLog.e(throwable);
-                                            Logger.INSTANCE.report(throwable);
-                                            webSocketThreadLock.release();
-                                        })
-                        );
+                if (isDisconnected) {
+                    return currentWebSocketThread.terminate(true)
+                            .doAfterTerminate(() -> currentWebSocketThread = null)
+                            .flatMap(terminated ->
+                                    RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
+                                            .doOnSuccess(thread -> {
+                                                currentWebSocketThread = thread;
+                                                webSocketThreadLock.release();
+                                            })
+                                            .doOnError(throwable -> {
+                                                currentWebSocketThread = null;
+                                                RCLog.e(throwable);
+                                                Logger.INSTANCE.report(throwable);
+                                                webSocketThreadLock.release();
+                                            })
+                            );
+                }
+                return Single.just(currentWebSocketThread);
             }
 
             return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)

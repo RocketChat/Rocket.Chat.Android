@@ -2,7 +2,6 @@ package chat.rocket.android.service
 
 import chat.rocket.android.ConnectionStatusManager
 import chat.rocket.android.RocketChatApplication
-import chat.rocket.android.RocketChatCache
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobManager
 import com.evernote.android.job.JobRequest
@@ -11,7 +10,6 @@ import java.util.concurrent.TimeUnit
 class KeepAliveJob : Job() {
 
     private val connectivityManager: ConnectivityManagerApi
-    private val rocketChatCache: RocketChatCache
 
     companion object {
         val TAG = "chat.rocket.android.service.KeepAliveJob"
@@ -38,7 +36,6 @@ class KeepAliveJob : Job() {
     init {
         val context = RocketChatApplication.getInstance()
         connectivityManager = ConnectivityManager.getInstance(context)
-        rocketChatCache = RocketChatCache(context)
     }
 
     override fun onRunJob(params: Params): Result {

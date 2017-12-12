@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import bolts.Continuation;
 import bolts.Task;
-import chat.rocket.android.RocketChatApplication;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.CheckSum;
 import chat.rocket.android.helper.TextUtils;
@@ -304,9 +303,7 @@ public class MethodCallHelper {
                             realm.createOrUpdateAllFromJson(
                                     RealmRoom.class, result);
 
-                            Context appContext = RocketChatApplication.getInstance();
-                            RocketChatCache cache = new RocketChatCache(appContext);
-                            JSONObject openedRooms = cache.getOpenedRooms();
+                            JSONObject openedRooms = RocketChatCache.INSTANCE.getOpenedRooms();
 
                             RealmQuery<RealmRoom> query = realm.where(RealmRoom.class);
                             Iterator<String> keys = openedRooms.keys();
@@ -314,7 +311,7 @@ public class MethodCallHelper {
                                 String rid = keys.next();
                                 RealmRoom realmRoom = query.equalTo(RealmRoom.ID, rid).findFirst();
                                 if (realmRoom == null) {
-                                    cache.removeOpenedRoom(rid);
+                                    RocketChatCache.INSTANCE.removeOpenedRoom(rid);
                                 } else {
                                     loadMissedMessages(rid, realmRoom.getLastSeen())
                                             .continueWithTask(task1 -> {
@@ -511,9 +508,8 @@ public class MethodCallHelper {
                         HttpUrl httpSiteUrl = HttpUrl.parse(siteUrl);
                         if (httpSiteUrl != null) {
                             String host = httpSiteUrl.host();
-                            RocketChatCache rocketChatCache = new RocketChatCache(context);
-                            rocketChatCache.addSiteUrl(host, currentHostname);
-                            rocketChatCache.addSiteName(currentHostname, siteName);
+                            RocketChatCache.INSTANCE.addSiteUrl(host, currentHostname);
+                            RocketChatCache.INSTANCE.addSiteName(currentHostname, siteName);
                         }
                     }
 

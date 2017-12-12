@@ -32,7 +32,7 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
     super.onCreate(savedInstanceState);
 
     Context appContext = getContext().getApplicationContext();
-    presenter = new InputHostnamePresenter(new RocketChatCache(appContext), ConnectivityManager.getInstance(appContext));
+    presenter = new InputHostnamePresenter(ConnectivityManager.getInstance(appContext));
   }
 
   @Override

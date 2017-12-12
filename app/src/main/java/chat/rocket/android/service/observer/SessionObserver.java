@@ -74,7 +74,7 @@ public class SessionObserver extends AbstractModelObserver<RealmSession> {
 
     // update push info
     pushHelper
-        .pushSetUser(new RocketChatCache(context).getOrCreatePushId())
+        .pushSetUser(RocketChatCache.INSTANCE.getOrCreatePushId())
         .continueWith(new LogIfError());
 
     ConnectivityManager.getInstance(context).notifySessionEstablished(hostname);
