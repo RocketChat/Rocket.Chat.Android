@@ -12,6 +12,7 @@ ext {
         support           : '27.0.0',
         constraintLayout  : '1.0.2',
         dagger            : '2.11',
+        exoPlayer         : '2.6.0',
         room              : '1.0.0-beta1',
         rxjava            : '2.1.4',
         rxandroid         : '2.0.1',
@@ -43,6 +44,7 @@ ext {
         daggerSupport       : "com.google.dagger:dagger-android-support:${versions.dagger}",
         daggerProcessor     : "com.google.dagger:dagger-compiler:${versions.dagger}",
         daggerAndroidApt    : "com.google.dagger:dagger-android-processor:${versions.dagger}",
+        exoPlayer           : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
 
         room                : "android.arch.persistence.room:runtime:${versions.room}",
         roomProcessor       : "android.arch.persistence.room:compiler:${versions.room}",
