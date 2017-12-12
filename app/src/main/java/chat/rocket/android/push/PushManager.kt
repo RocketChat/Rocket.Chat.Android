@@ -22,7 +22,6 @@ import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.RocketChatCache
 import chat.rocket.android.activity.MainActivity
-import chat.rocket.android.extensions.printStackTraceOnDebug
 import chat.rocket.android.helper.Logger
 import chat.rocket.core.interactors.MessageInteractor
 import chat.rocket.core.models.Room

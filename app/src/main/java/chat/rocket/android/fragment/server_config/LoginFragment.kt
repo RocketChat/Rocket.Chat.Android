@@ -99,14 +99,14 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
                             showFragmentWithBackStack(fragment)
                         }
                     }
-                    viewMap[info.serviceName]?.setVisibility(View.VISIBLE)
+                    viewMap[info.serviceName]?.visibility = View.VISIBLE
                 }
             }
         }
 
         for (info in OAuthProviderInfo.LIST) {
             if (supportedMap[info.serviceName] == false) {
-                viewMap[info.serviceName]?.setVisibility(View.GONE)
+                viewMap[info.serviceName]?.visibility = View.GONE
             }
         }
     }

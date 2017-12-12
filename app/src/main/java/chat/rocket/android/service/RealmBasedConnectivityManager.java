@@ -107,7 +107,7 @@ import io.reactivex.subjects.BehaviorSubject;
     public void removeServer(String hostname) {
         RealmBasedServerInfo.remove(hostname);
         if (serverConnectivityList.containsKey(hostname)) {
-            disconnectFromServerIfNeeded(hostname)
+            disconnectFromServerIfNeeded(hostname, DDPClient.REASON_CLOSED_BY_USER)
                     .subscribe(_val -> {
                     }, RCLog::e);
         }
@@ -207,7 +207,7 @@ import io.reactivex.subjects.BehaviorSubject;
         });
     }
 
-    private Single<Boolean> disconnectFromServerIfNeeded(String hostname) {
+    private Single<Boolean> disconnectFromServerIfNeeded(String hostname, int reason) {
         return Single.defer(() -> {
             final int connectivity = serverConnectivityList.get(hostname);
             if (connectivity == ServerConnectivity.STATE_DISCONNECTED) {
@@ -216,8 +216,8 @@ import io.reactivex.subjects.BehaviorSubject;
 
             if (connectivity == ServerConnectivity.STATE_CONNECTING) {
                 return waitForConnected(hostname)
-                        .doOnError(err -> notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR))
-                        .flatMap(_val -> disconnectFromServerIfNeeded(hostname));
+//                        .doOnError(err -> notifyConnectionLost(hostname, DDPClient.REASON_CLOSED_BY_USER))
+                        .flatMap(_val -> disconnectFromServerIfNeeded(hostname, DDPClient.REASON_CLOSED_BY_USER));
             }
 
             if (connectivity == ServerConnectivity.STATE_DISCONNECTING) {
@@ -286,7 +286,7 @@ import io.reactivex.subjects.BehaviorSubject;
 
             if (serviceInterface != null) {
                 return serviceInterface.disconnectFromServer(hostname)
-                         //after disconnection from server, remove HOSTNAME key from HashMap
+                        //after disconnection from server, remove HOSTNAME key from HashMap
                         .doAfterTerminate(() -> {
                             serverConnectivityList.remove(hostname);
                             serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);

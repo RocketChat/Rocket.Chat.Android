@@ -3,10 +3,14 @@ package chat.rocket.android.fragment.server_config
 import bolts.Continuation
 import bolts.Task
 import chat.rocket.android.BackgroundLooper
+import chat.rocket.android.LaunchUtil
+import chat.rocket.android.RocketChatApplication
+import chat.rocket.android.RocketChatCache
 import chat.rocket.android.api.MethodCallHelper
 import chat.rocket.android.api.TwoStepAuthException
 import chat.rocket.android.helper.Logger
 import chat.rocket.android.helper.TextUtils
+import chat.rocket.android.service.ConnectivityManager
 import chat.rocket.android.shared.BasePresenter
 import chat.rocket.core.PublicSettingsConstants
 import chat.rocket.core.models.PublicSetting
@@ -24,6 +28,20 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
         super.bindView(view)
 
         getLoginServices()
+    }
+
+    override fun release() {
+        val context = RocketChatApplication.getInstance()
+        val rocketChatCache = RocketChatCache(context)
+        val hostname = rocketChatCache.selectedServerHostname
+
+        hostname?.let {
+            ConnectivityManager.getInstance(context).removeServer(hostname)
+            rocketChatCache.clearSelectedHostnameReferences()
+
+        }
+        super.release()
+        LaunchUtil.showMainActivity(context)
     }
 
     override fun login(username: String, password: String) {
@@ -50,7 +68,9 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
                         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeBy(
-                                onNext = { loginServiceConfigurations -> view.showLoginServices(loginServiceConfigurations) },
+                                onNext = { loginServiceConfigurations ->
+                                    view.showLoginServices(loginServiceConfigurations);
+                                },
                                 onError = { Logger.report(it) }
                         )
         )

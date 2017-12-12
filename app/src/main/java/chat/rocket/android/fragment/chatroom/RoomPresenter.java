@@ -1,412 +1,447 @@
-package chat.rocket.android.fragment.chatroom
+package chat.rocket.android.fragment.chatroom;
 
-import android.support.v4.util.Pair
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 
-import com.hadisatrio.optional.Optional
+import com.hadisatrio.optional.Optional;
 
-import org.json.JSONException
-import org.json.JSONObject
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import chat.rocket.android.BackgroundLooper
-import chat.rocket.android.RocketChatApplication
-import chat.rocket.android.RocketChatCache
-import chat.rocket.android.api.MethodCallHelper
-import chat.rocket.android.helper.AbsoluteUrlHelper
-import chat.rocket.android.helper.LogIfError
-import chat.rocket.android.helper.Logger
-import chat.rocket.android.log.RCLog
-import chat.rocket.android.service.ConnectivityManagerApi
-import chat.rocket.android.shared.BasePresenter
-import chat.rocket.core.SyncState
-import chat.rocket.core.interactors.MessageInteractor
-import chat.rocket.core.models.Message
-import chat.rocket.core.models.Room
-import chat.rocket.core.models.Settings
-import chat.rocket.core.models.User
-import chat.rocket.core.repositories.RoomRepository
-import chat.rocket.core.repositories.UserRepository
-import io.reactivex.Flowable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import chat.rocket.android.BackgroundLooper;
+import chat.rocket.android.RocketChatApplication;
+import chat.rocket.android.RocketChatCache;
+import chat.rocket.android.api.MethodCallHelper;
+import chat.rocket.android.helper.AbsoluteUrlHelper;
+import chat.rocket.android.helper.LogIfError;
+import chat.rocket.android.helper.Logger;
+import chat.rocket.android.log.RCLog;
+import chat.rocket.android.service.ConnectivityManagerApi;
+import chat.rocket.android.shared.BasePresenter;
+import chat.rocket.core.SyncState;
+import chat.rocket.core.interactors.MessageInteractor;
+import chat.rocket.core.models.Message;
+import chat.rocket.core.models.Room;
+import chat.rocket.core.models.Settings;
+import chat.rocket.core.models.User;
+import chat.rocket.core.repositories.RoomRepository;
+import chat.rocket.core.repositories.UserRepository;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
-class RoomPresenter/* package */ internal constructor(private val roomId: String,
-                                                      private val userRepository: UserRepository,
-                                                      private val messageInteractor: MessageInteractor,
-                                                      private val roomRepository: RoomRepository,
-                                                      private val absoluteUrlHelper: AbsoluteUrlHelper,
-                                                      private val methodCallHelper: MethodCallHelper,
-                                                      private val connectivityManagerApi: ConnectivityManagerApi) : BasePresenter<RoomContract.View>(), RoomContract.Presenter {
-    private var currentRoom: Room? = null
+public class RoomPresenter extends BasePresenter<RoomContract.View>
+        implements RoomContract.Presenter {
 
-    private val roomUserPair: Single<Pair<Room, User>>
-        get() = Single.zip(
-                singleRoom,
-                currentUser,
-                BiFunction<Room, User, Pair<Room, User>> { first, second -> Pair(first, second) }
-        )
+    private final String roomId;
+    private final MessageInteractor messageInteractor;
+    private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
+    private final AbsoluteUrlHelper absoluteUrlHelper;
+    private final MethodCallHelper methodCallHelper;
+    private final ConnectivityManagerApi connectivityManagerApi;
+    private Room currentRoom;
 
-    private val singleRoom: Single<Room>
-        get() = roomRepository.getById(roomId)
-                .filter(Predicate<Optional<Room>> { it.isPresent() })
-                .map<Room>(Function<Optional<Room>, Room> { it.get() })
-                .firstElement()
-                .toSingle()
-
-    private val currentUser: Single<User>
-        get() = userRepository.getCurrent()
-                .filter(Predicate<Optional<User>> { it.isPresent() })
-                .map<User>(Function<Optional<User>, User> { it.get() })
-                .firstElement()
-                .toSingle()
-
-    override fun bindView(view: RoomContract.View) {
-        super.bindView(view)
-        refreshRoom()
+    /* package */RoomPresenter(String roomId,
+                               UserRepository userRepository,
+                               MessageInteractor messageInteractor,
+                               RoomRepository roomRepository,
+                               AbsoluteUrlHelper absoluteUrlHelper,
+                               MethodCallHelper methodCallHelper,
+                               ConnectivityManagerApi connectivityManagerApi) {
+        this.roomId = roomId;
+        this.userRepository = userRepository;
+        this.messageInteractor = messageInteractor;
+        this.roomRepository = roomRepository;
+        this.absoluteUrlHelper = absoluteUrlHelper;
+        this.methodCallHelper = methodCallHelper;
+        this.connectivityManagerApi = connectivityManagerApi;
     }
 
-    override fun refreshRoom() {
-        getRoomRoles()
-        getRoomInfo()
-        getRoomHistoryStateInfo()
-        getMessages()
-        getUserPreferences()
+    @Override
+    public void bindView(@NonNull RoomContract.View view) {
+        super.bindView(view);
+        refreshRoom();
     }
 
-    override fun loadMessages() {
-        val subscription = singleRoom
-                .flatMap<Boolean>(Function<Room, SingleSource<out Boolean>> { messageInteractor.loadMessages(it) })
+    @Override
+    public void refreshRoom() {
+        getRoomRoles();
+        getRoomInfo();
+        getRoomHistoryStateInfo();
+        getMessages();
+        getUserPreferences();
+    }
+
+    @Override
+    public void loadMessages() {
+        final Disposable subscription = getSingleRoom()
+                .flatMap(messageInteractor::loadMessages)
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { success ->
+                        success -> {
                             if (!success) {
-                                connectivityManagerApi.keepAliveServer()
+                                connectivityManagerApi.keepAliveServer();
                             }
                         },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
+                        Logger.INSTANCE::report
+                );
 
-        addSubscription(subscription)
+        addSubscription(subscription);
     }
 
-    override fun loadMoreMessages() {
-        val subscription = singleRoom
-                .flatMap<Boolean>(Function<Room, SingleSource<out Boolean>> { messageInteractor.loadMoreMessages(it) })
+    @Override
+    public void loadMoreMessages() {
+        final Disposable subscription = getSingleRoom()
+                .flatMap(messageInteractor::loadMoreMessages)
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { success ->
+                        success -> {
                             if (!success) {
-                                connectivityManagerApi.keepAliveServer()
+                                connectivityManagerApi.keepAliveServer();
                             }
                         },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
+                        Logger.INSTANCE::report
+                );
 
-        addSubscription(subscription)
+        addSubscription(subscription);
     }
 
-    override fun onMessageSelected(message: Message?) {
+    @Override
+    public void onMessageSelected(@Nullable Message message) {
         if (message == null) {
-            return
+            return;
         }
 
-        if (message.syncState == SyncState.DELETE_FAILED) {
-            view.showMessageDeleteFailure(message)
-        } else if (message.syncState == SyncState.FAILED) {
-            view.showMessageSendFailure(message)
-        } else if (message.type == null && message.syncState == SyncState.SYNCED) {
+        if (message.getSyncState() == SyncState.DELETE_FAILED) {
+            view.showMessageDeleteFailure(message);
+        } else if (message.getSyncState() == SyncState.FAILED) {
+            view.showMessageSendFailure(message);
+        } else if (message.getType() == null && message.getSyncState() == SyncState.SYNCED) {
             // If message is not a system message show applicable actions.
-            view.showMessageActions(message)
+            view.showMessageActions(message);
         }
     }
 
-    override fun onMessageTap(message: Message?) {
+    @Override
+    public void onMessageTap(@Nullable Message message) {
         if (message == null) {
-            return
+            return;
         }
 
-        if (message.syncState == SyncState.FAILED) {
-            view.showMessageSendFailure(message)
+        if (message.getSyncState() == SyncState.FAILED) {
+            view.showMessageSendFailure(message);
         }
     }
 
-    override fun replyMessage(message: Message, justQuote: Boolean) {
-        val subscription = this.absoluteUrlHelper.rocketChatAbsoluteUrl
+    @Override
+    public void replyMessage(@NonNull Message message, boolean justQuote) {
+        final Disposable subscription = this.absoluteUrlHelper.getRocketChatAbsoluteUrl()
                 .cache()
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { serverUrl ->
-                            if (serverUrl.isPresent) {
-                                val absoluteUrl = serverUrl.get()
-                                val baseUrl = absoluteUrl.baseUrl
-                                view.onReply(absoluteUrl, buildReplyOrQuoteMarkdown(baseUrl, message, justQuote), message)
+                        serverUrl -> {
+                            if (serverUrl.isPresent()) {
+                                RocketChatAbsoluteUrl absoluteUrl = serverUrl.get();
+                                String baseUrl = absoluteUrl.getBaseUrl();
+                                view.onReply(absoluteUrl, buildReplyOrQuoteMarkdown(baseUrl, message, justQuote), message);
                             }
                         },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
+                        Logger.INSTANCE::report
+                );
 
-        addSubscription(subscription)
+        addSubscription(subscription);
     }
 
-    override fun acceptMessageDeleteFailure(message: Message) {
-        val subscription = messageInteractor.acceptDeleteFailure(message)
+    public void acceptMessageDeleteFailure(Message message) {
+        final Disposable subscription = messageInteractor.acceptDeleteFailure(message)
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+                .subscribe();
 
-        addSubscription(subscription)
+        addSubscription(subscription);
     }
 
-    override fun loadMissedMessages() {
-        val appContext = RocketChatApplication.getInstance()
-        val openedRooms = RocketChatCache(appContext).openedRooms
+    @Override
+    public void loadMissedMessages() {
+        RocketChatApplication appContext = RocketChatApplication.getInstance();
+        JSONObject openedRooms = new RocketChatCache(appContext).getOpenedRooms();
         if (openedRooms.has(roomId)) {
             try {
-                val room = openedRooms.getJSONObject(roomId)
-                val rid = room.optString("rid")
-                val ls = room.optLong("ls")
+                JSONObject room = openedRooms.getJSONObject(roomId);
+                String rid = room.optString("rid");
+                long ls = room.optLong("ls");
                 methodCallHelper.loadMissedMessages(rid, ls)
-                        .continueWith(LogIfError())
-            } catch (e: JSONException) {
-                RCLog.e(e)
+                        .continueWith(new LogIfError());
+            } catch (JSONException e) {
+                RCLog.e(e);
             }
-
         }
     }
 
-    private fun buildReplyOrQuoteMarkdown(baseUrl: String, message: Message, justQuote: Boolean): String {
-        if (currentRoom == null || message.user == null) {
-            return ""
+    private String buildReplyOrQuoteMarkdown(String baseUrl, Message message, boolean justQuote) {
+        if (currentRoom == null || message.getUser() == null) {
+            return "";
         }
 
-        return if (currentRoom!!.isDirectMessage) {
-            String.format("[ ](%s/direct/%s?msg=%s) ", baseUrl,
-                    message.user!!.username,
-                    message.id)
+        if (currentRoom.isDirectMessage()) {
+            return String.format("[ ](%s/direct/%s?msg=%s) ", baseUrl,
+                    message.getUser().getUsername(),
+                    message.getId());
         } else {
-            String.format("[ ](%s/channel/%s?msg=%s) %s", baseUrl,
-                    currentRoom!!.name,
-                    message.id,
-                    if (justQuote) "" else "@" + message.user!!.username + " ")
+            return String.format("[ ](%s/channel/%s?msg=%s) %s", baseUrl,
+                    currentRoom.getName(),
+                    message.getId(),
+                    justQuote ? "" : "@" + message.getUser().getUsername() + " ");
         }
     }
 
-    override fun sendMessage(messageText: String) {
-        view.disableMessageInput()
-        val subscription = roomUserPair
-                .flatMap { pair -> messageInteractor.send(pair.first!!, pair.second!!, messageText) }
+    @Override
+    public void sendMessage(String messageText) {
+        view.disableMessageInput();
+        final Disposable subscription = getRoomUserPair()
+                .flatMap(pair -> messageInteractor.send(pair.first, pair.second, messageText))
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { success ->
+                        success -> {
                             if (success) {
-                                view.onMessageSendSuccessfully()
+                                view.onMessageSendSuccessfully();
                             }
-                            view.enableMessageInput()
-                        }
-                ) { throwable ->
-                    view.enableMessageInput()
-                    Logger.report(throwable)
-                }
-
-        addSubscription(subscription)
-    }
-
-    override fun resendMessage(message: Message) {
-        val subscription = currentUser
-                .flatMap { user -> messageInteractor.resend(message, user) }
-                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-
-        addSubscription(subscription)
-    }
-
-    override fun updateMessage(message: Message, content: String) {
-        view.disableMessageInput()
-        val subscription = currentUser
-                .flatMap { user -> messageInteractor.update(message, user, content) }
-                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { success ->
-                            if (success) {
-                                view.onMessageSendSuccessfully()
-                            }
-                            view.enableMessageInput()
-                        }
-                ) { throwable ->
-                    view.enableMessageInput()
-                    Logger.report(throwable)
-                }
-
-        addSubscription(subscription)
-    }
-
-    override fun deleteMessage(message: Message) {
-        val subscription = messageInteractor.delete(message)
-                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-
-        addSubscription(subscription)
-    }
-
-    override fun onUnreadCount() {
-        val subscription = roomUserPair
-                .flatMap { roomUserPair ->
-                    messageInteractor
-                            .unreadCountFor(roomUserPair.first!!, roomUserPair.second!!)
-                }
-                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { count -> view.showUnreadCount(count) },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
-
-        addSubscription(subscription)
-    }
-
-    override fun onMarkAsRead() {
-        val subscription = roomRepository.getById(roomId)
-                .filter(Predicate<Optional<Room>> { it.isPresent() })
-                .map<Room>(Function<Optional<Room>, Room> { it.get() })
-                .firstElement()
-                .filter(Predicate<Room> { it.isAlert() })
-                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { room ->
-                            methodCallHelper.readMessages(room.roomId)
-                                    .continueWith(LogIfError())
+                            view.enableMessageInput();
                         },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
+                        throwable -> {
+                            view.enableMessageInput();
+                            Logger.INSTANCE.report(throwable);
+                        }
+                );
 
-        addSubscription(subscription)
+        addSubscription(subscription);
     }
 
-    private fun getRoomRoles() {
-        methodCallHelper.getRoomRoles(roomId)
-    }
-
-    private fun getRoomInfo() {
-        val subscription = roomRepository.getById(roomId)
-                .distinctUntilChanged()
-                .filter(Predicate<Optional<Room>> { it.isPresent() })
-                .map<Room>(Function<Optional<Room>, Room> { it.get() })
+    @Override
+    public void resendMessage(@NonNull Message message) {
+        final Disposable subscription = getCurrentUser()
+                .flatMap(user -> messageInteractor.resend(message, user))
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Consumer<Room> { this.processRoom(it) }, Consumer<Throwable> { Logger.report(it) })
-        addSubscription(subscription)
+                .subscribe();
+
+        addSubscription(subscription);
     }
 
-    private fun processRoom(room: Room) {
-        this.currentRoom = room
-        view.render(room)
-
-        if (room.isDirectMessage) {
-            getUserByUsername(room.name)
-        }
-    }
-
-    private fun getUserByUsername(username: String) {
-        val disposable = userRepository.getByUsername(username)
-                .distinctUntilChanged()
-                .filter(Predicate<Optional<User>> { it.isPresent() })
-                .map<User>(Function<Optional<User>, User> { it.get() })
-                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Consumer<User> { view.showUserStatus(it) }, Consumer<Throwable> { Logger.report(it) })
-        addSubscription(disposable)
-    }
-
-    private fun getRoomHistoryStateInfo() {
-        val subscription = roomRepository.getHistoryStateByRoomId(roomId)
-                .distinctUntilChanged()
-                .filter(Predicate<Optional<RoomHistoryState>> { it.isPresent() })
-                .map<RoomHistoryState>(Function<Optional<RoomHistoryState>, RoomHistoryState> { it.get() })
+    @Override
+    public void updateMessage(@NonNull Message message, String content) {
+        view.disableMessageInput();
+        final Disposable subscription = getCurrentUser()
+                .flatMap(user -> messageInteractor.update(message, user, content))
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { roomHistoryState ->
-                            val syncState = roomHistoryState.getSyncState()
+                        success -> {
+                            if (success) {
+                                view.onMessageSendSuccessfully();
+                            }
+                            view.enableMessageInput();
+                        },
+                        throwable -> {
+                            view.enableMessageInput();
+                            Logger.INSTANCE.report(throwable);
+                        }
+                );
+
+        addSubscription(subscription);
+    }
+
+    @Override
+    public void deleteMessage(@NonNull Message message) {
+        final Disposable subscription = messageInteractor.delete(message)
+                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+
+        addSubscription(subscription);
+    }
+
+    @Override
+    public void onUnreadCount() {
+        final Disposable subscription = getRoomUserPair()
+                .flatMap(roomUserPair -> messageInteractor
+                        .unreadCountFor(roomUserPair.first, roomUserPair.second))
+                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        count -> view.showUnreadCount(count),
+                        Logger.INSTANCE::report
+                );
+
+        addSubscription(subscription);
+    }
+
+    @Override
+    public void onMarkAsRead() {
+        final Disposable subscription = roomRepository.getById(roomId)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .firstElement()
+                .filter(Room::isAlert)
+                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        room -> methodCallHelper.readMessages(room.getRoomId())
+                                .continueWith(new LogIfError()),
+                        Logger.INSTANCE::report
+                );
+
+        addSubscription(subscription);
+    }
+
+    private void getRoomRoles() {
+        methodCallHelper.getRoomRoles(roomId);
+    }
+
+    private void getRoomInfo() {
+        final Disposable subscription = roomRepository.getById(roomId)
+                .distinctUntilChanged()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::processRoom, Logger.INSTANCE::report);
+        addSubscription(subscription);
+    }
+
+    private void processRoom(Room room) {
+        this.currentRoom = room;
+        view.render(room);
+
+        if (room.isDirectMessage()) {
+            getUserByUsername(room.getName());
+        }
+    }
+
+    private void getUserByUsername(String username) {
+        final Disposable disposable = userRepository.getByUsername(username)
+                .distinctUntilChanged()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(view::showUserStatus, Logger.INSTANCE::report);
+        addSubscription(disposable);
+    }
+
+    private void getRoomHistoryStateInfo() {
+        final Disposable subscription = roomRepository.getHistoryStateByRoomId(roomId)
+                .distinctUntilChanged()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        roomHistoryState -> {
+                            int syncState = roomHistoryState.getSyncState();
                             view.updateHistoryState(
                                     !roomHistoryState.isComplete(),
                                     syncState == SyncState.SYNCED || syncState == SyncState.FAILED
-                            )
+                            );
                         },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
+                        Logger.INSTANCE::report
+                );
 
-        addSubscription(subscription)
+        addSubscription(subscription);
     }
 
-    private fun getMessages() {
-        val subscription = Flowable.zip<Optional<Room>, Optional<RocketChatAbsoluteUrl>, Pair<Optional<Room>, Optional<RocketChatAbsoluteUrl>>>(roomRepository.getById(roomId),
-                absoluteUrlHelper.rocketChatAbsoluteUrl.toFlowable().cache(), BiFunction<Optional<Room>, Optional<RocketChatAbsoluteUrl>, Pair<Optional<Room>, Optional<RocketChatAbsoluteUrl>>> { first, second -> Pair(first, second) })
+    private void getMessages() {
+        final Disposable subscription = Flowable.zip(roomRepository.getById(roomId),
+                absoluteUrlHelper.getRocketChatAbsoluteUrl().toFlowable().cache(), Pair::new)
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .map<Optional<Room>> { pair ->
-                    view.setupWith(pair.second!!.orNull())
-                    pair.first
-                }
-                .filter(Predicate<Optional<Room>> { it.isPresent() })
-                .map<Room>(Function<Optional<Room>, Room> { it.get() })
-                .map { room ->
-                    RocketChatCache(RocketChatApplication.getInstance())
-                            .addOpenedRoom(room.roomId, room.lastSeen)
-                    room
-                }
-                .flatMap<List<Message>>(Function<Room, Publisher<out List<Message>>> { messageInteractor.getAllFrom(it) })
+                .map(pair -> {
+                    view.setupWith(pair.second.orNull());
+                    return pair.first;
+                })
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(room -> {
+                    new RocketChatCache(RocketChatApplication.getInstance())
+                            .addOpenedRoom(room.getRoomId(), room.getLastSeen());
+                    return room;
+                })
+                .flatMap(messageInteractor::getAllFrom)
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        Consumer<List<Message>> { view.showMessages(it) },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
+                        view::showMessages,
+                        Logger.INSTANCE::report
+                );
 
-        addSubscription(subscription)
+        addSubscription(subscription);
     }
 
-    private fun getUserPreferences() {
-        val subscription = userRepository.getCurrent()
-                .filter(Predicate<Optional<User>> { it.isPresent() })
-                .map<User>(Function<Optional<User>, User> { it.get() })
-                .filter { user -> user.settings != null }
-                .map<Settings>(Function<User, Settings> { it.getSettings() })
-                .filter { settings -> settings.preferences != null }
-                .map<Preferences>(Function<Settings, Preferences> { it.getPreferences() })
+    private void getUserPreferences() {
+        final Disposable subscription = userRepository.getCurrent()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(user -> user.getSettings() != null)
+                .map(User::getSettings)
+                .filter(settings -> settings.getPreferences() != null)
+                .map(Settings::getPreferences)
                 .distinctUntilChanged()
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { preferences ->
+                        preferences -> {
                             if (preferences.isAutoImageLoad()) {
-                                view.autoloadImages()
+                                view.autoloadImages();
                             } else {
-                                view.manualLoadImages()
+                                view.manualLoadImages();
                             }
                         },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
+                        Logger.INSTANCE::report
+                );
 
-        addSubscription(subscription)
+        addSubscription(subscription);
     }
 
-    private fun getAbsoluteUrl() {
-        val subscription = absoluteUrlHelper.rocketChatAbsoluteUrl
+    private void getAbsoluteUrl() {
+        final Disposable subscription = absoluteUrlHelper.getRocketChatAbsoluteUrl()
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { it -> view.setupWith(it.orNull()) },
-                        Consumer<Throwable> { Logger.report(it) }
-                )
+                        it -> view.setupWith(it.orNull()),
+                        Logger.INSTANCE::report
+                );
 
-        addSubscription(subscription)
+        addSubscription(subscription);
+    }
+
+    private Single<Pair<Room, User>> getRoomUserPair() {
+        return Single.zip(
+                getSingleRoom(),
+                getCurrentUser(),
+                Pair::new
+        );
+    }
+
+    private Single<Room> getSingleRoom() {
+        return roomRepository.getById(roomId)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .firstElement()
+                .toSingle();
+    }
+
+    private Single<User> getCurrentUser() {
+        return userRepository.getCurrent()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .firstElement()
+                .toSingle();
     }
 }

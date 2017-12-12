@@ -512,8 +512,8 @@ public class MethodCallHelper {
                         if (httpSiteUrl != null) {
                             String host = httpSiteUrl.host();
                             RocketChatCache rocketChatCache = new RocketChatCache(context);
-                            rocketChatCache.addHostnameSiteUrl(host, currentHostname);
-                            rocketChatCache.addHostSiteName(currentHostname, siteName);
+                            rocketChatCache.addSiteUrl(host, currentHostname);
+                            rocketChatCache.addSiteName(currentHostname, siteName);
                         }
                     }
 

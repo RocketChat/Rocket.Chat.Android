@@ -2,10 +2,13 @@ package chat.rocket.android;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.hadisatrio.optional.Optional;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,8 +23,6 @@ import chat.rocket.android.log.RCLog;
 import chat.rocket.core.utils.Pair;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
 import okhttp3.HttpUrl;
 
 /**
@@ -38,13 +39,12 @@ public class RocketChatCache {
     private static final String KEY_SESSION_TOKEN = "KEY_SESSION_TOKEN";
 
     private Context context;
-    private String session;
 
     public RocketChatCache(Context context) {
         this.context = context.getApplicationContext();
     }
 
-    public void addOpenedRoom(@NonNull String roomId, long lastSeen) {
+    public void addOpenedRoom(@NotNull String roomId, long lastSeen) {
         JSONObject openedRooms = getOpenedRooms();
         try {
             JSONObject room = new JSONObject().put("rid", roomId).put("ls", lastSeen);
@@ -55,15 +55,15 @@ public class RocketChatCache {
         setString(KEY_OPENED_ROOMS, openedRooms.toString());
     }
 
-    public void removeOpenedRoom(@NonNull String roomId) {
+    public void removeOpenedRoom(@NotNull String roomId) {
         JSONObject openedRooms = getOpenedRooms();
         if (openedRooms.has(roomId)) {
             openedRooms.remove(roomId);
         }
     }
 
-    public @NonNull
-    JSONObject getOpenedRooms() {
+    @NotNull
+    public JSONObject getOpenedRooms() {
         String openedRooms = getString(KEY_OPENED_ROOMS, "");
         if (openedRooms.isEmpty()) {
             return new JSONObject();
@@ -88,9 +88,9 @@ public class RocketChatCache {
         setString(KEY_SELECTED_SERVER_HOSTNAME, newHostname);
     }
 
-    public void addHostSiteName(@NonNull String currentHostname, @NonNull String siteName) {
+    public void addSiteName(@NotNull String currentHostname, @NotNull String siteName) {
         try {
-            String hostSiteNamesJson = getHostSiteNamesJson();
+            String hostSiteNamesJson = getSiteName();
             JSONObject jsonObject = (hostSiteNamesJson == null) ?
                     new JSONObject() : new JSONObject(hostSiteNamesJson);
             jsonObject.put(currentHostname, siteName);
@@ -100,8 +100,22 @@ public class RocketChatCache {
         }
     }
 
-    public @NonNull
-    String getHostSiteName(@NonNull String host) {
+    public void removeSiteName(@NotNull String hostname) {
+        try {
+            String siteNameJson = getSiteName();
+            JSONObject jsonObject = (siteNameJson == null) ?
+                    new JSONObject() : new JSONObject(siteNameJson);
+            if (jsonObject.has(hostname)) {
+                jsonObject.remove(hostname);
+            }
+            setString(KEY_SELECTED_SITE_NAME, jsonObject.toString());
+        } catch (JSONException e) {
+            RCLog.e(e);
+        }
+    }
+
+    @NotNull
+    public String getHostSiteName(@NotNull String host) {
         if (host.startsWith("http")) {
             HttpUrl url = HttpUrl.parse(host);
             if (url != null) {
@@ -109,7 +123,7 @@ public class RocketChatCache {
             }
         }
         try {
-            String hostSiteNamesJson = getHostSiteNamesJson();
+            String hostSiteNamesJson = getSiteName();
             JSONObject jsonObject = (hostSiteNamesJson == null) ?
                     new JSONObject() : new JSONObject(hostSiteNamesJson);
             host = getSiteUrlFor(host);
@@ -120,18 +134,18 @@ public class RocketChatCache {
         return "";
     }
 
-    private @Nullable
-    String getHostSiteNamesJson() {
+    @Nullable
+    private String getSiteName() {
         return getString(KEY_SELECTED_SITE_NAME, null);
     }
 
-    public void addHostnameSiteUrl(@Nullable String hostnameAlias, @NonNull String currentHostname) {
+    public void addSiteUrl(@Nullable String hostnameAlias, @NotNull String currentHostname) {
         String alias = null;
         if (hostnameAlias != null) {
             alias = hostnameAlias.toLowerCase();
         }
         try {
-            String selectedHostnameAliasJson = getLoginHostnamesJson();
+            String selectedHostnameAliasJson = getSiteUrlForAllServers();
             JSONObject jsonObject = selectedHostnameAliasJson == null ?
                     new JSONObject() : new JSONObject(selectedHostnameAliasJson);
             jsonObject.put(alias, currentHostname);
@@ -141,14 +155,33 @@ public class RocketChatCache {
         }
     }
 
-    public @Nullable
-    String getSiteUrlFor(String hostname) {
+    private void removeSiteUrl(@NotNull String hostname) {
+        try {
+            String siteUrlForAllServersJson = getSiteUrlForAllServers();
+            JSONObject jsonObject = siteUrlForAllServersJson == null ?
+                    new JSONObject() : new JSONObject(siteUrlForAllServersJson);
+            Iterator<String> keys = jsonObject.keys();
+            while (keys.hasNext()) {
+                String alias = keys.next();
+                if (hostname.equals(jsonObject.getString(alias))) {
+                    jsonObject.remove(alias);
+                    break;
+                }
+            }
+            setString(KEY_SELECTED_SITE_URL, jsonObject.toString());
+        } catch (JSONException e) {
+            RCLog.e(e);
+        }
+    }
+
+    @Nullable
+    public String getSiteUrlFor(String hostname) {
         try {
             String selectedServerHostname = getSelectedServerHostname();
-            if (getLoginHostnamesJson() == null || getLoginHostnamesJson().isEmpty()) {
+            if (getSiteUrlForAllServers() == null || getSiteUrlForAllServers().isEmpty()) {
                 return null;
             }
-            return new JSONObject(getLoginHostnamesJson())
+            return new JSONObject(getSiteUrlForAllServers())
                     .optString(hostname, selectedServerHostname);
         } catch (JSONException e) {
             RCLog.e(e);
@@ -156,12 +189,12 @@ public class RocketChatCache {
         return null;
     }
 
-    private @Nullable
-    String getLoginHostnamesJson() {
+    @Nullable
+    private String getSiteUrlForAllServers() {
         return getString(KEY_SELECTED_SITE_URL, null);
     }
 
-    public void addHostname(@NonNull String hostname, @Nullable String hostnameAvatarUri, String siteName) {
+    public void addHostname(@NotNull String hostname, @Nullable String hostnameAvatarUri, String siteName) {
         String hostnameList = getString(KEY_HOSTNAME_LIST, null);
         try {
             JSONObject json;
@@ -257,6 +290,7 @@ public class RocketChatCache {
         }
     }
 
+    @NonNull
     private JSONObject getSelectedRoomIdJsonObject() throws JSONException {
         String json = getString(KEY_SELECTED_ROOM_ID, null);
         if (json == null) {
@@ -366,5 +400,18 @@ public class RocketChatCache {
         }
 
         return null;
+    }
+
+    /**
+     * Wipe all given hostname entries and references from cache.
+     */
+    public void clearSelectedHostnameReferences() {
+        String hostname = getSelectedServerHostname();
+        if (hostname != null) {
+            removeSiteName(hostname);
+            removeHostname(hostname);
+            removeSiteUrl(hostname);
+            setSelectedServerHostname(null);
+        }
     }
 }

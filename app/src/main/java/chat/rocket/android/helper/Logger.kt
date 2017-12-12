@@ -1,9 +1,8 @@
 package chat.rocket.android.helper
 
+import chat.rocket.android.BuildConfig
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.crash.FirebaseCrash
-
-import chat.rocket.android.BuildConfig
 
 object Logger {
 
