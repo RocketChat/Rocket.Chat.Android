@@ -13,10 +13,10 @@
     <string name="dialog_add_channel_private">Закрытый</string>
     <string name="dialog_add_channel_read_only">Только для чтения</string>
 
-    <string name="fragment_room_list_pinned_message_title">Закрепленные сообщения (%с)</string>
-    <string name="fragment_room_list_favorite_message_title">Избранные сообщения (%с)</string>
-    <string name="fragment_room_list_file_list_title">Список файлов (%с)</string>
-    <string name="fragment_room_list_member_list_title">Список (%с)</string>
+    <string name="fragment_room_list_pinned_message_title">Закрепленные сообщения (%s)</string>
+    <string name="fragment_room_list_favorite_message_title">Избранные сообщения (%s)</string>
+    <string name="fragment_room_list_file_list_title">Список файлов (%s)</string>
+    <string name="fragment_room_list_member_list_title">Список (%s)</string>
     <string name="fragment_room_list_could_not_load_your_request">Не удалось обработать запрос.\n%s.</string>
     <string name="fragment_room_list_no_pinned_message_to_show">Нет закрепленных сообщений</string>
     <string name="fragment_room_list_no_favorite_message_to_show">Нет избранных сообщений</string>
