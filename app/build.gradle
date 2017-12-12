@@ -26,6 +26,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation project(':player')
+
     implementation libraries.kotlin
 
     implementation libraries.appCompat
