@@ -17,6 +17,7 @@ import chat.rocket.core.models.PublicSetting
 import chat.rocket.core.repositories.LoginServiceConfigurationRepository
 import chat.rocket.core.repositories.PublicSettingRepository
 import com.hadisatrio.optional.Optional
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 
@@ -74,25 +75,34 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
     }
 
     private fun doLogin(username: String, password: String, optional: Optional<PublicSetting>) {
-        call(username, password, optional)
-                .continueWith(object : Continuation<Void, Any?> {
-                    override fun then(task: Task<Void>?): Any? {
-                        if (task != null && task.isFaulted()) {
-                            view.hideLoader()
+        addSubscription(
+                Completable.create {
+                    call(username, password, optional)
+                            .continueWith(object : Continuation<Void, Any?> {
+                                override fun then(task: Task<Void>?): Any? {
+                                    if (task != null && task.isFaulted()) {
+                                        view.hideLoader()
 
-                            val error = task.getError()
+                                        val error = task.getError()
 
-                            error?.let {
-                                if (error is TwoStepAuthException) {
-                                    view.showTwoStepAuth()
-                                } else {
-                                    view.showError(error.message)
+                                        error?.let {
+                                            if (error is TwoStepAuthException) {
+                                                view.showTwoStepAuth()
+                                            } else {
+                                                view.showError(error.message)
+                                            }
+                                        }
+                                        return Completable.complete()
+                                    }
+                                    return null
                                 }
-                            }
+                            }, Task.UI_THREAD_EXECUTOR)
+                }.subscribeBy(
+                        onError = {
+                            view.showError(it.message)
                         }
-                        return null
-                    }
-                }, Task.UI_THREAD_EXECUTOR)
+                )
+        )
     }
 
     private fun call(username: String, password: String, optional: Optional<PublicSetting>): Task<Void> {

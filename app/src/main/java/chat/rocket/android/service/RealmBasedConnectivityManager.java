@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import chat.rocket.android.ConnectionStatusManager;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
@@ -260,6 +261,7 @@ import io.reactivex.subjects.BehaviorSubject;
     private Single<Boolean> connectToServer(String hostname) {
         return Single.defer(() -> {
             if (!serverConnectivityList.containsKey(hostname)) {
+                ConnectionStatusManager.INSTANCE.setConnectionError();
                 return Single.error(new IllegalArgumentException("hostname not found"));
             }
 
@@ -270,8 +272,10 @@ import io.reactivex.subjects.BehaviorSubject;
             }
 
             if (serviceInterface != null) {
+                ConnectionStatusManager.INSTANCE.setConnecting();
                 return serviceInterface.ensureConnectionToServer(hostname);
             } else {
+                ConnectionStatusManager.INSTANCE.setConnectionError();
                 return Single.error(new ThreadLooperNotPreparedException("not prepared"));
             }
         });

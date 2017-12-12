@@ -11,6 +11,10 @@ object ConnectionStatusManager {
     }
 
     private const val DEBUG = false
+    private val DEFAULT_CALLBACK = object : TransitionCallback {
+        override fun onTransitioned(success: Boolean) {
+        }
+    }
     private val stateMachine: EnumStateMachine<State>
 
     init {
@@ -28,21 +32,44 @@ object ConnectionStatusManager {
     fun currentState() = stateMachine.currentState()
 
     @Synchronized
-    fun setOnline(callback: TransitionCallback) {
+    fun setOnline(callback: TransitionCallback = DEFAULT_CALLBACK) {
         KeepAliveJob.cancelPendingJobRequests()
         tryTransitionTo(State.ONLINE, callback)
     }
 
     @Synchronized
-    fun setConnecting(callback: TransitionCallback) {
+    fun setOnline() {
+        KeepAliveJob.cancelPendingJobRequests()
+        tryTransitionTo(State.ONLINE, DEFAULT_CALLBACK)
+    }
+
+    @Synchronized
+    fun setConnecting(callback: TransitionCallback = DEFAULT_CALLBACK) {
         KeepAliveJob.cancelPendingJobRequests()
         tryTransitionTo(State.CONNECTING, callback)
     }
 
     @Synchronized
-    fun setConnectionError(callback: TransitionCallback) {
+    fun setConnecting() {
+        KeepAliveJob.cancelPendingJobRequests()
+        tryTransitionTo(State.CONNECTING, DEFAULT_CALLBACK)
+    }
+
+    @Synchronized
+    fun setConnectionError(callback: TransitionCallback = DEFAULT_CALLBACK) {
         KeepAliveJob.schedule()
         tryTransitionTo(State.OFFLINE, callback)
+    }
+
+    @Synchronized
+    fun setConnectionError() {
+        KeepAliveJob.schedule()
+        tryTransitionTo(State.OFFLINE, DEFAULT_CALLBACK)
+    }
+
+    @Synchronized
+    fun setOffline() {
+        stateMachine.reset()
     }
 
     private fun tryTransitionTo(newState: State, callback: TransitionCallback) {

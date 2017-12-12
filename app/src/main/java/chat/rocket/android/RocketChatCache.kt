@@ -72,7 +72,7 @@ object RocketChatCache {
         return getString(KEY_SELECTED_SERVER_HOSTNAME, null)
     }
 
-    fun setSelectedRoomId(roomId: String) {
+    fun setSelectedRoomId(roomId: String?) {
         try {
             val jsonObject = getSelectedRoomIdJsonObject()
             jsonObject.put(getSelectedServerHostname(), roomId)
@@ -81,7 +81,6 @@ object RocketChatCache {
             RCLog.e(e)
             Logger.report(e)
         }
-
     }
 
     @Throws(JSONException::class)
@@ -234,10 +233,11 @@ object RocketChatCache {
     fun clearSelectedHostnameReferences() {
         val hostname = getSelectedServerHostname()
         if (hostname != null) {
+            setString(KEY_OPENED_ROOMS, null)
             removeSiteName(hostname)
             removeHostname(hostname)
             removeSiteUrl(hostname)
-            setSelectedServerHostname(null)
+            setSelectedServerHostname(getFirstLoggedHostnameIfAny())
         }
     }
 
@@ -308,7 +308,7 @@ object RocketChatCache {
     fun setSessionToken(sessionToken: String) {
         val selectedServerHostname = getSelectedServerHostname() ?:
                 throw IllegalStateException("Trying to set sessionToken to null hostname")
-        val sessions = getSessionToken()
+        val sessions = getString(KEY_SESSION_TOKEN, null)
         try {
             val jsonObject = if (sessions == null) JSONObject() else JSONObject(sessions)
             jsonObject.put(selectedServerHostname, sessionToken)

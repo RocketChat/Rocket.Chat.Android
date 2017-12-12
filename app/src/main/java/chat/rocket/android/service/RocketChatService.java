@@ -38,7 +38,8 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
     /**
      * ensure RocketChatService alive.
      */
-    /*package*/static void keepAlive(Context context) {
+    /*package*/
+    static void keepAlive(Context context) {
         context.startService(new Intent(context, RocketChatService.class));
     }
 
@@ -99,31 +100,29 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
         return Single.defer(() -> {
             webSocketThreadLock.acquire();
             int connectivityState = ConnectivityManager.getInstance(getApplicationContext()).getConnectivityState(hostname);
-            boolean isDisconnected = connectivityState < ServerConnectivity.STATE_CONNECTED ;
+            boolean isDisconnected = connectivityState < ServerConnectivity.STATE_CONNECTED;
             if (currentWebSocketThread != null && existsThreadForHostname(hostname) && !isDisconnected) {
                 webSocketThreadLock.release();
                 return Single.just(currentWebSocketThread);
             }
 
             if (currentWebSocketThread != null) {
-                if (isDisconnected) {
-                    return currentWebSocketThread.terminate(true)
-                            .doAfterTerminate(() -> currentWebSocketThread = null)
-                            .flatMap(terminated ->
-                                    RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
-                                            .doOnSuccess(thread -> {
-                                                currentWebSocketThread = thread;
-                                                webSocketThreadLock.release();
-                                            })
-                                            .doOnError(throwable -> {
-                                                currentWebSocketThread = null;
-                                                RCLog.e(throwable);
-                                                Logger.INSTANCE.report(throwable);
-                                                webSocketThreadLock.release();
-                                            })
-                            );
-                }
-                return Single.just(currentWebSocketThread);
+                boolean hasFailed = existsThreadForHostname(hostname);
+                return currentWebSocketThread.terminate(hasFailed)
+                        .doAfterTerminate(() -> currentWebSocketThread = null)
+                        .flatMap(terminated ->
+                                RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
+                                        .doOnSuccess(thread -> {
+                                            currentWebSocketThread = thread;
+                                            webSocketThreadLock.release();
+                                        })
+                                        .doOnError(throwable -> {
+                                            currentWebSocketThread = null;
+                                            RCLog.e(throwable);
+                                            Logger.INSTANCE.report(throwable);
+                                            webSocketThreadLock.release();
+                                        })
+                        );
             }
 
             return RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
