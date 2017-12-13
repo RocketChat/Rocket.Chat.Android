@@ -4,9 +4,9 @@ import android.content.Intent
 import chat.rocket.android.R
 import chat.rocket.android.app.MainActivity
 import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.authentication.ui.LoginFragment
-import chat.rocket.android.authentication.ui.SignupFragment
-import chat.rocket.android.authentication.ui.TwoFAFragment
+import chat.rocket.android.authentication.login.ui.LoginFragment
+import chat.rocket.android.authentication.signup.ui.SignupFragment
+import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
 import chat.rocket.android.util.addFragmentBackStack
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {

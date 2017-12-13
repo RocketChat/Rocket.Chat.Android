@@ -1,4 +1,4 @@
-package chat.rocket.android.authentication.ui
+package chat.rocket.android.authentication.twofactor.ui
 
 import DrawableHelper
 import android.app.ProgressDialog
@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import chat.rocket.android.R
-import chat.rocket.android.authentication.presentation.TwoFAPresenter
-import chat.rocket.android.authentication.presentation.TwoFAView
+import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
+import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
 import chat.rocket.android.util.content
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
@@ -52,12 +52,6 @@ class TwoFAFragment : Fragment(), TwoFAView {
         password = arguments?.getString(PASSWORD) ?: ""
     }
 
-    override fun onDestroy() {
-        presenter.unbind()
-        super.onDestroy()
-    }
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_two_fa, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,12 +78,13 @@ class TwoFAFragment : Fragment(), TwoFAView {
         }
     }
 
-    override fun showProgress() {
+    override fun showLoading() {
         // TODO - change for a proper progress indicator
-        progress = ProgressDialog.show(activity, "Authenticating", "Verifying user credentials")
+        progress = ProgressDialog.show(activity, "Authenticating",
+                "Verifying user credentials", true, true)
     }
 
-    override fun hideProgress() {
+    override fun hideLoading() {
         progress?.apply {
             cancel()
         }

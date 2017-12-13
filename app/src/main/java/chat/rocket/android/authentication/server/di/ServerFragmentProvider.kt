@@ -1,6 +1,6 @@
-package chat.rocket.android.authentication.di
+package chat.rocket.android.authentication.server.di
 
-import chat.rocket.android.authentication.ui.ServerFragment
+import chat.rocket.android.authentication.server.ui.ServerFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

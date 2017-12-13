@@ -1,5 +1,6 @@
-package chat.rocket.android.authentication.presentation
+package chat.rocket.android.authentication.server.presentation
 
+import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import javax.inject.Inject
 
 class ServerPresenter @Inject constructor(private val view: ServerView,

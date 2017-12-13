@@ -1,24 +1,24 @@
-package chat.rocket.android.authentication.presentation
+package chat.rocket.android.authentication.twofactor.presentation
 
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
+import chat.rocket.android.authentication.presentation.AuthenticationNavigator
+import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
+                                         private val strategy: CancelStrategy,
                                          private val navigator: AuthenticationNavigator,
                                          private val okHttpClient: OkHttpClient,
                                          private val logger: PlatformLogger,
                                          private val repository: AuthTokenRepository) {
 
-    var job: Job? = null
     val client: RocketChatClient = RocketChatClient.create {
         httpClient = okHttpClient
         restUrl = HttpUrl.parse(navigator.currentServer)!!
@@ -30,25 +30,18 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
     fun authenticate(username: String, password: String, pin: String) {
         // TODO - validate input
 
-        job = launch(UI) {
-            view.showProgress()
+        launchUI(strategy) {
+            view.showLoading()
             try {
                 val token = client.login(username, password, pin)
 
-                view.hideProgress()
                 navigator.toChatList()
             } catch (ex: RocketChatException) {
-                view.hideProgress()
                 view.onLoginError(ex.message)
+            } finally {
+                view.hideLoading()
             }
         }
-
-    }
-
-    fun unbind() {
-        job?.let {
-            it.cancel()
-        }.also { null }
     }
 
     fun signup() {

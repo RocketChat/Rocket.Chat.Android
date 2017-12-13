@@ -1,4 +1,4 @@
-package chat.rocket.android.authentication.ui
+package chat.rocket.android.authentication.signup.ui
 
 import DrawableHelper
 import android.app.ProgressDialog
@@ -9,8 +9,8 @@ import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.app.KeyboardHelper
-import chat.rocket.android.authentication.presentation.SignupPresenter
-import chat.rocket.android.authentication.presentation.SignupView
+import chat.rocket.android.authentication.signup.presentation.SignupPresenter
+import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.util.content
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
@@ -39,11 +39,6 @@ class SignupFragment : Fragment(), SignupView {
 
         // TODO - research a better way to initialize parameters on fragments.
         serverUrl = arguments?.getString(SERVER_URL) ?: "https://open.rocket.chat"
-    }
-
-    override fun onDestroy() {
-        presenter.unbind()
-        super.onDestroy()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_sign_up, container, false)
@@ -100,12 +95,13 @@ class SignupFragment : Fragment(), SignupView {
         }
     }
 
-    override fun showProgress() {
+    override fun showLoading() {
         // TODO - change for a proper progress indicator
-        progress = ProgressDialog.show(activity, "Authenticating", "Registering user")
+        progress = ProgressDialog.show(activity, "Authenticating",
+                "Registering user", true, true)
     }
 
-    override fun hideProgress() {
+    override fun hideLoading() {
         progress?.apply {
             cancel()
         }

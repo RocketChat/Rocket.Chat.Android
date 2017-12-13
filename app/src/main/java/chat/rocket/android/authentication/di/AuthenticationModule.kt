@@ -6,6 +6,7 @@ import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.dagger.scope.PerActivity
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.experimental.Job
 
 @Module
 class AuthenticationModule {
@@ -18,5 +19,10 @@ class AuthenticationModule {
     @PerActivity
     fun provideAuthTokenRepository(): AuthTokenRepository {
         return AuthTokenRepository()
+    }
+
+    @Provides
+    fun provideJob(): Job {
+        return Job()
     }
 }

@@ -1,6 +1,6 @@
-package chat.rocket.android.authentication.di
+package chat.rocket.android.authentication.twofactor.di
 
-import chat.rocket.android.authentication.ui.TwoFAFragment
+import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

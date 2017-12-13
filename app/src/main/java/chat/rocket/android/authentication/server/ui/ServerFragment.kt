@@ -1,4 +1,4 @@
-package chat.rocket.android.authentication.ui
+package chat.rocket.android.authentication.server.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import chat.rocket.android.R
-import chat.rocket.android.authentication.presentation.ServerPresenter
-import chat.rocket.android.authentication.presentation.ServerView
+import chat.rocket.android.authentication.server.presentation.ServerPresenter
+import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.util.ifEmpty
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
