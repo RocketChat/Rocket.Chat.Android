@@ -1,7 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -10,7 +10,7 @@
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
-    <style name="AuthenticationTheme" parent="android:Theme.Material.NoActionBar.Fullscreen">
+    <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
@@ -30,6 +30,18 @@
         <item name="android:layout_marginEnd">@dimen/screen_edge_left_and_right_margins</item>
         <item name="android:paddingStart">@dimen/edit_text_margin</item>
         <item name="android:paddingEnd">@dimen/edit_text_margin</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
+        <item name="android:drawableTint" tools:ignore="NewApi">@color/colorDrawableTintGrey</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:background">@drawable/style_edit_text</item>
+    </style>
+
+    <style name="AuthenticationLabel" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:paddingStart">@dimen/edit_text_margin</item>
         <item name="android:maxLines">1</item>
         <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
         <item name="android:fontFamily">sans-serif</item>

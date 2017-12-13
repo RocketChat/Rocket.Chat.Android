@@ -4,13 +4,14 @@ import android.app.Activity
 import android.graphics.Rect
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 
 //TODO: check if this code has memory leak.
-object LayoutHelper {
-    private lateinit var childOfContent: View
+class LayoutHelper {
+    private var childOfContent: View? = null
     private var usableHeightPrevious: Int = 0
-    private lateinit var frameLayoutParams: FrameLayout.LayoutParams
+    private var frameLayoutParams: FrameLayout.LayoutParams? = null
 
     /**
      * Workaround to adjust the layout when in the full screen mode.
@@ -22,38 +23,48 @@ object LayoutHelper {
      *
      * @param activity The Activity to adjust the layout.
      */
-    fun androidBug5497Workaround(activity: Activity) {
+    fun install(activity: Activity) {
         try {
             val content = activity.findViewById<View>(android.R.id.content) as FrameLayout
             childOfContent = content.getChildAt(0)
-            childOfContent.viewTreeObserver.addOnGlobalLayoutListener({ resizeChildOfContent() })
-            frameLayoutParams = childOfContent.layoutParams as FrameLayout.LayoutParams
+            childOfContent?.viewTreeObserver?.addOnGlobalLayoutListener(listener)
+            frameLayoutParams = childOfContent?.layoutParams as FrameLayout.LayoutParams
         } catch (exception : ClassCastException) {
             // TODO: are we using the android.util.Log for logging that type of errors? or should we use the SDK logger?
             Log.e("ERROR", exception.message)
         }
     }
 
+    private val listener = ViewTreeObserver.OnGlobalLayoutListener {
+        resizeChildOfContent()
+    }
+
     private fun resizeChildOfContent() {
         val usableHeightNow = computeUsableHeight()
         if (usableHeightNow != usableHeightPrevious) {
-            val usableHeightSansKeyboard = childOfContent.rootView.height
+            val usableHeightSansKeyboard = childOfContent?.rootView?.height ?: 0
             val heightDifference = usableHeightSansKeyboard - usableHeightNow
             if (heightDifference > usableHeightSansKeyboard / 4) {
                 // keyboard probably just became visible
-                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference
+                frameLayoutParams?.height = usableHeightSansKeyboard - heightDifference
             } else {
                 // keyboard probably just became hidden
-                frameLayoutParams.height = usableHeightNow
+                frameLayoutParams?.height = usableHeightNow
             }
-            childOfContent.requestLayout()
+            childOfContent?.requestLayout()
             usableHeightPrevious = usableHeightNow
         }
     }
 
     private fun computeUsableHeight(): Int {
         val rect = Rect()
-        childOfContent.getWindowVisibleDisplayFrame(rect)
+        childOfContent?.getWindowVisibleDisplayFrame(rect)
         return rect.bottom - rect.top
+    }
+
+    fun remove() {
+        childOfContent?.viewTreeObserver?.removeOnGlobalLayoutListener(listener)
+        childOfContent = null
+        frameLayoutParams = null
     }
 }
