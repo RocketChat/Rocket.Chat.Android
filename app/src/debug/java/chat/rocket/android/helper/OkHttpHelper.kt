@@ -1,6 +1,5 @@
 package chat.rocket.android.helper
 
-import android.content.Context
 import chat.rocket.android.api.rest.CookieInterceptor
 import chat.rocket.android.api.rest.DefaultCookieProvider
 import com.facebook.stetho.okhttp3.StethoInterceptor
