@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
+    android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+    android:layout_marginTop="16dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image_user_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundAsCircle="true" />
+
+    <LinearLayout
+        android:id="@+id/top_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toRightOf="@+id/image_user_avatar">
+
+        <TextView
+            android:id="@+id/text_user_name"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Ronald Perkins" />
+
+        <TextView
+            android:id="@+id/text_message_time"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            tools:text="11:45 pm" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_content"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toLeftOf="@id/top_container"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_container"
+        tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
+
+</android.support.constraint.ConstraintLayout>

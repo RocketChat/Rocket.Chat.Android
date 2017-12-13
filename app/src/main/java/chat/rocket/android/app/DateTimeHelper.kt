@@ -35,6 +35,17 @@ object DateTimeHelper {
         }
     }
 
+    /**
+     * Returns a time from a LocalDateTime.
+     *
+     * @param localDateTime The LocalDateTime.
+     * @return The time from a LocalDateTime.
+     */
+    fun getTime(localDateTime: LocalDateTime): String {
+        val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+        return localDateTime.toLocalTime().format(formatter).toString()
+    }
+
     private fun formatDate(localDate: LocalDate): String {
         val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
         return localDate.format(formatter).toString()

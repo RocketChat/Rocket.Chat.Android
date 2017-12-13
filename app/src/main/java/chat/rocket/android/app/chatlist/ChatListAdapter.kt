@@ -22,7 +22,7 @@ class ChatListAdapter(private var dataSet: MutableList<Chat>, private val contex
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chat = dataSet[position]
 
-        holder.userAvatar.setImageURI(chat.userAvatarUri)
+        holder.userAvatar.setImageURI(chat.user.avatarUri)
         holder.chatName.text = chat.name
         holder.lastMessage.text = chat.lastMessage
         holder.lastMessageDateTime.text = DateTimeHelper.getDate(chat.lastMessageDateTime, context)
@@ -30,12 +30,7 @@ class ChatListAdapter(private var dataSet: MutableList<Chat>, private val contex
         when (chat.type) {
             "p" -> DrawableHelper.compoundDrawable(holder.chatName, DrawableHelper.getDrawableFromId(R.drawable.ic_lock_outline_black, context))
             "c" -> DrawableHelper.compoundDrawable(holder.chatName, DrawableHelper.getDrawableFromId(R.drawable.ic_hashtag_black, context))
-            "d" -> {
-                val userStatus = chat.userStatus
-                if (userStatus != null) {
-                    DrawableHelper.compoundDrawable(holder.chatName, DrawableHelper.getUserStatusDrawable(userStatus, context))
-                }
-            }
+            "d" -> DrawableHelper.compoundDrawable(holder.chatName, DrawableHelper.getUserStatusDrawable(chat.user.status, context))
         }
 
         val totalUnreadMessage = chat.totalUnreadMessages

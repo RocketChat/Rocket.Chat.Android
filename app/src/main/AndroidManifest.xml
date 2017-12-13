@@ -29,14 +29,11 @@
 
         <activity
             android:name=".app.MainActivity"
+            android:theme="@style/ChatListTheme" />
+
+        <activity
+            android:name=".app.ChatRoomActivity"
             android:theme="@style/AppTheme">
-
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
         </activity>
     </application>
 

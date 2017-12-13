@@ -8,6 +8,7 @@
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
+    <string name="action_send">Enviar</string>
 
     <!-- Regular information messages -->
     <string name="msg_username">nome de usuário</string>
@@ -20,6 +21,7 @@
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos\n<font color='#FF1976D2'>Termos de Serviço</font> e <font color='#FF1976D2'>Política de Privacidade</font></string>
     <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">ontem</string>
+    <string name="msg_message">Messagem</string>
     <string name="msg_content_description_log_in_using_facebook">Fazer login através do Facebook</string>
     <string name="msg_content_description_log_in_using_github">Fazer login através do Github</string>
     <string name="msg_content_description_log_in_using_google">Fazer login através do Google</string>
