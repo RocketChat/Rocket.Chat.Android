@@ -23,7 +23,7 @@ object OkHttpHelper {
         return httpClientForUploadFile ?: throw AssertionError("httpClientForUploadFile set to null by another thread")
     }
 
-    fun getClientForDownloadFile(context: Context): OkHttpClient {
+    fun getClientForDownloadFile(): OkHttpClient {
         if(httpClientForDownloadFile == null) {
             httpClientForDownloadFile = OkHttpClient.Builder()
                     .followRedirects(true)
