@@ -30,7 +30,7 @@ class LayoutHelper {
             childOfContent?.viewTreeObserver?.addOnGlobalLayoutListener(listener)
             frameLayoutParams = childOfContent?.layoutParams as FrameLayout.LayoutParams
         } catch (exception : ClassCastException) {
-            // TODO: are we using the android.util.Log for logging that type of errors?
+            // TODO: are we using the android.util.Log for logging that type of errors? or should we use the SDK logger?
             Log.e("ERROR", exception.message)
         }
     }

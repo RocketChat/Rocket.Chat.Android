@@ -23,6 +23,7 @@ ext {
         timber            : '4.5.1',
         threeTenABP       : '1.0.5',
         floatingSearchView: '2.1.1',
+        androidSvg        : '1.2.1',
 
         // For testing
         junit             : '4.12',
@@ -69,6 +70,8 @@ ext {
         threeTenABP         : "com.jakewharton.threetenabp:threetenabp:${versions.threeTenABP}",
 
         floatingSearchView  : "com.github.arimorty:floatingsearchview:${versions.floatingSearchView}",
+
+        androidSvg          : "com.caverock:androidsvg:${versions.androidSvg}",
 
         // For testing
         toolsJar      : files(Jvm.current().getToolsJar()),
