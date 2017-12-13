@@ -1,7 +1,5 @@
 package chat.rocket.android.service.internal;
 
-import android.content.Context;
-
 import com.hadisatrio.optional.Optional;
 
 import chat.rocket.android.RocketChatCache;
