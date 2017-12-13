@@ -15,10 +15,17 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".app.AuthenticationActivity"
+            android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme" />
+            android:theme="@style/AuthenticationTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".app.MainActivity"
@@ -27,12 +34,6 @@
         <activity
             android:name=".app.ChatRoomActivity"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
