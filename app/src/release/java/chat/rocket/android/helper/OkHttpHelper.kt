@@ -28,7 +28,7 @@ object OkHttpHelper {
             httpClientForDownloadFile = OkHttpClient.Builder()
                     .followRedirects(true)
                     .followSslRedirects(true)
-                    .addInterceptor(CookieInterceptor(DefaultCookieProvider(RocketChatCache(context))))
+                    .addInterceptor(CookieInterceptor(DefaultCookieProvider()))
                     .build()
         }
         return httpClientForDownloadFile ?: throw  AssertionError("httpClientForDownloadFile set to null by another thread")
