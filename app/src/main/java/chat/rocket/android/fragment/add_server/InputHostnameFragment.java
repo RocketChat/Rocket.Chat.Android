@@ -97,9 +97,11 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
     }
 
     @Override
-    public void hideLoader() {
-        waitingView.setVisibility(View.GONE);
-        container.setVisibility(View.VISIBLE);
+    public void hideLoader(Boolean isValidServerUrl) {
+        if(!isValidServerUrl) {
+            waitingView.setVisibility(View.GONE);
+            container.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

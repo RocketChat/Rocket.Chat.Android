@@ -16,6 +16,7 @@ import io.reactivex.disposables.Disposable;
 public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.View> implements InputHostnameContract.Presenter {
   private final RocketChatCache rocketChatCache;
   private final ConnectivityManagerApi connectivityManager;
+  private boolean isValidServerUrl=false;
 
   public InputHostnamePresenter(RocketChatCache rocketChatCache, ConnectivityManagerApi connectivityManager) {
     this.rocketChatCache = rocketChatCache;
@@ -37,10 +38,11 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
     final Disposable subscription = ServerPolicyHelper.isApiVersionValid(validationHelper)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnTerminate(() -> view.hideLoader())
+        .doOnTerminate(() -> view.hideLoader(isValidServerUrl))
         .subscribe(
             serverValidation -> {
               if (serverValidation.isValid()) {
+                isValidServerUrl=true;
                 onServerValid(hostname, serverValidation.usesSecureConnection());
               } else {
                 view.showInvalidServerError();
