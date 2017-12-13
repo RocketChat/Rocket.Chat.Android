@@ -14,6 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -21,22 +22,34 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/core.kotlin_module'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation project(':core')
+
     implementation libraries.kotlin
+    implementation libraries.coroutines
+    implementation libraries.coroutinesAndroid
 
     implementation libraries.appCompat
     implementation libraries.recyclerview
     implementation libraries.design
     implementation libraries.constraintLayout
+    implementation libraries.cardView
 
     implementation libraries.dagger
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
+
+    implementation libraries.moshi
+    implementation libraries.moshiKotlin
 
     implementation libraries.room
     kapt libraries.roomProcessor
@@ -66,4 +79,10 @@ dependencies {
 
 repositories {
     mavenCentral()
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }
