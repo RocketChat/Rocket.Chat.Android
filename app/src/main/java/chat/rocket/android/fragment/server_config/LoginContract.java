@@ -7,21 +7,25 @@ import chat.rocket.core.models.LoginServiceConfiguration;
 
 public interface LoginContract {
 
-  interface View extends BaseContract.View {
+    interface View extends BaseContract.View {
 
-    void showLoader();
+        void showLoader();
 
-    void hideLoader();
+        void hideLoader();
 
-    void showError(String message);
+        void showError(String message);
 
-    void showLoginServices(List<LoginServiceConfiguration> loginServiceList);
+        void showLoginServices(List<LoginServiceConfiguration> loginServiceList);
 
-    void showTwoStepAuth();
-  }
+        void showTwoStepAuth();
 
-  interface Presenter extends BaseContract.Presenter<View> {
+        void goBack();
+    }
 
-    void login(String username, String password);
-  }
+    interface Presenter extends BaseContract.Presenter<View> {
+
+        void login(String username, String password);
+
+        void goBack();
+    }
 }

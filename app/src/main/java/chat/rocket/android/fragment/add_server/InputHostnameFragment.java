@@ -12,7 +12,6 @@ import android.widget.TextView;
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.LaunchUtil;
 import chat.rocket.android.R;
-import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.helper.TextUtils;
 import chat.rocket.android.service.ConnectivityManager;
@@ -34,7 +33,7 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
         super.onCreate(savedInstanceState);
 
         Context appContext = getContext().getApplicationContext();
-        presenter = new InputHostnamePresenter(new RocketChatCache(appContext), ConnectivityManager.getInstance(appContext));
+        presenter = new InputHostnamePresenter(ConnectivityManager.getInstance(appContext));
     }
 
     @Override
@@ -52,7 +51,7 @@ public class InputHostnameFragment extends AbstractFragment implements InputHost
     }
 
     private void setupVersionInfo() {
-        TextView versionInfoView = (TextView) rootView.findViewById(R.id.version_info);
+        TextView versionInfoView = rootView.findViewById(R.id.version_info);
         versionInfoView.setText(getString(R.string.version_info_text, BuildConfig.VERSION_NAME));
     }
 

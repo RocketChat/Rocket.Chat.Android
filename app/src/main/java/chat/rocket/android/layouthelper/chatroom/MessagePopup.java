@@ -48,9 +48,7 @@ public class MessagePopup {
     }
 
     private void showAvailableActionsOnly(Context context) {
-        RocketChatCache cache = new RocketChatCache(context.getApplicationContext());
-
-        String hostname = cache.getSelectedServerHostname();
+        String hostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
 
         EditMessageInteractor editMessageInteractor = getEditMessageInteractor(hostname);
 
@@ -102,7 +100,7 @@ public class MessagePopup {
                                     .create()
                                     .show();
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
         compositeDisposable.add(disposable);
     }
@@ -167,7 +165,7 @@ public class MessagePopup {
     }
 
     public MessagePopup setDeleteAction(ActionListener actionListener) {
-        DELETE_ACTION_INFO.actionListener= actionListener;
+        DELETE_ACTION_INFO.actionListener = actionListener;
         return singleton;
     }
 

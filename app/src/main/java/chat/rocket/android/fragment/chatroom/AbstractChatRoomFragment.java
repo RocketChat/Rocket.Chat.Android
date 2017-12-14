@@ -11,7 +11,7 @@ import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.widget.RoomToolbar;
 import chat.rocket.core.models.User;
 
-abstract class AbstractChatRoomFragment extends AbstractFragment {
+public abstract class AbstractChatRoomFragment extends AbstractFragment {
   private RoomToolbar roomToolbar;
 
   @Nullable

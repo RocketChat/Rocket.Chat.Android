@@ -5,6 +5,7 @@ import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
+import com.evernote.android.job.JobManager;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class RocketChatApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        RocketChatCache.INSTANCE.initialize(this);
+        JobManager.create(this).addJobCreator(new RocketChatJobCreator());
         DDPClient.initialize(OkHttpHelper.INSTANCE.getClientForWebSocket());
         Fabric.with(this, new Crashlytics());
 
@@ -44,7 +47,7 @@ public class RocketChatApplication extends MultiDexApplication {
             RealmStore.put(serverInfo.getHostname());
         }
 
-        RocketChatWidgets.initialize(this, OkHttpHelper.INSTANCE.getClientForDownloadFile(this));
+        RocketChatWidgets.initialize(this, OkHttpHelper.INSTANCE.getClientForDownloadFile());
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -57,7 +60,7 @@ public class RocketChatApplication extends MultiDexApplication {
             if (BuildConfig.DEBUG) {
                 e.printStackTrace();
             }
-            Logger.report(e);
+            Logger.INSTANCE.report(e);
         });
 
         instance = this;

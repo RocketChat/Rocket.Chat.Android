@@ -38,7 +38,6 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     private final String hostname;
     private final RoomInteractor roomInteractor;
     private final UserRepository userRepository;
-    private final RocketChatCache rocketChatCache;
     private final AbsoluteUrlHelper absoluteUrlHelper;
     private final MethodCallHelper methodCallHelper;
     private SpotlightRepository realmSpotlightRepository;
@@ -47,14 +46,12 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     public SidebarMainPresenter(String hostname,
                                 RoomInteractor roomInteractor,
                                 UserRepository userRepository,
-                                RocketChatCache rocketChatCache,
                                 AbsoluteUrlHelper absoluteUrlHelper,
                                 MethodCallHelper methodCallHelper,
                                 RealmSpotlightRepository realmSpotlightRepository) {
         this.hostname = hostname;
         this.roomInteractor = roomInteractor;
         this.userRepository = userRepository;
-        this.rocketChatCache = rocketChatCache;
         this.absoluteUrlHelper = absoluteUrlHelper;
         this.methodCallHelper = methodCallHelper;
         this.realmSpotlightRepository = realmSpotlightRepository;
@@ -80,14 +77,14 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
         )
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pair -> view.show(pair.first.orNull()), Logger::report);
+                .subscribe(pair -> view.show(pair.first.orNull()), Logger.INSTANCE::report);
 
         addSubscription(subscription);
     }
 
     @Override
     public void onRoomSelected(RoomSidebar roomSidebar) {
-        rocketChatCache.setSelectedRoomId(roomSidebar.getRoomId());
+        RocketChatCache.INSTANCE.setSelectedRoomId(roomSidebar.getRoomId());
     }
 
     @Override
@@ -103,7 +100,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
             methodCallHelper.createDirectMessage(username)
                     .continueWithTask(task -> {
                         if (task.isCompleted()) {
-                            rocketChatCache.setSelectedRoomId(task.getResult());
+                            RocketChatCache.INSTANCE.setSelectedRoomId(task.getResult());
                         }
                         return null;
                     });
@@ -111,7 +108,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
             methodCallHelper.joinRoom(spotlight.getId())
                     .continueWithTask(task -> {
                         if (task.isCompleted()) {
-                            rocketChatCache.setSelectedRoomId(spotlight.getId());
+                            RocketChatCache.INSTANCE.setSelectedRoomId(spotlight.getId());
                         }
                         return null;
                     });
@@ -142,7 +139,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
     public void onLogout(Continuation<Void, Object> continuation) {
         methodCallHelper.logout().continueWith(task -> {
             if (task.isFaulted()) {
-                Logger.report(task.getError());
+                Logger.INSTANCE.report(task.getError());
                 return Task.forError(task.getError());
             }
             return task.onSuccess(continuation);
@@ -157,12 +154,12 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
             }
 
             clearSubscriptions();
-            String currentHostname = rocketChatCache.getSelectedServerHostname();
+            String currentHostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
             RealmHelper realmHelper = RealmStore.getOrCreate(currentHostname);
             return realmHelper.executeTransaction(realm -> {
-                rocketChatCache.removeHostname(currentHostname);
-                rocketChatCache.removeSelectedRoomId(currentHostname);
-                rocketChatCache.setSelectedServerHostname(rocketChatCache.getFirstLoggedHostnameIfAny());
+                RocketChatCache.INSTANCE.removeHostname(currentHostname);
+                RocketChatCache.INSTANCE.removeSelectedRoomId(currentHostname);
+                RocketChatCache.INSTANCE.setSelectedServerHostname(RocketChatCache.INSTANCE.getFirstLoggedHostnameIfAny());
                 realm.executeTransactionAsync(Realm::deleteAll);
                 view.onPreparedToLogOut();
                 ConnectivityManager.getInstance(RocketChatApplication.getInstance())
@@ -183,7 +180,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
                 .distinctUntilChanged()
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::processRooms, Logger::report);
+                .subscribe(this::processRooms, Logger.INSTANCE::report);
         addSubscription(subscription);
     }
 
@@ -227,7 +224,7 @@ public class SidebarMainPresenter extends BasePresenter<SidebarMainContract.View
                 .distinctUntilChanged()
                 .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::processUsers, Logger::report);
+                .subscribe(this::processUsers, Logger.INSTANCE::report);
         addSubscription(subscription);
     }
 

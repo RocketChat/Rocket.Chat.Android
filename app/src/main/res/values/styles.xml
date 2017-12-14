@@ -12,7 +12,6 @@
 
         <item name="actionModeBackground">?attr/colorPrimaryDark</item>
         <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
@@ -27,7 +26,6 @@
 
         <item name="actionModeBackground">?attr/colorPrimaryDark</item>
         <item name="android:statusBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">?attr/colorPrimaryDark</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">

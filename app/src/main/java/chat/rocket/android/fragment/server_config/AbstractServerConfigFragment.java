@@ -8,7 +8,7 @@ import chat.rocket.android.R;
 import chat.rocket.android.fragment.AbstractFragment;
 import chat.rocket.android.helper.TextUtils;
 
-abstract class AbstractServerConfigFragment extends AbstractFragment {
+public abstract class AbstractServerConfigFragment extends AbstractFragment {
   public static final String KEY_HOSTNAME = "hostname";
 
   protected String hostname;

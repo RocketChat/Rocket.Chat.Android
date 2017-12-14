@@ -30,17 +30,18 @@ android {
     }
 }
 dependencies {
-    compile project(':log-wrapper')
-    compile project(':rocket-chat-core')
-    compile extraDependencies.rxJava
-    compile extraDependencies.boltTask
-    compile supportDependencies.annotation
-    compile supportDependencies.designSupportLibrary
-    compile extraDependencies.rxAndroid
-    provided extraDependencies.optional
-    testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
-    testCompile 'org.json:json:20170516'
-    testCompile 'org.skyscreamer:jsonassert:1.5.0'
-    testCompile 'junit:junit:4.12'
+    api project(':log-wrapper')
+    api project(':rocket-chat-core')
+    implementation extraDependencies.rxJava
+    implementation extraDependencies.rxKotlin
+    implementation extraDependencies.boltTask
+    implementation supportDependencies.annotation
+    implementation supportDependencies.designSupportLibrary
+    implementation extraDependencies.rxAndroid
+    implementation extraDependencies.optional
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
+    testImplementation 'org.json:json:20170516'
+    testImplementation 'org.skyscreamer:jsonassert:1.5.0'
+    testImplementation 'junit:junit:4.12'
 }
