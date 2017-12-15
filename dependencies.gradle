@@ -21,6 +21,7 @@ ext {
         timber            : '4.5.1',
         threeTenABP       : '1.0.5',
         fresco            : '1.5.0',
+        frescoImageViewer : '0.5.0',
         floatingSearchView: '2.1.1',
         androidSvg        : '1.2.1',
 
@@ -65,6 +66,7 @@ ext {
         frescoWebP          : "com.facebook.fresco:webpsupport:${versions.fresco}",
         frescoAnimatedWebP  : "com.facebook.fresco:animated-webp:${versions.fresco}",
 
+        frescoImageViewer   : "com.github.stfalcon:frescoimageviewer:${versions.frescoImageViewer}",
 
         floatingSearchView  : "com.github.arimorty:floatingsearchview:${versions.floatingSearchView}",
 

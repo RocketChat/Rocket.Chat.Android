@@ -58,6 +58,7 @@ dependencies {
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
 
+    implementation libraries.frescoImageViewer
 
     implementation libraries.floatingSearchView
 
