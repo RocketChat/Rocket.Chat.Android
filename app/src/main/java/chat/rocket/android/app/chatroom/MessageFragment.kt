@@ -35,7 +35,7 @@ class MessageFragment : Fragment() {
 
         val message1 = Message(user1,
                 "This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!",
-                "https://rocket.chat/images/index/community.svg",
+                "https://rocket.chat/images/index/livechat.png",
                 LocalDateTime.now())
         val message2 = Message(user2, "Great!",
                 "https://rocket.chat/images/index/screenshot.png",
@@ -47,6 +47,6 @@ class MessageFragment : Fragment() {
     private fun showMessageList(dataSet: List<Message>) {
         val context = activity
         recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recycler_view.adapter = MessageListAdapter(activity, dataSet.toMutableList())
+        recycler_view.adapter = MessageListAdapter(context, dataSet.toMutableList()) {}
     }
 }
