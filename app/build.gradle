@@ -63,13 +63,15 @@ dependencies {
     implementation libraries.okhttp
     implementation libraries.okhttpLogger
 
+    implementation libraries.timber
+    implementation libraries.threeTenABP
+
     implementation libraries.fresco
     implementation libraries.frescoAnimatedGif
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
 
-    implementation libraries.timber
-    implementation libraries.threeTenABP
+    implementation libraries.frescoImageViewer
 
     implementation libraries.floatingSearchView
 

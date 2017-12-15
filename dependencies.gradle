@@ -20,9 +20,10 @@ ext {
         rxandroid         : '2.0.1',
         moshi             : '1.6.0-SNAPSHOT',
         okhttp            : '3.9.0',
-        fresco            : '1.5.0',
         timber            : '4.5.1',
         threeTenABP       : '1.0.5',
+        fresco            : '1.5.0',
+        frescoImageViewer : '0.5.0',
         floatingSearchView: '2.1.1',
         androidSvg        : '1.2.1',
 
@@ -63,13 +64,15 @@ ext {
         okhttp              : "com.squareup.okhttp3:okhttp:${versions.okhttp}",
         okhttpLogger        : "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}",
 
+        timber              : "com.jakewharton.timber:timber:${versions.timber}",
+        threeTenABP         : "com.jakewharton.threetenabp:threetenabp:${versions.threeTenABP}",
+
         fresco              : "com.facebook.fresco:fresco:${versions.fresco}",
         frescoAnimatedGif   : "com.facebook.fresco:animated-gif:${versions.fresco}",
         frescoWebP          : "com.facebook.fresco:webpsupport:${versions.fresco}",
         frescoAnimatedWebP  : "com.facebook.fresco:animated-webp:${versions.fresco}",
 
-        timber              : "com.jakewharton.timber:timber:${versions.timber}",
-        threeTenABP         : "com.jakewharton.threetenabp:threetenabp:${versions.threeTenABP}",
+        frescoImageViewer   : "com.github.stfalcon:frescoimageviewer:${versions.frescoImageViewer}",
 
         floatingSearchView  : "com.github.arimorty:floatingsearchview:${versions.floatingSearchView}",
 
