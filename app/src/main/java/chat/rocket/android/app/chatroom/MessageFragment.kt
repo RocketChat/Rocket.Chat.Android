@@ -1,7 +1,7 @@
 package chat.rocket.android.app.chatroom
 
-import android.app.Fragment
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +13,9 @@ import org.threeten.bp.LocalDateTime
 
 class MessageFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater?.inflate(R.layout.fragment_message, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_message, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showMessageList(createDumpData())
     }
@@ -45,8 +45,9 @@ class MessageFragment : Fragment() {
 
     // REMARK: The presenter should call this method.
     private fun showMessageList(dataSet: List<Message>) {
-        val context = activity
-        recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recycler_view.adapter = MessageListAdapter(context, dataSet.toMutableList()) {}
+        activity?.apply {
+            recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            recycler_view.adapter = MessageListAdapter(this, dataSet.toMutableList()) {}
+        }
     }
 }

@@ -79,6 +79,7 @@ object SvgDecoder {
                 val svg = SVG.getFromInputStream(encodedImage.inputStream)
                 return CloseableSvgImage(svg)
             } catch (e: SVGParseException) {
+                // TODO: are we using the android.util.Log for logging that type of errors? or should we use the SDK logger?
                 e.printStackTrace()
             }
             // Return nothing if an error occurred

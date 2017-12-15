@@ -1,7 +1,7 @@
 package chat.rocket.android.app.chatlist
 
-import android.app.Fragment
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -14,9 +14,9 @@ import org.threeten.bp.LocalDateTime
 
 class ChatListFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater?.inflate(R.layout.fragment_chat_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_chat_list, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showChatList(createDumpData())
     }
@@ -87,9 +87,10 @@ class ChatListFragment : Fragment() {
 
     // REMARK: The presenter should call this method. The presenter also need to sort the chat list by latest message (compared by its date).
     private fun showChatList(dataSet: List<Chat>) {
-        val context = activity.applicationContext
-        recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recycler_view.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-        recycler_view.adapter = ChatListAdapter(dataSet.toMutableList(), context)
+        activity?.apply {
+            recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            recycler_view.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+            recycler_view.adapter = ChatListAdapter(dataSet.toMutableList(), this)
+        }
     }
 }
