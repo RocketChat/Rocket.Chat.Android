@@ -108,6 +108,7 @@ object ColorImage {
                 // Return the CloseableImage
                 return CloseableColorImage(color)
             } catch (e: IOException) {
+                // TODO: are we using the android.util.Log for logging that type of errors? or should we use the SDK logger?
                 e.printStackTrace()
             }
             // Return nothing if an error occurred

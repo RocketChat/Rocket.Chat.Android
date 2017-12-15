@@ -9,14 +9,25 @@
         android:layout_centerHorizontal="true"
         android:text="@string/title_sign_in_your_server" />
 
+    <TextView
+        android:id="@+id/server_protocol_label"
+        style="@style/AuthenticationLabel"
+        android:layout_below="@id/text_headline"
+        android:layout_marginTop="32dp"
+        android:gravity="center_vertical"
+        android:text="@string/default_protocol" />
+
     <EditText
         android:id="@+id/text_server_url"
         style="@style/AuthenticationEditText"
         android:layout_below="@id/text_headline"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="32dp"
+        android:layout_toEndOf="@id/server_protocol_label"
+        android:hint="@string/default_server"
         android:imeOptions="actionDone"
         android:inputType="textUri"
-        android:text="@string/msg_https" />
+        android:paddingStart="0dp" />
 
     <Button
         android:id="@+id/button_connect"
