@@ -22,17 +22,31 @@ class MessageFragment : Fragment() {
 
     // This is just a sample showing 2 messages in the chat room. We need to get it rid in a real word. REMARK: remove this comment and this method.
     private fun createDumpData(): List<Message> {
-        val user1 = User("1", "Filipe Brito", "filipe.brito", "online", "https://open.rocket.chat/avatar/filipe.brito")
-        val user2 = User("2", "Lucio Maciel", "Lucio Maciel", "busy", "https://open.rocket.chat/avatar/lucio.maciel")
+        val user1 = User("1",
+                "Filipe Brito",
+                "filipe.brito",
+                "online",
+                "https://open.rocket.chat/avatar/filipe.brito")
+        val user2 = User("2",
+                "Lucio Maciel",
+                "Lucio Maciel",
+                "busy",
+                "https://open.rocket.chat/avatar/lucio.maciel")
 
-        val message1 = Message(user1, "This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!", LocalDateTime.now())
-        val message2 = Message(user2, "Great!", LocalDateTime.now().plusHours(1))
+        val message1 = Message(user1,
+                "This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!",
+                "https://rocket.chat/images/index/community.svg",
+                LocalDateTime.now())
+        val message2 = Message(user2, "Great!",
+                "https://rocket.chat/images/index/screenshot.png",
+                LocalDateTime.now().plusHours(1))
         return listOf(message1, message2)
     }
 
     // REMARK: The presenter should call this method.
     private fun showMessageList(dataSet: List<Message>) {
-        recycler_view.layoutManager = LinearLayoutManager(activity.applicationContext, LinearLayoutManager.VERTICAL, false)
-        recycler_view.adapter = MessageListAdapter(dataSet.toMutableList())
+        val context = activity
+        recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recycler_view.adapter = MessageListAdapter(activity, dataSet.toMutableList())
     }
 }
