@@ -47,7 +47,7 @@ public class AddChannelDialogFragment extends AbstractAddRoomDialogFragment {
             .compose(bindToLifecycle())
             .subscribe(
                 buttonAddChannel::setEnabled,
-                Logger::report
+                Logger.INSTANCE::report
             );
 
     buttonAddChannel.setOnClickListener(view -> createRoom());

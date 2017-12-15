@@ -1,7 +1,5 @@
 package chat.rocket.android.service.internal;
 
-import android.content.Context;
-
 import com.hadisatrio.optional.Optional;
 
 import chat.rocket.android.RocketChatCache;
@@ -13,13 +11,11 @@ import chat.rocket.persistence.realm.models.ddp.RealmRoom;
 import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class AbstractRocketChatCacheObserver implements Registrable {
-  private final Context context;
   private final RealmHelper realmHelper;
   private String roomId;
   private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-  protected AbstractRocketChatCacheObserver(Context context, RealmHelper realmHelper) {
-    this.context = context;
+  protected AbstractRocketChatCacheObserver(RealmHelper realmHelper) {
     this.realmHelper = realmHelper;
   }
 
@@ -47,7 +43,7 @@ public abstract class AbstractRocketChatCacheObserver implements Registrable {
   @Override
   public final void register() {
     compositeDisposable.add(
-        new RocketChatCache(context)
+        RocketChatCache.INSTANCE
             .getSelectedRoomIdPublisher()
             .filter(Optional::isPresent)
             .map(Optional::get)

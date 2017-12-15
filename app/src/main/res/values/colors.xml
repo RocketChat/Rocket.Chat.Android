@@ -13,4 +13,5 @@
     <color name="colorSecondaryTextDark">#8A000000</color>
 
     <color name="colorDivider">#1F000000</color>
+    <color name="connection_crouton_background">#030000</color>
 </resources>

@@ -21,9 +21,10 @@ android {
     }
 }
 dependencies {
-    compile project(':log-wrapper')
-    compile extraDependencies.okHTTP
-    compile extraDependencies.rxJava
-    compile extraDependencies.boltTask
-    compile supportDependencies.annotation
+    api project(':log-wrapper')
+    implementation extraDependencies.okHTTP
+    implementation extraDependencies.rxJava
+    implementation extraDependencies.rxKotlin
+    implementation extraDependencies.boltTask
+    implementation supportDependencies.annotation
 }

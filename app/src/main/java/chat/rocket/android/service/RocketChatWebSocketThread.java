@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import bolts.Task;
+import chat.rocket.android.ConnectionStatusManager;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.helper.RxHelper;
@@ -29,7 +30,6 @@ import chat.rocket.android.service.observer.FileUploadingWithUfsObserver;
 import chat.rocket.android.service.observer.GcmPushRegistrationObserver;
 import chat.rocket.android.service.observer.GetUsersOfRoomsProcedureObserver;
 import chat.rocket.android.service.observer.LoadMessageProcedureObserver;
-import chat.rocket.android.service.observer.MethodCallObserver;
 import chat.rocket.android.service.observer.NewMessageObserver;
 import chat.rocket.android.service.observer.PushSettingsObserver;
 import chat.rocket.android.service.observer.SessionObserver;
@@ -54,8 +54,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
             LoginServiceConfigurationSubscriber.class,
             ActiveUsersSubscriber.class,
             UserDataSubscriber.class,
-            MethodCallObserver.class,
-            SessionObserver.class,
+//            MethodCallObserver.class,
             LoadMessageProcedureObserver.class,
             GetUsersOfRoomsProcedureObserver.class,
             NewMessageObserver.class,
@@ -125,21 +124,26 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
 
     /**
-     * terminate WebSocket thread.
+     * Terminate WebSocket thread. If {@code hasFailed} is {@code true} it means that a connection was
+     * in progress but failed and got offline. If it's {@code false} means that the user explicitly
+     * disconnected from server either by logging out or by means of changing servers.
+     *
+     * @param hasFailed {@code true} if the termination is due to a network error, otherwise
+     *                  return false
      */
     @DebugLog
-    /* package */ Single<Boolean> terminate() {
+    /* package */ Single<Boolean> terminate(boolean hasFailed) {
         if (isAlive()) {
-            return Single.create(emitter -> {
-                new Handler(getLooper()).post(() -> {
-                    RCLog.d("thread %s: terminated()", Thread.currentThread().getId());
-                    unregisterListenersAndClose();
-                    connectivityManager.notifyConnectionLost(hostname,
-                            DDPClient.REASON_CLOSED_BY_USER);
-                    RocketChatWebSocketThread.super.quit();
-                    emitter.onSuccess(true);
-                });
-            });
+            return Single.create(emitter -> new Handler(getLooper()).post(() -> {
+                RCLog.d("thread %s: terminated()", Thread.currentThread().getId());
+                int reason = (hasFailed) ?
+                        DDPClient.REASON_NETWORK_ERROR : DDPClient.REASON_CLOSED_BY_USER;
+                unregisterListenersAndClose(reason);
+                connectivityManager.notifyConnectionLost(hostname, reason);
+                RocketChatWebSocketThread.super.quit();
+                ConnectionStatusManager.INSTANCE.setOffline();
+                emitter.onSuccess(true);
+            }));
         } else {
             connectivityManager.notifyConnectionLost(hostname,
                     DDPClient.REASON_NETWORK_ERROR);
@@ -163,7 +167,7 @@ public class RocketChatWebSocketThread extends HandlerThread {
     @DebugLog
     /* package */ Single<Boolean> keepAlive() {
         return checkIfConnectionAlive()
-                .flatMap(alive -> alive ? Single.just(true) : connectWithExponentialBackoff());
+                .flatMap(alive -> connectWithExponentialBackoff());
     }
 
     @DebugLog
@@ -224,13 +228,11 @@ public class RocketChatWebSocketThread extends HandlerThread {
                     .onSuccessTask(task -> {
                         final String newSession = task.getResult().session;
                         connectivityManager.notifyConnectionEstablished(hostname, newSession);
-                        // handling WebSocket#onClose() callback.
+
                         task.getResult().client.getOnCloseCallback().onSuccess(_task -> {
                             RxWebSocketCallback.Close result = _task.getResult();
                             if (result.code == DDPClient.REASON_NETWORK_ERROR) {
                                 reconnect();
-                            } else {
-                                unregisterListenersAndClose();
                             }
                             return null;
                         });
@@ -382,6 +384,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
                 RCLog.w(exception, "Failed to register listeners!!");
             }
         }
+        // Register SessionObserver late.
+        SessionObserver sessionObserver = new SessionObserver(appContext, hostname, realmHelper);
+        sessionObserver.register();
+        listeners.add(sessionObserver);
         listenersRegistered = true;
         startHeartBeat();
     }
@@ -410,9 +416,9 @@ public class RocketChatWebSocketThread extends HandlerThread {
     }
 
     @DebugLog
-    private void unregisterListenersAndClose() {
+    private void unregisterListenersAndClose(int reason) {
         unregisterListeners();
-        DDPClient.get().close();
+        DDPClient.get().close(reason);
     }
 
     @DebugLog

@@ -24,7 +24,6 @@ import java.util.List;
 
 import chat.rocket.android.BuildConfig;
 import chat.rocket.android.R;
-import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.activity.MainActivity;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.fragment.AbstractFragment;
@@ -94,13 +93,11 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
                 new SessionInteractor(new RealmSessionRepository(hostname))
         );
 
-        RocketChatCache rocketChatCache = new RocketChatCache(getContext().getApplicationContext());
 
         presenter = new SidebarMainPresenter(
                 hostname,
                 new RoomInteractor(new RealmRoomRepository(hostname)),
                 userRepository,
-                rocketChatCache,
                 absoluteUrlHelper,
                 new MethodCallHelper(getContext(), hostname),
                 new RealmSpotlightRepository(hostname)
@@ -239,7 +236,7 @@ public class SidebarMainFragment extends AbstractFragment implements SidebarMain
                 .compose(bindToLifecycle())
                 .subscribe(
                         this::showUserActionContainer,
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
     }
 

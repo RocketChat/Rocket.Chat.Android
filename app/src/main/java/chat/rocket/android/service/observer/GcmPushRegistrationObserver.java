@@ -68,7 +68,7 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
     final RealmUser currentUser = realmHelper.executeTransactionForRead(realm ->
         RealmUser.queryCurrentUser(realm).findFirst());
     final String userId = currentUser != null ? currentUser.getId() : null;
-    final String pushId = new RocketChatCache(context).getOrCreatePushId();
+    final String pushId = RocketChatCache.INSTANCE.getOrCreatePushId();
 
     return new RaixPushHelper(realmHelper)
         .pushUpdate(pushId, gcmToken, userId);

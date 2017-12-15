@@ -1,7 +1,5 @@
 package chat.rocket.android.helper
 
-import android.content.Context
-import chat.rocket.android.RocketChatCache
 import chat.rocket.android.api.rest.CookieInterceptor
 import chat.rocket.android.api.rest.DefaultCookieProvider
 import com.facebook.stetho.okhttp3.StethoInterceptor
@@ -24,17 +22,18 @@ object OkHttpHelper {
         return httpClientForUploadFile ?: throw AssertionError("httpClientForUploadFile set to null by another thread")
     }
 
-    fun getClientForDownloadFile(context: Context): OkHttpClient {
-        if(httpClientForDownloadFile == null) {
+    fun getClientForDownloadFile(): OkHttpClient {
+        if (httpClientForDownloadFile == null) {
             httpClientForDownloadFile = OkHttpClient.Builder()
                     .addNetworkInterceptor(StethoInterceptor())
                     .followRedirects(true)
                     .followSslRedirects(true)
-                    .addInterceptor(CookieInterceptor(DefaultCookieProvider(RocketChatCache(context))))
+                    .addInterceptor(CookieInterceptor(DefaultCookieProvider()))
                     .build()
         }
         return httpClientForDownloadFile ?: throw  AssertionError("httpClientForDownloadFile set to null by another thread")
     }
+
     /**
      * Returns the OkHttpClient instance for WebSocket connection.
      * @return The OkHttpClient WebSocket connection instance.

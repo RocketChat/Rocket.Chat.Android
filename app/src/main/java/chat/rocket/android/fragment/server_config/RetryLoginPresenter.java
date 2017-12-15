@@ -52,7 +52,7 @@ public class RetryLoginPresenter extends BasePresenter<RetryLoginContract.View>
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 this::onSession,
-                Logger::report
+                Logger.INSTANCE::report
             )
     );
   }

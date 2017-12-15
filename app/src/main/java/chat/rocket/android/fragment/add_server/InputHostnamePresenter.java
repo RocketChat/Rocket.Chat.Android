@@ -14,12 +14,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.View> implements InputHostnameContract.Presenter {
-  private final RocketChatCache rocketChatCache;
   private final ConnectivityManagerApi connectivityManager;
   private boolean isValidServerUrl=false;
 
-  public InputHostnamePresenter(RocketChatCache rocketChatCache, ConnectivityManagerApi connectivityManager) {
-    this.rocketChatCache = rocketChatCache;
+  public InputHostnamePresenter(ConnectivityManagerApi connectivityManager) {
     this.connectivityManager = connectivityManager;
   }
 
@@ -49,14 +47,14 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
               }
             },
             throwable -> {
-              Logger.report(throwable);
+              Logger.INSTANCE.report(throwable);
               view.showConnectionError();
             });
     addSubscription(subscription);
   }
 
   private void onServerValid(String hostname, boolean usesSecureConnection) {
-    rocketChatCache.setSelectedServerHostname(hostname);
+    RocketChatCache.INSTANCE.setSelectedServerHostname(hostname);
 
     String server = hostname.replace("/", ".");
     connectivityManager.addOrUpdateServer(server, server, !usesSecureConnection);

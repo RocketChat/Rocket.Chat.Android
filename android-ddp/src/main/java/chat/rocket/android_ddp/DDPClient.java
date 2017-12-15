@@ -84,7 +84,11 @@ public class DDPClient {
     }
 
     public void close() {
-        impl.close(REASON_CLOSED_BY_USER, "closed by DDPClient#close()");
+        close(REASON_CLOSED_BY_USER);
+    }
+
+    public void close(int reason) {
+        impl.close(reason, "closed by DDPClient#close()");
     }
 
     /**
