@@ -12,10 +12,11 @@ android {
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
         versionCode 1
-        versionName "1.0"
+        versionName "2.0.0-beta1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -32,6 +33,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(':core')
+    implementation project(':player')
 
     implementation libraries.kotlin
     implementation libraries.coroutines

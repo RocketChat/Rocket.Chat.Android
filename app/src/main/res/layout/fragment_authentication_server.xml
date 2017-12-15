@@ -15,18 +15,19 @@
         android:layout_below="@id/text_headline"
         android:layout_marginTop="32dp"
         android:gravity="center_vertical"
-        android:text="@string/default_protocol"/>
+        android:text="@string/default_protocol" />
+
     <EditText
         android:id="@+id/text_server_url"
         style="@style/AuthenticationEditText"
         android:layout_below="@id/text_headline"
-        android:layout_toEndOf="@id/server_protocol_label"
-        android:layout_marginTop="32dp"
         android:layout_marginStart="0dp"
-        android:paddingStart="0dp"
+        android:layout_marginTop="32dp"
+        android:layout_toEndOf="@id/server_protocol_label"
+        android:hint="@string/default_server"
         android:imeOptions="actionDone"
         android:inputType="textUri"
-        android:hint="@string/default_server" />
+        android:paddingStart="0dp" />
 
     <Button
         android:id="@+id/button_connect"
