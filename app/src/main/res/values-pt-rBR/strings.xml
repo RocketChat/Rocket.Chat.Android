@@ -11,6 +11,7 @@
     <string name="action_send">Enviar</string>
 
     <!-- Regular information messages -->
+    <string name="msg_no_internet_connection">Sem conexão à internet</string>
     <string name="msg_username">nome de usuário</string>
     <string name="msg_username_or_email">nome de usuário ou email</string>
     <string name="msg_password">senha</string>
