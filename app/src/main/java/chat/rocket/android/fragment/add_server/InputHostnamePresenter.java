@@ -15,7 +15,7 @@ import io.reactivex.disposables.Disposable;
 
 public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.View> implements InputHostnameContract.Presenter {
   private final ConnectivityManagerApi connectivityManager;
-  private boolean isValidServerUrl=false;
+  private boolean isValidServerUrl;
 
   public InputHostnamePresenter(ConnectivityManagerApi connectivityManager) {
     this.connectivityManager = connectivityManager;
