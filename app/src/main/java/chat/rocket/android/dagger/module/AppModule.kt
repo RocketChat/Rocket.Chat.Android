@@ -73,6 +73,6 @@ class AppModule {
     @Provides
     @Singleton
     fun providePlatformLogger(): PlatformLogger {
-        return TimberLogger()
+        return TimberLogger
     }
 }
