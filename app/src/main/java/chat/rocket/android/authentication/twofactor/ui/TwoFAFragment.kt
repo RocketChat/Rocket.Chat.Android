@@ -13,7 +13,7 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
-import chat.rocket.android.util.content
+import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject
@@ -64,7 +64,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         }
 
         button_log_in.setOnClickListener {
-            presenter.authenticate(username, password, text_two_factor_auth.content)
+            presenter.authenticate(username, password, text_two_factor_auth.textContent)
         }
     }
 

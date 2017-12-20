@@ -9,7 +9,7 @@ import android.view.*
 import android.widget.ScrollView
 import android.widget.Toast
 import chat.rocket.android.R
-import chat.rocket.android.app.KeyboardHelper
+import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import dagger.android.support.AndroidSupportInjection

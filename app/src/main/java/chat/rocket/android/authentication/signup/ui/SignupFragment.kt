@@ -8,10 +8,10 @@ import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
-import chat.rocket.android.app.KeyboardHelper
+import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
-import chat.rocket.android.util.content
+import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject
@@ -55,10 +55,10 @@ class SignupFragment : Fragment(), SignupView {
         setupGlobalLayoutListener()
 
         button_sign_up.setOnClickListener {
-            val email = text_email.content
-            val name = text_name.content
-            val username = text_username.content
-            val password = text_password.content
+            val email = text_email.textContent
+            val name = text_name.textContent
+            val username = text_username.textContent
+            val password = text_password.textContent
 
             presenter.signup(email, name, username, password)
         }
