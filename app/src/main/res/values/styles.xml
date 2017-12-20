@@ -10,6 +10,7 @@
     </style>
 
     <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
