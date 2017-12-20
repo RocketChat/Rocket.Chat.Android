@@ -12,7 +12,7 @@
         android:text="@string/title_sign_in_your_server" />
 
     <TextView
-        android:id="@+id/server_protocol_label"
+        android:id="@+id/text_server_protocol"
         style="@style/AuthenticationLabel"
         android:layout_below="@id/text_headline"
         android:layout_marginTop="32dp"
