@@ -1,5 +1,6 @@
 package chat.rocket.android.util
 
+import android.view.View
 import android.widget.TextView
 
 fun String.ifEmpty(value: String): String {
@@ -9,6 +10,22 @@ fun String.ifEmpty(value: String): String {
     return this
 }
 
-var TextView.content: String
+fun View.setVisibility(value: Boolean) {
+    if (value) {
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
+    }
+}
+
+var TextView.textContent: String
     get() = this.text.toString()
-    set(value) { this.text = value }
+    set(value) {
+        this.text = value
+    }
+
+var TextView.hintContent: String
+    get() = this.hint.toString()
+    set(value) {
+        this.text = value
+    }
