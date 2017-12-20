@@ -3,7 +3,8 @@ package chat.rocket.android.util
 import chat.rocket.common.util.PlatformLogger
 import timber.log.Timber
 
-class TimberLogger : PlatformLogger {
+object TimberLogger : PlatformLogger {
+
     override fun debug(s: String) {
         Timber.d(s)
     }
