@@ -28,6 +28,7 @@
         android:hint="@string/default_server"
         android:imeOptions="actionDone"
         android:inputType="textUri"
+        android:paddingEnd="0dp"
         android:paddingStart="0dp" />
 
     <com.wang.avi.AVLoadingIndicatorView
