@@ -19,14 +19,6 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         }
     }
 
-    fun toChatList() {
-        val chatRoom = Intent(activity, MainActivity::class.java).apply {
-            //TODO any parameter to pass
-        }
-        activity.startActivity(chatRoom)
-        activity.finish()
-    }
-
     fun toTwoFA(server: String, username: String, password: String) {
         currentServer = server
         activity.addFragmentBackStack("twoFAFragment", R.id.fragment_container) {
@@ -39,5 +31,13 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         activity.addFragmentBackStack("signupFragment", R.id.fragment_container) {
             SignupFragment.newInstance(server)
         }
+    }
+
+    fun toChatList() {
+        val chatRoom = Intent(activity, MainActivity::class.java).apply {
+            //TODO any parameter to pass
+        }
+        activity.startActivity(chatRoom)
+        activity.finish()
     }
 }
