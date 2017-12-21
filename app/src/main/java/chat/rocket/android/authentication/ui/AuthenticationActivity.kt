@@ -1,7 +1,6 @@
 package chat.rocket.android.authentication.ui
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
@@ -12,7 +11,6 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.activity_authentication.*
 import javax.inject.Inject
 
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
