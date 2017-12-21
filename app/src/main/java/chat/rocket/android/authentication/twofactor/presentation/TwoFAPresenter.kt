@@ -37,7 +37,10 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
 
                 navigator.toChatList()
             } catch (ex: RocketChatException) {
-                view.onLoginError(ex.message)
+                val errorMessage = ex.message
+                if (errorMessage != null) {
+                    view.showMessage(errorMessage)
+                }
             } finally {
                 view.hideLoading()
             }
