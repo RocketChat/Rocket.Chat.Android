@@ -91,7 +91,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         progress = null
     }
 
-    override fun onLoginError(message: String?) {
+    override fun showMessage(message: String) {
         // TODO - show a proper error message
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
