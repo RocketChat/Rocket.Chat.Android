@@ -1,9 +1,11 @@
 package chat.rocket.android.authentication.login.presentation
 
+import android.widget.EditText
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.textContent
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.util.PlatformLogger
@@ -19,7 +21,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val okHttpClient: OkHttpClient,
                                          private val logger: PlatformLogger,
                                          private val repository: AuthTokenRepository) {
-
     val client: RocketChatClient = RocketChatClient.create {
         httpClient = okHttpClient
         restUrl = HttpUrl.parse(navigator.currentServer)!!
@@ -28,24 +29,36 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         platformLogger = logger
     }
 
-    fun authenticate(username: String, password: String) {
-        // TODO - validate input
+    fun authenticate(usernameOrEmail: EditText, password: EditText) {
+        val user = usernameOrEmail.textContent
+        val pass = password.textContent
 
-        launchUI(strategy) {
-            view.showLoading()
-            try {
-                val token = client.login(username, password)
-
-                navigator.toChatList()
-            } catch (ex: RocketChatException) {
-                when(ex) {
-                    is RocketChatTwoFactorException ->
-                        navigator.toTwoFA(navigator.currentServer!!, username, password)
-                    else ->
-                        view.onLoginError(ex.message)
+        if (user.isBlank() && pass.isEmpty()) {
+            view.shakeView(usernameOrEmail)
+            view.shakeView(password)
+        } else if (user.isBlank()) {
+            view.shakeView(usernameOrEmail)
+        } else if (pass.isEmpty()) {
+            view.shakeView(password)
+        } else {
+            launchUI(strategy) {
+                view.showLoading()
+                try {
+                    val token = client.login(user, pass)
+                    navigator.toChatList()
+                } catch (ex: RocketChatException) {
+                    when (ex) {
+                        is RocketChatTwoFactorException -> navigator.toTwoFA(navigator.currentServer!!, user, pass)
+                        else -> {
+                            val errorMessage = ex.message
+                            if (errorMessage != null) {
+                                view.showMessage(errorMessage)
+                            }
+                        }
+                    }
+                } finally {
+                    view.hideLoading()
                 }
-            } finally {
-                view.hideLoading()
             }
         }
     }
