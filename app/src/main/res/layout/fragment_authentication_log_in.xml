@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context=".authentication.login.ui.LoginFragment">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/middle_container"
@@ -45,6 +46,19 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_username_or_email" />
 
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/view_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:indicatorName="BallPulseIndicator"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_password"
+            tools:visibility="visible" />
+
         <LinearLayout
             android:id="@+id/social_accounts_container"
             android:layout_width="match_parent"
@@ -52,7 +66,6 @@
             android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
             android:layout_marginTop="16dp"
-            android:animateLayoutChanges="true"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
             android:orientation="vertical"
