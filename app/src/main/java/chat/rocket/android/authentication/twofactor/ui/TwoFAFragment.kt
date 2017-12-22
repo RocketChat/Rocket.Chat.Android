@@ -1,7 +1,6 @@
 package chat.rocket.android.authentication.twofactor.ui
 
 import DrawableHelper
-import android.app.ProgressDialog
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,12 +12,18 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
+import chat.rocket.android.helper.AnimationHelper
+import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject
 
 class TwoFAFragment : Fragment(), TwoFAView {
+    @Inject lateinit var presenter: TwoFAPresenter
+    lateinit var serverUrl: String
+    lateinit var username: String
+    lateinit var password: String
 
     companion object {
         private const val SERVER_URL = "server_url"
@@ -33,14 +38,6 @@ class TwoFAFragment : Fragment(), TwoFAView {
             }
         }
     }
-
-    var progress: ProgressDialog? = null
-    lateinit var serverUrl: String
-    lateinit var username: String
-    lateinit var password: String
-
-    @Inject
-    lateinit var presenter: TwoFAPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -64,8 +61,25 @@ class TwoFAFragment : Fragment(), TwoFAView {
         }
 
         button_log_in.setOnClickListener {
-            presenter.authenticate(username, password, text_two_factor_auth.textContent)
+            presenter.authenticate(username, password, text_two_factor_auth)
         }
+    }
+
+    override fun showLoading() {
+        view_loading.setVisibility(true)
+    }
+
+    override fun hideLoading() {
+        view_loading.setVisibility(false)
+    }
+
+    override fun showMessage(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun shakeView(viewToShake: View) {
+        AnimationHelper.vibrate(viewToShake.context)
+        AnimationHelper.shakeView(viewToShake)
     }
 
     private fun tintEditTextDrawableStart() {
@@ -76,23 +90,5 @@ class TwoFAFragment : Fragment(), TwoFAView {
             DrawableHelper.tintDrawable(lockDrawable, this, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_two_factor_auth, lockDrawable)
         }
-    }
-
-    override fun showLoading() {
-        // TODO - change for a proper progress indicator
-        progress = ProgressDialog.show(activity, "Authenticating",
-                "Verifying user credentials", true, true)
-    }
-
-    override fun hideLoading() {
-        progress?.apply {
-            cancel()
-        }
-        progress = null
-    }
-
-    override fun showMessage(message: String) {
-        // TODO - show a proper error message
-        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 }

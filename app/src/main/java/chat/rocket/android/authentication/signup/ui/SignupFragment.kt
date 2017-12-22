@@ -11,12 +11,23 @@ import chat.rocket.android.R
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
+import chat.rocket.android.helper.AnimationHelper
+import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject
 
 class SignupFragment : Fragment(), SignupView {
+    @Inject lateinit var presenter: SignupPresenter
+    lateinit var serverUrl: String
+    private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+        if (KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)) {
+            text_new_user_agreement.visibility = View.GONE
+        } else {
+            text_new_user_agreement.visibility = View.VISIBLE
+        }
+    }
 
     companion object {
         private const val SERVER_URL = "server_url"
@@ -27,11 +38,6 @@ class SignupFragment : Fragment(), SignupView {
             }
         }
     }
-
-    @Inject
-    lateinit var presenter: SignupPresenter
-    var progress: ProgressDialog? = null
-    lateinit var serverUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -55,18 +61,31 @@ class SignupFragment : Fragment(), SignupView {
         setupGlobalLayoutListener()
 
         button_sign_up.setOnClickListener {
-            val email = text_email.textContent
-            val name = text_name.textContent
-            val username = text_username.textContent
-            val password = text_password.textContent
-
-            presenter.signup(email, name, username, password)
+            presenter.signup(text_name, text_email, text_username, text_password)
         }
     }
 
     override fun onDestroyView() {
-        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
         super.onDestroyView()
+        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+    }
+
+
+    override fun showLoading() {
+        view_loading.setVisibility(true)
+    }
+
+    override fun hideLoading() {
+        view_loading.setVisibility(false)
+    }
+
+    override fun showMessage(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun shakeView(viewToShake: View) {
+        AnimationHelper.vibrate(viewToShake.context)
+        AnimationHelper.shakeView(viewToShake)
     }
 
     private fun tintEditTextDrawableStart() {
@@ -86,31 +105,4 @@ class SignupFragment : Fragment(), SignupView {
     private fun setupGlobalLayoutListener() {
         constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
     }
-
-    val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        if (KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)) {
-            text_new_user_agreement.visibility = View.GONE
-        } else {
-            text_new_user_agreement.visibility = View.VISIBLE
-        }
-    }
-
-    override fun showLoading() {
-        // TODO - change for a proper progress indicator
-        progress = ProgressDialog.show(activity, "Authenticating",
-                "Registering user", true, true)
-    }
-
-    override fun hideLoading() {
-        progress?.apply {
-            cancel()
-        }
-        progress = null
-    }
-
-    override fun onSignupError(message: String?) {
-        // TODO - show a proper error message
-        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
-    }
-
 }
