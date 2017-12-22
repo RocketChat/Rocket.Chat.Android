@@ -1,9 +1,11 @@
 package chat.rocket.android.authentication.signup.presentation
 
+import android.widget.EditText
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.textContent
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
@@ -20,7 +22,7 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                                           private val okHttpClient: OkHttpClient,
                                           private val logger: PlatformLogger,
                                           private val repository: AuthTokenRepository) {
-
+    // TODO: Create a single entry point to RocketChatClient
     val client: RocketChatClient = RocketChatClient.create {
         httpClient = okHttpClient
         restUrl = HttpUrl.parse(navigator.currentServer)!!
@@ -29,24 +31,36 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
         platformLogger = logger
     }
 
-    fun signup(email: String, name: String, username: String, password: String) {
-        // TODO - validate input
+    fun signup(nameEditText: EditText, emailEditText: EditText, usernameEditText: EditText, passwordEditText: EditText) {
+        val name = nameEditText.textContent
+        val email = emailEditText.textContent
+        val username = usernameEditText.textContent
+        val password = passwordEditText.textContent
 
-        launchUI(strategy) {
-            view.showLoading()
+        when {
+            name.isBlank() -> view.shakeView(nameEditText)
+            email.isBlank() -> view.shakeView(emailEditText)
+            username.isBlank() -> view.shakeView(usernameEditText)
+            password.isEmpty() -> view.shakeView(passwordEditText)
+            else -> launchUI(strategy) {
+                view.showLoading()
 
-            try {
-                val user = client.signup(email, name, username, password)
-                Timber.d("Created user: $user")
+                try {
+                    val user = client.signup(email, name, username, password)
+                    Timber.d("Created user: $user")
 
-                val token = client.login(username, password)
-                Timber.d("Logged in: $token")
+                    val token = client.login(username, password)
+                    Timber.d("Logged in: $token")
 
-                navigator.toChatList()
-            } catch (ex: RocketChatException) {
-                view.onSignupError(ex.message)
-            } finally {
-                view.hideLoading()
+                    navigator.toChatList()
+                } catch (ex: RocketChatException) {
+                    val errorMessage = ex.message
+                    if (errorMessage != null) {
+                        view.showMessage(errorMessage)
+                    }
+                } finally {
+                    view.hideLoading()
+                }
             }
         }
     }
