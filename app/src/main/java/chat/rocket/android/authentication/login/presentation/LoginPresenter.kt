@@ -21,6 +21,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val okHttpClient: OkHttpClient,
                                          private val logger: PlatformLogger,
                                          private val repository: AuthTokenRepository) {
+    // TODO: Create a single entry point to RocketChatClient
     val client: RocketChatClient = RocketChatClient.create {
         httpClient = okHttpClient
         restUrl = HttpUrl.parse(navigator.currentServer)!!
@@ -29,26 +30,22 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         platformLogger = logger
     }
 
-    fun authenticate(usernameOrEmail: EditText, password: EditText) {
-        val user = usernameOrEmail.textContent
-        val pass = password.textContent
+    fun authenticate(usernameOrEmailEditText: EditText, passwordEditText: EditText) {
+        val usernameOrEmail = usernameOrEmailEditText.textContent
+        val password = passwordEditText.textContent
 
-        if (user.isBlank() && pass.isEmpty()) {
-            view.shakeView(usernameOrEmail)
-            view.shakeView(password)
-        } else if (user.isBlank()) {
-            view.shakeView(usernameOrEmail)
-        } else if (pass.isEmpty()) {
-            view.shakeView(password)
-        } else {
-            launchUI(strategy) {
+        when {
+            usernameOrEmail.isBlank() -> view.shakeView(usernameOrEmailEditText)
+            password.isEmpty() -> view.shakeView(passwordEditText)
+            else -> launchUI(strategy) {
                 view.showLoading()
                 try {
-                    val token = client.login(user, pass)
+                    val token = client.login(usernameOrEmail, password)
+                    // TODO: Salve token.
                     navigator.toChatList()
                 } catch (ex: RocketChatException) {
                     when (ex) {
-                        is RocketChatTwoFactorException -> navigator.toTwoFA(navigator.currentServer!!, user, pass)
+                        is RocketChatTwoFactorException -> navigator.toTwoFA(navigator.currentServer!!, usernameOrEmail, password)
                         else -> {
                             val errorMessage = ex.message
                             if (errorMessage != null) {
