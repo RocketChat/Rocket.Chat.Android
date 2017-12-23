@@ -3,7 +3,11 @@ package chat.rocket.android.fragment.server_config
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
+import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -26,6 +30,8 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
     private lateinit var waitingView: View
     private lateinit var txtUsername: TextView
     private lateinit var txtPasswd: TextView
+    private lateinit var textInputUsername: TextInputLayout
+    private lateinit var textInputPassword: TextInputLayout
 
     override fun getLayout(): Int {
         return R.layout.fragment_login
@@ -48,6 +54,38 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
         val btnUserRegistration = rootView.findViewById<Button>(R.id.btn_user_registration)
         txtUsername = rootView.findViewById(R.id.editor_username)
         txtPasswd = rootView.findViewById(R.id.editor_passwd)
+        textInputUsername = rootView.findViewById(R.id.text_input_username)
+        textInputPassword = rootView.findViewById(R.id.text_input_passwd)
+
+        //setting text change listeners to username and password edit texts
+        txtUsername.addTextChangedListener(object :TextWatcher
+        {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if(!TextUtils.isEmpty(txtUsername.text.toString()) && textInputUsername.isErrorEnabled)
+                    textInputUsername.setErrorEnabled(false)
+            }
+        })
+
+        txtPasswd.addTextChangedListener(object :TextWatcher
+        {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if(!TextUtils.isEmpty(txtPasswd.text.toString()) && textInputPassword.isErrorEnabled)
+                    textInputPassword.setErrorEnabled(false)
+            }
+        })
+        
         waitingView = rootView.findViewById(R.id.waiting)
 
         btnEmail.setOnClickListener { _ -> presenter.login(txtUsername.text.toString(), txtPasswd.text.toString()) }
@@ -61,6 +99,16 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
     override fun showLoader() {
         container.visibility = View.GONE
         waitingView.visibility = View.VISIBLE
+    }
+
+    override fun showErrorInUsernameEditText(){
+        textInputUsername.setErrorEnabled(true);
+        textInputUsername.setError("Enter a Username")
+    }
+
+    override fun showErrorInPasswordEditText(){
+        textInputPassword.setErrorEnabled(true);
+        textInputPassword.setError("Enter a Password")
     }
 
     override fun hideLoader() {
