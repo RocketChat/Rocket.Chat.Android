@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.server_config
 
+import android.content.Context
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
@@ -126,8 +127,8 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
         presenter.release()
         super.onPause()
     }
-
-    override fun goBack() {
-        presenter.goBack()
+    override fun goBack(ctx: Context?) {
+        presenter.goBack(ctx)
     }
+
 }

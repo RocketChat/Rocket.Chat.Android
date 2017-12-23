@@ -1,5 +1,8 @@
 package chat.rocket.android.fragment.server_config;
 
+
+import android.content.Context;
+
 import java.util.List;
 
 import chat.rocket.android.shared.BaseContract;
@@ -19,13 +22,13 @@ public interface LoginContract {
 
         void showTwoStepAuth();
 
-        void goBack();
+        void goBack(Context ctx);
     }
 
     interface Presenter extends BaseContract.Presenter<View> {
 
         void login(String username, String password);
 
-        void goBack();
+        void goBack(Context ctx);
     }
 }

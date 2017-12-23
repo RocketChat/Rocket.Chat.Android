@@ -1,5 +1,6 @@
 package chat.rocket.android.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -94,7 +95,8 @@ public class LoginActivity extends AbstractFragmentActivity implements LoginCont
     protected boolean onBackPress() {
         LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager()
                 .findFragmentById(getLayoutContainerForFragment());
-        loginFragment.goBack();
+        Context loginActivityContext = this;
+        loginFragment.goBack(loginActivityContext);
         return true;
     }
 }
