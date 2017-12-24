@@ -16,22 +16,12 @@ import javax.inject.Inject
 
 class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                                          private val strategy: CancelStrategy,
-                                         private val navigator: AuthenticationNavigator,
-                                         private val okHttpClient: OkHttpClient,
-                                         private val logger: PlatformLogger,
-                                         private val repository: AuthTokenRepository) {
-    // TODO: Create a single entry point to RocketChatClient
-    val client: RocketChatClient = RocketChatClient.create {
-        httpClient = okHttpClient
-        restUrl = HttpUrl.parse(navigator.currentServer)!!
-        websocketUrl = navigator.currentServer!!
-        tokenRepository = repository
-        platformLogger = logger
-    }
+                                         private val navigator: AuthenticationNavigator) {
+    @Inject lateinit var client: RocketChatClient
 
     // TODO: If the usernameOrEmail and password was informed by the user on the previous screen, then we should pass only the pin, like this: fun authenticate(pin: EditText)
     fun authenticate(usernameOrEmail: String, password: String, pin: EditText) {
-       val twoFACode = pin.textContent
+        val twoFACode = pin.textContent
         if (twoFACode.isBlank()) {
             view.shakeView(pin)
         } else {
