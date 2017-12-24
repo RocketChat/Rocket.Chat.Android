@@ -11,19 +11,17 @@ import chat.rocket.android.dagger.scope.PerActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-@Module
-abstract class ActivityBuilder {
+@Module abstract class ActivityBuilder {
 
     @PerActivity
-    @ContributesAndroidInjector(modules = arrayOf(
-        AuthenticationModule::class,
+    @ContributesAndroidInjector(modules = [AuthenticationModule::class,
         LoginFragmentProvider::class,
         ServerFragmentProvider::class,
         SignupFragmentProvider::class,
         TwoFAFragmentProvider::class
-    ))
+    ])
+
     abstract fun bindAuthenticationActivity(): AuthenticationActivity
 
-    @ContributesAndroidInjector
-    abstract fun bindMainActivity(): MainActivity
+    @ContributesAndroidInjector abstract fun bindMainActivity(): MainActivity
 }
