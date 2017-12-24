@@ -43,7 +43,7 @@ class ServerFragment : Fragment(), ServerView {
         activity?.applicationContext?.apply {
             button_connect.setOnClickListener {
                 val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.login(this, text_server_protocol.textContent + url)
+                presenter.connect(this, text_server_protocol.textContent + url)
             }
         }
     }
