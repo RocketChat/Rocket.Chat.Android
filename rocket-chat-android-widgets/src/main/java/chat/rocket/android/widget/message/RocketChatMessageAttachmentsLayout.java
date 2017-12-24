@@ -173,6 +173,8 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
                 public void onClick(View view) {
                     new CustomTabsIntent.Builder()
                             .setToolbarColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
+                            .setStartAnimations(getContext(), R.anim.slide_in_right, R.anim.slide_out_left)
+                            .setExitAnimations(getContext(), R.anim.slide_in_left, R.anim.slide_out_right)
                             .build()
                             .launchUrl(getContext(), Uri.parse(link));
                 }
