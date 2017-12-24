@@ -5,9 +5,7 @@ import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -18,7 +16,9 @@ import chat.rocket.android.log.RCLog
 import chat.rocket.core.models.LoginServiceConfiguration
 import chat.rocket.persistence.realm.repositories.RealmLoginServiceConfigurationRepository
 import chat.rocket.persistence.realm.repositories.RealmPublicSettingRepository
+import com.jakewharton.rxbinding2.widget.RxTextView
 import java.util.*
+
 
 /**
  * Login screen.
@@ -57,35 +57,8 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
         textInputUsername = rootView.findViewById(R.id.text_input_username)
         textInputPassword = rootView.findViewById(R.id.text_input_passwd)
 
-        //setting text change listeners to username and password edit texts
-        txtUsername.addTextChangedListener(object :TextWatcher
-        {
-            override fun afterTextChanged(p0: Editable?) {
-            }
+        setUpRxBinders()
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(!TextUtils.isEmpty(txtUsername.text.toString()) && textInputUsername.isErrorEnabled)
-                    textInputUsername.setErrorEnabled(false)
-            }
-        })
-
-        txtPasswd.addTextChangedListener(object :TextWatcher
-        {
-            override fun afterTextChanged(p0: Editable?) {
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(!TextUtils.isEmpty(txtPasswd.text.toString()) && textInputPassword.isErrorEnabled)
-                    textInputPassword.setErrorEnabled(false)
-            }
-        })
-        
         waitingView = rootView.findViewById(R.id.waiting)
 
         btnEmail.setOnClickListener { _ -> presenter.login(txtUsername.text.toString(), txtPasswd.text.toString()) }
@@ -96,17 +69,30 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
         }
     }
 
+    fun setUpRxBinders() {
+        RxTextView.textChanges(txtUsername).subscribe { text ->
+            if (!TextUtils.isEmpty(text) && textInputUsername.isErrorEnabled)
+                textInputUsername.setErrorEnabled(false)
+        }
+
+        RxTextView.textChanges(txtPasswd).subscribe { text ->
+            if (!TextUtils.isEmpty(text) && textInputPassword.isErrorEnabled)
+                textInputPassword.setErrorEnabled(false)
+        }
+
+    }
+
     override fun showLoader() {
         container.visibility = View.GONE
         waitingView.visibility = View.VISIBLE
     }
 
-    override fun showErrorInUsernameEditText(){
+    override fun showErrorInUsernameEditText() {
         textInputUsername.setErrorEnabled(true);
         textInputUsername.setError("Enter a Username")
     }
 
-    override fun showErrorInPasswordEditText(){
+    override fun showErrorInPasswordEditText() {
         textInputPassword.setErrorEnabled(true);
         textInputPassword.setError("Enter a Password")
     }

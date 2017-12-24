@@ -32,7 +32,6 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
     }
 
 
-
     override fun goBack() {
         val context = RocketChatApplication.getInstance()
         val hostname = RocketChatCache.getSelectedServerHostname()
@@ -47,7 +46,7 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
     override fun login(username: String, password: String) {
 
         //set error to edit texts
-        if (TextUtils.isEmpty(username)&&TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
             view.showErrorInUsernameEditText()
             view.showErrorInPasswordEditText()
             return
@@ -56,7 +55,7 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
             view.showErrorInUsernameEditText()
             return
         }
-        if (TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
             view.showErrorInPasswordEditText()
             return
         }
