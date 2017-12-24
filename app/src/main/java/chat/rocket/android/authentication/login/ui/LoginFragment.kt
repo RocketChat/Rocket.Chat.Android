@@ -177,6 +177,7 @@ class LoginFragment : Fragment(), LoginView {
     override fun shakeView(viewToShake: View) {
         AnimationHelper.vibrate(viewToShake.context)
         AnimationHelper.shakeView(viewToShake)
+        viewToShake.requestFocus()
     }
 
     private fun tintEditTextDrawableStart() {

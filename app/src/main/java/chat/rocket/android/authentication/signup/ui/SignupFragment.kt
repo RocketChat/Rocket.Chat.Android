@@ -61,7 +61,7 @@ class SignupFragment : Fragment(), SignupView {
         setupGlobalLayoutListener()
 
         button_sign_up.setOnClickListener {
-            presenter.signup(text_name, text_email, text_username, text_password)
+            presenter.signup(text_name, text_username, text_password, text_email)
         }
     }
 
@@ -86,6 +86,7 @@ class SignupFragment : Fragment(), SignupView {
     override fun shakeView(viewToShake: View) {
         AnimationHelper.vibrate(viewToShake.context)
         AnimationHelper.shakeView(viewToShake)
+        viewToShake.requestFocus()
     }
 
     private fun tintEditTextDrawableStart() {
