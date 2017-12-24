@@ -34,7 +34,6 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
     private var isGlobalLayoutListenerSetUp = false
-    private var isSignUpViewOnClickListenerSetUp = false
 
     companion object {
         private const val SERVER_URL = "server_url"
@@ -153,10 +152,7 @@ class LoginFragment : Fragment(), LoginView {
     override fun shouldShowSignUpView(show: Boolean) {
         if (show) {
             text_new_to_rocket_chat.setVisibility(true)
-            if (!isSignUpViewOnClickListenerSetUp) {
-                text_new_to_rocket_chat.setOnClickListener { presenter.signup() }
-                isSignUpViewOnClickListenerSetUp = true
-            }
+            text_new_to_rocket_chat.setOnClickListener { presenter.signup() }
         } else {
             text_new_to_rocket_chat.setVisibility(false)
         }
