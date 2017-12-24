@@ -5,11 +5,14 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.app.RocketChatDatabase
+import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.android.server.infraestructure.ServerDao
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.util.PlatformLogger
+import chat.rocket.core.RocketChatClient
 import dagger.Module
 import dagger.Provides
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
@@ -68,6 +71,12 @@ class AppModule {
         return OkHttpClient.Builder().apply {
             addInterceptor(logger)
         }.build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthTokenRepository(): AuthTokenRepository {
+        return AuthTokenRepository()
     }
 
     @Provides
