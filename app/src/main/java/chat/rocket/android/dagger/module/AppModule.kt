@@ -22,6 +22,20 @@ class AppModule {
 
     @Provides
     @Singleton
+    fun provideRocketChatClient(okHttpClient: OkHttpClient, repository: AuthTokenRepository, logger: PlatformLogger): RocketChatClient {
+        return RocketChatClient.create {
+            httpClient = okHttpClient
+            tokenRepository = repository
+            platformLogger = logger
+
+            // TODO remove
+            restUrl = HttpUrl.parse("https://open.rocket.chat")!!
+            websocketUrl = "https://open.rocket.chat"
+        }
+    }
+
+    @Provides
+    @Singleton
     fun provideRocketChatDatabase(context: Application): RocketChatDatabase {
         return Room.databaseBuilder(context, RocketChatDatabase::class.java, "rocketchat-db").build()
     }
@@ -37,20 +51,6 @@ class AppModule {
     fun provideServerDao(database: RocketChatDatabase): ServerDao {
         return database.serverDao()
     }
-
-    /*@Provides
-    @Singleton
-    @IntoSet
-    fun provideHttpLoggingInterceptor(): Interceptor {
-        val interceptor = HttpLoggingInterceptor()
-        if (BuildConfig.DEBUG) {
-            interceptor.level = HttpLoggingInterceptor.Level.BODY
-        } else {
-            interceptor.level = HttpLoggingInterceptor.Level.HEADERS
-        }
-
-        return interceptor
-    }*/
 
     @Provides
     @Singleton
