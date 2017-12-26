@@ -6,7 +6,9 @@ import chat.rocket.android.R
 
 fun AppCompatActivity.addFragment(tag: String, layoutId: Int, newInstance: () -> Fragment) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
-    supportFragmentManager.beginTransaction().replace(layoutId, fragment, tag).commit()
+    supportFragmentManager.beginTransaction()
+            .replace(layoutId, fragment, tag)
+            .commit()
 }
 
 fun AppCompatActivity.addFragmentBackStack(tag: String, layoutId: Int, newInstance: () -> Fragment) {
