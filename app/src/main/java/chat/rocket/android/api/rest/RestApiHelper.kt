@@ -1,9 +1,18 @@
 package chat.rocket.android.api.rest
 
+import chat.rocket.android.R
+import chat.rocket.android.RocketChatApplication
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.push.gcm.GcmPushHelper
 import chat.rocket.core.models.Room
+import com.google.android.gms.gcm.GoogleCloudMessaging
+import com.google.android.gms.iid.InstanceID
 import okhttp3.HttpUrl
+import okhttp3.MediaType
 import okhttp3.Request
+import okhttp3.RequestBody
+import org.json.JSONObject
+import java.io.IOException
 
 /**
  * Helper class for dealing with Rest API calls.
@@ -139,6 +148,30 @@ object RestApiHelper {
                 .build()
     }
 
+    fun getRequestForPushTokenRegistration(hostname: String,
+                                           token: String,
+                                           userId: String): Request {
+        val parsedHttpUrl = HttpUrl.parse(getEndpointUrlForPushToken(hostname))
+                ?.newBuilder()
+                ?.build()
+
+        val json = JSONObject()
+                .put("type", "gcm")
+                .put("appName", "main")
+                .put("value", GcmPushHelper.getGcmToken())
+
+        val requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
+                json.toString())
+
+        return Request.Builder()
+                .url(parsedHttpUrl)
+                .post(requestBody)
+                .addHeader("X-Auth-Token", token)
+                .addHeader("X-User-Id", userId)
+                .addHeader("Content-Type", "application/json")
+                .build()
+    }
+
     /**
      * Returns a Rest API endpoint URL for favorite or pinned messages accordingly with the room type and the server hostname.
      *
@@ -168,6 +201,9 @@ object RestApiHelper {
      */
     fun getEndpointUrlForMemberList(roomType: String, hostname: String): String =
             UrlHelper.getSafeHostname(hostname) + getRestApiUrlForMemberList(roomType)
+
+    fun getEndpointUrlForPushToken(hostname: String): String =
+            UrlHelper.getSafeHostname(hostname) + getRestApiUrlForPushToken()
 
     /**
      * Returns the correspondent Rest API URL accordingly with the room type to get its favorite or pinned messages.
@@ -215,5 +251,22 @@ object RestApiHelper {
             Room.TYPE_DIRECT_MESSAGE -> restApiUrl = "/api/v1/dm.members"
         }
         return restApiUrl
+    }
+
+    /**
+     * Returns the correspondent Rest API URL for registration/deletion of Gcm Registration token.
+     */
+    fun getRestApiUrlForPushToken(): String {
+        return "/api/v1/push.token"
+    }
+
+    @Throws(IOException::class)
+    private fun getGcmToken(senderId: String): String {
+        return InstanceID.getInstance(RocketChatApplication.getInstance())
+                .getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
+    }
+
+    private fun getSenderId(): String {
+        return RocketChatApplication.getInstance().getString(R.string.gcm_sender_id)
     }
 }

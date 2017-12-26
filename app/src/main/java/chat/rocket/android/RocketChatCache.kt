@@ -25,6 +25,9 @@ object RocketChatCache {
     private val KEY_HOSTNAME_LIST = "KEY_HOSTNAME_LIST"
     private val KEY_OPENED_ROOMS = "KEY_OPENED_ROOMS"
     private val KEY_SESSION_TOKEN = "KEY_SESSION_TOKEN"
+    private val KEY_USER_ID = "KEY_USER_ID"
+    private val KEY_USER_NAME = "KEY_USER_NAME"
+    private val KEY_USER_USERNAME = "KEY_USER_USERNAME"
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -404,4 +407,20 @@ object RocketChatCache {
             sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
         }, BackpressureStrategy.LATEST)
     }
+
+    fun setUserId(userId: String) = setString(KEY_USER_ID, userId)
+
+    fun getUserId(): String? = getString(KEY_USER_ID, null)
+
+    fun setUserName(name: String?) {
+        name?.let {
+            setString(KEY_USER_NAME, name)
+        }
+    }
+
+    fun getUserName(): String? = getString(KEY_USER_NAME, null)
+
+    fun setUserUsername(username: String) = setString(KEY_USER_USERNAME, username)
+
+    fun getUserUsername(): String? = getString(KEY_USER_USERNAME, null)
 }
