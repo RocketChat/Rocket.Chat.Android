@@ -70,10 +70,10 @@ public class RocketChatWebSocketThread extends HandlerThread {
     private final String hostname;
     private final RealmHelper realmHelper;
     private final ConnectivityManagerInternal connectivityManager;
-    private final ArrayList<Registrable> listeners = new ArrayList<>();
+    private volatile ArrayList<Registrable> listeners = new ArrayList<>();
     private final CompositeDisposable heartbeatDisposable = new CompositeDisposable();
     private final CompositeDisposable reconnectDisposable = new CompositeDisposable();
-    private boolean listenersRegistered;
+    private volatile boolean listenersRegistered;
 
     private RocketChatWebSocketThread(Context appContext, String hostname) {
         super("RC_thread_" + hostname);
