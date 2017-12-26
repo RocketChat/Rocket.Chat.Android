@@ -12,6 +12,7 @@ import kotlinx.coroutines.experimental.Job
 @Module
 @PerFragment
 class TwoFAFragmentModule {
+
     @Provides
     fun loginView(frag: TwoFAFragment): TwoFAView {
         return frag
