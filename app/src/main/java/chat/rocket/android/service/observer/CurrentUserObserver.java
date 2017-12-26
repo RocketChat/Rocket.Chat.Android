@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.api.MethodCallHelper;
 import chat.rocket.android.helper.LogIfError;
 import chat.rocket.android.service.Registrable;
@@ -55,6 +56,10 @@ public class CurrentUserObserver extends AbstractModelObserver<RealmUser> {
       onLogout();
     }
     listeners = new ArrayList<>();
+
+    RocketChatCache.INSTANCE.setUserId(user.getId());
+    RocketChatCache.INSTANCE.setUserUsername(user.getUsername());
+    RocketChatCache.INSTANCE.setUserName(user.getName());
 
     final String userId = user.getId();
 
