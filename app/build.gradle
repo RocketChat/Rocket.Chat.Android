@@ -14,7 +14,7 @@ android {
         versionCode 1
         versionName "2.0.0-beta1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
+        multiDexEnabled false
     }
 
     buildTypes {
@@ -51,7 +51,6 @@ dependencies {
     kapt libraries.daggerAndroidApt
 
     implementation libraries.moshi
-    implementation libraries.moshiKotlin
 
     implementation libraries.room
     kapt libraries.roomProcessor

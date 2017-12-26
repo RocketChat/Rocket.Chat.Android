@@ -9,6 +9,7 @@ ext {
         kotlin            : '1.2.10',
         coroutine         : '0.20',
         dokka             : '0.9.15',
+        kotshi            : '0.3.0-beta2',
 
         // Main dependencies
         support           : '27.0.2',
@@ -60,7 +61,6 @@ ext {
         rxandroid           : "io.reactivex.rxjava2:rxandroid:${versions.rxandroid}",
 
         moshi               : "com.squareup.moshi:moshi:${versions.moshi}",
-        moshiKotlin         : "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
         okhttp              : "com.squareup.okhttp3:okhttp:${versions.okhttp}",
         okhttpLogger        : "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}",
 
