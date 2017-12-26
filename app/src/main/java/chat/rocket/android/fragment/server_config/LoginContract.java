@@ -13,6 +13,10 @@ public interface LoginContract {
 
         void hideLoader();
 
+        void showErrorInUsernameEditText();
+
+        void showErrorInPasswordEditText();
+
         void showError(String message);
 
         void showLoginServices(List<LoginServiceConfiguration> loginServiceList);
