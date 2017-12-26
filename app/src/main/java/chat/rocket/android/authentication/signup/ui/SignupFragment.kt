@@ -1,19 +1,17 @@
 package chat.rocket.android.authentication.signup.ui
 
 import DrawableHelper
-import android.app.ProgressDialog
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
-import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.AnimationHelper
+import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.setVisibility
-import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject
