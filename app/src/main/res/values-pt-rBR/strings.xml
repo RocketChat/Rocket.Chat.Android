@@ -20,8 +20,8 @@
     <string name="msg_name_and_surname">nome e sobrenome</string>
     <string name="msg_email">email</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue através de contas sociais</string>
-    <string name="msg_new_to_rocket_chat">Novo no Rocket Chat? <font color='#FF1976D2'>Inscreva-se</font></string>
-    <string name="msg_new_user_agreement">Ao proceder você concorda com nossos\n<font color='#FF1976D2'>Termos de Serviço</font> e <font color='#FF1976D2'>Política de Privacidade</font></string>
+    <string name="msg_new_to_rocket_chat">Novo no Rocket Chat? %1$s</string>
+    <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">ontem</string>
     <string name="msg_message">Messagem</string>
