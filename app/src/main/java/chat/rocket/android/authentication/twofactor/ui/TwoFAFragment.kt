@@ -14,7 +14,6 @@ import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
 import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.util.setVisibility
-import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject
@@ -78,7 +77,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
     }
 
     override fun shakeView(viewToShake: View) {
-        AnimationHelper.vibrate(viewToShake.context)
+        AnimationHelper.vibrateSmartPhone(viewToShake.context)
         AnimationHelper.shakeView(viewToShake)
     }
 

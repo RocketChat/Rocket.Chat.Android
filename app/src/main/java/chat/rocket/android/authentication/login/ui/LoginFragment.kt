@@ -4,6 +4,7 @@ import DrawableHelper
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.style.ClickableSpan
 import android.view.*
 import android.widget.ScrollView
 import android.widget.Toast
@@ -12,6 +13,7 @@ import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
@@ -22,14 +24,14 @@ class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var presenter: LoginPresenter
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
-            shouldShowOauthView(false)
-            shouldShowSignUpView(false)
-            shouldShowLoginButton(true)
+            showOauthView(false)
+            showSignUpView(false)
+            showLoginButton(true)
         } else {
             if (isEditTextEmpty()) {
-                shouldShowOauthView(true)
-                shouldShowSignUpView(true)
-                shouldShowLoginButton(false)
+                showOauthView(true)
+                showSignUpView(true)
+                showLoginButton(false)
             }
         }
     }
@@ -45,7 +47,8 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
-    lateinit var serverUrl: String
+    // Todo remove
+    private lateinit var serverUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -68,7 +71,7 @@ class LoginFragment : Fragment(), LoginView {
 
         // TODO: THIS IS A PRESENTER CONCERN - REMOVE THAT !
         // -------------------------------------------------------------------------------------------------------------------
-        shouldShowOauthView(true)
+        showOauthView(true)
 
         // Show the first three social account's ImageButton (REMARK: we must show at maximum *three* views)
         enableLoginByFacebook()
@@ -78,7 +81,8 @@ class LoginFragment : Fragment(), LoginView {
         setupFabListener()
 
         // Just an example: if the server allow the new users registration then show the respective interface.
-        shouldShowSignUpView(true)
+        setupSignUpListener()
+        showSignUpView(true)
         // -------------------------------------------------------------------------------------------------------------------
 
         button_log_in.setOnClickListener { presenter.authenticate(text_username_or_email, text_password) }
@@ -92,8 +96,8 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
-    override fun shouldShowOauthView(show: Boolean) {
-        if (show) {
+    override fun showOauthView(value: Boolean) {
+        if (value) {
             social_accounts_container.setVisibility(true)
             button_fab.setVisibility(true)
 
@@ -111,13 +115,9 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun setupFabListener() {
         button_fab.setOnClickListener({
-            enableLoginByLinkedin()
-            enableLoginByMeteor()
-            enableLoginByTwitter()
-            enableLoginByGitlab()
-
+            button_fab.hide()
+            showRemainingSocialAccountsView()
             scrollToBottom()
-            hideFab()
         })
     }
 
@@ -149,21 +149,18 @@ class LoginFragment : Fragment(), LoginView {
         button_gitlab.setVisibility(true)
     }
 
-    override fun shouldShowSignUpView(show: Boolean) {
-        if (show) {
-            text_new_to_rocket_chat.setVisibility(true)
-            text_new_to_rocket_chat.setOnClickListener { presenter.signup() }
-        } else {
-            text_new_to_rocket_chat.setVisibility(false)
-        }
+    override fun showSignUpView(value: Boolean) {
+        text_new_to_rocket_chat.setVisibility(value)
     }
 
     override fun showLoading() {
-        view_loading.setVisibility(true)
+        enableUserInput(false)
+        view_loading.show()
     }
 
     override fun hideLoading() {
-        view_loading.setVisibility(false)
+        view_loading.hide()
+        enableUserInput(true)
     }
 
     override fun showMessage(message: String) {
@@ -171,7 +168,7 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun shakeView(viewToShake: View) {
-        AnimationHelper.vibrate(viewToShake.context)
+        AnimationHelper.vibrateSmartPhone(viewToShake.context)
         AnimationHelper.shakeView(viewToShake)
         viewToShake.requestFocus()
     }
@@ -188,12 +185,27 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
-    private fun shouldShowLoginButton(show: Boolean) {
-        if (show) {
-            button_log_in.setVisibility(true)
-        } else {
-            button_log_in.setVisibility(false)
+    private fun showLoginButton(value: Boolean) {
+        button_log_in.setVisibility(value)
+    }
+
+    private fun setupSignUpListener() {
+        val signUp = getString(R.string.title_sign_up)
+        val newToRocketChat = String.format(getString(R.string.msg_new_to_rocket_chat), signUp)
+
+        text_new_to_rocket_chat.text = newToRocketChat
+
+        val signUpListener = object : ClickableSpan() {
+            override fun onClick(view: View) = presenter.signup()
         }
+
+        TextHelper.addLink(text_new_to_rocket_chat, arrayOf(signUp), arrayOf(signUpListener))
+    }
+
+    private fun enableUserInput(value: Boolean) {
+        button_log_in.isEnabled = value
+        text_username_or_email.isEnabled = value
+        text_password.isEnabled = value
     }
 
     // Returns true if *all* EditTexts are empty.
@@ -201,15 +213,18 @@ class LoginFragment : Fragment(), LoginView {
         return text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
     }
 
-    private fun scrollToBottom() {
-        scroll_view.postDelayed({
-            scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
+    private fun showRemainingSocialAccountsView() {
+        social_accounts_container.postDelayed({
+            enableLoginByLinkedin()
+            enableLoginByMeteor()
+            enableLoginByTwitter()
+            enableLoginByGitlab()
         }, 1000)
     }
 
-    private fun hideFab() {
-        button_fab.postDelayed({
-            button_fab.hide()
-        }, 1500)
+    private fun scrollToBottom() {
+        scroll_view.postDelayed({
+            scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
+        }, 1250)
     }
 }
