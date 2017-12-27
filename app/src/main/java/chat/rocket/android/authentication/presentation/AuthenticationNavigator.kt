@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.ui.MainActivity
-import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.app.MainActivity
 import chat.rocket.android.authentication.login.ui.LoginFragment
 import chat.rocket.android.authentication.signup.ui.SignupFragment
 import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
