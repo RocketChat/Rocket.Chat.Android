@@ -18,8 +18,8 @@
     <string name="fragment_room_list_file_list_title">File list (%s)</string>
     <string name="fragment_room_list_member_list_title">Member list (%s)</string>
     <string name="fragment_room_list_could_not_load_your_request">Could not load your request.\n%s.</string>
-    <string name="fragment_room_list_no_pinned_message_to_show">No pinned message to show</string>
-    <string name="fragment_room_list_no_favorite_message_to_show">No favorite message to show</string>
+    <string name="fragment_room_list_no_pinned_message_to_show">No pinned messages to show</string>
+    <string name="fragment_room_list_no_favorite_message_to_show">No favorite messages to show</string>
     <string name="fragment_room_list_no_file_list_to_show">No file list to show</string>
     <string name="fragment_room_list_no_member_list_to_show">No member list to show</string>
 

@@ -94,7 +94,7 @@ public class MainActivity extends AbstractAuthedActivity implements MainContract
         } else {
             connectivityManager.keepAliveServer();
             presenter.bindView(this);
-            presenter.loadSignedInServers(hostname);
+            //presenter.loadSignedInServers(hostname);
             roomId = RocketChatCache.INSTANCE.getSelectedRoomId();
         }
     }
