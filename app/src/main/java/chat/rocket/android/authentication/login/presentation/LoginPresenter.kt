@@ -58,7 +58,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
     }
 
-    fun signup() {
-        navigator.toSignUp(navigator.currentServer!!)
-    }
+    fun signup() =
+            navigator.toSignUp(navigator.currentServer!!)
 }
