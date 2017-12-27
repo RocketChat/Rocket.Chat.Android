@@ -34,8 +34,11 @@
 
         <activity
             android:name=".app.ChatRoomActivity"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".webview.WebViewActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
