@@ -9,7 +9,9 @@
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar" />
+    <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+    </style>
 
     <style name="ChatListTheme" parent="AppTheme">
         <item name="android:windowTranslucentStatus">true</item>
