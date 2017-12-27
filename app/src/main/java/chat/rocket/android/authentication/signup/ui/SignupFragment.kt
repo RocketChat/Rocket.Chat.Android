@@ -1,9 +1,11 @@
 package chat.rocket.android.authentication.signup.ui
 
 import DrawableHelper
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.style.ClickableSpan
 import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
@@ -11,6 +13,7 @@ import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.setVisibility
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
@@ -18,14 +21,18 @@ import javax.inject.Inject
 
 class SignupFragment : Fragment(), SignupView {
     @Inject lateinit var presenter: SignupPresenter
-    lateinit var serverUrl: String
+    @Inject lateinit var appContext: Context
+
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)) {
-            text_new_user_agreement.visibility = View.GONE
+            text_new_user_agreement.setVisibility(false)
         } else {
-            text_new_user_agreement.visibility = View.VISIBLE
+            text_new_user_agreement.setVisibility(true)
         }
     }
+
+    // TODO delete
+    lateinit var serverUrl: String
 
     companion object {
         private const val SERVER_URL = "server_url"
@@ -56,7 +63,9 @@ class SignupFragment : Fragment(), SignupView {
             tintEditTextDrawableStart()
         }
 
-        setupGlobalLayoutListener()
+        constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+
+        setUpNewUserAgreementListener()
 
         button_sign_up.setOnClickListener {
             presenter.signup(text_name, text_username, text_password, text_email)
@@ -68,13 +77,14 @@ class SignupFragment : Fragment(), SignupView {
         constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
-
     override fun showLoading() {
-        view_loading.setVisibility(true)
+        enableUserInput(false)
+        view_loading.show()
     }
 
     override fun hideLoading() {
-        view_loading.setVisibility(false)
+        view_loading.hide()
+        enableUserInput(true)
     }
 
     override fun showMessage(message: String) {
@@ -82,26 +92,50 @@ class SignupFragment : Fragment(), SignupView {
     }
 
     override fun shakeView(viewToShake: View) {
-        AnimationHelper.vibrate(viewToShake.context)
+        AnimationHelper.vibrateSmartPhone(appContext)
         AnimationHelper.shakeView(viewToShake)
         viewToShake.requestFocus()
     }
 
     private fun tintEditTextDrawableStart() {
-        activity?.applicationContext?.apply {
-            val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
-            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
-            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, this)
-            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
+        val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, appContext)
+        val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, appContext)
+        val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, appContext)
+        val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, appContext)
 
-            val drawables = arrayOf(personDrawable, atDrawable, lockDrawable, emailDrawable)
-            DrawableHelper.wrapDrawables(drawables)
-            DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
-            DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_password, text_email), drawables)
-        }
+        val drawables = arrayOf(personDrawable, atDrawable, lockDrawable, emailDrawable)
+        DrawableHelper.wrapDrawables(drawables)
+        DrawableHelper.tintDrawables(drawables, appContext, R.color.colorDrawableTintGrey)
+        DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_password, text_email), drawables)
     }
 
-    private fun setupGlobalLayoutListener() {
-        constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+    private fun setUpNewUserAgreementListener() {
+        val termsOfService = getString(R.string.action_terms_of_service)
+        val privacyPolicy = getString(R.string.action_privacy_policy)
+        val newUserAgreement = String.format(getString(R.string.msg_new_user_agreement), termsOfService, privacyPolicy)
+
+        text_new_user_agreement.text = newUserAgreement
+
+        val termsOfServiceListener = object : ClickableSpan() {
+            override fun onClick(view: View) {
+                presenter.termsOfService()
+            }
+        }
+
+        val privacyPolicyListener = object : ClickableSpan() {
+            override fun onClick(view: View) {
+                presenter.privacyPolicy()
+            }
+        }
+
+        TextHelper.addLink(text_new_user_agreement, arrayOf(termsOfService, privacyPolicy), arrayOf(termsOfServiceListener, privacyPolicyListener))
+    }
+
+    private fun enableUserInput(value: Boolean) {
+        button_sign_up.isEnabled = value
+        text_name.isEnabled = value
+        text_username.isEnabled = value
+        text_password.isEnabled = value
+        text_email.isEnabled = value
     }
 }
