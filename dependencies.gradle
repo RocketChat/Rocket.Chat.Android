@@ -2,13 +2,14 @@ import org.gradle.internal.jvm.Jvm
 
 ext {
     versions = [
-        java                   : JavaVersion.VERSION_1_8,
-        compileSdk             : 27,
-        targetSdk              : 27,
-        buildTools             : '27.0.0',
-        kotlin                 : '1.2.10',
-        coroutine              : '0.20',
-        dokka                  : '0.9.15',
+        java              : JavaVersion.VERSION_1_8,
+        compileSdk        : 27,
+        targetSdk         : 27,
+        buildTools        : '27.0.0',
+        kotlin            : '1.2.10',
+        coroutine         : '0.20',
+        dokka             : '0.9.15',
+        kotshi            : '0.3.0-beta2',
 
         // Main dependencies
         support                : '27.0.2',
