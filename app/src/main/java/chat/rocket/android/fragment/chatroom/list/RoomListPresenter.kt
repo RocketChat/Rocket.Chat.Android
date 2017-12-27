@@ -23,13 +23,14 @@ import java.sql.Timestamp
  * Created by Filipe de Lima Brito (filipedelimabrito@gmail.com) on 9/22/17.
  */
 class RoomListPresenter(val context: Context, val view: RoomListContract.View) : RoomListContract.Presenter {
-
+    private lateinit var TAG: String
     override fun requestPinnedMessages(roomId: String,
                                        roomType: String,
                                        hostname: String,
                                        token: String,
                                        userId: String,
                                        offset: Int) {
+        TAG = "pinned"
         view.showWaitingView(true)
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForPinnedMessages(roomId,
@@ -53,7 +54,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                         if (response.isSuccessful) {
                             val result = response.body()?.string()
                             if (result != null) {
-                                handleMessagesJson(result, true)
+                                handleMessagesJson(result, true, TAG)
                             }
                         } else {
                             showErrorMessage(response.message())
@@ -68,6 +69,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                                          token: String,
                                          userId: String,
                                          offset: Int) {
+        TAG = "favorite"
         view.showWaitingView(true)
         OkHttpHelper.getClient()
                 .newCall(RestApiHelper.getRequestForFavoriteMessages(roomId,
@@ -91,7 +93,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
                         if (response.isSuccessful) {
                             val result = response.body()?.string()
                             if (result != null) {
-                                handleMessagesJson(result, false)
+                                handleMessagesJson(result, false, TAG)
                             }
                         } else {
                             showErrorMessage(response.message())
@@ -180,7 +182,7 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
         OkHttpHelper.getClient().dispatcher().cancelAll()
     }
 
-    private fun handleMessagesJson(json: String, isPinnedMessage: Boolean) {
+    private fun handleMessagesJson(json: String, isPinnedMessage: Boolean, TAG: String) {
         try {
             val jSONObject = JSONObject(json)
             val messagesJSONArray = jSONObject.getJSONArray("messages")
@@ -204,7 +206,10 @@ class RoomListPresenter(val context: Context, val view: RoomListContract.View) :
             }
 
             if (dataSet.isEmpty() && !hasItem) {
-                showEmptyViewMessage(context.getString(R.string.fragment_room_list_no_favorite_message_to_show))
+                if (TAG.equals("favorite"))
+                    showEmptyViewMessage(context.getString(R.string.fragment_room_list_no_favorite_message_to_show))
+                else if (TAG.equals("pinned"))
+                    showEmptyViewMessage(context.getString(R.string.fragment_room_list_no_pinned_message_to_show))
             } else {
                 if (dataSet.isNotEmpty()) {
                     hasItem = true
