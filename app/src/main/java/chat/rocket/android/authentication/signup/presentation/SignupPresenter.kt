@@ -60,4 +60,12 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
             }
         }
     }
+
+    fun termsOfService() {
+        navigator.toTermsOfService()
+    }
+
+    fun privacyPolicy() {
+        navigator.toPrivacyPolicy()
+    }
 }
