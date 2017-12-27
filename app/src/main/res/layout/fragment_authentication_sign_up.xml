@@ -84,7 +84,7 @@
         android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
         android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
         android:gravity="center"
-        android:text="@string/msg_new_user_agreement"
+        android:textColorLink="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/button_sign_up"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

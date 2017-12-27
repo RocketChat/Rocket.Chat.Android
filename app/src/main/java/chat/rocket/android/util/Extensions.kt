@@ -19,13 +19,13 @@ fun View.setVisibility(value: Boolean) {
 }
 
 var TextView.textContent: String
-    get() = this.text.toString()
+    get() = text.toString()
     set(value) {
-        this.text = value
+        text = value
     }
 
 var TextView.hintContent: String
-    get() = this.hint.toString()
+    get() = hint.toString()
     set(value) {
-        this.text = value
+        text = value
     }

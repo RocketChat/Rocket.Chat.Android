@@ -13,9 +13,9 @@ interface LoginView : LoadingView, MessageView, ShakeView {
      * [enableLoginByLinkedin], [enableLoginByMeteor], [enableLoginByTwitter] or [enableLoginByGitlab]) for the oauth view.
      * If the possibility of login via social accounts exceeds 3 different ways we should set up the FAB ([setupFabListener]) to show the remaining view(s).
      *
-     * @param show True to show the oauth view, false otherwise.
+     * @param value True to show the oauth view, false otherwise.
      */
-    fun shouldShowOauthView(show: Boolean)
+    fun showOauthView(value: Boolean)
 
     /**
      * Setups the FloatingActionButton to show more social accounts views (expanding the oauth view interface to show the remaining view(s)).
@@ -60,7 +60,7 @@ interface LoginView : LoadingView, MessageView, ShakeView {
     /**
      * Shows the sign up view if the server settings allow the new users registration.
      *
-     * @param show True to show the sign up view, false otherwise.
+     * @param value True to show the sign up view, false otherwise.
      */
-    fun shouldShowSignUpView(show: Boolean)
+    fun showSignUpView(value: Boolean)
 }
