@@ -5,10 +5,13 @@
     <string name="title_sign_in_your_server">Sign in your server</string>
     <string name="title_log_in">Log in</string>
     <string name="title_sign_up">Sign up</string>
+    <string name="title_legal_terms">Legal Terms</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
     <string name="action_send">Send</string>
+    <string name="action_terms_of_service">Terms of Service</string>
+    <string name="action_privacy_policy">Privacy Policy</string>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">No internet connection</string>
