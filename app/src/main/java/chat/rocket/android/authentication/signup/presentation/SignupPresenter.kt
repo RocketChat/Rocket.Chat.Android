@@ -1,10 +1,8 @@
 package chat.rocket.android.authentication.signup.presentation
 
-import android.widget.EditText
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.util.launchUI
-import chat.rocket.android.util.textContent
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
@@ -17,35 +15,29 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                                           private val navigator: AuthenticationNavigator) {
     @Inject lateinit var client: RocketChatClient
 
-    fun signup(nameEditText: EditText, usernameEditText: EditText, passwordEditText: EditText, emailEditText: EditText) {
-        val name = nameEditText.textContent
-        val username = usernameEditText.textContent
-        val password = passwordEditText.textContent
-        val email = emailEditText.textContent
-
+    fun signup(name: String, username: String, password: String, email: String) {
         when {
             name.isBlank() -> {
-                view.shakeView(nameEditText)
+                view.alertBlankName()
             }
             username.isBlank() -> {
-                view.shakeView(usernameEditText)
+                view.alertBlankUsername()
             }
             password.isEmpty() -> {
-                view.shakeView(passwordEditText)
+                view.alertEmptyPassword()
             }
             email.isBlank() -> {
-                view.shakeView(emailEditText)
+                view.alertBlankEmail()
             }
             else -> {
                 launchUI(strategy) {
                     view.showLoading()
-
                     try {
                         val user = client.signup(email, name, username, password)
                         Timber.d("Created user: $user")
 
                         val token = client.login(username, password)
-                        Timber.d("Logged in: $token")
+                        Timber.d("Logged in. Token: $token")
 
                         navigator.toChatList()
                     } catch (ex: RocketChatException) {

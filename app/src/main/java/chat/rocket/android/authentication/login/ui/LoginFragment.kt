@@ -1,6 +1,7 @@
 package chat.rocket.android.authentication.login.ui
 
 import DrawableHelper
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -22,6 +23,8 @@ import javax.inject.Inject
 
 class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var presenter: LoginPresenter
+    @Inject lateinit var appContext: Context
+
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
             showOauthView(false)
@@ -85,7 +88,7 @@ class LoginFragment : Fragment(), LoginView {
         showSignUpView(true)
         // -------------------------------------------------------------------------------------------------------------------
 
-        button_log_in.setOnClickListener { presenter.authenticate(text_username_or_email, text_password) }
+        button_log_in.setOnClickListener { presenter.authenticate(text_username_or_email.textContent, text_password.textContent) }
     }
 
     override fun onDestroyView() {
@@ -153,6 +156,18 @@ class LoginFragment : Fragment(), LoginView {
         text_new_to_rocket_chat.setVisibility(value)
     }
 
+    override fun alertWrongUsernameOrEmail() {
+        AnimationHelper.vibrateSmartPhone(appContext)
+        AnimationHelper.shakeView(text_username_or_email)
+        text_username_or_email.requestFocus()
+    }
+
+    override fun alertWrongPassword() {
+        AnimationHelper.vibrateSmartPhone(appContext)
+        AnimationHelper.shakeView(text_password)
+        text_password.requestFocus()
+    }
+
     override fun showLoading() {
         enableUserInput(false)
         view_loading.show()
@@ -165,12 +180,6 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun showMessage(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun shakeView(viewToShake: View) {
-        AnimationHelper.vibrateSmartPhone(viewToShake.context)
-        AnimationHelper.shakeView(viewToShake)
-        viewToShake.requestFocus()
     }
 
     private fun tintEditTextDrawableStart() {

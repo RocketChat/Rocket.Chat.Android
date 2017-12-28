@@ -1,6 +1,7 @@
 package chat.rocket.android.authentication.twofactor.ui
 
 import DrawableHelper
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,12 +15,14 @@ import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
 import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject
 
 class TwoFAFragment : Fragment(), TwoFAView {
     @Inject lateinit var presenter: TwoFAPresenter
+    @Inject lateinit var appContext: Context    
     lateinit var serverUrl: String
     lateinit var username: String
     lateinit var password: String
@@ -60,8 +63,13 @@ class TwoFAFragment : Fragment(), TwoFAView {
         }
 
         button_log_in.setOnClickListener {
-            presenter.authenticate(username, password, text_two_factor_auth)
+            presenter.authenticate(username, password, text_two_factor_auth.textContent)
         }
+    }
+
+    override fun alertBlankTwoFactorAuthenticationCode() {
+        AnimationHelper.vibrateSmartPhone(appContext)
+        AnimationHelper.shakeView(text_two_factor_auth)
     }
 
     override fun showLoading() {
@@ -74,11 +82,6 @@ class TwoFAFragment : Fragment(), TwoFAView {
 
     override fun showMessage(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun shakeView(viewToShake: View) {
-        AnimationHelper.vibrateSmartPhone(viewToShake.context)
-        AnimationHelper.shakeView(viewToShake)
     }
 
     private fun tintEditTextDrawableStart() {

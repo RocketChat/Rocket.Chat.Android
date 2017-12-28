@@ -1,17 +1,12 @@
 package chat.rocket.android.authentication.login.presentation
 
-import android.widget.EditText
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.util.launchUI
-import chat.rocket.android.util.textContent
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.chatRooms
-import chat.rocket.core.internal.rest.getRoomFavoriteMessages
 import chat.rocket.core.internal.rest.login
-import chat.rocket.core.internal.rest.sendMessage
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,16 +15,13 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val navigator: AuthenticationNavigator) {
     @Inject lateinit var client: RocketChatClient
 
-    fun authenticate(usernameOrEmailEditText: EditText, passwordEditText: EditText) {
-        val usernameOrEmail = usernameOrEmailEditText.textContent
-        val password = passwordEditText.textContent
-
+    fun authenticate(usernameOrEmail: String, password: String) {
         when {
             usernameOrEmail.isBlank() -> {
-                view.shakeView(usernameOrEmailEditText)
+                view.alertWrongUsernameOrEmail()
             }
             password.isEmpty() -> {
-                view.shakeView(passwordEditText)
+                view.alertWrongPassword()
             }
             else -> {
                 launchUI(strategy) {
@@ -58,6 +50,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
     }
 
-    fun signup() =
-            navigator.toSignUp(navigator.currentServer!!)
+    fun signup() {
+        navigator.toSignUp(navigator.currentServer!!)
+    }
 }
