@@ -1,9 +1,10 @@
 package chat.rocket.android.authentication.signup.presentation
 
+import chat.rocket.android.core.behaviours.InternetView
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
-interface SignupView : LoadingView, MessageView {
+interface SignupView : LoadingView, MessageView, InternetView {
 
     /**
      * Alerts the user about a blank name.

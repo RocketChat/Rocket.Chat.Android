@@ -2,6 +2,7 @@ package chat.rocket.android.authentication.signup.presentation
 
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
@@ -31,22 +32,26 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
             }
             else -> {
                 launchUI(strategy) {
-                    view.showLoading()
-                    try {
-                        val user = client.signup(email, name, username, password)
-                        Timber.d("Created user: $user")
+                    if (NetworkHelper.hasInternetAccess()) {
+                        view.showLoading()
+                        try {
+                            val user = client.signup(email, name, username, password)
+                            Timber.d("Created user: $user")
 
-                        val token = client.login(username, password)
-                        Timber.d("Logged in. Token: $token")
+                            val token = client.login(username, password)
+                            Timber.d("Logged in. Token: $token")
 
-                        navigator.toChatList()
-                    } catch (ex: RocketChatException) {
-                        val errorMessage = ex.message
-                        if (errorMessage != null) {
-                            view.showMessage(errorMessage)
+                            navigator.toChatList()
+                        } catch (ex: RocketChatException) {
+                            val errorMessage = ex.message
+                            if (errorMessage != null) {
+                                view.showMessage(errorMessage)
+                            }
+                        } finally {
+                            view.hideLoading()
                         }
-                    } finally {
-                        view.hideLoading()
+                    } else {
+                        view.showNoInternetConnection()
                     }
                 }
             }

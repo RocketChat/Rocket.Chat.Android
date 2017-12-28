@@ -43,7 +43,7 @@ class ServerFragment : Fragment(), ServerView {
         activity?.applicationContext?.apply {
             button_connect.setOnClickListener {
                 val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.connect(this, text_server_protocol.textContent + url)
+                presenter.connect(text_server_protocol.textContent + url)
             }
         }
     }
@@ -67,5 +67,9 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun showMessage(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showNoInternetConnection() {
+        Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
     }
 }
