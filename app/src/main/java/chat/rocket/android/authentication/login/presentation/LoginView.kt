@@ -2,9 +2,8 @@ package chat.rocket.android.authentication.login.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.android.core.behaviours.ShakeView
 
-interface LoginView : LoadingView, MessageView, ShakeView {
+interface LoginView : LoadingView, MessageView {
 
     /**
      * Shows the oauth view if the server settings allow the login via social accounts.
@@ -63,4 +62,14 @@ interface LoginView : LoadingView, MessageView, ShakeView {
      * @param value True to show the sign up view, false otherwise.
      */
     fun showSignUpView(value: Boolean)
+
+    /**
+     * Alerts the user about a wrong inputted username or email.
+     */
+    fun alertWrongUsernameOrEmail()
+
+    /**
+     * Alerts the user about a wrong inputted password.
+     */
+    fun alertWrongPassword()
 }
