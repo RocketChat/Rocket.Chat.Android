@@ -1,7 +1,5 @@
 package chat.rocket.android.authentication.server.presentation
 
-import android.content.Context
-import chat.rocket.android.R
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
@@ -14,7 +12,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val navigator: AuthenticationNavigator) {
     @Inject lateinit var client: RocketChatClient
 
-    fun connect(context: Context, server: String) {
+    fun connect(server: String) {
         launchUI(strategy) {
             if (NetworkHelper.hasInternetAccess()) {
                 view.showLoading()
@@ -25,7 +23,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                 view.hideLoading()
                 navigator.toLogin(server)
             } else {
-                view.showMessage(context.getString(R.string.msg_no_internet_connection))
+                view.showNoInternetConnection()
             }
         }
     }

@@ -1,9 +1,10 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.core.behaviours.InternetView
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
-interface LoginView : LoadingView, MessageView {
+interface LoginView : LoadingView, MessageView, InternetView {
 
     /**
      * Shows the oauth view if the server settings allow the login via social accounts.

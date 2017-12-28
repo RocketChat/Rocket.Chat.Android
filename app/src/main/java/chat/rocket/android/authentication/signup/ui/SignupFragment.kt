@@ -116,6 +116,10 @@ class SignupFragment : Fragment(), SignupView {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun showNoInternetConnection() {
+        Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
+    }
+
     private fun tintEditTextDrawableStart() {
         val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, appContext)
         val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, appContext)

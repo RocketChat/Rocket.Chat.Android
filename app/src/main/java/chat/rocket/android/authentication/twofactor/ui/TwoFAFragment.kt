@@ -84,6 +84,10 @@ class TwoFAFragment : Fragment(), TwoFAView {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun showNoInternetConnection() {
+        Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
+    }
+
     private fun tintEditTextDrawableStart() {
         activity?.applicationContext?.apply {
             val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_vpn_key_black_24dp, this)

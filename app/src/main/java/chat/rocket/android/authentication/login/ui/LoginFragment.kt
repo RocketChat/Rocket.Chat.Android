@@ -182,6 +182,10 @@ class LoginFragment : Fragment(), LoginView {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun showNoInternetConnection() {
+        Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
+    }
+
     private fun tintEditTextDrawableStart() {
         activity?.applicationContext?.apply {
             val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_assignment_ind_black_24dp, this)
