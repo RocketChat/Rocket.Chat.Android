@@ -26,7 +26,7 @@ public interface LoginContract {
 
         void showTwoStepAuth();
 
-        void goBack(Context ctx);
+        void goBack();
     }
 
     interface Presenter extends BaseContract.Presenter<View> {

@@ -33,7 +33,7 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
     }
 
 
-    override fun goBack(ctx : Context?) {
+    override fun goBack(ctx: Context?) {
         val context = RocketChatApplication.getInstance()
         val hostname = RocketChatCache.getSelectedServerHostname()
         hostname?.let {

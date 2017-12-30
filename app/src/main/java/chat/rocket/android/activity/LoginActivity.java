@@ -1,6 +1,5 @@
 package chat.rocket.android.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -100,8 +99,7 @@ public class LoginActivity extends AbstractFragmentActivity implements LoginCont
         } else if (BackStackHelper.FRAGMENT_TAG.equals("login")) {
             LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager()
                     .findFragmentById(getLayoutContainerForFragment());
-            Context loginActivityContext = this;
-            loginFragment.goBack(loginActivityContext);
+            loginFragment.goBack();
         }
         return true;
     }
