@@ -38,11 +38,13 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity, int
     fun toTermsOfService() {
         val webPageUrl = currentServer + "/terms-of-service"
         activity.startActivity(context.webViewIntent(webPageUrl))
+        activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }
 
     fun toPrivacyPolicy() {
         val webPageUrl = currentServer + "/privacy-policy"
         activity.startActivity(context.webViewIntent(webPageUrl))
+        activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }
 
     fun toChatList() {
