@@ -72,12 +72,19 @@ class TwoFAFragment : Fragment(), TwoFAView {
         AnimationHelper.shakeView(text_two_factor_auth)
     }
 
+    override fun alertInvalidTwoFactorAuthenticationCode() {
+        showMessage(getString(R.string.msg_invalid_2fa_code))
+    }
+
     override fun showLoading() {
         view_loading.setVisibility(true)
+        enableUserInput(false)
+        view_loading.show()
     }
 
     override fun hideLoading() {
-        view_loading.setVisibility(false)
+        view_loading.hide()
+        enableUserInput(true)
     }
 
     override fun showMessage(message: String) {
@@ -85,7 +92,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
     }
 
     override fun showNoInternetConnection() {
-        Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
+        showMessage(getString(R.string.msg_no_internet_connection))
     }
 
     private fun tintEditTextDrawableStart() {
@@ -96,5 +103,10 @@ class TwoFAFragment : Fragment(), TwoFAView {
             DrawableHelper.tintDrawable(lockDrawable, this, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_two_factor_auth, lockDrawable)
         }
+    }
+
+    private fun enableUserInput(value: Boolean) {
+        button_log_in.isEnabled = value
+        text_two_factor_auth.isEnabled = value
     }
 }
