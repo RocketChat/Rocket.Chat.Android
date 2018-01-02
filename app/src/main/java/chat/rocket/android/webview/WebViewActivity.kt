@@ -56,7 +56,12 @@ class WebViewActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
         web_view.settings.javaScriptEnabled = true
-        web_view.webViewClient = WebViewClient()
+        web_view.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                view_loading.hide()
+            }
+        }
         web_view.loadUrl(webPageUrl)
     }
 
