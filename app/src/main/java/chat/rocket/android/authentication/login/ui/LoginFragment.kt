@@ -27,13 +27,13 @@ class LoginFragment : Fragment(), LoginView {
 
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
-            showOauthView(false)
             showSignUpView(false)
+            showOauthView(false)
             showLoginButton(true)
         } else {
             if (isEditTextEmpty()) {
-                showOauthView(true)
                 showSignUpView(true)
+                showOauthView(true)
                 showLoginButton(false)
             }
         }
@@ -219,6 +219,10 @@ class LoginFragment : Fragment(), LoginView {
         button_log_in.isEnabled = value
         text_username_or_email.isEnabled = value
         text_password.isEnabled = value
+        if (isEditTextEmpty()) {
+            showSignUpView(value)
+            showOauthView(value)
+        }
     }
 
     // Returns true if *all* EditTexts are empty.

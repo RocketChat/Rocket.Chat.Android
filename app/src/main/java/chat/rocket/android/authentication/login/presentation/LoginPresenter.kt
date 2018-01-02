@@ -26,22 +26,19 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
             }
             else -> {
                 launchUI(strategy) {
-                    view.showLoading()
                     if (NetworkHelper.hasInternetAccess()) {
+                        view.showLoading()
                         try {
                             val token = client.login(usernameOrEmail, password)
-                            Timber.d("Created token: $token")
+                            // TODO Salve token?
                             navigator.toChatList()
                         } catch (rocketChatException: RocketChatException) {
-                            when (rocketChatException) {
-                                is RocketChatTwoFactorException -> {
-                                    navigator.toTwoFA(navigator.currentServer!!, usernameOrEmail, password)
-                                }
-                                else -> {
-                                    val errorMessage = rocketChatException.message
-                                    if (errorMessage != null) {
-                                        view.showMessage(errorMessage)
-                                    }
+                            if (rocketChatException is RocketChatTwoFactorException) {
+                                navigator.toTwoFA(navigator.currentServer!!, usernameOrEmail, password)
+                            } else {
+                                val errorMessage = rocketChatException.message
+                                if (errorMessage != null) {
+                                    view.showMessage(errorMessage)
                                 }
                             }
                         } finally {

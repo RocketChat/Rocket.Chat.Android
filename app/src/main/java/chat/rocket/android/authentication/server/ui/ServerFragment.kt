@@ -54,16 +54,15 @@ class ServerFragment : Fragment(), ServerView {
     }
 
     override fun showLoading() {
-        text_server_url.isEnabled = false
-        button_connect.isEnabled = false
-        view_loading.setVisibility(true)
+        enableUserInput(false)
+        view_loading.show()
     }
 
     override fun hideLoading() {
-        view_loading.setVisibility(false)
-        button_connect.isEnabled = true
-        text_server_url.isEnabled = true
+        view_loading.hide()
+        enableUserInput(true)
     }
+
 
     override fun showMessage(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
@@ -71,5 +70,10 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun showNoInternetConnection() {
         Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun enableUserInput(value: Boolean) {
+        button_connect.isEnabled = value
+        text_server_url.isEnabled = value
     }
 }

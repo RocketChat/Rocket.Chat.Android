@@ -36,14 +36,12 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                         view.showLoading()
                         try {
                             val user = client.signup(email, name, username, password)
-                            Timber.d("Created user: $user")
-
+                            // TODO Salve user?
                             val token = client.login(username, password)
-                            Timber.d("Logged in. Token: $token")
-
+                            // TODO Salve token?
                             navigator.toChatList()
-                        } catch (ex: RocketChatException) {
-                            val errorMessage = ex.message
+                        } catch (rocketChatException: RocketChatException) {
+                            val errorMessage = rocketChatException.message
                             if (errorMessage != null) {
                                 view.showMessage(errorMessage)
                             }

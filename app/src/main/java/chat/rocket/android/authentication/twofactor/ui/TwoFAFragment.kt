@@ -77,7 +77,6 @@ class TwoFAFragment : Fragment(), TwoFAView {
     }
 
     override fun showLoading() {
-        view_loading.setVisibility(true)
         enableUserInput(false)
         view_loading.show()
     }
