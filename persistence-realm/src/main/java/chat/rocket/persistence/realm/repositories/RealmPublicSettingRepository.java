@@ -44,18 +44,20 @@ public class RealmPublicSettingRepository extends RealmRepository
         )
                 .unsubscribeOn(AndroidSchedulers.from(Looper.myLooper()))
                 .filter(it -> it.isLoaded() && it.isValid())
-                .map(it -> {
-                    if (it.size() > 0) {
-                        return Optional.of(it.get(0).asPublicSetting());
-                    }
-
-                    PublicSetting defaultSetting = PublicSetting.builder()
-                            .setId(id)
-                            .setValue("")
-                            .setUpdatedAt(0L)
-                            .build();
-                    return Optional.of(defaultSetting);
-                })
+                .map(it -> getPublicSettingOrDefault(id, it))
                 .first(Optional.absent()));
+    }
+
+    private Optional<PublicSetting> getPublicSettingOrDefault(String id, RealmResults<RealmPublicSetting> results) {
+        if (results.size() > 0) {
+            return Optional.of(results.get(0).asPublicSetting());
+        }
+
+        PublicSetting defaultSetting = PublicSetting.builder()
+                .setId(id)
+                .setValue("")
+                .setUpdatedAt(0L)
+                .build();
+        return Optional.of(defaultSetting);
     }
 }
