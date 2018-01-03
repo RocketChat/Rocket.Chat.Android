@@ -1,5 +1,6 @@
 package chat.rocket.android.fragment.server_config
 
+import android.content.Context
 import bolts.Continuation
 import bolts.Task
 import chat.rocket.android.BackgroundLooper
@@ -32,7 +33,7 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
     }
 
 
-    override fun goBack() {
+    override fun goBack(ctx: Context?) {
         val context = RocketChatApplication.getInstance()
         val hostname = RocketChatCache.getSelectedServerHostname()
         hostname?.let {
@@ -40,7 +41,7 @@ class LoginPresenter(private val loginServiceConfigurationRepository: LoginServi
             RocketChatCache.clearSelectedHostnameReferences()
 
         }
-        LaunchUtil.showMainActivity(context)
+        LaunchUtil.showMainActivity(ctx)
     }
 
     override fun login(username: String, password: String) {

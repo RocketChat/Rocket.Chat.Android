@@ -160,8 +160,9 @@ class LoginFragment : AbstractServerConfigFragment(), LoginContract.View {
         presenter.release()
         super.onPause()
     }
-
+    
     override fun goBack() {
-        presenter.goBack()
+        presenter.goBack(context)
     }
+
 }

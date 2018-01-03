@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import chat.rocket.android.R;
 import chat.rocket.android.fragment.server_config.LoginFragment;
 import chat.rocket.android.fragment.server_config.RetryLoginFragment;
+import chat.rocket.android.helper.BackStackHelper;
 import chat.rocket.android.service.ConnectivityManager;
 import chat.rocket.core.interactors.SessionInteractor;
 import chat.rocket.persistence.realm.repositories.RealmSessionRepository;
@@ -92,9 +93,14 @@ public class LoginActivity extends AbstractFragmentActivity implements LoginCont
 
     @Override
     protected boolean onBackPress() {
-        LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager()
-                .findFragmentById(getLayoutContainerForFragment());
-        loginFragment.goBack();
+        if (BackStackHelper.FRAGMENT_TAG.equals("internal")) {
+            super.onBackPress();
+            BackStackHelper.FRAGMENT_TAG = "login";
+        } else if (BackStackHelper.FRAGMENT_TAG.equals("login")) {
+            LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager()
+                    .findFragmentById(getLayoutContainerForFragment());
+            loginFragment.goBack();
+        }
         return true;
     }
 }

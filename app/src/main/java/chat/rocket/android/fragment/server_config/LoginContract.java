@@ -1,5 +1,8 @@
 package chat.rocket.android.fragment.server_config;
 
+
+import android.content.Context;
+
 import java.util.List;
 
 import chat.rocket.android.shared.BaseContract;
@@ -30,6 +33,6 @@ public interface LoginContract {
 
         void login(String username, String password);
 
-        void goBack();
+        void goBack(Context ctx);
     }
 }
