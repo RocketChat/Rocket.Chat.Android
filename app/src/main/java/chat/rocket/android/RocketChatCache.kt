@@ -408,7 +408,11 @@ object RocketChatCache {
         }, BackpressureStrategy.LATEST)
     }
 
-    fun setUserId(userId: String) = setString(KEY_USER_ID, userId)
+    fun setUserId(userId: String?) {
+        userId?.let {
+            setString(KEY_USER_ID, userId)
+        }
+    }
 
     fun getUserId(): String? = getString(KEY_USER_ID, null)
 
@@ -420,7 +424,11 @@ object RocketChatCache {
 
     fun getUserName(): String? = getString(KEY_USER_NAME, null)
 
-    fun setUserUsername(username: String) = setString(KEY_USER_USERNAME, username)
+    fun setUserUsername(username: String?) {
+        username?.let {
+            setString(KEY_USER_USERNAME, username)
+        }
+    }
 
     fun getUserUsername(): String? = getString(KEY_USER_USERNAME, null)
 }
