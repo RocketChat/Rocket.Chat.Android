@@ -5,9 +5,6 @@ import android.support.v4.util.Pair;
 
 import com.hadisatrio.optional.Optional;
 
-import javax.annotation.Nullable;
-
-import chat.rocket.core.PublicSettingsConstants;
 import chat.rocket.core.models.PublicSetting;
 import chat.rocket.core.repositories.PublicSettingRepository;
 import chat.rocket.persistence.realm.RealmStore;
