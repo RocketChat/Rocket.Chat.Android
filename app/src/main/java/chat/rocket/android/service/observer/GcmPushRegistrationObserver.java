@@ -65,7 +65,10 @@ public class GcmPushRegistrationObserver extends AbstractModelObserver<GcmPushRe
         ).continueWith(task -> {
             if (task.isFaulted()) {
                 realmHelper.executeTransaction(realm -> {
-                    GcmPushRegistration.queryDefault(realm).findFirst().setSyncState(SyncState.FAILED);
+                    GcmPushRegistration gcmPushRegistration = GcmPushRegistration.queryDefault(realm).findFirst();
+                    if (gcmPushRegistration != null) {
+                        gcmPushRegistration.setSyncState(SyncState.FAILED);
+                    }
                     return null;
                 }).continueWith(new LogIfError());
             }
