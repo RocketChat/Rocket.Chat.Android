@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
+import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
 import chat.rocket.common.model.BaseRoom.RoomType
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_chat.view.*
@@ -28,9 +30,9 @@ class ChatRoomsAdapter(private var dataSet: MutableList<ChatRoom>, private val c
         holder.chatName.textContent = chatRoomName
 
         if (chatRoom.type == RoomType.ONE_TO_ONE) {
+            // TODO Check the best way to get the current server url.
             val canonicalUrl = chatRoom.client.restUrl.toString()
-            // TODO get safe URL
-            holder.userAvatar.setImageURI(canonicalUrl + "avatar/" + chatRoomName)
+            holder.userAvatar.setImageURI(UrlHelper.getAvatarUrl(canonicalUrl, chatRoomName))
             holder.userAvatar.setVisibility(true)
         } else {
             holder.roomAvatar.setImageDrawable(DrawableHelper.getTextDrawable(chatRoomName))
@@ -58,10 +60,10 @@ class ChatRoomsAdapter(private var dataSet: MutableList<ChatRoom>, private val c
                 chatRoomName -> {
                     holder.lastMessage.textContent = message
                 }
-            // TODO Change to MySelf
-                chatRoom.user?.username -> {
-                    holder.lastMessage.textContent = context.getString(R.string.msg_you) + ": $message"
-                }
+                // TODO Change to MySelf
+//                chatRoom.user?.username -> {
+//                    holder.lastMessage.textContent = context.getString(R.string.msg_you) + ": $message"
+//                }
                 else -> {
                     holder.lastMessage.textContent = "@$senderUsername: $message"
                 }
