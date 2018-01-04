@@ -28,6 +28,7 @@ ext {
         floatingSearchView     : '2.1.1',
         androidSvg             : '1.2.1',
         aVLoadingIndicatorView : '2.1.3',
+        textDrawable           : '1.0.2',
 
         // For testing
         junit                  : '4.12',
@@ -81,6 +82,8 @@ ext {
         androidSvg             : "com.caverock:androidsvg:${versions.androidSvg}",
 
         aVLoadingIndicatorView : "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
+
+        textDrawable           : "com.github.rocketchat:textdrawable:${versions.textDrawable}",
 
         // For testing
         toolsJar      : files(Jvm.current().getToolsJar()),
