@@ -1,6 +1,10 @@
 package chat.rocket.android.util
 
+import android.support.annotation.LayoutRes
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 
 fun String.ifEmpty(value: String): String {
@@ -11,11 +15,15 @@ fun String.ifEmpty(value: String): String {
 }
 
 fun View.setVisibility(value: Boolean) {
-    if (value) {
-        this.visibility = View.VISIBLE
+    visibility = if (value) {
+        View.VISIBLE
     } else {
-        this.visibility = View.GONE
+        View.GONE
     }
+}
+
+fun ViewGroup.inflate(@LayoutRes resource: Int): View {
+    return LayoutInflater.from(context).inflate(resource, this, false)
 }
 
 var TextView.textContent: String
@@ -27,5 +35,5 @@ var TextView.textContent: String
 var TextView.hintContent: String
     get() = hint.toString()
     set(value) {
-        text = value
+        hint = value
     }
