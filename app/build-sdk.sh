@@ -76,8 +76,9 @@ cd $SDK_DIR && ./gradlew core:assemble && cd $CURRENT_DIR
 
 rm $CURRENT_DIR/libs/common* $CURRENT_DIR/libs/core*
 
-cp $SDK_DIR/common/build/libs/common-0.1-SNAPSHOT.jar $CURRENT_DIR/libs/common-$SHA.jar
-cp $SDK_DIR/core/build/libs/core-0.1-SNAPSHOT.jar $CURRENT_DIR/libs/core-$SHA.jar
+mkdir -p $CURRENT_DIR/libs/
+cp -v $SDK_DIR/common/build/libs/common-0.1-SNAPSHOT.jar $CURRENT_DIR/libs/common-$SHA.jar
+cp -v $SDK_DIR/core/build/libs/core-0.1-SNAPSHOT.jar $CURRENT_DIR/libs/core-$SHA.jar
 
 echo "$SHA" > $SDK_DIR/.last_commit_hash
 
