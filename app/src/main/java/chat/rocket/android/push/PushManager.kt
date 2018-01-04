@@ -1,5 +1,6 @@
 package chat.rocket.android.push
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -137,6 +138,7 @@ object PushManager {
         return group
     }
 
+    @SuppressLint("NewApi")
     internal fun showNotification(context: Context, lastPushMessage: PushMessage) {
         if (lastPushMessage.host == null || lastPushMessage.message == null || lastPushMessage.title == null) {
             return
@@ -202,7 +204,7 @@ object PushManager {
                     .setDeleteIntent(deleteIntent)
                     .setMessageNotification()
 
-            val subText = RocketChatCache(context).getHostSiteName(host)
+            val subText = RocketChatCache.getHostSiteName(host)
             if (subText.isNotEmpty()) {
                 builder.setSubText(subText)
             }
@@ -257,6 +259,7 @@ object PushManager {
         }
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.N)
     internal fun createGroupNotificationForNougatAndAbove(context: Context, lastPushMessage: PushMessage): Notification? {
         with(lastPushMessage) {
@@ -289,7 +292,7 @@ object PushManager {
                 manager.createNotificationChannel(groupChannel)
             }
 
-            val subText = RocketChatCache(context).getHostSiteName(host)
+            val subText = RocketChatCache.getHostSiteName(host)
             if (subText.isNotEmpty()) {
                 builder.setSubText(subText)
             }
@@ -344,7 +347,7 @@ object PushManager {
                     .setContentIntent(contentIntent)
                     .setMessageNotification()
 
-            val subText = RocketChatCache(context).getHostSiteName(host)
+            val subText = RocketChatCache.getHostSiteName(host)
             if (subText.isNotEmpty()) {
                 builder.setSubText(subText)
             }
@@ -370,6 +373,7 @@ object PushManager {
         }
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.N)
     internal fun createSingleNotificationForNougatAndAbove(context: Context, lastPushMessage: PushMessage): Notification? {
         val manager: NotificationManager =
@@ -404,7 +408,7 @@ object PushManager {
                 manager.createNotificationChannel(channel)
             }
 
-            val subText = RocketChatCache(context).getHostSiteName(host)
+            val subText = RocketChatCache.getHostSiteName(host)
             if (subText.isNotEmpty()) {
                 builder.setSubText(subText)
             }
@@ -503,6 +507,7 @@ object PushManager {
             setAutoCancel(true)
             setShowWhen(true)
             setColor(res.getColor(R.color.colorRed400, ctx.theme))
+            setDefaults(Notification.DEFAULT_ALL)
             setSmallIcon(smallIcon)
         })
         return this
@@ -646,7 +651,7 @@ object PushManager {
                             }
                             val httpUrl = HttpUrl.parse(pushMessage.host)
                             httpUrl?.let {
-                                val siteUrl = RocketChatCache(context).getSiteUrlFor(httpUrl.host())
+                                val siteUrl = RocketChatCache.getSiteUrlFor(httpUrl.host())
                                 if (siteUrl != null) {
                                     sendMessage(siteUrl, message, pushMessage.rid)
                                 }
@@ -693,7 +698,6 @@ object PushManager {
                     .subscribe({ _ ->
                         // Empty
                     }, { throwable ->
-                        throwable.printStackTrace()
                         Logger.report(throwable)
                     })
         }

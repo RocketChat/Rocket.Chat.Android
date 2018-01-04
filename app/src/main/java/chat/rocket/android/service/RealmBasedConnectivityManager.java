@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import chat.rocket.android.ConnectionStatusManager;
 import chat.rocket.android.RocketChatCache;
 import chat.rocket.android.helper.RxHelper;
 import chat.rocket.android.log.RCLog;
@@ -74,7 +75,7 @@ import io.reactivex.subjects.BehaviorSubject;
     @DebugLog
     @Override
     public void ensureConnections() {
-        String hostname = new RocketChatCache(appContext).getSelectedServerHostname();
+        String hostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
         if (hostname == null) {
             return;
         }
@@ -107,7 +108,7 @@ import io.reactivex.subjects.BehaviorSubject;
     public void removeServer(String hostname) {
         RealmBasedServerInfo.remove(hostname);
         if (serverConnectivityList.containsKey(hostname)) {
-            disconnectFromServerIfNeeded(hostname)
+            disconnectFromServerIfNeeded(hostname, DDPClient.REASON_CLOSED_BY_USER)
                     .subscribe(_val -> {
                     }, RCLog::e);
         }
@@ -134,6 +135,13 @@ import io.reactivex.subjects.BehaviorSubject;
             list.add(new ServerConnectivity(entry.getKey(), entry.getValue()));
         }
         return list;
+    }
+
+    @Override
+    public void notifySessionEstablished(String hostname) {
+        serverConnectivityList.put(hostname, ServerConnectivity.STATE_SESSION_ESTABLISHED);
+        connectivitySubject.onNext(
+                new ServerConnectivity(hostname, ServerConnectivity.STATE_SESSION_ESTABLISHED));
     }
 
     @DebugLog
@@ -200,7 +208,7 @@ import io.reactivex.subjects.BehaviorSubject;
         });
     }
 
-    private Single<Boolean> disconnectFromServerIfNeeded(String hostname) {
+    private Single<Boolean> disconnectFromServerIfNeeded(String hostname, int reason) {
         return Single.defer(() -> {
             final int connectivity = serverConnectivityList.get(hostname);
             if (connectivity == ServerConnectivity.STATE_DISCONNECTED) {
@@ -209,8 +217,8 @@ import io.reactivex.subjects.BehaviorSubject;
 
             if (connectivity == ServerConnectivity.STATE_CONNECTING) {
                 return waitForConnected(hostname)
-                        .doOnError(err -> notifyConnectionLost(hostname, DDPClient.REASON_NETWORK_ERROR))
-                        .flatMap(_val -> disconnectFromServerIfNeeded(hostname));
+//                        .doOnError(err -> notifyConnectionLost(hostname, DDPClient.REASON_CLOSED_BY_USER))
+                        .flatMap(_val -> disconnectFromServerIfNeeded(hostname, DDPClient.REASON_CLOSED_BY_USER));
             }
 
             if (connectivity == ServerConnectivity.STATE_DISCONNECTING) {
@@ -253,6 +261,7 @@ import io.reactivex.subjects.BehaviorSubject;
     private Single<Boolean> connectToServer(String hostname) {
         return Single.defer(() -> {
             if (!serverConnectivityList.containsKey(hostname)) {
+                ConnectionStatusManager.INSTANCE.setConnectionError();
                 return Single.error(new IllegalArgumentException("hostname not found"));
             }
 
@@ -263,8 +272,10 @@ import io.reactivex.subjects.BehaviorSubject;
             }
 
             if (serviceInterface != null) {
+                ConnectionStatusManager.INSTANCE.setConnecting();
                 return serviceInterface.ensureConnectionToServer(hostname);
             } else {
+                ConnectionStatusManager.INSTANCE.setConnectionError();
                 return Single.error(new ThreadLooperNotPreparedException("not prepared"));
             }
         });
@@ -279,8 +290,11 @@ import io.reactivex.subjects.BehaviorSubject;
 
             if (serviceInterface != null) {
                 return serviceInterface.disconnectFromServer(hostname)
-                        // //after disconnection from server, remove HOSTNAME key from HashMap
-                        .doAfterTerminate(() -> serverConnectivityList.remove(hostname));
+                        //after disconnection from server, remove HOSTNAME key from HashMap
+                        .doAfterTerminate(() -> {
+                            serverConnectivityList.remove(hostname);
+                            serverConnectivityList.put(hostname, ServerConnectivity.STATE_DISCONNECTED);
+                        });
             } else {
                 return Single.error(new IllegalStateException("not prepared"));
             }

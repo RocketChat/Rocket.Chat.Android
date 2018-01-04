@@ -1,5 +1,8 @@
 package chat.rocket.android.fragment.server_config;
 
+
+import android.content.Context;
+
 import java.util.List;
 
 import chat.rocket.android.shared.BaseContract;
@@ -7,21 +10,29 @@ import chat.rocket.core.models.LoginServiceConfiguration;
 
 public interface LoginContract {
 
-  interface View extends BaseContract.View {
+    interface View extends BaseContract.View {
 
-    void showLoader();
+        void showLoader();
 
-    void hideLoader();
+        void hideLoader();
 
-    void showError(String message);
+        void showErrorInUsernameEditText();
 
-    void showLoginServices(List<LoginServiceConfiguration> loginServiceList);
+        void showErrorInPasswordEditText();
 
-    void showTwoStepAuth();
-  }
+        void showError(String message);
 
-  interface Presenter extends BaseContract.Presenter<View> {
+        void showLoginServices(List<LoginServiceConfiguration> loginServiceList);
 
-    void login(String username, String password);
-  }
+        void showTwoStepAuth();
+
+        void goBack();
+    }
+
+    interface Presenter extends BaseContract.Presenter<View> {
+
+        void login(String username, String password);
+
+        void goBack(Context ctx);
+    }
 }

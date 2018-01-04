@@ -1,10 +1,12 @@
 ext {
     preDexLibs = "true" != System.getenv("CI")
     supportLibraryVersion = "27.0.1"
+    playLibVersion = '11.6.2'
     constraintLayoutVersion = "1.0.2"
-    kotlinVersion = "1.1.51"
+    kotlinVersion = "1.2.0"
     okHttpVersion = "3.9.0"
     rxbindingVersion = '2.0.0'
+    rxJavaVersion = "2.1.0"
 
     supportDependencies = [
             designSupportLibrary: "com.android.support:design:${supportLibraryVersion}",
@@ -12,16 +14,23 @@ ext {
             constraintLayout    : "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
             cardView            : "com.android.support:cardview-v7:${supportLibraryVersion}",
             supportV13          : "com.android.support:support-v13:${supportLibraryVersion}",
-            multidex            : "com.android.support:multidex:1.0.2"
+            multidex            : "com.android.support:multidex:1.0.2",
+            customTabs          : "com.android.support:customtabs:${supportLibraryVersion}"
     ]
+
     extraDependencies = [
             okHTTP         : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
-            rxJava         : "io.reactivex.rxjava2:rxjava:2.1.0",
+            rxJava         : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            rxKotlin       : "io.reactivex.rxjava2:rxkotlin:${rxJavaVersion}",
             boltTask       : "com.parse.bolts:bolts-tasks:1.4.0",
             rxAndroid      : "io.reactivex.rxjava2:rxandroid:2.0.1",
             textDrawable   : "com.github.rocketchat:textdrawable:1.0.2",
-            optional       : "com.hadisatrio:Optional:v1.0.1"
+            optional       : "com.hadisatrio:Optional:v1.0.1",
+            androidJob     : "com.evernote:android-job:1.2.1",
+            jstate         : "com.unquietcode.tools.jstate:jstate:2.1",
+            crouton        : "de.keyboardsurfer.android.widget:crouton:1.8.5@aar"
     ]
+
     rxbindingDependencies = [
             rxBinding          : "com.jakewharton.rxbinding2:rxbinding:${rxbindingVersion}",
             rxBindingSupport   : "com.jakewharton.rxbinding2:rxbinding-support-v4:${rxbindingVersion}",
@@ -35,6 +44,15 @@ subprojects {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         } else if ("com.android.build.gradle.LibraryPlugin" == plugin.class.name) {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        }
+    }
+
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex') ) {
+                details.useVersion "${supportLibraryVersion}"
+            }
         }
     }
 }

@@ -3,7 +3,8 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
-    maven { url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo' }
+//    maven { url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo' }
+    maven { url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo' }
 }
 
 apply plugin: 'kotlin-android'
@@ -20,8 +21,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 16
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 54
-        versionName "1.0.31"
+        versionCode 58
+        versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -97,10 +98,9 @@ play {
     track = "${track}"
 }
 ext {
-    playLibVersion = '11.6.0'
     stethoVersion = '1.5.0'
     stethoOkhttp3Version = '1.5.0'
-    stethoRealmVersion = '2.1.0'
+    stethoRealmVersion = '2.2.2'
     rxbindingVersion = '2.0.0'
     rxlifecycleVersion = '2.1.0'
     icepickVersion = '3.2.0'
@@ -108,43 +108,49 @@ ext {
 }
 
 dependencies {
-    compile project(':android-ddp')
-    compile project(':rocket-chat-android-widgets')
-    compile project(':persistence-realm')
-    compile extraDependencies.okHTTP
-    compile extraDependencies.rxJava
-    compile extraDependencies.boltTask
-    compile supportDependencies.multidex
-    compile supportDependencies.designSupportLibrary
-    compile supportDependencies.annotation
-    compile rxbindingDependencies.rxBinding
-    compile rxbindingDependencies.rxBindingSupport
-    compile rxbindingDependencies.rxBindingAppcompact
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
-    compile "com.google.firebase:firebase-core:$playLibVersion"
-    compile "com.google.firebase:firebase-crash:$playLibVersion"
-    compile "com.google.android.gms:play-services-gcm:$playLibVersion"
-    compile "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
-    compile "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycleVersion"
-    compile "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
-    compile 'nl.littlerobots.rxlint:rxlint:1.2'
-    compile "frankiesardo:icepick:$icepickVersion"
+    api project(':android-ddp')
+    api project(':rocket-chat-android-widgets')
+    api project(':persistence-realm')
+    implementation extraDependencies.okHTTP
+    implementation extraDependencies.rxJava
+    implementation extraDependencies.rxKotlin
+    implementation extraDependencies.boltTask
+    implementation supportDependencies.multidex
+    implementation supportDependencies.designSupportLibrary
+    implementation supportDependencies.annotation
+    implementation rxbindingDependencies.rxBinding
+    implementation rxbindingDependencies.rxBindingSupport
+    implementation rxbindingDependencies.rxBindingAppcompact
+    api "org.jetbrains.kotlin:kotlin-stdlib-jre8:$rootProject.ext.kotlinVersion"
+    implementation "com.google.firebase:firebase-core:$rootProject.ext.playLibVersion"
+    implementation "com.google.firebase:firebase-crash:$rootProject.ext.playLibVersion"
+    implementation "com.google.android.gms:play-services-gcm:$rootProject.ext.playLibVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycleVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
+    implementation 'nl.littlerobots.rxlint:rxlint:1.2'
+    implementation "frankiesardo:icepick:$icepickVersion"
     annotationProcessor "frankiesardo:icepick-processor:$icepickVersion"
-    compile "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
+    implementation "com.github.hotchemi:permissionsdispatcher:$permissionsdispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionsdispatcherVersion"
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-    debugCompile "com.facebook.stetho:stetho:$stethoVersion"
+    implementation(extraDependencies.crouton) {
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
+    implementation extraDependencies.androidJob
+    implementation extraDependencies.jstate
+    debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
     debugCompile "com.facebook.stetho:stetho-okhttp3:$stethoOkhttp3Version"
     debugCompile "com.uphyca:stetho_realm:$stethoRealmVersion"
     debugCompile "com.tspoon.traceur:traceur:1.0.1"
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.3'
-    testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$rootProject.ext.kotlinVersion"
-    testCompile "com.nhaarman:mockito-kotlin:1.5.0"
-    testCompile 'org.amshove.kluent:kluent:1.14'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:3.3'
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$rootProject.ext.kotlinVersion"
+    testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
+    testImplementation 'org.amshove.kluent:kluent:1.14'
 }
 apply plugin: 'com.google.gms.google-services'

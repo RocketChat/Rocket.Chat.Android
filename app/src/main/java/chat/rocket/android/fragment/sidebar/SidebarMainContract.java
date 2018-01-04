@@ -25,7 +25,7 @@ public interface SidebarMainContract {
 
     void show(User user);
 
-    void onLogoutCleanUp();
+    void onPreparedToLogOut();
   }
 
   interface Presenter extends BaseContract.Presenter<View> {
@@ -48,6 +48,6 @@ public interface SidebarMainContract {
 
     void onLogout(Continuation<Void, Object> continuation);
 
-    void beforeLogoutCleanUp();
+    void prepareToLogOut();
   }
 }

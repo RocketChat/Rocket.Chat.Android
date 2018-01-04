@@ -7,7 +7,7 @@ public interface InputHostnameContract {
   interface View extends BaseContract.View {
     void showLoader();
 
-    void hideLoader();
+    void hideLoader(Boolean isValidServerUrl);
 
     void showInvalidServerError();
 

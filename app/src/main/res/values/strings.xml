@@ -18,8 +18,8 @@
     <string name="fragment_room_list_file_list_title">File list (%s)</string>
     <string name="fragment_room_list_member_list_title">Member list (%s)</string>
     <string name="fragment_room_list_could_not_load_your_request">Could not load your request.\n%s.</string>
-    <string name="fragment_room_list_no_pinned_message_to_show">No pinned message to show</string>
-    <string name="fragment_room_list_no_favorite_message_to_show">No favorite message to show</string>
+    <string name="fragment_room_list_no_pinned_message_to_show">No pinned messages to show</string>
+    <string name="fragment_room_list_no_favorite_message_to_show">No favorite messages to show</string>
     <string name="fragment_room_list_no_file_list_to_show">No file list to show</string>
     <string name="fragment_room_list_no_member_list_to_show">No member list to show</string>
 
@@ -47,7 +47,7 @@
     <string name="username">\@%s</string>
     <string name="dialog_user_registration_password">Password</string>
     <string name="fragment_home_welcome_message">Welcome to Rocket.Chat.Android\nSelect a channel from the drawer.</string>
-    <string name="fragment_input_hostname_hostname">Hostname</string>
+    <string name="fragment_input_hostname_hostname">Server</string>
     <string name="fragment_input_hostname_server_hint">open.rocket.chat</string>
     <string name="fragment_input_hostname_connect">CONNECT</string>
     <string name="fragment_login_username_or_email">Username or email</string>
@@ -55,7 +55,7 @@
     <string name="fragment_login_sign_up">SIGN UP</string>
     <string name="fragment_login_sign_in">SIGN IN</string>
     <string name="fragment_retry_login_retry_title">RETRY</string>
-    <string name="fragment_retry_login_error_title">Connection Error</string>
+    <string name="fragment_retry_login_error_title">Your connection seems off…</string>
     <string name="server_config_activity_authenticating">Authenticating…</string>
     <string name="home_fragment_title">Rocket.Chat - Home</string>
     <string name="fragment_sidebar_main_unread_rooms_title">UNREAD ROOMS</string>

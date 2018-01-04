@@ -31,24 +31,25 @@ ext {
     frescoVersion = '1.4.0'
 }
 dependencies {
-    compile project(':rocket-chat-core')
-    compile extraDependencies.okHTTP
-    compile extraDependencies.textDrawable
-    compile supportDependencies.annotation
-    compile supportDependencies.cardView
-    compile supportDependencies.designSupportLibrary
-    compile supportDependencies.constraintLayout
-    compile supportDependencies.supportV13
-    compile rxbindingDependencies.rxBinding
-    compile rxbindingDependencies.rxBindingSupport
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
-    compile 'org.nibor.autolink:autolink:0.6.0'
-    compile 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
-    compile "com.facebook.fresco:fresco:$frescoVersion"
-    compile "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
-    compile 'com.caverock:androidsvg:1.2.1'
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
-    testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.7.19"
+    api project(':rocket-chat-core')
+    api extraDependencies.okHTTP
+    api extraDependencies.textDrawable
+    api supportDependencies.annotation
+    api supportDependencies.cardView
+    api supportDependencies.designSupportLibrary
+    api supportDependencies.constraintLayout
+    api supportDependencies.supportV13
+    api supportDependencies.customTabs
+    api rxbindingDependencies.rxBinding
+    api rxbindingDependencies.rxBindingSupport
+    api "org.jetbrains.kotlin:kotlin-stdlib-jre8:$rootProject.ext.kotlinVersion"
+    implementation 'org.nibor.autolink:autolink:0.6.0'
+    implementation 'com.github.yusukeiwaki.android-widget:widget-fontawesome:0.0.1'
+    api "com.facebook.fresco:fresco:$frescoVersion"
+    api "com.facebook.fresco:imagepipeline-okhttp3:$frescoVersion"
+    implementation 'com.caverock:androidsvg:1.2.1'
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$rootProject.ext.kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$rootProject.ext.kotlinVersion"
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:2.10.0"
 }

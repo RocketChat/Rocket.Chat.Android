@@ -14,11 +14,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.View> implements InputHostnameContract.Presenter {
-  private final RocketChatCache rocketChatCache;
   private final ConnectivityManagerApi connectivityManager;
+  private boolean isValidServerUrl;
 
-  public InputHostnamePresenter(RocketChatCache rocketChatCache, ConnectivityManagerApi connectivityManager) {
-    this.rocketChatCache = rocketChatCache;
+  public InputHostnamePresenter(ConnectivityManagerApi connectivityManager) {
     this.connectivityManager = connectivityManager;
   }
 
@@ -37,24 +36,25 @@ public class InputHostnamePresenter extends BasePresenter<InputHostnameContract.
     final Disposable subscription = ServerPolicyHelper.isApiVersionValid(validationHelper)
         .subscribeOn(AndroidSchedulers.from(BackgroundLooper.get()))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnTerminate(() -> view.hideLoader())
+        .doOnTerminate(() -> view.hideLoader(isValidServerUrl))
         .subscribe(
             serverValidation -> {
               if (serverValidation.isValid()) {
+                isValidServerUrl=true;
                 onServerValid(hostname, serverValidation.usesSecureConnection());
               } else {
                 view.showInvalidServerError();
               }
             },
             throwable -> {
-              Logger.report(throwable);
+              Logger.INSTANCE.report(throwable);
               view.showConnectionError();
             });
     addSubscription(subscription);
   }
 
   private void onServerValid(String hostname, boolean usesSecureConnection) {
-    rocketChatCache.setSelectedServerHostname(hostname);
+    RocketChatCache.INSTANCE.setSelectedServerHostname(hostname);
 
     String server = hostname.replace("/", ".");
     connectivityManager.addOrUpdateServer(server, server, !usesSecureConnection);

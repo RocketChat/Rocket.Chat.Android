@@ -38,7 +38,8 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
     /**
      * ensure RocketChatService alive.
      */
-    /*package*/static void keepAlive(Context context) {
+    /*package*/
+    static void keepAlive(Context context) {
         context.startService(new Intent(context, RocketChatService.class));
     }
 
@@ -80,7 +81,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
             }
 
             if (currentWebSocketThread != null) {
-                return currentWebSocketThread.terminate()
+                return currentWebSocketThread.terminate(false)
                         // after disconnection from server
                         .doAfterTerminate(() -> {
                             currentWebSocketThread = null;
@@ -99,14 +100,15 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
         return Single.defer(() -> {
             webSocketThreadLock.acquire();
             int connectivityState = ConnectivityManager.getInstance(getApplicationContext()).getConnectivityState(hostname);
-            boolean isDisconnected = connectivityState != ServerConnectivity.STATE_CONNECTED;
+            boolean isDisconnected = connectivityState < ServerConnectivity.STATE_CONNECTED;
             if (currentWebSocketThread != null && existsThreadForHostname(hostname) && !isDisconnected) {
                 webSocketThreadLock.release();
                 return Single.just(currentWebSocketThread);
             }
 
             if (currentWebSocketThread != null) {
-                return currentWebSocketThread.terminate()
+                boolean hasFailed = existsThreadForHostname(hostname);
+                return currentWebSocketThread.terminate(hasFailed)
                         .doAfterTerminate(() -> currentWebSocketThread = null)
                         .flatMap(terminated ->
                                 RocketChatWebSocketThread.getStarted(getApplicationContext(), hostname)
@@ -117,7 +119,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
                                         .doOnError(throwable -> {
                                             currentWebSocketThread = null;
                                             RCLog.e(throwable);
-                                            Logger.report(throwable);
+                                            Logger.INSTANCE.report(throwable);
                                             webSocketThreadLock.release();
                                         })
                         );
@@ -131,7 +133,7 @@ public class RocketChatService extends Service implements ConnectivityServiceInt
                     .doOnError(throwable -> {
                         currentWebSocketThread = null;
                         RCLog.e(throwable);
-                        Logger.report(throwable);
+                        Logger.INSTANCE.report(throwable);
                         webSocketThreadLock.release();
                     });
         });

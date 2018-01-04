@@ -28,6 +28,7 @@ import chat.rocket.core.models.Session;
 import chat.rocket.core.models.User;
 import chat.rocket.core.repositories.PublicSettingRepository;
 import chat.rocket.core.utils.Pair;
+import hugo.weaving.DebugLog;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -40,7 +41,6 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     private final SessionInteractor sessionInteractor;
     private final MethodCallHelper methodCallHelper;
     private final ConnectivityManagerApi connectivityManagerApi;
-    private final RocketChatCache rocketChatCache;
     private final PublicSettingRepository publicSettingRepository;
 
     public MainPresenter(RoomInteractor roomInteractor,
@@ -48,13 +48,12 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                          SessionInteractor sessionInteractor,
                          MethodCallHelper methodCallHelper,
                          ConnectivityManagerApi connectivityManagerApi,
-                         RocketChatCache rocketChatCache, PublicSettingRepository publicSettingRepository) {
+                         PublicSettingRepository publicSettingRepository) {
         this.roomInteractor = roomInteractor;
         this.canCreateRoomInteractor = canCreateRoomInteractor;
         this.sessionInteractor = sessionInteractor;
         this.methodCallHelper = methodCallHelper;
         this.connectivityManagerApi = connectivityManagerApi;
-        this.rocketChatCache = rocketChatCache;
         this.publicSettingRepository = publicSettingRepository;
     }
 
@@ -96,12 +95,13 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         subscribeToNetworkChanges();
         subscribeToUnreadCount();
         subscribeToSession();
-        setUserOnline();
     }
 
     @Override
     public void release() {
-        setUserAway();
+        if (RocketChatCache.INSTANCE.getSessionToken() != null) {
+            setUserAway();
+        }
 
         super.release();
     }
@@ -119,7 +119,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                                 view.showHome();
                             }
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -133,8 +133,9 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         addSubscription(subscription);
     }
 
+    @DebugLog
     @Override
-    public void beforeLogoutCleanUp() {
+    public void prepareToLogout() {
         clearSubscriptions();
     }
 
@@ -155,13 +156,13 @@ public class MainPresenter extends BasePresenter<MainContract.View>
         String logoUrl = (jsonObject.has("url")) ?
                 jsonObject.optString("url") : jsonObject.optString("defaultUrl");
         String siteName = serverInfoPair.second;
-        rocketChatCache.addHostname(hostname.toLowerCase(), logoUrl, siteName);
-        return rocketChatCache.getServerList();
+        RocketChatCache.INSTANCE.addHostname(hostname.toLowerCase(), logoUrl, siteName);
+        return RocketChatCache.INSTANCE.getServerList();
     }
 
     private void openRoom() {
-        String hostname = rocketChatCache.getSelectedServerHostname();
-        String roomId = rocketChatCache.getSelectedRoomId();
+        String hostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
+        String roomId = RocketChatCache.INSTANCE.getSelectedRoomId();
 
         if (roomId == null || roomId.length() == 0) {
             view.showHome();
@@ -181,7 +182,7 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pair -> view.showUnreadCount(pair.first, pair.second),
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -209,10 +210,11 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                                 view.showConnecting();
                                 return;
                             }
-
-                            view.showConnectionOk();
+                            // TODO: Should we remove below and above calls to view?
+                            // view.showConnectionOk();
+                            RocketChatCache.INSTANCE.setSessionToken(session.getToken());
                         },
-                        Logger::report
+                        Logger.INSTANCE::report
                 );
 
         addSubscription(subscription);
@@ -225,17 +227,21 @@ public class MainPresenter extends BasePresenter<MainContract.View>
                 .subscribe(
                         connectivity -> {
                             if (connectivity.state == ServerConnectivity.STATE_CONNECTED) {
-                                view.showConnectionOk();
-                                view.refreshRoom();
+                                //TODO: notify almost connected or something like that.
+//                                view.showConnectionOk();
                             } else if (connectivity.state == ServerConnectivity.STATE_DISCONNECTED) {
                                 if (connectivity.code == DDPClient.REASON_NETWORK_ERROR) {
                                     view.showConnectionError();
                                 }
+                            } else if (connectivity.state == ServerConnectivity.STATE_SESSION_ESTABLISHED) {
+                                setUserOnline();
+                                view.refreshRoom();
+                                view.showConnectionOk();
                             } else {
                                 view.showConnecting();
                             }
                         },
-                        Logger::report
+                        RCLog::e
                 );
 
         addSubscription(disposable);

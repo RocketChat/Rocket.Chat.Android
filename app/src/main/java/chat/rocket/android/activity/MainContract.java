@@ -40,6 +40,6 @@ public interface MainContract {
 
     void loadSignedInServers(String hostname);
 
-    void beforeLogoutCleanUp();
+    void prepareToLogout();
   }
 }
