@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".authentication.signup.ui.SignupFragment">
 
     <TextView
         android:id="@+id/text_headline"
@@ -61,6 +63,19 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_password" />
 
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:indicatorName="BallPulseIndicator"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_email"
+        tools:visibility="visible" />
+
     <TextView
         android:id="@+id/text_new_user_agreement"
         android:layout_width="wrap_content"
@@ -69,7 +84,7 @@
         android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
         android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
         android:gravity="center"
-        android:text="@string/msg_new_user_agreement"
+        android:textColorLink="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/button_sign_up"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

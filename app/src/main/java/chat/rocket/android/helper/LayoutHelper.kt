@@ -1,17 +1,17 @@
-package chat.rocket.android.app
+package chat.rocket.android.helper
 
 import android.app.Activity
 import android.graphics.Rect
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
+import chat.rocket.android.util.TimberLogger
 
-//TODO: check if this code has memory leak.
 class LayoutHelper {
     private var childOfContent: View? = null
     private var usableHeightPrevious: Int = 0
     private var frameLayoutParams: FrameLayout.LayoutParams? = null
+    private val listener = ViewTreeObserver.OnGlobalLayoutListener { resizeChildOfContent() }
 
     /**
      * Workaround to adjust the layout when in the full screen mode.
@@ -29,14 +29,15 @@ class LayoutHelper {
             childOfContent = content.getChildAt(0)
             childOfContent?.viewTreeObserver?.addOnGlobalLayoutListener(listener)
             frameLayoutParams = childOfContent?.layoutParams as FrameLayout.LayoutParams
-        } catch (exception : ClassCastException) {
-            // TODO: are we using the android.util.Log for logging that type of errors? or should we use the SDK logger?
-            Log.e("ERROR", exception.message)
+        } catch (exception: ClassCastException) {
+            TimberLogger.warn(exception.message.toString())
         }
     }
 
-    private val listener = ViewTreeObserver.OnGlobalLayoutListener {
-        resizeChildOfContent()
+    fun remove() {
+        childOfContent?.viewTreeObserver?.removeOnGlobalLayoutListener(listener)
+        childOfContent = null
+        frameLayoutParams = null
     }
 
     private fun resizeChildOfContent() {
@@ -60,11 +61,5 @@ class LayoutHelper {
         val rect = Rect()
         childOfContent?.getWindowVisibleDisplayFrame(rect)
         return rect.bottom - rect.top
-    }
-
-    fun remove() {
-        childOfContent?.viewTreeObserver?.removeOnGlobalLayoutListener(listener)
-        childOfContent = null
-        frameLayoutParams = null
     }
 }

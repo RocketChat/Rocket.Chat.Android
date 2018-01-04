@@ -8,6 +8,7 @@ import kotlinx.coroutines.experimental.Job
 import javax.inject.Inject
 
 class CancelStrategy @Inject constructor(owner: LifecycleOwner, val jobs: Job) : LifecycleObserver {
+
     init {
         owner.lifecycle.addObserver(this)
     }

@@ -1,4 +1,4 @@
-package chat.rocket.android.app
+package chat.rocket.android.helper
 
 import android.graphics.Rect
 import android.view.View

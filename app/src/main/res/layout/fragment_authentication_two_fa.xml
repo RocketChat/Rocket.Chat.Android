@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".authentication.twofactor.ui.TwoFAFragment">
 
     <TextView
         android:id="@+id/text_headline"
@@ -18,6 +21,16 @@
         android:hint="@string/msg_2fa_code"
         android:imeOptions="actionDone"
         android:inputType="text" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:indicatorName="BallPulseIndicator"
+        tools:visibility="visible" />
+
 
     <Button
         android:id="@+id/button_log_in"

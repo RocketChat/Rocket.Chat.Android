@@ -79,6 +79,10 @@ dependencies {
 
     implementation libraries.androidSvg
 
+    implementation libraries.aVLoadingIndicatorView
+
+    implementation libraries.textDrawable
+
     testImplementation libraries.junit
     androidTestImplementation (libraries.expressoCore , {
         exclude group: 'com.android.support', module: 'support-annotations'
