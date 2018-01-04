@@ -5,6 +5,7 @@ import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.widget.TextView
+import chat.rocket.android.util.ifEmpty
 
 object TextHelper {
 
@@ -26,5 +27,16 @@ object TextHelper {
         }
         textView.movementMethod = LinkMovementMethod.getInstance()
         textView.setText(spannableString, TextView.BufferType.SPANNABLE)
+    }
+
+    /**
+     * Returns the first character from a string.
+     *
+     * @param string The string to get its first character.
+     * @return The first character from a string.
+     */
+    fun getFirstCharacter(string: String): String {
+        string.ifEmpty("?")
+        return string.substring(0, 1).toUpperCase()
     }
 }
