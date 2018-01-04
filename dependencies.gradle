@@ -23,7 +23,7 @@ ext {
         okhttp                 : '3.9.0',
         timber                 : '4.5.1',
         threeTenABP            : '1.0.5',
-        fresco                 : '1.5.0',
+        fresco                 : '1.7.1',
         frescoImageViewer      : '0.5.0',
         floatingSearchView     : '2.1.1',
         androidSvg             : '1.2.1',
