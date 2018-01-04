@@ -15,7 +15,7 @@ import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class PushTokenService : FirebaseInstanceIdService() {
+class FirebaseTokenService : FirebaseInstanceIdService() {
 
     @Inject
     lateinit var client: RocketChatClient
@@ -34,8 +34,10 @@ class PushTokenService : FirebaseInstanceIdService() {
 
 
     override fun onTokenRefresh() {
+        //TODO: We need to use the Cordova Project gcm_sender_id since it's the one configured on RC
+        // default push gateway. We should register this project's own project sender id into it.
         val gcmToken = InstanceID.getInstance(this)
-                .getToken(getString(R.string.gcm_defaultSenderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE), null)
+                .getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
 
         gcmToken?.let {
             localRepository.save(LocalRepository.KEY_PUSH_TOKEN, gcmToken)

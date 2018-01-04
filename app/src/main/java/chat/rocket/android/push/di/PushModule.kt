@@ -3,7 +3,7 @@ package chat.rocket.android.push.di
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPreferencesRepository
-import chat.rocket.android.push.PushTokenService
+import chat.rocket.android.push.FirebaseTokenService
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.TokenRepository
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Module
 @Singleton
-class PushModule(val context: PushTokenService) {
+class PushModule(val context: FirebaseTokenService) {
 
     @Provides
     fun provideAuthTokenRepository(): TokenRepository = AuthTokenRepository()

@@ -1,12 +1,12 @@
 package chat.rocket.android.push.di
 
 import chat.rocket.android.dagger.module.AppModule
-import chat.rocket.android.push.PushTokenService
+import chat.rocket.android.push.FirebaseTokenService
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = arrayOf(AppModule::class, PushModule::class))
 interface PushComponent {
-    fun inject(service: PushTokenService)
+    fun inject(service: FirebaseTokenService)
 }
