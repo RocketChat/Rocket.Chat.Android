@@ -14,10 +14,10 @@ fun String.ifEmpty(value: String): String {
 }
 
 fun View.setVisibility(value: Boolean) {
-    if (value) {
-        this.visibility = View.VISIBLE
+    visibility = if (value) {
+        View.VISIBLE
     } else {
-        this.visibility = View.GONE
+        View.GONE
     }
 }
 
@@ -34,5 +34,5 @@ var TextView.textContent: String
 var TextView.hintContent: String
     get() = hint.toString()
     set(value) {
-        text = value
+        hint = value
     }

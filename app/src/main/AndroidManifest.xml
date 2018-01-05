@@ -30,7 +30,7 @@
         </activity>
 
         <activity
-            android:name=".app.MainActivity"
+            android:name=".chatrooms.ui.MainActivity"
             android:theme="@style/ChatListTheme" />
 
         <activity
