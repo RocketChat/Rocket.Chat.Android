@@ -22,19 +22,16 @@ import javax.inject.Inject
 
 class TwoFAFragment : Fragment(), TwoFAView {
     @Inject lateinit var presenter: TwoFAPresenter
-    @Inject lateinit var appContext: Context    
-    lateinit var serverUrl: String
+    @Inject lateinit var appContext: Context
     lateinit var username: String
     lateinit var password: String
 
     companion object {
-        private const val SERVER_URL = "server_url"
         private const val USERNAME = "username"
         private const val PASSWORD = "password"
 
-        fun newInstance(url: String, username: String, password: String) = TwoFAFragment().apply {
+        fun newInstance(username: String, password: String) = TwoFAFragment().apply {
             arguments = Bundle(1).apply {
-                putString(SERVER_URL, url)
                 putString(USERNAME, username)
                 putString(PASSWORD, password)
             }
@@ -46,7 +43,6 @@ class TwoFAFragment : Fragment(), TwoFAView {
         super.onCreate(savedInstanceState)
 
         // TODO - research a better way to initialize parameters on fragments.
-        serverUrl = arguments?.getString(SERVER_URL) ?: "https://open.rocket.chat"
         username = arguments?.getString(USERNAME) ?: ""
         password = arguments?.getString(PASSWORD) ?: ""
     }

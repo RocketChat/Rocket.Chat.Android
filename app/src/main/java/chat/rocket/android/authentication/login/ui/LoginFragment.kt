@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
 import android.view.*
+import android.widget.ImageButton
 import android.widget.ScrollView
 import android.widget.Toast
 import chat.rocket.android.R
@@ -41,24 +42,12 @@ class LoginFragment : Fragment(), LoginView {
     private var isGlobalLayoutListenerSetUp = false
 
     companion object {
-        private const val SERVER_URL = "server_url"
-
-        fun newInstance(url: String) = LoginFragment().apply {
-            arguments = Bundle(1).apply {
-                putString(SERVER_URL, url)
-            }
-        }
+        fun newInstance() = LoginFragment()
     }
-
-    // Todo remove
-    private lateinit var serverUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-
-        // TODO - research a better way to initialize parameters on fragments.
-        serverUrl = arguments?.getString(SERVER_URL) ?: "https://open.rocket.chat"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_log_in, container, false)
@@ -72,14 +61,8 @@ class LoginFragment : Fragment(), LoginView {
             tintEditTextDrawableStart()
         }
 
-        // TODO: THIS IS A PRESENTER CONCERN - REMOVE THAT !
-        // -------------------------------------------------------------------------------------------------------------------
-        showOauthView(true)
-
-        // Show the first three social account's ImageButton (REMARK: we must show at maximum *three* views)
-        enableLoginByFacebook()
-        enableLoginByGithub()
-        enableLoginByGoogle()
+        presenter.setup()
+        showThreeSocialMethods()
 
         setupFabListener()
 
@@ -89,6 +72,17 @@ class LoginFragment : Fragment(), LoginView {
         // -------------------------------------------------------------------------------------------------------------------
 
         button_log_in.setOnClickListener { presenter.authenticate(text_username_or_email.textContent, text_password.textContent) }
+    }
+
+    private fun showThreeSocialMethods() {
+        var count = 0
+        for (i in 0..social_accounts_container.childCount) {
+            val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
+            if (view.isEnabled && count < 3) {
+                view.visibility = View.VISIBLE
+                count++
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -125,31 +119,31 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun enableLoginByFacebook() {
-        button_facebook.setVisibility(true)
+        button_facebook.isEnabled = true
     }
 
     override fun enableLoginByGithub() {
-        button_github.setVisibility(true)
+        button_github.isEnabled = true
     }
 
     override fun enableLoginByGoogle() {
-        button_google.setVisibility(true)
+        button_google.isEnabled = true
     }
 
     override fun enableLoginByLinkedin() {
-        button_linkedin.setVisibility(true)
+        button_linkedin.isEnabled = true
     }
 
     override fun enableLoginByMeteor() {
-        button_meteor.setVisibility(true)
+        button_meteor.isEnabled = true
     }
 
     override fun enableLoginByTwitter() {
-        button_twitter.setVisibility(true)
+        button_twitter.isEnabled = true
     }
 
     override fun enableLoginByGitlab() {
-        button_gitlab.setVisibility(true)
+        button_gitlab.isEnabled = true
     }
 
     override fun showSignUpView(value: Boolean) {
@@ -228,10 +222,10 @@ class LoginFragment : Fragment(), LoginView {
 
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({
-            enableLoginByLinkedin()
-            enableLoginByMeteor()
-            enableLoginByTwitter()
-            enableLoginByGitlab()
+            for (i in 0..social_accounts_container.childCount) {
+                val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
+                if (view.isEnabled) view.visibility = View.VISIBLE
+            }
         }, 1000)
     }
 

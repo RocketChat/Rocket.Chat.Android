@@ -1,7 +1,7 @@
 package chat.rocket.android.helper
 
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.run
+import kotlinx.coroutines.experimental.withContext
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -15,7 +15,7 @@ object NetworkHelper {
      *
      * @return true if there is internet access, false otherwise.
      */
-    suspend fun hasInternetAccess(): Boolean = run(CommonPool) {
+    suspend fun hasInternetAccess(): Boolean = withContext(CommonPool) {
         try {
             val socket = Socket()
             val inetSocketAddress = InetSocketAddress("8.8.8.8", 53)

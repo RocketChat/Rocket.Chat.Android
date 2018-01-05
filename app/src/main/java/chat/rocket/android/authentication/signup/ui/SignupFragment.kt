@@ -32,25 +32,14 @@ class SignupFragment : Fragment(), SignupView {
         }
     }
 
-    // TODO delete
-    lateinit var serverUrl: String
-
     companion object {
-        private const val SERVER_URL = "server_url"
-
-        fun newInstance(url: String) = SignupFragment().apply {
-            arguments = Bundle(1).apply {
-                putString(SERVER_URL, url)
-            }
-        }
+        fun newInstance() = SignupFragment()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        // TODO - research a better way to initialize parameters on fragments.
-        serverUrl = arguments?.getString(SERVER_URL) ?: "https://open.rocket.chat"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_sign_up, container, false)
