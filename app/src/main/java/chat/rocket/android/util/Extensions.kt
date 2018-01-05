@@ -1,6 +1,9 @@
 package chat.rocket.android.util
 
+import android.support.annotation.LayoutRes
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 
 fun String.ifEmpty(value: String): String {
@@ -16,6 +19,10 @@ fun View.setVisibility(value: Boolean) {
     } else {
         this.visibility = View.GONE
     }
+}
+
+fun ViewGroup.inflate(@LayoutRes resource: Int): View {
+    return LayoutInflater.from(context).inflate(resource, this, false)
 }
 
 var TextView.textContent: String
