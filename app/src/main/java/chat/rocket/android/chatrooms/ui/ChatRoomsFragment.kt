@@ -48,4 +48,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun hideLoading() = view_loading.hide()
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 }
