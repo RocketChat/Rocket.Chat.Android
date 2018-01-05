@@ -41,24 +41,12 @@ class LoginFragment : Fragment(), LoginView {
     private var isGlobalLayoutListenerSetUp = false
 
     companion object {
-        private const val SERVER_URL = "server_url"
-
-        fun newInstance(url: String) = LoginFragment().apply {
-            arguments = Bundle(1).apply {
-                putString(SERVER_URL, url)
-            }
-        }
+        fun newInstance() = LoginFragment()
     }
 
-    // Todo remove
-    private lateinit var serverUrl: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-
-        // TODO - research a better way to initialize parameters on fragments.
-        serverUrl = arguments?.getString(SERVER_URL) ?: "https://open.rocket.chat"
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_log_in, container, false)
@@ -170,11 +158,11 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.show()
+        view_loading.setVisibility(true)
     }
 
     override fun hideLoading() {
-        view_loading.hide()
+        view_loading.setVisibility(false)
         enableUserInput(true)
     }
 

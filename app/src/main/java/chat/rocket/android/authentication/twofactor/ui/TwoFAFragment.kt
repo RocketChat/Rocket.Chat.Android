@@ -23,32 +23,14 @@ import javax.inject.Inject
 class TwoFAFragment : Fragment(), TwoFAView {
     @Inject lateinit var presenter: TwoFAPresenter
     @Inject lateinit var appContext: Context    
-    lateinit var serverUrl: String
-    lateinit var username: String
-    lateinit var password: String
 
     companion object {
-        private const val SERVER_URL = "server_url"
-        private const val USERNAME = "username"
-        private const val PASSWORD = "password"
-
-        fun newInstance(url: String, username: String, password: String) = TwoFAFragment().apply {
-            arguments = Bundle(1).apply {
-                putString(SERVER_URL, url)
-                putString(USERNAME, username)
-                putString(PASSWORD, password)
-            }
-        }
+        fun newInstance() = TwoFAFragment()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-
-        // TODO - research a better way to initialize parameters on fragments.
-        serverUrl = arguments?.getString(SERVER_URL) ?: "https://open.rocket.chat"
-        username = arguments?.getString(USERNAME) ?: ""
-        password = arguments?.getString(PASSWORD) ?: ""
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_two_fa, container, false)
@@ -63,7 +45,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         }
 
         button_log_in.setOnClickListener {
-            presenter.authenticate(username, password, text_two_factor_auth.textContent)
+            presenter.authenticate(text_two_factor_auth.textContent)
         }
     }
 
@@ -78,11 +60,11 @@ class TwoFAFragment : Fragment(), TwoFAView {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.show()
+        view_loading.setVisibility(true)
     }
 
     override fun hideLoading() {
-        view_loading.hide()
+        view_loading.setVisibility(false)
         enableUserInput(true)
     }
 

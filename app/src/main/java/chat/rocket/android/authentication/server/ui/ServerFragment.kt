@@ -40,7 +40,7 @@ class ServerFragment : Fragment(), ServerView {
         super.onViewCreated(view, savedInstanceState)
         relative_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
 
-        activity?.applicationContext?.apply {
+        activity?.apply {
             button_connect.setOnClickListener {
                 val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
                 presenter.connect(text_server_protocol.textContent + url)
@@ -55,14 +55,13 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.show()
+        view_loading.setVisibility(true)
     }
 
     override fun hideLoading() {
-        view_loading.hide()
+        view_loading.setVisibility(false)
         enableUserInput(true)
     }
-
 
     override fun showMessage(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
