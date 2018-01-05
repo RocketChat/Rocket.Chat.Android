@@ -72,6 +72,10 @@ class TwoFAFragment : Fragment(), TwoFAView {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun showGenericErrorMessage() {
+        showMessage(getString(R.string.msg_generic_error))
+    }
+
     override fun showNoInternetConnection() {
         showMessage(getString(R.string.msg_no_internet_connection))
     }
