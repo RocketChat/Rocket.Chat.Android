@@ -4,8 +4,9 @@ import chat.rocket.android.authentication.signup.ui.SignupFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-@Module abstract class SignupFragmentProvider {
+@Module
+abstract class SignupFragmentProvider {
 
-    @ContributesAndroidInjector(modules = arrayOf(SignupFragmentModule::class))
+    @ContributesAndroidInjector(modules = [SignupFragmentModule::class])
     abstract fun provideSignupFragment(): SignupFragment
 }

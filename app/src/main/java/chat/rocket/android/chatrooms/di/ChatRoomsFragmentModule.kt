@@ -1,8 +1,8 @@
-package chat.rocket.android.authentication.twofactor.di
+package chat.rocket.android.chatrooms.di
 
 import android.arch.lifecycle.LifecycleOwner
-import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
-import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
+import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
 import dagger.Module
@@ -11,20 +11,25 @@ import kotlinx.coroutines.experimental.Job
 
 @Module
 @PerFragment
-class TwoFAFragmentModule {
+class ChatRoomsFragmentModule {
 
     @Provides
-    fun loginView(frag: TwoFAFragment): TwoFAView {
+    fun chatRoomsView(frag: ChatRoomsFragment): ChatRoomsView {
         return frag
     }
 
     @Provides
-    fun provideLifecycleOwner(frag: TwoFAFragment): LifecycleOwner {
+    fun provideLifecycleOwner(frag: ChatRoomsFragment): LifecycleOwner {
         return frag
     }
 
     @Provides
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
+    }
+
+    @Provides
+    fun provideJob(): Job {
+        return Job()
     }
 }

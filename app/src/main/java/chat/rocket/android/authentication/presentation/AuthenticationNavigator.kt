@@ -3,7 +3,7 @@ package chat.rocket.android.authentication.presentation
 import android.content.Context
 import android.content.Intent
 import chat.rocket.android.R
-import chat.rocket.android.app.MainActivity
+import chat.rocket.android.chatrooms.ui.MainActivity
 import chat.rocket.android.authentication.login.ui.LoginFragment
 import chat.rocket.android.authentication.signup.ui.SignupFragment
 import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
@@ -50,10 +50,10 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity, int
     }
 
     fun toChatList() {
-        val chatRoom = Intent(activity, MainActivity::class.java).apply {
+        val chatList = Intent(activity, MainActivity::class.java).apply {
             //TODO any parameter to pass
         }
-        activity.startActivity(chatRoom)
+        activity.startActivity(chatList)
         activity.finish()
     }
 }

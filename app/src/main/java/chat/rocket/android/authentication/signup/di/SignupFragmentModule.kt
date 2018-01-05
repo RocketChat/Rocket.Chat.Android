@@ -12,6 +12,7 @@ import kotlinx.coroutines.experimental.Job
 @Module
 @PerFragment
 class SignupFragmentModule {
+
     @Provides
     fun signupView(frag: SignupFragment): SignupView {
         return frag
