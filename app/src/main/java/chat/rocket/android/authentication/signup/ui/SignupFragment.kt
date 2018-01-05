@@ -32,25 +32,13 @@ class SignupFragment : Fragment(), SignupView {
         }
     }
 
-    // TODO delete
-    lateinit var serverUrl: String
-
     companion object {
-        private const val SERVER_URL = "server_url"
-
-        fun newInstance(url: String) = SignupFragment().apply {
-            arguments = Bundle(1).apply {
-                putString(SERVER_URL, url)
-            }
-        }
+        fun newInstance() = SignupFragment()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-
-        // TODO - research a better way to initialize parameters on fragments.
-        serverUrl = arguments?.getString(SERVER_URL) ?: "https://open.rocket.chat"
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_sign_up, container, false)
@@ -104,16 +92,20 @@ class SignupFragment : Fragment(), SignupView {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.show()
+        view_loading.setVisibility(true)
     }
 
     override fun hideLoading() {
-        view_loading.hide()
+        view_loading.setVisibility(false)
         enableUserInput(true)
     }
 
     override fun showMessage(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showGenericErrorMessage() {
+        showMessage(getString(R.string.msg_generic_error))
     }
 
     override fun showNoInternetConnection() {

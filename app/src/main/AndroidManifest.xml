@@ -19,7 +19,8 @@
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme">
+            android:theme="@style/AuthenticationTheme"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

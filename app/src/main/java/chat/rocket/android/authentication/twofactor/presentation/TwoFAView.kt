@@ -7,7 +7,12 @@ import chat.rocket.android.core.behaviours.MessageView
 interface TwoFAView : LoadingView, MessageView, InternetView {
 
     /**
-     * Alerts the user about a blank two factor authentication code.
+     * Alerts the user about a blank Two Factor Authentication code.
      */
     fun alertBlankTwoFactorAuthenticationCode()
+
+    /**
+     * Alerts the user about an invalid inputted Two Factor Authentication code.
+     */
+    fun alertInvalidTwoFactorAuthenticationCode()
 }
