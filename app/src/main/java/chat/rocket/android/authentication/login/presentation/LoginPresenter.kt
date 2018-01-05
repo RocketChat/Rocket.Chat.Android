@@ -1,56 +1,59 @@
 package chat.rocket.android.authentication.login.presentation
 
-import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
-import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val strategy: CancelStrategy,
-                                         private val navigator: AuthenticationNavigator,
-                                         private val okHttpClient: OkHttpClient,
-                                         private val logger: PlatformLogger,
-                                         private val repository: AuthTokenRepository) {
+                                         private val navigator: AuthenticationNavigator) {
+    @Inject lateinit var client: RocketChatClient
 
-    val client: RocketChatClient = RocketChatClient.create {
-        httpClient = okHttpClient
-        restUrl = HttpUrl.parse(navigator.currentServer)!!
-        websocketUrl = navigator.currentServer!!
-        tokenRepository = repository
-        platformLogger = logger
-    }
+    fun authenticate(usernameOrEmail: String, password: String) {
+        when {
+            usernameOrEmail.isBlank() -> {
+                view.alertWrongUsernameOrEmail()
+            }
+            password.isEmpty() -> {
+                view.alertWrongPassword()
+            }
+            else -> {
+                launchUI(strategy) {
+                    if (NetworkHelper.hasInternetAccess()) {
+                        view.showLoading()
 
-    fun authenticate(username: String, password: String) {
-        // TODO - validate input
+                        try {
+                            client.login(usernameOrEmail, password) // TODO This function returns a user token so should we save it?
+                            navigator.toChatList()
+                        } catch (exception: RocketChatException) {
+                            if (exception is RocketChatTwoFactorException) {
+                                navigator.toTwoFA(usernameOrEmail, password)
+                            } else {
+                                val message = exception.message
+                                if (message != null) {
+                                    view.showMessage(message)
+                                } else {
+                                    view.showGenericErrorMessage()
+                                }
+                            }
+                        }
 
-        launchUI(strategy) {
-            view.showLoading()
-            try {
-                val token = client.login(username, password)
-
-                navigator.toChatList()
-            } catch (ex: RocketChatException) {
-                when(ex) {
-                    is RocketChatTwoFactorException ->
-                        navigator.toTwoFA(navigator.currentServer!!, username, password)
-                    else ->
-                        view.onLoginError(ex.message)
+                        view.hideLoading()
+                    } else {
+                        view.showNoInternetConnection()
+                    }
                 }
-            } finally {
-                view.hideLoading()
             }
         }
     }
 
     fun signup() {
-        navigator.toSignUp(navigator.currentServer!!)
+        navigator.toSignUp()
     }
 }

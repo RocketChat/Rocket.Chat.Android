@@ -12,6 +12,7 @@ import kotlinx.coroutines.experimental.Job
 @Module
 @PerFragment
 class LoginFragmentModule {
+
     @Provides
     fun loginView(frag: LoginFragment): LoginView {
         return frag
@@ -26,4 +27,4 @@ class LoginFragmentModule {
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
     }
- }
+}

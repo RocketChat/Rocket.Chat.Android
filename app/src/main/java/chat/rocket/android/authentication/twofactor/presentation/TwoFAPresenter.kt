@@ -1,50 +1,53 @@
 package chat.rocket.android.authentication.twofactor.presentation
 
-import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.util.launchUI
+import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
-import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                                          private val strategy: CancelStrategy,
-                                         private val navigator: AuthenticationNavigator,
-                                         private val okHttpClient: OkHttpClient,
-                                         private val logger: PlatformLogger,
-                                         private val repository: AuthTokenRepository) {
+                                         private val navigator: AuthenticationNavigator) {
+    @Inject lateinit var client: RocketChatClient
 
-    val client: RocketChatClient = RocketChatClient.create {
-        httpClient = okHttpClient
-        restUrl = HttpUrl.parse(navigator.currentServer)!!
-        websocketUrl = navigator.currentServer!!
-        tokenRepository = repository
-        platformLogger = logger
-    }
+    fun authenticate(twoFactorAuthenticationCode: String) {
+        if (twoFactorAuthenticationCode.isBlank()) {
+            view.alertBlankTwoFactorAuthenticationCode()
+        } else {
+            launchUI(strategy) {
+                if (NetworkHelper.hasInternetAccess()) {
+                    view.showLoading()
 
-    fun authenticate(username: String, password: String, pin: String) {
-        // TODO - validate input
+                    try {
+                        client.login(navigator.usernameOrEmail, navigator.password, twoFactorAuthenticationCode) // TODO This function returns a user token so should we save it?
+                        navigator.toChatList()
+                    } catch (exception: RocketChatException) {
+                        if (exception is RocketChatAuthException) {
+                            view.alertInvalidTwoFactorAuthenticationCode()
+                        } else {
+                            val message = exception.message
+                            if (message != null) {
+                                view.showMessage(message)
+                            } else {
+                                view.showGenericErrorMessage()
+                            }
+                        }
+                    }
 
-        launchUI(strategy) {
-            view.showLoading()
-            try {
-                val token = client.login(username, password, pin)
-
-                navigator.toChatList()
-            } catch (ex: RocketChatException) {
-                view.onLoginError(ex.message)
-            } finally {
-                view.hideLoading()
+                    view.hideLoading()
+                } else {
+                    view.showNoInternetConnection()
+                }
             }
         }
     }
 
     fun signup() {
-        navigator.toSignUp(navigator.currentServer!!)
+        navigator.toSignUp()
     }
 }
