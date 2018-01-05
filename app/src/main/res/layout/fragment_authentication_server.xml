@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    tools:context=".authentication.server.ui.ServerFragment">
 
     <TextView
         android:id="@+id/text_headline"
@@ -10,7 +15,7 @@
         android:text="@string/title_sign_in_your_server" />
 
     <TextView
-        android:id="@+id/server_protocol_label"
+        android:id="@+id/text_server_protocol"
         style="@style/AuthenticationLabel"
         android:layout_below="@id/text_headline"
         android:layout_marginTop="32dp"
@@ -23,11 +28,22 @@
         android:layout_below="@id/text_headline"
         android:layout_marginStart="0dp"
         android:layout_marginTop="32dp"
-        android:layout_toEndOf="@id/server_protocol_label"
+        android:layout_toEndOf="@id/text_server_protocol"
+        android:cursorVisible="false"
         android:hint="@string/default_server"
         android:imeOptions="actionDone"
         android:inputType="textUri"
+        android:paddingEnd="0dp"
         android:paddingStart="0dp" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:indicatorName="BallPulseIndicator"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/button_connect"

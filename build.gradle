@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath "com.android.tools.build:gradle:3.0.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}"
         classpath 'com.google.gms:google-services:3.1.2'
@@ -24,6 +24,7 @@ allprojects {
         jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://jitpack.io" }
+        maven { url "http://dl.bintray.com/amulyakhare/maven" } // For TextDrawable.
     }
 
     apply from: rootProject.file('dependencies.gradle')

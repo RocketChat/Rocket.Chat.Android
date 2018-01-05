@@ -6,6 +6,6 @@ import dagger.android.ContributesAndroidInjector
 
 @Module abstract class TwoFAFragmentProvider {
 
-    @ContributesAndroidInjector(modules = arrayOf(TwoFAFragmentModule::class))
+    @ContributesAndroidInjector(modules = [TwoFAFragmentModule::class])
     abstract fun provideTwoFAFragment(): TwoFAFragment
 }

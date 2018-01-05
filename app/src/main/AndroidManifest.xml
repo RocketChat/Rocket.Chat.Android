@@ -13,7 +13,6 @@
 
     <uses-permission android:name="chat.rocket.android.permission.C2D_MESSAGE" />
 
-
     <application
         android:name=".app.RocketChatApplication"
         android:allowBackup="true"
@@ -27,7 +26,8 @@
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme">
+            android:theme="@style/AuthenticationTheme"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +37,7 @@
         </activity>
 
         <activity
-            android:name=".app.MainActivity"
+            android:name=".chatrooms.ui.MainActivity"
             android:theme="@style/ChatListTheme" />
 
         <activity
@@ -72,6 +72,9 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".webview.WebViewActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

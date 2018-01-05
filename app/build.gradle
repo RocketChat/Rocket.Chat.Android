@@ -22,6 +22,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            applicationIdSuffix ".dev"
+        }
     }
 
     packagingOptions {
@@ -32,7 +36,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(':core')
     implementation project(':player')
 
     implementation libraries.kotlin
@@ -76,7 +79,11 @@ dependencies {
 
     implementation libraries.androidSvg
 
-    implementation "com.google.android.gms:play-services-gcm:11.8.0"
+    implementation libraries.playServicesGcm
+
+    implementation libraries.aVLoadingIndicatorView
+
+    implementation libraries.textDrawable
 
     testImplementation libraries.junit
     androidTestImplementation (libraries.expressoCore , {
@@ -93,5 +100,12 @@ kotlin {
         coroutines "enable"
     }
 }
+
+// FIXME - build and install the sdk into the app/libs directory
+// We were having some issues with the kapt generated files from the sdk when importing as a module
+task compileSdk(type:Exec) {
+    commandLine './build-sdk.sh'
+}
+preBuild.dependsOn compileSdk
 
 apply plugin: 'com.google.gms.google-services'

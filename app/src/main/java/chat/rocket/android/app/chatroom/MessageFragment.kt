@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.app.User
-import kotlinx.android.synthetic.main.fragment_chat_list.*
+import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import org.threeten.bp.LocalDateTime
 
 class MessageFragment : Fragment() {
