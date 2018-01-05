@@ -6,7 +6,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, PushModule::class))
+@Component(modules = [PushModule::class])
 interface PushComponent {
     fun inject(service: FirebaseTokenService)
 }

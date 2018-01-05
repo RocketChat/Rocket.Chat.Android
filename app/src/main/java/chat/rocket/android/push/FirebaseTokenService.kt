@@ -1,7 +1,6 @@
 package chat.rocket.android.push
 
 import chat.rocket.android.R
-import chat.rocket.android.dagger.module.AppModule
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.push.di.DaggerPushComponent
 import chat.rocket.android.push.di.PushModule
@@ -26,7 +25,6 @@ class FirebaseTokenService : FirebaseInstanceIdService() {
     override fun onCreate() {
         super.onCreate()
         DaggerPushComponent.builder()
-                .appModule(AppModule())
                 .pushModule(PushModule(this))
                 .build()
                 .inject(this)

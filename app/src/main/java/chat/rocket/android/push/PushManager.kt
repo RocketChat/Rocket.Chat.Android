@@ -20,7 +20,7 @@ import android.text.Spanned
 import android.util.Log
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.app.MainActivity
+import chat.rocket.android.chatrooms.ui.MainActivity
 import org.json.JSONObject
 import java.io.Serializable
 import java.util.*
