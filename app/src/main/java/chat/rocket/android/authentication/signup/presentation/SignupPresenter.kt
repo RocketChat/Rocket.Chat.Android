@@ -8,7 +8,6 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.signup
-import timber.log.Timber
 import javax.inject.Inject
 
 class SignupPresenter @Inject constructor(private val view: SignupView,
@@ -34,20 +33,21 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                 launchUI(strategy) {
                     if (NetworkHelper.hasInternetAccess()) {
                         view.showLoading()
+
                         try {
-                            val user = client.signup(email, name, username, password)
-                            // TODO Salve user?
-                            val token = client.login(username, password)
-                            // TODO Salve token?
+                            client.signup(email, name, username, password) // TODO This function returns a user so should we save it?
+                            client.login(username, password) // TODO This function returns a user token so should we save it?
                             navigator.toChatList()
-                        } catch (rocketChatException: RocketChatException) {
-                            val errorMessage = rocketChatException.message
+                        } catch (exception: RocketChatException) {
+                            val errorMessage = exception.message
                             if (errorMessage != null) {
                                 view.showMessage(errorMessage)
+                            } else {
+                                view.showGenericErrorMessage()
                             }
-                        } finally {
-                            view.hideLoading()
                         }
+
+                        view.hideLoading()
                     } else {
                         view.showNoInternetConnection()
                     }

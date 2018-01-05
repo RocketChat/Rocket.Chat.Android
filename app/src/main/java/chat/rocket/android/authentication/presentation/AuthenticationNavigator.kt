@@ -12,37 +12,39 @@ import chat.rocket.android.util.addFragmentBackStack
 import chat.rocket.android.webview.webViewIntent
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity, internal val context: Context) {
-    var currentServer: String? = null
+    lateinit var server: String
+    lateinit var usernameOrEmail: String
+    lateinit var password: String
 
     fun toLogin(server: String) {
-        currentServer = server
+        this.server = server
         activity.addFragmentBackStack("loginFragment", R.id.fragment_container) {
-            LoginFragment.newInstance(server)
+            LoginFragment.newInstance()
         }
     }
 
-    fun toTwoFA(server: String, username: String, password: String) {
-        currentServer = server
+    fun toTwoFA(usernameOrEmail: String, password: String) {
+        this.usernameOrEmail = usernameOrEmail
+        this.password = password
         activity.addFragmentBackStack("twoFAFragment", R.id.fragment_container) {
-            TwoFAFragment.newInstance(server, username, password)
+            TwoFAFragment.newInstance()
         }
     }
 
-    fun toSignUp(server: String) {
-        currentServer = server
+    fun toSignUp() {
         activity.addFragmentBackStack("signupFragment", R.id.fragment_container) {
-            SignupFragment.newInstance(server)
+            SignupFragment.newInstance()
         }
     }
 
     fun toTermsOfService() {
-        val webPageUrl = currentServer + "/terms-of-service"
+        val webPageUrl = server + "/terms-of-service" // TODO Move to UrlHelper
         activity.startActivity(context.webViewIntent(webPageUrl))
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }
 
     fun toPrivacyPolicy() {
-        val webPageUrl = currentServer + "/privacy-policy"
+        val webPageUrl = server + "/privacy-policy" // TODO Move to UrlHelper
         activity.startActivity(context.webViewIntent(webPageUrl))
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }

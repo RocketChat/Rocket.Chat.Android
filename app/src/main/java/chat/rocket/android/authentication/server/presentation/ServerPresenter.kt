@@ -18,10 +18,10 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                 view.showLoading()
 
                 // TODO - validate server URL and get server settings and info before going to Login screen
-//                client.connect(server)
+                //client.connect(server)
+                navigator.toLogin(server)
 
                 view.hideLoading()
-                navigator.toLogin(server)
             } else {
                 view.showNoInternetConnection()
             }

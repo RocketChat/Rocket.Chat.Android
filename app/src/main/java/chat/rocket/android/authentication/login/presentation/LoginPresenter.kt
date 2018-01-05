@@ -8,7 +8,6 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
-import timber.log.Timber
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
@@ -28,22 +27,24 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                 launchUI(strategy) {
                     if (NetworkHelper.hasInternetAccess()) {
                         view.showLoading()
+
                         try {
-                            val token = client.login(usernameOrEmail, password)
-                            // TODO Salve token?
+                            client.login(usernameOrEmail, password) // TODO This function returns a user token so should we save it?
                             navigator.toChatList()
-                        } catch (rocketChatException: RocketChatException) {
-                            if (rocketChatException is RocketChatTwoFactorException) {
-                                navigator.toTwoFA(navigator.currentServer!!, usernameOrEmail, password)
+                        } catch (exception: RocketChatException) {
+                            if (exception is RocketChatTwoFactorException) {
+                                navigator.toTwoFA(usernameOrEmail, password)
                             } else {
-                                val errorMessage = rocketChatException.message
-                                if (errorMessage != null) {
-                                    view.showMessage(errorMessage)
+                                val message = exception.message
+                                if (message != null) {
+                                    view.showMessage(message)
+                                } else {
+                                    view.showGenericErrorMessage()
                                 }
                             }
-                        } finally {
-                            view.hideLoading()
                         }
+
+                        view.hideLoading()
                     } else {
                         view.showNoInternetConnection()
                     }
@@ -53,6 +54,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     }
 
     fun signup() {
-        navigator.toSignUp(navigator.currentServer!!)
+        navigator.toSignUp()
     }
 }
