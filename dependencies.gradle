@@ -7,7 +7,7 @@ ext {
         targetSdk         : 27,
         buildTools        : '27.0.0',
         kotlin            : '1.2.10',
-        coroutine         : '0.20',
+        coroutine         : '0.21',
         dokka             : '0.9.15',
         kotshi            : '0.3.0-beta2',
 

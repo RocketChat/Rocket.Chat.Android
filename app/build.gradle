@@ -14,13 +14,17 @@ android {
         versionCode 1
         versionName "2.0.0-beta1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled false
+        multiDexEnabled true
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            applicationIdSuffix ".dev"
         }
     }
 
@@ -32,7 +36,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(':core')
     implementation project(':player')
 
     implementation libraries.kotlin
@@ -95,3 +98,10 @@ kotlin {
         coroutines "enable"
     }
 }
+
+// FIXME - build and install the sdk into the app/libs directory
+// We were having some issues with the kapt generated files from the sdk when importing as a module
+task compileSdk(type:Exec) {
+    commandLine './build-sdk.sh'
+}
+preBuild.dependsOn compileSdk
