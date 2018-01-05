@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="PlayerTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+</resources>

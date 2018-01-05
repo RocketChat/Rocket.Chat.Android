@@ -5,23 +5,30 @@
     <string name="title_sign_in_your_server">Sign in your server</string>
     <string name="title_log_in">Log in</string>
     <string name="title_sign_up">Sign up</string>
+    <string name="title_legal_terms">Legal Terms</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
+    <string name="action_send">Send</string>
+    <string name="action_terms_of_service">Terms of Service</string>
+    <string name="action_privacy_policy">Privacy Policy</string>
 
     <!-- Regular information messages -->
-    <string name="msg_https" translatable="false">https://</string>
+    <string name="msg_no_internet_connection">No internet connection</string>
+    <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_username">username</string>
     <string name="msg_username_or_email">username or email</string>
     <string name="msg_password">password</string>
     <string name="msg_name_and_surname">name and surname</string>
     <string name="msg_email">email</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
-    <string name="msg_new_to_rocket_chat">New to Rocket Chat? <font color='#FF1976D2'>Sign up</font></string>
-    <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n<font color='#FF1976D2'>Terms of Service</font> and <font color='#FF1976D2'>Privacy Policy</font></string>
+    <string name="msg_new_to_rocket_chat">New to Rocket Chat? %1$s</string>
+    <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
     <string name="msg_2fa_code">2FA Code</string>
+    <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Yesterday</string>
+    <string name="msg_message">Message</string>
     <string name="msg_content_description_log_in_using_facebook">Login using Facebook</string>
     <string name="msg_content_description_log_in_using_github">Login using Github</string>
     <string name="msg_content_description_log_in_using_google">Login using Google</string>
