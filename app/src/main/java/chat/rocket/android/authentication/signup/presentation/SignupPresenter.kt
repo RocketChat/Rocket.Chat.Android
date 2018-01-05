@@ -9,7 +9,6 @@ import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.signup
-import timber.log.Timber
 import javax.inject.Inject
 
 class SignupPresenter @Inject constructor(private val view: SignupView,
@@ -41,22 +40,21 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                 launchUI(strategy) {
                     if (NetworkHelper.hasInternetAccess()) {
                         view.showLoading()
+
                         try {
-                            val user = client.signup(email, name, username, password)
-                            Timber.d("Created user: $user")
-
-                            val token = client.login(username, password)
-                            Timber.d("Logged in. Token: $token")
-
+                            client.signup(email, name, username, password) // TODO This function returns a user so should we save it?
+                            client.login(username, password) // TODO This function returns a user token so should we save it?
                             navigator.toChatList()
-                        } catch (ex: RocketChatException) {
-                            val errorMessage = ex.message
+                        } catch (exception: RocketChatException) {
+                            val errorMessage = exception.message
                             if (errorMessage != null) {
                                 view.showMessage(errorMessage)
+                            } else {
+                                view.showGenericErrorMessage()
                             }
-                        } finally {
-                            view.hideLoading()
                         }
+
+                        view.hideLoading()
                     } else {
                         view.showNoInternetConnection()
                     }

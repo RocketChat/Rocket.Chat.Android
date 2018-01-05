@@ -4,10 +4,11 @@ import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.util.launchUI
+import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.internal.rest.login
-import timber.log.Timber
 import javax.inject.Inject
 
 class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
@@ -25,20 +26,30 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
             navigator.toServerScreen()
         } else {
             launchUI(strategy) {
+
                 val client = factory.create(server)
-                view.showLoading()
-                try {
-                    val token = client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
-                    Timber.d("Created token: $token")
-                    // Todo Salve token?.
-                    navigator.toChatList()
-                } catch (ex: RocketChatException) {
-                    val errorMessage = ex.message
-                    if (errorMessage != null) {
-                        view.showMessage(errorMessage)
+                if (NetworkHelper.hasInternetAccess()) {
+                    view.showLoading()
+
+                    try {
+                        // The token is saved via the client TokenProvider
+                        client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
+                        navigator.toChatList()
+                    } catch (exception: RocketChatException) {
+                        if (exception is RocketChatAuthException) {
+                            view.alertInvalidTwoFactorAuthenticationCode()
+                        } else {
+                            val message = exception.message
+                            if (message != null) {
+                                view.showMessage(message)
+                            } else {
+                                view.showGenericErrorMessage()
+                            }
+                        }
                     }
-                } finally {
                     view.hideLoading()
+                } else {
+                    view.showNoInternetConnection()
                 }
             }
         }

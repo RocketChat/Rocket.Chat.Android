@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
 import android.view.*
 import android.widget.ImageButton
+import android.view.inputmethod.InputMethodManager
 import android.widget.ScrollView
 import android.widget.Toast
 import chat.rocket.android.R
@@ -16,6 +17,7 @@ import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
+import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
@@ -24,17 +26,17 @@ import javax.inject.Inject
 
 class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var presenter: LoginPresenter
-    @Inject lateinit var appContext: Context
+    @Inject lateinit var appContext: Context // TODO we really need it? Check alternatives...
 
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
-            showOauthView(false)
             showSignUpView(false)
+            showOauthView(false)
             showLoginButton(true)
         } else {
             if (isEditTextEmpty()) {
-                showOauthView(true)
                 showSignUpView(true)
+                showOauthView(true)
                 showLoginButton(false)
             }
         }
@@ -46,16 +48,20 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_log_in, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_log_in)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        activity?.apply {
+            text_username_or_email.requestFocus()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(text_username_or_email, InputMethodManager.SHOW_IMPLICIT)
+        }
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
@@ -64,14 +70,12 @@ class LoginFragment : Fragment(), LoginView {
         presenter.setup()
         showThreeSocialMethods()
 
+        button_log_in.setOnClickListener {
+            presenter.authenticate(text_username_or_email.textContent, text_password.textContent)
+        }
+
         setupFabListener()
-
-        // Just an example: if the server allow the new users registration then show the respective interface.
         setupSignUpListener()
-        showSignUpView(true)
-        // -------------------------------------------------------------------------------------------------------------------
-
-        button_log_in.setOnClickListener { presenter.authenticate(text_username_or_email.textContent, text_password.textContent) }
     }
 
     private fun showThreeSocialMethods() {
@@ -146,9 +150,7 @@ class LoginFragment : Fragment(), LoginView {
         button_gitlab.isEnabled = true
     }
 
-    override fun showSignUpView(value: Boolean) {
-        text_new_to_rocket_chat.setVisibility(value)
-    }
+    override fun showSignUpView(value: Boolean) = text_new_to_rocket_chat.setVisibility(value)
 
     override fun alertWrongUsernameOrEmail() {
         AnimationHelper.vibrateSmartPhone(appContext)
@@ -164,24 +166,25 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.show()
+        view_loading.setVisibility(true)
     }
 
     override fun hideLoading() {
-        view_loading.hide()
+        view_loading.setVisibility(false)
         enableUserInput(true)
     }
 
-    override fun showMessage(message: String) {
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-    }
+    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
-    override fun showNoInternetConnection() {
-        Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
-    }
+
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+
+    override fun showNoInternetConnection() = showMessage(getString(R.string.msg_no_internet_connection))
+
 
     private fun tintEditTextDrawableStart() {
-        activity?.applicationContext?.apply {
+        activity?.apply {
             val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_assignment_ind_black_24dp, this)
             val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, this)
 
@@ -213,12 +216,14 @@ class LoginFragment : Fragment(), LoginView {
         button_log_in.isEnabled = value
         text_username_or_email.isEnabled = value
         text_password.isEnabled = value
+        if (isEditTextEmpty()) {
+            showSignUpView(value)
+            showOauthView(value)
+        }
     }
 
     // Returns true if *all* EditTexts are empty.
-    private fun isEditTextEmpty(): Boolean {
-        return text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
-    }
+    private fun isEditTextEmpty(): Boolean =  text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
 
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({

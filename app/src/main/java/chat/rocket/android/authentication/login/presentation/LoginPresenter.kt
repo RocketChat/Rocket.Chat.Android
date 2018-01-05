@@ -8,9 +8,9 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
-import timber.log.Timber
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
@@ -84,27 +84,28 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
             }
             else -> {
                 launchUI(strategy) {
-                    view.showLoading()
                     if (NetworkHelper.hasInternetAccess()) {
+                        view.showLoading()
+
                         try {
-                            val token = client.login(usernameOrEmail, password)
-                            Timber.d("Created token: $token")
+                            client.login(usernameOrEmail, password) // TODO This function returns a user token so should we save it?
                             navigator.toChatList()
-                        } catch (rocketChatException: RocketChatException) {
-                            when (rocketChatException) {
+                        } catch (exception: RocketChatException) {
+                            when (exception) {
                                 is RocketChatTwoFactorException -> {
                                     navigator.toTwoFA(usernameOrEmail, password)
                                 }
                                 else -> {
-                                    val errorMessage = rocketChatException.message
-                                    if (errorMessage != null) {
-                                        view.showMessage(errorMessage)
+                                    exception.message?.let {
+                                        view.showMessage(it)
+                                    }.ifNull {
+                                        view.showGenericErrorMessage()
                                     }
                                 }
                             }
-                        } finally {
-                            view.hideLoading()
                         }
+
+                        view.hideLoading()
                     } else {
                         view.showNoInternetConnection()
                     }
@@ -114,7 +115,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     }
 
     fun signup() {
-        // TODO - remove the server parameter here, signup screen should use the interactor too
         navigator.toSignUp()
     }
 }

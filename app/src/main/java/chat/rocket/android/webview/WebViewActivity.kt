@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import chat.rocket.android.R
 import kotlinx.android.synthetic.main.activity_web_view.*
@@ -40,7 +41,7 @@ class WebViewActivity : AppCompatActivity() {
         if (web_view.canGoBack()) {
             web_view.goBack()
         } else {
-            super.onBackPressed()
+            finishActivity()
         }
     }
 
@@ -48,14 +49,24 @@ class WebViewActivity : AppCompatActivity() {
         toolbar.title = getString(R.string.title_legal_terms)
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
         toolbar.setNavigationOnClickListener {
-            finish()
+            finishActivity()
         }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
         web_view.settings.javaScriptEnabled = true
-        web_view.webViewClient = WebViewClient()
+        web_view.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                view_loading.hide()
+            }
+        }
         web_view.loadUrl(webPageUrl)
+    }
+
+    private fun finishActivity() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.hold, R.anim.slide_down)
     }
 }
