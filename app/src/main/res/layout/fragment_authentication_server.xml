@@ -5,6 +5,7 @@
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     tools:context=".authentication.server.ui.ServerFragment">
 
     <TextView
