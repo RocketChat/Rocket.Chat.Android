@@ -11,10 +11,7 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.helper.KeyboardHelper
-import chat.rocket.android.util.hintContent
-import chat.rocket.android.util.ifEmpty
-import chat.rocket.android.util.setVisibility
-import chat.rocket.android.util.textContent
+import chat.rocket.android.util.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import javax.inject.Inject
@@ -34,18 +31,12 @@ class ServerFragment : Fragment(), ServerView {
         AndroidSupportInjection.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_server, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_server)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         relative_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-
-        activity?.apply {
-            button_connect.setOnClickListener {
-                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.connect(text_server_protocol.textContent + url)
-            }
-        }
+        setupOnClickListener()
     }
 
     override fun onDestroyView() {
@@ -63,20 +54,21 @@ class ServerFragment : Fragment(), ServerView {
         enableUserInput(true)
     }
 
-    override fun showMessage(message: String) {
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-    }
+    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
-    override fun showGenericErrorMessage() {
-        showMessage(getString(R.string.msg_generic_error))
-    }
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun showNoInternetConnection() {
-        Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
-    }
+    override fun showNoInternetConnection() = showMessage(getString(R.string.msg_no_internet_connection))
 
     private fun enableUserInput(value: Boolean) {
         button_connect.isEnabled = value
         text_server_url.isEnabled = value
+    }
+
+    private fun setupOnClickListener() {
+        button_connect.setOnClickListener {
+            val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
+            presenter.connect(text_server_protocol.textContent + url)
+        }
     }
 }
