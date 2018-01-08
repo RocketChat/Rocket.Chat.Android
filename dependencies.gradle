@@ -9,7 +9,7 @@ ext {
         kotlin            : '1.2.10',
         coroutine         : '0.21',
         dokka             : '0.9.15',
-        kotshi            : '0.3.0-beta2',
+        kotshi            : '0.3.0',
 
         // Main dependencies
         support                : '27.0.2',

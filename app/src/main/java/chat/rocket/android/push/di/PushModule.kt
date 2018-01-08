@@ -11,7 +11,6 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.TokenRepository
 import dagger.Module
 import dagger.Provides
-import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
@@ -57,8 +56,7 @@ class PushModule(val context: FirebaseTokenService) {
     fun provideRocketChatClient(okHttpClient: OkHttpClient, repository: TokenRepository, logger: PlatformLogger): RocketChatClient {
         return RocketChatClient.create {
             httpClient = okHttpClient
-            restUrl = HttpUrl.parse("https://unstable.rocket.chat")!!
-            websocketUrl = "https://unstable.rocket.chat"
+            restUrl = "https://unstable.rocket.chat"
             tokenRepository = repository
             platformLogger = logger
         }

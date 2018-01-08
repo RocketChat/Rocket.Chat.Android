@@ -26,11 +26,11 @@ class ChatRoomsAdapter(private var dataSet: MutableList<ChatRoom>, private val c
         val chatRoom = dataSet[position]
         val chatRoomName = chatRoom.name
 
-        holder.chatName.textContent = chatRoomName!!
+        holder.chatName.textContent = chatRoomName
 
         if (chatRoom.type == RoomType.ONE_TO_ONE) {
             // TODO Check the best way to get the current server url.
-            val canonicalUrl = chatRoom.client.restUrl.toString()
+            val canonicalUrl = chatRoom.client.url
             holder.userAvatar.setImageURI(UrlHelper.getAvatarUrl(canonicalUrl, chatRoomName))
             holder.userAvatar.setVisibility(true)
         } else {

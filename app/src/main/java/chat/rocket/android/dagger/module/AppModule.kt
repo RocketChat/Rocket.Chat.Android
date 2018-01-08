@@ -29,8 +29,8 @@ class AppModule {
             platformLogger = logger
 
             // TODO remove
-            restUrl = HttpUrl.parse("https://open.rocket.chat")!!
-            websocketUrl = "https://open.rocket.chat"
+            // TODO: From where should we get the url here?
+            restUrl = "https://unstable.rocket.chat"
         }
     }
 
