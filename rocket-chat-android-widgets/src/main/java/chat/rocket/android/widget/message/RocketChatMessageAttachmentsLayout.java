@@ -89,7 +89,6 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
             return;
         }
 
-        removeAllViews();
         View attachmentView = inflater.inflate(R.layout.message_inline_attachment, this, false);
 
         colorizeAttachmentBar(attachment, attachmentView, showAttachmentStrip);
