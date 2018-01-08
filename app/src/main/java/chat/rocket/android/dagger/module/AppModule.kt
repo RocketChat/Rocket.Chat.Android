@@ -30,7 +30,7 @@ class AppModule {
 
             // TODO remove
             // TODO: From where should we get the url here?
-            restUrl = "https://unstable.rocket.chat"
+            restUrl = "https://open.rocket.chat"
         }
     }
 

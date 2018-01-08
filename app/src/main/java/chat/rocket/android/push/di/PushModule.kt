@@ -56,7 +56,7 @@ class PushModule(val context: FirebaseTokenService) {
     fun provideRocketChatClient(okHttpClient: OkHttpClient, repository: TokenRepository, logger: PlatformLogger): RocketChatClient {
         return RocketChatClient.create {
             httpClient = okHttpClient
-            restUrl = "https://unstable.rocket.chat"
+            restUrl = "https://open.rocket.chat"
             tokenRepository = repository
             platformLogger = logger
         }
