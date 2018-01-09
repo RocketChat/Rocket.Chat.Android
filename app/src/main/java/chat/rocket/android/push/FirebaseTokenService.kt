@@ -2,14 +2,13 @@ package chat.rocket.android.push
 
 import chat.rocket.android.R
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.push.di.DaggerPushComponent
-import chat.rocket.android.push.di.PushModule
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.registerPushToken
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.google.android.gms.iid.InstanceID
 import com.google.firebase.iid.FirebaseInstanceIdService
+import dagger.android.AndroidInjection
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,12 +23,8 @@ class FirebaseTokenService : FirebaseInstanceIdService() {
 
     override fun onCreate() {
         super.onCreate()
-        DaggerPushComponent.builder()
-                .pushModule(PushModule(this))
-                .build()
-                .inject(this)
+        AndroidInjection.inject(this);
     }
-
 
     override fun onTokenRefresh() {
         //TODO: We need to use the Cordova Project gcm_sender_id since it's the one configured on RC

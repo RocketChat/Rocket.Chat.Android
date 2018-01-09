@@ -4,7 +4,6 @@ import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.infrastructure.SharedPreferencesRepository
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
@@ -16,7 +15,8 @@ import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val strategy: CancelStrategy,
-                                         private val navigator: AuthenticationNavigator) {
+                                         private val navigator: AuthenticationNavigator,
+                                         private val localRepository: LocalRepository) {
     @Inject lateinit var client: RocketChatClient
 
     fun authenticate(usernameOrEmail: String, password: String) {
@@ -63,9 +63,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     }
 
     private suspend fun registerPushToken() {
-        // TODO: put it on constructor
-        val localRepository: LocalRepository = SharedPreferencesRepository(navigator.activity)
-
         localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
             client.registerPushToken(it)
         }

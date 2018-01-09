@@ -4,7 +4,6 @@ import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.infrastructure.SharedPreferencesRepository
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
@@ -15,7 +14,8 @@ import javax.inject.Inject
 
 class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                                          private val strategy: CancelStrategy,
-                                         private val navigator: AuthenticationNavigator) {
+                                         private val navigator: AuthenticationNavigator,
+                                         private val localRepository: LocalRepository) {
     @Inject lateinit var client: RocketChatClient
 
     fun authenticate(twoFactorAuthenticationCode: String) {
@@ -56,13 +56,9 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
     }
 
     private suspend fun registerPushToken() {
-        // TODO: put it on constructor
-        val localRepository: LocalRepository = SharedPreferencesRepository(navigator.activity)
-
         localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
             client.registerPushToken(it)
         }
-
         // TODO: Schedule push token registering when it comes up null
     }
 }

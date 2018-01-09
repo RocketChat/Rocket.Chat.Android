@@ -1,15 +1,8 @@
 package chat.rocket.android.infrastructure
 
-import android.content.Context
 import android.content.SharedPreferences
 
-class SharedPreferencesRepository(context: Context) : LocalRepository {
-
-    val preferences: SharedPreferences
-
-    init {
-        preferences = context.getSharedPreferences("local.prefs", Context.MODE_PRIVATE)
-    }
+class SharedPreferencesRepository(private val preferences: SharedPreferences) : LocalRepository {
 
     override fun save(key: String, value: String?) {
         preferences.edit().putString(key, value).apply()
