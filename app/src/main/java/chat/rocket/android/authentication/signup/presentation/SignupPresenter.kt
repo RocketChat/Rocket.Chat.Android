@@ -3,20 +3,26 @@ package chat.rocket.android.authentication.signup.presentation
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.signup
 import javax.inject.Inject
 
 class SignupPresenter @Inject constructor(private val view: SignupView,
                                           private val strategy: CancelStrategy,
-                                          private val navigator: AuthenticationNavigator) {
-    @Inject lateinit var client: RocketChatClient
+                                          private val navigator: AuthenticationNavigator,
+                                          private val serverInteractor: GetCurrentServerInteractor,
+                                          private val factory: RocketChatClientFactory) {
 
     fun signup(name: String, username: String, password: String, email: String) {
+        val server = serverInteractor.get()
         when {
+            server == null -> {
+                navigator.toServerScreen()
+            }
             name.isBlank() -> {
                 view.alertBlankName()
             }
@@ -30,6 +36,7 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                 view.alertBlankEmail()
             }
             else -> {
+                val client = factory.create(server)
                 launchUI(strategy) {
                     if (NetworkHelper.hasInternetAccess()) {
                         view.showLoading()
@@ -57,10 +64,14 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
     }
 
     fun termsOfService() {
-        navigator.toTermsOfService()
+        serverInteractor.get()?.let {
+            navigator.toWebPage("/terms-of-service")
+        }
     }
 
     fun privacyPolicy() {
-        navigator.toPrivacyPolicy()
+        serverInteractor.get()?.let {
+            navigator.toWebPage("/privacy-policy")
+        }
     }
 }

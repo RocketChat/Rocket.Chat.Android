@@ -22,15 +22,29 @@ import javax.inject.Inject
 
 class TwoFAFragment : Fragment(), TwoFAView {
     @Inject lateinit var presenter: TwoFAPresenter
-    @Inject lateinit var appContext: Context // TODO we really need it? Check alternatives...
+    lateinit var username: String
+    lateinit var password: String
 
+    // TODO - we could create an in memory repository to save username and password.
     companion object {
-        fun newInstance() = TwoFAFragment()
+        private const val USERNAME = "username"
+        private const val PASSWORD = "password"
+
+        fun newInstance(username: String, password: String) = TwoFAFragment().apply {
+            arguments = Bundle(1).apply {
+                putString(USERNAME, username)
+                putString(PASSWORD, password)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
+        // TODO - research a better way to initialize parameters on fragments.
+        username = arguments?.getString(USERNAME) ?: ""
+        password = arguments?.getString(PASSWORD) ?: ""
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_two_fa, container, false)
@@ -51,8 +65,10 @@ class TwoFAFragment : Fragment(), TwoFAView {
     }
 
     override fun alertBlankTwoFactorAuthenticationCode() {
-        AnimationHelper.vibrateSmartPhone(appContext)
-        AnimationHelper.shakeView(text_two_factor_auth)
+        activity?.let {
+            AnimationHelper.vibrateSmartPhone(it)
+            AnimationHelper.shakeView(text_two_factor_auth)
+        }
     }
 
     override fun alertInvalidTwoFactorAuthenticationCode() = showMessage(getString(R.string.msg_invalid_2fa_code))
@@ -89,7 +105,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
 
     private fun setupOnClickListener() {
         button_log_in.setOnClickListener {
-            presenter.authenticate(text_two_factor_auth.textContent)
+            presenter.authenticate(username, password, text_two_factor_auth.textContent)
         }
     }
 }

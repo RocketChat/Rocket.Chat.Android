@@ -3,16 +3,20 @@ package chat.rocket.android.dagger.module
 import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
+import chat.rocket.android.server.domain.CurrentServerRepository
+import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.infraestructure.MemorySettingsRepository
 import chat.rocket.android.server.infraestructure.ServerDao
+import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import dagger.Module
 import dagger.Provides
-import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
@@ -29,8 +33,7 @@ class AppModule {
             platformLogger = logger
 
             // TODO remove
-            restUrl = HttpUrl.parse("https://open.rocket.chat")!!
-            websocketUrl = "https://open.rocket.chat"
+            restUrl = "https://open.rocket.chat"
         }
     }
 
@@ -83,5 +86,22 @@ class AppModule {
     @Singleton
     fun providePlatformLogger(): PlatformLogger {
         return TimberLogger
+    }
+
+    @Provides
+    fun provideSharedPreferences(context: Application): SharedPreferences {
+        return context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrentServerRepository(prefs: SharedPreferences): CurrentServerRepository {
+        return SharedPrefsCurrentServerRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(): SettingsRepository {
+        return MemorySettingsRepository()
     }
 }

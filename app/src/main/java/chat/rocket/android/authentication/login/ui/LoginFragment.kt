@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
 import android.view.*
+import android.widget.ImageButton
 import android.view.inputmethod.InputMethodManager
 import android.widget.ScrollView
 import android.widget.Toast
@@ -27,7 +28,6 @@ class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var presenter: LoginPresenter
     @Inject lateinit var appContext: Context // TODO we really need it? Check alternatives...
 
-/*
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
             showSignUpView(false)
@@ -42,7 +42,7 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
     private var isGlobalLayoutListenerSetUp = false
-*/
+
     companion object {
         fun newInstance() = LoginFragment()
     }
@@ -67,29 +67,28 @@ class LoginFragment : Fragment(), LoginView {
             tintEditTextDrawableStart()
         }
 
+        presenter.setup()
+        showThreeSocialMethods()
+
         button_log_in.setOnClickListener {
             presenter.authenticate(text_username_or_email.textContent, text_password.textContent)
         }
 
-/*
-        // TODO: THIS IS A PRESENTER CONCERN - REMOVE THAT ! WE SHOULD GET THE SERVER SETTINGS!
-        // -------------------------------------------------------------------------------------------------------------------
-        showOauthView(true)
-
-        // Show the first three social account's ImageButton (REMARK: we must show at maximum *three* views)
-        enableLoginByFacebook()
-        enableLoginByGithub()
-        enableLoginByGoogle()
-
         setupFabListener()
-
-        // Just an example: if the server allow the new users registration then show the respective interface.
         setupSignUpListener()
-        showSignUpView(true)
-        // -------------------------------------------------------------------------------------------------------------------
-*/
     }
-/*
+
+    private fun showThreeSocialMethods() {
+        var count = 0
+        for (i in 0..social_accounts_container.childCount) {
+            val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
+            if (view.isEnabled && count < 3) {
+                view.visibility = View.VISIBLE
+                count++
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         if (isGlobalLayoutListenerSetUp) {
@@ -97,58 +96,58 @@ class LoginFragment : Fragment(), LoginView {
             isGlobalLayoutListenerSetUp = false
         }
     }
-*/
+
     override fun showOauthView(value: Boolean) {
-//        if (value) {
-//            social_accounts_container.setVisibility(true)
-//            button_fab.setVisibility(true)
-//
-//            // We need to setup the layout to hide and show the oauth interface when the soft keyboard is shown
-//            // (means that the user touched the text_username_or_email or text_password EditText to fill that respective fields).
-//            if (!isGlobalLayoutListenerSetUp) {
-//                scroll_view.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-//                isGlobalLayoutListenerSetUp = true
-//            }
-//        } else {
-//            social_accounts_container.setVisibility(false)
-//            button_fab.setVisibility(false)
-//        }
+        if (value) {
+            social_accounts_container.setVisibility(true)
+            button_fab.setVisibility(true)
+
+            // We need to setup the layout to hide and show the oauth interface when the soft keyboard is shown
+            // (means that the user touched the text_username_or_email or text_password EditText to fill that respective fields).
+            if (!isGlobalLayoutListenerSetUp) {
+                scroll_view.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+                isGlobalLayoutListenerSetUp = true
+            }
+        } else {
+            social_accounts_container.setVisibility(false)
+            button_fab.setVisibility(false)
+        }
     }
 
     override fun setupFabListener() {
-//        button_fab.setOnClickListener({
-//            button_fab.hide()
-//            showRemainingSocialAccountsView()
-//            scrollToBottom()
-//        })
+        button_fab.setOnClickListener({
+            button_fab.hide()
+            showRemainingSocialAccountsView()
+            scrollToBottom()
+        })
     }
 
     override fun enableLoginByFacebook() {
-        button_facebook.setVisibility(true)
+        button_facebook.isEnabled = true
     }
 
     override fun enableLoginByGithub() {
-        button_github.setVisibility(true)
+        button_github.isEnabled = true
     }
 
     override fun enableLoginByGoogle() {
-        button_google.setVisibility(true)
+        button_google.isEnabled = true
     }
 
     override fun enableLoginByLinkedin() {
-        button_linkedin.setVisibility(true)
+        button_linkedin.isEnabled = true
     }
 
     override fun enableLoginByMeteor() {
-        button_meteor.setVisibility(true)
+        button_meteor.isEnabled = true
     }
 
     override fun enableLoginByTwitter() {
-        button_twitter.setVisibility(true)
+        button_twitter.isEnabled = true
     }
 
     override fun enableLoginByGitlab() {
-        button_gitlab.setVisibility(true)
+        button_gitlab.isEnabled = true
     }
 
     override fun showSignUpView(value: Boolean) = text_new_to_rocket_chat.setVisibility(value)
@@ -195,7 +194,7 @@ class LoginFragment : Fragment(), LoginView {
             DrawableHelper.compoundDrawables(arrayOf(text_username_or_email, text_password), drawables)
         }
     }
-/*
+
     private fun showLoginButton(value: Boolean) {
         button_log_in.setVisibility(value)
     }
@@ -212,26 +211,26 @@ class LoginFragment : Fragment(), LoginView {
 
         TextHelper.addLink(text_new_to_rocket_chat, arrayOf(signUp), arrayOf(signUpListener))
     }
-*/
+
     private fun enableUserInput(value: Boolean) {
         button_log_in.isEnabled = value
         text_username_or_email.isEnabled = value
         text_password.isEnabled = value
-//        if (isEditTextEmpty()) {
-//            showSignUpView(value)
-//            showOauthView(value)
-//        }
+        if (isEditTextEmpty()) {
+            showSignUpView(value)
+            showOauthView(value)
+        }
     }
-/*
+
     // Returns true if *all* EditTexts are empty.
     private fun isEditTextEmpty(): Boolean =  text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
 
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({
-            enableLoginByLinkedin()
-            enableLoginByMeteor()
-            enableLoginByTwitter()
-            enableLoginByGitlab()
+            for (i in 0..social_accounts_container.childCount) {
+                val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
+                if (view.isEnabled) view.visibility = View.VISIBLE
+            }
         }, 1000)
     }
 
@@ -240,5 +239,4 @@ class LoginFragment : Fragment(), LoginView {
             scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
         }, 1250)
     }
-*/
 }
