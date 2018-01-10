@@ -11,5 +11,5 @@ interface ChatRoomsView : LoadingView, MessageView {
      *
      * @param dataSet The data set to show.
      */
-    fun showChatRooms(dataSet: MutableList<ChatRoom>)
+    suspend fun updateChatRooms(newDataSet: List<ChatRoom>)
 }

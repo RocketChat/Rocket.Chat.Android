@@ -15,10 +15,9 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        AndroidInjection.inject(this)
 
         addFragment("ChatRoomsFragment", R.id.fragment_container) {
             ChatRoomsFragment.newInstance()

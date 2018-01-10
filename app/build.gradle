@@ -54,6 +54,7 @@ dependencies {
     kapt libraries.daggerAndroidApt
 
     implementation libraries.moshi
+    implementation libraries.kotshi
 
     implementation libraries.room
     kapt libraries.roomProcessor

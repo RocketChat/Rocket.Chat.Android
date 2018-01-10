@@ -18,7 +18,14 @@ import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_chat.view.*
 
-class ChatRoomsAdapter(private var dataSet: MutableList<ChatRoom>, private val context: Context) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
+class ChatRoomsAdapter(private val context: Context) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
+
+    var dataSet: MutableList<ChatRoom> = ArrayList()
+
+    fun updateRooms(newRooms: List<ChatRoom>)  {
+        dataSet.clear()
+        dataSet.addAll(newRooms)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.item_chat))
 
@@ -70,6 +77,10 @@ class ChatRoomsAdapter(private var dataSet: MutableList<ChatRoom>, private val c
             val localDateTime = DateTimeHelper.getLocalDateTime(lastMessage.timestamp)
             holder.lastMessageDateTime.textContent = DateTimeHelper.getDate(localDateTime, context)
         }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>?) {
+        onBindViewHolder(holder, position)
     }
 
     override fun getItemCount(): Int = dataSet.size
