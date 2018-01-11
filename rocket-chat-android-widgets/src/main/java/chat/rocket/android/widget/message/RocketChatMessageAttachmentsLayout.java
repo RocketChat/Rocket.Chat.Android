@@ -79,6 +79,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
         }
         this.attachments = attachments;
 
+        removeAllViews();
         for (int i = 0, size = attachments.size(); i < size; i++) {
             appendAttachmentView(attachments.get(i), autoloadImages, true);
         }
