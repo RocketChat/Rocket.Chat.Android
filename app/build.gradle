@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
 
@@ -84,13 +84,9 @@ dependencies {
     implementation libraries.textDrawable
 
     testImplementation libraries.junit
-    androidTestImplementation (libraries.expressoCore , {
+    androidTestImplementation(libraries.expressoCore, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-}
-
-repositories {
-    mavenCentral()
 }
 
 kotlin {
