@@ -7,6 +7,8 @@ import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
+import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.infraestructure.MemorySettingsRepository
@@ -91,6 +93,12 @@ class AppModule {
     @Provides
     fun provideSharedPreferences(context: Application): SharedPreferences {
         return context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferencesRepository(prefs: SharedPreferences): LocalRepository {
+        return SharedPrefsLocalRepository(prefs)
     }
 
     @Provides
