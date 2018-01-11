@@ -1,8 +1,10 @@
-# Auth files
-*.jks
 app/rocket-chat.json
 app/src/release/google-services.json
 app/src/release/res/values/api_key_strings.xml
+app/libs/
+
+# Auth files
+*.jks
 
 ################################# Created by https://www.gitignore.io/api/androidstudio (modified) #################################
 
