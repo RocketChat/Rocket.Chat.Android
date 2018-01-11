@@ -5,12 +5,15 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
-import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.infrastructure.SharedPreferencesRepository
+import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
+import chat.rocket.android.server.domain.CurrentServerRepository
+import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.infraestructure.MemorySettingsRepository
 import chat.rocket.android.server.infraestructure.ServerDao
+import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
@@ -32,7 +35,6 @@ class AppModule {
             platformLogger = logger
 
             // TODO remove
-            // TODO: From where should we get the url here?
             restUrl = "https://open.rocket.chat"
         }
     }
@@ -89,14 +91,25 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
-    fun provideSharedPreferences(context: Context): SharedPreferences {
+    fun provideSharedPreferences(context: Application): SharedPreferences {
         return context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
     }
 
     @Provides
     @Singleton
-    fun provideSharedPreferencesRepository(preferences: SharedPreferences): LocalRepository {
-        return SharedPreferencesRepository(preferences)
+    fun provideSharedPreferencesRepository(prefs: SharedPreferences): LocalRepository {
+        return SharedPrefsLocalRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrentServerRepository(prefs: SharedPreferences): CurrentServerRepository {
+        return SharedPrefsCurrentServerRepository(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(): SettingsRepository {
+        return MemorySettingsRepository()
     }
 }

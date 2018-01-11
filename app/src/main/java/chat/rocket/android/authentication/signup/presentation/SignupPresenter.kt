@@ -4,6 +4,8 @@ import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
@@ -15,11 +17,18 @@ import javax.inject.Inject
 class SignupPresenter @Inject constructor(private val view: SignupView,
                                           private val strategy: CancelStrategy,
                                           private val navigator: AuthenticationNavigator,
-                                          private val localRepository: LocalRepository) {
-    @Inject lateinit var client: RocketChatClient
+                                          private val localRepository: LocalRepository,
+                                          private val serverInteractor: GetCurrentServerInteractor,
+                                          private val factory: RocketChatClientFactory) {
+
+    private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
 
     fun signup(name: String, username: String, password: String, email: String) {
+        val server = serverInteractor.get()
         when {
+            server == null -> {
+                navigator.toServerScreen()
+            }
             name.isBlank() -> {
                 view.alertBlankName()
             }
@@ -33,6 +42,7 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                 view.alertBlankEmail()
             }
             else -> {
+                val client = factory.create(server)
                 launchUI(strategy) {
                     if (NetworkHelper.hasInternetAccess()) {
                         view.showLoading()
@@ -61,11 +71,15 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
     }
 
     fun termsOfService() {
-        navigator.toTermsOfService()
+        serverInteractor.get()?.let {
+            navigator.toWebPage("/terms-of-service")
+        }
     }
 
     fun privacyPolicy() {
-        navigator.toPrivacyPolicy()
+        serverInteractor.get()?.let {
+            navigator.toWebPage("/privacy-policy")
+        }
     }
 
     private suspend fun registerPushToken() {
