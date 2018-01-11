@@ -33,6 +33,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.chatRooms()
+        floating_search_view.setOnQueryChangeListener { oldQuery, newQuery ->
+            if (oldQuery.isNotEmpty() && newQuery.isEmpty()) {
+                floating_search_view.clearSuggestions()
+            } else {
+                floating_search_view.showProgress()
+            }
+        }
     }
 
     override fun showChatRooms(dataSet: MutableList<ChatRoom>) {
