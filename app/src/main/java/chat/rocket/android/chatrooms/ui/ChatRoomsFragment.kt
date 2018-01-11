@@ -34,10 +34,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onViewCreated(view, savedInstanceState)
         presenter.chatRooms()
         floating_search_view.setOnQueryChangeListener { oldQuery, newQuery ->
+            presenter.chatRoomsByName(newQuery)
             if (oldQuery.isNotEmpty() && newQuery.isEmpty()) {
                 floating_search_view.clearSuggestions()
+                floating_search_view.hideProgress()
             } else {
                 floating_search_view.showProgress()
+                presenter.chatRoomsByName(newQuery)
+                floating_search_view.hideProgress()
             }
         }
     }

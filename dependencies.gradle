@@ -9,7 +9,7 @@ ext {
         kotlin            : '1.2.10',
         coroutine         : '0.21',
         dokka             : '0.9.15',
-        kotshi            : '0.3.0-beta2',
+        kotshi            : '0.3.0',
 
         // Main dependencies
         support                : '27.0.2',
@@ -29,6 +29,7 @@ ext {
         androidSvg             : '1.2.1',
         aVLoadingIndicatorView : '2.1.3',
         textDrawable           : '1.0.2',
+        playServices           : '11.8.0',
 
         // For testing
         junit                  : '4.12',
@@ -84,6 +85,8 @@ ext {
         aVLoadingIndicatorView : "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
 
         textDrawable           : "com.github.rocketchat:textdrawable:${versions.textDrawable}",
+
+        playServicesGcm        : "com.google.android.gms:play-services-gcm:${versions.playServices}",
 
         // For testing
         toolsJar      : files(Jvm.current().getToolsJar()),
