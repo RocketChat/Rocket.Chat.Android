@@ -52,8 +52,7 @@ dependencies {
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
-
-    implementation libraries.moshi
+    implementation libraries.playServicesGcm
 
     implementation libraries.room
     kapt libraries.roomProcessor
@@ -62,6 +61,7 @@ dependencies {
     implementation libraries.rxjava
     implementation libraries.rxandroid
 
+    implementation libraries.moshi
     implementation libraries.okhttp
     implementation libraries.okhttpLogger
 
@@ -74,6 +74,8 @@ dependencies {
     implementation libraries.frescoAnimatedWebP
 
     implementation libraries.frescoImageViewer
+
+    implementation libraries.kotshi
 
     implementation libraries.floatingSearchView
 
@@ -101,3 +103,5 @@ task compileSdk(type:Exec) {
     commandLine './build-sdk.sh'
 }
 preBuild.dependsOn compileSdk
+
+apply plugin: 'com.google.gms.google-services'

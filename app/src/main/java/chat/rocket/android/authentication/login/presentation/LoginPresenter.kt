@@ -3,6 +3,7 @@ package chat.rocket.android.authentication.login.presentation
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
@@ -11,11 +12,13 @@ import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
+import chat.rocket.core.internal.rest.registerPushToken
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val strategy: CancelStrategy,
                                          private val navigator: AuthenticationNavigator,
+                                         private val localRepository: LocalRepository,
                                          private val settingsInteractor: GetSettingsInteractor,
                                          private val serverInteractor: GetCurrentServerInteractor,
                                          factory: RocketChatClientFactory) {
@@ -88,6 +91,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
 
                         try {
                             client.login(usernameOrEmail, password) // TODO This function returns a user token so should we save it?
+                            registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {
                             when (exception) {
@@ -114,4 +118,11 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     }
 
     fun signup() = navigator.toSignUp()
+
+    private suspend fun registerPushToken() {
+        localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
+            client.registerPushToken(it)
+        }
+        // TODO: Schedule push token registering when it comes up null
+    }
 }
