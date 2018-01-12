@@ -18,70 +18,87 @@ import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_chat.view.*
 
-class ChatRoomsAdapter(private var dataSet: MutableList<ChatRoom>, private val context: Context) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
+class ChatRoomsAdapter(private var dataSet: MutableList<ChatRoom>,
+                       private val context: Context,
+                       private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.item_chat))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val chatRoom = dataSet[position]
-        val chatRoomName = chatRoom.name
-
-        holder.chatName.textContent = chatRoomName
-
-        if (chatRoom.type == RoomType.ONE_TO_ONE) {
-            // TODO Check the best way to get the current server url.
-            val canonicalUrl = chatRoom.client.url
-            holder.userAvatar.setImageURI(UrlHelper.getAvatarUrl(canonicalUrl, chatRoomName))
-            holder.userAvatar.setVisibility(true)
-        } else {
-            holder.roomAvatar.setImageDrawable(DrawableHelper.getTextDrawable(chatRoomName))
-            holder.roomAvatar.setVisibility(true)
-        }
-
-        val totalUnreadMessage = chatRoom.unread
-        when {
-            totalUnreadMessage in 1..99 -> {
-                holder.unreadMessage.textContent = totalUnreadMessage.toString()
-                holder.unreadMessage.setVisibility(true)
-            }
-            totalUnreadMessage > 99 -> {
-                holder.unreadMessage.textContent = context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
-                holder.unreadMessage.setVisibility(true)
-            }
-        }
-
-        val lastMessage = chatRoom.lastMessage
-        val lastMessageSender = lastMessage?.sender
-        if (lastMessage != null && lastMessageSender != null) {
-            val message = lastMessage.message
-            val senderUsername = lastMessageSender.username
-            when (senderUsername) {
-                chatRoomName -> {
-                    holder.lastMessage.textContent = message
-                }
-                // TODO Change to MySelf
-//                chatRoom.user?.username -> {
-//                    holder.lastMessage.textContent = context.getString(R.string.msg_you) + ": $message"
-//                }
-                else -> {
-                    holder.lastMessage.textContent = "@$senderUsername: $message"
-                }
-            }
-            val localDateTime = DateTimeHelper.getLocalDateTime(lastMessage.timestamp)
-            holder.lastMessageDateTime.textContent = DateTimeHelper.getDate(localDateTime, context)
-        }
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
     override fun getItemCount(): Int = dataSet.size
 
     override fun getItemViewType(position: Int): Int = position
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val userAvatar: SimpleDraweeView = itemView.image_user_avatar
-        val roomAvatar: ImageView = itemView.image_room_avatar
-        val chatName: TextView = itemView.text_chat_name
-        val lastMessage: TextView = itemView.text_last_message
-        val lastMessageDateTime: TextView = itemView.text_last_message_date_time
-        val unreadMessage: TextView = itemView.text_total_unread_messages
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun bind(chatRoom: ChatRoom) = with(itemView) {
+            bindAvatar(chatRoom, image_user_avatar, image_room_avatar)
+            bindName(chatRoom, text_chat_name)
+            bindLastMessageDateTime(chatRoom, text_last_message_date_time)
+            bindLastMessage(chatRoom, text_last_message)
+            bindUnreadMessages(chatRoom, text_total_unread_messages)
+
+            setOnClickListener { listener(chatRoom) }
+        }
+
+        private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView, imageView: ImageView) {
+            val chatRoomName = chatRoom.name
+            if (chatRoom.type == RoomType.ONE_TO_ONE) {
+                val serverUrl = chatRoom.client.url
+                drawee.setImageURI(UrlHelper.getAvatarUrl(serverUrl, chatRoomName))
+                drawee.setVisibility(true)
+            } else {
+                imageView.setImageDrawable(DrawableHelper.getTextDrawable(chatRoomName))
+                imageView.setVisibility(true)
+            }
+        }
+
+        private fun bindName(chatRoom: ChatRoom, textView: TextView) {
+            textView.textContent = chatRoom.name
+        }
+
+        private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {
+            val lastMessage = chatRoom.lastMessage
+            if (lastMessage != null) {
+                val localDateTime = DateTimeHelper.getLocalDateTime(lastMessage.timestamp)
+                textView.textContent = DateTimeHelper.getDate(localDateTime, context)
+            }
+        }
+
+        private fun bindLastMessage(chatRoom: ChatRoom, textView: TextView) {
+            val lastMessage = chatRoom.lastMessage
+            val lastMessageSender = lastMessage?.sender
+            if (lastMessage != null && lastMessageSender != null) {
+                val message = lastMessage.message
+                val senderUsername = lastMessageSender.username
+                when (senderUsername) {
+                    chatRoom.name -> {
+                        textView.textContent = message
+                    }
+                // TODO Change to MySelf
+                //                chatRoom.user?.username -> {
+                //                    holder.lastMessage.textContent = context.getString(R.string.msg_you) + ": $message"
+                //                }
+                    else -> {
+                        textView.textContent = "@$senderUsername: $message"
+                    }
+                }
+            }
+        }
+
+        private fun bindUnreadMessages(chatRoom: ChatRoom, textView: TextView) {
+            val totalUnreadMessage = chatRoom.unread
+            when {
+                totalUnreadMessage in 1..99 -> {
+                    textView.textContent = totalUnreadMessage.toString()
+                    textView.setVisibility(true)
+                }
+                totalUnreadMessage > 99 -> {
+                    textView.textContent = context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
+                    textView.setVisibility(true)
+                }
+            }
+        }
     }
 }

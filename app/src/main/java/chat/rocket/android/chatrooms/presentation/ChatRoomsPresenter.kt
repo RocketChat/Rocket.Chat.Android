@@ -11,21 +11,29 @@ import javax.inject.Inject
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
-                                             private val serverInteractor: GetCurrentServerInteractor,
-                                             private val factory: RocketChatClientFactory) {
-    lateinit var client: RocketChatClient
+                                             private val navigator: ChatRoomsNavigator,
+                                             serverInteractor: GetCurrentServerInteractor,
+                                             factory: RocketChatClientFactory) {
+    private val client = factory.create(serverInteractor.get()!!)
 
-    fun chatRooms() {
-        // TODO - check for current server
-        client = factory.create(serverInteractor.get()!!)
+    fun loadChatRooms() {
         launchUI(strategy) {
             view.showLoading()
-            val chatRooms = client.chatRooms().update
-            val openChatRooms = getOpenChatRooms(chatRooms)
-            val sortedOpenChatRooms = sortChatRooms(openChatRooms)
-            view.showChatRooms(sortedOpenChatRooms.toMutableList())
-            view.hideLoading()
+            try {
+                val chatRooms = client.chatRooms().update
+                val openChatRooms = getOpenChatRooms(chatRooms)
+                val sortedOpenChatRooms = sortChatRooms(openChatRooms)
+                view.showChatRooms(sortedOpenChatRooms.toMutableList())
+            } catch (ex: Exception) {
+                view.showMessage(ex.message!!)
+            } finally {
+                view.hideLoading()
+            }
         }
+    }
+
+    fun loadChatRoom(chatRoom: ChatRoom) {
+        navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.open)
     }
 
     private fun getOpenChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
@@ -33,8 +41,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     private fun sortChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
-        return chatRooms.sortedByDescending {
-            chatRoom -> chatRoom.lastMessage?.timestamp
+        return chatRooms.sortedByDescending { chatRoom ->
+            chatRoom.lastMessage?.timestamp
         }
     }
 }

@@ -19,7 +19,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val settingsInteractor: GetSettingsInteractor,
                                          private val serverInteractor: GetCurrentServerInteractor,
                                          factory: RocketChatClientFactory) {
-
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
 
@@ -35,6 +34,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
             navigator.toServerScreen()
             return
         }
+
+        view.showSignUpView(settings.registrationEnabled())
 
         var hasSocial = false
         if (settings.facebookEnabled()) {
@@ -65,8 +66,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
             view.enableLoginByGitlab()
             hasSocial = true
         }
-
-        view.showSignUpView(settings.registrationEnabled())
         view.showOauthView(hasSocial)
     }
 
@@ -103,9 +102,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                     }
                                 }
                             }
+                        } finally {
+                            view.hideLoading()
                         }
-
-                        view.hideLoading()
                     } else {
                         view.showNoInternetConnection()
                     }
@@ -114,7 +113,5 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
     }
 
-    fun signup() {
-        navigator.toSignUp()
-    }
+    fun signup() = navigator.toSignUp()
 }

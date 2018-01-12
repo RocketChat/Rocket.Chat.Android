@@ -6,9 +6,9 @@ import chat.rocket.core.RocketChatClient
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
-class RocketChatClientFactory @Inject constructor(val okHttpClient: OkHttpClient,
-                                                  val repository: AuthTokenRepository,
-                                                  val logger: PlatformLogger) {
+class RocketChatClientFactory @Inject constructor(private val okHttpClient: OkHttpClient,
+                                                  private val repository: AuthTokenRepository,
+                                                  private val logger: PlatformLogger) {
     private val cache = HashMap<String, RocketChatClient>()
 
     fun create(url: String): RocketChatClient {

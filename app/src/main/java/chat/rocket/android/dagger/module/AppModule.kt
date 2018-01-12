@@ -17,6 +17,7 @@ import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.experimental.Job
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
@@ -41,6 +42,11 @@ class AppModule {
     @Singleton
     fun provideRocketChatDatabase(context: Application): RocketChatDatabase {
         return Room.databaseBuilder(context, RocketChatDatabase::class.java, "rocketchat-db").build()
+    }
+
+    @Provides
+    fun provideJob(): Job {
+        return Job()
     }
 
     @Provides

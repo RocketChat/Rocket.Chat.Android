@@ -10,6 +10,7 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.util.setVisibility
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
@@ -32,20 +33,22 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.chatRooms()
+        presenter.loadChatRooms()
     }
 
     override fun showChatRooms(dataSet: MutableList<ChatRoom>) {
         activity?.apply {
             recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(this, 144, 32))
-            recycler_view.adapter = ChatRoomsAdapter(dataSet, this)
+            recycler_view.adapter = ChatRoomsAdapter(dataSet, this) { chatRoom ->
+                presenter.loadChatRoom(chatRoom)
+            }
         }
     }
 
-    override fun showLoading() = view_loading.show()
+    override fun showLoading() = view_loading.setVisibility(true)
 
-    override fun hideLoading() = view_loading.hide()
+    override fun hideLoading() = view_loading.setVisibility(false)
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 

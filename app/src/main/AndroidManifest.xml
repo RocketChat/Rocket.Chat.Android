@@ -34,7 +34,7 @@
             android:theme="@style/ChatListTheme" />
 
         <activity
-            android:name=".app.ChatRoomActivity"
+            android:name=".chatroom.ui.ChatRoomActivity"
             android:theme="@style/AppTheme" />
 
         <activity

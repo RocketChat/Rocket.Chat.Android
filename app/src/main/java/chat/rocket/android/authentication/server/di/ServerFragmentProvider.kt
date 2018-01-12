@@ -6,6 +6,6 @@ import dagger.android.ContributesAndroidInjector
 
 @Module abstract class ServerFragmentProvider {
 
-    @ContributesAndroidInjector(modules = arrayOf(ServerFragmentModule::class))
+    @ContributesAndroidInjector(modules = [(ServerFragmentModule::class)])
     abstract fun provideServerFragment(): ServerFragment
 }
