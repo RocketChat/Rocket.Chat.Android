@@ -7,20 +7,6 @@ interface SettingsRepository {
     fun get(url: String): Map<String, Value<Any>>?
 }
 
-fun Map<String, Value<Any>>.googleEnabled(): Boolean = (this[ACCOUNT_GOOGLE] as Value<Boolean>?)?.value == true
-fun Map<String, Value<Any>>.facebookEnabled(): Boolean = (this[ACCOUNT_FACEBOOK] as Value<Boolean>?)?.value == true
-fun Map<String, Value<Any>>.githubEnabled(): Boolean = (this[ACCOUNT_GITHUB] as Value<Boolean>?)?.value == true
-fun Map<String, Value<Any>>.linkedinEnabled(): Boolean = (this[ACCOUNT_LINKEDIN] as Value<Boolean>?)?.value == true
-fun Map<String, Value<Any>>.meteorEnabled(): Boolean = (this[ACCOUNT_METEOR] as Value<Boolean>?)?.value == true
-fun Map<String, Value<Any>>.twitterEnabled(): Boolean = (this[ACCOUNT_TWITTER] as Value<Boolean>?)?.value == true
-fun Map<String, Value<Any>>.gitlabEnabled(): Boolean = (this[ACCOUNT_GITLAB] as Value<Boolean>?)?.value == true
-fun Map<String, Value<Any>>.wordpressEnabled(): Boolean = (this[ACCOUNT_WORDPRESS] as Value<Boolean>?)?.value == true
-
-fun Map<String, Value<Any>>.registrationEnabled(): Boolean {
-    val value = this[ACCOUNT_REGISTRATION] as Value<String>?
-    return value?.value == "Public"
-}
-
 const val ACCOUNT_FACEBOOK = "Accounts_OAuth_Facebook"
 const val ACCOUNT_GITHUB = "Accounts_OAuth_Github"
 const val ACCOUNT_GITLAB = "Accounts_OAuth_Gitlab"
@@ -46,3 +32,22 @@ const val HIDE_USER_LEAVE = "Message_HideType_ul"
 const val HIDE_TYPE_AU = "Message_HideType_au"
 const val HIDE_TYPE_RU = "Message_HideType_ru"
 const val HIDE_MUTE_UNMUTE = "Message_HideType_mute_unmute"
+/*
+ * Extension functions for Public Settings.
+ *
+ * If you need to access a Setting, add a const val key above, add it to the filter on
+ * ServerPresenter.kt and a extension function to access it
+ */
+fun Map<String, Value<Any>>.googleEnabled(): Boolean = this[ACCOUNT_GOOGLE]?.value == true
+fun Map<String, Value<Any>>.facebookEnabled(): Boolean = this[ACCOUNT_FACEBOOK]?.value == true
+fun Map<String, Value<Any>>.githubEnabled(): Boolean = this[ACCOUNT_GITHUB]?.value == true
+fun Map<String, Value<Any>>.linkedinEnabled(): Boolean = this[ACCOUNT_LINKEDIN]?.value == true
+fun Map<String, Value<Any>>.meteorEnabled(): Boolean = this[ACCOUNT_METEOR]?.value == true
+fun Map<String, Value<Any>>.twitterEnabled(): Boolean = this[ACCOUNT_TWITTER]?.value == true
+fun Map<String, Value<Any>>.gitlabEnabled(): Boolean = this[ACCOUNT_GITLAB]?.value == true
+fun Map<String, Value<Any>>.wordpressEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
+
+fun Map<String, Value<Any>>.registrationEnabled(): Boolean {
+    val value = this[ACCOUNT_REGISTRATION]
+    return value?.value == "Public"
+}

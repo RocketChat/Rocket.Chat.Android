@@ -4,15 +4,19 @@ import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import okhttp3.OkHttpClient
+import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class RocketChatClientFactory @Inject constructor(private val okHttpClient: OkHttpClient,
-                                                  private val repository: AuthTokenRepository,
-                                                  private val logger: PlatformLogger) {
+@Singleton
+class RocketChatClientFactory @Inject constructor(val okHttpClient: OkHttpClient,
+                                                  val repository: AuthTokenRepository,
+                                                  val logger: PlatformLogger) {
     private val cache = HashMap<String, RocketChatClient>()
 
     fun create(url: String): RocketChatClient {
         cache[url]?.let {
+            Timber.d("Returning CACHED client for: $url")
             return it
         }
 
@@ -23,6 +27,7 @@ class RocketChatClientFactory @Inject constructor(private val okHttpClient: OkHt
             platformLogger = logger
         }
 
+        Timber.d("Returning NEW client for: $url")
         cache.put(url, client)
         return client
     }
