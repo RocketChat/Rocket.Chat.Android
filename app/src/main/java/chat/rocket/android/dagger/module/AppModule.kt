@@ -9,8 +9,10 @@ import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
+import chat.rocket.android.server.domain.ChatRoomsRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
 import chat.rocket.android.server.infraestructure.MemorySettingsRepository
 import chat.rocket.android.server.infraestructure.ServerDao
 import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
@@ -111,5 +113,11 @@ class AppModule {
     @Singleton
     fun provideSettingsRepository(): SettingsRepository {
         return MemorySettingsRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRoomsRepository(): ChatRoomsRepository {
+        return MemoryChatRoomsRepository()
     }
 }
