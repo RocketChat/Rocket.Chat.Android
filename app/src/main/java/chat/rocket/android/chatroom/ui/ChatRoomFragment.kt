@@ -14,9 +14,11 @@ import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.textContent
 import chat.rocket.core.model.Message
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_chat_rooms.*
+import kotlinx.android.synthetic.main.fragment_chat_room.*
+import kotlinx.android.synthetic.main.message_composer.*
 import javax.inject.Inject
 
 fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomOpen: Boolean): Fragment {
@@ -41,6 +43,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
     private var isChatRoomOpen: Boolean = true
+    private lateinit var adapter: ChatRoomAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,26 +64,40 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.messages(chatRoomId, chatRoomType)
+        presenter.loadMessages(chatRoomId, chatRoomType)
+        setupComposer()
     }
 
     override fun showMessages(dataSet: MutableList<Message>, serverUrl: String) {
         activity?.apply {
             if (recycler_view.adapter == null) {
-                recycler_view.adapter = ChatRoomAdapter(this, dataSet, serverUrl)
+                adapter = ChatRoomAdapter(this, dataSet, serverUrl)
+                recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 recycler_view.layoutManager = linearLayoutManager
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
-                            presenter.messages(chatRoomId, chatRoomType, page * 30)
+                            presenter.loadMessages(chatRoomId, chatRoomType, page * 30)
                         }
                     })
                 }
             } else {
-                (recycler_view.adapter as ChatRoomAdapter).addDataSet(dataSet)
+                adapter.addDataSet(dataSet)
             }
         }
+    }
+
+    override fun sendMessage(text: String) {
+        if (!text.isBlank()) {
+            presenter.sendMessage(chatRoomId, text)
+        }
+    }
+
+    override fun showSentMessage(message: Message) {
+        text_message.textContent = ""
+        adapter.addItem(message)
+        recycler_view.smoothScrollToPosition(0)
     }
 
     override fun showLoading() = view_loading.setVisibility(true)
@@ -90,4 +107,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    private fun setupComposer() {
+        if (isChatRoomOpen) {
+            text_send.setOnClickListener { sendMessage(text_message.textContent) }
+        } else {
+            text_room_is_read_only.setVisibility(true)
+            top_container.setVisibility(false)
+        }
+    }
 }
