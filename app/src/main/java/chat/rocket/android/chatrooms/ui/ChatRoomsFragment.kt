@@ -34,19 +34,17 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onViewCreated(view, savedInstanceState)
         presenter.chatRooms()
         floating_search_view.setOnQueryChangeListener { oldQuery, newQuery ->
+            floating_search_view.showProgress()
             presenter.chatRoomsByName(newQuery)
             if (oldQuery.isNotEmpty() && newQuery.isEmpty()) {
                 floating_search_view.clearSuggestions()
-                floating_search_view.hideProgress()
-            } else {
-                floating_search_view.showProgress()
-                presenter.chatRoomsByName(newQuery)
                 floating_search_view.hideProgress()
             }
         }
     }
 
     override fun showChatRooms(dataSet: MutableList<ChatRoom>) {
+        floating_search_view.hideProgress()
         activity?.apply {
             recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(this, 144, 32))
