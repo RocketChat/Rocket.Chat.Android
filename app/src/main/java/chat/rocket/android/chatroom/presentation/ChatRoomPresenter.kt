@@ -6,7 +6,6 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.sendMessage
 import javax.inject.Inject

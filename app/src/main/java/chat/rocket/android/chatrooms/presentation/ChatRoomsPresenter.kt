@@ -4,7 +4,6 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.ChatRoom
 import javax.inject.Inject
@@ -33,7 +32,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     fun loadChatRoom(chatRoom: ChatRoom) {
-        navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.open)
+        navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.readonly ?: false)
     }
 
     private fun getOpenChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
