@@ -53,6 +53,7 @@ hs_err_pid*
 # Built application files
 *.apk
 *.ap_
+app/libs
 
 # Files for the ART/Dalvik VM
 *.dex
