@@ -9,6 +9,7 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.registerPushToken
@@ -20,51 +21,50 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                                          private val localRepository: LocalRepository,
                                          private val serverInteractor: GetCurrentServerInteractor,
                                          private val factory: RocketChatClientFactory) {
-
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
 
     // TODO: If the usernameOrEmail and password was informed by the user on the previous screen, then we should pass only the pin, like this: fun authenticate(pin: EditText)
     fun authenticate(usernameOrEmail: String, password: String, twoFactorAuthenticationCode: String) {
         val server = serverInteractor.get()
-        if (twoFactorAuthenticationCode.isBlank()) {
-            view.alertBlankTwoFactorAuthenticationCode()
-        } else if (server == null) {
-            navigator.toServerScreen()
-        } else {
-            launchUI(strategy) {
-
-                val client = factory.create(server)
-                if (NetworkHelper.hasInternetAccess()) {
-                    view.showLoading()
-
-                    try {
-                        // The token is saved via the client TokenProvider
-                        client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
-                        registerPushToken()
-                        navigator.toChatList()
-                    } catch (exception: RocketChatException) {
-                        if (exception is RocketChatAuthException) {
-                            view.alertInvalidTwoFactorAuthenticationCode()
-                        } else {
-                            val message = exception.message
-                            if (message != null) {
-                                view.showMessage(message)
+        when {
+            server == null -> {
+                navigator.toServerScreen()
+            }
+            twoFactorAuthenticationCode.isBlank() -> {
+                view.alertBlankTwoFactorAuthenticationCode()
+            }
+            else -> {
+                launchUI(strategy) {
+                    val client = factory.create(server)
+                    if (NetworkHelper.hasInternetAccess()) {
+                        view.showLoading()
+                        try {
+                            // The token is saved via the client TokenProvider
+                            client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
+                            registerPushToken()
+                            navigator.toChatList()
+                        } catch (exception: RocketChatException) {
+                            if (exception is RocketChatAuthException) {
+                                view.alertInvalidTwoFactorAuthenticationCode()
                             } else {
-                                view.showGenericErrorMessage()
+                                exception.message?.let {
+                                    view.showMessage(it)
+                                }.ifNull {
+                                    view.showGenericErrorMessage()
+                                }
                             }
+                        } finally {
+                            view.hideLoading()
                         }
+                    } else {
+                        view.showNoInternetConnection()
                     }
-                    view.hideLoading()
-                } else {
-                    view.showNoInternetConnection()
                 }
             }
         }
     }
 
-    fun signup() {
-        navigator.toSignUp()
-    }
+    fun signup() = navigator.toSignUp()
 
     private suspend fun registerPushToken() {
         localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {

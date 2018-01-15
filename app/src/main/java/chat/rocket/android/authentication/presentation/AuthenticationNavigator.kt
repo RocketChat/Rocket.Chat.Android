@@ -32,6 +32,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity, int
 
     fun toWebPage(url: String) {
         activity.startActivity(context.webViewIntent(url))
+        activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }
 
     fun toChatList() {

@@ -37,5 +37,6 @@
     <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
     <string name="msg_you">You</string>
+    <string name="msg_unknown">Unknown</string>
 
 </resources>

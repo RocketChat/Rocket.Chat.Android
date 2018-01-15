@@ -18,11 +18,11 @@ import javax.inject.Inject
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
+                                             private val navigator: ChatRoomsNavigator,
                                              private val serverInteractor: GetCurrentServerInteractor,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
                                              factory: RocketChatClientFactory) {
-
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
     private var reloadJob: Deferred<List<ChatRoom>>? = null
@@ -34,6 +34,10 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             subscribeRoomUpdates()
             view.hideLoading()
         }
+    }
+
+    fun loadChatRoom(chatRoom: ChatRoom) {
+        navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.readonly ?: false)
     }
 
     private suspend fun loadRooms(): List<ChatRoom> {
@@ -70,8 +74,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     private fun sortChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
-        return chatRooms.sortedByDescending {
-            chatRoom -> chatRoom.lastMessage?.timestamp
+        return chatRooms.sortedByDescending { chatRoom ->
+            chatRoom.lastMessage?.timestamp
         }
     }
 

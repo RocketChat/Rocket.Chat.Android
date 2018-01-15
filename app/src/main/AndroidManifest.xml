@@ -37,12 +37,16 @@
         </activity>
 
         <activity
+            android:name=".webview.WebViewActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".chatrooms.ui.MainActivity"
             android:theme="@style/ChatListTheme" />
 
         <activity
-            android:name=".app.ChatRoomActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:name=".chatroom.ui.ChatRoomActivity"
+            android:theme="@style/AppTheme" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -71,10 +75,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name=".webview.WebViewActivity"
-            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
