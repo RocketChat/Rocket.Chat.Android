@@ -1,5 +1,7 @@
 package chat.rocket.android.helper
 
+import android.util.Patterns
+
 object UrlHelper {
 
     /**
@@ -9,7 +11,7 @@ object UrlHelper {
      * @param avatarName The avatar name.
      * @return The avatar URL.
      */
-    fun getAvatarUrl(serverUrl: String, avatarName: String): String = removeTrailingSlash(serverUrl)+ "/avatar/" + avatarName
+    fun getAvatarUrl(serverUrl: String, avatarName: String): String = removeTrailingSlash(serverUrl) + "/avatar/" + avatarName
 
     /**
      * Returns the server's Terms of Service URL.
@@ -40,4 +42,11 @@ object UrlHelper {
             serverUrl
         }
     }
+
+    /**
+     * Checks if the given URL is valid or not.
+     * @param url The url to check its valid.
+     * @return True if url is valid, false otherwise.
+     */
+    fun isValidUrl(url: String): Boolean = Patterns.WEB_URL.matcher(url).matches()
 }

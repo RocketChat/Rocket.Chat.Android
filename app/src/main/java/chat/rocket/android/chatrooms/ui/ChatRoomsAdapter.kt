@@ -16,6 +16,7 @@ import chat.rocket.android.util.textContent
 import chat.rocket.common.model.BaseRoom.RoomType
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
+import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_chat.view.*
 
 class ChatRoomsAdapter(private val context: Context,
@@ -38,7 +39,7 @@ class ChatRoomsAdapter(private val context: Context,
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(chatRoom: ChatRoom) = with(itemView) {
-            bindAvatar(chatRoom, image_user_avatar, image_room_avatar)
+            bindAvatar(chatRoom, layout_avatar, image_avatar, image_room_avatar)
             bindName(chatRoom, text_chat_name)
             bindLastMessageDateTime(chatRoom, text_last_message_date_time)
             bindLastMessage(chatRoom, text_last_message)
@@ -47,14 +48,15 @@ class ChatRoomsAdapter(private val context: Context,
             setOnClickListener { listener(chatRoom) }
         }
 
-        private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView, imageView: ImageView) {
+        private fun bindAvatar(chatRoom: ChatRoom, avatarLayout: View, drawee: SimpleDraweeView, imageView: ImageView) {
             val chatRoomName = chatRoom.name
             if (chatRoom.type == RoomType.ONE_TO_ONE) {
-                val serverUrl = chatRoom.client.url
-                drawee.setImageURI(UrlHelper.getAvatarUrl(serverUrl, chatRoomName))
-                drawee.setVisibility(true)
+                drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoomName))
+                imageView.setVisibility(false)
+                avatarLayout.setVisibility(true)
             } else {
                 imageView.setImageDrawable(DrawableHelper.getTextDrawable(chatRoomName))
+                avatarLayout.setVisibility(false)
                 imageView.setVisibility(true)
             }
         }

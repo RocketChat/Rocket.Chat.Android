@@ -194,7 +194,7 @@ class LoginFragment : Fragment(), LoginView {
 
     private fun setupSignUpListener() {
         val signUp = getString(R.string.title_sign_up)
-        val newToRocketChat = String.format(getString(R.string.msg_new_to_rocket_chat), signUp)
+        val newToRocketChat = String.format(getString(R.string.msg_new_user), signUp)
 
         text_new_to_rocket_chat.text = newToRocketChat
 

@@ -15,6 +15,7 @@
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">No internet connection</string>
+    <string name="msg_invalid_server_url">Invalid server URL</string>
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_username">username</string>
     <string name="msg_username_or_email">username or email</string>
@@ -22,7 +23,7 @@
     <string name="msg_name_and_surname">name and surname</string>
     <string name="msg_email">email</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
-    <string name="msg_new_to_rocket_chat">New to Rocket Chat? %1$s</string>
+    <string name="msg_new_user">New user? %1$s</string>
     <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
     <string name="msg_2fa_code">2FA Code</string>
     <string name="msg_invalid_2fa_code">Invalid 2FA Code</string>
