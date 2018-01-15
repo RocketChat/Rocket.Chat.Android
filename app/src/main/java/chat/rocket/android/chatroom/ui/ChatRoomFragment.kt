@@ -39,6 +39,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 
 class ChatRoomFragment : Fragment(), ChatRoomView {
+
     @Inject lateinit var presenter: ChatRoomPresenter
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -106,6 +107,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         text_message.textContent = ""
         adapter.addItem(message)
         recycler_view.smoothScrollToPosition(0)
+    }
+
+    override fun disableMessageInput() {
+        text_send.isEnabled = false
+        text_message.isEnabled = false
+    }
+
+    override fun enableMessageInput(clear: Boolean) {
+        text_send.isEnabled = true
+        text_message.isEnabled = true
+        if (clear) text_message.textContent = ""
     }
 
     override fun dispatchUpdateMessage(index: Int, message: Message) {

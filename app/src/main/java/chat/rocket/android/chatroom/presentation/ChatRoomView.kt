@@ -34,4 +34,8 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param index The index of the changed message
      */
     fun dispatchUpdateMessage(index: Int, message: Message)
+
+    fun disableMessageInput()
+
+    fun enableMessageInput(clear: Boolean = false)
 }

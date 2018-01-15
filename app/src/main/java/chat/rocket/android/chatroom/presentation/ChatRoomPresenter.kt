@@ -34,6 +34,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }
                 view.showMessages(messages, serverInteractor.get()!!)
             } catch (ex: Exception) {
+                ex.printStackTrace()
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
@@ -47,18 +48,20 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     fun sendMessage(chatRoomId: String, text: String) {
         launchUI(strategy) {
+            view.disableMessageInput()
             try {
                 val message = client.sendMessage(chatRoomId, text)
-                synchronized(roomMessages) {
-                    roomMessages.add(0, message)
-                }
-                view.showNewMessage(message)
+                // ignore message for now, will receive it on the stream
+                view.enableMessageInput(clear = true)
             } catch (ex: Exception) {
+                ex.printStackTrace()
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
+
+                view.enableMessageInput()
             }
         }
     }
