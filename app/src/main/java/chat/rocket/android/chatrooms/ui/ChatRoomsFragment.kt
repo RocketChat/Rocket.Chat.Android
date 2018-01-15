@@ -51,8 +51,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             if (supportActionBar == null) {
                 setSupportActionBar(toolbar)
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                supportActionBar?.setDisplayShowHomeEnabled(false)
-                supportActionBar?.setDisplayShowTitleEnabled(false)
+                supportActionBar?.setDisplayShowHomeEnabled(true)
+                //TODO: should display the current server "SiteName" setting?
+                supportActionBar?.setDisplayShowTitleEnabled(true)
+                supportActionBar?.title = "Rocket.Chat"
             }
         }
         presenter.loadChatRooms()
