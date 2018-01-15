@@ -12,6 +12,7 @@
     <string name="action_send">Send</string>
     <string name="action_terms_of_service">Terms of Service</string>
     <string name="action_privacy_policy">Privacy Policy</string>
+    <string name="search">Search</string>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">No internet connection</string>

@@ -11,6 +11,7 @@
     <string name="action_send">Enviar</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
+    <string name="search">Pesquisar</string>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">Sem conexão à internet</string>

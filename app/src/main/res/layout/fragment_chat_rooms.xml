@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".chatrooms.ui.ChatRoomsFragment">
+
+    <include
+        android:id="@+id/layout_app_bar"
+        layout="@layout/app_bar"
+        android:background="@color/black" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
@@ -12,19 +18,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:gravity="center_horizontal"
-        android:paddingTop="84dp" />
-
-    <com.arlib.floatingsearchview.FloatingSearchView
-        android:id="@+id/floating_search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:floatingSearch_close_search_on_keyboard_dismiss="true"
-        app:floatingSearch_dimBackground="false"
-        app:floatingSearch_dismissOnOutsideTouch="true"
-        app:floatingSearch_leftActionMode="showSearch"
-        app:floatingSearch_searchBarMarginLeft="4dp"
-        app:floatingSearch_searchBarMarginRight="4dp"
-        app:floatingSearch_searchBarMarginTop="28dp" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
@@ -36,4 +30,4 @@
         app:indicatorName="BallPulseIndicator"
         tools:visibility="visible" />
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
