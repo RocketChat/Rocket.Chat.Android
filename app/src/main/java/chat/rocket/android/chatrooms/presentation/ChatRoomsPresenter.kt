@@ -87,8 +87,12 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     State.Authenticating -> Timber.d("Authenticating")
                     State.Connected -> {
                         Timber.d("Connected")
-                        client.subscribeSubscriptions()
-                        client.subscribeRooms()
+                        client.subscribeSubscriptions {
+                            Timber.d("subscriptions: $it")
+                        }
+                        client.subscribeRooms {
+                            Timber.d("rooms: $it")
+                        }
                     }
                 }
             }

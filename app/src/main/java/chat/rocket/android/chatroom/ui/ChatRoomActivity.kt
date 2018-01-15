@@ -37,10 +37,9 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private var isChatRoomReadOnly: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room)
-
-        AndroidInjection.inject(this)
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }

@@ -2,6 +2,7 @@ package chat.rocket.android.chatroom.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -65,16 +66,23 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
+        presenter.subscribeMessages(chatRoomId)
         setupComposer()
     }
 
-    override fun showMessages(dataSet: MutableList<Message>, serverUrl: String) {
+    override fun onDestroyView() {
+        presenter.unsubscribeMessages()
+        super.onDestroyView()
+    }
+
+    override fun showMessages(dataSet: List<Message>, serverUrl: String) {
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(this, dataSet, serverUrl)
+                adapter = ChatRoomAdapter(this, serverUrl)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 recycler_view.layoutManager = linearLayoutManager
+                recycler_view.itemAnimator = DefaultItemAnimator()
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
@@ -82,9 +90,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                         }
                     })
                 }
-            } else {
-                adapter.addDataSet(dataSet)
             }
+
+            adapter.addDataSet(dataSet)
         }
     }
 
@@ -94,10 +102,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         }
     }
 
-    override fun showSentMessage(message: Message) {
+    override fun showNewMessage(message: Message) {
         text_message.textContent = ""
         adapter.addItem(message)
         recycler_view.smoothScrollToPosition(0)
+    }
+
+    override fun dispatchUpdateMessage(index: Int, message: Message) {
+        adapter.updateItem(index, message)
     }
 
     override fun showLoading() = view_loading.setVisibility(true)

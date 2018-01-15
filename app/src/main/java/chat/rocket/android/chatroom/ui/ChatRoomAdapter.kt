@@ -19,12 +19,21 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class ChatRoomAdapter(private val context: Context,
-                      private var dataSet: MutableList<Message>,
                       private val serverUrl: String) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+
+    init {
+        setHasStableIds(true)
+    }
+
+    val dataSet = ArrayList<Message>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.item_message))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>?) {
+        onBindViewHolder(holder, position)
+    }
 
     override fun getItemCount(): Int = dataSet.size
 
@@ -39,6 +48,15 @@ class ChatRoomAdapter(private val context: Context,
     fun addItem(message: Message) {
         dataSet.add(0, message)
         notifyItemInserted(0)
+    }
+
+    fun updateItem(index: Int, message: Message) {
+        dataSet[index] = message
+        notifyItemChanged(index)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return dataSet[position].id.hashCode().toLong()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
