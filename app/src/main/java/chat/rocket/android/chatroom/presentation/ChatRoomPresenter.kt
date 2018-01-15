@@ -73,7 +73,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     }
 
     fun unsubscribeMessages() {
-        launchUI(strategy) {
+        launch(CommonPool) {
             subId?.let { subscriptionId ->
                 client.unsubscibre(subscriptionId)
             }
