@@ -35,6 +35,11 @@ class ChatRoomAdapter(private val context: Context,
         notifyItemRangeInserted(previousDataSetSize, dataSet.size)
     }
 
+    fun addItem(message: Message) {
+        dataSet.add(0, message)
+        notifyItemInserted(0)
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(message: Message) = with(itemView) {

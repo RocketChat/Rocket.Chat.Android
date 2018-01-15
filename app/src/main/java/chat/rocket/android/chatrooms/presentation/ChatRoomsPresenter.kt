@@ -36,8 +36,18 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
     }
 
-    fun loadChatRoom(chatRoom: ChatRoom) {
-        navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.readonly ?: false)
+    fun loadChatRoom(chatRoom: ChatRoom) = navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.readonly ?: false)
+
+    /**
+     * Gets a [ChatRoom] list from local repository.
+     * ChatRooms returned are filtered by name.
+     */
+    fun chatRoomsByName(name: String) {
+        val currentServer = serverInteractor.get()!!
+        launchUI(strategy) {
+            val roomList = getChatRoomsInteractor.getByName(currentServer, name)
+            view.updateChatRooms(roomList)
+        }
     }
 
     private suspend fun loadRooms(): List<ChatRoom> {
@@ -55,17 +65,6 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private fun updateRooms() {
         launch {
             view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
-        }
-    }
-
-    /**
-     * Get a ChatRoom list from local repository. ChatRooms returned are filtered by name.
-     */
-    fun chatRoomsByName(name: String) {
-        val currentServer = serverInteractor.get()!!
-        launchUI(strategy) {
-            val roomList = getChatRoomsInteractor.getByName(currentServer, name)
-            view.updateChatRooms(roomList)
         }
     }
 

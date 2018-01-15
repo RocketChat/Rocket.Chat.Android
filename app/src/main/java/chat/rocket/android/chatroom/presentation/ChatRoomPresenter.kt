@@ -6,8 +6,8 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.messages
+import chat.rocket.core.internal.rest.sendMessage
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
@@ -16,7 +16,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             factory: RocketChatClientFactory) {
     private val client = factory.create(serverInteractor.get()!!)
 
-    fun messages(chatRoomId: String, chatRoomType: String, offset: Int = 0) {
+    fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Int = 0) {
         launchUI(strategy) {
             view.showLoading()
             try {
@@ -30,6 +30,21 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }
             } finally {
                 view.hideLoading()
+            }
+        }
+    }
+
+    fun sendMessage(chatRoomId: String, text: String) {
+        launchUI(strategy) {
+            try {
+                val message = client.sendMessage(chatRoomId, text)
+                view.showSentMessage(message)
+            } catch (ex: Exception) {
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             }
         }
     }
