@@ -15,6 +15,7 @@ import chat.rocket.android.util.textContent
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.model.Message
 import com.facebook.drawee.view.SimpleDraweeView
+import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class ChatRoomAdapter(private val context: Context,
@@ -43,16 +44,16 @@ class ChatRoomAdapter(private val context: Context,
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(message: Message) = with(itemView) {
-            bindUserAvatar(message, image_user_avatar, image_unknown_user)
+            bindUserAvatar(message, image_avatar, image_unknown_avatar)
             bindUserName(message, text_user_name)
             bindTime(message, text_message_time)
             bindContent(message, text_content)
         }
 
-        private fun bindUserAvatar(message: Message, drawee: SimpleDraweeView, imageUnknownUser: ImageView) = message.sender?.username.let {
+        private fun bindUserAvatar(message: Message, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.sender?.username.let {
             drawee.setImageURI(UrlHelper.getAvatarUrl(serverUrl, it.toString()))
         }.ifNull {
-            imageUnknownUser.setVisibility(true)
+            imageUnknownAvatar.setVisibility(true)
         }
 
         private fun bindUserName(message: Message, textView: TextView) = message.sender?.username.let {

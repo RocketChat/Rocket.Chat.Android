@@ -9,25 +9,14 @@
     android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
     android:layout_marginTop="10dp">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/image_user_avatar"
+    <include
+        android:id="@+id/layout_avatar"
+        layout="@layout/avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginTop="7dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:roundAsCircle="true" />
-
-    <!-- TODO define the correct bg color for this-->
-    <ImageView
-        android:id="@+id/image_unknown_user"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_help_black_24dp"
-        android:tint="@color/colorAccent"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="contentDescription" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/top_container"
@@ -35,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toRightOf="@+id/image_user_avatar">
+        app:layout_constraintLeft_toRightOf="@+id/layout_avatar">
 
         <TextView
             android:id="@+id/text_user_name"
