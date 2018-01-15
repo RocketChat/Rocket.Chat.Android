@@ -44,6 +44,8 @@ class ServerFragment : Fragment(), ServerView {
         relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
+    override fun showInvalidServerUrl() = showMessage(getString(R.string.msg_invalid_server_url))
+
     override fun showLoading() {
         enableUserInput(false)
         view_loading.setVisibility(true)

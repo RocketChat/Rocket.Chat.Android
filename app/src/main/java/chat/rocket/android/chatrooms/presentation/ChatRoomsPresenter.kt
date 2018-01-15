@@ -18,11 +18,11 @@ import javax.inject.Inject
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
+                                             private val navigator: ChatRoomsNavigator,
                                              private val serverInteractor: GetCurrentServerInteractor,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
                                              factory: RocketChatClientFactory) {
-
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
     private var reloadJob: Deferred<List<ChatRoom>>? = null
@@ -33,6 +33,20 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             view.updateChatRooms(loadRooms())
             subscribeRoomUpdates()
             view.hideLoading()
+        }
+    }
+
+    fun loadChatRoom(chatRoom: ChatRoom) = navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.readonly ?: false)
+
+    /**
+     * Gets a [ChatRoom] list from local repository.
+     * ChatRooms returned are filtered by name.
+     */
+    fun chatRoomsByName(name: String) {
+        val currentServer = serverInteractor.get()!!
+        launchUI(strategy) {
+            val roomList = getChatRoomsInteractor.getByName(currentServer, name)
+            view.updateChatRooms(roomList)
         }
     }
 
@@ -54,24 +68,13 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
     }
 
-    /**
-     * Get a ChatRoom list from local repository. ChatRooms returned are filtered by name.
-     */
-    fun chatRoomsByName(name: String) {
-        val currentServer = serverInteractor.get()!!
-        launchUI(strategy) {
-            val roomList = getChatRoomsInteractor.getByName(currentServer, name)
-            view.updateChatRooms(roomList)
-        }
-    }
-
     private fun getOpenChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
         return chatRooms.filter(ChatRoom::open)
     }
 
     private fun sortChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
-        return chatRooms.sortedByDescending {
-            chatRoom -> chatRoom.lastMessage?.timestamp
+        return chatRooms.sortedByDescending { chatRoom ->
+            chatRoom.lastMessage?.timestamp
         }
     }
 

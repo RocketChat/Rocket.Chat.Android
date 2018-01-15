@@ -12,6 +12,7 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.util.setVisibility
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
@@ -46,8 +47,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         (activity as AppCompatActivity).apply {
             recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(this, 144, 32))
-            recycler_view.adapter = ChatRoomsAdapter(this)
             recycler_view.itemAnimator = DefaultItemAnimator()
+            recycler_view.adapter = ChatRoomsAdapter(this) { chatRoom ->
+                presenter.loadChatRoom(chatRoom)
+            }
+
             if (supportActionBar == null) {
                 setSupportActionBar(toolbar)
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -57,6 +61,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 supportActionBar?.title = "Rocket.Chat"
             }
         }
+
         presenter.loadChatRooms()
     }
 
@@ -97,9 +102,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
-    override fun showLoading() = view_loading.show()
+    override fun showLoading() = view_loading.setVisibility(true)
 
-    override fun hideLoading() = view_loading.hide()
+    override fun hideLoading() = view_loading.setVisibility(false)
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
@@ -112,6 +117,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     class RoomsDiffCallback(private val oldRooms: List<ChatRoom>,
                             private val newRooms: List<ChatRoom>) : DiffUtil.Callback() {
+
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return oldRooms[oldItemPosition].id == newRooms[newItemPosition].id
         }

@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
 import android.view.*
 import android.widget.ImageButton
-import android.view.inputmethod.InputMethodManager
 import android.widget.ScrollView
 import android.widget.Toast
 import chat.rocket.android.R
@@ -56,12 +55,6 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        activity?.apply {
-            text_username_or_email.requestFocus()
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(text_username_or_email, InputMethodManager.SHOW_IMPLICIT)
-        }
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
@@ -201,7 +194,7 @@ class LoginFragment : Fragment(), LoginView {
 
     private fun setupSignUpListener() {
         val signUp = getString(R.string.title_sign_up)
-        val newToRocketChat = String.format(getString(R.string.msg_new_to_rocket_chat), signUp)
+        val newToRocketChat = String.format(getString(R.string.msg_new_user), signUp)
 
         text_new_to_rocket_chat.text = newToRocketChat
 
@@ -216,7 +209,7 @@ class LoginFragment : Fragment(), LoginView {
         button_log_in.isEnabled = value
         text_username_or_email.isEnabled = value
         text_password.isEnabled = value
-        if (isEditTextEmpty()) {
+        if (!isEditTextEmpty()) {
             showSignUpView(value)
             showOauthView(value)
         }

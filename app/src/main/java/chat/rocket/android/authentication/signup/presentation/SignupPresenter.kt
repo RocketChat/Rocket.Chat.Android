@@ -3,11 +3,13 @@ package chat.rocket.android.authentication.signup.presentation
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
+import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.registerPushToken
@@ -20,7 +22,6 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                                           private val localRepository: LocalRepository,
                                           private val serverInteractor: GetCurrentServerInteractor,
                                           private val factory: RocketChatClientFactory) {
-
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
 
     fun signup(name: String, username: String, password: String, email: String) {
@@ -53,15 +54,15 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                             registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {
-                            val errorMessage = exception.message
-                            if (errorMessage != null) {
-                                view.showMessage(errorMessage)
-                            } else {
+                            exception.message?.let {
+                                view.showMessage(it)
+                            }.ifNull {
                                 view.showGenericErrorMessage()
                             }
-                        }
+                        } finally {
+                            view.hideLoading()
 
-                        view.hideLoading()
+                        }
                     } else {
                         view.showNoInternetConnection()
                     }
@@ -72,13 +73,13 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
 
     fun termsOfService() {
         serverInteractor.get()?.let {
-            navigator.toWebPage("/terms-of-service")
+            navigator.toWebPage(UrlHelper.getTermsOfServiceUrl(it))
         }
     }
 
     fun privacyPolicy() {
         serverInteractor.get()?.let {
-            navigator.toWebPage("/privacy-policy")
+            navigator.toWebPage(UrlHelper.getPrivacyPolicyUrl(it))
         }
     }
 

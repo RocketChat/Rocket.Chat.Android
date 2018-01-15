@@ -135,7 +135,7 @@ object DrawableHelper {
                 .beginConfig()
                 .useFont(Typeface.SANS_SERIF)
                 .endConfig()
-                .buildRound(TextHelper.getFirstCharacter(string), getAvatarBackgroundColor(string))
+                .buildRoundRect(TextHelper.getFirstCharacter(string), getAvatarBackgroundColor(string), 4)
     }
 
     /**

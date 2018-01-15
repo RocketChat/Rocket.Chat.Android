@@ -10,6 +10,17 @@
         android:layout_height="1dp"
         android:background="@color/colorDividerMessageComposer" />
 
+    <TextView
+        android:id="@+id/text_room_is_read_only"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="@string/msg_this_room_is_read_only"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
     <LinearLayout
         android:id="@+id/top_container"
         android:layout_width="match_parent"

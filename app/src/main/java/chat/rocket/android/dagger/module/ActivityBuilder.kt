@@ -6,7 +6,10 @@ import chat.rocket.android.authentication.server.di.ServerFragmentProvider
 import chat.rocket.android.authentication.signup.di.SignupFragmentProvider
 import chat.rocket.android.authentication.twofactor.di.TwoFAFragmentProvider
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
+import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
+import chat.rocket.android.chatrooms.di.ChatRoomsModule
 import chat.rocket.android.chatrooms.ui.MainActivity
 import chat.rocket.android.dagger.scope.PerActivity
 import dagger.Module
@@ -24,6 +27,11 @@ abstract class ActivityBuilder {
     ])
     abstract fun bindAuthenticationActivity(): AuthenticationActivity
 
-    @ContributesAndroidInjector(modules = [ChatRoomsFragmentProvider::class])
+    @PerActivity
+    @ContributesAndroidInjector(modules = [ChatRoomsModule::class, ChatRoomsFragmentProvider::class])
     abstract fun bindMainActivity(): MainActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [ChatRoomFragmentProvider::class])
+    abstract fun bindChatRoomActivity(): ChatRoomActivity
 }

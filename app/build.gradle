@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
 
@@ -52,9 +52,7 @@ dependencies {
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
-
-    implementation libraries.moshi
-    implementation libraries.kotshi
+    implementation libraries.playServicesGcm
 
     implementation libraries.room
     kapt libraries.roomProcessor
@@ -63,6 +61,7 @@ dependencies {
     implementation libraries.rxjava
     implementation libraries.rxandroid
 
+    implementation libraries.moshi
     implementation libraries.okhttp
     implementation libraries.okhttpLogger
 
@@ -76,24 +75,20 @@ dependencies {
 
     implementation libraries.frescoImageViewer
 
+    implementation libraries.kotshi
+
     implementation libraries.floatingSearchView
 
     implementation libraries.androidSvg
-
-    implementation libraries.playServicesGcm
 
     implementation libraries.aVLoadingIndicatorView
 
     implementation libraries.textDrawable
 
     testImplementation libraries.junit
-    androidTestImplementation (libraries.expressoCore , {
+    androidTestImplementation(libraries.expressoCore, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-}
-
-repositories {
-    mavenCentral()
 }
 
 kotlin {

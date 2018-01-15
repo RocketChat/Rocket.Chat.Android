@@ -21,7 +21,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         AndroidInjection.inject(this)
 
-        addFragment("authenticationServerFragment", R.id.fragment_container) {
+        addFragment("ServerFragment", R.id.fragment_container) {
             ServerFragment.newInstance()
         }
     }
