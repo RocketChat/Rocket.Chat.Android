@@ -20,19 +20,6 @@
         android:gravity="center_horizontal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!--<com.arlib.floatingsearchview.FloatingSearchView-->
-    <!--android:id="@+id/floating_search_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--app:floatingSearch_close_search_on_keyboard_dismiss="true"-->
-    <!--app:floatingSearch_dimBackground="false"-->
-    <!--app:floatingSearch_dismissOnOutsideTouch="true"-->
-    <!--app:floatingSearch_leftActionMode="showSearch"-->
-    <!--app:floatingSearch_searchBarMarginLeft="4dp"-->
-    <!--app:floatingSearch_searchBarMarginRight="4dp"-->
-    <!--app:floatingSearch_searchBarMarginTop="28dp" />-->
-
-
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
         android:layout_width="wrap_content"

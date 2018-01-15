@@ -80,13 +80,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             override fun onQueryTextChange(newText: String?): Boolean {
                 return queryChatRoomsByName(newText)
             }
-
         })
     }
-
-    /*override fun showChatRooms(dataSet: MutableList<ChatRoom>) {
-        floating_search_view.hideProgress()
-    }*/
 
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {
         activity.apply {
