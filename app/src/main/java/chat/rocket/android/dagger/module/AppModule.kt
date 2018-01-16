@@ -91,7 +91,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthTokenRepository(): TokenRepository {
+    fun provideTokenRepository(): TokenRepository {
         return MemoryTokenRepository()
     }
 
@@ -108,7 +108,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferencesRepository(prefs: SharedPreferences): LocalRepository {
+    fun provideLocalRepository(prefs: SharedPreferences): LocalRepository {
         return SharedPrefsLocalRepository(prefs)
     }
 

@@ -20,7 +20,7 @@ class AuthenticationModule {
 
     @Provides
     @PerActivity
-    fun provideSharedPreferencesMultiServerTokenRepository(repository: LocalRepository, moshi: Moshi): MultiServerTokenRepository {
+    fun provideMultiServerTokenRepository(repository: LocalRepository, moshi: Moshi): MultiServerTokenRepository {
         return SharedPreferencesMultiServerTokenRepository(repository, moshi)
     }
 }
