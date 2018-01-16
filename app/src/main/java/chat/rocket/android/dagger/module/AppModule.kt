@@ -6,19 +6,22 @@ import android.content.Context
 import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.app.RocketChatDatabase
-import chat.rocket.android.authentication.infraestructure.AuthTokenRepository
+import chat.rocket.android.authentication.infraestructure.MemoryTokenRepository
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
-import chat.rocket.android.server.infraestructure.MemorySettingsRepository
 import chat.rocket.android.server.infraestructure.ServerDao
+import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
+import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.TokenRepository
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.experimental.Job
@@ -31,7 +34,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRocketChatClient(okHttpClient: OkHttpClient, repository: AuthTokenRepository, logger: PlatformLogger): RocketChatClient {
+    fun provideRocketChatClient(okHttpClient: OkHttpClient, repository: TokenRepository, logger: PlatformLogger): RocketChatClient {
         return RocketChatClient.create {
             httpClient = okHttpClient
             tokenRepository = repository
@@ -88,8 +91,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthTokenRepository(): AuthTokenRepository {
-        return AuthTokenRepository()
+    fun provideAuthTokenRepository(): TokenRepository {
+        return MemoryTokenRepository()
     }
 
     @Provides
@@ -117,13 +120,19 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSettingsRepository(): SettingsRepository {
-        return MemorySettingsRepository()
+    fun provideSettingsRepository(localRepository: LocalRepository): SettingsRepository {
+        return SharedPreferencesSettingsRepository(localRepository)
     }
 
     @Provides
     @Singleton
     fun provideChatRoomsRepository(): ChatRoomsRepository {
         return MemoryChatRoomsRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi {
+        return  Moshi.Builder().add(AppJsonAdapterFactory.INSTANCE).build()
     }
 }

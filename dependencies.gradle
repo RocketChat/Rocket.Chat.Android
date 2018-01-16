@@ -77,7 +77,8 @@ ext {
 
         frescoImageViewer      : "com.github.stfalcon:frescoimageviewer:${versions.frescoImageViewer}",
 
-        kotshi                 : "se.ansman.kotshi:api:${versions.kotshi}",
+        kotshiApi              : "se.ansman.kotshi:api:${versions.kotshi}",
+        kotshiCompiler         : "se.ansman.kotshi:compiler:${versions.kotshi}",
 
         floatingSearchView     : "com.github.arimorty:floatingsearchview:${versions.floatingSearchView}",
 

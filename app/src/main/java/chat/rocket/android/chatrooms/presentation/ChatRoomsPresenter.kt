@@ -241,4 +241,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
         saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
     }
+
+    fun disconnect() {
+        client.disconnect()
+    }
 }

@@ -1,5 +1,6 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val strategy: CancelStrategy,
                                          private val navigator: AuthenticationNavigator,
+                                         private val multiServerRepository: MultiServerTokenRepository,
                                          private val localRepository: LocalRepository,
                                          private val settingsInteractor: GetSettingsInteractor,
                                          private val serverInteractor: GetCurrentServerInteractor,
@@ -90,7 +92,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         view.showLoading()
 
                         try {
-                            client.login(usernameOrEmail, password) // TODO This function returns a user token so should we save it?
+                            val token = client.login(usernameOrEmail, password)
+                            multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
                             registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {

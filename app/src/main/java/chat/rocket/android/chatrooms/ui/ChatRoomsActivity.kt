@@ -11,17 +11,21 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class ChatRoomsActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_chat_rooms)
 
         addFragment("ChatRoomsFragment", R.id.fragment_container) {
             ChatRoomsFragment.newInstance()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
