@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#ff212121</color> <!-- Material Grey 900 -->
     <color name="colorAccent">#FF1976D2</color> <!-- Material Blue 700 -->
 
+    <color name="ic_launcher_background">#15293F</color>
+
     <color name="colorUserStatusOnline">#2FE1A8</color>
     <color name="colorUserStatusBusy">#F33E5B</color>
     <color name="colorUserStatusAway">#FDD236</color>
