@@ -21,6 +21,8 @@ class SharedPreferencesSettingsRepository(private val localRespository: LocalRep
 
         return null
     }
-}
 
-const val SETTINGS_KEY = "settings_"
+    companion object {
+        private const val SETTINGS_KEY = "settings_"
+    }
+}

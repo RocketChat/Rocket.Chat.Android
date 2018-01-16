@@ -13,6 +13,7 @@ class SharedPrefsCurrentServerRepository(private val preferences: SharedPreferen
         return preferences.getString(CURRENT_SERVER_KEY, null)
     }
 
+    companion object {
+        private const val CURRENT_SERVER_KEY = "current_server"
+    }
 }
-
-const val CURRENT_SERVER_KEY = "current_server"
