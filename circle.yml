@@ -7,8 +7,8 @@
 machine:
   environment:
     ANDROID_HOME: /usr/local/android-sdk-linux
-    GRADLE_OPTS: '-Xmx1024m -Dorg.gradle.jvmargs="-Xmx1024m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError"'
-    JAVA_OPTS: "-Xms518m -Xmx1024m"
+    GRADLE_OPTS: '-Xmx1536M -Dorg.gradle.jvmargs="-Xmx1536M -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError"'
+    JAVA_OPTS: "-Xms518m -Xmx1536M"
   pre:
     - git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git Rocket.Chat.Kotlin.SDK
 
