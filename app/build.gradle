@@ -11,16 +11,27 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 1
-        versionName "2.0.0-beta1"
+        versionCode 1001
+        versionName "2.0.0-dev1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
 
+    signingConfigs {
+        release {
+            storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationIdSuffix ".dev"
         }
 
         debug {
@@ -75,7 +86,8 @@ dependencies {
 
     implementation libraries.frescoImageViewer
 
-    implementation libraries.kotshi
+    kapt libraries.kotshiCompiler
+    implementation libraries.kotshiApi
 
     implementation libraries.floatingSearchView
 

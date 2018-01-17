@@ -3,7 +3,7 @@ package chat.rocket.android.authentication.infraestructure
 import chat.rocket.common.model.Token
 import chat.rocket.core.TokenRepository
 
-class AuthTokenRepository : TokenRepository {
+class MemoryTokenRepository : TokenRepository {
     var savedToken: Token? = null
 
     override fun get(): Token? {
