@@ -17,6 +17,7 @@ import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.Value
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_composer.*
@@ -76,10 +77,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         super.onDestroyView()
     }
 
-    override fun showMessages(dataSet: List<Message>, serverUrl: String) {
+    override fun showMessages(dataSet: List<Message>, serverUrl: String, settings: Map<String, Value<Any>>?) {
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(this, serverUrl)
+                adapter = ChatRoomAdapter(this, serverUrl, settings)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 recycler_view.layoutManager = linearLayoutManager
