@@ -9,17 +9,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.server.domain.USE_REALNAME
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.Value
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class ChatRoomAdapter(private val context: Context,
-                      private val serverUrl: String) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+                      private val serverUrl: String,
+                      private val settings: Map<String, Value<Any>>?) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
 
     init {
         setHasStableIds(true)
@@ -74,12 +77,20 @@ class ChatRoomAdapter(private val context: Context,
             imageUnknownAvatar.setVisibility(true)
         }
 
-        private fun bindUserName(message: Message, textView: TextView) = message.sender?.username.let {
-            textView.textContent = it.toString()
-        }.ifNull {
-            textView.textContent = context.getString(R.string.msg_unknown)
-        }
+        private fun bindUserName(message: Message, textView: TextView) {
+            val useRealName = settings?.get(USE_REALNAME)?.value as Boolean
+            val realName = message.sender?.name
+            val username = message.sender?.username
+            val senderName = if (useRealName) realName else username
+            senderName.let {
+                // TODO: Fallback to username if real name happens to be null. ATM this could happen if the
+                // present message is a system message. We should handle that on the SDK
+                textView.textContent = if (senderName == null) username.toString() else it.toString()
+            }.ifNull {
+                textView.textContent = context.getString(R.string.msg_unknown)
+            }
 
+        }
         private fun bindTime(message: Message, textView: TextView) {
             textView.textContent = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(message.timestamp))
         }

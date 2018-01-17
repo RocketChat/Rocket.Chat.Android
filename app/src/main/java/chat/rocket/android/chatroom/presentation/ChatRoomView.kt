@@ -3,6 +3,7 @@ package chat.rocket.android.chatroom.presentation
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.Value
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -11,8 +12,9 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param dataSet The data set to show.
      * @param serverUrl The server URL.
+     * @param settings The server settings.
      */
-    fun showMessages(dataSet: List<Message>, serverUrl: String)
+    fun showMessages(dataSet: List<Message>, serverUrl: String, settings: Map<String, Value<Any>>?)
 
     /**
      * Send a message to a chat room.
