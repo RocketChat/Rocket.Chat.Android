@@ -2,7 +2,13 @@ package chat.rocket.android.chatroom.ui
 
 import DateTimeHelper
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -15,6 +21,7 @@ import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.Value
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
@@ -79,8 +86,8 @@ class ChatRoomAdapter(private val context: Context,
 
         private fun bindUserName(message: Message, textView: TextView) {
             val useRealName = settings?.get(USE_REALNAME)?.value as Boolean
-            val realName = message.sender?.name
             val username = message.sender?.username
+            val realName = message.sender?.name
             val senderName = if (useRealName) realName else username
             senderName.let {
                 // TODO: Fallback to username if real name happens to be null. ATM this could happen if the
@@ -96,7 +103,39 @@ class ChatRoomAdapter(private val context: Context,
         }
 
         private fun bindContent(message: Message, textView: TextView) {
-            textView.textContent = message.message
+            when (message.type) {
+                //TODO: Add implementation for other types.
+                //TODO: Move all those strings to xml. Refer to https://github.com/RocketChat/Rocket.Chat.Android/blob/develop/app/src/main/res/values/system_message_strings.xml
+                MessageType.MESSAGE_REMOVED -> setSystemMessage(message, textView,
+                        "Message removed")
+                MessageType.USER_JOINED ->  setSystemMessage(message, textView,
+                        "Has joined the channel.")
+                MessageType.USER_LEFT -> setSystemMessage(message, textView,
+                        "Has left the channel.")
+                MessageType.USER_ADDED -> setSystemMessage(message, textView,
+                        "User ${message.message} added by ${message.sender?.username}")
+                else -> textView.textContent = message.message
+            }
+        }
+
+        private fun setSystemMessage(message: Message, textView: TextView, msg: String) {
+            val spannableMsg = SpannableString(msg)
+            spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
+                    0)
+            spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length,
+                    0)
+
+            if (message.type == MessageType.USER_ADDED) {
+                val userAddedStartIndex = 5
+                val userAddedLastIndex = userAddedStartIndex + message.message.length
+                val addedByStartIndex = userAddedLastIndex + 10
+                val addedByLastIndex = addedByStartIndex + message.sender?.username!!.length
+                spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), userAddedStartIndex, userAddedLastIndex,
+                        0)
+                spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), addedByStartIndex, addedByLastIndex,
+                        0)
+            }
+            textView.text = spannableMsg
         }
     }
 }
