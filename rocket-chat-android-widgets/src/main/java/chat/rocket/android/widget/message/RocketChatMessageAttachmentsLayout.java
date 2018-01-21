@@ -79,6 +79,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
         }
         this.attachments = attachments;
 
+        removeAllViews();
         for (int i = 0, size = attachments.size(); i < size; i++) {
             appendAttachmentView(attachments.get(i), autoloadImages, true);
         }
@@ -89,7 +90,6 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
             return;
         }
 
-        removeAllViews();
         View attachmentView = inflater.inflate(R.layout.message_inline_attachment, this, false);
 
         colorizeAttachmentBar(attachment, attachmentView, showAttachmentStrip);
