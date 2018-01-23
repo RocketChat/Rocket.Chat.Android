@@ -11,6 +11,7 @@ import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.USE_REALNAME
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType.*
 import chat.rocket.core.model.Value
@@ -71,34 +72,24 @@ data class MessageViewModel(private val message: Message,
         spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length,
                 0)
 
-        if (message.type == USER_ADDED) {
-            val userAddedStartIndex = 5
-            val userAddedLastIndex = userAddedStartIndex + message.message.length
-            val addedByStartIndex = userAddedLastIndex + 10
-            val addedByLastIndex = addedByStartIndex + message.sender?.username!!.length
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), userAddedStartIndex, userAddedLastIndex,
-                    0)
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), addedByStartIndex, addedByLastIndex,
-                    0)
-        } else if (message.type == ROOM_NAME_CHANGED) {
-            val userAddedStartIndex = 22
-            val userAddedLastIndex = userAddedStartIndex + message.message.length
-            val addedByStartIndex = userAddedLastIndex + 4
-            val addedByLastIndex = addedByStartIndex + message.sender?.username!!.length
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), userAddedStartIndex, userAddedLastIndex,
-                    0)
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), addedByStartIndex, addedByLastIndex,
-                    0)
-        } else if (message.type == USER_REMOVED) {
-            val userAddedStartIndex = 5
-            val userAddedLastIndex = userAddedStartIndex + message.message.length
-            val addedByStartIndex = userAddedLastIndex + 12
-            val addedByLastIndex = addedByStartIndex + message.sender?.username!!.length
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), userAddedStartIndex, userAddedLastIndex,
-                    0)
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), addedByStartIndex, addedByLastIndex,
+        val username = message.sender?.username
+        val message = message.message
+
+        val usernameTextStartIndex: Int = if (username != null) content.indexOf(username) else -1
+        val usernameTextEndIndex = if (username != null) usernameTextStartIndex + username.length else -1
+        val messageTextStartIndex = if (message.isNotEmpty()) content.indexOf(message) else -1
+        val messageTextEndIndex = messageTextStartIndex + message.length
+
+        if (usernameTextStartIndex > -1) {
+            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), usernameTextStartIndex, usernameTextEndIndex,
                     0)
         }
+        
+        if (messageTextStartIndex > -1) {
+            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), messageTextStartIndex, messageTextEndIndex,
+                    0)
+        }
+
         return spannableMsg
     }
 }
