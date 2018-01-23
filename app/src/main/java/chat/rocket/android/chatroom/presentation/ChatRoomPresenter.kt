@@ -107,8 +107,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
+            val viewModelStreamedMessage = MessageViewModelMapper.mapToViewModel(streamedMessage, settings)
             synchronized(roomMessages) {
-                val viewModelStreamedMessage = MessageViewModelMapper.mapToViewModel(streamedMessage, settings)
                 val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
                 if (index != -1) {
                     Timber.d("Updatind message at $index")
