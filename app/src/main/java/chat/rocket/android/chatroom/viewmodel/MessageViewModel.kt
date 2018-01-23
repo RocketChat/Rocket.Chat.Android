@@ -11,7 +11,6 @@ import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.USE_REALNAME
-import chat.rocket.common.util.ifNull
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType.*
 import chat.rocket.core.model.Value
@@ -75,7 +74,7 @@ data class MessageViewModel(private val message: Message,
         val username = message.sender?.username
         val message = message.message
 
-        val usernameTextStartIndex: Int = if (username != null) content.indexOf(username) else -1
+        val usernameTextStartIndex = if (username != null) content.indexOf(username) else -1
         val usernameTextEndIndex = if (username != null) usernameTextStartIndex + username.length else -1
         val messageTextStartIndex = if (message.isNotEmpty()) content.indexOf(message) else -1
         val messageTextEndIndex = messageTextStartIndex + message.length
@@ -84,7 +83,7 @@ data class MessageViewModel(private val message: Message,
             spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), usernameTextStartIndex, usernameTextEndIndex,
                     0)
         }
-        
+
         if (messageTextStartIndex > -1) {
             spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), messageTextStartIndex, messageTextEndIndex,
                     0)
