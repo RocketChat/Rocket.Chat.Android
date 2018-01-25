@@ -13,6 +13,7 @@ import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,6 +27,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
     private var reloadJob: Deferred<List<ChatRoom>>? = null
+
+    private val stateChannel = Channel<State>()
 
     fun loadChatRooms() {
         launchUI(strategy) {
@@ -80,8 +83,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     // TODO - Temporary stuff, remove when adding DB support
     private suspend fun subscribeRoomUpdates() {
+        client.addStateChannel(stateChannel)
         launch(CommonPool + strategy.jobs) {
-            for (status in client.statusChannel) {
+            for (status in stateChannel) {
                 Timber.d("Changing status to: $status")
                 when (status) {
                     State.Authenticating -> Timber.d("Authenticating")
@@ -243,6 +247,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     fun disconnect() {
+        client.removeStateChannel(stateChannel)
         client.disconnect()
     }
 }

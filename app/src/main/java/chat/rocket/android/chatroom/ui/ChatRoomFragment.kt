@@ -67,7 +67,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
-        presenter.subscribeMessages(chatRoomId)
         setupComposer()
     }
 
@@ -87,7 +86,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
-                            presenter.loadMessages(chatRoomId, chatRoomType, page * 30)
+                            presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
                         }
                     })
                 }
