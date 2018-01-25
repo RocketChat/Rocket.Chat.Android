@@ -25,6 +25,10 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     @Inject
     lateinit var serviceDispatchingAndroidInjector: DispatchingAndroidInjector<Service>
 
+    companion object {
+        lateinit var instance: RocketChatApplication
+    }
+
     override fun onCreate() {
         super.onCreate()
 
@@ -34,6 +38,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
         setupFresco()
         setupTimber()
+        instance = this
     }
 
     private fun setupFresco() {

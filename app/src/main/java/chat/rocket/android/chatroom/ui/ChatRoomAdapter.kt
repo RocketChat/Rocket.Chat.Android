@@ -1,33 +1,28 @@
 package chat.rocket.android.chatroom.ui
 
-import DateTimeHelper
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
-import chat.rocket.android.util.textContent
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.model.Message
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
-class ChatRoomAdapter(private val context: Context,
-                      private val serverUrl: String) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
 
     init {
         setHasStableIds(true)
     }
 
-    val dataSet = ArrayList<Message>()
+    val dataSet = ArrayList<MessageViewModel>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.item_message))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+            ViewHolder(parent.inflate(R.layout.item_message), serverUrl)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
@@ -39,18 +34,18 @@ class ChatRoomAdapter(private val context: Context,
 
     override fun getItemViewType(position: Int): Int = position
 
-    fun addDataSet(dataSet: List<Message>) {
+    fun addDataSet(dataSet: List<MessageViewModel>) {
         val previousDataSetSize = this.dataSet.size
         this.dataSet.addAll(previousDataSetSize, dataSet)
         notifyItemRangeInserted(previousDataSetSize, dataSet.size)
     }
 
-    fun addItem(message: Message) {
+    fun addItem(message: MessageViewModel) {
         dataSet.add(0, message)
         notifyItemInserted(0)
     }
 
-    fun updateItem(index: Int, message: Message) {
+    fun updateItem(index: Int, message: MessageViewModel) {
         dataSet[index] = message
         notifyItemChanged(index)
     }
@@ -59,33 +54,19 @@ class ChatRoomAdapter(private val context: Context,
         return dataSet[position].id.hashCode().toLong()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, val serverUrl: String) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(message: Message) = with(itemView) {
+        fun bind(message: MessageViewModel) = with(itemView) {
             bindUserAvatar(message, image_avatar, image_unknown_avatar)
-            bindUserName(message, text_user_name)
-            bindTime(message, text_message_time)
-            bindContent(message, text_content)
+            text_user_name.text = message.sender
+            text_message_time.text = message.time
+            text_content.text = message.content
         }
 
-        private fun bindUserAvatar(message: Message, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.sender?.username.let {
-            drawee.setImageURI(UrlHelper.getAvatarUrl(serverUrl, it.toString()))
+        private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.getAvatarUrl(serverUrl).let {
+            drawee.setImageURI(it.toString())
         }.ifNull {
             imageUnknownAvatar.setVisibility(true)
-        }
-
-        private fun bindUserName(message: Message, textView: TextView) = message.sender?.username.let {
-            textView.textContent = it.toString()
-        }.ifNull {
-            textView.textContent = context.getString(R.string.msg_unknown)
-        }
-
-        private fun bindTime(message: Message, textView: TextView) {
-            textView.textContent = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(message.timestamp))
-        }
-
-        private fun bindContent(message: Message, textView: TextView) {
-            textView.textContent = message.message
         }
     }
 }
