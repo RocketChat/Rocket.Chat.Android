@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -63,6 +64,7 @@ dependencies {
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
+
     implementation libraries.playServicesGcm
 
     implementation libraries.room
@@ -80,6 +82,7 @@ dependencies {
     implementation libraries.threeTenABP
 
     implementation libraries.fresco
+    api libraries.frescoOkHttp
     implementation libraries.frescoAnimatedGif
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
@@ -96,6 +99,10 @@ dependencies {
     implementation libraries.aVLoadingIndicatorView
 
     implementation libraries.textDrawable
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true
+    }
 
     testImplementation libraries.junit
     androidTestImplementation(libraries.expressoCore, {

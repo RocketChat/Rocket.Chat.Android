@@ -13,7 +13,7 @@ fun String.ifEmpty(value: String): String {
     return this
 }
 
-fun View.setVisibility(value: Boolean) {
+fun View.setVisible(value: Boolean) {
     visibility = if (value) {
         View.VISIBLE
     } else {

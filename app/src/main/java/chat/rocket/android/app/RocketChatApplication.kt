@@ -4,13 +4,15 @@ import android.app.Activity
 import android.app.Application
 import android.app.Service
 import chat.rocket.android.BuildConfig
-import chat.rocket.android.app.utils.CustomImageFormatConfigurator
 import chat.rocket.android.dagger.DaggerAppComponent
+import chat.rocket.android.helper.CrashlyticsTree
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.common.model.Token
 import chat.rocket.core.TokenRepository
+import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
@@ -19,8 +21,11 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.HasServiceInjector
+import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import javax.inject.Inject
+
+
 
 class RocketChatApplication : Application(), HasActivityInjector, HasServiceInjector {
 
@@ -30,9 +35,10 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     @Inject
     lateinit var serviceDispatchingAndroidInjector: DispatchingAndroidInjector<Service>
 
-    companion object {
-        lateinit var instance: RocketChatApplication
-    }
+    @Inject
+    lateinit var imagePipelineConfig: ImagePipelineConfig
+    @Inject
+    lateinit var draweeConfig: DraweeConfig
 
     // TODO - remove this from here when we have a proper service handling the connection.
     @Inject
@@ -54,9 +60,9 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
         AndroidThreeTen.init(this)
 
+        setupCrashlytics()
         setupFresco()
         setupTimber()
-        instance = this
     }
 
     // TODO - remove this when we have a proper service handling connection...
@@ -69,21 +75,20 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         }
     }
 
+    private fun setupCrashlytics() {
+        val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
+        Fabric.with(this, Crashlytics.Builder().core(core).build())
+    }
+
     private fun setupFresco() {
-        val imagePipelineConfig = ImagePipelineConfig.newBuilder(this)
-                .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig())
-                .build()
-
-        val draweeConfigBuilder = DraweeConfig.newBuilder()
-
-        CustomImageFormatConfigurator.addCustomDrawableFactories(draweeConfigBuilder)
-
-        Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
+        Fresco.initialize(this, imagePipelineConfig, draweeConfig)
     }
 
     private fun setupTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(CrashlyticsTree())
         }
     }
 

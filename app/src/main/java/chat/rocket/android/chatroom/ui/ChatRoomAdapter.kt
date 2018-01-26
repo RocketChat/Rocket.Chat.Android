@@ -4,14 +4,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.common.util.ifNull
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
+import kotlinx.android.synthetic.main.message_attachment.view.*
 
 class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
 
@@ -61,12 +65,54 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
             text_user_name.text = message.sender
             text_message_time.text = message.time
             text_content.text = message.content
+
+            bindAttachment(message, attachment_container, image_attachment, audio_video_attachment,
+                    file_name)
+        }
+
+        private fun bindAttachment(message: MessageViewModel,
+                                   attachment_container: View,
+                                   image_attachment: SimpleDraweeView,
+                                   audio_video_attachment: View,
+                                   file_name: TextView) {
+            with(message) {
+                if (attachmentUrl == null || attachmentType == null) {
+                    attachment_container.setVisible(false)
+                }
+
+                var imageVisible = false
+                var videoVisible = false
+
+                attachment_container.setVisible(true)
+                when (message.attachmentType) {
+                    is AttachmentType.Image -> {
+                        imageVisible = true
+                        image_attachment.setImageURI(message.attachmentUrl)
+                    }
+                    is AttachmentType.Video,
+                    is AttachmentType.Audio -> {
+                        videoVisible = true
+                        audio_video_attachment.setOnClickListener { view ->
+                            message.attachmentUrl?.let { url ->
+                                PlayerActivity.play(view.context, url)
+                            }
+                        }
+                    }
+                }
+
+                image_attachment.setVisible(imageVisible)
+                audio_video_attachment.setVisible(videoVisible)
+                file_name.text = message.attachmentTitle
+            }
         }
 
         private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.getAvatarUrl(serverUrl).let {
             drawee.setImageURI(it.toString())
+            drawee.setVisible(true)
+            imageUnknownAvatar.setVisible(false)
         }.ifNull {
-            imageUnknownAvatar.setVisibility(true)
+            drawee.setVisible(false)
+            imageUnknownAvatar.setVisible(true)
         }
     }
 }

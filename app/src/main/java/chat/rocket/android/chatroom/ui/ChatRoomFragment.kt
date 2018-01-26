@@ -15,7 +15,7 @@ import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -123,9 +123,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         adapter.updateItem(index, message)
     }
 
-    override fun showLoading() = view_loading.setVisibility(true)
+    override fun showLoading() = view_loading.setVisible(true)
 
-    override fun hideLoading() = view_loading.setVisibility(false)
+    override fun hideLoading() = view_loading.setVisible(false)
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
@@ -133,8 +133,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     private fun setupComposer() {
         if (isChatRoomReadOnly) {
-            text_room_is_read_only.setVisibility(true)
-            top_container.setVisibility(false)
+            text_room_is_read_only.setVisible(true)
+            top_container.setVisible(false)
         } else {
             text_send.setOnClickListener { sendMessage(text_message.textContent) }
         }

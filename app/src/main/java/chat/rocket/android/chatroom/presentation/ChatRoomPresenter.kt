@@ -26,7 +26,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
-                                            factory: RocketChatClientFactory) {
+                                            factory: RocketChatClientFactory,
+                                            private val mapper: MessageViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
     private val roomMessages = ArrayList<Message>()
     private var subId: String? = null
@@ -47,7 +48,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     roomMessages.addAll(messages)
                 }
 
-                val messagesViewModels = MessageViewModelMapper.mapToViewModelList(messages, settings)
+                val messagesViewModels = mapper.mapToViewModelList(messages, settings)
                 view.showMessages(messagesViewModels, serverInteractor.get()!!)
 
                 // Subscribe after getting the first page of messages from REST
@@ -148,7 +149,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
-            val viewModelStreamedMessage = MessageViewModelMapper.mapToViewModel(streamedMessage, settings)
+            val viewModelStreamedMessage = mapper.mapToViewModel(streamedMessage, settings)
             synchronized(roomMessages) {
                 val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
                 if (index != -1) {

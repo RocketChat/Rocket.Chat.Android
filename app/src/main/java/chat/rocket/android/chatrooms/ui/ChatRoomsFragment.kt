@@ -12,7 +12,7 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
-import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
@@ -104,9 +104,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
-    override fun showLoading() = view_loading.setVisibility(true)
+    override fun showLoading() = view_loading.setVisible(true)
 
-    override fun hideLoading() = view_loading.setVisibility(false)
+    override fun hideLoading() = view_loading.setVisible(false)
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
