@@ -38,6 +38,7 @@ import kotlinx.coroutines.experimental.Job
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -82,11 +83,14 @@ class AppModule {
     @Provides
     @Singleton
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-        val interceptor = HttpLoggingInterceptor()
+        val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
+            Timber.d(message)
+        })
         if (BuildConfig.DEBUG) {
             interceptor.level = HttpLoggingInterceptor.Level.BODY
         } else {
-            interceptor.level = HttpLoggingInterceptor.Level.HEADERS
+            // TODO - change to HEADERS on production...
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
         }
 
         return interceptor
