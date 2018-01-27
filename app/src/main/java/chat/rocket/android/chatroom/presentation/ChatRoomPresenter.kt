@@ -116,6 +116,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             else -> client.connect()
         }
 
+        launchUI(strategy) {
+            listenMessages(roomId)
+        }
+
         // TODO - when we have a proper service, we won't need to take care of connection, just
         // subscribe and listen...
         /*launchUI(strategy) {

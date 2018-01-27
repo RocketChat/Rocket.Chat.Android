@@ -66,7 +66,7 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
             text_message_time.text = message.time
             text_content.text = message.content
 
-            bindAttachment(message, attachment_container, image_attachment, audio_video_attachment,
+            bindAttachment(message, message_attachment, image_attachment, audio_video_attachment,
                     file_name)
         }
 
@@ -78,6 +78,7 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
             with(message) {
                 if (attachmentUrl == null || attachmentType == null) {
                     attachment_container.setVisible(false)
+                    return
                 }
 
                 var imageVisible = false
