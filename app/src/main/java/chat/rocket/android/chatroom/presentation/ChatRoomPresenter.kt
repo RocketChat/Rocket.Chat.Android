@@ -6,7 +6,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
-import chat.rocket.common.model.BaseRoom
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.connect
@@ -43,7 +43,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val messages = client.messages(chatRoomId, BaseRoom.RoomType.valueOf(chatRoomType), offset, 30).result
+                val messages = client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                 synchronized(roomMessages) {
                     roomMessages.addAll(messages)
                 }

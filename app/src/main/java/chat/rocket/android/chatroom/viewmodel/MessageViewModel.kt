@@ -76,14 +76,14 @@ data class MessageViewModel(val context: Context,
         val contentMessage: CharSequence
         when (message.type) {
         //TODO: Add implementation for Welcome type.
-            MESSAGE_REMOVED -> contentMessage = getSystemMessage(context.getString(R.string.message_removed))
-            USER_JOINED -> contentMessage = getSystemMessage(context.getString(R.string.message_user_joined_channel))
-            USER_LEFT -> contentMessage = getSystemMessage(context.getString(R.string.message_user_left))
-            USER_ADDED -> contentMessage = getSystemMessage(
+            is MessageRemoved -> contentMessage = getSystemMessage(context.getString(R.string.message_removed))
+            is UserJoined -> contentMessage = getSystemMessage(context.getString(R.string.message_user_joined_channel))
+            is UserLeft -> contentMessage = getSystemMessage(context.getString(R.string.message_user_left))
+            is UserAdded -> contentMessage = getSystemMessage(
                     context.getString(R.string.message_user_added_by, message.message, message.sender?.username))
-            ROOM_NAME_CHANGED -> contentMessage = getSystemMessage(
+            is RoomNameChanged -> contentMessage = getSystemMessage(
                     context.getString(R.string.message_room_name_changed, message.message, message.sender?.username))
-            USER_REMOVED -> contentMessage = getSystemMessage(
+            is UserRemoved -> contentMessage = getSystemMessage(
                     context.getString(R.string.message_user_removed_by, message.message, message.sender?.username))
             else -> contentMessage = getNormalMessage()
         }

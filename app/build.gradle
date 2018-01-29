@@ -12,8 +12,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 1005
-        versionName "2.0.0-dev4"
+        versionCode 1006
+        versionName "2.0.0-dev5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
