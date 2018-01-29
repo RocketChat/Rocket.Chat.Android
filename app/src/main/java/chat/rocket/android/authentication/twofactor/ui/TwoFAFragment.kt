@@ -55,7 +55,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         activity?.apply {
             text_two_factor_auth.requestFocus()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(text_two_factor_auth, InputMethodManager.SHOW_IMPLICIT)
+            imm.showSoftInput(text_two_factor_auth, InputMethodManager.RESULT_UNCHANGED_SHOWN)
         }
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {

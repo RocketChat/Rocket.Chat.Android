@@ -69,8 +69,8 @@ dependencies {
     kapt libraries.roomProcessor
     implementation libraries.roomRxjava
 
-    implementation libraries.rxjava
-    implementation libraries.rxandroid
+    implementation libraries.rxKotlin
+    implementation libraries.rxAndroid
 
     implementation libraries.moshi
     implementation libraries.okhttp
@@ -78,24 +78,25 @@ dependencies {
 
     implementation libraries.timber
     implementation libraries.threeTenABP
+    implementation libraries.rxBinding
 
     implementation libraries.fresco
     implementation libraries.frescoAnimatedGif
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
 
-    implementation libraries.frescoImageViewer
-
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi
 
-    implementation libraries.floatingSearchView
+    implementation libraries.frescoImageViewer
 
     implementation libraries.androidSvg
 
     implementation libraries.aVLoadingIndicatorView
 
     implementation libraries.textDrawable
+
+    implementation libraries.moshiLazyAdapters
 
     testImplementation libraries.junit
     androidTestImplementation(libraries.expressoCore, {

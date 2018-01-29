@@ -5,22 +5,28 @@
     <string name="title_log_in">Entrar</string>
     <string name="title_sign_up">Inscreva-se</string>
     <string name="title_legal_terms">Termos Legais</string>
+    <string name="title_chats">Chats</string>
+    <string name="title_profile">Perfil</string>
+    <string name="title_update_profile">Editar perfil</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_send">Enviar</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
-    <string name="search">Pesquisar</string>
+    <string name="action_search">Pesquisar</string>
+    <string name="action_update">Atualizar</string>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">Sem conexão à internet</string>
     <string name="msg_invalid_server_url">URL de servidor inválida</string>
     <string name="msg_generic_error">Desculpe, ocorreu um erro, tente novamente</string>
+    <string name="msg_no_data_to_display">Nenhum dado para exibir</string>
+    <string name="msg_profile_update_successfully">Perfil atualizado com sucesso</string>
     <string name="msg_username">nome de usuário</string>
     <string name="msg_username_or_email">nome de usuário ou email</string>
     <string name="msg_password">senha</string>
-    <string name="msg_name_and_surname">nome e sobrenome</string>
+    <string name="msg_name">nome</string>
     <string name="msg_email">email</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue através de contas sociais</string>
     <string name="msg_new_user">Novo usuário? %1$s</string>

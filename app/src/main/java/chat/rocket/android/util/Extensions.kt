@@ -4,7 +4,12 @@ import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
+import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 
 fun String.ifEmpty(value: String): String {
     if (isEmpty()) {
@@ -36,3 +41,10 @@ var TextView.hintContent: String
     set(value) {
         hint = value
     }
+
+fun EditText.getObservable(): Observable<CharSequence> {
+    return RxTextView.textChanges(this)
+            .debounce(100, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(AndroidSchedulers.mainThread())
+}

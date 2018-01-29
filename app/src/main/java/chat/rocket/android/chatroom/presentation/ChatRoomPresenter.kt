@@ -29,10 +29,14 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             view.showLoading()
             try {
                 val messages = client.messages(chatRoomId, BaseRoom.RoomType.valueOf(chatRoomType), offset.toLong(), 30).result
-                synchronized(roomMessages) {
-                    roomMessages.addAll(messages)
+                if (messages != null) {
+                    synchronized(roomMessages) {
+                        roomMessages.addAll(messages)
+                    }
+                    view.showMessages(messages, serverInteractor.get()!!)
+                } else {
+                    view.showGenericErrorMessage()
                 }
-                view.showMessages(messages, serverInteractor.get()!!)
             } catch (ex: Exception) {
                 ex.printStackTrace()
                 ex.message?.let {

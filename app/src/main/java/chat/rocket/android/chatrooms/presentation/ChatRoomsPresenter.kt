@@ -6,6 +6,8 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SaveChatRoomsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
+import chat.rocket.common.RocketChatException
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.*
@@ -19,53 +21,68 @@ import javax.inject.Inject
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
                                              private val navigator: ChatRoomsNavigator,
-                                             private val serverInteractor: GetCurrentServerInteractor,
+                                             serverInteractor: GetCurrentServerInteractor,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
                                              factory: RocketChatClientFactory) {
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
-    private var reloadJob: Deferred<List<ChatRoom>>? = null
+    private var reloadJob: Deferred<List<ChatRoom>?>? = null
 
     fun loadChatRooms() {
         launchUI(strategy) {
             view.showLoading()
-            view.updateChatRooms(loadRooms())
-            subscribeRoomUpdates()
+            try {
+                val chatRooms = getChatRooms()
+                if (chatRooms != null) {
+                    view.updateChatRooms(chatRooms)
+                    subscribeRoomUpdates()
+                } else {
+                    view.showNoChatRoomsToDisplay()
+                }
+            } catch (exception: RocketChatException) {
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
             view.hideLoading()
         }
     }
 
-    fun loadChatRoom(chatRoom: ChatRoom) = navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.readonly ?: false)
+    fun loadChatRoom(chatRoom: ChatRoom) {
+        navigator.toChatRoom(chatRoom.id,
+                chatRoom.name,
+                chatRoom.type.name,
+                chatRoom.readonly ?: false)
+    }
 
     /**
-     * Gets a [ChatRoom] list from local repository.
-     * ChatRooms returned are filtered by name.
+     * Gets a [ChatRoom] list filtered by name from local repository.
+     *
+     * @param name The Chat Room name to get.
      */
     fun chatRoomsByName(name: String) {
-        val currentServer = serverInteractor.get()!!
         launchUI(strategy) {
             val roomList = getChatRoomsInteractor.getByName(currentServer, name)
             view.updateChatRooms(roomList)
         }
     }
 
-    private suspend fun loadRooms(): List<ChatRoom> {
+    private suspend fun getChatRooms(): List<ChatRoom>? {
         val chatRooms = client.chatRooms().update
-        val sortedRooms = sortRooms(chatRooms)
-        saveChatRoomsInteractor.save(currentServer, sortedRooms)
-        return sortedRooms
+        if (chatRooms != null) {
+            val sortedOpenChatRooms = sortOpenChatRooms(chatRooms)
+            saveChatRoomsInteractor.save(currentServer, sortedOpenChatRooms)
+            return sortedOpenChatRooms
+        }
+        return null
     }
 
-    private fun sortRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
+    private fun sortOpenChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
         val openChatRooms = getOpenChatRooms(chatRooms)
         return sortChatRooms(openChatRooms)
-    }
-
-    private fun updateRooms() {
-        launch {
-            view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
-        }
     }
 
     private fun getOpenChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
@@ -75,6 +92,11 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private fun sortChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
         return chatRooms.sortedByDescending { chatRoom ->
             chatRoom.lastMessage?.timestamp
+        }
+    }
+    private fun updateChatRooms() {
+        launch {
+            view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
         }
     }
 
@@ -137,7 +159,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 }
             }
 
-            updateRooms()
+            updateChatRooms()
         }
     }
 
@@ -157,7 +179,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 }
             }
 
-            updateRooms()
+            updateChatRooms()
         }
     }
 
@@ -168,7 +190,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         reloadJob = async(CommonPool + strategy.jobs) {
             delay(1000)
             Timber.d("reloading rooms after wait")
-            loadRooms()
+            getChatRooms()
         }
         reloadJob?.await()
     }
@@ -199,7 +221,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     client)
             removeRoom(room.id, chatRooms)
             chatRooms.add(newRoom)
-            saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
+            saveChatRoomsInteractor.save(currentServer, sortOpenChatRooms(chatRooms))
         }
     }
 
@@ -229,7 +251,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     client)
             removeRoom(subscription.roomId, chatRooms)
             chatRooms.add(newRoom)
-            saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
+            saveChatRoomsInteractor.save(currentServer, sortOpenChatRooms(chatRooms))
         }
     }
 
@@ -239,10 +261,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         synchronized(this) {
             chatRooms.removeAll { chatRoom -> chatRoom.id == id }
         }
-        saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
+        saveChatRoomsInteractor.save(currentServer, sortOpenChatRooms(chatRooms))
     }
 
-    fun disconnect() {
-        client.disconnect()
-    }
+    fun disconnect() = client.disconnect()
 }

@@ -12,6 +12,7 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
@@ -22,11 +23,9 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
-
     @Inject lateinit var presenter: ChatRoomsPresenter
     private var searchView: SearchView? = null
 
@@ -41,45 +40,27 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun onDestroy() {
-        Timber.d("Called on destroy...")
         presenter.disconnect()
         super.onDestroy()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_chat_rooms, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_chat_rooms)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).apply {
-            recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            recycler_view.addItemDecoration(DividerItemDecoration(this, 144, 32))
-            recycler_view.itemAnimator = DefaultItemAnimator()
-            recycler_view.adapter = ChatRoomsAdapter(this) { chatRoom ->
-                presenter.loadChatRoom(chatRoom)
-            }
-
-            if (supportActionBar == null) {
-                setSupportActionBar(toolbar)
-                supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                supportActionBar?.setDisplayShowHomeEnabled(true)
-                //TODO: should display the current server "SiteName" setting?
-                supportActionBar?.setDisplayShowTitleEnabled(true)
-                supportActionBar?.title = "Rocket.Chat"
-            }
-        }
-
+        setupToolbar()
+        setupRecyclerView()
         presenter.loadChatRooms()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.chatrooms_menu, menu)
-        val searchItem = menu?.findItem(R.id.action_search)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.chatrooms, menu)
 
+        val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as SearchView
-
-        val sv = searchView
-        sv?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return queryChatRoomsByName(query)
             }
@@ -104,6 +85,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
+    override fun showNoChatRoomsToDisplay() = text_no_data_to_display.setVisibility(true)
+
     override fun showLoading() = view_loading.setVisibility(true)
 
     override fun hideLoading() = view_loading.setVisibility(false)
@@ -111,6 +94,21 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    private fun setupToolbar() {
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_chats)
+    }
+
+    private fun setupRecyclerView() {
+        activity?.apply {
+            recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            recycler_view.addItemDecoration(DividerItemDecoration(this, 144, 32))
+            recycler_view.itemAnimator = DefaultItemAnimator()
+            recycler_view.adapter = ChatRoomsAdapter(this) { chatRoom ->
+                presenter.loadChatRoom(chatRoom)
+            }
+        }
+    }
 
     private fun queryChatRoomsByName(name: String?): Boolean {
         presenter.chatRoomsByName(name ?: "")

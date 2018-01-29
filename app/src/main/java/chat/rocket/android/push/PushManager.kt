@@ -20,7 +20,7 @@ import android.text.Spanned
 import android.util.Log
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.chatrooms.ui.ChatRoomsActivity
+import chat.rocket.android.main.ui.MainActivity
 import org.json.JSONObject
 import java.io.Serializable
 import java.util.*
@@ -455,7 +455,7 @@ object PushManager {
     }
 
     private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, grouped: Boolean = false): PendingIntent {
-        val notificationIntent = Intent(context, ChatRoomsActivity::class.java)
+        val notificationIntent = Intent(context, MainActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 .putExtra(EXTRA_NOT_ID, notificationId)
                 .putExtra(EXTRA_HOSTNAME, pushMessage.host)

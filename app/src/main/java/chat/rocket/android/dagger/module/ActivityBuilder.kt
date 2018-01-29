@@ -10,8 +10,9 @@ import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
 import chat.rocket.android.chatrooms.di.ChatRoomsModule
-import chat.rocket.android.chatrooms.ui.ChatRoomsActivity
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.dagger.scope.PerActivity
+import chat.rocket.android.profile.di.ProfileFragmentProvider
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -28,8 +29,8 @@ abstract class ActivityBuilder {
     abstract fun bindAuthenticationActivity(): AuthenticationActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [ChatRoomsModule::class, ChatRoomsFragmentProvider::class])
-    abstract fun bindMainActivity(): ChatRoomsActivity
+    @ContributesAndroidInjector(modules = [ChatRoomsModule::class, ChatRoomsFragmentProvider::class, ProfileFragmentProvider::class])
+    abstract fun bindMainActivity(): MainActivity
 
     @PerActivity
     @ContributesAndroidInjector(modules = [ChatRoomFragmentProvider::class])
