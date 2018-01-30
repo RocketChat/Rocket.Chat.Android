@@ -50,7 +50,7 @@ class ChatRoomsAdapter(private val context: Context,
 
         private fun bindAvatar(chatRoom: ChatRoom, avatarLayout: View, drawee: SimpleDraweeView, imageView: ImageView) {
             val chatRoomName = chatRoom.name
-            if (chatRoom.type is RoomType.OneToOne) {
+            if (chatRoom.type is RoomType.DirectMessage) {
                 drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoomName))
                 imageView.setVisible(false)
                 avatarLayout.setVisible(true)
