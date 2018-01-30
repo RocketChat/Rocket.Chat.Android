@@ -13,6 +13,7 @@ import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisible
 import chat.rocket.common.util.ifNull
 import com.facebook.drawee.view.SimpleDraweeView
+import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
@@ -89,6 +90,12 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
                     is AttachmentType.Image -> {
                         imageVisible = true
                         image_attachment.setImageURI(message.attachmentUrl)
+                        image_attachment.setOnClickListener { view ->
+                            // TODO - implement a proper image viewer with a proper Transition
+                            ImageViewer.Builder(view.context, listOf(message.attachmentUrl))
+                                    .setStartPosition(0)
+                                    .show()
+                        }
                     }
                     is AttachmentType.Video,
                     is AttachmentType.Audio -> {
