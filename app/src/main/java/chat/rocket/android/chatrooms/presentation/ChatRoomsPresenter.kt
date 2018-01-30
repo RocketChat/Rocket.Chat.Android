@@ -250,6 +250,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         client.disconnect()
     }
 
+    /**
+     * Logout from current server.
+     */
     fun logout() {
         launchUI(strategy) {
             try {
