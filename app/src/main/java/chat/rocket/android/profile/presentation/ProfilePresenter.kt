@@ -10,7 +10,6 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.updateProfile
-import timber.log.Timber
 import javax.inject.Inject
 
 class ProfilePresenter @Inject constructor (private val view: ProfileView,
