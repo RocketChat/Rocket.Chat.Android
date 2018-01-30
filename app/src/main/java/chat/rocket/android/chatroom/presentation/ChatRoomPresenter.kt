@@ -1,7 +1,9 @@
 package chat.rocket.android.chatroom.presentation
 
+import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.model.BaseRoom
@@ -11,6 +13,7 @@ import chat.rocket.core.internal.realtime.unsubscibre
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
@@ -18,11 +21,17 @@ import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val strategy: CancelStrategy,
+                                            getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
                                             factory: RocketChatClientFactory) {
     private val client = factory.create(serverInteractor.get()!!)
     private val roomMessages = ArrayList<Message>()
     private var subId: String? = null
+    private var settings: Map<String, Value<Any>>? = null
+
+    init {
+        settings = getSettingsInteractor.get(serverInteractor.get()!!)
+    }
 
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Int = 0) {
         launchUI(strategy) {
@@ -33,7 +42,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     synchronized(roomMessages) {
                         roomMessages.addAll(messages)
                     }
-                    view.showMessages(messages, serverInteractor.get()!!)
+                    val messagesViewModels = MessageViewModelMapper.mapToViewModelList(messages, settings)
+                    view.showMessages(messagesViewModels, serverInteractor.get()!!)
                 } else {
                     view.showGenericErrorMessage()
                 }
@@ -101,16 +111,17 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
+            val viewModelStreamedMessage = MessageViewModelMapper.mapToViewModel(streamedMessage, settings)
             synchronized(roomMessages) {
                 val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
                 if (index != -1) {
                     Timber.d("Updatind message at $index")
                     roomMessages[index] = streamedMessage
-                    view.dispatchUpdateMessage(index, streamedMessage)
+                    view.dispatchUpdateMessage(index, viewModelStreamedMessage)
                 } else {
                     Timber.d("Adding new message")
                     roomMessages.add(0, streamedMessage)
-                    view.showNewMessage(streamedMessage)
+                    view.showNewMessage(viewModelStreamedMessage)
                 }
             }
         }

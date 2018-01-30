@@ -46,4 +46,13 @@
     <string name="msg_you">Você</string>
     <string name="msg_unknown">Desconhecido</string>
 
+    <!-- System messages -->
+    <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
+    <string name="message_user_added_by">Usuário %1$s adicionado por %2$s</string>
+    <string name="message_user_removed_by">Usuário %1$s removido por %2$s</string>
+    <string name="message_user_left">Saiu da sala.</string>
+    <string name="message_user_joined_channel">Entrou no sala.</string>
+    <string name="message_welcome">Bem-vindo, %s</string>
+    <string name="message_removed">Mensagem removida</string>
+
 </resources>
