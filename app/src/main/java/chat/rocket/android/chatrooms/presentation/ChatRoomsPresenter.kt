@@ -251,7 +251,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     /**
-     * Logout from current server
+     * Logout from current server.
      */
     fun logout() {
         launchUI(strategy) {
