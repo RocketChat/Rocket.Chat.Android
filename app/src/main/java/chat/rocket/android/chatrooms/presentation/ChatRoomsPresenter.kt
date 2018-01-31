@@ -13,6 +13,7 @@ import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,6 +28,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private val currentServer = serverInteractor.get()!!
     private var reloadJob: Deferred<List<ChatRoom>>? = null
 
+    private val stateChannel = Channel<State>()
+
     fun loadChatRooms() {
         launchUI(strategy) {
             view.showLoading()
@@ -36,7 +39,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
     }
 
-    fun loadChatRoom(chatRoom: ChatRoom) = navigator.toChatRoom(chatRoom.id, chatRoom.name, chatRoom.type.name, chatRoom.readonly ?: false)
+    fun loadChatRoom(chatRoom: ChatRoom) = navigator.toChatRoom(chatRoom.id, chatRoom.name,
+            chatRoom.type.toString(), chatRoom.readonly ?: false)
 
     /**
      * Gets a [ChatRoom] list from local repository.
@@ -80,8 +84,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     // TODO - Temporary stuff, remove when adding DB support
     private suspend fun subscribeRoomUpdates() {
+        client.addStateChannel(stateChannel)
         launch(CommonPool + strategy.jobs) {
-            for (status in client.statusChannel) {
+            for (status in stateChannel) {
                 Timber.d("Changing status to: $status")
                 when (status) {
                     State.Authenticating -> Timber.d("Authenticating")
@@ -243,6 +248,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     fun disconnect() {
+        client.removeStateChannel(stateChannel)
         client.disconnect()
     }
 }

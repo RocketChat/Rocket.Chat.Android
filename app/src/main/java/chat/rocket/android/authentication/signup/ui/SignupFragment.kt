@@ -14,7 +14,7 @@ import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
-import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
@@ -26,9 +26,9 @@ class SignupFragment : Fragment(), SignupView {
 
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)) {
-            text_new_user_agreement.setVisibility(false)
+            text_new_user_agreement.setVisible(false)
         } else {
-            text_new_user_agreement.setVisibility(true)
+            text_new_user_agreement.setVisible(true)
         }
     }
 
@@ -92,11 +92,11 @@ class SignupFragment : Fragment(), SignupView {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.setVisibility(true)
+        view_loading.setVisible(true)
     }
 
     override fun hideLoading() {
-        view_loading.setVisibility(false)
+        view_loading.setVisible(false)
         enableUserInput(true)
     }
 

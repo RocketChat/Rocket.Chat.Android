@@ -8,24 +8,52 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import chat.rocket.android.R
-import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.USE_REALNAME
+import chat.rocket.common.model.Token
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType.*
 import chat.rocket.core.model.Value
+import chat.rocket.core.model.attachment.AudioAttachment
+import chat.rocket.core.model.attachment.FileAttachment
+import chat.rocket.core.model.attachment.ImageAttachment
+import chat.rocket.core.model.attachment.VideoAttachment
+import okhttp3.HttpUrl
 
-data class MessageViewModel(private val message: Message,
+data class MessageViewModel(val context: Context,
+                            private val token: Token?,
+                            private val message: Message,
                             private val settings: Map<String, Value<Any>>?) {
     val id: String = message.id
     val time: CharSequence
     val sender: CharSequence
     val content: CharSequence
+    var attachmentUrl: String? = null
+    var attachmentTitle: CharSequence? = null
+    var attachmentType: AttachmentType? = null
 
     init {
         sender = getSenderName()
-        content = getContent(RocketChatApplication.instance)
+        content = getContent(context)
         time = getTime()
+
+        message.attachments?.let {
+            if (it.isEmpty() || it[0] == null) return@let
+            val attachment = it[0] as FileAttachment
+            val baseUrl = settings?.get(SITE_URL)
+            baseUrl?.let {
+                attachmentUrl = attachmentUrl("${baseUrl.value}${attachment.url}")
+                attachmentTitle = attachment.title
+
+                attachmentType = when (attachment) {
+                    is ImageAttachment -> AttachmentType.Image
+                    is VideoAttachment -> AttachmentType.Video
+                    is AudioAttachment -> AttachmentType.Audio
+                    else -> null
+                }
+            }
+        }
     }
 
     fun getAvatarUrl(serverUrl: String): String? {
@@ -41,21 +69,21 @@ data class MessageViewModel(private val message: Message,
         val username = message.sender?.username
         val realName = message.sender?.name
         val senderName = if (useRealName) realName else username
-        return if (senderName == null) username.toString() else senderName.toString()
+        return senderName ?: username.toString()
     }
 
     fun getContent(context: Context): CharSequence {
         val contentMessage: CharSequence
         when (message.type) {
         //TODO: Add implementation for Welcome type.
-            MESSAGE_REMOVED -> contentMessage = getSystemMessage(context.getString(R.string.message_removed))
-            USER_JOINED -> contentMessage = getSystemMessage(context.getString(R.string.message_user_joined_channel))
-            USER_LEFT -> contentMessage = getSystemMessage(context.getString(R.string.message_user_left))
-            USER_ADDED -> contentMessage = getSystemMessage(
+            is MessageRemoved -> contentMessage = getSystemMessage(context.getString(R.string.message_removed))
+            is UserJoined -> contentMessage = getSystemMessage(context.getString(R.string.message_user_joined_channel))
+            is UserLeft -> contentMessage = getSystemMessage(context.getString(R.string.message_user_left))
+            is UserAdded -> contentMessage = getSystemMessage(
                     context.getString(R.string.message_user_added_by, message.message, message.sender?.username))
-            ROOM_NAME_CHANGED -> contentMessage = getSystemMessage(
+            is RoomNameChanged -> contentMessage = getSystemMessage(
                     context.getString(R.string.message_room_name_changed, message.message, message.sender?.username))
-            USER_REMOVED -> contentMessage = getSystemMessage(
+            is UserRemoved -> contentMessage = getSystemMessage(
                     context.getString(R.string.message_user_removed_by, message.message, message.sender?.username))
             else -> contentMessage = getNormalMessage()
         }
@@ -91,4 +119,23 @@ data class MessageViewModel(private val message: Message,
 
         return spannableMsg
     }
+
+    private fun attachmentUrl(url: String): String {
+        var response = url
+        val httpUrl = HttpUrl.parse(url)
+        httpUrl?.let {
+            response = it.newBuilder().apply {
+                addQueryParameter("rc_uid", token?.userId)
+                addQueryParameter("rc_token", token?.authToken)
+            }.build().toString()
+        }
+
+        return response
+    }
+}
+
+sealed class AttachmentType {
+    object Image : AttachmentType()
+    object Video : AttachmentType()
+    object Audio : AttachmentType()
 }
