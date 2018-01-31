@@ -121,7 +121,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun onLogOut() {
+    override fun onLogout() {
         activity?.apply {
             finish()
             val intent = Intent(this, AuthenticationActivity::class.java)

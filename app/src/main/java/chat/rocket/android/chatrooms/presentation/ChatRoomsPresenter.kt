@@ -261,7 +261,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 client.logout()
                 //TODO: Add the code to unsubscribe to all subscriptions.
                 client.disconnect()
-                view.onLogOut()
+                view.onLogout()
             } catch (e: RocketChatException) {
                 Timber.e(e)
                 view.showMessage(e.message!!)

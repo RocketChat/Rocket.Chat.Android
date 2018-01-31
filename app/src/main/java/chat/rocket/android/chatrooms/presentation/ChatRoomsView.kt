@@ -16,5 +16,5 @@ interface ChatRoomsView : LoadingView, MessageView {
     /**
      * User has successfully logged out from the current server.
      */
-    fun onLogOut()
+    fun onLogout()
 }
