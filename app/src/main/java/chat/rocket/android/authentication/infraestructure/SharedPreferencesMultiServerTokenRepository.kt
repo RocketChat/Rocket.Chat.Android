@@ -3,6 +3,7 @@ package chat.rocket.android.authentication.infraestructure
 import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.dagger.scope.PerActivity
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.infrastructure.LocalRepository.Companion.TOKEN_KEY
 import chat.rocket.android.server.domain.MultiServerTokenRepository
 import com.squareup.moshi.Moshi
 
@@ -28,6 +29,7 @@ class SharedPreferencesMultiServerTokenRepository(private val repository: LocalR
         repository.save("$TOKEN_KEY$server", adapter.toJson(token))
     }
 
+    override fun clear(server: String) {
+        repository.clear("$TOKEN_KEY$server")
+    }
 }
-
-const val TOKEN_KEY = "token_"

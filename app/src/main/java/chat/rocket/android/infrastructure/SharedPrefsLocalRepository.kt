@@ -11,4 +11,14 @@ class SharedPrefsLocalRepository(private val preferences: SharedPreferences) : L
     override fun get(key: String): String? {
         return preferences.getString(key, null)
     }
+
+    override fun clear(key: String) {
+        preferences.edit().remove(key).apply()
+    }
+
+    override fun clearAllFromServer(server: String) {
+        clear(LocalRepository.KEY_PUSH_TOKEN)
+        clear(LocalRepository.TOKEN_KEY + server)
+        clear(LocalRepository.SETTINGS_KEY + server)
+    }
 }
