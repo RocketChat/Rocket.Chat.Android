@@ -7,6 +7,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SaveChatRoomsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
+import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.*
@@ -261,7 +262,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 //TODO: Add the code to unsubscribe to all subscriptions.
                 client.disconnect()
                 view.onLogOut()
-            } catch (e: Exception) {
+            } catch (e: RocketChatException) {
                 Timber.e(e)
                 view.showMessage(e.message!!)
             }
