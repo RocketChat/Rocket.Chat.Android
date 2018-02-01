@@ -17,7 +17,7 @@ import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
@@ -92,8 +92,8 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun showOauthView(value: Boolean) {
         if (value) {
-            social_accounts_container.setVisibility(true)
-            button_fab.setVisibility(true)
+            social_accounts_container.setVisible(true)
+            button_fab.setVisible(true)
 
             // We need to setup the layout to hide and show the oauth interface when the soft keyboard is shown
             // (means that the user touched the text_username_or_email or text_password EditText to fill that respective fields).
@@ -102,8 +102,8 @@ class LoginFragment : Fragment(), LoginView {
                 isGlobalLayoutListenerSetUp = true
             }
         } else {
-            social_accounts_container.setVisibility(false)
-            button_fab.setVisibility(false)
+            social_accounts_container.setVisible(false)
+            button_fab.setVisible(false)
         }
     }
 
@@ -143,7 +143,7 @@ class LoginFragment : Fragment(), LoginView {
         button_gitlab.isEnabled = true
     }
 
-    override fun showSignUpView(value: Boolean) = text_new_to_rocket_chat.setVisibility(value)
+    override fun showSignUpView(value: Boolean) = text_new_to_rocket_chat.setVisible(value)
 
     override fun alertWrongUsernameOrEmail() {
         AnimationHelper.vibrateSmartPhone(appContext)
@@ -159,11 +159,11 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.setVisibility(true)
+        view_loading.setVisible(true)
     }
 
     override fun hideLoading() {
-        view_loading.setVisibility(false)
+        view_loading.setVisible(false)
         enableUserInput(true)
     }
 
@@ -189,7 +189,7 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun showLoginButton(value: Boolean) {
-        button_log_in.setVisibility(value)
+        button_log_in.setVisible(value)
     }
 
     private fun setupSignUpListener() {

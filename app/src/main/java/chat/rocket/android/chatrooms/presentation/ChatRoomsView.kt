@@ -17,4 +17,9 @@ interface ChatRoomsView : LoadingView, MessageView {
      *  Shows no chat rooms to display.
      */
     fun showNoChatRoomsToDisplay()
+
+    /**
+     * User has successfully logged out from the current server.
+     **/
+    fun onLogout()
 }

@@ -5,7 +5,7 @@ ext {
         targetSdk         : 27,
         buildTools        : '27.0.3',
         kotlin            : '1.2.21',
-        coroutine         : '0.21',
+        coroutine         : '0.22',
         dokka             : '0.9.15',
 
         // Main dependencies
@@ -73,6 +73,7 @@ ext {
         rxBinding              : "com.jakewharton.rxbinding2:rxbinding-kotlin:${versions.rxBinding}",
 
         fresco                 : "com.facebook.fresco:fresco:${versions.fresco}",
+        frescoOkHttp           : "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}",
         frescoAnimatedGif      : "com.facebook.fresco:animated-gif:${versions.fresco}",
         frescoWebP             : "com.facebook.fresco:webpsupport:${versions.fresco}",
         frescoAnimatedWebP     : "com.facebook.fresco:animated-webp:${versions.fresco}",

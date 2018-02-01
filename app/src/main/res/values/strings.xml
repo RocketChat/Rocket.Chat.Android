@@ -17,6 +17,7 @@
     <string name="action_privacy_policy">Privacy Policy</string>
     <string name="action_search">Search</string>
     <string name="action_update">Update</string>
+    <string name="action_logout">Log Out</string>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">No internet connection</string>

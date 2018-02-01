@@ -1,88 +1,80 @@
 package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SaveChatRoomsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
-import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.*
 import chat.rocket.core.internal.rest.chatRooms
+import chat.rocket.core.internal.rest.logout
+import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
                                              private val navigator: ChatRoomsNavigator,
-                                             serverInteractor: GetCurrentServerInteractor,
+                                             private val serverInteractor: GetCurrentServerInteractor,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
+                                             private val localRepository: LocalRepository,
                                              factory: RocketChatClientFactory) {
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
-    private var reloadJob: Deferred<List<ChatRoom>?>? = null
+    private var reloadJob: Deferred<List<ChatRoom>>? = null
+
+    private val stateChannel = Channel<State>()
 
     fun loadChatRooms() {
         launchUI(strategy) {
             view.showLoading()
-            try {
-                val chatRooms = getChatRooms()
-                if (chatRooms != null) {
-                    view.updateChatRooms(chatRooms)
-                    subscribeRoomUpdates()
-                } else {
-                    view.showNoChatRoomsToDisplay()
-                }
-            } catch (exception: RocketChatException) {
-                exception.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
-                    view.showGenericErrorMessage()
-                }
-            }
+            view.updateChatRooms(loadRooms())
+            subscribeRoomUpdates()
             view.hideLoading()
         }
     }
 
-    fun loadChatRoom(chatRoom: ChatRoom) {
-        navigator.toChatRoom(chatRoom.id,
-                chatRoom.name,
-                chatRoom.type.name,
-                chatRoom.readonly ?: false)
-    }
+    fun loadChatRoom(chatRoom: ChatRoom) = navigator.toChatRoom(chatRoom.id, chatRoom.name,
+            chatRoom.type.toString(), chatRoom.readonly ?: false)
 
     /**
-     * Gets a [ChatRoom] list filtered by name from local repository.
-     *
-     * @param name The Chat Room name to get.
+     * Gets a [ChatRoom] list from local repository.
+     * ChatRooms returned are filtered by name.
      */
     fun chatRoomsByName(name: String) {
+        val currentServer = serverInteractor.get()!!
         launchUI(strategy) {
             val roomList = getChatRoomsInteractor.getByName(currentServer, name)
             view.updateChatRooms(roomList)
         }
     }
 
-    private suspend fun getChatRooms(): List<ChatRoom>? {
+    private suspend fun loadRooms(): List<ChatRoom> {
         val chatRooms = client.chatRooms().update
-        if (chatRooms != null) {
-            val sortedOpenChatRooms = sortOpenChatRooms(chatRooms)
-            saveChatRoomsInteractor.save(currentServer, sortedOpenChatRooms)
-            return sortedOpenChatRooms
-        }
-        return null
+        val sortedRooms = sortRooms(chatRooms)
+        saveChatRoomsInteractor.save(currentServer, sortedRooms)
+        return sortedRooms
     }
 
-    private fun sortOpenChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
+    private fun sortRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
         val openChatRooms = getOpenChatRooms(chatRooms)
         return sortChatRooms(openChatRooms)
+    }
+
+    private fun updateRooms() {
+        launch {
+            view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
+        }
     }
 
     private fun getOpenChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
@@ -94,16 +86,12 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             chatRoom.lastMessage?.timestamp
         }
     }
-    private fun updateChatRooms() {
-        launch {
-            view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
-        }
-    }
 
     // TODO - Temporary stuff, remove when adding DB support
     private suspend fun subscribeRoomUpdates() {
+        client.addStateChannel(stateChannel)
         launch(CommonPool + strategy.jobs) {
-            for (status in client.statusChannel) {
+            for (status in stateChannel) {
                 Timber.d("Changing status to: $status")
                 when (status) {
                     State.Authenticating -> Timber.d("Authenticating")
@@ -159,7 +147,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 }
             }
 
-            updateChatRooms()
+            updateRooms()
         }
     }
 
@@ -179,7 +167,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 }
             }
 
-            updateChatRooms()
+            updateRooms()
         }
     }
 
@@ -190,7 +178,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         reloadJob = async(CommonPool + strategy.jobs) {
             delay(1000)
             Timber.d("reloading rooms after wait")
-            getChatRooms()
+            loadRooms()
         }
         reloadJob?.await()
     }
@@ -221,7 +209,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     client)
             removeRoom(room.id, chatRooms)
             chatRooms.add(newRoom)
-            saveChatRoomsInteractor.save(currentServer, sortOpenChatRooms(chatRooms))
+            saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
         }
     }
 
@@ -251,7 +239,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     client)
             removeRoom(subscription.roomId, chatRooms)
             chatRooms.add(newRoom)
-            saveChatRoomsInteractor.save(currentServer, sortOpenChatRooms(chatRooms))
+            saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
         }
     }
 
@@ -261,8 +249,39 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         synchronized(this) {
             chatRooms.removeAll { chatRoom -> chatRoom.id == id }
         }
-        saveChatRoomsInteractor.save(currentServer, sortOpenChatRooms(chatRooms))
+        saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
     }
 
-    fun disconnect() = client.disconnect()
+    fun disconnect() {
+        client.removeStateChannel(stateChannel)
+        client.disconnect()
+    }
+
+    /**
+     * Logout from current server.
+     */
+    fun logout() {
+        launchUI(strategy) {
+            try {
+                clearTokens()
+                client.logout()
+                //TODO: Add the code to unsubscribe to all subscriptions.
+                client.disconnect()
+                view.onLogout()
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+                view.showMessage(e.message!!)
+            }
+        }
+    }
+
+    private suspend fun clearTokens() {
+        serverInteractor.clear()
+        val pushToken = localRepository.get(LocalRepository.KEY_PUSH_TOKEN)
+        if (pushToken != null) {
+            client.unregisterPushToken(pushToken)
+            localRepository.clear(LocalRepository.KEY_PUSH_TOKEN)
+        }
+        localRepository.clearAllFromServer(currentServer)
+    }
 }

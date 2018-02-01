@@ -1,8 +1,11 @@
 package chat.rocket.android.player
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.DefaultRenderersFactory
@@ -22,10 +25,12 @@ class PlayerActivity : AppCompatActivity() {
     private var playWhenReady = true
     private var currentWindow = 0
     private var playbackPosition = 0L
+    private lateinit var videoUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
+        videoUrl = intent.getStringExtra(URL_KEY)
     }
 
     override fun onStart() {
@@ -65,8 +70,9 @@ class PlayerActivity : AppCompatActivity() {
             player.seekTo(currentWindow, playbackPosition)
             isPlayerInitialized = true
         }
-        val uri = Uri.parse("http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4")
+        val uri = Uri.parse(videoUrl)
         val mediaSource = buildMediaSource(uri)
+        Log.d("PlayerActivity", "Player with: " + videoUrl)
         player.prepare(mediaSource, true, false)
     }
 
@@ -85,5 +91,14 @@ class PlayerActivity : AppCompatActivity() {
     private fun hideSystemUi() {
         // Read the docs for detailed explanation: https://developer.android.com/training/basics/firstapp/starting-activity.html and https://developer.android.com/design/patterns/fullscreen.html
          player_view.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+    }
+
+    companion object {
+        const private val URL_KEY = "URL_KEY"
+        fun play(context: Context, url: String) {
+            context.startActivity(Intent(context, PlayerActivity::class.java).apply {
+                putExtra(URL_KEY, url)
+            })
+        }
     }
 }

@@ -48,11 +48,11 @@ class ServerFragment : Fragment(), ServerView {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.setVisibility(true)
+        view_loading.setVisible(true)
     }
 
     override fun hideLoading() {
-        view_loading.setVisibility(false)
+        view_loading.setVisible(false)
         enableUserInput(true)
     }
 

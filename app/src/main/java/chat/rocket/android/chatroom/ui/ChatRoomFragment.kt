@@ -14,7 +14,7 @@ import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.android.util.textContent
 import chat.rocket.core.model.Message
 import dagger.android.support.AndroidSupportInjection
@@ -67,7 +67,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
-        presenter.subscribeMessages(chatRoomId)
         setupComposer()
     }
 
@@ -87,7 +86,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
-                            presenter.loadMessages(chatRoomId, chatRoomType, page * 30)
+                            presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
                         }
                     })
                 }
@@ -124,9 +123,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         adapter.updateItem(index, message)
     }
 
-    override fun showLoading() = view_loading.setVisibility(true)
+    override fun showLoading() = view_loading.setVisible(true)
 
-    override fun hideLoading() = view_loading.setVisibility(false)
+    override fun hideLoading() = view_loading.setVisible(false)
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
@@ -134,8 +133,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     private fun setupComposer() {
         if (isChatRoomReadOnly) {
-            text_room_is_read_only.setVisibility(true)
-            top_container.setVisibility(false)
+            text_room_is_read_only.setVisible(true)
+            top_container.setVisible(false)
         } else {
             text_send.setOnClickListener { sendMessage(text_message.textContent) }
         }

@@ -11,9 +11,9 @@ import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.android.util.textContent
-import chat.rocket.common.model.BaseRoom.RoomType
+import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
@@ -50,14 +50,14 @@ class ChatRoomsAdapter(private val context: Context,
 
         private fun bindAvatar(chatRoom: ChatRoom, avatarLayout: View, drawee: SimpleDraweeView, imageView: ImageView) {
             val chatRoomName = chatRoom.name
-            if (chatRoom.type == RoomType.ONE_TO_ONE) {
+            if (chatRoom.type is RoomType.DirectMessage) {
                 drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoomName))
-                imageView.setVisibility(false)
-                avatarLayout.setVisibility(true)
+                imageView.setVisible(false)
+                avatarLayout.setVisible(true)
             } else {
                 imageView.setImageDrawable(DrawableHelper.getTextDrawable(chatRoomName))
-                avatarLayout.setVisibility(false)
-                imageView.setVisibility(true)
+                avatarLayout.setVisible(false)
+                imageView.setVisible(true)
             }
         }
 
@@ -99,11 +99,11 @@ class ChatRoomsAdapter(private val context: Context,
             when {
                 totalUnreadMessage in 1..99 -> {
                     textView.textContent = totalUnreadMessage.toString()
-                    textView.setVisibility(true)
+                    textView.setVisible(true)
                 }
                 totalUnreadMessage > 99 -> {
                     textView.textContent = context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
-                    textView.setVisibility(true)
+                    textView.setVisible(true)
                 }
             }
         }

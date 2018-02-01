@@ -1,5 +1,6 @@
 package chat.rocket.android.chatrooms.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -10,14 +11,15 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
+import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -71,6 +73,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_logout -> presenter.logout()
+        }
+        return true
+    }
+
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {
         activity.apply {
             launch(UI) {
@@ -89,11 +98,22 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun showLoading() = view_loading.setVisibility(true)
 
-    override fun hideLoading() = view_loading.setVisibility(false)
+    override fun showLoading() = view_loading.setVisible(true)
+
+    override fun hideLoading() = view_loading.setVisible(false)
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    override fun onLogout() {
+        activity?.apply {
+            finish()
+            val intent = Intent(this, AuthenticationActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+    }
 
     private fun setupToolbar() {
         (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_chats)
