@@ -1,8 +1,8 @@
 package chat.rocket.android.chatroom.presentation
 
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
+import chat.rocket.core.model.Message
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -12,7 +12,7 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param dataSet The data set to show.
      * @param serverUrl The server URL.
      */
-    fun showMessages(dataSet: List<MessageViewModel>, serverUrl: String)
+    fun showMessages(dataSet: List<Message>, serverUrl: String)
 
     /**
      * Send a message to a chat room.
@@ -26,14 +26,14 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param message The (recent) message sent to a chat room.
      */
-    fun showNewMessage(message: MessageViewModel)
+    fun showNewMessage(message: Message)
 
     /**
      * Dispatch a update to the recycler views adapter about a changed message.
      *
      * @param index The index of the changed message
      */
-    fun dispatchUpdateMessage(index: Int, message: MessageViewModel)
+    fun dispatchUpdateMessage(index: Int, message: Message)
 
     fun disableMessageInput()
 

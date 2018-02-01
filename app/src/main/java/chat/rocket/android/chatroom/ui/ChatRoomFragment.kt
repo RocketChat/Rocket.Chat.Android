@@ -12,11 +12,11 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.textContent
+import chat.rocket.core.model.Message
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_composer.*
@@ -76,10 +76,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         super.onDestroyView()
     }
 
-    override fun showMessages(dataSet: List<MessageViewModel>, serverUrl: String) {
+    override fun showMessages(dataSet: List<Message>, serverUrl: String) {
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(serverUrl)
+                adapter = ChatRoomAdapter(this, serverUrl)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 recycler_view.layoutManager = linearLayoutManager
@@ -103,7 +103,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         }
     }
 
-    override fun showNewMessage(message: MessageViewModel) {
+    override fun showNewMessage(message: Message) {
         text_message.textContent = ""
         adapter.addItem(message)
         recycler_view.smoothScrollToPosition(0)
@@ -120,7 +120,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         if (clear) text_message.textContent = ""
     }
 
-    override fun dispatchUpdateMessage(index: Int, message: MessageViewModel) {
+    override fun dispatchUpdateMessage(index: Int, message: Message) {
         adapter.updateItem(index, message)
     }
 
