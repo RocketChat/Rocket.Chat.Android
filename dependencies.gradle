@@ -24,8 +24,6 @@ ext {
         fresco                 : '1.7.1',
         frescoImageViewer      : '0.5.0',
         kotshi                 : '0.3.0',
-        floatingSearchView     : '2.1.1',
-        androidSvg             : '1.2.1',
         aVLoadingIndicatorView : '2.1.3',
         textDrawable           : '1.0.2',
 
@@ -80,10 +78,6 @@ ext {
 
         kotshiApi              : "se.ansman.kotshi:api:${versions.kotshi}",
         kotshiCompiler         : "se.ansman.kotshi:compiler:${versions.kotshi}",
-
-        floatingSearchView     : "com.github.arimorty:floatingsearchview:${versions.floatingSearchView}",
-
-        androidSvg             : "com.caverock:androidsvg:${versions.androidSvg}",
 
         aVLoadingIndicatorView : "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
 

@@ -49,6 +49,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
+    implementation project(':svg')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
@@ -91,10 +92,6 @@ dependencies {
 
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi
-
-    implementation libraries.floatingSearchView
-
-    implementation libraries.androidSvg
 
     implementation libraries.aVLoadingIndicatorView
 
