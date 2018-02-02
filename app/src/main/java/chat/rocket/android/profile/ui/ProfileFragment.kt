@@ -13,7 +13,7 @@ import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.getObservable
 import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisibility
+import chat.rocket.android.util.setVisible
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.rxkotlin.Observables
@@ -62,7 +62,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         currentUsername = username
         currentEmail = email
 
-        profile_container.setVisibility(true)
+        profile_container.setVisible(true)
 
         listenToChanges()
     }
@@ -71,11 +71,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.setVisibility(true)
+        view_loading.setVisible(true)
     }
 
     override fun hideLoading() {
-        view_loading.setVisibility(false)
+        view_loading.setVisible(false)
         enableUserInput(true)
     }
 

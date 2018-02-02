@@ -1,7 +1,9 @@
 package chat.rocket.android.chatroom.presentation
 
+import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.model.roomTypeOf
@@ -13,6 +15,7 @@ import chat.rocket.core.internal.realtime.unsubscibre
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
@@ -21,12 +24,18 @@ import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val strategy: CancelStrategy,
+                                            getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
     private val roomMessages = ArrayList<Message>()
     private var subId: String? = null
+    private var settings: Map<String, Value<Any>>? = null
+
+    init {
+        settings = getSettingsInteractor.get(serverInteractor.get()!!)
+    }
 
     private val stateChannel = Channel<State>()
 
@@ -51,8 +60,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                }
+                            view.showGenericErrorMessage()
+                        }
             } finally {
                 view.hideLoading()
             }
@@ -71,8 +80,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                }
+                            view.showGenericErrorMessage()
+                        }
 
                 view.enableMessageInput()
             }
