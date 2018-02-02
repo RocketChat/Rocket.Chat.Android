@@ -5,8 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import ru.noties.markwon.Markwon
 
 fun String.ifEmpty(value: String): String {
+    if (isEmpty()) {
+        return value
+    }
+    return this
+}
+
+fun CharSequence.ifEmpty(value: String): CharSequence {
     if (isEmpty()) {
         return value
     }
@@ -29,6 +37,16 @@ var TextView.textContent: String
     get() = text.toString()
     set(value) {
         text = value
+    }
+
+var TextView.content: CharSequence
+    get() = text
+    set(value) {
+        Markwon.unscheduleDrawables(this)
+        Markwon.unscheduleTableRows(this)
+        text = value
+        Markwon.scheduleDrawables(this)
+        Markwon.scheduleTableRows(this)
     }
 
 var TextView.hintContent: String
