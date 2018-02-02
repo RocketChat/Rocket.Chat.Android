@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.app.utils.CustomImageFormatConfigurator
@@ -11,16 +12,11 @@ import chat.rocket.android.authentication.infraestructure.MemoryTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.dagger.qualifier.ForFresco
 import chat.rocket.android.helper.FrescoAuthInterceptor
+import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
-import chat.rocket.android.server.domain.ChatRoomsRepository
-import chat.rocket.android.server.domain.CurrentServerRepository
-import chat.rocket.android.server.domain.MultiServerTokenRepository
-import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
-import chat.rocket.android.server.infraestructure.ServerDao
-import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
+import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.infraestructure.*
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.util.PlatformLogger
@@ -38,7 +34,11 @@ import kotlinx.coroutines.experimental.Job
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import ru.noties.markwon.SpannableConfiguration
+import ru.noties.markwon.il.AsyncDrawableLoader
+import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
+import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 @Module
@@ -188,12 +188,39 @@ class AppModule {
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
-        return  Moshi.Builder().add(AppJsonAdapterFactory.INSTANCE).build()
+        return Moshi.Builder().add(AppJsonAdapterFactory.INSTANCE).build()
     }
 
     @Provides
     @Singleton
     fun provideMultiServerTokenRepository(repository: LocalRepository, moshi: Moshi): MultiServerTokenRepository {
         return SharedPreferencesMultiServerTokenRepository(repository, moshi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMessageRepository(): MessagesRepository {
+        return MemoryMessagesRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideConfiguration(context: Application, client: OkHttpClient): SpannableConfiguration {
+        return SpannableConfiguration.builder(context)
+                .asyncDrawableLoader(AsyncDrawableLoader.builder()
+                        .client(client)
+                        .executorService(Executors.newCachedThreadPool())
+                        .resources(context.resources)
+                        .build())
+                .theme(SpannableTheme.builder()
+                        .linkColor(Color.BLUE)
+                        .build())
+                .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMessageParser(context: Application, configuration: SpannableConfiguration): MessageParser {
+        return MessageParser(context, configuration)
     }
 }
