@@ -47,7 +47,6 @@ data class MessageViewModel(val context: Context,
 
         val baseUrl = settings?.get(SITE_URL)
         message.urls?.let {
-//            println(message.urls)
             if (it.isEmpty()) return@let
             for (url in it) {
                 if (url.meta != null) {
