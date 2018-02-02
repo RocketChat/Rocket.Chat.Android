@@ -25,10 +25,20 @@ class MessageParser @Inject constructor(val context: Application, private val co
 
     private val parser = Markwon.createParser()
 
+    /**
+     * Render a markdown text message to Spannable.
+     *
+     * @param text The text message containing markdown syntax.
+     * @param quote An optional message to be quoted either by a quote or reply action.
+     * @param urls A list of urls to convert to markdown link syntax.
+     *
+     * @return A Spannable with the parsed markdown.
+     */
     fun renderMarkdown(text: String, quote: MessageViewModel?, urls: List<Url>): CharSequence {
         val builder = SpannableBuilder()
         var content: String = text
 
+        // Replace all url links to markdown url syntax.
         for (url in urls) {
             content = content.replace(url.url, "[${url.url}](${url.url})")
         }
@@ -97,18 +107,9 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class QuoteMarginSpan : LeadingMarginSpan, LineHeightSpan {
-        private var mDrawable: Drawable? = null
-        private var mPad: Int = 0
-
-        constructor(b: Drawable) {
-            mDrawable = b
-        }
-
-        constructor(b: Drawable, pad: Int) {
-            mDrawable = b
-            mPad = pad
-        }
+    class QuoteMarginSpan(b: Drawable, pad: Int) : LeadingMarginSpan, LineHeightSpan {
+        private var mDrawable: Drawable? = b
+        private var mPad: Int = pad
 
         override fun getLeadingMargin(first: Boolean): Int {
             return mDrawable!!.intrinsicWidth + mPad
