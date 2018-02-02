@@ -1,6 +1,7 @@
 package chat.rocket.android.chatroom.ui
 
 import android.support.v7.widget.RecyclerView
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,8 +10,10 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
+import chat.rocket.android.util.content
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisible
+import chat.rocket.android.util.textContent
 import chat.rocket.common.util.ifNull
 import com.facebook.drawee.view.SimpleDraweeView
 import com.stfalcon.frescoimageviewer.ImageViewer
@@ -63,9 +66,10 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
 
         fun bind(message: MessageViewModel) = with(itemView) {
             bindUserAvatar(message, image_avatar, image_unknown_avatar)
-            text_user_name.text = message.sender
-            text_message_time.text = message.time
-            text_content.text = message.content
+            text_user_name.content = message.sender
+            text_message_time.content = message.time
+            text_content.content = message.content
+            text_content.movementMethod = LinkMovementMethod()
 
             bindAttachment(message, message_attachment, image_attachment, audio_video_attachment,
                     file_name)
