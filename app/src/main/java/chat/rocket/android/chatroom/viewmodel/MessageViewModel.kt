@@ -8,40 +8,64 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import chat.rocket.android.R
+import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.USE_REALNAME
 import chat.rocket.common.model.Token
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType.*
+import chat.rocket.core.model.Url
 import chat.rocket.core.model.Value
 import chat.rocket.core.model.attachment.AudioAttachment
 import chat.rocket.core.model.attachment.FileAttachment
 import chat.rocket.core.model.attachment.ImageAttachment
 import chat.rocket.core.model.attachment.VideoAttachment
 import okhttp3.HttpUrl
+import timber.log.Timber
 
 data class MessageViewModel(val context: Context,
                             private val token: Token?,
                             private val message: Message,
-                            private val settings: Map<String, Value<Any>>?) {
+                            private val settings: Map<String, Value<Any>>?,
+                            private val parser: MessageParser,
+                            private val messagesRepository: MessagesRepository) {
     val id: String = message.id
     val time: CharSequence
     val sender: CharSequence
     val content: CharSequence
+    var quote: Message? = null
+    var urlsWithMeta = arrayListOf<Url>()
     var attachmentUrl: String? = null
     var attachmentTitle: CharSequence? = null
     var attachmentType: AttachmentType? = null
 
     init {
         sender = getSenderName()
-        content = getContent(context)
         time = getTime()
+
+        val baseUrl = settings?.get(SITE_URL)
+        message.urls?.let {
+//            println(message.urls)
+            if (it.isEmpty()) return@let
+            for (url in it) {
+                if (url.meta != null) {
+                    urlsWithMeta.add(url)
+                }
+                baseUrl?.let {
+                    val quoteUrl = HttpUrl.parse(url.url)
+                    val serverUrl = HttpUrl.parse(baseUrl.value.toString())
+                    if (quoteUrl != null && serverUrl != null) {
+                        makeQuote(quoteUrl, serverUrl)
+                    }
+                }
+            }
+        }
 
         message.attachments?.let {
             if (it.isEmpty() || it[0] == null) return@let
             val attachment = it[0] as FileAttachment
-            val baseUrl = settings?.get(SITE_URL)
             baseUrl?.let {
                 attachmentUrl = attachmentUrl("${baseUrl.value}${attachment.url}")
                 attachmentTitle = attachment.title
@@ -54,6 +78,18 @@ data class MessageViewModel(val context: Context,
                 }
             }
         }
+
+        content = getContent(context)
+    }
+
+    private fun makeQuote(quoteUrl: HttpUrl, serverUrl: HttpUrl) {
+        if (quoteUrl.host() == serverUrl.host()) {
+            val msgIdToQuote = quoteUrl.queryParameter("msg")
+            Timber.d("Will quote message Id: $msgIdToQuote")
+            if (msgIdToQuote != null) {
+                quote = messagesRepository.getById(msgIdToQuote)
+            }
+        }
     }
 
     fun getAvatarUrl(serverUrl: String): String? {
@@ -62,9 +98,11 @@ data class MessageViewModel(val context: Context,
         }
     }
 
-    fun getTime() = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(message.timestamp))
+    fun getOriginalMessage() = message.message
 
-    fun getSenderName(): CharSequence {
+    private fun getTime() = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(message.timestamp))
+
+    private fun getSenderName(): CharSequence {
         val useRealName = settings?.get(USE_REALNAME)?.value as Boolean
         val username = message.sender?.username
         val realName = message.sender?.name
@@ -72,7 +110,7 @@ data class MessageViewModel(val context: Context,
         return senderName ?: username.toString()
     }
 
-    fun getContent(context: Context): CharSequence {
+    private fun getContent(context: Context): CharSequence {
         val contentMessage: CharSequence
         when (message.type) {
         //TODO: Add implementation for Welcome type.
@@ -90,7 +128,14 @@ data class MessageViewModel(val context: Context,
         return contentMessage
     }
 
-    private fun getNormalMessage() = message.message
+    private fun getNormalMessage(): CharSequence {
+        var quoteViewModel: MessageViewModel? = null
+        if (quote != null) {
+            val quoteMessage: Message = quote!!
+            quoteViewModel = MessageViewModel(context, token, quoteMessage, settings, parser, messagesRepository)
+        }
+        return parser.renderMarkdown(message.message, quoteViewModel, urlsWithMeta)
+    }
 
     private fun getSystemMessage(content: String): CharSequence {
         val spannableMsg = SpannableString(content)
