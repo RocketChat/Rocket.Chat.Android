@@ -8,8 +8,11 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.text.Layout
+import android.text.Spannable
 import android.text.Spanned
+import android.text.TextPaint
 import android.text.style.*
+import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.core.model.Url
@@ -18,12 +21,15 @@ import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.renderer.SpannableMarkdownVisitor
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 
 class MessageParser @Inject constructor(val context: Application, private val configuration: SpannableConfiguration) {
 
     private val parser = Markwon.createParser()
+    private val userPattern = Pattern.compile("(@[\\w.]+)",
+            Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
 
     /**
      * Render a markdown text message to Spannable.
@@ -53,7 +59,20 @@ class MessageParser @Inject constructor(val context: Application, private val co
             quoteNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         }
 
-        return builder.text()
+        val result = builder.text()
+        applySpans(result)
+        return result
+    }
+
+    private fun applySpans(text: CharSequence) {
+        val matcher = userPattern.matcher(text)
+        val result = text as Spannable
+        while (matcher.find()) {
+            val user = matcher.group(1)
+            val start = matcher.start()
+            //TODO: should check if username actually exists prior to applying.
+            result.setSpan(UsernameClickableSpan(), start, start + user.length, 0)
+        }
     }
 
     /**
@@ -142,5 +161,17 @@ class MessageParser @Inject constructor(val context: Application, private val co
                     fm.bottom += need
             }
         }
+    }
+
+    class UsernameClickableSpan: ClickableSpan() {
+        override fun onClick(widget: View) {
+            //TODO: Implement action when clicking on username, like showing user profile.
+        }
+
+        override fun updateDrawState(ds: TextPaint) {
+            ds.color = ds.linkColor
+            ds.isUnderlineText = false
+        }
+
     }
 }
