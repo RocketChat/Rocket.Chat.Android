@@ -93,13 +93,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
 
                         try {
                             val token = client.login(usernameOrEmail, password)
-                            if (token != null) {
-                                multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
-                                registerPushToken()
-                                navigator.toChatList()
-                            } else {
-                                view.showGenericErrorMessage()
-                            }
+                            multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
+                            registerPushToken()
+                            navigator.toChatList()
                         } catch (exception: RocketChatException) {
                             when (exception) {
                                 is RocketChatTwoFactorException -> {

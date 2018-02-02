@@ -10,7 +10,6 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.updateProfile
-import timber.log.Timber
 import javax.inject.Inject
 
 class ProfilePresenter @Inject constructor (private val view: ProfileView,
@@ -46,13 +45,8 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
             view.showLoading()
             try {
                 val user = client.updateProfile(myselfId, email, name, username)
-                if (user != null) {
-                    view.showProfileUpdateSuccessfullyMessage()
-                    val avatarUrl = UrlHelper.getAvatarUrl(serverUrl, user.username!!)
-                    view.showProfile(avatarUrl, user.name!!, user.username!!, user.emails?.get(0)?.address!!)
-                } else {
-                    view.showGenericErrorMessage()
-                }
+                view.showProfileUpdateSuccessfullyMessage()
+                loadUserProfile()
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)

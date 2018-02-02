@@ -15,7 +15,6 @@ import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisibility
 import chat.rocket.android.util.setVisible
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
@@ -94,9 +93,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
-    override fun showNoChatRoomsToDisplay() = text_no_data_to_display.setVisibility(true)
-
-    override fun showLoading() = view_loading.setVisibility(true)
+    override fun showNoChatRoomsToDisplay() = text_no_data_to_display.setVisible(true)
 
     override fun showLoading() = view_loading.setVisible(true)
 

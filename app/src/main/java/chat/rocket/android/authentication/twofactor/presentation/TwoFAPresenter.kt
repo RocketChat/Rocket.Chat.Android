@@ -44,13 +44,9 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                         try {
                             // The token is saved via the client TokenProvider
                             val token = client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
-                            if (token != null) {
-                                multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
-                                registerPushToken()
-                                navigator.toChatList()
-                            } else {
-                                view.showGenericErrorMessage()
-                            }
+                            multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
+                            registerPushToken()
+                            navigator.toChatList()
                         } catch (exception: RocketChatException) {
                             if (exception is RocketChatAuthException) {
                                 view.alertInvalidTwoFactorAuthenticationCode()
