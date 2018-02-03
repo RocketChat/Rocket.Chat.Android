@@ -52,4 +52,11 @@
     <string name="message_welcome">Welcome %s</string>
     <string name="message_removed">Message removed</string>
 
+    <!-- Message actions -->
+    <string name="action_msg_reply">Reply</string>
+    <string name="action_msg_edit">Edit</string>
+    <string name="action_msg_copy">Copy</string>
+    <string name="action_msg_quote">Quote</string>
+    <string name="action_msg_delete">Delete</string>
+
 </resources>

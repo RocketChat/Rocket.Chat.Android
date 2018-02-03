@@ -5,6 +5,7 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
@@ -13,7 +14,6 @@ import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.content
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisible
-import chat.rocket.android.util.textContent
 import chat.rocket.common.util.ifNull
 import com.facebook.drawee.view.SimpleDraweeView
 import com.stfalcon.frescoimageviewer.ImageViewer
@@ -73,6 +73,12 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
 
             bindAttachment(message, message_attachment, image_attachment, audio_video_attachment,
                     file_name)
+
+            itemView.setOnClickListener {
+                val popup = PopupMenu(it.context, it)
+                popup.menuInflater.inflate(R.menu.message_actions, popup.menu)
+                popup.show()
+            }
         }
 
         private fun bindAttachment(message: MessageViewModel,
