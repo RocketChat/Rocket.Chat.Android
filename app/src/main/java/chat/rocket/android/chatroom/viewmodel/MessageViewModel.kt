@@ -16,12 +16,12 @@ import chat.rocket.android.server.domain.USE_REALNAME
 import chat.rocket.common.model.Token
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType.*
-import chat.rocket.core.model.Url
 import chat.rocket.core.model.Value
 import chat.rocket.core.model.attachment.AudioAttachment
 import chat.rocket.core.model.attachment.FileAttachment
 import chat.rocket.core.model.attachment.ImageAttachment
 import chat.rocket.core.model.attachment.VideoAttachment
+import chat.rocket.core.model.url.Url
 import okhttp3.HttpUrl
 import timber.log.Timber
 

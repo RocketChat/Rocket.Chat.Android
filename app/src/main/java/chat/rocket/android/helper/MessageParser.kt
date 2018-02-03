@@ -15,7 +15,7 @@ import android.text.style.*
 import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
-import chat.rocket.core.model.Url
+import chat.rocket.core.model.url.Url
 import org.commonmark.node.BlockQuote
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
@@ -163,7 +163,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class UsernameClickableSpan: ClickableSpan() {
+    class UsernameClickableSpan : ClickableSpan() {
         override fun onClick(widget: View) {
             //TODO: Implement action when clicking on username, like showing user profile.
         }
