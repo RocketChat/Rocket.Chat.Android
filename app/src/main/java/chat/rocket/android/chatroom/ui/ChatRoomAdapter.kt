@@ -119,8 +119,8 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
             drawee.setVisible(true)
             imageUnknownAvatar.setVisible(false)
         }.ifNull {
-                    drawee.setVisible(false)
-                    imageUnknownAvatar.setVisible(true)
-                }
+            drawee.setVisible(false)
+            imageUnknownAvatar.setVisible(true)
+        }
     }
 }
