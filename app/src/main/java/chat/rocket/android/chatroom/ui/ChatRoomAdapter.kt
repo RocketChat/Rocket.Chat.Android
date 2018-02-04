@@ -23,6 +23,8 @@ import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
 class ChatRoomAdapter(private val serverUrl: String,
+                      private val roomType: String,
+                      private val roomName: String,
                       private val presenter: ChatRoomPresenter) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
 
     init {
@@ -32,7 +34,7 @@ class ChatRoomAdapter(private val serverUrl: String,
     val dataSet = ArrayList<MessageViewModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_message), serverUrl, presenter)
+            ViewHolder(parent.inflate(R.layout.item_message), serverUrl, roomType, roomName, presenter)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
@@ -75,7 +77,11 @@ class ChatRoomAdapter(private val serverUrl: String,
         return dataSet[position].id.hashCode().toLong()
     }
 
-    class ViewHolder(itemView: View, val serverUrl: String, val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View,
+                     val serverUrl: String,
+                     val roomType: String,
+                     val roomName: String,
+                     val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(message: MessageViewModel) = with(itemView) {
             bindUserAvatar(message, image_avatar, image_unknown_avatar)
@@ -88,16 +94,20 @@ class ChatRoomAdapter(private val serverUrl: String,
                     file_name)
 
             text_content.setOnClickListener {
-                val popup = PopupMenu(it.context, it)
-                popup.menuInflater.inflate(R.menu.message_actions, popup.menu)
-                popup.setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.action_menu_msg_delete -> presenter.deleteMessage(message.roomId, message.id)
-                        else -> TODO("Not implemented")
+                if (!message.systemMessage) {
+                    val popup = PopupMenu(it.context, it)
+                    popup.menuInflater.inflate(R.menu.message_actions, popup.menu)
+                    popup.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.action_menu_msg_delete -> presenter.deleteMessage(message.roomId, message.id)
+                            R.id.action_menu_msg_quote -> presenter.citeMessage(serverUrl, roomType, roomName, message.id, "", false)
+                            R.id.action_menu_msg_reply -> presenter.citeMessage(serverUrl, roomType, roomName, message.id, "", true)
+                            else -> TODO("Not implemented")
+                        }
+                        true
                     }
-                    true
+                    popup.show()
                 }
-                popup.show()
             }
         }
 
