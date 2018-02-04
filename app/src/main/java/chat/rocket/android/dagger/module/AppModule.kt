@@ -223,4 +223,10 @@ class AppModule {
     fun provideMessageParser(context: Application, configuration: SpannableConfiguration): MessageParser {
         return MessageParser(context, configuration)
     }
+
+    @Provides
+    @Singleton
+    fun providePermissionInteractor(settingsRepository: SettingsRepository, serverRepository: CurrentServerRepository): PermissionsInteractor {
+        return PermissionsInteractor(settingsRepository, serverRepository)
+    }
 }
