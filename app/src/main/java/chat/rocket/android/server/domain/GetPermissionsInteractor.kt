@@ -2,8 +2,8 @@ package chat.rocket.android.server.domain
 
 import javax.inject.Inject
 
-class PermissionsInteractor @Inject constructor(private val settingsRepository: SettingsRepository,
-                                                private val currentServerRepository: CurrentServerRepository) {
+class GetPermissionsInteractor @Inject constructor(private val settingsRepository: SettingsRepository,
+                                                   private val currentServerRepository: CurrentServerRepository) {
 
     private fun publicSettings(): PublicSettings? = settingsRepository.get(currentServerRepository.get()!!)
 

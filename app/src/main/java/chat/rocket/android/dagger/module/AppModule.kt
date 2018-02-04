@@ -226,7 +226,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providePermissionInteractor(settingsRepository: SettingsRepository, serverRepository: CurrentServerRepository): PermissionsInteractor {
-        return PermissionsInteractor(settingsRepository, serverRepository)
+    fun providePermissionInteractor(settingsRepository: SettingsRepository, serverRepository: CurrentServerRepository): GetPermissionsInteractor {
+        return GetPermissionsInteractor(settingsRepository, serverRepository)
     }
 }
