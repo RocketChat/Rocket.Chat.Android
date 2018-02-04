@@ -45,6 +45,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private lateinit var chatRoomType: String
     private var isChatRoomReadOnly: Boolean = false
     private lateinit var adapter: ChatRoomAdapter
+    private lateinit var citationSnackbar: CitationSnackbar
+    private var citation: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +69,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
         setupComposer()
+        setupCitationSnackbar()
     }
 
     override fun onDestroyView() {
@@ -77,7 +80,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun showMessages(dataSet: List<MessageViewModel>, serverUrl: String) {
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(serverUrl, presenter)
+                adapter = ChatRoomAdapter(serverUrl, chatRoomType, chatRoomName, presenter)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 recycler_view.layoutManager = linearLayoutManager
@@ -126,6 +129,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         adapter.removeItem(msgId)
     }
 
+    override fun showReplyStatus(replyMarkdown: String, quotedMessage: String) {
+        activity?.apply {
+            citation = replyMarkdown
+            citationSnackbar.text = quotedMessage
+            citationSnackbar.show()
+        }
+    }
+
     override fun showLoading() = view_loading.setVisible(true)
 
     override fun hideLoading() = view_loading.setVisible(false)
@@ -139,7 +150,24 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             text_room_is_read_only.setVisible(true)
             top_container.setVisible(false)
         } else {
-            text_send.setOnClickListener { sendMessage(text_message.textContent) }
+            text_send.setOnClickListener {
+                var textMessage = citation ?: ""
+                textMessage = textMessage + text_message.textContent
+                sendMessage(textMessage)
+                clearCitation()
+            }
         }
+    }
+
+    private fun setupCitationSnackbar() {
+        citationSnackbar = CitationSnackbar.make(message_list_container, "")
+        citationSnackbar.cancelView.setOnClickListener({
+            clearCitation()
+        })
+    }
+
+    private fun clearCitation() {
+        citation = null
+        citationSnackbar.dismiss()
     }
 }
