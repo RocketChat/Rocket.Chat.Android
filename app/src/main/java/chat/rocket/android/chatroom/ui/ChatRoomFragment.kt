@@ -122,6 +122,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         adapter.updateItem(message)
     }
 
+    override fun dispatchDeleteMessage(msgId: String) {
+        adapter.removeItem(msgId)
+    }
+
     override fun showLoading() = view_loading.setVisible(true)
 
     override fun hideLoading() = view_loading.setVisible(false)

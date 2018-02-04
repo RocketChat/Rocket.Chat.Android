@@ -63,6 +63,14 @@ class ChatRoomAdapter(private val serverUrl: String,
         }
     }
 
+    fun removeItem(messageId: String) {
+        val index = dataSet.indexOfFirst { it.id == messageId }
+        if (index > -1) {
+            dataSet.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
+
     override fun getItemId(position: Int): Long {
         return dataSet[position].id.hashCode().toLong()
     }

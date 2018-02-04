@@ -13,6 +13,7 @@ import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.USE_REALNAME
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.common.model.Token
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType.*
@@ -28,7 +29,7 @@ import timber.log.Timber
 data class MessageViewModel(val context: Context,
                             private val token: Token?,
                             private val message: Message,
-                            private val settings: Map<String, Value<Any>>?,
+                            private val settings: Map<String, Value<Any>>,
                             private val parser: MessageParser,
                             private val messagesRepository: MessagesRepository) {
     val id: String = message.id
@@ -103,10 +104,9 @@ data class MessageViewModel(val context: Context,
     private fun getTime() = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(message.timestamp))
 
     private fun getSenderName(): CharSequence {
-        val useRealName = settings?.get(USE_REALNAME)?.value as Boolean
         val username = message.sender?.username
         val realName = message.sender?.name
-        val senderName = if (useRealName) realName else username
+        val senderName = if (settings.useRealName()) realName else username
         return senderName ?: username.toString()
     }
 

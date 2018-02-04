@@ -13,10 +13,10 @@ class MessageViewModelMapper @Inject constructor(private val context: Context,
                                                  private val messageParser: MessageParser,
                                                  private val messagesRepository: MessagesRepository) {
 
-    suspend fun mapToViewModel(message: Message, settings: Map<String, Value<Any>>?) =
+    suspend fun mapToViewModel(message: Message, settings: Map<String, Value<Any>>) =
             MessageViewModel(context, tokenRepository.get(), message, settings, messageParser, messagesRepository)
 
-    suspend fun mapToViewModelList(messageList: List<Message>, settings: Map<String, Value<Any>>?): List<MessageViewModel> {
+    suspend fun mapToViewModelList(messageList: List<Message>, settings: Map<String, Value<Any>>): List<MessageViewModel> {
         return messageList.map { MessageViewModel(context, tokenRepository.get(), it, settings, messageParser, messagesRepository) }
     }
 }
