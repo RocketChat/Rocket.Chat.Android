@@ -5,6 +5,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.MessagesRepository
+import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
@@ -20,6 +21,7 @@ import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.cancel
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
@@ -29,16 +31,13 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
+                                            private val permissionsInteractor: PermissionsInteractor,
                                             private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
     private var subId: String? = null
-    private var settings: Map<String, Value<Any>>? = null
-
-    init {
-        settings = getSettingsInteractor.get(serverInteractor.get()!!)
-    }
+    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
 
     private val stateChannel = Channel<State>()
 
@@ -148,13 +147,21 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
      */
     fun deleteMessage(roomId: String, id: String) {
         launchUI(strategy) {
+            if (!permissionsInteractor.isMessageDeletingAllowed()) {
+                coroutineContext.cancel()
+                return@launchUI
+            }
             //TODO: Default delete message always to true. Until we have the permissions system
             //implemented, a user will only be able to delete his own messages.
             try {
                 //TODO: Should honor permission 'Message_ShowDeletedStatus'
                 client.deleteMessage(roomId, id, true)
+                // if Message_ShowDeletedStatus == true an update to that message will be dispatched.
+                // Otherwise we signalize that we just want the message removed.
+                if (!permissionsInteractor.showDeletedStatus()) {
+                    view.dispatchDeleteMessage(id)
+                }
             } catch (e: RocketChatException) {
-                //TODO: Handle permission error.
                 Timber.e(e)
             }
         }
