@@ -64,5 +64,7 @@
     <string name="action_msg_copy">Copy</string>
     <string name="action_msg_quote">Quote</string>
     <string name="action_msg_delete">Delete</string>
+    <string name="action_msg_pin">Pin Message</string>
+    <string name="action_msg_star">Star Message</string>
 
 </resources>
