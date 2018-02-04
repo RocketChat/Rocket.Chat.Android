@@ -42,12 +42,13 @@ data class MessageViewModel(val context: Context,
     var attachmentUrl: String? = null
     var attachmentTitle: CharSequence? = null
     var attachmentType: AttachmentType? = null
+    var systemMessage: Boolean = false
 
     init {
         sender = getSenderName()
         time = getTime()
 
-        val baseUrl = settings?.get(SITE_URL)
+        val baseUrl = settings.get(SITE_URL)
         message.urls?.let {
             if (it.isEmpty()) return@let
             for (url in it) {
@@ -138,6 +139,7 @@ data class MessageViewModel(val context: Context,
     }
 
     private fun getSystemMessage(content: String): CharSequence {
+        systemMessage = true
         val spannableMsg = SpannableString(content)
         spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
                 0)
