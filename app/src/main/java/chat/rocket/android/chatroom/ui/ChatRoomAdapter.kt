@@ -2,10 +2,10 @@ package chat.rocket.android.chatroom.ui
 
 import android.support.v7.widget.RecyclerView
 import android.text.method.LinkMovementMethod
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -21,6 +21,7 @@ import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
+import ru.whalemare.sheetmenu.SheetMenu
 
 class ChatRoomAdapter(private val serverUrl: String,
                       private val roomType: String,
@@ -81,9 +82,12 @@ class ChatRoomAdapter(private val serverUrl: String,
                      val serverUrl: String,
                      val roomType: String,
                      val roomName: String,
-                     val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView) {
+                     val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
+
+        private lateinit var messageViewModel: MessageViewModel
 
         fun bind(message: MessageViewModel) = with(itemView) {
+            messageViewModel = message
             bindUserAvatar(message, image_avatar, image_unknown_avatar)
             text_user_name.content = message.sender
             text_message_time.content = message.time
@@ -95,20 +99,25 @@ class ChatRoomAdapter(private val serverUrl: String,
 
             text_content.setOnClickListener {
                 if (!message.systemMessage) {
-                    val popup = PopupMenu(it.context, it)
-                    popup.menuInflater.inflate(R.menu.message_actions, popup.menu)
-                    popup.setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.action_menu_msg_delete -> presenter.deleteMessage(message.roomId, message.id)
-                            R.id.action_menu_msg_quote -> presenter.citeMessage(serverUrl, roomType, roomName, message.id, "", false)
-                            R.id.action_menu_msg_reply -> presenter.citeMessage(serverUrl, roomType, roomName, message.id, "", true)
-                            else -> TODO("Not implemented")
-                        }
-                        true
-                    }
-                    popup.show()
+                    SheetMenu().apply {
+                        click = this@ViewHolder
+                        menu = R.menu.message_actions
+                    }.show(it.context)
                 }
             }
+        }
+
+        override fun onMenuItemClick(item: MenuItem): Boolean {
+            messageViewModel.apply {
+                when (item.itemId) {
+                    R.id.action_menu_msg_delete -> presenter.deleteMessage(roomId, id)
+                    R.id.action_menu_msg_quote -> presenter.citeMessage(serverUrl, roomType, roomName, id, "", false)
+                    R.id.action_menu_msg_reply -> presenter.citeMessage(serverUrl, roomType, roomName, id, "", true)
+                    else -> TODO("Not implemented")
+                }
+            }
+
+            return true
         }
 
         private fun bindAttachment(message: MessageViewModel,
