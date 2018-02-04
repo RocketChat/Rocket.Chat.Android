@@ -2,13 +2,11 @@ package chat.rocket.android.chatroom.presentation
 
 import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.MessagesRepository
-import chat.rocket.android.server.domain.PermissionsInteractor
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
@@ -16,6 +14,7 @@ import chat.rocket.core.internal.realtime.connect
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.unsubscibre
 import chat.rocket.core.internal.rest.deleteMessage
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.model.Message
@@ -31,7 +30,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
-                                            private val permissionsInteractor: PermissionsInteractor,
+                                            private val getPermissionsInteractor: GetPermissionsInteractor,
                                             private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
@@ -147,7 +146,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
      */
     fun deleteMessage(roomId: String, id: String) {
         launchUI(strategy) {
-            if (!permissionsInteractor.isMessageDeletingAllowed()) {
+            if (!getPermissionsInteractor.isMessageDeletingAllowed()) {
                 coroutineContext.cancel()
                 return@launchUI
             }
@@ -158,11 +157,42 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 client.deleteMessage(roomId, id, true)
                 // if Message_ShowDeletedStatus == true an update to that message will be dispatched.
                 // Otherwise we signalize that we just want the message removed.
-                if (!permissionsInteractor.showDeletedStatus()) {
+                if (!getPermissionsInteractor.showDeletedStatus()) {
                     view.dispatchDeleteMessage(id)
                 }
             } catch (e: RocketChatException) {
                 Timber.e(e)
+            }
+        }
+    }
+
+    /**
+     * Quote or reply a message.
+     *
+     * @param roomType The current room type.
+     * @param roomName The name of the current room.
+     * @param messageId The id of the message to make citation for.
+     * @param text The actual message to send along with the citation.
+     * @param mentionAuthor true if you want to cite replying or false just to quote.
+     */
+    fun citeMessage(serverUrl: String, roomType: String, roomName: String, messageId: String, text: String, mentionAuthor: Boolean) {
+        launchUI(strategy) {
+            val message = messagesRepository.getById(messageId)
+            val me = client.me() //TODO: Cache this and use an interactor
+            message?.let { m ->
+                val id = m.id
+                val username = m.sender?.username
+                val user = "@" + if (settings.useRealName()) m.sender?.name ?: m.sender?.username else m.sender?.username
+                val mention = if (mentionAuthor && me.username != username) user else ""
+                val type = roomTypeOf(roomType)
+                val room = when (type) {
+                    is RoomType.Channel -> "channel"
+                    is RoomType.DirectMessage -> "direct"
+                    is RoomType.PrivateGroup -> "group"
+                    is RoomType.Livechat -> "livechat"
+                    is RoomType.Custom -> "custom" //TODO: put appropriate callback string here.
+                }
+                view.showReplyStatus("[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ", m.message)
             }
         }
     }
