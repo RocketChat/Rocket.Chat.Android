@@ -7,12 +7,14 @@ import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.connect
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.unsubscibre
+import chat.rocket.core.internal.rest.deleteMessage
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.model.Message
@@ -31,7 +33,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
-    private val roomMessages = ArrayList<Message>()
     private var subId: String? = null
     private var settings: Map<String, Value<Any>>? = null
 
@@ -46,10 +47,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             view.showLoading()
             try {
                 val messages = client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
-                synchronized(roomMessages) {
-                    roomMessages.addAll(messages)
-                    messagesRepository.saveAll(messages)
-                }
+                messagesRepository.saveAll(messages)
 
                 val messagesViewModels = mapper.mapToViewModelList(messages, settings)
                 view.showMessages(messagesViewModels, serverInteractor.get()!!)
@@ -142,6 +140,26 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    /**
+     * Delete the message with the given id.
+     *
+     * @param roomId The room id of the message to be deleted.
+     * @param id The id of the message to be deleted.
+     */
+    fun deleteMessage(roomId: String, id: String) {
+        launchUI(strategy) {
+            //TODO: Default delete message always to true. Until we have the permissions system
+            //implemented, a user will only be able to delete his own messages.
+            try {
+                //TODO: Should honor permission 'Message_ShowDeletedStatus'
+                client.deleteMessage(roomId, id, true)
+            } catch (e: RocketChatException) {
+                //TODO: Handle permission error.
+                Timber.e(e)
+            }
+        }
+    }
+
     private suspend fun listenMessages(roomId: String) {
         launch(CommonPool + strategy.jobs) {
             for (message in client.messagesChannel) {
@@ -157,17 +175,16 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.mapToViewModel(streamedMessage, settings)
-            synchronized(roomMessages) {
-                val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
-                if (index != -1) {
-                    Timber.d("Updatind message at $index")
-                    roomMessages[index] = streamedMessage
-                    view.dispatchUpdateMessage(index, viewModelStreamedMessage)
-                } else {
-                    Timber.d("Adding new message")
-                    roomMessages.add(0, streamedMessage)
-                    view.showNewMessage(viewModelStreamedMessage)
-                }
+            val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
+            val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
+            if (index > -1) {
+                Timber.d("Updating message at $index")
+                messagesRepository.save(streamedMessage)
+                view.dispatchUpdateMessage(index, viewModelStreamedMessage)
+            } else {
+                Timber.d("Adding new message")
+                messagesRepository.save(streamedMessage)
+                view.showNewMessage(viewModelStreamedMessage)
             }
         }
     }

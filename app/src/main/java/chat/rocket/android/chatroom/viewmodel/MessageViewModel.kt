@@ -32,6 +32,7 @@ data class MessageViewModel(val context: Context,
                             private val parser: MessageParser,
                             private val messagesRepository: MessagesRepository) {
     val id: String = message.id
+    val roomId: String = message.roomId
     val time: CharSequence
     val sender: CharSequence
     val content: CharSequence

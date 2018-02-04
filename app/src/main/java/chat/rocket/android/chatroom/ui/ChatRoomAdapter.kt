@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
@@ -21,7 +22,8 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
-class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+class ChatRoomAdapter(private val serverUrl: String,
+                      private val presenter: ChatRoomPresenter) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
 
     init {
         setHasStableIds(true)
@@ -30,7 +32,7 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
     val dataSet = ArrayList<MessageViewModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_message), serverUrl)
+            ViewHolder(parent.inflate(R.layout.item_message), serverUrl, presenter)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
@@ -53,16 +55,19 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
         notifyItemInserted(0)
     }
 
-    fun updateItem(index: Int, message: MessageViewModel) {
-        dataSet[index] = message
-        notifyItemChanged(index)
+    fun updateItem(message: MessageViewModel) {
+        val index = dataSet.indexOfFirst { it.id == message.id }
+        if (index > -1) {
+            dataSet[index] = message
+            notifyItemChanged(index)
+        }
     }
 
     override fun getItemId(position: Int): Long {
         return dataSet[position].id.hashCode().toLong()
     }
 
-    class ViewHolder(itemView: View, val serverUrl: String) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, val serverUrl: String, val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(message: MessageViewModel) = with(itemView) {
             bindUserAvatar(message, image_avatar, image_unknown_avatar)
@@ -74,9 +79,16 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
             bindAttachment(message, message_attachment, image_attachment, audio_video_attachment,
                     file_name)
 
-            itemView.setOnClickListener {
+            text_content.setOnClickListener {
                 val popup = PopupMenu(it.context, it)
                 popup.menuInflater.inflate(R.menu.message_actions, popup.menu)
+                popup.setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_menu_msg_delete -> presenter.deleteMessage(message.roomId, message.id)
+                        else -> TODO("Not implemented")
+                    }
+                    true
+                }
                 popup.show()
             }
         }

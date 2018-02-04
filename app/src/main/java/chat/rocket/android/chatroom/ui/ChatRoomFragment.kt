@@ -39,7 +39,6 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 
 class ChatRoomFragment : Fragment(), ChatRoomView {
-
     @Inject lateinit var presenter: ChatRoomPresenter
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -78,7 +77,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun showMessages(dataSet: List<MessageViewModel>, serverUrl: String) {
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(serverUrl)
+                adapter = ChatRoomAdapter(serverUrl, presenter)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 recycler_view.layoutManager = linearLayoutManager
@@ -120,7 +119,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     }
 
     override fun dispatchUpdateMessage(index: Int, message: MessageViewModel) {
-        adapter.updateItem(index, message)
+        adapter.updateItem(message)
     }
 
     override fun showLoading() = view_loading.setVisible(true)
