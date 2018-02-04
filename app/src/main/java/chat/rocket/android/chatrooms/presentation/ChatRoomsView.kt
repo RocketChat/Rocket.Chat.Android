@@ -14,7 +14,12 @@ interface ChatRoomsView : LoadingView, MessageView {
     suspend fun updateChatRooms(newDataSet: List<ChatRoom>)
 
     /**
-     * User has successfully logged out from the current server.
+     *  Shows no chat rooms to display.
      */
+    fun showNoChatRoomsToDisplay()
+
+    /**
+     * User has successfully logged out from the current server.
+     **/
     fun onLogout()
 }

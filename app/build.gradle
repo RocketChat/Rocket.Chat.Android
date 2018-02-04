@@ -71,8 +71,8 @@ dependencies {
     kapt libraries.roomProcessor
     implementation libraries.roomRxjava
 
-    implementation libraries.rxjava
-    implementation libraries.rxandroid
+    implementation libraries.rxKotlin
+    implementation libraries.rxAndroid
 
     implementation libraries.moshi
     implementation libraries.okhttp
@@ -80,6 +80,7 @@ dependencies {
 
     implementation libraries.timber
     implementation libraries.threeTenABP
+    implementation libraries.rxBinding
 
     implementation libraries.fresco
     api libraries.frescoOkHttp
@@ -87,12 +88,10 @@ dependencies {
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
 
-    implementation libraries.frescoImageViewer
-
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi
 
-    implementation libraries.floatingSearchView
+    implementation libraries.frescoImageViewer
 
     implementation libraries.androidSvg
 
@@ -103,6 +102,8 @@ dependencies {
     implementation libraries.markwon
 
     implementation libraries.markwonImageLoader
+
+    implementation libraries.moshiLazyAdapters
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
