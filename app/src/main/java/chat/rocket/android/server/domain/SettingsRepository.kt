@@ -2,9 +2,11 @@ package chat.rocket.android.server.domain
 
 import chat.rocket.core.model.Value
 
+typealias PublicSettings = Map<String, Value<Any>>
+
 interface SettingsRepository {
-    fun save(url: String, settings: Map<String, Value<Any>>)
-    fun get(url: String): Map<String, Value<Any>>?
+    fun save(url: String, settings: PublicSettings)
+    fun get(url: String): PublicSettings?
 }
 
 const val ACCOUNT_FACEBOOK = "Accounts_OAuth_Facebook"
@@ -32,6 +34,10 @@ const val HIDE_USER_LEAVE = "Message_HideType_ul"
 const val HIDE_TYPE_AU = "Message_HideType_au"
 const val HIDE_TYPE_RU = "Message_HideType_ru"
 const val HIDE_MUTE_UNMUTE = "Message_HideType_mute_unmute"
+const val ALLOW_MESSAGE_DELETING = "Message_AllowDeleting"
+const val ALLOW_MESSAGE_EDITING = "Message_AllowEditing"
+const val SHOW_DELETED_STATUS = "Message_ShowDeletedStatus"
+const val SHOW_EDITED_STATUS = "Message_ShowEditedStatus"
 /*
  * Extension functions for Public Settings.
  *
@@ -46,6 +52,14 @@ fun Map<String, Value<Any>>.meteorEnabled(): Boolean = this[ACCOUNT_METEOR]?.val
 fun Map<String, Value<Any>>.twitterEnabled(): Boolean = this[ACCOUNT_TWITTER]?.value == true
 fun Map<String, Value<Any>>.gitlabEnabled(): Boolean = this[ACCOUNT_GITLAB]?.value == true
 fun Map<String, Value<Any>>.wordpressEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
+
+fun Map<String, Value<Any>>.useRealName(): Boolean = this[USE_REALNAME]?.value == true
+
+// Message settings
+fun Map<String, Value<Any>>.deleteMessageAllowed(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
+fun Map<String, Value<Any>>.editingMessageAllowed(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
+fun Map<String, Value<Any>>.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true
+fun Map<String, Value<Any>>.showEditedStatus(): Boolean = this[SHOW_EDITED_STATUS]?.value == true
 
 fun Map<String, Value<Any>>.registrationEnabled(): Boolean {
     val value = this[ACCOUNT_REGISTRATION]
