@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<item-->
-        <!--android:id="@+id/action_menu_msg_reply"-->
-        <!--android:title="@string/action_msg_reply" />-->
+    <item
+        android:id="@+id/action_menu_msg_reply"
+        android:title="@string/action_msg_reply" />
     <!--<item-->
         <!--android:id="@+id/action_menu_msg_edit"-->
         <!--android:title="@string/action_msg_edit" />-->
     <!--<item-->
         <!--android:id="@+id/action_menu_msg_copy"-->
         <!--android:title="@string/action_msg_copy" />-->
-    <!--<item-->
-        <!--android:id="@+id/action_menu_msg_quote"-->
-        <!--android:title="@string/action_msg_quote" />-->
+    <item
+        android:id="@+id/action_menu_msg_quote"
+        android:title="@string/action_msg_quote" />
     <item
         android:id="@+id/action_menu_msg_delete"
         android:title="@string/action_msg_delete" />
