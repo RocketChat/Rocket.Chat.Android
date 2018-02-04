@@ -197,6 +197,23 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    /**
+     * Copy message to clipboard.
+     *
+     * @param messageId The id of the message to copy to clipboard.
+     */
+    fun copyMessage(messageId: String) {
+        launchUI(strategy) {
+            try {
+                messagesRepository.getById(messageId)?.let { m ->
+                    view.copyToClipboard(m.message)
+                }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
     private suspend fun listenMessages(roomId: String) {
         launch(CommonPool + strategy.jobs) {
             for (message in client.messagesChannel) {

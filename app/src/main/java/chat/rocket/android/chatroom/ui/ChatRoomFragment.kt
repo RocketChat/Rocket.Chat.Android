@@ -1,5 +1,8 @@
 package chat.rocket.android.chatroom.ui
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -21,6 +24,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_composer.*
 import javax.inject.Inject
+
 
 fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Fragment {
     return ChatRoomFragment().apply {
@@ -144,6 +148,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    override fun copyToClipboard(message: String) {
+        activity?.apply {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("", message))
+        }
+    }
 
     private fun setupComposer() {
         if (isChatRoomReadOnly) {

@@ -50,6 +50,13 @@ interface ChatRoomView : LoadingView, MessageView {
      */
     fun showReplyStatus(replyMarkdown: String, quotedMessage: String)
 
+    /**
+     * Copy message to clipboard.
+     *
+     * @param message The message to copy.
+     */
+    fun copyToClipboard(message: String)
+
     fun disableMessageInput()
     fun enableMessageInput(clear: Boolean = false)
 }
