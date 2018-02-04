@@ -30,6 +30,7 @@ ext {
         markwon                : '1.0.3',
         textDrawable           : '1.0.2', // Remove this library after https://github.com/RocketChat/Rocket.Chat/pull/9492 is merged
         moshiLazyAdapters      : '2.1', // Even declared on the SDK we need to add this library here because java.lang.NoClassDefFoundError: Failed resolution of: Lcom/serjltt/moshi/adapters/FallbackEnum;
+        sheetMenu              : '1.3.3',
 
         // For testing
         junit                  : '4.12',
@@ -94,6 +95,8 @@ ext {
         markwonImageLoader     : "ru.noties:markwon-image-loader:${versions.markwon}",
 
         moshiLazyAdapters      : "com.serjltt.moshi:moshi-lazy-adapters:${versions.moshiLazyAdapters}",
+
+        sheetMenu              : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
 
         // For testing
         junit         : "junit:junit:$versions.junit",
