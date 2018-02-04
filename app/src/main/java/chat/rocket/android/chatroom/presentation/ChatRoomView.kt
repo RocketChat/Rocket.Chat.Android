@@ -29,6 +29,13 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showNewMessage(message: MessageViewModel)
 
     /**
+     * Dispatch to the recycler views adapter that we should remove a message.
+     *
+     * @param msgId The id of the message to be removed.
+     */
+    fun dispatchDeleteMessage(msgId: String)
+
+    /**
      * Dispatch a update to the recycler views adapter about a changed message.
      *
      * @param index The index of the changed message
@@ -36,6 +43,5 @@ interface ChatRoomView : LoadingView, MessageView {
     fun dispatchUpdateMessage(index: Int, message: MessageViewModel)
 
     fun disableMessageInput()
-
     fun enableMessageInput(clear: Boolean = false)
 }
