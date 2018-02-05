@@ -28,7 +28,7 @@ import javax.inject.Inject
 class MessageParser @Inject constructor(val context: Application, private val configuration: SpannableConfiguration) {
 
     private val parser = Markwon.createParser()
-    private val userPattern = Pattern.compile("(@[\\w.]+)",
+    private val usernameRegex = Pattern.compile("([^\\S]|^)+(@[\\w.]+)",
             Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
 
     /**
@@ -65,11 +65,11 @@ class MessageParser @Inject constructor(val context: Application, private val co
     }
 
     private fun applySpans(text: CharSequence) {
-        val matcher = userPattern.matcher(text)
+        val matcher = usernameRegex.matcher(text)
         val result = text as Spannable
         while (matcher.find()) {
-            val user = matcher.group(1)
-            val start = matcher.start()
+            val user = matcher.group(2)
+            val start = matcher.start(2)
             //TODO: should check if username actually exists prior to applying.
             result.setSpan(UsernameClickableSpan(), start, start + user.length, 0)
         }
