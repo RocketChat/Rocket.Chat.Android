@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
+import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
@@ -13,10 +14,7 @@ import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.connect
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.unsubscibre
-import chat.rocket.core.internal.rest.deleteMessage
-import chat.rocket.core.internal.rest.me
-import chat.rocket.core.internal.rest.messages
-import chat.rocket.core.internal.rest.sendMessage
+import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
@@ -67,11 +65,16 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
-    fun sendMessage(chatRoomId: String, text: String) {
+    fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
             view.disableMessageInput()
             try {
-                val message = client.sendMessage(chatRoomId, text)
+                val message: Message
+                if (messageId == null) {
+                    message = client.sendMessage(chatRoomId, text)
+                } else {
+                    message = client.updateMessage(chatRoomId, messageId, text)
+                }
                 // ignore message for now, will receive it on the stream
                 view.enableMessageInput(clear = true)
             } catch (ex: Exception) {
@@ -79,8 +82,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
+                    view.showGenericErrorMessage()
+                }
 
                 view.enableMessageInput()
             }
@@ -192,7 +195,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     is RoomType.Livechat -> "livechat"
                     is RoomType.Custom -> "custom" //TODO: put appropriate callback string here.
                 }
-                view.showReplyStatus("[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ", m.message)
+                view.showReplyingAction(user, "[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ", m.message)
             }
         }
     }
@@ -211,6 +214,24 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }
+        }
+    }
+
+    /**
+     * Update message identified by given id with given text.
+     *
+     * @param roomId The id of the room of the message.
+     * @param messageId The id of the message to update.
+     * @param text The updated text.
+     */
+    fun editMessage(roomId: String, messageId: String, text: String) {
+        launchUI(strategy) {
+            if (!getPermissionsInteractor.isMessageEditingAllowed()) {
+                coroutineContext.cancel()
+                view.showMessage(R.string.permission_editing_not_allowed)
+                return@launchUI
+            }
+            view.showEditingAction(roomId, messageId, text)
         }
     }
 

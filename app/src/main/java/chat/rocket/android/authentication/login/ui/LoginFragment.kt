@@ -6,7 +6,10 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import android.widget.ScrollView
 import android.widget.Toast
@@ -167,8 +170,9 @@ class LoginFragment : Fragment(), LoginView {
         enableUserInput(true)
     }
 
-    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    override fun showMessage(resId: Int) = showMessage(getString(resId))
 
+    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
@@ -216,7 +220,7 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     // Returns true if *all* EditTexts are empty.
-    private fun isEditTextEmpty(): Boolean =  text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
+    private fun isEditTextEmpty(): Boolean = text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
 
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({

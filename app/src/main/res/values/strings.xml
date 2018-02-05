@@ -67,5 +67,9 @@
     <string name="action_msg_pin">Pin Message</string>
     <string name="action_msg_star">Star Message</string>
     <string name="action_msg_share">Share</string>
+    <string name="action_title_editing">Editing Message</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">Editing not allowed</string>
 
 </resources>

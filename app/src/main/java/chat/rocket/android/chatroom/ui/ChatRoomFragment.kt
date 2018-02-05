@@ -49,8 +49,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private lateinit var chatRoomType: String
     private var isChatRoomReadOnly: Boolean = false
     private lateinit var adapter: ChatRoomAdapter
-    private lateinit var citationSnackbar: CitationSnackbar
+    private lateinit var actionSnackbar: ActionSnackbar
     private var citation: String? = null
+    private var editingMessageId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +74,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
         setupComposer()
-        setupCitationSnackbar()
+        setupActionSnackbar()
     }
 
     override fun onDestroyView() {
@@ -104,7 +105,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun sendMessage(text: String) {
         if (!text.isBlank()) {
-            presenter.sendMessage(chatRoomId, text)
+            presenter.sendMessage(chatRoomId, text, editingMessageId)
         }
     }
 
@@ -133,11 +134,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         adapter.removeItem(msgId)
     }
 
-    override fun showReplyStatus(replyMarkdown: String, quotedMessage: String) {
+    override fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String) {
         activity?.apply {
             citation = replyMarkdown
-            citationSnackbar.text = quotedMessage
-            citationSnackbar.show()
+            actionSnackbar.title = username
+            actionSnackbar.text = quotedMessage
+            actionSnackbar.show()
         }
     }
 
@@ -147,6 +149,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 
+    override fun showMessage(resId: Int) = showMessage(getString(resId))
+
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun copyToClipboard(message: String) {
@@ -154,6 +158,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.setPrimaryClip(ClipData.newPlainText("", message))
         }
+    }
+
+    override fun showEditingAction(roomId: String, messageId: String, text: String) {
+        activity?.apply {
+            actionSnackbar.title = getString(R.string.action_title_editing)
+            actionSnackbar.text = text
+            actionSnackbar.show()
+            text_message.textContent = text
+            editingMessageId = messageId
+        }
+
     }
 
     private fun setupComposer() {
@@ -165,20 +180,22 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                 var textMessage = citation ?: ""
                 textMessage = textMessage + text_message.textContent
                 sendMessage(textMessage)
-                clearCitation()
+                clearActionMessage()
             }
         }
     }
 
-    private fun setupCitationSnackbar() {
-        citationSnackbar = CitationSnackbar.make(message_list_container, "")
-        citationSnackbar.cancelView.setOnClickListener({
-            clearCitation()
+    private fun setupActionSnackbar() {
+        actionSnackbar = ActionSnackbar.make(message_list_container, "")
+        actionSnackbar.cancelView.setOnClickListener({
+            clearActionMessage()
         })
     }
 
-    private fun clearCitation() {
+    private fun clearActionMessage() {
         citation = null
-        citationSnackbar.dismiss()
+        editingMessageId = null
+        text_message.text.clear()
+        actionSnackbar.dismiss()
     }
 }

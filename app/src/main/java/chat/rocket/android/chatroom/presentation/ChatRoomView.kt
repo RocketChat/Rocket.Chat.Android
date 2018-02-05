@@ -45,10 +45,11 @@ interface ChatRoomView : LoadingView, MessageView {
     /**
      * Show reply status above the message composer.
      *
+     * @param username The username or name of the user to reply/quote to.
      * @param replyMarkdown The markdown of the message reply.
      * @param quotedMessage The message to quote.
      */
-    fun showReplyStatus(replyMarkdown: String, quotedMessage: String)
+    fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String)
 
     /**
      * Copy message to clipboard.
@@ -56,6 +57,11 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param message The message to copy.
      */
     fun copyToClipboard(message: String)
+
+    /**
+     * Show edit status above the message composer.
+     */
+    fun showEditingAction(roomId: String, messageId: String, text: String)
 
     fun disableMessageInput()
     fun enableMessageInput(clear: Boolean = false)

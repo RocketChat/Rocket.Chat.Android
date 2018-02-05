@@ -12,9 +12,10 @@
             android:icon="@drawable/ic_quote_black_24px"
             android:title="@string/action_msg_quote" />
 
-        <!--<item-->
-        <!--android:id="@+id/action_menu_msg_edit"-->
-        <!--android:title="@string/action_msg_edit" />-->
+        <item
+            android:id="@+id/action_menu_msg_edit"
+            android:icon="@drawable/ic_edit_black_24px"
+            android:title="@string/action_msg_edit" />
 
         <item
             android:id="@+id/action_menu_msg_copy"
@@ -22,19 +23,19 @@
             android:title="@string/action_msg_copy" />
 
         <!--<item-->
-            <!--android:id="@+id/action_menu_msg_share"-->
-            <!--android:icon="@drawable/ic_share_black_24px"-->
-            <!--android:title="@string/action_msg_share" />-->
+        <!--android:id="@+id/action_menu_msg_share"-->
+        <!--android:icon="@drawable/ic_share_black_24px"-->
+        <!--android:title="@string/action_msg_share" />-->
 
         <!--<item-->
-            <!--android:id="@+id/action_menu_msg_pin"-->
-            <!--android:icon="@drawable/ic_pin_black_24dp"-->
-            <!--android:title="@string/action_msg_pin" />-->
+        <!--android:id="@+id/action_menu_msg_pin"-->
+        <!--android:icon="@drawable/ic_pin_black_24dp"-->
+        <!--android:title="@string/action_msg_pin" />-->
 
         <!--<item-->
-            <!--android:id="@+id/action_menu_msg_star"-->
-            <!--android:icon="@drawable/ic_star_black_24px"-->
-            <!--android:title="@string/action_msg_star" />-->
+        <!--android:id="@+id/action_menu_msg_star"-->
+        <!--android:icon="@drawable/ic_star_black_24px"-->
+        <!--android:title="@string/action_msg_star" />-->
     </group>
 
     <group android:id="@+id/dangerous_actions">

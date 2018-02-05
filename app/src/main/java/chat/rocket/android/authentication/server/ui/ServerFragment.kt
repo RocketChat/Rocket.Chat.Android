@@ -1,6 +1,7 @@
 package chat.rocket.android.authentication.server.ui
 
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -55,6 +56,8 @@ class ServerFragment : Fragment(), ServerView {
         view_loading.setVisible(false)
         enableUserInput(true)
     }
+
+    override fun showMessage(resId: Int) = showMessage(getString(resId))
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 

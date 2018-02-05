@@ -65,5 +65,9 @@
     <string name="action_msg_pin">Pinar Mensagem</string>
     <string name="action_msg_star">Favoritar Mensagem</string>
     <string name="action_msg_share">Compartilhar</string>
+    <string name="action_title_editing">Editando Mensagem</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">Edição não permitida</string>
 
 </resources>
