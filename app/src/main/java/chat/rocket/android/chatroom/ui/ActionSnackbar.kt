@@ -20,10 +20,10 @@ class CitationSnackbar : BaseTransientBottomBar<CitationSnackbar> {
     companion object {
         fun make(parentViewGroup: ViewGroup, content: String): CitationSnackbar {
             val context = parentViewGroup.context
-            val view = LayoutInflater.from(context).inflate(R.layout.quote_bar, parentViewGroup, false)
+            val view = LayoutInflater.from(context).inflate(R.layout.message_action_bar, parentViewGroup, false)
             val citationSnackbar = CitationSnackbar(parentViewGroup, view, CallbackImpl(view))
-            citationSnackbar.textView = view.findViewById(R.id.text_view_quote) as TextView
-            citationSnackbar.cancelView = view.findViewById(R.id.image_view_cancel_quote) as ImageView
+            citationSnackbar.textView = view.findViewById(R.id.text_view_action_text) as TextView
+            citationSnackbar.cancelView = view.findViewById(R.id.image_view_action_cancel_quote) as ImageView
             citationSnackbar.duration = BaseTransientBottomBar.LENGTH_INDEFINITE
             val spannable = SpannableString(content)
             citationSnackbar.marginDrawable = context.getDrawable(R.drawable.quote)
