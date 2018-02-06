@@ -57,6 +57,7 @@
     <string name="message_user_joined_channel">Has joined the channel.</string>
     <string name="message_welcome">Welcome %s</string>
     <string name="message_removed">Message removed</string>
+    <string name="message_pinned">Pinned a message:</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
