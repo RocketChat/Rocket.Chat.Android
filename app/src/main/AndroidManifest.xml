@@ -47,6 +47,10 @@
             android:name=".chatroom.ui.ChatRoomActivity"
             android:theme="@style/AppTheme" />
 
+        <activity
+            android:name=".chatroom.ui.PinnedMessagesActivity"
+            android:theme="@style/AppTheme" />
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"

@@ -29,7 +29,7 @@ class GetChatRoomsInteractor @Inject constructor(private val repository: ChatRoo
      *
      * @return The ChatRoom object or null if we couldn't find any.
      */
-    suspend fun getByRoomId(serverUrl: String, roomId: String): ChatRoom {
+    suspend fun getById(serverUrl: String, roomId: String): ChatRoom? {
         return async(CommonPool) {
             val allChatRooms = repository.get(serverUrl)
             return@async allChatRooms.first {

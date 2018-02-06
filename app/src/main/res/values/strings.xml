@@ -72,4 +72,7 @@
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing not allowed</string>
 
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">Pinned Messages</string>
+
 </resources>

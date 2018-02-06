@@ -3,14 +3,13 @@ package chat.rocket.android.chatroom.ui
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -66,6 +65,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_chat_room)
@@ -80,6 +80,25 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onDestroyView() {
         presenter.unsubscribeMessages()
         super.onDestroyView()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.chatroom_actions, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_pinned_messages -> {
+                val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
+                    putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+                    putExtra(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
+                    putExtra(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
+                }
+                startActivity(intent)
+            }
+        }
+        return true
     }
 
     override fun showMessages(dataSet: List<MessageViewModel>, serverUrl: String) {
