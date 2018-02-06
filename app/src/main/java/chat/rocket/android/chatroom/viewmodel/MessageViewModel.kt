@@ -26,22 +26,26 @@ data class MessageViewModel(val context: Context,
                             private val message: Message,
                             private val settings: Map<String, Value<Any>>?) {
     val id: String = message.id
+    val isGroupable = message.groupable
+    val senderId = message.sender?.id
+    val avatarUri: String?
     val time: CharSequence
-    val sender: CharSequence
+    val senderName: CharSequence
     val content: CharSequence
     var attachmentUrl: String? = null
     var attachmentTitle: CharSequence? = null
     var attachmentType: AttachmentType? = null
+    private val baseUrl = settings?.get(SITE_URL)
 
     init {
-        sender = getSenderName()
-        content = getContent(context)
+        avatarUri = getUserAvatar()
         time = getTime()
+        senderName = getSender()
+        content = getContent(context)
 
         message.attachments?.let {
-            if (it.isEmpty() || it[0] == null) return@let
+            if (it.isEmpty()) return@let
             val attachment = it[0] as FileAttachment
-            val baseUrl = settings?.get(SITE_URL)
             baseUrl?.let {
                 attachmentUrl = attachmentUrl("${baseUrl.value}${attachment.url}")
                 attachmentTitle = attachment.title
@@ -56,36 +60,55 @@ data class MessageViewModel(val context: Context,
         }
     }
 
-    fun getAvatarUrl(serverUrl: String): String? {
-        return message.sender?.username.let {
-            return@let UrlHelper.getAvatarUrl(serverUrl, it.toString())
+    private fun getUserAvatar(): String? {
+        val username = message.sender?.username ?: "?"
+        return baseUrl?.let {
+            UrlHelper.getAvatarUrl(baseUrl.value.toString(), username)
         }
     }
 
-    fun getTime() = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(message.timestamp))
+    private fun getTime() =
+        DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(message.timestamp))
 
-    fun getSenderName(): CharSequence {
+    private fun getSender(): CharSequence {
         val useRealName = settings?.get(USE_REALNAME)?.value as Boolean
         val username = message.sender?.username
         val realName = message.sender?.name
         val senderName = if (useRealName) realName else username
-        return senderName ?: username.toString()
+        return senderName ?: context.getString(R.string.msg_unknown)
     }
 
-    fun getContent(context: Context): CharSequence {
+    private fun getContent(context: Context): CharSequence {
         val contentMessage: CharSequence
         when (message.type) {
-        //TODO: Add implementation for Welcome type.
-            is MessageRemoved -> contentMessage = getSystemMessage(context.getString(R.string.message_removed))
-            is UserJoined -> contentMessage = getSystemMessage(context.getString(R.string.message_user_joined_channel))
-            is UserLeft -> contentMessage = getSystemMessage(context.getString(R.string.message_user_left))
-            is UserAdded -> contentMessage = getSystemMessage(
-                    context.getString(R.string.message_user_added_by, message.message, message.sender?.username))
-            is RoomNameChanged -> contentMessage = getSystemMessage(
-                    context.getString(R.string.message_room_name_changed, message.message, message.sender?.username))
-            is UserRemoved -> contentMessage = getSystemMessage(
-                    context.getString(R.string.message_user_removed_by, message.message, message.sender?.username))
-            else -> contentMessage = getNormalMessage()
+            //TODO: Add implementation for Welcome type.
+            is MessageRemoved -> {
+                contentMessage = getSystemMessage(context.getString(R.string.message_removed))
+            }
+            is UserJoined -> {
+                contentMessage = getSystemMessage(context.getString(R.string.message_user_joined_channel))
+            }
+            is UserLeft -> {
+                contentMessage = getSystemMessage(context.getString(R.string.message_user_left))
+            }
+            is UserAdded -> {
+                contentMessage = getSystemMessage(context.getString(R.string.message_user_added_by,
+                    message.message,
+                    message.sender?.username))
+            }
+            is RoomNameChanged -> {
+                contentMessage = getSystemMessage(context.getString(R.string.message_room_name_changed,
+                    message.message,
+                    message.sender?.username))
+            }
+            is UserRemoved -> {
+                contentMessage = getSystemMessage(context.getString(R.string.message_user_removed_by,
+                    message.message,
+                    message.sender?.username))
+            }
+            else -> {
+                contentMessage = getNormalMessage()
+            }
         }
         return contentMessage
     }
@@ -94,10 +117,14 @@ data class MessageViewModel(val context: Context,
 
     private fun getSystemMessage(content: String): CharSequence {
         val spannableMsg = SpannableString(content)
-        spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
-                0)
-        spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length,
-                0)
+        spannableMsg.setSpan(StyleSpan(Typeface.ITALIC),
+            0,
+            spannableMsg.length,
+            0)
+        spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY),
+            0,
+            spannableMsg.length,
+            0)
 
         val username = message.sender?.username
         val message = message.message
@@ -108,13 +135,17 @@ data class MessageViewModel(val context: Context,
         val messageTextEndIndex = messageTextStartIndex + message.length
 
         if (usernameTextStartIndex > -1) {
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), usernameTextStartIndex, usernameTextEndIndex,
-                    0)
+            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC),
+                usernameTextStartIndex,
+                usernameTextEndIndex,
+                0)
         }
 
         if (messageTextStartIndex > -1) {
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), messageTextStartIndex, messageTextEndIndex,
-                    0)
+            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC),
+                messageTextStartIndex,
+                messageTextEndIndex,
+                0)
         }
 
         return spannableMsg

@@ -49,7 +49,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }
 
                 val messagesViewModels = mapper.mapToViewModelList(messages, settings)
-                view.showMessages(messagesViewModels, serverInteractor.get()!!)
+                view.showMessages(messagesViewModels)
 
                 // Subscribe after getting the first page of messages from REST
                 if (offset == 0L) {
