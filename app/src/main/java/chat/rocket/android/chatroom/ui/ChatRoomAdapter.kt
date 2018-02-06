@@ -3,7 +3,6 @@ package chat.rocket.android.chatroom.ui
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
@@ -11,33 +10,33 @@ import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisible
-import chat.rocket.common.util.ifNull
 import com.facebook.drawee.view.SimpleDraweeView
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
-class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+class ChatRoomAdapter: RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+    private val dataSet = ArrayList<MessageViewModel>()
 
     init {
         setHasStableIds(true)
     }
 
-    val dataSet = ArrayList<MessageViewModel>()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_message), serverUrl)
+            ViewHolder(parent.inflate(R.layout.item_message))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        holder.bind(dataSet[position], dataSet.getOrNull(position + 1))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>?) {
-        onBindViewHolder(holder, position)
-    }
+    override fun getItemCount(): Int =
+        dataSet.size
 
-    override fun getItemCount(): Int = dataSet.size
+    override fun getItemViewType(position: Int): Int =
+        position
 
-    override fun getItemViewType(position: Int): Int = position
+    override fun getItemId(position: Int): Long =
+        dataSet[position].id.hashCode().toLong()
 
     fun addDataSet(dataSet: List<MessageViewModel>) {
         val previousDataSetSize = this.dataSet.size
@@ -55,21 +54,27 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
         notifyItemChanged(index)
     }
 
-    override fun getItemId(position: Int): Long {
-        return dataSet[position].id.hashCode().toLong()
-    }
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    class ViewHolder(itemView: View, val serverUrl: String) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(message: MessageViewModel) = with(itemView) {
-            bindUserAvatar(message, image_avatar, image_unknown_avatar)
-            text_user_name.text = message.sender
+        fun bind(message: MessageViewModel, nextMessage: MessageViewModel?) = with(itemView) {
+            image_avatar.setImageURI(message.avatarUri)
+            text_sender.text = message.senderName
             text_message_time.text = message.time
-            text_content.text = message.content
 
-            bindAttachment(message, message_attachment, image_attachment, audio_video_attachment,
-                    file_name)
+            if (nextMessage != null) {
+                if (isSequential(message, nextMessage)) {
+                    image_avatar.setVisible(false)
+                    text_sender.setVisible(false)
+                    text_message_time.setVisible(false)
+                }
+            }
+
+            text_content.text = message.content
+            bindAttachment(message, message_attachment, image_attachment, audio_video_attachment, file_name)
         }
+
+        private fun isSequential(message: MessageViewModel, nextMessage: MessageViewModel): Boolean =
+            (message.isGroupable && nextMessage.isGroupable) && (message.senderId == nextMessage.senderId)
 
         private fun bindAttachment(message: MessageViewModel,
                                    attachment_container: View,
@@ -112,15 +117,6 @@ class ChatRoomAdapter(private val serverUrl: String) : RecyclerView.Adapter<Chat
                 audio_video_attachment.setVisible(videoVisible)
                 file_name.text = message.attachmentTitle
             }
-        }
-
-        private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.getAvatarUrl(serverUrl).let {
-            drawee.setImageURI(it.toString())
-            drawee.setVisible(true)
-            imageUnknownAvatar.setVisible(false)
-        }.ifNull {
-            drawee.setVisible(false)
-            imageUnknownAvatar.setVisible(true)
         }
     }
 }
