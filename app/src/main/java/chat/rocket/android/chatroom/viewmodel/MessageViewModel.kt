@@ -178,23 +178,27 @@ data class MessageViewModel(val context: Context,
                 spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), messageTextStartIndex, messageTextEndIndex,
                         0)
             }
-        } else {
-            spannableMsg.apply {
-                var header = "\n$attachmentMessageAuthor ${getTime(attachmentTimestamp!!)}\n"
-
-                append(SpannableString(header).apply {
-                    setSpan(StyleSpan(Typeface.BOLD), 1, attachmentMessageAuthor!!.length + 1, 0)
-                    setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 1, length, 0)
-                    setSpan(AbsoluteSizeSpan(context.resources.getDimensionPixelSize(R.dimen.message_time_text_size)),
-                            attachmentMessageAuthor!!.length + 1, length, 0)
-                })
-                append(SpannableString(parser.renderMarkdown(attachmentMessageText!!)).apply {
-                    setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 0, length, 0)
-                })
-            }
+        } else if (attachmentType == AttachmentType.Message) {
+            spannableMsg.append(quoteMessage(attachmentMessageAuthor!!, attachmentMessageText!!, attachmentTimestamp!!))
         }
 
         return spannableMsg
+    }
+
+    private fun quoteMessage(author: String, text: String, timestamp: Long): CharSequence {
+        return SpannableStringBuilder().apply {
+            val header = "\n$author ${getTime(timestamp)}\n"
+
+            append(SpannableString(header).apply {
+                setSpan(StyleSpan(Typeface.BOLD), 1, author.length + 1, 0)
+                setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 1, length, 0)
+                setSpan(AbsoluteSizeSpan(context.resources.getDimensionPixelSize(R.dimen.message_time_text_size)),
+                        author.length + 1, length, 0)
+            })
+            append(SpannableString(parser.renderMarkdown(text)).apply {
+                setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 0, length, 0)
+            })
+        }
     }
 
     private fun attachmentUrl(url: String): String {
