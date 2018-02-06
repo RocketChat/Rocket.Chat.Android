@@ -27,10 +27,10 @@
         <!--android:icon="@drawable/ic_share_black_24px"-->
         <!--android:title="@string/action_msg_share" />-->
 
-        <!--<item-->
-        <!--android:id="@+id/action_menu_msg_pin"-->
-        <!--android:icon="@drawable/ic_pin_black_24dp"-->
-        <!--android:title="@string/action_msg_pin" />-->
+        <item
+            android:id="@+id/action_menu_msg_pin"
+            android:icon="@drawable/ic_pin_black_24dp"
+            android:title="@string/action_msg_pin" />
 
         <!--<item-->
         <!--android:id="@+id/action_menu_msg_star"-->

@@ -115,6 +115,7 @@ class ChatRoomAdapter(private val serverUrl: String,
                     R.id.action_menu_msg_reply -> presenter.citeMessage(serverUrl, roomType, roomName, id, "", true)
                     R.id.action_menu_msg_copy -> presenter.copyMessage(id)
                     R.id.action_menu_msg_edit -> presenter.editMessage(roomId, id, getOriginalMessage())
+                    R.id.action_menu_msg_pin -> presenter.pinMessage(id)
                     else -> TODO("Not implemented")
                 }
             }
