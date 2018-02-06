@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import chat.rocket.android.R
@@ -12,16 +14,12 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.SITE_URL
-import chat.rocket.android.server.domain.USE_REALNAME
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.common.model.Token
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType.*
 import chat.rocket.core.model.Value
-import chat.rocket.core.model.attachment.AudioAttachment
-import chat.rocket.core.model.attachment.FileAttachment
-import chat.rocket.core.model.attachment.ImageAttachment
-import chat.rocket.core.model.attachment.VideoAttachment
+import chat.rocket.core.model.attachment.*
 import chat.rocket.core.model.url.Url
 import okhttp3.HttpUrl
 import timber.log.Timber
@@ -42,11 +40,15 @@ data class MessageViewModel(val context: Context,
     var attachmentUrl: String? = null
     var attachmentTitle: CharSequence? = null
     var attachmentType: AttachmentType? = null
+    var attachmentMessageText: String? = null
+    var attachmentMessageAuthor: String? = null
+    var attachmentMessageIcon: String? = null
+    var attachmentTimestamp: Long? = null
     var systemMessage: Boolean = false
 
     init {
         sender = getSenderName()
-        time = getTime()
+        time = getTime(message.timestamp)
 
         val baseUrl = settings.get(SITE_URL)
         message.urls?.let {
@@ -67,17 +69,27 @@ data class MessageViewModel(val context: Context,
 
         message.attachments?.let {
             if (it.isEmpty() || it[0] == null) return@let
-            val attachment = it[0] as FileAttachment
-            baseUrl?.let {
-                attachmentUrl = attachmentUrl("${baseUrl.value}${attachment.url}")
-                attachmentTitle = attachment.title
 
-                attachmentType = when (attachment) {
-                    is ImageAttachment -> AttachmentType.Image
-                    is VideoAttachment -> AttachmentType.Video
-                    is AudioAttachment -> AttachmentType.Audio
-                    else -> null
+            if (it[0] is FileAttachment) {
+                val attachment = it[0] as FileAttachment
+                baseUrl?.let {
+                    attachmentUrl = attachmentUrl("${baseUrl.value}${attachment.url}")
+                    attachmentTitle = attachment.title
+
+                    attachmentType = when (attachment) {
+                        is ImageAttachment -> AttachmentType.Image
+                        is VideoAttachment -> AttachmentType.Video
+                        is AudioAttachment -> AttachmentType.Audio
+                        else -> null
+                    }
                 }
+            } else if (it[0] is MessageAttachment) {
+                val attachment = it[0] as MessageAttachment
+                attachmentType = AttachmentType.Message
+                attachmentMessageText = attachment.text ?: ""
+                attachmentMessageAuthor = attachment.author ?: ""
+                attachmentMessageIcon = attachment.icon
+                attachmentTimestamp = attachment.timestamp
             }
         }
 
@@ -102,7 +114,7 @@ data class MessageViewModel(val context: Context,
 
     fun getOriginalMessage() = message.message
 
-    private fun getTime() = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(message.timestamp))
+    private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
 
     private fun getSenderName(): CharSequence {
         val username = message.sender?.username
@@ -124,6 +136,8 @@ data class MessageViewModel(val context: Context,
                     context.getString(R.string.message_room_name_changed, message.message, message.sender?.username))
             is UserRemoved -> contentMessage = getSystemMessage(
                     context.getString(R.string.message_user_removed_by, message.message, message.sender?.username))
+            is MessagePinned -> contentMessage = getSystemMessage(
+                    context.getString(R.string.message_pinned))
             else -> contentMessage = getNormalMessage()
         }
         return contentMessage
@@ -140,28 +154,44 @@ data class MessageViewModel(val context: Context,
 
     private fun getSystemMessage(content: String): CharSequence {
         systemMessage = true
-        val spannableMsg = SpannableString(content)
+        val spannableMsg = SpannableStringBuilder(content)
         spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
                 0)
         spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length,
                 0)
 
-        val username = message.sender?.username
-        val message = message.message
+        if (attachmentType == null) {
+            val username = message.sender?.username
+            val message = message.message
 
-        val usernameTextStartIndex = if (username != null) content.indexOf(username) else -1
-        val usernameTextEndIndex = if (username != null) usernameTextStartIndex + username.length else -1
-        val messageTextStartIndex = if (message.isNotEmpty()) content.indexOf(message) else -1
-        val messageTextEndIndex = messageTextStartIndex + message.length
+            val usernameTextStartIndex = if (username != null) content.indexOf(username) else -1
+            val usernameTextEndIndex = if (username != null) usernameTextStartIndex + username.length else -1
+            val messageTextStartIndex = if (message.isNotEmpty()) content.indexOf(message) else -1
+            val messageTextEndIndex = messageTextStartIndex + message.length
 
-        if (usernameTextStartIndex > -1) {
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), usernameTextStartIndex, usernameTextEndIndex,
-                    0)
-        }
+            if (usernameTextStartIndex > -1) {
+                spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), usernameTextStartIndex, usernameTextEndIndex,
+                        0)
+            }
 
-        if (messageTextStartIndex > -1) {
-            spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), messageTextStartIndex, messageTextEndIndex,
-                    0)
+            if (messageTextStartIndex > -1) {
+                spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), messageTextStartIndex, messageTextEndIndex,
+                        0)
+            }
+        } else {
+            spannableMsg.apply {
+                var header = "\n$attachmentMessageAuthor ${getTime(attachmentTimestamp!!)}\n"
+
+                append(SpannableString(header).apply {
+                    setSpan(StyleSpan(Typeface.BOLD), 1, attachmentMessageAuthor!!.length + 1, 0)
+                    setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 1, length, 0)
+                    setSpan(AbsoluteSizeSpan(context.resources.getDimensionPixelSize(R.dimen.message_time_text_size)),
+                            attachmentMessageAuthor!!.length + 1, length, 0)
+                })
+                append(SpannableString(parser.renderMarkdown(attachmentMessageText!!)).apply {
+                    setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 0, length, 0)
+                })
+            }
         }
 
         return spannableMsg
@@ -185,4 +215,5 @@ sealed class AttachmentType {
     object Image : AttachmentType()
     object Video : AttachmentType()
     object Audio : AttachmentType()
+    object Message : AttachmentType()
 }

@@ -40,13 +40,15 @@ class MessageParser @Inject constructor(val context: Application, private val co
      *
      * @return A Spannable with the parsed markdown.
      */
-    fun renderMarkdown(text: String, quote: MessageViewModel?, urls: List<Url>): CharSequence {
+    fun renderMarkdown(text: String, quote: MessageViewModel? = null, urls: List<Url>? = null): CharSequence {
         val builder = SpannableBuilder()
         var content: String = text
 
         // Replace all url links to markdown url syntax.
-        for (url in urls) {
-            content = content.replace(url.url, "[${url.url}](${url.url})")
+        urls?.let {
+            for (url in urls) {
+                content = content.replace(url.url, "[${url.url}](${url.url})")
+            }
         }
 
         val parentNode = parser.parse(toLenientMarkdown(content))
