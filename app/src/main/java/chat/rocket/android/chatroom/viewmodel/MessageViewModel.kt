@@ -44,11 +44,13 @@ data class MessageViewModel(val context: Context,
     var attachmentMessageAuthor: String? = null
     var attachmentMessageIcon: String? = null
     var attachmentTimestamp: Long? = null
-    var systemMessage: Boolean = false
+    var isSystemMessage: Boolean = false
+    var isPinned: Boolean = false
 
     init {
         sender = getSenderName()
         time = getTime(message.timestamp)
+        isPinned = message.pinned
 
         val baseUrl = settings.get(SITE_URL)
         message.urls?.let {
@@ -153,7 +155,7 @@ data class MessageViewModel(val context: Context,
     }
 
     private fun getSystemMessage(content: String): CharSequence {
-        systemMessage = true
+        isSystemMessage = true
         val spannableMsg = SpannableStringBuilder(content)
         spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
                 0)

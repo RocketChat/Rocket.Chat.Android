@@ -246,6 +246,17 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    fun unpinMessage(messageId: String) {
+        launchUI(strategy) {
+            //TODO: Check permissions.
+            try {
+                client.unpinMessage(messageId)
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
     private suspend fun listenMessages(roomId: String) {
         launch(CommonPool + strategy.jobs) {
             for (message in client.messagesChannel) {

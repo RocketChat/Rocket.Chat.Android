@@ -21,7 +21,8 @@ import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
-import ru.whalemare.sheetmenu.SheetMenu
+import ru.whalemare.sheetmenu.extension.inflate
+import ru.whalemare.sheetmenu.extension.toList
 
 class ChatRoomAdapter(private val serverUrl: String,
                       private val roomType: String,
@@ -98,10 +99,16 @@ class ChatRoomAdapter(private val serverUrl: String,
                     file_name)
 
             text_content.setOnClickListener {
-                if (!message.systemMessage) {
-                    SheetMenu().apply {
-                        click = this@ViewHolder
-                        menu = R.menu.message_actions
+                if (!message.isSystemMessage) {
+                    val menuItems = it.context.inflate(R.menu.message_actions).toList()
+                    menuItems.find { it.itemId == R.id.action_menu_msg_pin_unpin }?.apply {
+                        val isPinned = message.isPinned
+                        setTitle(if (isPinned) R.string.action_msg_unpin else R.string.action_msg_pin)
+                        setChecked(isPinned)
+                    }
+                    val adapter = ActionListAdapter(menuItems, this@ViewHolder)
+                    BottomSheetMenu(adapter).apply {
+
                     }.show(it.context)
                 }
             }
@@ -115,7 +122,15 @@ class ChatRoomAdapter(private val serverUrl: String,
                     R.id.action_menu_msg_reply -> presenter.citeMessage(serverUrl, roomType, roomName, id, "", true)
                     R.id.action_menu_msg_copy -> presenter.copyMessage(id)
                     R.id.action_menu_msg_edit -> presenter.editMessage(roomId, id, getOriginalMessage())
-                    R.id.action_menu_msg_pin -> presenter.pinMessage(id)
+                    R.id.action_menu_msg_pin_unpin -> {
+                        with(item) {
+                            if (!isChecked) {
+                                presenter.pinMessage(id)
+                            } else {
+                                presenter.unpinMessage(id)
+                            }
+                        }
+                    }
                     else -> TODO("Not implemented")
                 }
             }

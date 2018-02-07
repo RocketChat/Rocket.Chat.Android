@@ -63,7 +63,8 @@
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
     <string name="action_msg_delete">Remover</string>
-    <string name="action_msg_pin">Pinar Mensagem</string>
+    <string name="action_msg_pin">Fixar Mensagem</string>
+    <string name="action_msg_unpin">Desafixar Messagem</string>
     <string name="action_msg_star">Favoritar Mensagem</string>
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando Mensagem</string>

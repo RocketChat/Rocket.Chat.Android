@@ -28,7 +28,7 @@
         <!--android:title="@string/action_msg_share" />-->
 
         <item
-            android:id="@+id/action_menu_msg_pin"
+            android:id="@+id/action_menu_msg_pin_unpin"
             android:icon="@drawable/ic_pin_black_24dp"
             android:title="@string/action_msg_pin" />
 
