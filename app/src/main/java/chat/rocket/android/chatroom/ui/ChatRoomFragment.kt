@@ -16,6 +16,7 @@ import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisible
 import chat.rocket.android.util.textContent
@@ -43,6 +44,7 @@ private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 
 class ChatRoomFragment : Fragment(), ChatRoomView {
     @Inject lateinit var presenter: ChatRoomPresenter
+    @Inject lateinit var parser: MessageParser
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
@@ -205,7 +207,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     }
 
     private fun setupActionSnackbar() {
-        actionSnackbar = ActionSnackbar.make(message_list_container, "")
+        actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener({
             clearActionMessage()
         })

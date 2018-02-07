@@ -45,14 +45,14 @@ class MessageParser @Inject constructor(val context: Application, private val co
         var content: String = text
 
         // Replace all url links to markdown url syntax.
-        urls?.let {
+        if (urls != null) {
             for (url in urls) {
                 content = content.replace(url.url, "[${url.url}](${url.url})")
             }
         }
 
         val parentNode = parser.parse(toLenientMarkdown(content))
-        parentNode.accept(SpannableMarkdownVisitor(configuration, builder))
+        parentNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         quote?.apply {
             var quoteNode = parser.parse("> $sender $time")
             parentNode.appendChild(quoteNode)

@@ -14,26 +14,28 @@ import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.content
 import ru.noties.markwon.Markwon
+import javax.inject.Inject
 
 class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
 
     companion object {
-        fun make(parentViewGroup: ViewGroup, content: String): ActionSnackbar {
+        fun make(parentViewGroup: ViewGroup, content: String = "", parser: MessageParser): ActionSnackbar {
             val context = parentViewGroup.context
             val view = LayoutInflater.from(context).inflate(R.layout.message_action_bar, parentViewGroup, false)
-            val citationSnackbar = ActionSnackbar(parentViewGroup, view, CallbackImpl(view))
-            citationSnackbar.messageTextView = view.findViewById(R.id.text_view_action_text) as TextView
-            citationSnackbar.titleTextView = view.findViewById(R.id.text_view_action_title) as TextView
-            citationSnackbar.cancelView = view.findViewById(R.id.image_view_action_cancel_quote) as ImageView
-            citationSnackbar.duration = BaseTransientBottomBar.LENGTH_INDEFINITE
-            val spannable = SpannableString(content)
-            citationSnackbar.marginDrawable = context.getDrawable(R.drawable.quote)
-            spannable.setSpan(MessageParser.QuoteMarginSpan(citationSnackbar.marginDrawable, 10), 0, content.length, 0)
-            citationSnackbar.messageTextView.content = spannable
-            return citationSnackbar
+            val actionSnackbar = ActionSnackbar(parentViewGroup, view, CallbackImpl(view))
+            actionSnackbar.parser = parser
+            actionSnackbar.messageTextView = view.findViewById(R.id.text_view_action_text) as TextView
+            actionSnackbar.titleTextView = view.findViewById(R.id.text_view_action_title) as TextView
+            actionSnackbar.cancelView = view.findViewById(R.id.image_view_action_cancel_quote) as ImageView
+            actionSnackbar.duration = BaseTransientBottomBar.LENGTH_INDEFINITE
+            val spannable = Markwon.markdown(context, content).trim()
+            actionSnackbar.marginDrawable = context.getDrawable(R.drawable.quote)
+            actionSnackbar.messageTextView.content = spannable
+            return actionSnackbar
         }
     }
 
+    lateinit var parser: MessageParser
     lateinit var cancelView: View
     private lateinit var messageTextView: TextView
     private lateinit var titleTextView: TextView
@@ -41,7 +43,7 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
 
     var text: String = ""
         set(value) {
-            val spannable = Markwon.markdown(this.context, value) as Spannable
+            val spannable = parser.renderMarkdown(value) as Spannable
             spannable.setSpan(MessageParser.QuoteMarginSpan(marginDrawable, 10), 0, spannable.length, 0)
             messageTextView.content = spannable
         }
