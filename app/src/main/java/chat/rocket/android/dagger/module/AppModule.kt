@@ -4,8 +4,8 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import chat.rocket.android.BuildConfig
+import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.app.utils.CustomImageFormatConfigurator
 import chat.rocket.android.authentication.infraestructure.MemoryTokenRepository
@@ -206,14 +206,15 @@ class AppModule {
     @Provides
     @Singleton
     fun provideConfiguration(context: Application, client: OkHttpClient): SpannableConfiguration {
+        val res = context.resources
         return SpannableConfiguration.builder(context)
                 .asyncDrawableLoader(AsyncDrawableLoader.builder()
                         .client(client)
                         .executorService(Executors.newCachedThreadPool())
-                        .resources(context.resources)
+                        .resources(res)
                         .build())
                 .theme(SpannableTheme.builder()
-                        .linkColor(Color.BLUE)
+                        .linkColor(res.getColor(R.color.colorAccent))
                         .build())
                 .build()
     }
