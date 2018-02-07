@@ -127,7 +127,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
     }
 
     class QuoteMarginSpan(quoteDrawable: Drawable, private var pad: Int) : LeadingMarginSpan, LineHeightSpan {
-        private var drawable: Drawable = quoteDrawable
+        private val drawable: Drawable = quoteDrawable
 
         override fun getLeadingMargin(first: Boolean): Int {
             return drawable.intrinsicWidth + pad
@@ -148,14 +148,14 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
 
         override fun chooseHeight(text: CharSequence, start: Int, end: Int,
-                                  istartv: Int, v: Int,
+                                  spanstartv: Int, v: Int,
                                   fm: Paint.FontMetricsInt) {
             if (end == (text as Spanned).getSpanEnd(this)) {
                 val ht = drawable.intrinsicHeight
-                var need = ht - (v + fm.descent - fm.ascent - istartv)
+                var need = ht - (v + fm.descent - fm.ascent - spanstartv)
                 if (need > 0)
                     fm.descent += need
-                need = ht - (v + fm.bottom - fm.top - istartv)
+                need = ht - (v + fm.bottom - fm.top - spanstartv)
                 if (need > 0)
                     fm.bottom += need
             }
