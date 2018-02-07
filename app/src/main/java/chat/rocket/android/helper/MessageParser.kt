@@ -128,12 +128,11 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class QuoteMarginSpan(b: Drawable, pad: Int) : LeadingMarginSpan, LineHeightSpan {
-        private var mDrawable: Drawable? = b
-        private var mPad: Int = pad
+    class QuoteMarginSpan(quoteDrawable: Drawable, private var pad: Int) : LeadingMarginSpan, LineHeightSpan {
+        private var drawable: Drawable = quoteDrawable
 
         override fun getLeadingMargin(first: Boolean): Int {
-            return mDrawable!!.intrinsicWidth + mPad
+            return drawable.intrinsicWidth + pad
         }
 
         override fun drawLeadingMargin(c: Canvas, p: Paint, x: Int, dir: Int,
@@ -143,18 +142,18 @@ class MessageParser @Inject constructor(val context: Application, private val co
             val st = (text as Spanned).getSpanStart(this)
             val ix = x
             val itop = layout.getLineTop(layout.getLineForOffset(st))
-            val dw = mDrawable!!.intrinsicWidth
-            val dh = mDrawable!!.intrinsicHeight
+            val dw = drawable.intrinsicWidth
+            val dh = drawable.intrinsicHeight
             // XXX What to do about Paint?
-            mDrawable!!.setBounds(ix, itop, ix + dw, itop + layout.height)
-            mDrawable!!.draw(c)
+            drawable.setBounds(ix, itop, ix + dw, itop + layout.height)
+            drawable.draw(c)
         }
 
         override fun chooseHeight(text: CharSequence, start: Int, end: Int,
                                   istartv: Int, v: Int,
                                   fm: Paint.FontMetricsInt) {
             if (end == (text as Spanned).getSpanEnd(this)) {
-                val ht = mDrawable!!.intrinsicHeight
+                val ht = drawable.intrinsicHeight
                 var need = ht - (v + fm.descent - fm.ascent - istartv)
                 if (need > 0)
                     fm.descent += need
