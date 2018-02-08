@@ -150,7 +150,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun deleteMessage(roomId: String, id: String) {
         launchUI(strategy) {
             if (!getPermissionsInteractor.isMessageDeletingAllowed()) {
-                coroutineContext.cancel()
                 return@launchUI
             }
             //TODO: Default delete message always to true. Until we have the permissions system
