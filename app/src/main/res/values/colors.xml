@@ -21,4 +21,7 @@
     <color name="darkGray">#a0a0a0</color>
     <color name="actionMenuColor">#727272</color>
 
+    <color name="linkTextColor">#FF074481</color>
+    <color name="linkBackgroundColor">#30074481</color>
+
 </resources>

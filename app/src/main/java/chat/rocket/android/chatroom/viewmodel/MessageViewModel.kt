@@ -12,6 +12,7 @@ import android.text.style.StyleSpan
 import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.useRealName
@@ -29,7 +30,8 @@ data class MessageViewModel(val context: Context,
                             private val message: Message,
                             private val settings: Map<String, Value<Any>>,
                             private val parser: MessageParser,
-                            private val messagesRepository: MessagesRepository) {
+                            private val messagesRepository: MessagesRepository,
+                            private val localRepository: LocalRepository) {
     val id: String = message.id
     val roomId: String = message.roomId
     val time: CharSequence
@@ -46,8 +48,10 @@ data class MessageViewModel(val context: Context,
     var attachmentTimestamp: Long? = null
     var isSystemMessage: Boolean = false
     var isPinned: Boolean = false
+    var currentUsername: String? = null
 
     init {
+        currentUsername = localRepository.get(LocalRepository.USERNAME_KEY)
         sender = getSenderName()
         time = getTime(message.timestamp)
         isPinned = message.pinned
@@ -153,9 +157,9 @@ data class MessageViewModel(val context: Context,
         var quoteViewModel: MessageViewModel? = null
         if (quote != null) {
             val quoteMessage: Message = quote!!
-            quoteViewModel = MessageViewModel(context, token, quoteMessage, settings, parser, messagesRepository)
+            quoteViewModel = MessageViewModel(context, token, quoteMessage, settings, parser, messagesRepository, localRepository)
         }
-        return parser.renderMarkdown(message.message, quoteViewModel, urlsWithMeta)
+        return parser.renderMarkdown(message.message, quoteViewModel, currentUsername)
     }
 
     private fun getSystemMessage(content: String): CharSequence {

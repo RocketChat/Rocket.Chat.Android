@@ -20,5 +20,6 @@ class SharedPrefsLocalRepository(private val preferences: SharedPreferences) : L
         clear(LocalRepository.KEY_PUSH_TOKEN)
         clear(LocalRepository.TOKEN_KEY + server)
         clear(LocalRepository.SETTINGS_KEY + server)
+        clear(LocalRepository.USERNAME_KEY + server)
     }
 }

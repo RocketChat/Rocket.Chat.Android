@@ -15,7 +15,6 @@ import android.text.style.*
 import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
-import chat.rocket.core.model.url.Url
 import org.commonmark.node.BlockQuote
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
@@ -28,7 +27,9 @@ import javax.inject.Inject
 class MessageParser @Inject constructor(val context: Application, private val configuration: SpannableConfiguration) {
 
     private val parser = Markwon.createParser()
-    private val usernameRegex = Pattern.compile("([^\\S]|^)+(@[\\w.]+)",
+    private val regexUsername = Pattern.compile("([^\\S]|^)+(@[\\w.]+)",
+            Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
+    private val regexLink = Pattern.compile("(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&/=]*)",
             Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
 
     /**
@@ -40,14 +41,19 @@ class MessageParser @Inject constructor(val context: Application, private val co
      *
      * @return A Spannable with the parsed markdown.
      */
-    fun renderMarkdown(text: String, quote: MessageViewModel? = null, urls: List<Url>? = null): CharSequence {
+    fun renderMarkdown(text: String, quote: MessageViewModel? = null, selfUsername: String? = null): CharSequence {
         val builder = SpannableBuilder()
         var content: String = text
 
         // Replace all url links to markdown url syntax.
-        if (urls != null) {
-            for (url in urls) {
-                content = content.replace(url.url, "[${url.url}](${url.url})")
+        val matcher = regexLink.matcher(content)
+        val consumed = mutableListOf<String>()
+        while (matcher.find()) {
+            val link = matcher.group(0)
+            // skip usernames
+            if (!link.startsWith("@") && !consumed.contains(link)) {
+                content = content.replace(link, "[$link]($link)")
+                consumed.add(link)
             }
         }
 
@@ -62,18 +68,22 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
 
         val result = builder.text()
-        applySpans(result)
+        applySpans(result, selfUsername)
         return result
     }
 
-    private fun applySpans(text: CharSequence) {
-        val matcher = usernameRegex.matcher(text)
+    private fun applySpans(text: CharSequence, currentUser: String?) {
+        val matcher = regexUsername.matcher(text)
         val result = text as Spannable
         while (matcher.find()) {
             val user = matcher.group(2)
             val start = matcher.start(2)
             //TODO: should check if username actually exists prior to applying.
-            result.setSpan(UsernameClickableSpan(), start, start + user.length, 0)
+            val linkColor = context.resources.getColor(R.color.linkTextColor)
+            val linkBackgroundColor = context.resources.getColor(R.color.linkBackgroundColor)
+            val referSelf = currentUser != null && "@$currentUser" == user
+            val usernameSpan = UsernameClickableSpan(linkBackgroundColor, linkColor, referSelf)
+            result.setSpan(usernameSpan, start, start + user.length, 0)
         }
     }
 
@@ -164,13 +174,23 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class UsernameClickableSpan : ClickableSpan() {
+    class UsernameClickableSpan(private val linkBackgroundColor: Int,
+                                private val linkTextColor: Int,
+                                private val referSelf: Boolean) : ClickableSpan() {
+
         override fun onClick(widget: View) {
             //TODO: Implement action when clicking on username, like showing user profile.
         }
 
         override fun updateDrawState(ds: TextPaint) {
-            ds.color = ds.linkColor
+            if (referSelf) {
+                ds.color = Color.WHITE
+                ds.typeface = Typeface.DEFAULT_BOLD
+                ds.bgColor = linkTextColor
+            } else {
+                ds.color = linkTextColor
+                ds.bgColor = linkBackgroundColor
+            }
             ds.isUnderlineText = false
         }
 
