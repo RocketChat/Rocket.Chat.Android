@@ -40,7 +40,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                     view.showLoading()
                     val pinnedMessages = client.getRoomPinnedMessages(roomId, room.type, pinnedMessagesListOffset)
                     pinnedMessagesListOffset = pinnedMessages.offset.toInt()
-                    val messageList = mapper.mapToViewModelList(pinnedMessages.result, settings)
+                    val messageList = mapper.mapToViewModelList(pinnedMessages.result, settings).filterNot { it.isSystemMessage }
                     view.showPinnedMessages(messageList, serverUrl)
                     view.hideLoading()
                 }.ifNull {
