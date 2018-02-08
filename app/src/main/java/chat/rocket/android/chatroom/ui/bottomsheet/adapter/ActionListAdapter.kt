@@ -1,7 +1,6 @@
 package chat.rocket.android.chatroom.ui.bottomsheet.adapter
 
 import android.view.MenuItem
-import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.util.setVisible
 
