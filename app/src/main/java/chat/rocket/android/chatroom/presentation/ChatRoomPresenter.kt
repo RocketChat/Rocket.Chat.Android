@@ -18,7 +18,6 @@ import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.cancel
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
@@ -28,7 +27,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
-                                            private val getPermissionsInteractor: GetPermissionsInteractor,
+                                            private val permissions: GetPermissionsInteractor,
                                             private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
@@ -149,17 +148,16 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
      */
     fun deleteMessage(roomId: String, id: String) {
         launchUI(strategy) {
-            if (!getPermissionsInteractor.isMessageDeletingAllowed()) {
+            if (!permissions.allowedMessageDeleting()) {
                 return@launchUI
             }
             //TODO: Default delete message always to true. Until we have the permissions system
             //implemented, a user will only be able to delete his own messages.
             try {
-                //TODO: Should honor permission 'Message_ShowDeletedStatus'
                 client.deleteMessage(roomId, id, true)
                 // if Message_ShowDeletedStatus == true an update to that message will be dispatched.
                 // Otherwise we signalize that we just want the message removed.
-                if (!getPermissionsInteractor.showDeletedStatus()) {
+                if (!permissions.showDeletedStatus()) {
                     view.dispatchDeleteMessage(id)
                 }
             } catch (e: RocketChatException) {
@@ -225,8 +223,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
      */
     fun editMessage(roomId: String, messageId: String, text: String) {
         launchUI(strategy) {
-            if (!getPermissionsInteractor.isMessageEditingAllowed()) {
-                coroutineContext.cancel()
+            if (!permissions.allowedMessageEditing()) {
                 view.showMessage(R.string.permission_editing_not_allowed)
                 return@launchUI
             }
@@ -236,7 +233,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     fun pinMessage(messageId: String) {
         launchUI(strategy) {
-            //TODO: Check permissions.
+            if (!permissions.allowedMessagePinning()) {
+                view.showMessage(R.string.permission_pinning_not_allowed)
+                return@launchUI
+            }
             try {
                 client.pinMessage(messageId)
             } catch (e: RocketChatException) {
@@ -247,7 +247,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     fun unpinMessage(messageId: String) {
         launchUI(strategy) {
-            //TODO: Check permissions.
+            if (!permissions.allowedMessagePinning()) {
+                view.showMessage(R.string.permission_pinning_not_allowed)
+                return@launchUI
+            }
             try {
                 client.unpinMessage(messageId)
             } catch (e: RocketChatException) {

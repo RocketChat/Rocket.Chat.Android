@@ -72,7 +72,9 @@
     <string name="action_title_editing">Editing Message</string>
 
     <!-- Permission messages -->
-    <string name="permission_editing_not_allowed">Editing not allowed</string>
+    <string name="permission_editing_not_allowed">Editing is not allowed</string>
+    <string name="permission_deleting_not_allowed">Deleting is not allowed</string>
+    <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>

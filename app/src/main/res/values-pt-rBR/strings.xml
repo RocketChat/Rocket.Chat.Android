@@ -71,6 +71,8 @@
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
+    <string name="permission_deleting_not_allowed">Remoção não permitida</string>
+    <string name="permission_pinning_not_allowed">Fixar não permitido</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Pinadas</string>

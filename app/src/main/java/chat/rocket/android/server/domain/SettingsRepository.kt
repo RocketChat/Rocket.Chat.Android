@@ -38,6 +38,7 @@ const val ALLOW_MESSAGE_DELETING = "Message_AllowDeleting"
 const val ALLOW_MESSAGE_EDITING = "Message_AllowEditing"
 const val SHOW_DELETED_STATUS = "Message_ShowDeletedStatus"
 const val SHOW_EDITED_STATUS = "Message_ShowEditedStatus"
+const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
 /*
  * Extension functions for Public Settings.
  *
@@ -56,10 +57,11 @@ fun Map<String, Value<Any>>.wordpressEnabled(): Boolean = this[ACCOUNT_WORDPRESS
 fun Map<String, Value<Any>>.useRealName(): Boolean = this[USE_REALNAME]?.value == true
 
 // Message settings
-fun Map<String, Value<Any>>.deleteMessageAllowed(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
-fun Map<String, Value<Any>>.editingMessageAllowed(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
 fun Map<String, Value<Any>>.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true
 fun Map<String, Value<Any>>.showEditedStatus(): Boolean = this[SHOW_EDITED_STATUS]?.value == true
+fun Map<String, Value<Any>>.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING]?.value == true
+fun Map<String, Value<Any>>.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
+fun Map<String, Value<Any>>.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
 
 fun Map<String, Value<Any>>.registrationEnabled(): Boolean {
     val value = this[ACCOUNT_REGISTRATION]
