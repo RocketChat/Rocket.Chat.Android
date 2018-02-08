@@ -4,6 +4,7 @@ import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
 import chat.rocket.common.model.roomTypeOf
@@ -26,6 +27,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
+                                            private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
@@ -46,6 +48,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 val messages = client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                 synchronized(roomMessages) {
                     roomMessages.addAll(messages)
+                    messagesRepository.saveAll(messages)
                 }
 
                 val messagesViewModels = mapper.mapToViewModelList(messages, settings)

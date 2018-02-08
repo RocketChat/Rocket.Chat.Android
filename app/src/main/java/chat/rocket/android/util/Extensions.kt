@@ -6,12 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import ru.noties.markwon.Markwon
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 
 fun String.ifEmpty(value: String): String {
+    if (isEmpty()) {
+        return value
+    }
+    return this
+}
+
+fun CharSequence.ifEmpty(value: String): CharSequence {
     if (isEmpty()) {
         return value
     }
@@ -34,6 +42,16 @@ var TextView.textContent: String
     get() = text.toString()
     set(value) {
         text = value
+    }
+
+var TextView.content: CharSequence
+    get() = text
+    set(value) {
+        Markwon.unscheduleDrawables(this)
+        Markwon.unscheduleTableRows(this)
+        text = value
+        Markwon.scheduleDrawables(this)
+        Markwon.scheduleTableRows(this)
     }
 
 var TextView.hintContent: String

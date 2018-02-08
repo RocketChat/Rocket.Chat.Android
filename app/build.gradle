@@ -99,6 +99,10 @@ dependencies {
 
     implementation libraries.textDrawable
 
+    implementation libraries.markwon
+
+    implementation libraries.markwonImageLoader
+
     implementation libraries.moshiLazyAdapters
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
