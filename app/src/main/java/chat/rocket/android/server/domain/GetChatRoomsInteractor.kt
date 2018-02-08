@@ -2,23 +2,27 @@ package chat.rocket.android.server.domain
 
 import chat.rocket.core.model.ChatRoom
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.withContext
 import javax.inject.Inject
 
 class GetChatRoomsInteractor @Inject constructor(private val repository: ChatRoomsRepository) {
     fun get(url: String) = repository.get(url)
 
-    suspend fun getByName(url: String, name: String): List<ChatRoom> {
-        val chatRooms = async {
-            val allChatRooms = repository.get(url)
-            if (name.isEmpty()) {
-                return@async allChatRooms
-            }
-            return@async allChatRooms.filter {
-                it.name.contains(name, true)
-            }
+    /**
+     * Get a list of chat rooms that contains the name parameter.
+     *
+     * @param url The server url.
+     * @param name The name of chat room to look for or a chat room that contains this name.
+     * @return A list of ChatRoom objects with the given name.
+     */
+    suspend fun getByName(url: String, name: String): List<ChatRoom> = withContext(CommonPool) {
+        val allChatRooms = repository.get(url)
+        if (name.isEmpty()) {
+            return@withContext allChatRooms
         }
-        return chatRooms.await()
+        return@withContext allChatRooms.filter {
+            it.name.contains(name, true)
+        }
     }
 
     /**
@@ -26,15 +30,12 @@ class GetChatRoomsInteractor @Inject constructor(private val repository: ChatRoo
      *
      * @param serverUrl The server url where the room is.
      * @param roomId The id of the room to get.
-     *
      * @return The ChatRoom object or null if we couldn't find any.
      */
-    suspend fun getById(serverUrl: String, roomId: String): ChatRoom? {
-        return async(CommonPool) {
-            val allChatRooms = repository.get(serverUrl)
-            return@async allChatRooms.first {
-                it.id == roomId
-            }
-        }.await()
+    suspend fun getById(serverUrl: String, roomId: String): ChatRoom? = withContext(CommonPool) {
+        val allChatRooms = repository.get(serverUrl)
+        return@withContext allChatRooms.first {
+            it.id == roomId
+        }
     }
 }
