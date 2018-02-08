@@ -10,7 +10,6 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
@@ -19,6 +18,7 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisible
+import chat.rocket.android.util.showToast
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -168,9 +168,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun hideLoading() = view_loading.setVisible(false)
 
-    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    override fun showMessage(message: String) = showToast(message)
 
-    override fun showMessage(resId: Int) = showMessage(getString(resId))
+    override fun showMessage(resId: Int) = showToast(resId)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 

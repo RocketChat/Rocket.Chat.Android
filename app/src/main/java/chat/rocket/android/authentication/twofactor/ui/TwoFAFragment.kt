@@ -83,7 +83,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         enableUserInput(true)
     }
 
-    override fun showMessage(resId: Int) = showMessage(getString(resId))
+    override fun showMessage(resId: Int) = showToast(resId)
 
     override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
 

@@ -21,6 +21,7 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.inflate
 import chat.rocket.android.util.setVisible
+import chat.rocket.android.util.showToast
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
@@ -170,9 +171,9 @@ class LoginFragment : Fragment(), LoginView {
         enableUserInput(true)
     }
 
-    override fun showMessage(resId: Int) = showMessage(getString(resId))
+    override fun showMessage(resId: Int) = showToast(resId)
 
-    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    override fun showMessage(message: String) = showToast(message)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 

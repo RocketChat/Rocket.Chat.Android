@@ -15,6 +15,7 @@ import chat.rocket.android.chatroom.presentation.PinnedMessagesView
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.util.setVisible
+import chat.rocket.android.util.showToast
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_pinned_messages.*
 import javax.inject.Inject
@@ -65,11 +66,9 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
     override fun hideLoading() = view_loading.setVisible(false)
 
-    override fun showMessage(resId: Int) = showMessage(getString(resId))
+    override fun showMessage(resId: Int) = showToast(resId)
 
-    override fun showMessage(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
+    override fun showMessage(message: String) = showToast(message)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
