@@ -15,7 +15,7 @@ class ActionListAdapter(menuItems: List<MenuItem> = emptyList(), callback: MenuI
         val item = menuItems[position]
 
         if (showIcons) {
-            holder.imageIcon.setVisible(item.icon == null)
+            holder.imageIcon.setVisible(item.icon != null)
         } else {
             holder.imageIcon.setVisible(false)
         }
