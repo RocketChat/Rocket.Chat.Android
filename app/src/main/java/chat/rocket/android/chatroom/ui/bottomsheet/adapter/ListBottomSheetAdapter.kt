@@ -30,8 +30,7 @@ open class ListBottomSheetAdapter(menuItems: List<MenuItem> = emptyList(), callb
      * @param itemId The id of the menu item to disable and hide.
      */
     fun hideMenuItem(@IdRes itemId: Int) {
-        val item = menuItems.firstOrNull { it.itemId == itemId }
-        item?.apply {
+        menuItems.firstOrNull { it.itemId == itemId }?.apply {
             setVisible(false)
             setEnabled(false)
         }
@@ -43,8 +42,7 @@ open class ListBottomSheetAdapter(menuItems: List<MenuItem> = emptyList(), callb
      * @param itemId The id of the menu item to enable and show.
      */
     fun showMenuItem(@IdRes itemId: Int) {
-        val item = menuItems.firstOrNull { it.itemId == itemId }
-        item?.apply {
+        menuItems.firstOrNull { it.itemId == itemId }?.apply {
             setVisible(true)
             setEnabled(true)
         }

@@ -14,8 +14,11 @@ class BottomSheetMenu(adapter: MenuAdapter) : SheetMenu(adapter = adapter) {
             layoutManager = LinearLayoutManager(recycler.context, LinearLayoutManager.VERTICAL, false)
         }
 
-        val callback = adapter?.callback
-        adapter?.callback = MenuItem.OnMenuItemClickListener {
+        // Superclass SheetMenu adapter property is nullable MenuAdapter? but this class enforces
+        // passing one at the constructor, so we assume it's always non-null.
+        val adapter = adapter!!
+        val callback = adapter.callback
+        adapter.callback = MenuItem.OnMenuItemClickListener {
             callback?.onMenuItemClick(it)
             dialog.cancel()
             true

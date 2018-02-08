@@ -17,6 +17,7 @@
 
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
+    <color name="red">#FFFF0000</color>
     <color name="darkGray">#a0a0a0</color>
     <color name="actionMenuColor">#727272</color>
 

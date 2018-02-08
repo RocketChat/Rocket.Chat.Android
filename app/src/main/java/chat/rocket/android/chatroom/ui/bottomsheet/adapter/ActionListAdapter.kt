@@ -1,9 +1,9 @@
 package chat.rocket.android.chatroom.ui.bottomsheet.adapter
 
-import android.graphics.Color
 import android.view.MenuItem
 import android.view.View
 import chat.rocket.android.R
+import chat.rocket.android.util.setVisible
 
 /**
  * An adapter for bottomsheet menu that lists all the actions that could be taken over a chat message.
@@ -15,13 +15,9 @@ class ActionListAdapter(menuItems: List<MenuItem> = emptyList(), callback: MenuI
         val item = menuItems[position]
 
         if (showIcons) {
-            if (item.icon == null) {
-                holder.imageIcon.visibility = View.GONE
-            } else {
-                holder.imageIcon.visibility = View.VISIBLE
-            }
+            holder.imageIcon.setVisible(item.icon == null)
         } else {
-            holder.imageIcon.visibility = View.GONE
+            holder.imageIcon.setVisible(false)
         }
 
         holder.imageIcon.setImageDrawable(item.icon)
@@ -29,7 +25,8 @@ class ActionListAdapter(menuItems: List<MenuItem> = emptyList(), callback: MenuI
         holder.itemView.setOnClickListener {
             callback?.onMenuItemClick(item)
         }
-        val color = if (item.itemId == R.id.action_menu_msg_delete) Color.RED else textColors.get(item.itemId)
+        val deleteTextColor = holder.itemView.context.resources.getColor(R.color.red)
+        val color = if (item.itemId == R.id.action_menu_msg_delete) deleteTextColor else textColors.get(item.itemId)
         holder.textTitle.setTextColor(color)
     }
 }
