@@ -69,29 +69,30 @@ data class MessageViewModel(val context: Context,
             }
         }
 
-        message.attachments?.let {
-            if (it.isEmpty() || it[0] == null) return@let
+        message.attachments?.let { attachments ->
+            val attachment = attachments.firstOrNull()
+            if (attachments.isEmpty() || attachment == null) return@let
+            when (attachment) {
+                is FileAttachment -> {
+                    baseUrl?.let {
+                        attachmentUrl = attachmentUrl("${baseUrl.value}${attachment.url}")
+                        attachmentTitle = attachment.title
 
-            if (it[0] is FileAttachment) {
-                val attachment = it[0] as FileAttachment
-                baseUrl?.let {
-                    attachmentUrl = attachmentUrl("${baseUrl.value}${attachment.url}")
-                    attachmentTitle = attachment.title
-
-                    attachmentType = when (attachment) {
-                        is ImageAttachment -> AttachmentType.Image
-                        is VideoAttachment -> AttachmentType.Video
-                        is AudioAttachment -> AttachmentType.Audio
-                        else -> null
+                        attachmentType = when (attachment) {
+                            is ImageAttachment -> AttachmentType.Image
+                            is VideoAttachment -> AttachmentType.Video
+                            is AudioAttachment -> AttachmentType.Audio
+                            else -> null
+                        }
                     }
                 }
-            } else if (it[0] is MessageAttachment) {
-                val attachment = it[0] as MessageAttachment
-                attachmentType = AttachmentType.Message
-                attachmentMessageText = attachment.text ?: ""
-                attachmentMessageAuthor = attachment.author ?: ""
-                attachmentMessageIcon = attachment.icon
-                attachmentTimestamp = attachment.timestamp
+                is MessageAttachment -> {
+                    attachmentType = AttachmentType.Message
+                    attachmentMessageText = attachment.text ?: ""
+                    attachmentMessageAuthor = attachment.author ?: ""
+                    attachmentMessageIcon = attachment.icon
+                    attachmentTimestamp = attachment.timestamp
+                }
             }
         }
 
@@ -114,6 +115,9 @@ data class MessageViewModel(val context: Context,
         }
     }
 
+    /**
+     * Get the original message as a String.
+     */
     fun getOriginalMessage() = message.message
 
     private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
