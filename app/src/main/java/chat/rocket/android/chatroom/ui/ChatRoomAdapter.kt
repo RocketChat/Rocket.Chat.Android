@@ -118,8 +118,8 @@ class ChatRoomAdapter(private val roomType: String,
             messageViewModel.apply {
                 when (item.itemId) {
                     R.id.action_menu_msg_delete -> presenter.deleteMessage(roomId, id)
-                    R.id.action_menu_msg_quote -> presenter.citeMessage(roomType, roomName, id, "", false)
-                    R.id.action_menu_msg_reply -> presenter.citeMessage(roomType, roomName, id, "", true)
+                    R.id.action_menu_msg_quote -> presenter.citeMessage(roomType, roomName, id, false)
+                    R.id.action_menu_msg_reply -> presenter.citeMessage(roomType, roomName, id, true)
                     R.id.action_menu_msg_copy -> presenter.copyMessage(id)
                     R.id.action_menu_msg_edit -> presenter.editMessage(roomId, id, getOriginalMessage())
                     R.id.action_menu_msg_pin_unpin -> {
