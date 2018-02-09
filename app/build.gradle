@@ -105,6 +105,8 @@ dependencies {
 
     implementation libraries.moshiLazyAdapters
 
+    implementation libraries.sheetMenu
+
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }

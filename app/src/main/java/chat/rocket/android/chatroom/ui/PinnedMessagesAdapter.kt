@@ -2,15 +2,11 @@ package chat.rocket.android.chatroom.ui
 
 import android.support.v7.widget.RecyclerView
 import android.text.method.LinkMovementMethod
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
-import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
-import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
@@ -23,12 +19,8 @@ import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
-import ru.whalemare.sheetmenu.extension.inflate
-import ru.whalemare.sheetmenu.extension.toList
 
-class ChatRoomAdapter(private val roomType: String,
-                      private val roomName: String,
-                      private val presenter: ChatRoomPresenter) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHolder>() {
 
     init {
         setHasStableIds(true)
@@ -37,7 +29,7 @@ class ChatRoomAdapter(private val roomType: String,
     val dataSet = ArrayList<MessageViewModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_message), roomType, roomName, presenter)
+            ViewHolder(parent.inflate(R.layout.item_message))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
@@ -80,10 +72,7 @@ class ChatRoomAdapter(private val roomType: String,
         return dataSet[position].id.hashCode().toLong()
     }
 
-    class ViewHolder(itemView: View,
-                     val roomType: String,
-                     val roomName: String,
-                     val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var messageViewModel: MessageViewModel
 
@@ -97,45 +86,6 @@ class ChatRoomAdapter(private val roomType: String,
 
             bindAttachment(message, message_attachment, image_attachment, audio_video_attachment,
                     file_name)
-
-            text_content.setOnClickListener {
-                if (!message.isSystemMessage) {
-                    val menuItems = it.context.inflate(R.menu.message_actions).toList()
-                    menuItems.find { it.itemId == R.id.action_menu_msg_pin_unpin }?.apply {
-                        val isPinned = message.isPinned
-                        setTitle(if (isPinned) R.string.action_msg_unpin else R.string.action_msg_pin)
-                        setChecked(isPinned)
-                    }
-                    val adapter = ActionListAdapter(menuItems, this@ViewHolder)
-                    BottomSheetMenu(adapter).apply {
-
-                    }.show(it.context)
-                }
-            }
-        }
-
-        override fun onMenuItemClick(item: MenuItem): Boolean {
-            messageViewModel.apply {
-                when (item.itemId) {
-                    R.id.action_menu_msg_delete -> presenter.deleteMessage(roomId, id)
-                    R.id.action_menu_msg_quote -> presenter.citeMessage(roomType, roomName, id, false)
-                    R.id.action_menu_msg_reply -> presenter.citeMessage(roomType, roomName, id, true)
-                    R.id.action_menu_msg_copy -> presenter.copyMessage(id)
-                    R.id.action_menu_msg_edit -> presenter.editMessage(roomId, id, getOriginalMessage())
-                    R.id.action_menu_msg_pin_unpin -> {
-                        with(item) {
-                            if (!isChecked) {
-                                presenter.pinMessage(id)
-                            } else {
-                                presenter.unpinMessage(id)
-                            }
-                        }
-                    }
-                    else -> TODO("Not implemented")
-                }
-            }
-
-            return true
         }
 
         private fun bindAttachment(message: MessageViewModel,
@@ -181,13 +131,15 @@ class ChatRoomAdapter(private val roomType: String,
             }
         }
 
-        private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.getAvatarUrl().let {
-            drawee.setImageURI(it.toString())
-            drawee.setVisible(true)
-            imageUnknownAvatar.setVisible(false)
-        }.ifNull {
-            drawee.setVisible(false)
-            imageUnknownAvatar.setVisible(true)
+        private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) {
+            message.getAvatarUrl().let {
+                drawee.setImageURI(it.toString())
+                drawee.setVisible(true)
+                imageUnknownAvatar.setVisible(false)
+            }.ifNull {
+                drawee.setVisible(false)
+                imageUnknownAvatar.setVisible(true)
+            }
         }
     }
 }

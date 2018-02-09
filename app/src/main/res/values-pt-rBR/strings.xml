@@ -55,5 +55,26 @@
     <string name="message_user_joined_channel">Entrou no sala.</string>
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
+    <string name="message_pinned">Pinou uma mensagem:</string>
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">Responder</string>
+    <string name="action_msg_edit">Editar</string>
+    <string name="action_msg_copy">Copiar</string>
+    <string name="action_msg_quote">Citar</string>
+    <string name="action_msg_delete">Remover</string>
+    <string name="action_msg_pin">Fixar Mensagem</string>
+    <string name="action_msg_unpin">Desafixar Messagem</string>
+    <string name="action_msg_star">Favoritar Mensagem</string>
+    <string name="action_msg_share">Compartilhar</string>
+    <string name="action_title_editing">Editando Mensagem</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">Edição não permitida</string>
+    <string name="permission_deleting_not_allowed">Remoção não permitida</string>
+    <string name="permission_pinning_not_allowed">Fixar não permitido</string>
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">Mensagens Pinadas</string>
 
 </resources>

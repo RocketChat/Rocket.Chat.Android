@@ -15,6 +15,7 @@ import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
 import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.util.setVisible
+import chat.rocket.android.util.showToast
 import chat.rocket.android.util.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
@@ -83,7 +84,9 @@ class TwoFAFragment : Fragment(), TwoFAView {
         enableUserInput(true)
     }
 
-    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    override fun showMessage(resId: Int) = showToast(resId)
+
+    override fun showMessage(message: String) = showToast(message)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 

@@ -38,9 +38,15 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     fun loadChatRooms() {
         launchUI(strategy) {
             view.showLoading()
-            view.updateChatRooms(loadRooms())
-            subscribeRoomUpdates()
-            view.hideLoading()
+            try {
+                view.updateChatRooms(loadRooms())
+                subscribeRoomUpdates()
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+                view.showMessage(e.message!!)
+            } finally {
+                view.hideLoading()
+            }
         }
     }
 
