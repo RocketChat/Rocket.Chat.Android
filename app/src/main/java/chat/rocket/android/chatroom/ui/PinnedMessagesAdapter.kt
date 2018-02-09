@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
-class PinnedMessagesAdapter(private val serverUrl: String) : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHolder>() {
+class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHolder>() {
 
     init {
         setHasStableIds(true)
@@ -29,7 +29,7 @@ class PinnedMessagesAdapter(private val serverUrl: String) : RecyclerView.Adapte
     val dataSet = ArrayList<MessageViewModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_message), serverUrl)
+            ViewHolder(parent.inflate(R.layout.item_message))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
@@ -72,8 +72,7 @@ class PinnedMessagesAdapter(private val serverUrl: String) : RecyclerView.Adapte
         return dataSet[position].id.hashCode().toLong()
     }
 
-    class ViewHolder(itemView: View,
-                     val serverUrl: String) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var messageViewModel: MessageViewModel
 

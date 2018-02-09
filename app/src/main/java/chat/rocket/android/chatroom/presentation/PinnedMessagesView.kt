@@ -10,7 +10,6 @@ interface PinnedMessagesView : MessageView, LoadingView {
      * Show list of pinned messages for the current room.
      *
      * @param pinnedMessages The list of pinned messages.
-     * @param serverUrl The url of the current server.
      */
-    fun showPinnedMessages(pinnedMessages: List<MessageViewModel>, serverUrl: String)
+    fun showPinnedMessages(pinnedMessages: List<MessageViewModel>)
 }

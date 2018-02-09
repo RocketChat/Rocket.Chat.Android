@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.PinnedMessagesPresenter
 import chat.rocket.android.chatroom.presentation.PinnedMessagesView
@@ -72,10 +71,10 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun showPinnedMessages(pinnedMessages: List<MessageViewModel>, serverUrl: String) {
+    override fun showPinnedMessages(pinnedMessages: List<MessageViewModel>) {
         activity?.apply {
             if (recycler_view_pinned.adapter == null) {
-                adapter = PinnedMessagesAdapter(serverUrl)
+                adapter = PinnedMessagesAdapter()
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view_pinned.layoutManager = linearLayoutManager
