@@ -173,7 +173,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
      * @param roomName The name of the current room.
      * @param messageId The id of the message to make citation for.
      * @param text The actual message to send along with the citation.
-     * @param mentionAuthor true if you want to cite replying or false just to quote.
+     * @param mentionAuthor true means the citation is a reply otherwise it's a quote.
      */
     fun citeMessage(roomType: String, roomName: String, messageId: String, text: String, mentionAuthor: Boolean) {
         launchUI(strategy) {
