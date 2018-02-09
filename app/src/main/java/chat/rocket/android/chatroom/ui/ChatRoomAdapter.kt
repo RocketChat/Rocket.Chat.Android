@@ -8,8 +8,8 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
-import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisible
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setVisible
 import com.facebook.drawee.view.SimpleDraweeView
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.avatar.view.*

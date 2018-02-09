@@ -11,7 +11,7 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.helper.KeyboardHelper
-import chat.rocket.android.util.*
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import javax.inject.Inject

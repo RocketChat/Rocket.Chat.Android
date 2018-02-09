@@ -15,7 +15,14 @@
 
     <color name="colorDividerMessageComposer">#D8D8D8</color>
 
+    <color name="colorLightTheme">#FBFBFB</color>
+
+    <color name="colorDim">#99000000</color>
+
+    <color name="colorBackgroundFileAttachment">#E2FFC8</color>
+    <color name="colorBackgroundContentFileAttachment">#FFD8F5C0</color>
+
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
-
+    
 </resources>

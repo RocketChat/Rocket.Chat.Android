@@ -6,6 +6,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.launchUI
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
@@ -16,6 +17,7 @@ import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
+import chat.rocket.core.model.attachment.Attachment
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
@@ -80,10 +82,23 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
+                   view.showGenericErrorMessage()
+                }
 
                 view.enableMessageInput()
+            }
+        }
+    }
+
+    fun sendFile(chatRoomId: String, fileName: String) {
+        launchUI(strategy) {
+            view.showLoading()
+            try {
+//            client.sendMessage(chatRoomId)
+            } catch (ex: RocketChatException) {
+
+            } finally {
+                view.hideLoading()
             }
         }
     }

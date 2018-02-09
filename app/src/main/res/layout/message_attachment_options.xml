@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/style_attachment_options"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/button_files"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="20dp"
+        android:drawableStart="@drawable/ic_files_24dp"
+        android:gravity="start|center"
+        android:text="@string/action_files" />
+
+</LinearLayout>

@@ -14,8 +14,8 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
-import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisible
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection

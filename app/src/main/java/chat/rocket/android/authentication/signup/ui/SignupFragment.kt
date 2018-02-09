@@ -14,8 +14,8 @@ import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.AnimationHelper
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
-import chat.rocket.android.util.setVisible
-import chat.rocket.android.util.textContent
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject

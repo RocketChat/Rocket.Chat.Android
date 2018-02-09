@@ -14,8 +14,8 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
 import chat.rocket.android.helper.AnimationHelper
-import chat.rocket.android.util.setVisible
-import chat.rocket.android.util.textContent
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject

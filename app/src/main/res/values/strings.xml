@@ -12,12 +12,12 @@
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
-    <string name="action_send">Send</string>
     <string name="action_terms_of_service">Terms of Service</string>
     <string name="action_privacy_policy">Privacy Policy</string>
     <string name="action_search">Search</string>
     <string name="action_update">Update</string>
     <string name="action_logout">Log Out</string>
+    <string name="action_files">Files</string>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">No internet connection</string>
@@ -46,6 +46,8 @@
     <string name="msg_content_description_log_in_using_meteor">Login using Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Login using Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Login using Gitlab</string>
+    <string name="msg_content_description_send_message">Send message</string>
+    <string name="msg_content_description_show_attachment_options">Show attachment options</string>
     <string name="msg_you">You</string>
     <string name="msg_unknown">Unknown</string>
 
