@@ -103,10 +103,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         return true
     }
 
-    override fun showMessages(dataSet: List<MessageViewModel>, serverUrl: String) {
+    override fun showMessages(dataSet: List<MessageViewModel>) {
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(serverUrl, chatRoomType, chatRoomName, presenter)
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 recycler_view.layoutManager = linearLayoutManager

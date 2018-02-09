@@ -9,8 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
-import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
+import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
@@ -26,8 +26,7 @@ import kotlinx.android.synthetic.main.message_attachment.view.*
 import ru.whalemare.sheetmenu.extension.inflate
 import ru.whalemare.sheetmenu.extension.toList
 
-class ChatRoomAdapter(private val serverUrl: String,
-                      private val roomType: String,
+class ChatRoomAdapter(private val roomType: String,
                       private val roomName: String,
                       private val presenter: ChatRoomPresenter) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
 
@@ -38,7 +37,7 @@ class ChatRoomAdapter(private val serverUrl: String,
     val dataSet = ArrayList<MessageViewModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-            ViewHolder(parent.inflate(R.layout.item_message), serverUrl, roomType, roomName, presenter)
+            ViewHolder(parent.inflate(R.layout.item_message), roomType, roomName, presenter)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
@@ -82,7 +81,6 @@ class ChatRoomAdapter(private val serverUrl: String,
     }
 
     class ViewHolder(itemView: View,
-                     val serverUrl: String,
                      val roomType: String,
                      val roomName: String,
                      val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
@@ -120,8 +118,8 @@ class ChatRoomAdapter(private val serverUrl: String,
             messageViewModel.apply {
                 when (item.itemId) {
                     R.id.action_menu_msg_delete -> presenter.deleteMessage(roomId, id)
-                    R.id.action_menu_msg_quote -> presenter.citeMessage(serverUrl, roomType, roomName, id, "", false)
-                    R.id.action_menu_msg_reply -> presenter.citeMessage(serverUrl, roomType, roomName, id, "", true)
+                    R.id.action_menu_msg_quote -> presenter.citeMessage(roomType, roomName, id, "", false)
+                    R.id.action_menu_msg_reply -> presenter.citeMessage(roomType, roomName, id, "", true)
                     R.id.action_menu_msg_copy -> presenter.copyMessage(id)
                     R.id.action_menu_msg_edit -> presenter.editMessage(roomId, id, getOriginalMessage())
                     R.id.action_menu_msg_pin_unpin -> {
@@ -183,7 +181,7 @@ class ChatRoomAdapter(private val serverUrl: String,
             }
         }
 
-        private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.getAvatarUrl(serverUrl).let {
+        private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.getAvatarUrl().let {
             drawee.setImageURI(it.toString())
             drawee.setVisible(true)
             imageUnknownAvatar.setVisible(false)

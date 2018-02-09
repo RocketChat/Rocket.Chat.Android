@@ -13,6 +13,7 @@ import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.useRealName
@@ -23,7 +24,6 @@ import chat.rocket.core.model.Value
 import chat.rocket.core.model.attachment.*
 import chat.rocket.core.model.url.Url
 import okhttp3.HttpUrl
-import timber.log.Timber
 
 data class MessageViewModel(val context: Context,
                             private val token: Token?,
@@ -31,7 +31,8 @@ data class MessageViewModel(val context: Context,
                             private val settings: Map<String, Value<Any>>,
                             private val parser: MessageParser,
                             private val messagesRepository: MessagesRepository,
-                            private val localRepository: LocalRepository) {
+                            private val localRepository: LocalRepository,
+                            private val currentServerRepository: CurrentServerRepository) {
     val id: String = message.id
     val roomId: String = message.roomId
     val time: CharSequence
@@ -106,16 +107,15 @@ data class MessageViewModel(val context: Context,
     private fun makeQuote(quoteUrl: HttpUrl, serverUrl: HttpUrl) {
         if (quoteUrl.host() == serverUrl.host()) {
             val msgIdToQuote = quoteUrl.queryParameter("msg")
-            Timber.d("Will quote message Id: $msgIdToQuote")
             if (msgIdToQuote != null) {
                 quote = messagesRepository.getById(msgIdToQuote)
             }
         }
     }
 
-    fun getAvatarUrl(serverUrl: String): String? {
+    fun getAvatarUrl(): String? {
         return message.sender?.username.let {
-            return@let UrlHelper.getAvatarUrl(serverUrl, it.toString())
+            return@let UrlHelper.getAvatarUrl(currentServerRepository.get()!!, it.toString())
         }
     }
 
@@ -157,7 +157,8 @@ data class MessageViewModel(val context: Context,
         var quoteViewModel: MessageViewModel? = null
         if (quote != null) {
             val quoteMessage: Message = quote!!
-            quoteViewModel = MessageViewModel(context, token, quoteMessage, settings, parser, messagesRepository, localRepository)
+            quoteViewModel = MessageViewModel(context, token, quoteMessage, settings, parser,
+                    messagesRepository, localRepository, currentServerRepository)
         }
         return parser.renderMarkdown(message.message, quoteViewModel, currentUsername)
     }

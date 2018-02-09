@@ -133,7 +133,7 @@ class PinnedMessagesAdapter(private val serverUrl: String) : RecyclerView.Adapte
         }
 
         private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) {
-            message.getAvatarUrl(serverUrl).let {
+            message.getAvatarUrl().let {
                 drawee.setImageURI(it.toString())
                 drawee.setVisible(true)
                 imageUnknownAvatar.setVisible(false)

@@ -3,6 +3,7 @@ package chat.rocket.android.chatroom.viewmodel
 import android.content.Context
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.server.domain.CurrentServerRepository
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.core.TokenRepository
 import chat.rocket.core.model.Message
@@ -15,7 +16,8 @@ class MessageViewModelMapper @Inject constructor(private val context: Context,
                                                  private val tokenRepository: TokenRepository,
                                                  private val messageParser: MessageParser,
                                                  private val messagesRepository: MessagesRepository,
-                                                 private val localRepository: LocalRepository) {
+                                                 private val localRepository: LocalRepository,
+                                                 private val currentServerRepository: CurrentServerRepository) {
 
     suspend fun mapToViewModel(message: Message, settings: Map<String, Value<Any>>): MessageViewModel = withContext(CommonPool) {
         MessageViewModel(
@@ -25,17 +27,13 @@ class MessageViewModelMapper @Inject constructor(private val context: Context,
                 settings,
                 messageParser,
                 messagesRepository,
-                localRepository
+                localRepository,
+                currentServerRepository
         )
     }
 
     suspend fun mapToViewModelList(messageList: List<Message>, settings: Map<String, Value<Any>>): List<MessageViewModel> {
-        return messageList.map { MessageViewModel(context,
-                tokenRepository.get(),
-                it,
-                settings,
-                messageParser,
-                messagesRepository,
-                localRepository) }
+        return messageList.map { MessageViewModel(context, tokenRepository.get(), it, settings,
+                messageParser, messagesRepository, localRepository, currentServerRepository) }
     }
 }

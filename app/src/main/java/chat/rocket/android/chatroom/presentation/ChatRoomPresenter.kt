@@ -45,7 +45,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 messagesRepository.saveAll(messages)
 
                 val messagesViewModels = mapper.mapToViewModelList(messages, settings)
-                view.showMessages(messagesViewModels, serverInteractor.get()!!)
+                view.showMessages(messagesViewModels)
 
                 // Subscribe after getting the first page of messages from REST
                 if (offset == 0L) {
@@ -175,10 +175,11 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
      * @param text The actual message to send along with the citation.
      * @param mentionAuthor true if you want to cite replying or false just to quote.
      */
-    fun citeMessage(serverUrl: String, roomType: String, roomName: String, messageId: String, text: String, mentionAuthor: Boolean) {
+    fun citeMessage(roomType: String, roomName: String, messageId: String, text: String, mentionAuthor: Boolean) {
         launchUI(strategy) {
             val message = messagesRepository.getById(messageId)
             val me = client.me() //TODO: Cache this and use an interactor
+            val serverUrl = serverInteractor.get()!!
             message?.let { m ->
                 val id = m.id
                 val username = m.sender?.username

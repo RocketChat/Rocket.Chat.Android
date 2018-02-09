@@ -10,9 +10,8 @@ interface ChatRoomView : LoadingView, MessageView {
      * Shows the chat room messages.
      *
      * @param dataSet The data set to show.
-     * @param serverUrl The server URL.
      */
-    fun showMessages(dataSet: List<MessageViewModel>, serverUrl: String)
+    fun showMessages(dataSet: List<MessageViewModel>)
 
     /**
      * Send a message to a chat room.
