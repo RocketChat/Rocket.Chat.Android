@@ -15,13 +15,14 @@ import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.unsubscibre
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.sendMessage
+import chat.rocket.core.internal.rest.uploadFile
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
-import chat.rocket.core.model.attachment.Attachment
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
@@ -90,13 +91,21 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
-    fun sendFile(chatRoomId: String, fileName: String) {
+    fun uploadFile(roomId: String,
+                   file: File,
+                   mimeType: String,
+                   msg: String,
+                   description: String) {
         launchUI(strategy) {
             view.showLoading()
             try {
-//            client.sendMessage(chatRoomId)
+                client.uploadFile(roomId, file, mimeType, msg, description)
             } catch (ex: RocketChatException) {
-
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                 }
             } finally {
                 view.hideLoading()
             }

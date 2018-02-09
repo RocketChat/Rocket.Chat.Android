@@ -22,11 +22,11 @@ interface ChatRoomView : LoadingView, MessageView {
     fun sendMessage(text: String)
 
     /**
-     * Send a file to a chat room.
+     * Uploads a file to a chat room.
      *
      * @param uri The file URI to send.
      */
-    fun sendFile(uri: Uri)
+    fun uploadFile(uri: Uri)
 
     /**
      * Shows a (recent) message sent to a chat room.

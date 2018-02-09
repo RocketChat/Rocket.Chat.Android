@@ -23,6 +23,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
+import java.io.File
 import javax.inject.Inject
 
 fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Fragment {
@@ -88,7 +89,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF && resultCode == Activity.RESULT_OK) {
             if (resultData != null) {
-                sendFile(resultData.data)
+                uploadFile(resultData.data)
             }
         }
     }
@@ -120,13 +121,24 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         }
     }
 
-    override fun sendFile(uri: Uri) {
+    override fun uploadFile(uri: Uri) {
         var fileName: String? = null
+        var mimeType: String? = null
+        var fileRealPath: String? = null
         activity?.apply {
             fileName = uri.getFileName(this)
-        }
-        if (fileName != null) {
-            presenter.sendFile(chatRoomId, fileName.toString())
+            mimeType = uri.getMimeType(this)
+            fileRealPath = uri.getRealPathFromURI(this)
+
+            if (fileName != null && mimeType != null && fileRealPath != null) {
+                presenter.uploadFile(
+                    chatRoomId,
+                    File(fileRealPath),
+                    mimeType.toString(),
+                    "", // TODO Just leaving it for now, in the future lets add the possibility to add a message with the file to be uploaded.
+                    fileName.toString()
+                )
+            }
         }
     }
 

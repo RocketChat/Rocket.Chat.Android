@@ -1,11 +1,13 @@
 package chat.rocket.android.util.extensions
 
 import android.app.Activity
+import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import android.widget.TextView
 import android.provider.OpenableColumns
-
-
+import android.webkit.MimeTypeMap
+import android.provider.MediaStore
 
 fun String.ifEmpty(value: String): String {
     if (isEmpty()) {
@@ -51,4 +53,23 @@ fun Uri.getFileSize(activity: Activity): String? {
         }
     }
     return fileSize
+}
+
+fun Uri.getMimeType(context: Context): String {
+    return if (scheme == ContentResolver.SCHEME_CONTENT) {
+        context.contentResolver.getType(this)
+    } else {
+        val fileExtension = MimeTypeMap.getFileExtensionFromUrl(toString())
+        MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase())
+    }
+}
+
+fun Uri.getRealPathFromURI(context: Context): String? {
+    val cursor = context.contentResolver.query(this, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
+
+    cursor.use { cursor ->
+        val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+        return cursor.getString(columnIndex)
+    }
 }
