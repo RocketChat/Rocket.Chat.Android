@@ -41,7 +41,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                     val pinnedMessages = client.getRoomPinnedMessages(roomId, room.type, pinnedMessagesListOffset)
                     pinnedMessagesListOffset = pinnedMessages.offset.toInt()
                     val messageList = mapper.mapToViewModelList(pinnedMessages.result, settings).filterNot { it.isSystemMessage }
-                    view.showPinnedMessages(messageList, serverUrl)
+                    view.showPinnedMessages(messageList)
                     view.hideLoading()
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
