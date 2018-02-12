@@ -59,5 +59,26 @@
     <string name="message_user_joined_channel">Has joined the channel.</string>
     <string name="message_welcome">Welcome %s</string>
     <string name="message_removed">Message removed</string>
+    <string name="message_pinned">Pinned a message:</string>
+
+    <!-- Message actions -->
+    <string name="action_msg_reply">Reply</string>
+    <string name="action_msg_edit">Edit</string>
+    <string name="action_msg_copy">Copy</string>
+    <string name="action_msg_quote">Quote</string>
+    <string name="action_msg_delete">Delete</string>
+    <string name="action_msg_pin">Pin Message</string>
+    <string name="action_msg_unpin">Unpin Message</string>
+    <string name="action_msg_star">Star Message</string>
+    <string name="action_msg_share">Share</string>
+    <string name="action_title_editing">Editing Message</string>
+
+    <!-- Permission messages -->
+    <string name="permission_editing_not_allowed">Editing is not allowed</string>
+    <string name="permission_deleting_not_allowed">Deleting is not allowed</string>
+    <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
+
+    <!-- Pinned Messages -->
+    <string name="title_pinned_messages">Pinned Messages</string>
 
 </resources>

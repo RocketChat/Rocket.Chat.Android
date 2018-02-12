@@ -6,7 +6,7 @@ import chat.rocket.android.server.domain.GetChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SaveChatRoomsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.Subscription
@@ -38,9 +38,15 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     fun loadChatRooms() {
         launchUI(strategy) {
             view.showLoading()
-            view.updateChatRooms(loadRooms())
-            subscribeRoomUpdates()
-            view.hideLoading()
+            try {
+                view.updateChatRooms(loadRooms())
+                subscribeRoomUpdates()
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+                view.showMessage(e.message!!)
+            } finally {
+                view.hideLoading()
+            }
         }
     }
 

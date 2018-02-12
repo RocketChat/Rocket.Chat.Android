@@ -6,10 +6,12 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import android.widget.ScrollView
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
@@ -18,6 +20,7 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
@@ -167,8 +170,9 @@ class LoginFragment : Fragment(), LoginView {
         enableUserInput(true)
     }
 
-    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    override fun showMessage(resId: Int) = showToast(resId)
 
+    override fun showMessage(message: String) = showToast(message)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
@@ -216,7 +220,7 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     // Returns true if *all* EditTexts are empty.
-    private fun isEditTextEmpty(): Boolean =  text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
+    private fun isEditTextEmpty(): Boolean = text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
 
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({

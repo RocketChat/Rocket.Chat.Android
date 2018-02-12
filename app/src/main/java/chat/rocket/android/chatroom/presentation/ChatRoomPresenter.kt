@@ -1,12 +1,13 @@
 package chat.rocket.android.chatroom.presentation
 
+import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
@@ -15,7 +16,12 @@ import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.unsubscibre
 import chat.rocket.core.internal.rest.messages
 import chat.rocket.core.internal.rest.sendMessage
+import chat.rocket.core.internal.rest.updateMessage
 import chat.rocket.core.internal.rest.uploadFile
+import chat.rocket.core.internal.rest.pinMessage
+import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.unpinMessage
+import chat.rocket.core.internal.rest.deleteMessage
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
@@ -29,16 +35,13 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
+                                            private val permissions: GetPermissionsInteractor,
+                                            private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
-    private val roomMessages = ArrayList<Message>()
     private var subId: String? = null
-    private var settings: Map<String, Value<Any>>? = null
-
-    init {
-        settings = getSettingsInteractor.get(serverInteractor.get()!!)
-    }
+    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
 
     private val stateChannel = Channel<State>()
 
@@ -46,10 +49,9 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val messages = client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
-                synchronized(roomMessages) {
-                    roomMessages.addAll(messages)
-                }
+                val messages =
+                    client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
+                messagesRepository.saveAll(messages)
 
                 val messagesViewModels = mapper.mapToViewModelList(messages, settings)
                 view.showMessages(messagesViewModels)
@@ -63,19 +65,24 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                }
+                        view.showGenericErrorMessage()
+                    }
             } finally {
                 view.hideLoading()
             }
         }
     }
 
-    fun sendMessage(chatRoomId: String, text: String) {
+    fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
             view.disableMessageInput()
             try {
-                val message = client.sendMessage(chatRoomId, text)
+                val message: Message
+                if (messageId == null) {
+                    message = client.sendMessage(chatRoomId, text)
+                } else {
+                    message = client.updateMessage(chatRoomId, messageId, text)
+                }
                 // ignore message for now, will receive it on the stream
                 view.enableMessageInput(clear = true)
             } catch (ex: Exception) {
@@ -83,8 +90,9 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                   view.showGenericErrorMessage()
-                }
+                        view.showGenericErrorMessage()
+                        view.showGenericErrorMessage()
+                    }
 
                 view.enableMessageInput()
             }
@@ -104,8 +112,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                 }
+                        view.showGenericErrorMessage()
+                    }
             } finally {
                 view.hideLoading()
             }
@@ -163,6 +171,130 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    /**
+     * Delete the message with the given id.
+     *
+     * @param roomId The room id of the message to be deleted.
+     * @param id The id of the message to be deleted.
+     */
+    fun deleteMessage(roomId: String, id: String) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessageDeleting()) {
+                return@launchUI
+            }
+            //TODO: Default delete message always to true. Until we have the permissions system
+            //implemented, a user will only be able to delete his own messages.
+            try {
+                client.deleteMessage(roomId, id, true)
+                // if Message_ShowDeletedStatus == true an update to that message will be dispatched.
+                // Otherwise we signalize that we just want the message removed.
+                if (!permissions.showDeletedStatus()) {
+                    view.dispatchDeleteMessage(id)
+                }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    /**
+     * Quote or reply a message.
+     *
+     * @param roomType The current room type.
+     * @param roomName The name of the current room.
+     * @param messageId The id of the message to make citation for.
+     * @param mentionAuthor true means the citation is a reply otherwise it's a quote.
+     */
+    fun citeMessage(roomType: String, roomName: String, messageId: String, mentionAuthor: Boolean) {
+        launchUI(strategy) {
+            val message = messagesRepository.getById(messageId)
+            val me = client.me() //TODO: Cache this and use an interactor
+            val serverUrl = serverInteractor.get()!!
+            message?.let { m ->
+                val id = m.id
+                val username = m.sender?.username
+                val user = "@" + if (settings.useRealName()) m.sender?.name
+                        ?: m.sender?.username else m.sender?.username
+                val mention = if (mentionAuthor && me.username != username) user else ""
+                val type = roomTypeOf(roomType)
+                val room = when (type) {
+                    is RoomType.Channel -> "channel"
+                    is RoomType.DirectMessage -> "direct"
+                    is RoomType.PrivateGroup -> "group"
+                    is RoomType.Livechat -> "livechat"
+                    is RoomType.Custom -> "custom" //TODO: put appropriate callback string here.
+                }
+                view.showReplyingAction(
+                    user,
+                    "[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ",
+                    m.message
+                )
+            }
+        }
+    }
+
+    /**
+     * Copy message to clipboard.
+     *
+     * @param messageId The id of the message to copy to clipboard.
+     */
+    fun copyMessage(messageId: String) {
+        launchUI(strategy) {
+            try {
+                messagesRepository.getById(messageId)?.let { m ->
+                    view.copyToClipboard(m.message)
+                }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    /**
+     * Update message identified by given id with given text.
+     *
+     * @param roomId The id of the room of the message.
+     * @param messageId The id of the message to update.
+     * @param text The updated text.
+     */
+    fun editMessage(roomId: String, messageId: String, text: String) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessageEditing()) {
+                view.showMessage(R.string.permission_editing_not_allowed)
+                return@launchUI
+            }
+            view.showEditingAction(roomId, messageId, text)
+        }
+    }
+
+    fun pinMessage(messageId: String) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessagePinning()) {
+                view.showMessage(R.string.permission_pinning_not_allowed)
+                return@launchUI
+            }
+            try {
+                client.pinMessage(messageId)
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    fun unpinMessage(messageId: String) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessagePinning()) {
+                view.showMessage(R.string.permission_pinning_not_allowed)
+                return@launchUI
+            }
+            try {
+                client.unpinMessage(messageId)
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
     private suspend fun listenMessages(roomId: String) {
         launch(CommonPool + strategy.jobs) {
             for (message in client.messagesChannel) {
@@ -178,17 +310,16 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.mapToViewModel(streamedMessage, settings)
-            synchronized(roomMessages) {
-                val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
-                if (index != -1) {
-                    Timber.d("Updatind message at $index")
-                    roomMessages[index] = streamedMessage
-                    view.dispatchUpdateMessage(index, viewModelStreamedMessage)
-                } else {
-                    Timber.d("Adding new message")
-                    roomMessages.add(0, streamedMessage)
-                    view.showNewMessage(viewModelStreamedMessage)
-                }
+            val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
+            val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
+            if (index > -1) {
+                Timber.d("Updating message at $index")
+                messagesRepository.save(streamedMessage)
+                view.dispatchUpdateMessage(index, viewModelStreamedMessage)
+            } else {
+                Timber.d("Adding new message")
+                messagesRepository.save(streamedMessage)
+                view.showNewMessage(viewModelStreamedMessage)
             }
         }
     }

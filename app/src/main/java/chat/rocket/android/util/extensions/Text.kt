@@ -8,8 +8,16 @@ import android.widget.TextView
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import android.provider.MediaStore
+import ru.noties.markwon.Markwon
 
 fun String.ifEmpty(value: String): String {
+    if (isEmpty()) {
+        return value
+    }
+    return this
+}
+
+fun CharSequence.ifEmpty(value: String): CharSequence {
     if (isEmpty()) {
         return value
     }
@@ -26,6 +34,16 @@ var TextView.hintContent: String
     get() = hint.toString()
     set(value) {
         hint = value
+    }
+
+var TextView.content: CharSequence
+    get() = text
+    set(value) {
+        Markwon.unscheduleDrawables(this)
+        Markwon.unscheduleTableRows(this)
+        text = value
+        Markwon.scheduleDrawables(this)
+        Markwon.scheduleTableRows(this)
     }
 
 fun Uri.getFileName(activity: Activity): String? {

@@ -36,15 +36,19 @@
         </activity>
 
         <activity
-            android:name=".webview.WebViewActivity"
-            android:theme="@style/AppTheme" />
-
-        <activity
             android:name=".main.ui.MainActivity"
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".webview.WebViewActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".chatroom.ui.ChatRoomActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".chatroom.ui.PinnedMessagesActivity"
             android:theme="@style/AppTheme" />
 
         <receiver
@@ -78,7 +82,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="12ac6e94f850aaffcdff52001af77ca415d06a43" />
-
     </application>
 
 </manifest>

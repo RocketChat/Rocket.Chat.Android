@@ -4,7 +4,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
@@ -27,13 +27,18 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
                 val myself = client.me()
                 myselfId = myself.id
                 val avatarUrl = UrlHelper.getAvatarUrl(serverUrl, myself.username!!)
-                view.showProfile(avatarUrl, myself.name!!, myself.username!!, myself.emails?.get(0)?.address!!)
+                view.showProfile(
+                    avatarUrl,
+                    myself.name!!,
+                    myself.username!!,
+                    myself.emails?.get(0)?.address!!
+                )
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                }
+                        view.showGenericErrorMessage()
+                    }
             } finally {
                 view.hideLoading()
             }
@@ -51,8 +56,8 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                }
+                        view.showGenericErrorMessage()
+                    }
             } finally {
                 view.hideLoading()
             }

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
-import chat.rocket.android.util.addFragment
+import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -14,6 +14,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import javax.inject.Inject
+
 
 fun Context.chatRoomIntent(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Intent {
     return Intent(this, ChatRoomActivity::class.java).apply {
@@ -67,6 +68,8 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun setupToolbar(chatRoomName: String) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         text_room_name.textContent = chatRoomName
         toolbar.setNavigationOnClickListener {
             finishActivity()
