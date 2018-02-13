@@ -1,6 +1,5 @@
 package chat.rocket.android.util.extensions
 
-import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
@@ -46,8 +45,8 @@ var TextView.content: CharSequence
         Markwon.scheduleTableRows(this)
     }
 
-fun Uri.getFileName(activity: Activity): String? {
-    val cursor = activity.contentResolver.query(this, null, null, null, null, null)
+fun Uri.getFileName(context: Context): String? {
+    val cursor = context.contentResolver.query(this, null, null, null, null, null)
 
     var fileName: String? = null
     cursor.use { cursor ->
@@ -58,8 +57,8 @@ fun Uri.getFileName(activity: Activity): String? {
     return fileName
 }
 
-fun Uri.getFileSize(activity: Activity): String? {
-    val cursor = activity.contentResolver.query(this, null, null, null, null, null)
+fun Uri.getFileSize(context: Context): String? {
+    val cursor = context.contentResolver.query(this, null, null, null, null, null)
 
     var fileSize: String? = null
     cursor.use { cursor ->

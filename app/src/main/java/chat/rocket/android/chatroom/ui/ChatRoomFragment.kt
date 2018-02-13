@@ -28,9 +28,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
-import java.io.File
 import javax.inject.Inject
-
 
 fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Fragment {
     return ChatRoomFragment().apply {
@@ -64,7 +62,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private var editingMessageId: String? = null
 
     // For reveal and unreveal anim.
-    private val hypotenuse by lazy { Math.hypot(relative_layout.width.toDouble(), relative_layout.height.toDouble()).toFloat() }
+    private val hypotenuse by lazy { Math.hypot(root_layout.width.toDouble(), root_layout.height.toDouble()).toFloat() }
     private val max by lazy { Math.max(layout_message_attachment_options.width.toDouble(), layout_message_attachment_options.height.toDouble()).toFloat() }
     private val centerX by lazy { recycler_view.right }
     private val centerY by lazy { recycler_view.bottom }
@@ -98,6 +96,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun onDestroyView() {
         presenter.unsubscribeMessages()
+        handler.removeCallbacksAndMessages(null)
         super.onDestroyView()
     }
 
@@ -144,7 +143,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                     })
                 }
             }
-
             adapter.addDataSet(dataSet)
         }
     }
@@ -156,22 +154,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     }
 
     override fun uploadFile(uri: Uri) {
-        activity?.apply {
-            val fileName = uri.getFileName(this)
-            val mimeType = uri.getMimeType(this)
-            val fileRealPath = uri.getRealPathFromURI(this)
-
-            if (fileName != null  && fileRealPath != null) {
-                presenter.uploadFile(
-                    chatRoomId,
-                    File(fileRealPath),
-                    mimeType,
-                    "", // TODO Just leaving it for now, in the future lets add the possibility to add a message with the file to be uploaded.
-                    fileName.toString()
-                )
-            }
-        }
+        // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
+        presenter.uploadFile(chatRoomId, uri, "")
     }
+
+    override fun showInvalidFileMessage() = showMessage(getString(R.string.msg_invalid_file))
 
     override fun showNewMessage(message: MessageViewModel) {
         text_message.textContent = ""
@@ -220,7 +207,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun copyToClipboard(message: String) {
         activity?.apply {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.setPrimaryClip(ClipData.newPlainText("", message))
+            clipboard.primaryClip = ClipData.newPlainText("", message)
         }
     }
 

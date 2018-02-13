@@ -1,10 +1,15 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.net.Uri
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.domain.UriInteractor
 import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extensions.getFileName
+import chat.rocket.android.util.extensions.getMimeType
+import chat.rocket.android.util.extensions.getRealPathFromURI
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -36,6 +41,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
                                             private val permissions: GetPermissionsInteractor,
+                                            private val uriInteractor: UriInteractor,
                                             private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
@@ -65,8 +71,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                        view.showGenericErrorMessage()
-                    }
+                    view.showGenericErrorMessage()
+                }
             } finally {
                 view.hideLoading()
             }
@@ -90,30 +96,34 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                        view.showGenericErrorMessage()
-                        view.showGenericErrorMessage()
-                    }
+                    view.showGenericErrorMessage()
+                    view.showGenericErrorMessage()
+                 }
 
                 view.enableMessageInput()
             }
         }
     }
 
-    fun uploadFile(roomId: String,
-                   file: File,
-                   mimeType: String,
-                   msg: String,
-                   description: String) {
+    fun uploadFile(roomId: String, uri: Uri, msg: String) {
         launchUI(strategy) {
             view.showLoading()
             try {
-                client.uploadFile(roomId, file, mimeType, msg, description)
+                val fileName = uriInteractor.getFileName(uri)
+                val mimeType = uriInteractor.getMimeType(uri)
+                val fileRealPath = uriInteractor.getRealPath(uri)
+
+                if (fileName == null || fileRealPath == null) {
+                    view.showInvalidFileMessage()
+                } else {
+                    client.uploadFile(roomId, File(fileRealPath), mimeType, msg, fileName)
+                }
             } catch (ex: RocketChatException) {
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                        view.showGenericErrorMessage()
-                    }
+                    view.showGenericErrorMessage()
+                }
             } finally {
                 view.hideLoading()
             }
@@ -301,7 +311,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 if (message.roomId != roomId) {
                     Timber.d("Ignoring message for room ${message.roomId}, expecting $roomId")
                 }
-
                 updateMessage(message)
             }
         }

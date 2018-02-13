@@ -29,6 +29,11 @@ interface ChatRoomView : LoadingView, MessageView {
     fun uploadFile(uri: Uri)
 
     /**
+     * Shows a invalid file message.
+     */
+    fun showInvalidFileMessage()
+
+    /**
      * Shows a (recent) message sent to a chat room.
      *
      * @param message The (recent) message sent to a chat room.
@@ -71,5 +76,6 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showEditingAction(roomId: String, messageId: String, text: String)
 
     fun disableMessageInput()
+
     fun enableMessageInput(clear: Boolean = false)
 }
