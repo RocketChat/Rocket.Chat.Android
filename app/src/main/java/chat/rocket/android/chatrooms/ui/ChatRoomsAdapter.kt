@@ -39,7 +39,7 @@ class ChatRoomsAdapter(private val context: Context,
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(chatRoom: ChatRoom) = with(itemView) {
-            bindAvatar(chatRoom, layout_avatar, image_avatar, image_room_avatar)
+            bindAvatar(chatRoom, image_avatar)
             bindName(chatRoom, text_chat_name)
             bindLastMessageDateTime(chatRoom, text_last_message_date_time)
             bindLastMessage(chatRoom, text_last_message)
@@ -48,17 +48,8 @@ class ChatRoomsAdapter(private val context: Context,
             setOnClickListener { listener(chatRoom) }
         }
 
-        private fun bindAvatar(chatRoom: ChatRoom, avatarLayout: View, drawee: SimpleDraweeView, imageView: ImageView) {
-            val chatRoomName = chatRoom.name
-            if (chatRoom.type is RoomType.DirectMessage) {
-                drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoomName))
-                imageView.setVisible(false)
-                avatarLayout.setVisible(true)
-            } else {
-                imageView.setImageDrawable(DrawableHelper.getTextDrawable(chatRoomName))
-                avatarLayout.setVisible(false)
-                imageView.setVisible(true)
-            }
+        private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
+            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoom.name))
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
