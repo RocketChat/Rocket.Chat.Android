@@ -50,16 +50,10 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                         view.showLoading()
 
                         try {
-                            client.signup(
-                                email,
-                                name,
-                                username,
-                                password
-                            ) // TODO This function returns a user so should we save it?
-                            client.login(
-                                username,
-                                password
-                            ) // TODO This function returns a user token so should we save it?
+                            // TODO This function returns a user so should we save it?
+                            client.signup(email, name, username, password)
+                            // TODO This function returns a user token so should we save it?
+                            client.login(username, password)
                             val me = client.me()
                             localRepository.save(LocalRepository.USERNAME_KEY, me.username)
                             registerPushToken()
@@ -68,8 +62,8 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                             exception.message?.let {
                                 view.showMessage(it)
                             }.ifNull {
-                                    view.showGenericErrorMessage()
-                                }
+                                view.showGenericErrorMessage()
+                            }
                         } finally {
                             view.hideLoading()
 

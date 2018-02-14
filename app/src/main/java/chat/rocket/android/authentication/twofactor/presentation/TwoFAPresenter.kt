@@ -58,8 +58,8 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                                 exception.message?.let {
                                     view.showMessage(it)
                                 }.ifNull {
-                                        view.showGenericErrorMessage()
-                                    }
+                                    view.showGenericErrorMessage()
+                                }
                             }
                         } finally {
                             view.hideLoading()

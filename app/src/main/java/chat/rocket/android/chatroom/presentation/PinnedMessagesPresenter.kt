@@ -46,8 +46,8 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                     view.showPinnedMessages(messageList)
                     view.hideLoading()
                 }.ifNull {
-                        Timber.e("Couldn't find a room with id: $roomId at current server.")
-                    }
+                    Timber.e("Couldn't find a room with id: $roomId at current server.")
+                }
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }

@@ -111,8 +111,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                     exception.message?.let {
                                         view.showMessage(it)
                                     }.ifNull {
-                                            view.showGenericErrorMessage()
-                                        }
+                                        view.showGenericErrorMessage()
+                                    }
                                 }
                             }
                         } finally {

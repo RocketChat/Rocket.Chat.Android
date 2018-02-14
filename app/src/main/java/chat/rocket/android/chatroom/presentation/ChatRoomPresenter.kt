@@ -97,9 +97,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
-                    view.showGenericErrorMessage()
-                 }
-
+                }
                 view.enableMessageInput()
             }
         }
