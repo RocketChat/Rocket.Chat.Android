@@ -31,8 +31,6 @@ data class MessageViewModel(val context: Context,
                             private val localRepository: LocalRepository,
                             private val currentServerRepository: CurrentServerRepository) {
     val id: String = message.id
-    val isGroupable = message.groupable
-    val senderId = message.sender?.id
     val avatarUri: String?
     val roomId: String = message.roomId
     val time: CharSequence

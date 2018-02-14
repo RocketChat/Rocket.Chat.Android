@@ -36,8 +36,7 @@ class ChatRoomAdapter(private val roomType: String,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
             ViewHolder(parent.inflate(R.layout.item_message), roomType, roomName, presenter)
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(dataSet[position], dataSet.getOrNull(position + 1))
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
     override fun getItemCount(): Int = dataSet.size
 
@@ -78,21 +77,12 @@ class ChatRoomAdapter(private val roomType: String,
                      val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
         private lateinit var messageViewModel: MessageViewModel
 
-        fun bind(message: MessageViewModel, nextMessage: MessageViewModel?) = with(itemView) {
+        fun bind(message: MessageViewModel) = with(itemView) {
             messageViewModel = message
 
             image_avatar.setImageURI(message.avatarUri)
             text_sender.text = message.senderName
             text_message_time.content = message.time
-
-            if (nextMessage != null) {
-                if (isSequential(message, nextMessage)) {
-                    image_avatar.setVisible(false)
-                    text_sender.setVisible(false)
-                    text_message_time.setVisible(false)
-                }
-            }
-
             text_content.content = message.content
             text_content.movementMethod = LinkMovementMethod()
             bindAttachment(message, message_attachment, image_attachment, audio_video_attachment, file_name)
@@ -135,9 +125,6 @@ class ChatRoomAdapter(private val roomType: String,
             }
             return true
         }
-
-        private fun isSequential(message: MessageViewModel, nextMessage: MessageViewModel): Boolean =
-            (message.isGroupable && nextMessage.isGroupable) && (message.senderId == nextMessage.senderId)
 
         private fun bindAttachment(message: MessageViewModel,
                                    attachment_container: View,
