@@ -5,7 +5,6 @@ import android.text.method.LinkMovementMethod
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -14,10 +13,9 @@ import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
-import chat.rocket.android.util.content
-import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisible
-import chat.rocket.common.util.ifNull
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.content
 import com.facebook.drawee.view.SimpleDraweeView
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.avatar.view.*
@@ -29,25 +27,22 @@ import ru.whalemare.sheetmenu.extension.toList
 class ChatRoomAdapter(private val roomType: String,
                       private val roomName: String,
                       private val presenter: ChatRoomPresenter) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+    private val dataSet = ArrayList<MessageViewModel>()
 
     init {
         setHasStableIds(true)
     }
-
-    val dataSet = ArrayList<MessageViewModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
             ViewHolder(parent.inflate(R.layout.item_message), roomType, roomName, presenter)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>?) {
-        onBindViewHolder(holder, position)
-    }
-
     override fun getItemCount(): Int = dataSet.size
 
     override fun getItemViewType(position: Int): Int = position
+
+    override fun getItemId(position: Int): Long = dataSet[position].id.hashCode().toLong()
 
     fun addDataSet(dataSet: List<MessageViewModel>) {
         val previousDataSetSize = this.dataSet.size
@@ -76,27 +71,21 @@ class ChatRoomAdapter(private val roomType: String,
         }
     }
 
-    override fun getItemId(position: Int): Long {
-        return dataSet[position].id.hashCode().toLong()
-    }
-
     class ViewHolder(itemView: View,
                      val roomType: String,
                      val roomName: String,
                      val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
-
         private lateinit var messageViewModel: MessageViewModel
 
         fun bind(message: MessageViewModel) = with(itemView) {
             messageViewModel = message
-            bindUserAvatar(message, image_avatar, image_unknown_avatar)
-            text_user_name.content = message.sender
+
+            image_avatar.setImageURI(message.avatarUri)
+            text_sender.text = message.senderName
             text_message_time.content = message.time
             text_content.content = message.content
             text_content.movementMethod = LinkMovementMethod()
-
-            bindAttachment(message, message_attachment, image_attachment, audio_video_attachment,
-                    file_name)
+            bindAttachment(message, message_attachment, image_attachment, audio_video_attachment, file_name)
 
             text_content.setOnClickListener {
                 if (!message.isSystemMessage) {
@@ -134,7 +123,6 @@ class ChatRoomAdapter(private val roomType: String,
                     else -> TODO("Not implemented")
                 }
             }
-
             return true
         }
 
@@ -179,15 +167,6 @@ class ChatRoomAdapter(private val roomType: String,
                 audio_video_attachment.setVisible(videoVisible)
                 file_name.text = message.attachmentTitle
             }
-        }
-
-        private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) = message.getAvatarUrl().let {
-            drawee.setImageURI(it.toString())
-            drawee.setVisible(true)
-            imageUnknownAvatar.setVisible(false)
-        }.ifNull {
-            drawee.setVisible(false)
-            imageUnknownAvatar.setVisible(true)
         }
     }
 }

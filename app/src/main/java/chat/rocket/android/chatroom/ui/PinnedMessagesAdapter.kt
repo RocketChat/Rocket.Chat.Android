@@ -10,10 +10,9 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
-import chat.rocket.android.util.content
-import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisible
-import chat.rocket.common.util.ifNull
+import chat.rocket.android.util.extensions.content
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setVisible
 import com.facebook.drawee.view.SimpleDraweeView
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.avatar.view.*
@@ -78,8 +77,8 @@ class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHol
 
         fun bind(message: MessageViewModel) = with(itemView) {
             messageViewModel = message
-            bindUserAvatar(message, image_avatar, image_unknown_avatar)
-            text_user_name.content = message.sender
+            image_avatar.setImageURI(message.avatarUri)
+            text_sender.content = message.senderName
             text_message_time.content = message.time
             text_content.content = message.content
             text_content.movementMethod = LinkMovementMethod()
@@ -128,17 +127,6 @@ class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHol
                 image_attachment.setVisible(imageVisible)
                 audio_video_attachment.setVisible(videoVisible)
                 file_name.text = message.attachmentTitle
-            }
-        }
-
-        private fun bindUserAvatar(message: MessageViewModel, drawee: SimpleDraweeView, imageUnknownAvatar: ImageView) {
-            message.getAvatarUrl().let {
-                drawee.setImageURI(it.toString())
-                drawee.setVisible(true)
-                imageUnknownAvatar.setVisible(false)
-            }.ifNull {
-                drawee.setVisible(false)
-                imageUnknownAvatar.setVisible(true)
             }
         }
     }

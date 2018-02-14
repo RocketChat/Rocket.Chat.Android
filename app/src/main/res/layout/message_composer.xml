@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <View
@@ -22,36 +22,51 @@
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <LinearLayout
-        android:id="@+id/top_container"
+        android:id="@+id/input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-        android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
+        <ImageButton
+            android:id="@+id/button_add_reaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/msg_content_description_show_attachment_options"
+            android:src="@drawable/ic_reaction_24dp" />
+
         <EditText
             android:id="@+id/text_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:hint="@string/msg_message"
             android:maxLines="4" />
 
-        <TextView
-            android:id="@+id/text_send"
-            style="@style/TextAppearance.AppCompat.Medium"
+        <ImageButton
+            android:id="@+id/button_show_attachment_options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="@string/action_send"
-            android:textColor="@color/colorAccent" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/msg_content_description_show_attachment_options"
+            android:src="@drawable/ic_add_24dp" />
+
+        <ImageButton
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/msg_content_description_send_message"
+            android:src="@drawable/ic_send_24dp"
+            android:visibility="gone" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

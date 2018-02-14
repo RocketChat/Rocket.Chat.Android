@@ -23,7 +23,6 @@ import ru.noties.markwon.renderer.SpannableMarkdownVisitor
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-
 class MessageParser @Inject constructor(val context: Application, private val configuration: SpannableConfiguration) {
 
     private val parser = Markwon.createParser()
@@ -60,9 +59,9 @@ class MessageParser @Inject constructor(val context: Application, private val co
         val parentNode = parser.parse(toLenientMarkdown(content))
         parentNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         quote?.apply {
-            var quoteNode = parser.parse("> $sender $time")
+            var quoteNode = parser.parse("> $senderName $time")
             parentNode.appendChild(quoteNode)
-            quoteNode.accept(QuoteMessageSenderVisitor(context, configuration, builder, sender.length))
+            quoteNode.accept(QuoteMessageSenderVisitor(context, configuration, builder, senderName.length))
             quoteNode = parser.parse("> ${toLenientMarkdown(quote.getOriginalMessage())}")
             quoteNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         }

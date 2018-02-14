@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
-import chat.rocket.android.util.addFragment
-import chat.rocket.android.util.textContent
+import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

@@ -13,8 +13,8 @@ import chat.rocket.android.chatroom.presentation.PinnedMessagesPresenter
 import chat.rocket.android.chatroom.presentation.PinnedMessagesView
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
-import chat.rocket.android.util.setVisible
-import chat.rocket.android.util.showToast
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.showToast
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_pinned_messages.*
 import javax.inject.Inject

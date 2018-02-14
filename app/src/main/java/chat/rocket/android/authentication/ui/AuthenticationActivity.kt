@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.authentication.server.ui.ServerFragment
-import chat.rocket.android.util.addFragment
+import chat.rocket.android.util.extensions.addFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

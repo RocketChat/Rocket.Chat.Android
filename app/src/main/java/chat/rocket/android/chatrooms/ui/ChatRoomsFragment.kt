@@ -9,14 +9,13 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
-import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisible
-import chat.rocket.android.util.showToast
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection

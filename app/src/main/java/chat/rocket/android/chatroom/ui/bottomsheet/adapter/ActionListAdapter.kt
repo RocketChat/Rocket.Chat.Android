@@ -2,7 +2,7 @@ package chat.rocket.android.chatroom.ui.bottomsheet.adapter
 
 import android.view.MenuItem
 import chat.rocket.android.R
-import chat.rocket.android.util.setVisible
+import chat.rocket.android.util.extensions.setVisible
 
 /**
  * An adapter for bottomsheet menu that lists all the actions that could be taken over a chat message.

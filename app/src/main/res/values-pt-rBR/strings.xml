@@ -11,16 +11,15 @@
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
-    <string name="action_send">Enviar</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_update">Atualizar</string>
     <string name="action_logout">Sair</string>
+    <string name="action_files">Arquivos</string>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">Sem conexão à internet</string>
-    <string name="msg_invalid_server_url">URL de servidor inválida</string>
     <string name="msg_generic_error">Desculpe, ocorreu um erro, tente novamente</string>
     <string name="msg_no_data_to_display">Nenhum dado para exibir</string>
     <string name="msg_profile_update_successfully">Perfil atualizado com sucesso</string>
@@ -33,10 +32,12 @@
     <string name="msg_new_user">Novo usuário? %1$s</string>
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
-    <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
     <string name="msg_yesterday">ontem</string>
     <string name="msg_message">Messagem</string>
     <string name="msg_this_room_is_read_only">Este chat é apenas de leitura</string>
+    <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
+    <string name="msg_invalid_file">Arquivo inválido</string>
+    <string name="msg_invalid_server_url">URL de servidor inválida</string>
     <string name="msg_content_description_log_in_using_facebook">Fazer login através do Facebook</string>
     <string name="msg_content_description_log_in_using_github">Fazer login através do Github</string>
     <string name="msg_content_description_log_in_using_google">Fazer login através do Google</string>
@@ -44,6 +45,8 @@
     <string name="msg_content_description_log_in_using_meteor">Fazer login através do Meteor</string>
     <string name="msg_content_description_log_in_using_twitter">Fazer login através do Twitter</string>
     <string name="msg_content_description_log_in_using_gitlab">Fazer login através do Gitlab</string>
+    <string name="msg_content_description_send_message">Enviar mensagem</string>
+    <string name="msg_content_description_show_attachment_options">Mostrar opções de anexo</string>
     <string name="msg_you">Você</string>
     <string name="msg_unknown">Desconhecido</string>
 
