@@ -1,6 +1,7 @@
 package chat.rocket.android.server.infraestructure
 
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.infrastructure.LocalRepository.Companion.SETTINGS_KEY
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.core.internal.SettingsAdapter
 import chat.rocket.core.model.Value
@@ -20,9 +21,5 @@ class SharedPreferencesSettingsRepository(private val localRespository: LocalRep
         }
 
         return null
-    }
-
-    companion object {
-        private const val SETTINGS_KEY = "settings_"
     }
 }

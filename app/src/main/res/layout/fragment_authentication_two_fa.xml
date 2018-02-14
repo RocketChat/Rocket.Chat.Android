@@ -14,7 +14,7 @@
 
     <EditText
         android:id="@+id/text_two_factor_auth"
-        style="@style/AuthenticationEditText"
+        style="@style/EditText.Authentication"
         android:layout_below="@id/text_headline"
         android:layout_marginTop="32dp"
         android:drawableStart="@drawable/ic_vpn_key_black_24dp"

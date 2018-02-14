@@ -1,27 +1,34 @@
 <resources>
-    <string name="app_name" translatable="false">Rocket Chat</string>
+    <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in your server</string>
     <string name="title_log_in">Log in</string>
     <string name="title_sign_up">Sign up</string>
     <string name="title_legal_terms">Legal Terms</string>
+    <string name="title_chats">Chats</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_update_profile">Update profile</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
     <string name="action_send">Send</string>
     <string name="action_terms_of_service">Terms of Service</string>
     <string name="action_privacy_policy">Privacy Policy</string>
-    <string name="search">Search</string>
+    <string name="action_search">Search</string>
+    <string name="action_update">Update</string>
+    <string name="action_logout">Log Out</string>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">No internet connection</string>
     <string name="msg_invalid_server_url">Invalid server URL</string>
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
+    <string name="msg_no_data_to_display">No data to display</string>
+    <string name="msg_profile_update_successfully">Profile update successfully</string>
     <string name="msg_username">username</string>
     <string name="msg_username_or_email">username or email</string>
     <string name="msg_password">password</string>
-    <string name="msg_name_and_surname">name and surname</string>
+    <string name="msg_name">name</string>
     <string name="msg_email">email</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>

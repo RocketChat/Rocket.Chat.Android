@@ -10,7 +10,7 @@
         android:id="@+id/image_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:roundedCornerRadius="2dp" />
+        app:roundedCornerRadius="3dp" />
 
     <!-- TODO define the correct bg color for this-->
     <ImageView

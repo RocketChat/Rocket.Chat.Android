@@ -24,7 +24,7 @@
 
     <EditText
         android:id="@+id/text_server_url"
-        style="@style/AuthenticationEditText"
+        style="@style/EditText.Authentication"
         android:layout_below="@id/text_headline"
         android:layout_marginStart="0dp"
         android:layout_marginTop="32dp"

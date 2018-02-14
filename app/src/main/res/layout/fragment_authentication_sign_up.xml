@@ -17,10 +17,10 @@
 
     <EditText
         android:id="@+id/text_name"
-        style="@style/AuthenticationEditText"
+        style="@style/EditText.Authentication"
         android:layout_marginTop="32dp"
         android:drawableStart="@drawable/ic_person_black_24dp"
-        android:hint="@string/msg_name_and_surname"
+        android:hint="@string/msg_name"
         android:imeOptions="actionNext"
         android:inputType="textCapWords"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -29,7 +29,7 @@
 
     <EditText
         android:id="@+id/text_username"
-        style="@style/AuthenticationEditText"
+        style="@style/EditText.Authentication"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_at_black_24dp"
         android:hint="@string/msg_username"
@@ -41,7 +41,7 @@
 
     <EditText
         android:id="@+id/text_password"
-        style="@style/AuthenticationEditText"
+        style="@style/EditText.Authentication"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_lock_black_24dp"
         android:hint="@string/msg_password"
@@ -53,7 +53,7 @@
 
     <EditText
         android:id="@+id/text_email"
-        style="@style/AuthenticationEditText"
+        style="@style/EditText.Authentication"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_email_black_24dp"
         android:hint="@string/msg_email"
