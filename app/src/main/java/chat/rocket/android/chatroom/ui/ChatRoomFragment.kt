@@ -1,11 +1,11 @@
 package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -18,12 +18,8 @@ import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
-import chat.rocket.android.util.extensions.*
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
@@ -66,7 +62,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private val max by lazy { Math.max(layout_message_attachment_options.width.toDouble(), layout_message_attachment_options.height.toDouble()).toFloat() }
     private val centerX by lazy { recycler_view.right }
     private val centerY by lazy { recycler_view.bottom }
-    private lateinit var handler: Handler
+    val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +85,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
-        handler = Handler()
         setupComposer()
         setupActionSnackbar()
     }
