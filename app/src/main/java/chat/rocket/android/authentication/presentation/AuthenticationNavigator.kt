@@ -8,7 +8,7 @@ import chat.rocket.android.authentication.signup.ui.SignupFragment
 import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.ui.MainActivity
-import chat.rocket.android.util.addFragmentBackStack
+import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.webview.webViewIntent
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity, internal val context: Context) {

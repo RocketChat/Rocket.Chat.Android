@@ -8,7 +8,7 @@ import android.view.MenuItem
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.profile.ui.ProfileFragment
-import chat.rocket.android.util.addFragment
+import chat.rocket.android.util.extensions.addFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

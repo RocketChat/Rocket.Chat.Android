@@ -7,7 +7,7 @@ import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.util.ifNull
@@ -95,7 +95,10 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         try {
                             val token = client.login(usernameOrEmail, password)
                             val me = client.me()
-                            multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
+                            multiServerRepository.save(
+                                server,
+                                TokenModel(token.userId, token.authToken)
+                            )
                             localRepository.save(LocalRepository.USERNAME_KEY, me.username)
                             registerPushToken()
                             navigator.toChatList()

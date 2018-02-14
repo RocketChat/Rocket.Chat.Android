@@ -6,7 +6,7 @@ import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.settings
@@ -56,8 +56,8 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                             exception.message?.let {
                                 view.showMessage(it)
                             }.ifNull {
-                                view.showGenericErrorMessage()
-                            }
+                                    view.showGenericErrorMessage()
+                                }
                         } finally {
                             view.hideLoading()
                         }

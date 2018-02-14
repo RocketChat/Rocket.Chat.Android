@@ -27,7 +27,7 @@
         app:layout_constraintLeft_toRightOf="@+id/layout_avatar">
 
         <TextView
-            android:id="@+id/text_user_name"
+            android:id="@+id/text_sender"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

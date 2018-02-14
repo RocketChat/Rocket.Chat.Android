@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.net.Uri
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
@@ -19,6 +20,18 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param text The text to send.
      */
     fun sendMessage(text: String)
+
+    /**
+     * Uploads a file to a chat room.
+     *
+     * @param uri The file URI to send.
+     */
+    fun uploadFile(uri: Uri)
+
+    /**
+     * Shows a invalid file message.
+     */
+    fun showInvalidFileMessage()
 
     /**
      * Shows a (recent) message sent to a chat room.
@@ -63,5 +76,6 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showEditingAction(roomId: String, messageId: String, text: String)
 
     fun disableMessageInput()
+
     fun enableMessageInput(clear: Boolean = false)
 }

@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable
 import android.support.design.widget.BaseTransientBottomBar
 import android.support.v4.view.ViewCompat
 import android.text.Spannable
-import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.util.content
+import chat.rocket.android.util.extensions.content
 import ru.noties.markwon.Markwon
-import javax.inject.Inject
 
 class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
 
@@ -66,19 +64,21 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
             super(parentViewGroup, content, contentViewCallback)
 
     class CallbackImpl(val content: View) : BaseTransientBottomBar.ContentViewCallback {
+
         override fun animateContentOut(delay: Int, duration: Int) {
             ViewCompat.setScaleY(content, 1f)
             ViewCompat.animate(content)
-                    .scaleY(0f)
-                    .setDuration(duration.toLong())
-                    .setStartDelay(delay.toLong())
+                .scaleY(0f)
+                .setDuration(duration.toLong())
+                .startDelay = delay.toLong()
         }
 
         override fun animateContentIn(delay: Int, duration: Int) {
             ViewCompat.setScaleY(content, 0f)
             ViewCompat.animate(content)
-                    .scaleY(1f).setDuration(duration.toLong())
-                    .setStartDelay(delay.toLong())
+                .scaleY(1f)
+                .setDuration(duration.toLong())
+                .startDelay = delay.toLong()
         }
     }
 }

@@ -13,10 +13,7 @@ import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.CurrentServerRepository
-import chat.rocket.android.server.domain.MessagesRepository
-import chat.rocket.android.server.domain.SITE_URL
-import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.server.domain.*
 import chat.rocket.common.model.Token
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType.*
@@ -34,9 +31,10 @@ data class MessageViewModel(val context: Context,
                             private val localRepository: LocalRepository,
                             private val currentServerRepository: CurrentServerRepository) {
     val id: String = message.id
+    val avatarUri: String?
     val roomId: String = message.roomId
     val time: CharSequence
-    val sender: CharSequence
+    val senderName: CharSequence
     val content: CharSequence
     var quote: Message? = null
     var urlsWithMeta = arrayListOf<Url>()
@@ -50,11 +48,13 @@ data class MessageViewModel(val context: Context,
     var isSystemMessage: Boolean = false
     var isPinned: Boolean = false
     var currentUsername: String? = null
+    private val baseUrl = settings.get(SITE_URL)
 
     init {
         currentUsername = localRepository.get(LocalRepository.USERNAME_KEY)
-        sender = getSenderName()
+        avatarUri = getUserAvatar()
         time = getTime(message.timestamp)
+        senderName = getSender()
         isPinned = message.pinned
 
         val baseUrl = settings.get(SITE_URL)
@@ -100,38 +100,39 @@ data class MessageViewModel(val context: Context,
                 }
             }
         }
-
         content = getContent(context)
     }
 
-    private fun makeQuote(quoteUrl: HttpUrl, serverUrl: HttpUrl) {
-        if (quoteUrl.host() == serverUrl.host()) {
-            val msgIdToQuote = quoteUrl.queryParameter("msg")
-            if (msgIdToQuote != null) {
-                quote = messagesRepository.getById(msgIdToQuote)
-            }
+    private fun getUserAvatar(): String? {
+        val username = message.sender?.username ?: "?"
+        return baseUrl?.let {
+            UrlHelper.getAvatarUrl(baseUrl.value.toString(), username)
         }
     }
-
-    fun getAvatarUrl(): String? {
-        return message.sender?.username.let {
-            return@let UrlHelper.getAvatarUrl(currentServerRepository.get()!!, it.toString())
-        }
-    }
-
-    /**
-     * Get the original message as a String.
-     */
-    fun getOriginalMessage() = message.message
 
     private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
 
-    private fun getSenderName(): CharSequence {
+    private fun getSender(): CharSequence {
+        val useRealName = settings?.get(USE_REALNAME)?.value as Boolean
         val username = message.sender?.username
         val realName = message.sender?.name
-        val senderName = if (settings.useRealName()) realName else username
-        return senderName ?: username.toString()
+        val senderName = if (useRealName) realName else username
+        return senderName ?: context.getString(R.string.msg_unknown)
     }
+
+        private fun makeQuote(quoteUrl: HttpUrl, serverUrl: HttpUrl) {
+            if (quoteUrl.host() == serverUrl.host()) {
+                val msgIdToQuote = quoteUrl.queryParameter("msg")
+                if (msgIdToQuote != null) {
+                    quote = messagesRepository.getById(msgIdToQuote)
+                }
+            }
+        }
+
+        /**
+         * Get the original message as a String.
+         */
+        fun getOriginalMessage() = message.message
 
     private fun getContent(context: Context): CharSequence {
         val contentMessage: CharSequence

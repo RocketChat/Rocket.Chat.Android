@@ -6,7 +6,7 @@ import chat.rocket.android.server.domain.GetChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.getRoomPinnedMessages
@@ -38,9 +38,11 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                 val chatRoom = roomsInteractor.getById(serverUrl, roomId)
                 chatRoom?.let { room ->
                     view.showLoading()
-                    val pinnedMessages = client.getRoomPinnedMessages(roomId, room.type, pinnedMessagesListOffset)
+                    val pinnedMessages =
+                        client.getRoomPinnedMessages(roomId, room.type, pinnedMessagesListOffset)
                     pinnedMessagesListOffset = pinnedMessages.offset.toInt()
-                    val messageList = mapper.mapToViewModelList(pinnedMessages.result, settings).filterNot { it.isSystemMessage }
+                    val messageList = mapper.mapToViewModelList(pinnedMessages.result, settings)
+                        .filterNot { it.isSystemMessage }
                     view.showPinnedMessages(messageList)
                     view.hideLoading()
                 }.ifNull {

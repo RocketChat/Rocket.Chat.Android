@@ -1,13 +1,27 @@
-package chat.rocket.android.util
+package chat.rocket.android.util.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import chat.rocket.android.R
+
+fun View.setVisible(visible: Boolean) {
+    visibility = if (visible) {
+        View.VISIBLE
+    } else {
+        View.GONE
+    }
+}
+
+fun ViewGroup.inflate(@LayoutRes resource: Int): View = LayoutInflater.from(context).inflate(resource, this, false)
 
 fun AppCompatActivity.addFragment(tag: String, layoutId: Int, newInstance: () -> Fragment) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
@@ -31,7 +45,9 @@ fun Activity.hideKeyboard() {
 }
 
 fun Activity.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) = showToast(getString(resource), duration)
+
 fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) = Toast.makeText(this, message, duration).show()
 
 fun Fragment.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) = showToast(getString(resource), duration)
+
 fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) = activity!!.showToast(message, duration)

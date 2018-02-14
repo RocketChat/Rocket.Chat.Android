@@ -1,11 +1,13 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.net.Uri
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.domain.UriInteractor
 import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
@@ -18,9 +20,11 @@ import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
@@ -28,6 +32,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
                                             private val permissions: GetPermissionsInteractor,
+                                            private val uriInteractor: UriInteractor,
                                             private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
                                             private val mapper: MessageViewModelMapper) {
@@ -41,7 +46,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val messages = client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
+                val messages =
+                    client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                 messagesRepository.saveAll(messages)
 
                 val messagesViewModels = mapper.mapToViewModelList(messages, settings)
@@ -68,11 +74,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.disableMessageInput()
             try {
-                val message: Message
-                if (messageId == null) {
-                    message = client.sendMessage(chatRoomId, text)
+                val message = if (messageId == null) {
+                    client.sendMessage(chatRoomId, text)
                 } else {
-                    message = client.updateMessage(chatRoomId, messageId, text)
+                    client.updateMessage(chatRoomId, messageId, text)
                 }
                 // ignore message for now, will receive it on the stream
                 view.enableMessageInput(clear = true)
@@ -83,8 +88,48 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
-
                 view.enableMessageInput()
+            }
+        }
+    }
+
+    fun uploadFile(roomId: String, uri: Uri, msg: String) {
+        launchUI(strategy) {
+            view.showLoading()
+            var tempFile: File? = null
+            try {
+                val fileName = async { uriInteractor.getFileName(uri) }.await()
+                val mimeType = async { uriInteractor.getMimeType(uri) }.await()
+                /* FIXME - this is a workaround for uploading files with the SDK
+                 *
+                 * https://developer.android.com/guide/topics/providers/document-provider.html
+                 *
+                 * We need to use contentResolver.openInputStream(uri) to open this file.
+                 * Since the SDK is not Android specific we cannot pass the Uri and let the
+                 * SDK handle the file.
+                 *
+                 * As a temporary workaround we are saving the contents to a temp file.
+                 *
+                 * A proper solution is to implement some interface to open the InputStream
+                 * and use a RequestBody based on https://github.com/square/okhttp/issues/3585
+                 */
+                tempFile = async { uriInteractor.tempFile(uri) }.await()
+
+                if (fileName == null || tempFile == null) {
+                    view.showInvalidFileMessage()
+                } else {
+                    client.uploadFile(roomId, tempFile, mimeType, msg, fileName)
+                }
+            } catch (ex: RocketChatException) {
+                Timber.d(ex)
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                tempFile?.delete()
+                view.hideLoading()
             }
         }
     }
@@ -182,7 +227,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             message?.let { m ->
                 val id = m.id
                 val username = m.sender?.username
-                val user = "@" + if (settings.useRealName()) m.sender?.name ?: m.sender?.username else m.sender?.username
+                val user = "@" + if (settings.useRealName()) m.sender?.name
+                        ?: m.sender?.username else m.sender?.username
                 val mention = if (mentionAuthor && me.username != username) user else ""
                 val type = roomTypeOf(roomType)
                 val room = when (type) {
@@ -192,7 +238,11 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     is RoomType.Livechat -> "livechat"
                     is RoomType.Custom -> "custom" //TODO: put appropriate callback string here.
                 }
-                view.showReplyingAction(user, "[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ", m.message)
+                view.showReplyingAction(
+                    user,
+                    "[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ",
+                    m.message
+                )
             }
         }
     }
@@ -265,7 +315,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 if (message.roomId != roomId) {
                     Timber.d("Ignoring message for room ${message.roomId}, expecting $roomId")
                 }
-
                 updateMessage(message)
             }
         }
