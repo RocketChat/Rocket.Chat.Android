@@ -25,8 +25,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="red">#FFFF0000</color>
-    <color name="darkGray">#a0a0a0</color>
-    <color name="actionMenuColor">#727272</color>
+    <color name="darkGray">#FFa0a0a0</color>
+    <color name="actionMenuColor">#FF727272</color>
+    <color name="whitesmoke">#FFf1f1f1</color>
 
     <color name="linkTextColor">#FF074481</color>
     <color name="linkBackgroundColor">#30074481</color>
