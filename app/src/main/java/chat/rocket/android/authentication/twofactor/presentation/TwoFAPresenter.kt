@@ -8,7 +8,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
@@ -43,8 +43,12 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                         view.showLoading()
                         try {
                             // The token is saved via the client TokenProvider
-                            val token = client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
-                            multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
+                            val token =
+                                client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
+                            multiServerRepository.save(
+                                server,
+                                TokenModel(token.userId, token.authToken)
+                            )
                             registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {

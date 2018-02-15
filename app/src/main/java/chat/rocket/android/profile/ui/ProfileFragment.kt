@@ -11,10 +11,7 @@ import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
-import chat.rocket.android.util.getObservable
-import chat.rocket.android.util.inflate
-import chat.rocket.android.util.setVisible
-import chat.rocket.android.util.textContent
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.app_bar.*
@@ -79,7 +76,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         enableUserInput(true)
     }
 
-    override fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    override fun showMessage(resId: Int) = showToast(resId)
+
+    override fun showMessage(message: String) = showToast(message)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
@@ -126,7 +125,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun listenToChanges() {
-        Observables.combineLatest(text_name.getObservable(), text_username.getObservable(), text_email.getObservable()).subscribe({ t ->
+        Observables.combineLatest(text_name.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
                     if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail) {
                         startActionMode()
                     } else {

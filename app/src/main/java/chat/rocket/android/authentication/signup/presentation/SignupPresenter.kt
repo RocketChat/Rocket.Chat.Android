@@ -7,11 +7,12 @@ import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.registerPushToken
 import chat.rocket.core.internal.rest.signup
 import javax.inject.Inject
@@ -49,8 +50,12 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                         view.showLoading()
 
                         try {
-                            client.signup(email, name, username, password) // TODO This function returns a user so should we save it?
-                            client.login(username, password) // TODO This function returns a user token so should we save it?
+                            // TODO This function returns a user so should we save it?
+                            client.signup(email, name, username, password)
+                            // TODO This function returns a user token so should we save it?
+                            client.login(username, password)
+                            val me = client.me()
+                            localRepository.save(LocalRepository.USERNAME_KEY, me.username)
                             registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {

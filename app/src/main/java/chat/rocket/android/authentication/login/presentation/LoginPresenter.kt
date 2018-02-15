@@ -7,12 +7,13 @@ import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.launchUI
+import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.registerPushToken
 import javax.inject.Inject
 
@@ -93,7 +94,12 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
 
                         try {
                             val token = client.login(usernameOrEmail, password)
-                            multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
+                            val me = client.me()
+                            multiServerRepository.save(
+                                server,
+                                TokenModel(token.userId, token.authToken)
+                            )
+                            localRepository.save(LocalRepository.USERNAME_KEY, me.username)
                             registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {
