@@ -49,7 +49,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
-    implementation project(':svg')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
@@ -93,6 +92,7 @@ dependencies {
     implementation libraries.kotshiApi
 
     implementation libraries.frescoImageViewer
+    implementation libraries.androidSvg
 
     implementation libraries.aVLoadingIndicatorView
 
