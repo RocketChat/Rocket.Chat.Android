@@ -19,6 +19,7 @@ import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -28,22 +29,25 @@ import chat.rocket.android.widget.emoji.Emoji
 import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.model.Message
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
+import kotlinx.android.synthetic.main.item_chat.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import timber.log.Timber
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Fragment {
+fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, chatRoomLastSeen: Long): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
             putString(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
             putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
+            putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
         }
     }
 }
@@ -53,18 +57,18 @@ private const val BUNDLE_CHAT_ROOM_NAME = "chat_room_name"
 private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
+private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     @Inject lateinit var presenter: ChatRoomPresenter
     @Inject lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
-
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var isChatRoomReadOnly: Boolean = false
-
+    private var chatRoomLastSeen: Long = -1
     private lateinit var actionSnackbar: ActionSnackbar
     private var citation: String? = null
     private var editingMessageId: String? = null
@@ -89,6 +93,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             chatRoomName = bundle.getString(BUNDLE_CHAT_ROOM_NAME)
             chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
             isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
+            chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -152,6 +157,27 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     override fun showMessages(dataSet: List<BaseViewModel<*>>) {
+        // track the message sent immediately after the current message
+        var prevMessageViewModel : MessageViewModel? = null
+
+        // Loop over received messages to determine first unread
+        for (i in dataSet.indices) {
+            val msgModel = dataSet[i]
+
+            if (msgModel is MessageViewModel){
+                val msg = msgModel.rawData
+                if (msg.timestamp < chatRoomLastSeen) {
+                    // This message was sent before the last seen of the room. Hence, it was seen.
+                    // if there is a message after (below) this, mark it firstUnread.
+                    if (prevMessageViewModel != null) {
+                        prevMessageViewModel.isFirstUnread = true
+                    }
+                    break
+                }
+                prevMessageViewModel = msgModel
+            }
+        }
+
         activity?.apply {
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter)

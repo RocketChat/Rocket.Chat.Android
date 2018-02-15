@@ -147,7 +147,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val content = getContent(context, message, quote)
         MessageViewModel(message = message, rawData = message, messageId = message.id,
                 avatar = avatar!!, time = time, senderName = sender,
-                content = content, isPinned = message.pinned)
+                content = content, isPinned = message.pinned, isFirstUnread = false)
     }
 
     private fun getSenderName(message: Message): CharSequence {

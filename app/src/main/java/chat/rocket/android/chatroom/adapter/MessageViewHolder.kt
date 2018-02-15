@@ -20,6 +20,9 @@ class MessageViewHolder(
 
     override fun bindViews(data: MessageViewModel) {
         with(itemView) {
+            if (data.isFirstUnread) new_messages_notif.visibility = View.VISIBLE
+            else new_messages_notif.visibility = View.GONE
+
             text_message_time.text = data.time
             text_sender.text = data.senderName
             text_content.text = data.content
