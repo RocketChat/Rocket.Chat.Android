@@ -7,6 +7,10 @@ import android.widget.TextView
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import android.provider.MediaStore
+import android.text.Spannable
+import android.text.Spanned
+import android.text.TextUtils
+import chat.rocket.android.widget.emoji.EmojiParser
 import ru.noties.markwon.Markwon
 
 fun String.ifEmpty(value: String): String {
@@ -40,7 +44,13 @@ var TextView.content: CharSequence
     set(value) {
         Markwon.unscheduleDrawables(this)
         Markwon.unscheduleTableRows(this)
-        text = value
+        if (value is Spanned) {
+            val result = EmojiParser.parse(value.toString()) as Spannable
+            TextUtils.copySpansFrom(value, 0, value.length, Any::class.java, result, 0)
+            text = result
+        } else {
+            text = value
+        }
         Markwon.scheduleDrawables(this)
         Markwon.scheduleTableRows(this)
     }

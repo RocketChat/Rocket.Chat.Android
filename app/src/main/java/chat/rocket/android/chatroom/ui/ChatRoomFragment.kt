@@ -18,8 +18,12 @@ import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.widget.emoji.Emoji
+import chat.rocket.android.widget.emoji.EmojiBottomPicker
+import chat.rocket.android.widget.emoji.EmojiParser
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
@@ -43,7 +47,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 
-class ChatRoomFragment : Fragment(), ChatRoomView {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiBottomPicker.OnEmojiClickCallback {
     @Inject lateinit var presenter: ChatRoomPresenter
     @Inject lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
@@ -217,6 +221,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     }
 
+    override fun onEmojiAdded(emoji: Emoji) {
+        val cursorPosition = text_message.selectionStart
+        val text = text_message.text.insert(cursorPosition, emoji.shortname).toString()
+        text_message.content = EmojiParser.parse(text)
+        text_message.setSelection(cursorPosition + emoji.unicode.length)
+        KeyboardHelper.showSoftKeyboard(text_message)
+    }
+
     private fun setupComposer() {
         if (isChatRoomReadOnly) {
             text_room_is_read_only.setVisible(true)
@@ -224,19 +236,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         } else {
             var playAnimation = true
             text_message.asObservable(0)
-                .subscribe({ t ->
-                    if (t.isNotEmpty() && playAnimation) {
-                        button_show_attachment_options.fadeInOrOut(1F, 0F, 120)
-                        button_send.fadeInOrOut(0F, 1F, 120)
-                        playAnimation = false
-                    }
+                    .subscribe({ t ->
+                        if (t.isNotEmpty() && playAnimation) {
+                            button_show_attachment_options.fadeInOrOut(1F, 0F, 120)
+                            button_send.fadeInOrOut(0F, 1F, 120)
+                            playAnimation = false
+                        }
 
-                    if (t.isEmpty()) {
-                        button_send.fadeInOrOut(1F, 0F, 120)
-                        button_show_attachment_options.fadeInOrOut(0F, 1F, 120)
-                        playAnimation = true
-                    }
-                })
+                        if (t.isEmpty()) {
+                            button_send.fadeInOrOut(1F, 0F, 120)
+                            button_show_attachment_options.fadeInOrOut(0F, 1F, 120)
+                            playAnimation = true
+                        }
+                    })
 
             button_send.setOnClickListener {
                 var textMessage = citation ?: ""
@@ -264,6 +276,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 600)
+            }
+
+            button_add_reaction.setOnClickListener {
+                activity?.let {
+                    KeyboardHelper.hideSoftKeyboard(it)
+                    EmojiBottomPicker().show(it.supportFragmentManager, "EmojiBottomPicker")
+                }
             }
         }
     }
