@@ -9,6 +9,7 @@
     <string name="title_chats">Chats</string>
     <string name="title_profile">Profile</string>
     <string name="title_update_profile">Update profile</string>
+    <string name="title_choose_image_from">Choose From</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -78,6 +79,7 @@
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
     <string name="permission_deleting_not_allowed">Deleting is not allowed</string>
     <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
+    <string name="permission_image_picking_not_allowed">Image cannot be accessed without read storage permissions</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>

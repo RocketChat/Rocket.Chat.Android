@@ -1,12 +1,22 @@
 package chat.rocket.android.profile.ui
 
 import DrawableHelper
+import android.Manifest
+import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.view.ActionMode
 import android.view.*
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
@@ -18,13 +28,27 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
+import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
+import android.widget.Toast
+import java.io.File
+import java.io.FileOutputStream
+import java.util.*
+
 
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
-    @Inject lateinit var presenter: ProfilePresenter
+    @Inject
+    lateinit var presenter: ProfilePresenter
     private lateinit var currentName: String
     private lateinit var currentUsername: String
     private lateinit var currentEmail: String
     private var actionMode: ActionMode? = null
+    private var cameraImage: File? = null
+    private var isAvatarChanged = false
+    //request codes
+    private var CHOOSE_PICKER_MODE = 193
+    private val CAMERA_REQUEST_CODE = 108
+    private val STORAGE_REQUEST_CODE = 109
+
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -50,7 +74,18 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String) {
         image_avatar.setImageURI(avatarUrl)
-
+        //click on image_avatar to change avatar
+        image_avatar.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(view: View) {
+                val permissionCheck = ContextCompat.checkSelfPermission(context!!,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                if (permissionCheck != PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), CHOOSE_PICKER_MODE)
+                } else {
+                    openImagePickerChooserDialog()
+                }
+            }
+        })
         text_name.textContent = name
         text_username.textContent = username
         text_email.textContent = email
@@ -62,6 +97,76 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         profile_container.setVisible(true)
 
         listenToChanges()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            CHOOSE_PICKER_MODE -> {
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openImagePickerChooserDialog()
+                } else {
+                    Toast.makeText(context, getString(R.string.permission_image_picking_not_allowed), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    //show dialog to choose whether to pick image from gallery or to click it from camera
+    private fun openImagePickerChooserDialog() {
+        val choices = arrayOf("Open camera", "Pick an image from storage")
+
+        val imagePickerChooserDialogBuilder = AlertDialog.Builder(context)
+        imagePickerChooserDialogBuilder.setTitle(getString(R.string.title_choose_image_from))
+        imagePickerChooserDialogBuilder.setItems(choices, object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                when (which) {
+                    0 -> openCamera()
+                    1 -> openStorage()
+                }
+            }
+        })
+        imagePickerChooserDialogBuilder.show()
+
+    }
+
+    //open camera to capture picture
+    private fun openCamera() {
+        var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraImage = createCameraImage()
+        startActivityForResult(intent, CAMERA_REQUEST_CODE)
+
+    }
+
+    //open storage to pick image
+    private fun openStorage() {
+
+    }
+
+    private fun createCameraImage(): File {
+        val timeStamp = (Date().getTime()).toString()
+        val imageFileName = "photo-" + timeStamp
+
+        return File.createTempFile(imageFileName, ".jpg", context!!.cacheDir)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            CAMERA_REQUEST_CODE -> {
+                if (resultCode == RESULT_OK) {
+                    //write image data to file
+                    try {
+                        val bitmapImage: Bitmap = data!!.extras.get("data") as Bitmap
+                        val out = FileOutputStream(cameraImage)
+                        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, out)
+                        out.close()
+                        image_avatar.setImageURI(data.data)
+                        isAvatarChanged = true
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
     }
 
     override fun showProfileUpdateSuccessfullyMessage() = showMessage(getString(R.string.msg_profile_update_successfully))
@@ -126,12 +231,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     private fun listenToChanges() {
         Observables.combineLatest(text_name.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
-                    if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail) {
-                        startActionMode()
-                    } else {
-                        finishActionMode()
-                    }
-                })
+            if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail || isAvatarChanged) {
+                startActionMode()
+            } else {
+                finishActionMode()
+            }
+        })
     }
 
     private fun startActionMode() {
