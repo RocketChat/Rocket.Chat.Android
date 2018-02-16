@@ -70,7 +70,7 @@ class CategoryPagerAdapter(val callback: EmojiBottomPicker.OnEmojiClickCallback)
 
         fun bind(emoji: Emoji) {
             emojiView.text = EmojiParser.parse(emoji.unicode)
-            emojiView.setOnClickListener {
+            itemView.setOnClickListener {
                 onEmojiClickCallback.onEmojiAdded(emoji)
             }
         }
