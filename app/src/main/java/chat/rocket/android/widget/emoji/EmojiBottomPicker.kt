@@ -15,7 +15,7 @@ import android.widget.TextView
 import chat.rocket.android.R
 
 
-class EmojiBottomPicker : DialogFragment() {
+open class EmojiBottomPicker : DialogFragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
 
@@ -81,7 +81,9 @@ class EmojiBottomPicker : DialogFragment() {
             textView.text = category.icon()
         }
 
-        viewPager.setCurrentItem(EmojiCategory.PEOPLE.ordinal)
+        val currentTab = if (EmojiLoader.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
+            EmojiCategory.RECENTS.ordinal
+        viewPager.setCurrentItem(currentTab)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -89,6 +91,11 @@ class EmojiBottomPicker : DialogFragment() {
     }
 
     interface OnEmojiClickCallback {
+        /**
+         * Callback triggered after an emoji is selected on the picker.
+         *
+         * @param emoji The selected emoji
+         */
         fun onEmojiAdded(emoji: Emoji)
     }
 }
