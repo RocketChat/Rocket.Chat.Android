@@ -44,7 +44,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private lateinit var currentUsername: String
     private lateinit var currentEmail: String
     private var actionMode: ActionMode? = null
-    private var cameraImage: File? = null
+    private var avatarImage: File? = null
     private var isAvatarChanged = false
     //request codes
     private var CHOOSE_PICKER_MODE = 193
@@ -78,6 +78,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String) {
         image_avatar.setImageURI(avatarUrl)
+
         //click on image_avatar to change avatar
         image_avatar.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
@@ -130,13 +131,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             }
         })
         imagePickerChooserDialogBuilder.show()
-
     }
 
     //open camera to capture picture
     private fun openCamera() {
         var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraImage = createCameraImage()
+        avatarImage = createCameraImage()
         startActivityForResult(intent, CAMERA_REQUEST_CODE)
 
     }
@@ -147,8 +147,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.setType("image/*")
         startActivityForResult(intent, READ_STORAGE_REQUEST_CODE)
-        //call mObservable.onNext(isAvatarChanged) later on to tell respond to changes
-
     }
 
     private fun createCameraImage(): File {
@@ -166,7 +164,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     //TODO add better method to store image into storage, presently image has a relatively poor quality (added by aniketsingh03)
                     try {
                         val bitmapImage: Bitmap = data!!.extras.get("data") as Bitmap
-                        val out = FileOutputStream(cameraImage)
+                        val out = FileOutputStream(avatarImage)
                         bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, out)
                         out.close()
                         image_avatar.setImageURI(data.data)
@@ -182,8 +180,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             READ_STORAGE_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
-                    cameraImage = File(data!!.data.path)
-                    Toast.makeText(context, data.data.path,Toast.LENGTH_SHORT).show()
+                    avatarImage = File(data!!.data.path)
+                    Toast.makeText(context, data.data.path, Toast.LENGTH_SHORT).show()
                     image_avatar.setImageURI(data.data)
                     isAvatarChanged = true
                     mObservable.onNext(isAvatarChanged)
@@ -208,7 +206,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun showMessage(resId: Int) = showToast(resId)
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        isAvatarChanged = false
+        showToast(message)
+    }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
@@ -223,7 +224,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent)
+                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, avatarImage!!)
                 mode.finish()
                 true
             }
