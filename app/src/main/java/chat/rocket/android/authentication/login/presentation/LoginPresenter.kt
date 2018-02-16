@@ -8,13 +8,6 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
-import chat.rocket.common.RocketChatException
-import chat.rocket.common.RocketChatTwoFactorException
-import chat.rocket.common.util.ifNull
-import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.login
-import chat.rocket.core.internal.rest.me
-import chat.rocket.core.internal.rest.registerPushToken
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
@@ -96,8 +89,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                             val token = client.login(usernameOrEmail, password)
                             val me = client.me()
                             multiServerRepository.save(
-                                server,
-                                TokenModel(token.userId, token.authToken)
+                                    server,
+                                    TokenModel(token.userId, token.authToken)
                             )
                             localRepository.save(LocalRepository.USERNAME_KEY, me.username)
                             registerPushToken()
@@ -111,8 +104,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                     exception.message?.let {
                                         view.showMessage(it)
                                     }.ifNull {
-                                        view.showGenericErrorMessage()
-                                    }
+                                                view.showGenericErrorMessage()
+                                            }
                                 }
                             }
                         } finally {

@@ -10,13 +10,14 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
 import android.support.v7.view.ActionMode
 import android.view.*
+import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
@@ -24,15 +25,15 @@ import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
-import javax.inject.Inject
-import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
-import android.widget.Toast
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
+import javax.inject.Inject
 
 
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
@@ -48,6 +49,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private var CHOOSE_PICKER_MODE = 193
     private val CAMERA_REQUEST_CODE = 108
     private val STORAGE_REQUEST_CODE = 109
+
+    private var mObservable: Subject<Boolean> = PublishSubject.create()
 
 
     companion object {
@@ -161,6 +164,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                         out.close()
                         image_avatar.setImageURI(data.data)
                         isAvatarChanged = true
+                        mObservable.onNext(isAvatarChanged)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -230,10 +234,18 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun listenToChanges() {
+        mObservable.subscribe({ _ ->
+            if (isAvatarChanged) {
+                startActionMode()
+            } else {
+                finishActionMode()
+            }
+        })
+
         Observables.combineLatest(text_name.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
             if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail || isAvatarChanged) {
                 startActionMode()
-            } else {
+            } else if (!isAvatarChanged) {
                 finishActionMode()
             }
         })
