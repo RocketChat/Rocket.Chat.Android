@@ -9,9 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
+import chat.rocket.android.widget.emoji.EmojiBottomPicker.OnEmojiClickCallback
 import java.util.*
 
-class CategoryPagerAdapter(val callback: EmojiBottomPicker.OnEmojiClickCallback) : PagerAdapter() {
+class CategoryPagerAdapter(val callback: OnEmojiClickCallback) : PagerAdapter() {
     override fun isViewFromObject(view: View, obj: Any): Boolean {
         return view == obj
     }
@@ -19,9 +20,9 @@ class CategoryPagerAdapter(val callback: EmojiBottomPicker.OnEmojiClickCallback)
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(container.context)
                 .inflate(R.layout.emoji_category_layout, container, false)
-        val recycler = view.findViewById(R.id.emojiRecyclerView) as RecyclerView
         val layoutManager = GridLayoutManager(view.context, 5)
-        val adapter = EmojiAdapter(callback)
+        val recycler = view.findViewById(R.id.emojiRecyclerView) as RecyclerView
+        val adapter = EmojiAdapter(layoutManager.spanCount, callback)
         val category = EmojiCategory.values().get(position)
         val emojis = if (category != EmojiCategory.RECENTS)
             EmojiLoader.getEmojisByCategory(category)
@@ -45,7 +46,7 @@ class CategoryPagerAdapter(val callback: EmojiBottomPicker.OnEmojiClickCallback)
     override fun getPageTitle(position: Int) = EmojiCategory.values()[position].icon()
 
 
-    class EmojiAdapter(val callback: EmojiBottomPicker.OnEmojiClickCallback) : RecyclerView.Adapter<EmojiRowViewHolder>() {
+    class EmojiAdapter(val spanCount: Int, val callback: OnEmojiClickCallback) : RecyclerView.Adapter<EmojiRowViewHolder>() {
         private var emojis: List<Emoji> = Collections.emptyList()
 
         fun addEmojis(emojis: List<Emoji>) {
@@ -59,19 +60,26 @@ class CategoryPagerAdapter(val callback: EmojiBottomPicker.OnEmojiClickCallback)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmojiRowViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.emoji_row_item, parent, false)
-            return EmojiRowViewHolder(view, callback)
+            return EmojiRowViewHolder(view, itemCount, spanCount, callback)
         }
 
         override fun getItemCount(): Int = emojis.size
     }
 
-    class EmojiRowViewHolder(itemView: View, val onEmojiClickCallback: EmojiBottomPicker.OnEmojiClickCallback) : RecyclerView.ViewHolder(itemView) {
+    class EmojiRowViewHolder(itemView: View, val itemCount: Int, val spanCount: Int, val callback: OnEmojiClickCallback) : RecyclerView.ViewHolder(itemView) {
         private val emojiView: TextView = itemView.findViewById(R.id.emoji)
 
         fun bind(emoji: Emoji) {
+            val context = itemView.context
             emojiView.text = EmojiParser.parse(emoji.unicode)
+            val remainder = itemCount % spanCount
+            val lastLineItemCount = if (remainder == 0) spanCount else remainder
+            val paddingBottom = context.resources.getDimensionPixelSize(R.dimen.picker_padding_bottom)
+            if (adapterPosition >= itemCount - lastLineItemCount) {
+                itemView.setPadding(0, 0, 0, paddingBottom)
+            }
             itemView.setOnClickListener {
-                onEmojiClickCallback.onEmojiAdded(emoji)
+                callback.onEmojiAdded(emoji)
             }
         }
     }
