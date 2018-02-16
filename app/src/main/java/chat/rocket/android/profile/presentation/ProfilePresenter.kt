@@ -1,6 +1,5 @@
 package chat.rocket.android.profile.presentation
 
-import android.util.Log
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -53,11 +52,9 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             view.showLoading()
             try {
                 //TODO check for problems here
-                Log.d("__VALUES__", "Name " + name + " email " + email + " username " + username)
-                Log.d("__AVATAR__", avatarImage.absolutePath)
                 val user = client.updateProfile(myselfId, email, name, username)
                 val avatar = client.setAvatar(avatarImage, "image/jpeg")
-                Log.d("STATUS", "profile_update" + user + "avatar_update" + avatar)
+                //Log.d("STATUS", "profile_update" + user )
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
             } catch (exception: RocketChatException) {
