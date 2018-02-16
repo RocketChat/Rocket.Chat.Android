@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
 import android.support.v7.view.ActionMode
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
@@ -48,7 +49,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     //request codes
     private var CHOOSE_PICKER_MODE = 193
     private val CAMERA_REQUEST_CODE = 108
-    private val STORAGE_REQUEST_CODE = 109
+    private val READ_STORAGE_REQUEST_CODE = 109
 
     private var mObservable: Subject<Boolean> = PublishSubject.create()
 
@@ -142,6 +143,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     //open storage to pick image
     private fun openStorage() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.setType("image/*")
+        startActivityForResult(intent, READ_STORAGE_REQUEST_CODE)
+        //call mObservable.onNext(isAvatarChanged) later on to tell respond to changes
 
     }
 
@@ -157,6 +163,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             CAMERA_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
                     //write image data to file
+                    //TODO add better method to store image into storage, presently image has a relatively poor quality (added by aniketsingh03)
                     try {
                         val bitmapImage: Bitmap = data!!.extras.get("data") as Bitmap
                         val out = FileOutputStream(cameraImage)
@@ -168,6 +175,20 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
+                } else {
+                    Log.d("ERROR_CODE", resultCode.toString())
+                }
+            }
+
+            READ_STORAGE_REQUEST_CODE -> {
+                if (resultCode == RESULT_OK) {
+                    cameraImage = File(data!!.data.path)
+                    Toast.makeText(context, data.data.path,Toast.LENGTH_SHORT).show()
+                    image_avatar.setImageURI(data.data)
+                    isAvatarChanged = true
+                    mObservable.onNext(isAvatarChanged)
+                } else {
+                    Log.d("ERROR_CODE", resultCode.toString())
                 }
             }
         }
@@ -234,6 +255,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun listenToChanges() {
+        //setup rx for avatar
         mObservable.subscribe({ _ ->
             if (isAvatarChanged) {
                 startActionMode()
