@@ -10,10 +10,10 @@ class EmojiParser {
          * Spannable.
          *
          * @param text The text to parse
-         *
+         * smiley = D83D DE03
          * @return A rendered Spannable containing any supported emoji.
          */
-        fun parse(text: String): CharSequence {
+        fun parse(text: CharSequence): CharSequence {
             val unicodedText = EmojiLoader.shortnameToUnicode(text, true)
             val spannableString = SpannableString.valueOf(unicodedText)
             // Look for groups of emojis, set a CustomTypefaceSpan with the emojione font
@@ -32,14 +32,14 @@ class EmojiParser {
                 } else {
                     if (inEmoji) {
                         spannableString.setSpan(EmojiTypefaceSpan("sans-serif", EmojiLoader.cachedTypeface),
-                                emojiStart, offset, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+                                emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                     inEmoji = false
                 }
                 offset += count
                 if (offset >= length && inEmoji) {
                     spannableString.setSpan(EmojiTypefaceSpan("sans-serif", EmojiLoader.cachedTypeface),
-                            emojiStart, offset, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+                            emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }
             return spannableString

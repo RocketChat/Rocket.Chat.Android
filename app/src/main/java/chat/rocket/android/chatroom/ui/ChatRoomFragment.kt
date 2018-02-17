@@ -223,8 +223,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiBottomPicker.OnEmojiClic
 
     override fun onEmojiAdded(emoji: Emoji) {
         val cursorPosition = text_message.selectionStart
-        val text = text_message.text.insert(cursorPosition, emoji.shortname).toString()
-        text_message.content = EmojiParser.parse(text)
+        text_message.text.insert(cursorPosition, EmojiParser.parse(emoji.shortname))
         text_message.setSelection(cursorPosition + emoji.unicode.length)
         KeyboardHelper.showSoftKeyboard(text_message)
     }
@@ -281,7 +280,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiBottomPicker.OnEmojiClic
             button_add_reaction.setOnClickListener {
                 activity?.let {
                     KeyboardHelper.hideSoftKeyboard(it)
-                    EmojiBottomPicker().show(it.supportFragmentManager, "EmojiBottomPicker")
+                    val emojiBottomPicker = EmojiBottomPicker()
+                    text_message.apply {
+                        addTextChangedListener(EmojiBottomPicker.EmojiTextWatcher(this))
+                    }
+                    emojiBottomPicker.show(it.supportFragmentManager, "EmojiBottomPicker")
                 }
             }
         }

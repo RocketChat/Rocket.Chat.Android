@@ -7,12 +7,17 @@ import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.TabLayout
 import android.support.v4.app.DialogFragment
 import android.support.v4.view.ViewPager
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.EditText
 import android.widget.TextView
 import chat.rocket.android.R
+import java.util.concurrent.atomic.AtomicReference
+import java.util.function.UnaryOperator
 
 
 open class EmojiBottomPicker : DialogFragment() {
@@ -88,6 +93,50 @@ open class EmojiBottomPicker : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(context!!, theme)
+    }
+
+    class EmojiTextWatcher(val editor: EditText) : TextWatcher {
+        @Volatile private var emojiToRemove = mutableListOf<EmojiTypefaceSpan>()
+
+        override fun afterTextChanged(s: Editable) {
+            val message = editor.getEditableText()
+
+            // Commit the emoticons to be removed.
+            for (span in emojiToRemove.toList()) {
+                val start = message.getSpanStart(span)
+                val end = message.getSpanEnd(span)
+
+                // Remove the span
+                message.removeSpan(span)
+
+                // Remove the remaining emoticon text.
+                if (start != end) {
+                    message.delete(start, end)
+                }
+                break
+            }
+            emojiToRemove.clear()
+        }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            if (after < count) {
+                val end = start + count
+                val message = editor.getEditableText()
+                val list = message.getSpans(start, end, EmojiTypefaceSpan::class.java)
+
+                for (span in list) {
+                    val spanStart = message.getSpanStart(span)
+                    val spanEnd = message.getSpanEnd(span)
+                    if (spanStart < end && spanEnd > start) {
+                        // Add to remove list
+                        emojiToRemove.add(span)
+                    }
+                }
+            }
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        }
     }
 
     interface OnEmojiClickCallback {

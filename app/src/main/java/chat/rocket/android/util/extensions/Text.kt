@@ -49,7 +49,8 @@ var TextView.content: CharSequence
             TextUtils.copySpansFrom(value, 0, value.length, Any::class.java, result, 0)
             text = result
         } else {
-            text = value
+            val result = EmojiParser.parse(value.toString()) as Spannable
+            text = result
         }
         Markwon.scheduleDrawables(this)
         Markwon.scheduleTableRows(this)
