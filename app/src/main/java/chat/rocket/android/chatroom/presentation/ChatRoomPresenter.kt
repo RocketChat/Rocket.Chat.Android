@@ -39,7 +39,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     private val client = factory.create(serverInteractor.get()!!)
     private var subId: String? = null
     private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
-
     private val stateChannel = Channel<State>()
 
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
@@ -72,23 +71,23 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
-            view.disableMessageInput()
+            view.disableSendMessageButton()
             try {
+                // ignore message for now, will receive it on the stream
                 val message = if (messageId == null) {
                     client.sendMessage(chatRoomId, text)
                 } else {
                     client.updateMessage(chatRoomId, messageId, text)
                 }
-                // ignore message for now, will receive it on the stream
-                view.enableMessageInput(clear = true)
+                view.clearMessageComposition()
             } catch (ex: Exception) {
-                ex.printStackTrace()
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
-                view.enableMessageInput()
+            } finally {
+                view.enableSendMessageButton()
             }
         }
     }

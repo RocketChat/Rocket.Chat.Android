@@ -78,23 +78,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/guideline_one"
-            app:layout_constraintRight_toRightOf="@+id/text_total_unread_messages"
+            app:layout_constraintRight_toRightOf="@+id/layout_unread_messages_badge"
             tools:text="11:45" />
 
-        <TextView
-            android:id="@+id/text_total_unread_messages"
-            style="@style/TextAppearance.AppCompat.Caption"
+        <include
+            android:id="@+id/layout_unread_messages_badge"
+            layout="@layout/unread_messages_badge"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:background="@drawable/style_total_unread_messages"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/guideline_two"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:text="99+"
-            tools:visibility="visible" />
+            app:layout_constraintRight_toRightOf="parent" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline_one"

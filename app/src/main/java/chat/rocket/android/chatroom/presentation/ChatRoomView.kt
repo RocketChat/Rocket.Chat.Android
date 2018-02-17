@@ -75,7 +75,19 @@ interface ChatRoomView : LoadingView, MessageView {
      */
     fun showEditingAction(roomId: String, messageId: String, text: String)
 
-    fun disableMessageInput()
+    /**
+     * Disabling the send message button avoids the user tap this button multiple
+     * times to send a same message.
+     */
+    fun disableSendMessageButton()
 
-    fun enableMessageInput(clear: Boolean = false)
+    /**
+     * Enables the send message button.
+     */
+    fun enableSendMessageButton()
+
+    /**
+     * Clears the message composition.
+     */
+    fun clearMessageComposition()
 }

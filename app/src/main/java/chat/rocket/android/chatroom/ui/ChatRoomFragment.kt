@@ -24,6 +24,8 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
+import kotlinx.android.synthetic.main.message_list.*
+import timber.log.Timber
 import javax.inject.Inject
 
 fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Fragment {
@@ -85,7 +87,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
-        setupComposer()
+
+        setupRecyclerView()
+        setupFab()
+        setupMessageComposer()
         setupActionSnackbar()
     }
 
@@ -156,20 +161,23 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun showInvalidFileMessage() = showMessage(getString(R.string.msg_invalid_file))
 
     override fun showNewMessage(message: MessageViewModel) {
-        text_message.textContent = ""
         adapter.addItem(message)
-        recycler_view.smoothScrollToPosition(0)
+        recycler_view.scrollToPosition(0)
     }
 
-    override fun disableMessageInput() {
+    override fun disableSendMessageButton() {
         button_send.isEnabled = false
-        text_message.isEnabled = false
     }
 
-    override fun enableMessageInput(clear: Boolean) {
+    override fun enableSendMessageButton() {
         button_send.isEnabled = true
-        text_message.isEnabled = true
-        if (clear) text_message.textContent = ""
+    }
+
+    override fun clearMessageComposition() {
+        citation = null
+        editingMessageId = null
+        text_message.textContent = ""
+        actionSnackbar.dismiss()
     }
 
     override fun dispatchUpdateMessage(index: Int, message: MessageViewModel) {
@@ -217,7 +225,32 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     }
 
-    private fun setupComposer() {
+    private fun setupRecyclerView() {
+        recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                Timber.i("Scrolling vertically: $dy")
+                if (!recyclerView.canScrollVertically(1)) {
+                    button_fab.hide()
+                } else {
+                    if (dy > 0 && !button_fab.isVisible()) {
+                        button_fab.show()
+                    } else if (dy < 0 && button_fab.isVisible()) {
+                        button_fab.hide()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun setupFab() {
+        button_fab.setOnClickListener {
+            recycler_view.scrollToPosition(0)
+            button_fab.hide()
+        }
+    }
+
+    private fun setupMessageComposer() {
         if (isChatRoomReadOnly) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
@@ -239,10 +272,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                 })
 
             button_send.setOnClickListener {
-                var textMessage = citation ?: ""
-                textMessage += text_message.textContent
-                sendMessage(textMessage)
-                clearActionMessage()
+                var message = citation ?: ""
+                message += text_message.textContent
+                sendMessage(message)
             }
 
 
@@ -271,15 +303,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private fun setupActionSnackbar() {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener({
-            clearActionMessage()
+            clearMessageComposition()
         })
-    }
-
-    private fun clearActionMessage() {
-        citation = null
-        editingMessageId = null
-        text_message.text.clear()
-        actionSnackbar.dismiss()
     }
 
     private fun showAttachmentOptions() {
