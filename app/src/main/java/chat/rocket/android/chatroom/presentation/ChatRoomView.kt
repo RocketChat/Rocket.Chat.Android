@@ -22,6 +22,11 @@ interface ChatRoomView : LoadingView, MessageView {
     fun sendMessage(text: String)
 
     /**
+     * Perform file selection with the mime type [filter]
+     */
+    fun showFileSelection(filter: Array<String>)
+
+    /**
      * Uploads a file to a chat room.
      *
      * @param uri The file URI to send.
@@ -78,4 +83,6 @@ interface ChatRoomView : LoadingView, MessageView {
     fun disableMessageInput()
 
     fun enableMessageInput(clear: Boolean = false)
+
+    fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 }

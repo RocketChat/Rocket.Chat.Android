@@ -80,4 +80,7 @@
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Pinadas</string>
 
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
+
 </resources>

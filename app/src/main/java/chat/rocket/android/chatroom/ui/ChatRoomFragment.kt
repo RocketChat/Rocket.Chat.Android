@@ -214,7 +214,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             text_message.textContent = text
             editingMessageId = messageId
         }
+    }
 
+    override fun showFileSelection(filter: Array<String>) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "*/*"
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
+        startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
+    }
+
+    override fun showInvalidFileSize(fileSize: Int, maxFileSize: Int) {
+        showMessage(getString(R.string.max_file_size_exceeded, fileSize, maxFileSize))
     }
 
     private fun setupComposer() {
@@ -258,7 +268,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
             button_files.setOnClickListener {
                 handler.postDelayed({
-                    performSAF()
+                    presenter.selectFile()
                 }, 300)
 
                 handler.postDelayed({
@@ -296,11 +306,5 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         layout_message_attachment_options.circularRevealOrUnreveal(centerX, centerY, max, 0F)
 
         view_dim.setVisible(false)
-    }
-
-    private fun performSAF() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
-        startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
     }
 }

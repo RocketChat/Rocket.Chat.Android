@@ -4,6 +4,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.SaveChatRoomsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
@@ -28,6 +29,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
                                              private val localRepository: LocalRepository,
+                                             private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                              factory: RocketChatClientFactory) {
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
@@ -36,6 +38,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private val stateChannel = Channel<State>()
 
     fun loadChatRooms() {
+        refreshSettingsInteractor.refreshAsync(currentServer)
         launchUI(strategy) {
             view.showLoading()
             try {
