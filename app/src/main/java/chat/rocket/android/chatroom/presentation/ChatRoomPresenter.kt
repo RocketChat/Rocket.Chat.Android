@@ -15,7 +15,7 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.connect
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
-import chat.rocket.core.internal.realtime.unsubscibre
+import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
@@ -180,7 +180,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launch(CommonPool) {
             client.removeStateChannel(stateChannel)
             subId?.let { subscriptionId ->
-                client.unsubscibre(subscriptionId)
+                client.unsubscribe(subscriptionId)
             }
         }
     }
