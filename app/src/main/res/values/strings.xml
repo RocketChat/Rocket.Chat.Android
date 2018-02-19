@@ -83,6 +83,6 @@
     <string name="title_pinned_messages">Pinned Messages</string>
 
     <!-- Upload Messages -->
-    <string name="max_file_size_exceeded">File size %1$d exceeded max file size of %2$d bytes</string>
+    <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
 
 </resources>
