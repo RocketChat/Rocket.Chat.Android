@@ -9,33 +9,15 @@
     android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
     android:layout_marginTop="12dp">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/avatar_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <include
+        android:id="@+id/layout_avatar"
+        layout="@layout/avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/middle_container"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include
-            android:id="@+id/layout_avatar"
-            layout="@layout/avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:visibility="gone" />
-
-        <!-- We need to build the avatar with initials since the server returns a SVG file with a pre defined 50x50 pixel.
-            TODO: check to scale the SVG file on the app and remove the view bellow (or make the server to return a jpg file.
-            SVG scaling with fresco is impossible: http://frescolib.org/docs/resizing.html
-         -->
-        <ImageView
-            android:id="@+id/image_room_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:visibility="gone"
-            tools:ignore="contentDescription" />
-    </android.support.constraint.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/middle_container"
@@ -43,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/avatar_container"
+        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
         app:layout_constraintRight_toLeftOf="@+id/right_container">
 
         <TextView

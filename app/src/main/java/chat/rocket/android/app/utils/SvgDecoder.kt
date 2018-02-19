@@ -23,8 +23,8 @@ import com.facebook.imagepipeline.image.QualityInfo
 object SvgDecoder {
     val svgFormat = ImageFormat("SVG_FORMAT", "svg")
     // We do not include the closing ">" since there can be additional information.
-    private val headerTag = "<?xml"
-    private val possibleHeaderTags = arrayOf(ImageFormatCheckerUtils.asciiBytes("<svg"))
+    private val headerTag = "<svg"
+    private val possibleHeaderTags = arrayOf(ImageFormatCheckerUtils.asciiBytes("<?xml"))
 
     /**
      * Custom SVG format checker that verifies that the header of the file corresponds to our [SvgDecoder.headerTag] or [SvgDecoder.possibleHeaderTags].
