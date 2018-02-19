@@ -255,28 +255,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else {
-            var playAnimation = true
-            text_message.asObservable(0)
-                .subscribe({ t ->
-                    if (t.isNotEmpty() && playAnimation) {
-                        button_show_attachment_options.fadeInOrOut(1F, 0F, 120)
-                        button_send.fadeInOrOut(0F, 1F, 120)
-                        playAnimation = false
-                    }
-
-                    if (t.isEmpty()) {
-                        button_send.fadeInOrOut(1F, 0F, 120)
-                        button_show_attachment_options.fadeInOrOut(0F, 1F, 120)
-                        playAnimation = true
-                    }
-                })
+            subscribeTextMessage()
 
             button_send.setOnClickListener {
                 var message = citation ?: ""
                 message += text_message.textContent
                 sendMessage(message)
             }
-
 
             button_show_attachment_options.setOnClickListener {
                 if (layout_message_attachment_options.isShown) {
@@ -286,7 +271,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                 }
             }
 
-            view_dim.setOnClickListener { hideAttachmentOptions() }
+            view_dim.setOnClickListener {
+                hideAttachmentOptions()
+            }
 
             button_files.setOnClickListener {
                 handler.postDelayed({
@@ -305,6 +292,24 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         actionSnackbar.cancelView.setOnClickListener({
             clearMessageComposition()
         })
+    }
+
+    private fun subscribeTextMessage() {
+        var playAnimation = true
+        text_message.asObservable(0)
+            .subscribe({ t ->
+                if (t.isNotEmpty() && playAnimation) {
+                    button_show_attachment_options.fadeInOrOut(1F, 0F, 120)
+                    button_send.fadeInOrOut(0F, 1F, 120)
+                    playAnimation = false
+                }
+
+                if (t.isEmpty()) {
+                    button_send.fadeInOrOut(1F, 0F, 120)
+                    button_show_attachment_options.fadeInOrOut(0F, 1F, 120)
+                    playAnimation = true
+                }
+            })
     }
 
     private fun showAttachmentOptions() {
