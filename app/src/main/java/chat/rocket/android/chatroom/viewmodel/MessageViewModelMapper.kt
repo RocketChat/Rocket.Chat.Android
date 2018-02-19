@@ -10,6 +10,7 @@ import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class MessageViewModelMapper @Inject constructor(private val context: Context,
@@ -20,6 +21,7 @@ class MessageViewModelMapper @Inject constructor(private val context: Context,
                                                  private val currentServerRepository: CurrentServerRepository) {
 
     suspend fun mapToViewModel(message: Message, settings: Map<String, Value<Any>>): MessageViewModel = withContext(CommonPool) {
+        Timber.d("mapping message ${message.id}")
         MessageViewModel(
                 this@MessageViewModelMapper.context,
                 tokenRepository.get(),

@@ -24,7 +24,7 @@ import okhttp3.HttpUrl
 
 data class MessageViewModel(val context: Context,
                             private val token: Token?,
-                            private val message: Message,
+                            internal val message: Message,
                             private val settings: Map<String, Value<Any>>,
                             private val parser: MessageParser,
                             private val messagesRepository: MessagesRepository,

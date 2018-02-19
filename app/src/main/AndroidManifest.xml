@@ -3,6 +3,12 @@
     package="chat.rocket.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+    Allows Glide to monitor connectivity status and restart failed requests if users go from a
+    a disconnected to a connected network state.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />

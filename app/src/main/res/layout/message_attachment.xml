@@ -23,13 +23,15 @@
         tools:text="brazilian_anthem.mp4"
         tools:visibility="visible" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <!--<com.facebook.drawee.view.SimpleDraweeView-->
+    <!--fresco:actualImageScaleType="fitStart"
+        fresco:placeholderImage="@drawable/image_dummy"-->
+    <ImageView
         android:id="@+id/image_attachment"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
         android:visibility="gone"
-        fresco:actualImageScaleType="fitStart"
-        fresco:placeholderImage="@drawable/image_dummy"
         tools:visibility="visible" />
 
     <FrameLayout

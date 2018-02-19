@@ -9,15 +9,56 @@
     android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
     android:layout_marginTop="12dp">
 
-    <include
-        android:id="@+id/layout_avatar"
-        layout="@layout/avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <FrameLayout
+        android:id="@+id/avatar_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/middle_container"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--<include
+            android:id="@+id/layout_avatar"
+            layout="@layout/avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone" />-->
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/image_room_avatar"/>
+
+        <!-- We need to build the avatar with initials since the server returns a SVG file with a pre defined 50x50 pixel.
+            TODO: check to scale the SVG file on the app and remove the view bellow (or make the server to return a jpg file.
+            SVG scaling with fresco is impossible: http://frescolib.org/docs/resizing.html
+         -->
+        <!--<ImageView
+            android:id="@+id/image_room_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            tools:ignore="contentDescription" />-->
+        <FrameLayout
+            android:id="@+id/text_room_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:background="#C0C0C0"
+            tools:ignore="contentDescription">
+            <TextView
+                android:id="@+id/room_avatar_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:typeface="sans"
+                android:textAllCaps="true"
+                tools:text="A"/>
+        </FrameLayout>
+    </FrameLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/middle_container"
@@ -25,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
+        app:layout_constraintLeft_toRightOf="@+id/avatar_container"
         app:layout_constraintRight_toLeftOf="@+id/right_container">
 
         <TextView
@@ -42,16 +83,18 @@
             android:id="@+id/text_last_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:maxHeight="40dp"
+
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
-            tools:text="You: Type something" />
+            tools:text="You: Type something that is really big to have more than one line" />
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:id="@+id/right_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintRight_toRightOf="parent">
 
         <TextView
@@ -59,8 +102,7 @@
             style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_one"
-            app:layout_constraintRight_toRightOf="@+id/text_total_unread_messages"
+            android:layout_marginTop="8dp"
             tools:text="11:45" />
 
         <TextView
@@ -73,24 +115,10 @@
             android:textColor="@color/white"
             android:textSize="10sp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_two"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="right"
             tools:text="99+"
             tools:visibility="visible" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_one"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="22dp" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="48dp" />
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

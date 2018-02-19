@@ -23,14 +23,13 @@
             android:orientation="horizontal">
 
             <!-- TODO implement -->
-            <com.facebook.drawee.view.SimpleDraweeView
+            <ImageView
                 android:id="@+id/image_room_avatar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:roundAsCircle="true" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_room_name"

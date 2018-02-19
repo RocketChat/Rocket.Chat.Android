@@ -234,7 +234,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         } else {
             var playAnimation = true
             text_message.asObservable(0)
-                .subscribe({ t ->
+                .subscribe { t ->
                     if (t.isNotEmpty() && playAnimation) {
                         button_show_attachment_options.fadeInOrOut(1F, 0F, 120)
                         button_send.fadeInOrOut(0F, 1F, 120)
@@ -246,7 +246,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                         button_show_attachment_options.fadeInOrOut(0F, 1F, 120)
                         playAnimation = true
                     }
-                })
+                }
 
             button_send.setOnClickListener {
                 var textMessage = citation ?: ""

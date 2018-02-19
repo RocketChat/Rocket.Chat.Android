@@ -5,6 +5,7 @@ import android.text.method.LinkMovementMethod
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -12,13 +13,13 @@ import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.core.GlideApp
 import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
-import com.facebook.drawee.view.SimpleDraweeView
-import com.stfalcon.frescoimageviewer.ImageViewer
-import kotlinx.android.synthetic.main.avatar.view.*
+import chat.rocket.android.widget.TextAvatarDrawable
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
 import ru.whalemare.sheetmenu.extension.inflate
@@ -39,8 +40,6 @@ class ChatRoomAdapter(private val roomType: String,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(dataSet[position])
 
     override fun getItemCount(): Int = dataSet.size
-
-    override fun getItemViewType(position: Int): Int = position
 
     override fun getItemId(position: Int): Long = dataSet[position].id.hashCode().toLong()
 
@@ -77,10 +76,18 @@ class ChatRoomAdapter(private val roomType: String,
                      val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
         private lateinit var messageViewModel: MessageViewModel
 
+        val placeholder = TextAvatarDrawable()
+
         fun bind(message: MessageViewModel) = with(itemView) {
             messageViewModel = message
 
-            image_avatar.setImageURI(message.avatarUri)
+            GlideApp.with(image_avatar)
+                    .load(message.avatarUri)
+                    .placeholder(placeholder)
+                    .transition(withCrossFade())
+                    .into(image_avatar)
+
+            //image_avatar.setImageURI(message.avatarUri)
             text_sender.text = message.senderName
             text_message_time.content = message.time
             text_content.content = message.content
@@ -128,7 +135,7 @@ class ChatRoomAdapter(private val roomType: String,
 
         private fun bindAttachment(message: MessageViewModel,
                                    attachment_container: View,
-                                   image_attachment: SimpleDraweeView,
+                                   image_attachment: ImageView,
                                    audio_video_attachment: View,
                                    file_name: TextView) {
             with(message) {
@@ -144,12 +151,15 @@ class ChatRoomAdapter(private val roomType: String,
                 when (message.attachmentType) {
                     is AttachmentType.Image -> {
                         imageVisible = true
-                        image_attachment.setImageURI(message.attachmentUrl)
+                        //image_attachment.setImageURI(message.attachmentUrl)
+                        GlideApp.with(image_attachment)
+                                .load(message.attachmentUrl)
+                                .into(image_attachment)
                         image_attachment.setOnClickListener { view ->
-                            // TODO - implement a proper image viewer with a proper Transition
+                            /*// TODO - implement a proper image viewer with a proper Transition
                             ImageViewer.Builder(view.context, listOf(message.attachmentUrl))
                                     .setStartPosition(0)
-                                    .show()
+                                    .show()*/
                         }
                     }
                     is AttachmentType.Video,
