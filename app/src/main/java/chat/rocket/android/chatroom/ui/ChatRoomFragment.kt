@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.method.ScrollingMovementMethod
 import android.view.*
+import android.widget.ImageButton
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
@@ -278,7 +279,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.OnEmojiClickCal
                 }, 600)
             }
 
-            button_add_reaction.setOnClickListener {
+            button_add_reaction.setOnClickListener { view ->
                 activity?.let {
                     val editor = text_message
                     val emojiFragment = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
@@ -286,11 +287,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.OnEmojiClickCal
                         if (!isShown()) {
                             show()
                         } else {
+                            val button = view as ImageButton
+                            val resourceId: Int
                             if (softKeyboardVisible) {
+                                resourceId = R.drawable.ic_keyboard_black_24px
                                 KeyboardHelper.hideSoftKeyboard(it)
                             } else {
+                                resourceId = R.drawable.ic_reaction_24dp
                                 KeyboardHelper.showSoftKeyboard(editor)
                             }
+                            button.setImageResource(resourceId)
                         }
                     }
                 }

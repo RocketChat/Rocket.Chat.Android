@@ -93,7 +93,6 @@ class EmojiFragment : Fragment() {
                         } else if (lastVisibleDecorViewHeight + 150 < visibleDecorViewHeight) {
                             // Notify listener about keyboard being hidden.
                             softKeyboardVisible = false
-                            hide()
                         }
                     }
                     // Save current decor view height for the next call.
