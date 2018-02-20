@@ -12,7 +12,7 @@ fun View.rotateBy(value: Float, duration: Long = 200) {
         .start()
 }
 
-fun View.fadeInOrOut(startValue: Float, finishValue: Float, duration: Long = 200) {
+fun View.fadeIn(startValue: Float, finishValue: Float, duration: Long = 200) {
     animate()
         .alpha(startValue)
         .setDuration(duration)
@@ -24,11 +24,22 @@ fun View.fadeInOrOut(startValue: Float, finishValue: Float, duration: Long = 200
                 .setInterpolator(AccelerateInterpolator()).start()
         }).start()
 
-    if (startValue > finishValue) {
-        setVisible(false)
-    } else {
-        setVisible(true)
-    }
+    setVisible(true)
+}
+
+fun View.fadeOut(startValue: Float, finishValue: Float, duration: Long = 200) {
+    animate()
+        .alpha(startValue)
+        .setDuration(duration)
+        .setInterpolator(DecelerateInterpolator())
+        .withEndAction({
+            animate()
+                .alpha(finishValue)
+                .setDuration(duration)
+                .setInterpolator(AccelerateInterpolator()).start()
+        }).start()
+
+    setVisible(false)
 }
 
 fun View.circularRevealOrUnreveal(centerX: Int, centerY: Int, startRadius: Float, endRadius: Float, duration: Long = 600) {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_total_unread_messages"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/style_total_unread_messages"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:visibility="gone"
+        tools:text="99+"
+        tools:visibility="visible" />
+
+</LinearLayout>
