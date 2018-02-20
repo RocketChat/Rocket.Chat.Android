@@ -92,10 +92,14 @@ dependencies {
     implementation libraries.kotshiApi
 
     implementation libraries.frescoImageViewer
-    implementation libraries.androidSvg
+    implementation (libraries.androidSvg) {
+        exclude group: 'org.jetbrains', module: 'annotations-java5'
+    }
 
     implementation libraries.markwon
-    implementation libraries.markwonImageLoader
+    implementation (libraries.markwonImageLoader) {
+        exclude group: 'com.caverock', module: 'androidsvg'
+    }
 
     implementation libraries.sheetMenu
 
