@@ -21,6 +21,7 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
@@ -59,12 +60,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private var citation: String? = null
     private var editingMessageId: String? = null
 
+    private val compositeDisposable = CompositeDisposable()
+    private var playComposeMessageButtonsAnimation = true
+
     // For reveal and unreveal anim.
     private val hypotenuse by lazy { Math.hypot(root_layout.width.toDouble(), root_layout.height.toDouble()).toFloat() }
     private val max by lazy { Math.max(layout_message_attachment_options.width.toDouble(), layout_message_attachment_options.height.toDouble()).toFloat() }
     private val centerX by lazy { recycler_view.right }
     private val centerY by lazy { recycler_view.bottom }
-    val handler = Handler()
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +101,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onDestroyView() {
         presenter.unsubscribeMessages()
         handler.removeCallbacksAndMessages(null)
+        unsubscribeTextMessage()
         super.onDestroyView()
     }
 
@@ -238,7 +243,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private fun setupRecyclerView() {
         recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
                 Timber.i("Scrolling vertically: $dy")
                 if (!recyclerView.canScrollVertically(1)) {
                     button_fab.hide()
@@ -305,21 +309,30 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     }
 
     private fun subscribeTextMessage() {
-        var playAnimation = true
-        text_message.asObservable(0)
-            .subscribe({ t ->
-                if (t.isNotEmpty() && playAnimation) {
-                    button_show_attachment_options.fadeInOrOut(1F, 0F, 120)
-                    button_send.fadeInOrOut(0F, 1F, 120)
-                    playAnimation = false
-                }
+        val disposable = text_message.asObservable(0)
+            .subscribe({ t -> setupComposeMessageButtons(t) })
 
-                if (t.isEmpty()) {
-                    button_send.fadeInOrOut(1F, 0F, 120)
-                    button_show_attachment_options.fadeInOrOut(0F, 1F, 120)
-                    playAnimation = true
-                }
-            })
+        compositeDisposable.add(disposable)
+    }
+
+    private fun unsubscribeTextMessage() {
+        if (!compositeDisposable.isDisposed) {
+            compositeDisposable.dispose()
+        }
+    }
+
+    private fun setupComposeMessageButtons(charSequence: CharSequence) {
+        if (charSequence.isNotEmpty() && playComposeMessageButtonsAnimation) {
+            button_show_attachment_options.fadeOut(1F, 0F, 120)
+            button_send.fadeIn(0F, 1F, 120)
+            playComposeMessageButtonsAnimation = false
+        }
+
+        if (charSequence.isEmpty()) {
+            button_send.fadeOut(1F, 0F, 120)
+            button_show_attachment_options.fadeIn(0F, 1F, 120)
+            playComposeMessageButtonsAnimation = true
+        }
     }
 
     private fun showAttachmentOptions() {
