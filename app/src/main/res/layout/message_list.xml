@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_arrow_downward_black_24dp"
+        android:src="@drawable/ic_arrow_downward_24dp"
         android:theme="@style/Theme.AppCompat"
         android:tint="@color/gray_material"
         android:visibility="invisible"
