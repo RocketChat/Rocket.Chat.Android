@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.method.ScrollingMovementMethod
 import android.view.*
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -22,7 +23,7 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiBottomPicker
+import chat.rocket.android.widget.emoji.EmojiFragment
 import chat.rocket.android.widget.emoji.EmojiParser
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -47,7 +48,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 
-class ChatRoomFragment : Fragment(), ChatRoomView, EmojiBottomPicker.OnEmojiClickCallback {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.OnEmojiClickCallback {
     @Inject lateinit var presenter: ChatRoomPresenter
     @Inject lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
@@ -225,7 +226,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiBottomPicker.OnEmojiClic
         val cursorPosition = text_message.selectionStart
         text_message.text.insert(cursorPosition, EmojiParser.parse(emoji.shortname))
         text_message.setSelection(cursorPosition + emoji.unicode.length)
-        KeyboardHelper.showSoftKeyboard(text_message)
     }
 
     private fun setupComposer() {
@@ -234,6 +234,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiBottomPicker.OnEmojiClic
             input_container.setVisible(false)
         } else {
             var playAnimation = true
+            text_message.movementMethod = ScrollingMovementMethod()
             text_message.asObservable(0)
                     .subscribe({ t ->
                         if (t.isNotEmpty() && playAnimation) {
@@ -279,14 +280,24 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiBottomPicker.OnEmojiClic
 
             button_add_reaction.setOnClickListener {
                 activity?.let {
-                    KeyboardHelper.hideSoftKeyboard(it)
-                    val emojiBottomPicker = EmojiBottomPicker()
-                    text_message.apply {
-                        addTextChangedListener(EmojiBottomPicker.EmojiTextWatcher(this))
+                    val editor = text_message
+                    val emojiFragment = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
+                    with(emojiFragment) {
+                        if (!isShown()) {
+                            show()
+                        } else {
+                            if (softKeyboardVisible) {
+                                KeyboardHelper.hideSoftKeyboard(it)
+                            } else {
+                                KeyboardHelper.showSoftKeyboard(editor)
+                            }
+                        }
                     }
-                    emojiBottomPicker.show(it.supportFragmentManager, "EmojiBottomPicker")
                 }
             }
+
+            addEmojiFragment()
+            text_message.addTextChangedListener(EmojiFragment.EmojiTextWatcher(text_message))
         }
     }
 
@@ -295,6 +306,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiBottomPicker.OnEmojiClic
         actionSnackbar.cancelView.setOnClickListener({
             clearActionMessage()
         })
+    }
+
+    private fun addEmojiFragment() {
+        activity?.let {
+            EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
+        }
     }
 
     private fun clearActionMessage() {

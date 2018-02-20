@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.widget.emoji.EmojiBottomPicker.OnEmojiClickCallback
+import chat.rocket.android.widget.emoji.EmojiFragment.OnEmojiClickCallback
 import java.util.*
 
 class CategoryPagerAdapter(val callback: OnEmojiClickCallback) : PagerAdapter() {
@@ -25,9 +25,9 @@ class CategoryPagerAdapter(val callback: OnEmojiClickCallback) : PagerAdapter() 
         val adapter = EmojiAdapter(layoutManager.spanCount, callback)
         val category = EmojiCategory.values().get(position)
         val emojis = if (category != EmojiCategory.RECENTS)
-            EmojiLoader.getEmojisByCategory(category)
+            EmojiRepository.getEmojisByCategory(category)
         else
-            EmojiLoader.getRecents()
+            EmojiRepository.getRecents()
         adapter.addEmojis(emojis)
         recycler.layoutManager = layoutManager
         recycler.itemAnimator = DefaultItemAnimator()

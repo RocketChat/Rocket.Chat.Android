@@ -1,11 +1,11 @@
 package chat.rocket.android.widget.emoji
 
-import android.app.Dialog
+import android.graphics.Rect
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
+import android.support.annotation.IdRes
 import android.support.design.widget.TabLayout
-import android.support.v4.app.DialogFragment
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,45 +16,44 @@ import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.TextView
 import chat.rocket.android.R
-import java.util.concurrent.atomic.AtomicReference
-import java.util.function.UnaryOperator
+import chat.rocket.android.util.extensions.setVisible
 
 
-open class EmojiBottomPicker : DialogFragment() {
+class EmojiFragment : Fragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
+    private lateinit var editor: View
+    internal lateinit var parentContainer: ViewGroup
+    var softKeyboardVisible = false
 
     companion object {
         const val PREF_EMOJI_RECENTS = "PREF_EMOJI_RECENTS"
+        const val PREF_KEYBOARD_HEIGHT = "PREF_KEYBOARD_HEIGHT"
+        val TAG: String = EmojiFragment::class.java.simpleName
+        fun newInstance(editor: View) = EmojiFragment().apply { this.editor = editor }
+
+        fun getOrAttach(activity: FragmentActivity, @IdRes containerId: Int, editor: View): EmojiFragment {
+            val fragmentManager = activity.supportFragmentManager
+            var fragment: Fragment? = fragmentManager.findFragmentByTag(TAG)
+            return if (fragment == null) {
+                fragment = newInstance(editor)
+                fragment.parentContainer = activity.findViewById(containerId)
+                fragmentManager.beginTransaction()
+                        .replace(containerId, fragment, TAG)
+                        .commit()
+                fragment
+            } else {
+                fragment as EmojiFragment
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.emoji_popup_layout, container, false)
+        parentContainer = view.findViewById(R.id.emoji_keyboard_container)
         viewPager = view.findViewById(R.id.pager_categories)
         tabLayout = view.findViewById(R.id.tabs)
         tabLayout.setupWithViewPager(viewPager)
-        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                val parent = dialog.findViewById<View>(R.id.design_bottom_sheet)
-                parent?.let {
-                    val bottomSheetBehavior = BottomSheetBehavior.from(parent)
-                    if (bottomSheetBehavior != null) {
-                        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                            }
-
-                            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                                }
-                            }
-                        })
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
-                    }
-                }
-            }
-        })
         return view
     }
 
@@ -70,10 +69,47 @@ open class EmojiBottomPicker : DialogFragment() {
             }
         }
 
+        activity?.let {
+            val decorView = it.getWindow().decorView
+            decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                private val windowVisibleDisplayFrame = Rect()
+                private var lastVisibleDecorViewHeight: Int = 0
+
+                override fun onGlobalLayout() {
+                    // Retrieve visible rectangle inside window.
+                    decorView.getWindowVisibleDisplayFrame(windowVisibleDisplayFrame)
+                    val visibleDecorViewHeight = windowVisibleDisplayFrame.height()
+
+                    // Decide whether keyboard is visible from changing decor view height.
+                    if (lastVisibleDecorViewHeight != 0) {
+                        if (lastVisibleDecorViewHeight > visibleDecorViewHeight + 150) {
+                            // Calculate current keyboard height (this includes also navigation bar height when in fullscreen mode).
+                            val currentKeyboardHeight = decorView.height - windowVisibleDisplayFrame.bottom - editor.measuredHeight
+                            // Notify listener about keyboard being shown.
+                            EmojiRepository.saveKeyboardHeight(currentKeyboardHeight)
+                            setKeyboardHeight(currentKeyboardHeight)
+                            softKeyboardVisible = true
+                            show()
+                        } else if (lastVisibleDecorViewHeight + 150 < visibleDecorViewHeight) {
+                            // Notify listener about keyboard being hidden.
+                            softKeyboardVisible = false
+                            hide()
+                        }
+                    }
+                    // Save current decor view height for the next call.
+                    lastVisibleDecorViewHeight = visibleDecorViewHeight
+                }
+            })
+        }
+
+        val storedHeight = EmojiRepository.getKeyboardHeight()
+        if (storedHeight > 0) {
+            setKeyboardHeight(storedHeight)
+        }
+
         viewPager.adapter = CategoryPagerAdapter(object : OnEmojiClickCallback {
             override fun onEmojiAdded(emoji: Emoji) {
-                dismiss()
-                EmojiLoader.addToRecents(emoji)
+                EmojiRepository.addToRecents(emoji)
                 callback.onEmojiAdded(emoji)
             }
         })
@@ -86,13 +122,14 @@ open class EmojiBottomPicker : DialogFragment() {
             textView.text = category.icon()
         }
 
-        val currentTab = if (EmojiLoader.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
+        val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
             EmojiCategory.RECENTS.ordinal
         viewPager.setCurrentItem(currentTab)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return BottomSheetDialog(context!!, theme)
+    private fun setKeyboardHeight(height: Int) {
+        parentContainer.layoutParams.height = height
+        parentContainer.requestLayout()
     }
 
     class EmojiTextWatcher(val editor: EditText) : TextWatcher {
@@ -138,6 +175,16 @@ open class EmojiBottomPicker : DialogFragment() {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         }
     }
+
+    fun show() {
+        parentContainer.setVisible(true)
+    }
+
+    fun hide() {
+        parentContainer.setVisible(false)
+    }
+
+    fun isShown() = parentContainer.visibility == View.VISIBLE
 
     interface OnEmojiClickCallback {
         /**

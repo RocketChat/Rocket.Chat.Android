@@ -9,7 +9,7 @@ import chat.rocket.android.helper.CrashlyticsTree
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.widget.emoji.EmojiLoader
+import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.common.model.Token
 import chat.rocket.core.TokenRepository
 import com.crashlytics.android.Crashlytics
@@ -58,7 +58,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         initCurrentServer()
 
         AndroidThreeTen.init(this)
-        EmojiLoader.load(this)
+        EmojiRepository.load(this)
 
         setupCrashlytics()
         setupFresco()

@@ -35,7 +35,7 @@ enum class EmojiCategory {
     abstract fun icon(): CharSequence
 
     protected fun getTextIconFor(text: String): CharSequence {
-        val span = EmojiTypefaceSpan("sans-serif", EmojiLoader.cachedTypeface)
+        val span = EmojiTypefaceSpan("sans-serif", EmojiRepository.cachedTypeface)
         return SpannableString.valueOf(text).apply {
             setSpan(span, 0, text.length, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
         }

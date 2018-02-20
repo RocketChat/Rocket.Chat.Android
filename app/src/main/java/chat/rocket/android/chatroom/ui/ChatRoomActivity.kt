@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.widget.emoji.EmojiFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -61,7 +62,14 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-    override fun onBackPressed() = finishActivity()
+    override fun onBackPressed() {
+        val frag = supportFragmentManager.findFragmentByTag(EmojiFragment.TAG) as EmojiFragment?
+        if (frag != null && frag.isShown()) {
+            frag.hide()
+        } else {
+            finishActivity()
+        }
+    }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector

@@ -14,7 +14,7 @@ class EmojiParser {
          * @return A rendered Spannable containing any supported emoji.
          */
         fun parse(text: CharSequence): CharSequence {
-            val unicodedText = EmojiLoader.shortnameToUnicode(text, true)
+            val unicodedText = EmojiRepository.shortnameToUnicode(text, true)
             val spannableString = SpannableString.valueOf(unicodedText)
             // Look for groups of emojis, set a CustomTypefaceSpan with the emojione font
             val length = spannableString.length
@@ -31,14 +31,14 @@ class EmojiParser {
                     inEmoji = true
                 } else {
                     if (inEmoji) {
-                        spannableString.setSpan(EmojiTypefaceSpan("sans-serif", EmojiLoader.cachedTypeface),
+                        spannableString.setSpan(EmojiTypefaceSpan("sans-serif", EmojiRepository.cachedTypeface),
                                 emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                     inEmoji = false
                 }
                 offset += count
                 if (offset >= length && inEmoji) {
-                    spannableString.setSpan(EmojiTypefaceSpan("sans-serif", EmojiLoader.cachedTypeface),
+                    spannableString.setSpan(EmojiTypefaceSpan("sans-serif", EmojiRepository.cachedTypeface),
                             emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }
