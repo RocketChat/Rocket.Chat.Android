@@ -1,19 +1,16 @@
 package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
-import DrawableHelper
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
-import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
