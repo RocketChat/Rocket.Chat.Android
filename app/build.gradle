@@ -60,6 +60,8 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.cardView
 
+    implementation libraries.androidKtx
+
     implementation libraries.dagger
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
@@ -91,13 +93,11 @@ dependencies {
 
     implementation libraries.aVLoadingIndicatorView
 
-    implementation 'com.github.bumptech.glide:glide:4.6.1'
-    implementation "com.github.bumptech.glide:okhttp3-integration:4.6.1"
-    kapt 'com.github.bumptech.glide:compiler:4.6.1'
+    implementation libraries.glide
+    implementation libraries.glideOkhttp3
+    kapt libraries.glideCompiler
 
-    implementation 'androidx.core:core-ktx:0.1'
-
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation(libraries.crashlytics) {
         transitive = true
     }
 
