@@ -1,23 +1,22 @@
 package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
-import DrawableHelper
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.core.GlideApp
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setImageURI
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.widget.TextAvatarDrawable
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.item_chat.view.*
 
 class ChatRoomsAdapter(private val context: Context,
@@ -37,8 +36,10 @@ class ChatRoomsAdapter(private val context: Context,
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        val placeholder = TextAvatarDrawable()
+
         fun bind(chatRoom: ChatRoom) = with(itemView) {
-            bindAvatar(chatRoom, /*layout_avatar, */image_room_avatar, text_room_avatar, room_avatar_text)
+            bindAvatar(chatRoom, image_room_avatar)
             bindName(chatRoom, text_chat_name)
             bindLastMessageDateTime(chatRoom, text_last_message_date_time)
             bindLastMessage(chatRoom, text_last_message)
@@ -47,16 +48,13 @@ class ChatRoomsAdapter(private val context: Context,
             setOnClickListener { listener(chatRoom) }
         }
 
-        private fun bindAvatar(chatRoom: ChatRoom, image_room_avatar: ImageView, text_room_avatar: FrameLayout, room_avatar_text: TextView) {
-            val chatRoomName = chatRoom.name
-            if (chatRoom.type is RoomType.DirectMessage) {
-                GlideApp.with(image_room_avatar)
-                        .load(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoomName))
-                        .into(image_room_avatar)
-            } else {
-                image_room_avatar.setImageDrawable(TextAvatarDrawable(chatRoomName.take(1).toUpperCase(),
-                        DrawableHelper.getAvatarBackgroundColor(chatRoomName)))
-            }
+        private fun bindAvatar(chatRoom: ChatRoom, image_room_avatar: ImageView) {
+            val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else chatRoom.id
+            image_room_avatar
+                    .setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId)) {
+                        placeholder(placeholder)
+                        transition(withCrossFade())
+                    }
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {

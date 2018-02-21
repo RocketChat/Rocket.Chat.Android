@@ -13,10 +13,10 @@ import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.AttachmentType
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
-import chat.rocket.android.core.GlideApp
 import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setImageURI
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.widget.TextAvatarDrawable
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -81,13 +81,11 @@ class ChatRoomAdapter(private val roomType: String,
         fun bind(message: MessageViewModel) = with(itemView) {
             messageViewModel = message
 
-            GlideApp.with(image_avatar)
-                    .load(message.avatarUri)
-                    .placeholder(placeholder)
-                    .transition(withCrossFade())
-                    .into(image_avatar)
+            image_avatar.setImageURI(message.avatarUri) {
+                placeholder(placeholder)
+                transition(withCrossFade())
+            }
 
-            //image_avatar.setImageURI(message.avatarUri)
             text_sender.text = message.senderName
             text_message_time.content = message.time
             text_content.content = message.content
@@ -151,15 +149,14 @@ class ChatRoomAdapter(private val roomType: String,
                 when (message.attachmentType) {
                     is AttachmentType.Image -> {
                         imageVisible = true
-                        //image_attachment.setImageURI(message.attachmentUrl)
-                        GlideApp.with(image_attachment)
-                                .load(message.attachmentUrl)
-                                .into(image_attachment)
+                        image_attachment.setImageURI(message.attachmentUrl) {
+                            placeholder(R.drawable.image_dummy)
+                            centerCrop()
+                            transition(withCrossFade())
+                        }
+
                         image_attachment.setOnClickListener { view ->
-                            /*// TODO - implement a proper image viewer with a proper Transition
-                            ImageViewer.Builder(view.context, listOf(message.attachmentUrl))
-                                    .setStartPosition(0)
-                                    .show()*/
+                            // TODO - implement a proper image viewer with a proper Transition
                         }
                     }
                     is AttachmentType.Video,
