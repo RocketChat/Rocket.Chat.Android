@@ -15,7 +15,7 @@ import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setImageURI
 import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.widget.TextAvatarDrawable
+import chat.rocket.android.widget.AvatarTextDrawable
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
@@ -76,7 +76,7 @@ class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHol
 
         fun bind(message: MessageViewModel) = with(itemView) {
             messageViewModel = message
-            val placeholder = TextAvatarDrawable(message.currentUsername ?: "",
+            val placeholder = AvatarTextDrawable(message.currentUsername ?: "",
                     DrawableHelper.getAvatarBackgroundColor(message.currentUsername ?: "default"))
             image_avatar.setImageURI(message.avatarUri) {
                 placeholder(placeholder)

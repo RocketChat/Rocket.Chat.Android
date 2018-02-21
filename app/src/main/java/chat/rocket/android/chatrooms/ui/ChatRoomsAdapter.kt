@@ -13,7 +13,7 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setImageURI
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.widget.TextAvatarDrawable
+import chat.rocket.android.widget.AvatarTextDrawable
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -36,7 +36,7 @@ class ChatRoomsAdapter(private val context: Context,
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val placeholder = TextAvatarDrawable()
+        val placeholder = AvatarTextDrawable()
 
         fun bind(chatRoom: ChatRoom) = with(itemView) {
             bindAvatar(chatRoom, image_room_avatar)

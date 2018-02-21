@@ -6,7 +6,7 @@ import android.graphics.drawable.shapes.RectShape
 import android.graphics.drawable.shapes.RoundRectShape
 import androidx.graphics.withTranslation
 
-class TextAvatarDrawable(private val text: String = "",
+class AvatarTextDrawable(private val text: String = "",
                          color: Int = Color.GRAY,
                          private val textSize: Int = -1,
                          radius: Float = 4f,

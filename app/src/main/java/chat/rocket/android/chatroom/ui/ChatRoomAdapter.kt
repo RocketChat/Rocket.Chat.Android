@@ -18,7 +18,7 @@ import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setImageURI
 import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.widget.TextAvatarDrawable
+import chat.rocket.android.widget.AvatarTextDrawable
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
@@ -76,7 +76,7 @@ class ChatRoomAdapter(private val roomType: String,
                      val presenter: ChatRoomPresenter) : RecyclerView.ViewHolder(itemView), MenuItem.OnMenuItemClickListener {
         private lateinit var messageViewModel: MessageViewModel
 
-        val placeholder = TextAvatarDrawable()
+        val placeholder = AvatarTextDrawable()
 
         fun bind(message: MessageViewModel) = with(itemView) {
             messageViewModel = message
