@@ -2,6 +2,7 @@ package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
 import android.content.Context
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,12 @@ class ChatRoomsAdapter(private val context: Context,
             bindLastMessageDateTime(chatRoom, text_last_message_date_time)
             bindLastMessage(chatRoom, text_last_message)
             bindUnreadMessages(chatRoom, text_total_unread_messages)
+
+            if (chatRoom.alert || chatRoom.unread > 0) {
+                text_chat_name.alpha = 1F
+                text_last_message_date_time.setTextColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
+                text_last_message.setTextColor(ResourcesCompat.getColor(resources, android.R.color.primary_text_light, null))
+            }
 
             setOnClickListener { listener(chatRoom) }
         }

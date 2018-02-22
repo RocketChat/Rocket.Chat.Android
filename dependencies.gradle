@@ -11,7 +11,7 @@ ext {
         // Main dependencies
         support                : '27.0.2',
         constraintLayout       : '1.0.2',
-        dagger                 : '2.13',
+        dagger                 : '2.14.1',
         exoPlayer              : '2.6.0',
         playServices           : '11.8.0',
         room                   : '1.0.0',

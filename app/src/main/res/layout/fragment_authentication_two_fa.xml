@@ -31,7 +31,6 @@
         app:indicatorName="BallPulseIndicator"
         tools:visibility="visible" />
 
-
     <Button
         android:id="@+id/button_log_in"
         style="@style/AuthenticationButton"

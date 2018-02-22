@@ -14,29 +14,54 @@
         layout="@layout/avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="6dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/middle_container"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/middle_container"
+        android:id="@+id/top_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
-        app:layout_constraintRight_toLeftOf="@+id/right_container">
+        app:layout_constraintRight_toRightOf="parent">
 
         <TextView
             android:id="@+id/text_chat_name"
             style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawablePadding="5dp"
+            android:alpha="0.6"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/text_last_message_date_time"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="General" />
+
+        <TextView
+            android:id="@+id/text_last_message_date_time"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textSize="10sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/text_chat_name"
+            app:layout_constraintLeft_toRightOf="@+id/text_chat_name"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="11:45 AM" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottom_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_container">
 
         <TextView
             android:id="@+id/text_last_message"
@@ -44,46 +69,20 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/layout_unread_messages_badge"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="You: Type something" />
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/right_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <TextView
-            android:id="@+id/text_last_message_date_time"
-            style="@style/TextAppearance.AppCompat.Caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_one"
-            app:layout_constraintRight_toRightOf="@+id/layout_unread_messages_badge"
-            tools:text="11:45" />
 
         <include
             android:id="@+id/layout_unread_messages_badge"
             layout="@layout/unread_messages_badge"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_two"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_one"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="22dp" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="48dp" />
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintLeft_toRightOf="@+id/text_last_message"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
