@@ -3,7 +3,6 @@
     android:id="@+id/image_category"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/whitesmoke"
     android:layout_gravity="center"
-    android:gravity="center"
-    android:textSize="14sp" />
+    android:background="@color/whitesmoke"
+    android:gravity="center" />
