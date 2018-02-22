@@ -6,6 +6,7 @@
     <string name="title_sign_up">Inscreva-se</string>
     <string name="title_legal_terms">Termos Legais</string>
     <string name="title_chats">Chats</string>
+    <string name="title_settings">Configurações</string>
     <string name="title_profile">Perfil</string>
     <string name="title_update_profile">Editar perfil</string>
 
@@ -17,6 +18,12 @@
     <string name="action_update">Atualizar</string>
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
+    <string name="action_confirm_password">Confirme a nova senha</string>
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_password">Alterar senha</item>
+    </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">Sem conexão à internet</string>
@@ -49,6 +56,8 @@
     <string name="msg_content_description_show_attachment_options">Mostrar opções de anexo</string>
     <string name="msg_you">Você</string>
     <string name="msg_unknown">Desconhecido</string>
+    <string name="msg_new_password">Informe a nova senha</string>
+    <string name="msg_confirm_password">Confirme a nova senha</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>

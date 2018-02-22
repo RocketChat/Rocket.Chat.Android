@@ -49,7 +49,7 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val user = client.updateProfile(myselfId, email, name, username)
+                client.updateProfile(myselfId, email, name, null, username)
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
             } catch (exception: RocketChatException) {
