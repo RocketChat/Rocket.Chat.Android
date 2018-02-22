@@ -10,7 +10,9 @@ import android.provider.MediaStore
 import android.text.Spannable
 import android.text.Spanned
 import android.text.TextUtils
+import android.widget.EditText
 import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
 import ru.noties.markwon.Markwon
 
 fun String.ifEmpty(value: String): String {
@@ -25,6 +27,14 @@ fun CharSequence.ifEmpty(value: String): CharSequence {
         return value
     }
     return this
+}
+
+fun EditText.erase() {
+    this.text.clear()
+    val spans = this.text.getSpans(0, text.length, EmojiTypefaceSpan::class.java)
+    spans.forEach {
+        text.removeSpan(it)
+    }
 }
 
 var TextView.textContent: String
@@ -46,7 +56,8 @@ var TextView.content: CharSequence
         Markwon.unscheduleTableRows(this)
         if (value is Spanned) {
             val result = EmojiParser.parse(value.toString()) as Spannable
-            TextUtils.copySpansFrom(value, 0, value.length, Any::class.java, result, 0)
+            val end = if (value.length > result.length) result.length else value.length
+            TextUtils.copySpansFrom(value, 0, end, Any::class.java, result, 0)
             text = result
         } else {
             val result = EmojiParser.parse(value.toString()) as Spannable

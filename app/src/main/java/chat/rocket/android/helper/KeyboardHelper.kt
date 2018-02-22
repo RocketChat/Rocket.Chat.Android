@@ -51,4 +51,11 @@ object KeyboardHelper {
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
         }
     }
+
+    fun restart(view: View) {
+        if (view.requestFocus()) {
+            val inputMethodManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.restartInput(view)
+        }
+    }
 }

@@ -22,13 +22,16 @@ import chat.rocket.android.util.extensions.setVisible
 class EmojiFragment : Fragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
-    private lateinit var editor: View
-    internal lateinit var parentContainer: ViewGroup
+    private lateinit var parentContainer: ViewGroup
+    private var editor: View? = null
+    private var decorLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
     var softKeyboardVisible = false
+    var listener: EmojiKeyboardListener? = null
 
     companion object {
         const val PREF_EMOJI_RECENTS = "PREF_EMOJI_RECENTS"
         const val PREF_KEYBOARD_HEIGHT = "PREF_KEYBOARD_HEIGHT"
+        const val MIN_KEYBOARD_HEIGHT_PX = 150
         val TAG: String = EmojiFragment::class.java.simpleName
         fun newInstance(editor: View) = EmojiFragment().apply { this.editor = editor }
 
@@ -57,40 +60,51 @@ class EmojiFragment : Fragment() {
         return view
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        activity?.getWindow()?.decorView?.viewTreeObserver?.removeOnGlobalLayoutListener(decorLayoutListener)
+        listener = null
+        editor = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val callback = when (activity) {
-            is OnEmojiClickCallback -> activity as OnEmojiClickCallback
+            is EmojiKeyboardListener -> activity as EmojiKeyboardListener
             else -> {
                 val fragments = activity?.supportFragmentManager?.fragments
-                if (fragments == null || fragments.size == 0 || !(fragments[0] is OnEmojiClickCallback)) {
-                    throw IllegalStateException("activity/fragment should implement OnEmojiClickCallback interface")
+                if (fragments == null || fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
+                    throw IllegalStateException("activity/fragment should implement EmojiKeyboardListener interface")
                 }
-                fragments[0] as OnEmojiClickCallback
+                fragments[0] as EmojiKeyboardListener
             }
         }
 
         activity?.let {
             val decorView = it.getWindow().decorView
-            decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            decorLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
                 private val windowVisibleDisplayFrame = Rect()
                 private var lastVisibleDecorViewHeight: Int = 0
 
                 override fun onGlobalLayout() {
+                    if (editor == null) {
+                        return
+                    }
                     // Retrieve visible rectangle inside window.
                     decorView.getWindowVisibleDisplayFrame(windowVisibleDisplayFrame)
                     val visibleDecorViewHeight = windowVisibleDisplayFrame.height()
 
                     // Decide whether keyboard is visible from changing decor view height.
                     if (lastVisibleDecorViewHeight != 0) {
-                        if (lastVisibleDecorViewHeight > visibleDecorViewHeight + 150) {
+                        if (lastVisibleDecorViewHeight > visibleDecorViewHeight + MIN_KEYBOARD_HEIGHT_PX) {
                             // Calculate current keyboard height (this includes also navigation bar height when in fullscreen mode).
-                            val currentKeyboardHeight = decorView.height - windowVisibleDisplayFrame.bottom - editor.measuredHeight
+                            val currentKeyboardHeight = decorView.height - windowVisibleDisplayFrame.bottom - editor!!.measuredHeight
                             // Notify listener about keyboard being shown.
                             EmojiRepository.saveKeyboardHeight(currentKeyboardHeight)
                             setKeyboardHeight(currentKeyboardHeight)
                             softKeyboardVisible = true
-                            show()
-                        } else if (lastVisibleDecorViewHeight + 150 < visibleDecorViewHeight) {
+                            openHidden()
+                            listener?.onSoftKeyboardShown()
+                        } else if (lastVisibleDecorViewHeight + MIN_KEYBOARD_HEIGHT_PX < visibleDecorViewHeight) {
                             // Notify listener about keyboard being hidden.
                             softKeyboardVisible = false
                         }
@@ -98,7 +112,8 @@ class EmojiFragment : Fragment() {
                     // Save current decor view height for the next call.
                     lastVisibleDecorViewHeight = visibleDecorViewHeight
                 }
-            })
+            }
+            decorView.viewTreeObserver.addOnGlobalLayoutListener(decorLayoutListener)
         }
 
         val storedHeight = EmojiRepository.getKeyboardHeight()
@@ -106,7 +121,23 @@ class EmojiFragment : Fragment() {
             setKeyboardHeight(storedHeight)
         }
 
-        viewPager.adapter = CategoryPagerAdapter(object : OnEmojiClickCallback {
+        viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
+            override fun onEmojiKeyboardShown() {
+                // Do nothing here.
+            }
+
+            override fun onEmojiKeyboardHidden() {
+                // Do nothing here.
+            }
+
+            override fun onSoftKeyboardHidden() {
+                // Do nothing here.
+            }
+
+            override fun onSoftKeyboardShown() {
+                // Do nothing here.
+            }
+
             override fun onEmojiAdded(emoji: Emoji) {
                 EmojiRepository.addToRecents(emoji)
                 callback.onEmojiAdded(emoji)
@@ -127,8 +158,11 @@ class EmojiFragment : Fragment() {
     }
 
     private fun setKeyboardHeight(height: Int) {
-        parentContainer.layoutParams.height = height
-        parentContainer.requestLayout()
+        val oldHeight = parentContainer.layoutParams.height
+        if (oldHeight != height) {
+            parentContainer.layoutParams.height = height
+            parentContainer.requestLayout()
+        }
     }
 
     class EmojiTextWatcher(val editor: EditText) : TextWatcher {
@@ -175,22 +209,57 @@ class EmojiFragment : Fragment() {
         }
     }
 
+    /**
+     * Show the emoji keyboard.
+     */
     fun show() {
         parentContainer.setVisible(true)
+        listener?.onEmojiKeyboardShown()
     }
 
+    fun openHidden() {
+        parentContainer.visibility = View.INVISIBLE
+    }
+
+    /**
+     * Hide the emoji keyboard.
+     */
     fun hide() {
+        // Since the emoji keyboard is always behind the soft keyboard assume it's also dismissed
+        // when the emoji one is about to get close. Hence we should invoke our listener to update
+        // the UI as if the soft keyboard is hidden.
         parentContainer.setVisible(false)
+        listener?.onEmojiKeyboardHidden()
     }
 
+    /**
+     * Whether the emoji keyboard is visible.
+     *
+     * @return <code>true</code> if opened.
+     */
     fun isShown() = parentContainer.visibility == View.VISIBLE
 
-    interface OnEmojiClickCallback {
+    /**
+     * Whether the emoji keyboard is collapsed.
+     *
+     * @return false if the emoji keyboard is visible and not obscured
+     */
+    fun isCollapsed() = parentContainer.visibility == View.GONE
+
+    interface EmojiKeyboardListener {
         /**
-         * Callback triggered after an emoji is selected on the picker.
+         * Callback after an emoji is selected on the picker.
          *
          * @param emoji The selected emoji
          */
         fun onEmojiAdded(emoji: Emoji)
+
+        fun onSoftKeyboardHidden()
+
+        fun onSoftKeyboardShown()
+
+        fun onEmojiKeyboardHidden()
+
+        fun onEmojiKeyboardShown()
     }
 }

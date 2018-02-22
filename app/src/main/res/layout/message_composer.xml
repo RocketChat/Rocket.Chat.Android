@@ -41,18 +41,18 @@
 
             <ImageButton
                 android:id="@+id/button_add_reaction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/msg_content_description_show_attachment_options"
                 android:clickable="false"
+                android:contentDescription="@string/msg_content_description_show_attachment_options"
                 android:src="@drawable/ic_reaction_24dp" />
 
-            <EditText
+            <chat.rocket.android.widget.emoji.ComposerEditText
                 android:id="@+id/text_message"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="24dp"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
