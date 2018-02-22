@@ -15,6 +15,8 @@ import chat.rocket.android.chatrooms.di.ChatRoomsModule
 import chat.rocket.android.dagger.scope.PerActivity
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.di.ProfileFragmentProvider
+import chat.rocket.android.settings.password.di.PasswordFragmentProvider
+import chat.rocket.android.settings.password.ui.PasswordActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -41,4 +43,8 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [PinnedMessagesFragmentProvider::class])
     abstract fun bindPinnedMessagesActivity(): PinnedMessagesActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class])
+    abstract fun bindPasswordActivity(): PasswordActivity
 }

@@ -8,6 +8,7 @@ import android.view.MenuItem
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.profile.ui.ProfileFragment
+import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.util.extensions.addFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -68,6 +69,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
             R.id.action_profile -> {
                 addFragment("ProfileFragment", R.id.fragment_container) {
                     ProfileFragment.newInstance()
+                }
+            }
+            R.id.action_settings -> {
+                addFragment("SettingsFragment", R.id.fragment_container) {
+                    SettingsFragment.newInstance()
                 }
             }
         }

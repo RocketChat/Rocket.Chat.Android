@@ -11,6 +11,11 @@
             android:id="@+id/action_profile"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="@string/title_profile" />
+
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/title_settings"/>
     </group>
 
 </menu>

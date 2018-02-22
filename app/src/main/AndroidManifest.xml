@@ -51,6 +51,10 @@
             android:name=".chatroom.ui.PinnedMessagesActivity"
             android:theme="@style/AppTheme" />
 
+        <activity
+            android:name=".settings.password.ui.PasswordActivity"
+            android:theme="@style/AppTheme" />
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
