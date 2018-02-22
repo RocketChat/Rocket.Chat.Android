@@ -103,7 +103,6 @@ class EmojiFragment : Fragment() {
                             setKeyboardHeight(currentKeyboardHeight)
                             softKeyboardVisible = true
                             openHidden()
-                            listener?.onSoftKeyboardShown()
                         } else if (lastVisibleDecorViewHeight + MIN_KEYBOARD_HEIGHT_PX < visibleDecorViewHeight) {
                             // Notify listener about keyboard being hidden.
                             softKeyboardVisible = false
@@ -122,22 +121,6 @@ class EmojiFragment : Fragment() {
         }
 
         viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
-            override fun onEmojiKeyboardShown() {
-                // Do nothing here.
-            }
-
-            override fun onEmojiKeyboardHidden() {
-                // Do nothing here.
-            }
-
-            override fun onSoftKeyboardHidden() {
-                // Do nothing here.
-            }
-
-            override fun onSoftKeyboardShown() {
-                // Do nothing here.
-            }
-
             override fun onEmojiAdded(emoji: Emoji) {
                 EmojiRepository.addToRecents(emoji)
                 callback.onEmojiAdded(emoji)
@@ -214,7 +197,6 @@ class EmojiFragment : Fragment() {
      */
     fun show() {
         parentContainer.setVisible(true)
-        listener?.onEmojiKeyboardShown()
     }
 
     fun openHidden() {
@@ -229,7 +211,6 @@ class EmojiFragment : Fragment() {
         // when the emoji one is about to get close. Hence we should invoke our listener to update
         // the UI as if the soft keyboard is hidden.
         parentContainer.setVisible(false)
-        listener?.onEmojiKeyboardHidden()
     }
 
     /**
@@ -253,13 +234,5 @@ class EmojiFragment : Fragment() {
          * @param emoji The selected emoji
          */
         fun onEmojiAdded(emoji: Emoji)
-
-        fun onSoftKeyboardHidden()
-
-        fun onSoftKeyboardShown()
-
-        fun onEmojiKeyboardHidden()
-
-        fun onEmojiKeyboardShown()
     }
 }

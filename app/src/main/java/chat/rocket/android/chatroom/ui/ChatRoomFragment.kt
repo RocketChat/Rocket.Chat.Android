@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.method.ScrollingMovementMethod
 import android.view.*
+import android.widget.ImageButton
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
@@ -27,7 +28,6 @@ import chat.rocket.android.widget.emoji.ComposerEditText
 import chat.rocket.android.widget.emoji.Emoji
 import chat.rocket.android.widget.emoji.EmojiFragment
 import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
@@ -247,24 +247,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
         }
     }
 
-    override fun onSoftKeyboardHidden() {
-        setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
-    }
-
-    override fun onSoftKeyboardShown() {
-        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-        recycler_view.scrollToPosition(0)
-    }
-
-    override fun onEmojiKeyboardHidden() {
-        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-    }
-
-    override fun onEmojiKeyboardShown() {
-        setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
-        recycler_view.scrollToPosition(0)
-    }
-
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
         button_add_reaction.setImageResource(drawableId)
         button_add_reaction.setTag(drawableId)
@@ -301,8 +283,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                     })
 
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
-                override fun onKeyboardClose() {
+                override fun onKeyboardOpened() {
                     activity?.let {
+                        val fragment = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
+                        if (fragment.isCollapsed()) {
+                            fragment.show()
+                        }
+                        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+                    }
+                }
+
+                override fun onKeyboardClosed() {
+                    activity?.let {
+                        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
                         val fragment = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
                         if (fragment.isCollapsed()) {
                             it.onBackPressed()
@@ -358,8 +351,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                             if (!emojiFragment.isShown()) {
                                 emojiFragment.show()
                             }
+                            setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
                         }
-                        R.drawable.ic_keyboard_black_24dp -> KeyboardHelper.showSoftKeyboard(editor)
+                        R.drawable.ic_keyboard_black_24dp -> {
+                            KeyboardHelper.showSoftKeyboard(editor)
+                            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+                        }
                     }
                 }
             }

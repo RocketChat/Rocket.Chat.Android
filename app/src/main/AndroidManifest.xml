@@ -45,7 +45,7 @@
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme" />
 
         <activity

@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.AppCompatEditText
 import android.util.AttributeSet
 import android.view.KeyEvent
+import android.view.MotionEvent
 
 class ComposerEditText : AppCompatEditText {
     var listener: ComposerEditTextListener? = null
@@ -21,7 +22,7 @@ class ComposerEditText : AppCompatEditText {
             if (state != null) {
                 if (event.action == KeyEvent.ACTION_DOWN) {
                     state.startTracking(event, this)
-                    listener?.onKeyboardClose()
+                    listener?.onKeyboardClosed()
                 }
                 return true
             }
@@ -29,7 +30,13 @@ class ComposerEditText : AppCompatEditText {
         return super.dispatchKeyEventPreIme(event)
     }
 
+    override fun performClick(): Boolean {
+        listener?.onKeyboardOpened()
+        return super.performClick()
+    }
+
     interface ComposerEditTextListener {
-        fun onKeyboardClose()
+        fun onKeyboardClosed()
+        fun onKeyboardOpened()
     }
 }
