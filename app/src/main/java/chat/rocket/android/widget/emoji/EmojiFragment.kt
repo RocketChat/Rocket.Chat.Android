@@ -14,7 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.ImageView
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.setVisible
 
@@ -131,8 +131,8 @@ class EmojiFragment : Fragment() {
             val tab = tabLayout.getTabAt(category.ordinal)
             val tabView = layoutInflater.inflate(R.layout.emoji_picker_tab, null)
             tab?.setCustomView(tabView)
-            val textView = tabView.findViewById(R.id.text) as TextView
-            textView.text = category.icon()
+            val textView = tabView.findViewById(R.id.image_category) as ImageView
+            textView.setImageResource(category.resourceIcon())
         }
 
         val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
