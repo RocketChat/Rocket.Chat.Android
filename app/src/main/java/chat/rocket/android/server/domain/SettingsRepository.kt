@@ -1,5 +1,6 @@
 package chat.rocket.android.server.domain
 
+import chat.rocket.android.util.extensions.mapToTypedArray
 import chat.rocket.core.model.Value
 
 typealias PublicSettings = Map<String, Value<Any>>
@@ -28,7 +29,9 @@ const val USE_REALNAME = "UI_Use_Real_Name"
 const val ALLOW_ROOM_NAME_SPECIAL_CHARS = "UI_Allow_room_names_with_special_chars"
 const val FAVORITE_ROOMS = "Favorite_Rooms"
 const val LDAP_ENABLE = "LDAP_Enable"
-const val STORAGE_TYPE = "FileUpload_Storage_Type"
+const val UPLOAD_STORAGE_TYPE = "FileUpload_Storage_Type"
+const val UPLOAD_MAX_FILE_SIZE = "FileUpload_MaxFileSize"
+const val UPLOAD_WHITELIST_MIMETYPES = "FileUpload_MediaTypeWhiteList"
 const val HIDE_USER_JOIN = "Message_HideType_uj"
 const val HIDE_USER_LEAVE = "Message_HideType_ul"
 const val HIDE_TYPE_AU = "Message_HideType_au"
@@ -66,4 +69,17 @@ fun Map<String, Value<Any>>.allowedMessageDeleting(): Boolean = this[ALLOW_MESSA
 fun Map<String, Value<Any>>.registrationEnabled(): Boolean {
     val value = this[ACCOUNT_REGISTRATION]
     return value?.value == "Public"
+}
+
+fun Map<String, Value<Any>>.uploadMimeTypeFilter(): Array<String> {
+    val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value
+    values?.let { it as String }?.split(",")?.let {
+        return it.mapToTypedArray { it.trim() }
+    }
+
+    return arrayOf("*/*")
+}
+
+fun Map<String, Value<Any>>.uploadMaxFileSize(): Int {
+    return this[UPLOAD_MAX_FILE_SIZE]?.value?.let { it as Int } ?: Int.MAX_VALUE
 }
