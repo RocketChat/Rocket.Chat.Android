@@ -5,7 +5,7 @@ import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 
-fun View.rotateBy(value: Float, duration: Long = 200) {
+fun View.rotateBy(value: Float, duration: Long = 100) {
     animate()
         .rotationBy(value)
         .setDuration(duration)
@@ -42,7 +42,7 @@ fun View.fadeOut(startValue: Float, finishValue: Float, duration: Long = 200) {
     setVisible(false)
 }
 
-fun View.circularRevealOrUnreveal(centerX: Int, centerY: Int, startRadius: Float, endRadius: Float, duration: Long = 600) {
+fun View.circularRevealOrUnreveal(centerX: Int, centerY: Int, startRadius: Float, endRadius: Float, duration: Long = 200) {
     val anim = ViewAnimationUtils.createCircularReveal(this, centerX, centerY, startRadius, endRadius)
     anim.duration = duration
 

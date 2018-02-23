@@ -10,13 +10,13 @@
 
     <TextView
         android:id="@+id/text_headline"
-        style="@style/HeadlineTextView"
+        style="@style/Authentication.Headline.TextView"
         android:layout_centerHorizontal="true"
         android:text="@string/title_sign_in_your_server" />
 
     <TextView
         android:id="@+id/text_server_protocol"
-        style="@style/AuthenticationLabel"
+        style="@style/Authentication.TextView"
         android:layout_below="@id/text_headline"
         android:layout_marginTop="32dp"
         android:gravity="center_vertical"
@@ -24,7 +24,7 @@
 
     <EditText
         android:id="@+id/text_server_url"
-        style="@style/EditText.Authentication"
+        style="@style/Authentication.EditText"
         android:layout_below="@id/text_headline"
         android:layout_marginStart="0dp"
         android:layout_marginTop="32dp"
@@ -48,7 +48,7 @@
 
     <Button
         android:id="@+id/button_connect"
-        style="@style/AuthenticationButton"
+        style="@style/Authentication.Button"
         android:layout_alignParentBottom="true"
         android:text="@string/action_connect" />
 

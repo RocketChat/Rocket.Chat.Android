@@ -24,7 +24,7 @@ class PinnedMessagesFragmentModule {
     }
 
     @Provides
-    fun providePinnedMessageView(frag: PinnedMessagesFragment): PinnedMessagesView {
+    fun providePinnedMessagesView(frag: PinnedMessagesFragment): PinnedMessagesView {
         return frag
     }
 }
