@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.method.ScrollingMovementMethod
 import android.view.*
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -274,7 +273,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
             input_container.setVisible(false)
         } else {
             var playAnimation = true
-            text_message.movementMethod = ScrollingMovementMethod()
             text_message.asObservable(0)
                     .subscribe({ t ->
                         if (t.isNotEmpty() && playAnimation) {

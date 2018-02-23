@@ -4,13 +4,17 @@ import android.content.Context
 import android.support.v7.widget.AppCompatEditText
 import android.util.AttributeSet
 import android.view.KeyEvent
-import android.view.MotionEvent
 
 class ComposerEditText : AppCompatEditText {
     var listener: ComposerEditTextListener? = null
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
-            super(context, attrs, defStyleAttr)
+            super(context, attrs, defStyleAttr) {
+        isFocusable = true
+        isFocusableInTouchMode = true
+        isClickable = true
+        isLongClickable = true
+    }
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, android.support.v7.appcompat.R.attr.editTextStyle)
 
