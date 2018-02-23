@@ -10,7 +10,6 @@ class EmojiParser {
          * Spannable.
          *
          * @param text The text to parse
-         * smiley = D83D DE03
          * @return A rendered Spannable containing any supported emoji.
          */
         fun parse(text: CharSequence): CharSequence {
