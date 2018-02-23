@@ -13,7 +13,6 @@ import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import chat.rocket.android.R
-import chat.rocket.android.util.extensions.setVisible
 
 
 class EmojiFragment : Fragment() {
@@ -98,6 +97,9 @@ class EmojiFragment : Fragment() {
                             EmojiRepository.saveKeyboardHeight(currentKeyboardHeight)
                             setKeyboardHeight(currentKeyboardHeight)
                             softKeyboardVisible = true
+                            parentContainer.postDelayed({
+                                expandHidden()
+                            }, 100)
                         } else if (lastVisibleDecorViewHeight + MIN_KEYBOARD_HEIGHT_PX < visibleDecorViewHeight) {
                             // Notify listener about keyboard being hidden.
                             softKeyboardVisible = false
@@ -122,7 +124,7 @@ class EmojiFragment : Fragment() {
         }
 
         backspaceView.setOnClickListener {
-            listener?.onKeyPressed(KeyEvent.KEYCODE_BACK)
+            listener?.onNonEmojiKeyPressed(KeyEvent.KEYCODE_BACK)
         }
     }
 
@@ -139,7 +141,15 @@ class EmojiFragment : Fragment() {
                 }
             }
             viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
-                override fun onKeyPressed(keyCode: Int) {
+                override fun onEmojiPanelExpanded() {
+                    // do nothing
+                }
+
+                override fun onEmojiPanelCollapsed() {
+                    // do nothing
+                }
+
+                override fun onNonEmojiKeyPressed(keyCode: Int) {
                     // do nothing
                 }
 
@@ -215,25 +225,35 @@ class EmojiFragment : Fragment() {
         }
     }
 
+    private fun setKeyboardVisibility(visibility: Int) {
+        if (visibility != parentContainer.visibility) {
+            parentContainer.visibility = visibility
+        }
+    }
+
     /**
      * Show the emoji keyboard.
      */
     fun show() {
-        parentContainer.setVisible(true)
+        setKeyboardVisibility(View.VISIBLE)
     }
 
-    fun openHidden() {
-        parentContainer.visibility = View.INVISIBLE
+    /**
+     * Expand the emoji keyboard with invisible contents.
+     */
+    fun expandHidden() {
+        setKeyboardVisibility(View.INVISIBLE)
     }
 
     /**
      * Hide the emoji keyboard.
      */
-    fun hide() {
+    fun collapse() {
         // Since the emoji keyboard is always behind the soft keyboard assume it's also dismissed
         // when the emoji one is about to get close. Hence we should invoke our listener to update
         // the UI as if the soft keyboard is hidden.
-        parentContainer.setVisible(false)
+        listener?.onEmojiPanelCollapsed()
+        setKeyboardVisibility(View.GONE)
     }
 
     /**
@@ -241,7 +261,7 @@ class EmojiFragment : Fragment() {
      *
      * @return <code>true</code> if opened.
      */
-    fun isShown() = parentContainer.visibility == View.VISIBLE
+    fun isExpanded() = parentContainer.visibility == View.VISIBLE
 
     /**
      * Whether the emoji keyboard is collapsed.
@@ -265,6 +285,10 @@ class EmojiFragment : Fragment() {
          *
          * @see android.view.KeyEvent
          */
-        fun onKeyPressed(keyCode: Int)
+        fun onNonEmojiKeyPressed(keyCode: Int)
+
+        fun onEmojiPanelCollapsed()
+
+        fun onEmojiPanelExpanded()
     }
 }

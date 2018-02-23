@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.extensions.addFragment
@@ -68,13 +67,13 @@ class ChatRoomActivity : SwipeBackActivity(), HasSupportFragmentInjector {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         val frag = supportFragmentManager.findFragmentByTag(EmojiFragment.TAG) as EmojiFragment?
-        if (frag != null && frag.isShown()) {
-            frag.hide()
+        if (frag != null && frag.isExpanded()) {
+            frag.collapse()
         } else {
             KeyboardHelper.hideSoftKeyboard(this)
             finishActivity()
+            super.onBackPressed()
         }
     }
 

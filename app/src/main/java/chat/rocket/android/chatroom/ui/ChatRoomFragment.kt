@@ -261,13 +261,21 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
         }
     }
 
-    override fun onKeyPressed(keyCode: Int) {
+    override fun onNonEmojiKeyPressed(keyCode: Int) {
         when (keyCode) {
             KeyEvent.KEYCODE_BACK -> with(text_message) {
                 if (selectionStart > 0) text.delete(selectionStart - 1, selectionStart)
             }
             else -> throw IllegalArgumentException("pressed key not expected")
         }
+    }
+
+    override fun onEmojiPanelCollapsed() {
+        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+    }
+
+    override fun onEmojiPanelExpanded() {
+
     }
 
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
@@ -278,7 +286,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
     private fun hideAllKeyboards() {
         activity?.let {
             KeyboardHelper.hideSoftKeyboard(it)
-            attachOrGetEmojiFragment()?.hide()
+            attachOrGetEmojiFragment()?.collapse()
             setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         }
     }
@@ -328,7 +336,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                     activity?.let {
                         val fragment = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
                         if (fragment.isCollapsed()) {
-                            fragment.openHidden()
+                            fragment.expandHidden()
                         }
                         setReactionButtonIcon(R.drawable.ic_reaction_24dp)
                     }
@@ -353,7 +361,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                 sendMessage(textMessage)
                 attachOrGetEmojiFragment()?.let {
                     if (it.softKeyboardVisible) {
-                        it.hide()
+                        it.collapse()
                     }
                 }
                 clearMessageComposition()
@@ -390,7 +398,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                     when (tag) {
                         R.drawable.ic_reaction_24dp -> {
                             KeyboardHelper.hideSoftKeyboard(it)
-                            if (!emojiFragment.isShown()) {
+                            if (!emojiFragment.isExpanded()) {
                                 emojiFragment.show()
                             }
                             setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
@@ -402,6 +410,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                     }
                 }
             }
+
+            text_message.requestFocus()
         }
     }
 
