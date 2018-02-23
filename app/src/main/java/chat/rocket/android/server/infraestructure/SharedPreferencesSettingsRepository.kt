@@ -8,7 +8,7 @@ import chat.rocket.core.model.Value
 
 class SharedPreferencesSettingsRepository(private val localRespository: LocalRepository) : SettingsRepository {
 
-    private val adapter = SettingsAdapter()
+    private val adapter = SettingsAdapter().lenient()
 
     override fun save(url: String, settings: Map<String, Value<Any>>) {
         localRespository.save("$SETTINGS_KEY$url", adapter.toJson(settings))
