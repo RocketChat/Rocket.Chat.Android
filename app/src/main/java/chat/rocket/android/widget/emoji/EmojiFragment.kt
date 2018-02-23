@@ -98,7 +98,6 @@ class EmojiFragment : Fragment() {
                             EmojiRepository.saveKeyboardHeight(currentKeyboardHeight)
                             setKeyboardHeight(currentKeyboardHeight)
                             softKeyboardVisible = true
-                            openHidden()
                         } else if (lastVisibleDecorViewHeight + MIN_KEYBOARD_HEIGHT_PX < visibleDecorViewHeight) {
                             // Notify listener about keyboard being hidden.
                             softKeyboardVisible = false

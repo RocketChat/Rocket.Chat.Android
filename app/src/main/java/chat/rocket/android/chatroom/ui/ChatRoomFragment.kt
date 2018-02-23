@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.method.ScrollingMovementMethod
 import android.view.*
-import android.widget.ImageButton
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
@@ -250,10 +249,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
     override fun onKeyPressed(keyCode: Int) {
         when (keyCode) {
             KeyEvent.KEYCODE_BACK -> with(text_message) {
-                    if (selectionStart > 0) {
-                        text.delete(selectionStart - 1, selectionStart)
-                    }
-                }
+                if (selectionStart > 0) text.delete(selectionStart - 1, selectionStart)
+            }
             else -> throw IllegalArgumentException("pressed key not expected")
         }
     }
@@ -298,7 +295,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                     activity?.let {
                         val fragment = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
                         if (fragment.isCollapsed()) {
-                            fragment.show()
+                            fragment.openHidden()
                         }
                         setReactionButtonIcon(R.drawable.ic_reaction_24dp)
                     }
