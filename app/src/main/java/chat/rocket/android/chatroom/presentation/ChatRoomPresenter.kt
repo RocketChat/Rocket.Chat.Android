@@ -134,7 +134,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun markRoomAsRead(roomId: String) {
         launchUI(strategy) {
             try {
-                client.read(roomId)
+                client.markAsRead(roomId)
             } catch (ex: RocketChatException) {
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
