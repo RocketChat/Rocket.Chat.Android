@@ -21,6 +21,10 @@ fun View.setVisible(visible: Boolean) {
     }
 }
 
+fun View.isVisible(): Boolean {
+    return visibility == View.VISIBLE
+}
+
 fun ViewGroup.inflate(@LayoutRes resource: Int): View = LayoutInflater.from(context).inflate(resource, this, false)
 
 fun AppCompatActivity.addFragment(tag: String, layoutId: Int, newInstance: () -> Fragment) {

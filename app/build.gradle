@@ -92,20 +92,18 @@ dependencies {
     implementation libraries.kotshiApi
 
     implementation libraries.frescoImageViewer
-
-    implementation libraries.androidSvg
-
-    implementation libraries.aVLoadingIndicatorView
-
-    implementation libraries.textDrawable
+    implementation (libraries.androidSvg) {
+        exclude group: 'org.jetbrains', module: 'annotations-java5'
+    }
 
     implementation libraries.markwon
-
-    implementation libraries.markwonImageLoader
-
-    implementation libraries.moshiLazyAdapters
+    implementation (libraries.markwonImageLoader) {
+        exclude group: 'com.caverock', module: 'androidsvg'
+    }
 
     implementation libraries.sheetMenu
+
+    implementation libraries.aVLoadingIndicatorView
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
