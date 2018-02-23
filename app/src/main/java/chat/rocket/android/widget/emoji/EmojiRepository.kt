@@ -40,7 +40,10 @@ object EmojiRepository {
             val unicodeIntArray = unicodeIntList.toIntArray()
             val unicode = String(unicodeIntArray, 0, unicodeIntArray.size)
             ALL_EMOJIS.add(it.copy(unicode = unicode))
-            shortNameToUnicode.apply { put(it.shortname, unicode) }
+            shortNameToUnicode.apply {
+                put(it.shortname, unicode)
+                it.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
+            }
         }
     }
 
