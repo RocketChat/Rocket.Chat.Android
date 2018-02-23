@@ -168,9 +168,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                 }
             }
             adapter.addDataSet(dataSet)
-            if (adapter.itemCount > 0) {
-                recycler_view.scrollToPosition(0)
-            }
         }
     }
 
