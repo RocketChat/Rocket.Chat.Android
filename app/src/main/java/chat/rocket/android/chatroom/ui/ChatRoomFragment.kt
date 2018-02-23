@@ -292,11 +292,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             button_files.setOnClickListener {
                 handler.postDelayed({
                     presenter.selectFile()
-                }, 300)
+                }, 200)
 
                 handler.postDelayed({
                     hideAttachmentOptions()
-                }, 600)
+                }, 400)
             }
         }
     }
