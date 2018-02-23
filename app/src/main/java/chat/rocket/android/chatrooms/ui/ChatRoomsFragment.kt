@@ -103,7 +103,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun setupRecyclerView() {
         activity?.apply {
             recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            recycler_view.addItemDecoration(DividerItemDecoration(this, 144, 0))
+            recycler_view.addItemDecoration(DividerItemDecoration(this,
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
             recycler_view.itemAnimator = DefaultItemAnimator()
             recycler_view.adapter = ChatRoomsAdapter(this) { chatRoom ->
                 presenter.loadChatRoom(chatRoom)
