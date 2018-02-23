@@ -13,6 +13,8 @@ import chat.rocket.android.chatroom.ui.PinnedMessagesActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
 import chat.rocket.android.chatrooms.di.ChatRoomsModule
 import chat.rocket.android.dagger.scope.PerActivity
+import chat.rocket.android.main.di.MainActivityProvider
+import chat.rocket.android.main.di.MainModule
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.di.ProfileFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
@@ -33,7 +35,12 @@ abstract class ActivityBuilder {
     abstract fun bindAuthenticationActivity(): AuthenticationActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [ChatRoomsModule::class, ChatRoomsFragmentProvider::class, ProfileFragmentProvider::class])
+    @ContributesAndroidInjector(modules = [MainModule::class,
+        MainActivityProvider::class,
+        ChatRoomsModule::class,
+        ChatRoomsFragmentProvider::class,
+        ProfileFragmentProvider::class
+    ])
     abstract fun bindMainActivity(): MainActivity
 
     @PerActivity

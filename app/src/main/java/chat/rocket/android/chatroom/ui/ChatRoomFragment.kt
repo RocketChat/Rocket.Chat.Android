@@ -247,10 +247,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                 if (!recyclerView.canScrollVertically(1)) {
                     button_fab.hide()
                 } else {
-                    if (dy > 0 && !button_fab.isVisible()) {
+                    if (dy < 0 && !button_fab.isVisible()) {
                         button_fab.show()
-                    } else if (dy < 0 && button_fab.isVisible()) {
-                        button_fab.hide()
                     }
                 }
             }
@@ -292,11 +290,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             button_files.setOnClickListener {
                 handler.postDelayed({
                     presenter.selectFile()
-                }, 300)
+                }, 200)
 
                 handler.postDelayed({
                     hideAttachmentOptions()
-                }, 600)
+                }, 400)
             }
         }
     }

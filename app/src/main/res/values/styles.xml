@@ -17,7 +17,18 @@
     </style>
 
     <!-- Widget styles. -->
-    <style name="HeadlineTextView" parent="TextAppearance.AppCompat.Headline">
+    <style name="Authentication.TextView" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:paddingStart">@dimen/edit_text_margin</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:background">@drawable/style_edit_text_authentication</item>
+    </style>
+
+    <style name="Authentication.Headline.TextView" parent="TextAppearance.AppCompat.Headline">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">20dp</item>
@@ -25,7 +36,7 @@
         <item name="android:layout_marginEnd">@dimen/screen_edge_left_and_right_margins</item>
     </style>
 
-    <style name="EditText.Authentication" parent="Widget.AppCompat.EditText">
+    <style name="Authentication.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
@@ -39,8 +50,10 @@
         <item name="android:background">@drawable/style_edit_text_authentication</item>
     </style>
 
-    <style name="EditText.Profile" parent="EditText.Authentication">
-        <item name="android:background">@drawable/style_edit_text_profile</item>
+    <style name="Authentication.Button" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/effect_ripple</item>
     </style>
 
     <style name="EditText.Password" parent="TextAppearance.AppCompat">
@@ -56,16 +69,31 @@
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
         <item name="android:paddingStart">@dimen/edit_text_margin</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:background">@drawable/style_edit_text_authentication</item>
     </style>
 
-    <style name="AuthenticationButton" parent="Widget.AppCompat.Button">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/effect_ripple</item>
+    <style name="ChatRoom.Name.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Sender.Name.TextView" parent="TextAppearance.AppCompat.Title">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Message.TextView" parent="android:TextAppearance">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
+    <style name="Timestamp.TextView" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="Profile.EditText" parent="Authentication.EditText">
+        <item name="android:background">@drawable/style_edit_text_profile</item>
     </style>
 
     <style name="ActionModeStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

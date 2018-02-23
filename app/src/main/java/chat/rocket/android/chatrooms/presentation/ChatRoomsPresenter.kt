@@ -1,7 +1,6 @@
 package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
@@ -13,8 +12,6 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.*
 import chat.rocket.core.internal.rest.chatRooms
-import chat.rocket.core.internal.rest.logout
-import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.*
@@ -28,7 +25,6 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val serverInteractor: GetCurrentServerInteractor,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
-                                             private val localRepository: LocalRepository,
                                              private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                              factory: RocketChatClientFactory) {
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
@@ -264,33 +260,5 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     fun disconnect() {
         client.removeStateChannel(stateChannel)
         client.disconnect()
-    }
-
-    /**
-     * Logout from current server.
-     */
-    fun logout() {
-        launchUI(strategy) {
-            try {
-                clearTokens()
-                client.logout()
-                //TODO: Add the code to unsubscribe to all subscriptions.
-                client.disconnect()
-                view.onLogout()
-            } catch (e: RocketChatException) {
-                Timber.e(e)
-                view.showMessage(e.message!!)
-            }
-        }
-    }
-
-    private suspend fun clearTokens() {
-        serverInteractor.clear()
-        val pushToken = localRepository.get(LocalRepository.KEY_PUSH_TOKEN)
-        if (pushToken != null) {
-            client.unregisterPushToken(pushToken)
-            localRepository.clear(LocalRepository.KEY_PUSH_TOKEN)
-        }
-        localRepository.clearAllFromServer(currentServer)
     }
 }

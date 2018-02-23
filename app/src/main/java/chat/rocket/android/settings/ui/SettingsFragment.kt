@@ -22,10 +22,6 @@ class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListene
         fun newInstance() = SettingsFragment()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_settings)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,7 +49,6 @@ class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListene
 
     private fun startNewActivity(classType: KClass<out AppCompatActivity>) {
         startActivity(Intent(activity, classType.java))
-        activity!!.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
-
+        activity?.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 }

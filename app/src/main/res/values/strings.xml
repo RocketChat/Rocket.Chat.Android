@@ -18,7 +18,8 @@
     <string name="action_privacy_policy">Privacy Policy</string>
     <string name="action_search">Search</string>
     <string name="action_update">Update</string>
-    <string name="action_logout">Log Out</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
 

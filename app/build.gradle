@@ -105,6 +105,8 @@ dependencies {
 
     implementation libraries.aVLoadingIndicatorView
 
+    implementation libraries.swipeBackLayout
+
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
@@ -124,7 +126,11 @@ kotlin {
 // FIXME - build and install the sdk into the app/libs directory
 // We were having some issues with the kapt generated files from the sdk when importing as a module
 task compileSdk(type:Exec) {
-    commandLine './build-sdk.sh'
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', 'build-sdk.sh'
+    } else {
+        commandLine './build-sdk.sh'
+    }
 }
 preBuild.dependsOn compileSdk
 

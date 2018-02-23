@@ -14,7 +14,7 @@
         layout="@layout/avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,25 +28,23 @@
 
         <TextView
             android:id="@+id/text_sender"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/Sender.Name.TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
             tools:text="Ronald Perkins" />
 
         <TextView
             android:id="@+id/text_message_time"
-            style="@style/TextAppearance.AppCompat.Caption"
+            style="@style/Timestamp.TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            tools:text="11:45 pm" />
+            tools:text="11:45 PM" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/text_content"
-        style="@style/TextAppearance.AppCompat.Subhead"
+        style="@style/Message.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"

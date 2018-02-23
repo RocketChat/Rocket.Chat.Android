@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/text_headline"
-            style="@style/HeadlineTextView"
+            style="@style/Authentication.Headline.TextView"
             android:text="@string/title_log_in"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -23,7 +23,7 @@
 
         <EditText
             android:id="@+id/text_username_or_email"
-            style="@style/EditText.Authentication"
+            style="@style/Authentication.EditText"
             android:layout_marginTop="32dp"
             android:drawableStart="@drawable/ic_assignment_ind_black_24dp"
             android:hint="@string/msg_username_or_email"
@@ -35,7 +35,7 @@
 
         <EditText
             android:id="@+id/text_password"
-            style="@style/EditText.Authentication"
+            style="@style/Authentication.EditText"
             android:layout_marginTop="16dp"
             android:drawableStart="@drawable/ic_lock_black_24dp"
             android:hint="@string/msg_password"
@@ -193,7 +193,7 @@
 
         <Button
             android:id="@+id/button_log_in"
-            style="@style/AuthenticationButton"
+            style="@style/Authentication.Button"
             android:text="@string/title_log_in"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"

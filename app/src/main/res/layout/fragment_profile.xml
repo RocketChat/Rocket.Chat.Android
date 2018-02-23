@@ -25,7 +25,7 @@
 
         <EditText
             android:id="@+id/text_name"
-            style="@style/EditText.Profile"
+            style="@style/Profile.EditText"
             android:layout_marginTop="32dp"
             android:drawableStart="@drawable/ic_person_black_24dp"
             android:hint="@string/msg_name"
@@ -33,7 +33,7 @@
 
         <EditText
             android:id="@+id/text_username"
-            style="@style/EditText.Profile"
+            style="@style/Profile.EditText"
             android:layout_marginTop="16dp"
             android:drawableStart="@drawable/ic_at_black_24dp"
             android:hint="@string/msg_username"
@@ -41,7 +41,7 @@
 
         <EditText
             android:id="@+id/text_email"
-            style="@style/EditText.Profile"
+            style="@style/Profile.EditText"
             android:layout_marginTop="16dp"
             android:drawableStart="@drawable/ic_email_black_24dp"
             android:hint="@string/msg_email"
