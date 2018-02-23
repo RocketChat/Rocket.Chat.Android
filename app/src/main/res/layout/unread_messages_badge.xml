@@ -7,8 +7,8 @@
     <TextView
         android:id="@+id/text_total_unread_messages"
         style="@style/TextAppearance.AppCompat.Caption"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:background="@drawable/style_total_unread_messages"
         android:gravity="center"
         android:textColor="@color/white"
