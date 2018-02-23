@@ -214,6 +214,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
         adapter.removeItem(msgId)
     }
 
+    override fun restoreUIState() {
+        hideAllKeyboards()
+    }
+
     override fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String) {
         activity?.apply {
             citation = replyMarkdown

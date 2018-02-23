@@ -96,9 +96,8 @@ class ChatRoomAdapter(private val roomType: String,
                         setChecked(isPinned)
                     }
                     val adapter = ActionListAdapter(menuItems, this@ViewHolder)
-                    BottomSheetMenu(adapter).apply {
-
-                    }.show(it.context)
+                    presenter.dispatchRestoreUIState()
+                    BottomSheetMenu(adapter).show(it.context)
                 }
             }
         }

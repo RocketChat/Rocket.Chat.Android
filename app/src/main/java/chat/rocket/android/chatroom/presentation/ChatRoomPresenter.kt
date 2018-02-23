@@ -302,6 +302,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    fun dispatchRestoreUIState() {
+        view.restoreUIState()
+    }
+
     private suspend fun listenMessages(roomId: String) {
         launch(CommonPool + strategy.jobs) {
             for (message in client.messagesChannel) {
