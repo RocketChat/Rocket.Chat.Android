@@ -161,7 +161,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                     })
                 }
             }
+            val oldMessagesCount = adapter.itemCount
             adapter.addDataSet(dataSet)
+            if (oldMessagesCount == 0 && dataSet.size > 0) {
+                recycler_view.scrollToPosition(0)
+            }
         }
     }
 
