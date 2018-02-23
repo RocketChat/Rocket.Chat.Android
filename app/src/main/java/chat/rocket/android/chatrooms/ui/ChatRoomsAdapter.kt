@@ -5,17 +5,19 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setImageURI
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.widget.AvatarTextDrawable
+import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
-import com.facebook.drawee.view.SimpleDraweeView
-import kotlinx.android.synthetic.main.avatar.view.*
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.item_chat.view.*
-import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
 class ChatRoomsAdapter(private val context: Context,
                        private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
@@ -27,8 +29,6 @@ class ChatRoomsAdapter(private val context: Context,
 
     override fun getItemCount(): Int = dataSet.size
 
-    override fun getItemViewType(position: Int): Int = position
-
     fun updateRooms(newRooms: List<ChatRoom>)  {
         dataSet.clear()
         dataSet.addAll(newRooms)
@@ -36,8 +36,10 @@ class ChatRoomsAdapter(private val context: Context,
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        val placeholder = AvatarTextDrawable()
+
         fun bind(chatRoom: ChatRoom) = with(itemView) {
-            bindAvatar(chatRoom, image_avatar)
+            bindAvatar(chatRoom, image_room_avatar)
             bindName(chatRoom, text_chat_name)
             bindLastMessageDateTime(chatRoom, text_last_message_date_time)
             bindLastMessage(chatRoom, text_last_message)
@@ -46,8 +48,13 @@ class ChatRoomsAdapter(private val context: Context,
             setOnClickListener { listener(chatRoom) }
         }
 
-        private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
-            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoom.name))
+        private fun bindAvatar(chatRoom: ChatRoom, image_room_avatar: ImageView) {
+            val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else chatRoom.id
+            image_room_avatar
+                    .setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId)) {
+                        placeholder(placeholder)
+                        transition(withCrossFade())
+                    }
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
@@ -80,12 +87,15 @@ class ChatRoomsAdapter(private val context: Context,
                         textView.textContent = "@$senderUsername: $message"
                     }
                 }
+            } else {
+                textView.textContent = ""
             }
         }
 
         private fun bindUnreadMessages(chatRoom: ChatRoom, textView: TextView) {
             val totalUnreadMessage = chatRoom.unread
             when {
+                totalUnreadMessage == 0L -> textView.setVisible(false)
                 totalUnreadMessage in 1..99 -> {
                     textView.textContent = totalUnreadMessage.toString()
                     textView.setVisible(true)

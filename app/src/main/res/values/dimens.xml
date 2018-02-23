@@ -11,4 +11,6 @@
 
     <dimen name="message_time_text_size">12sp</dimen>
 
+    <dimen name="avatar_size">40dp</dimen>
+
 </resources>

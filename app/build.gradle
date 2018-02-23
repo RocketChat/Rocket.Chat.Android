@@ -60,6 +60,8 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.cardView
 
+    implementation libraries.androidKtx
+
     implementation libraries.dagger
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor
@@ -82,30 +84,20 @@ dependencies {
     implementation libraries.threeTenABP
     implementation libraries.rxBinding
 
-    implementation libraries.fresco
-    api libraries.frescoOkHttp
-    implementation libraries.frescoAnimatedGif
-    implementation libraries.frescoWebP
-    implementation libraries.frescoAnimatedWebP
-
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi
 
-    implementation libraries.frescoImageViewer
-    implementation (libraries.androidSvg) {
-        exclude group: 'org.jetbrains', module: 'annotations-java5'
-    }
-
     implementation libraries.markwon
-    implementation (libraries.markwonImageLoader) {
-        exclude group: 'com.caverock', module: 'androidsvg'
-    }
 
     implementation libraries.sheetMenu
 
     implementation libraries.aVLoadingIndicatorView
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation libraries.glide
+    implementation libraries.glideOkhttp3
+    kapt libraries.glideCompiler
+
+    implementation(libraries.crashlytics) {
         transitive = true
     }
 

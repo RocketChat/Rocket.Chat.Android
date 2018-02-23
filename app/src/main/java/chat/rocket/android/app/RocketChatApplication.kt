@@ -13,9 +13,6 @@ import chat.rocket.common.model.Token
 import chat.rocket.core.TokenRepository
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
-import com.facebook.drawee.backends.pipeline.DraweeConfig
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -32,11 +29,6 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
     @Inject
     lateinit var serviceDispatchingAndroidInjector: DispatchingAndroidInjector<Service>
-
-    @Inject
-    lateinit var imagePipelineConfig: ImagePipelineConfig
-    @Inject
-    lateinit var draweeConfig: DraweeConfig
 
     // TODO - remove this from here when we have a proper service handling the connection.
     @Inject
@@ -59,7 +51,6 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         AndroidThreeTen.init(this)
 
         setupCrashlytics()
-        setupFresco()
         setupTimber()
     }
 
@@ -76,10 +67,6 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     private fun setupCrashlytics() {
         val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
         Fabric.with(this, Crashlytics.Builder().core(core).build())
-    }
-
-    private fun setupFresco() {
-        Fresco.initialize(this, imagePipelineConfig, draweeConfig)
     }
 
     private fun setupTimber() {

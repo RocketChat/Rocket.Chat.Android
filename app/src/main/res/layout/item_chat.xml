@@ -9,15 +9,14 @@
     android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
     android:layout_marginTop="12dp">
 
-    <include
-        android:id="@+id/layout_avatar"
-        layout="@layout/avatar"
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/middle_container"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/image_room_avatar"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/middle_container"
@@ -25,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
+        app:layout_constraintLeft_toRightOf="@+id/image_room_avatar"
         app:layout_constraintRight_toLeftOf="@+id/right_container">
 
         <TextView
@@ -42,16 +41,18 @@
             android:id="@+id/text_last_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:maxHeight="40dp"
+
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
-            tools:text="You: Type something" />
+            tools:text="You: Type something that is really big to have more than one line" />
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:id="@+id/right_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintRight_toRightOf="parent">
 
         <TextView
@@ -59,31 +60,23 @@
             style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_one"
-            app:layout_constraintRight_toRightOf="@+id/layout_unread_messages_badge"
+            android:layout_marginTop="8dp"
             tools:text="11:45" />
 
-        <include
-            android:id="@+id/layout_unread_messages_badge"
-            layout="@layout/unread_messages_badge"
+        <TextView
+            android:id="@+id/text_total_unread_messages"
+            style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_two"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_one"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="22dp" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="48dp" />
-    </android.support.constraint.ConstraintLayout>
+            android:background="@drawable/style_total_unread_messages"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="right"
+            tools:text="99+"
+            tools:visibility="visible" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

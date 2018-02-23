@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.ui
 
+import DrawableHelper
 import android.support.v7.widget.RecyclerView
 import android.text.method.LinkMovementMethod
 import android.view.View
@@ -12,10 +13,10 @@ import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setImageURI
 import chat.rocket.android.util.extensions.setVisible
-import com.facebook.drawee.view.SimpleDraweeView
-import com.stfalcon.frescoimageviewer.ImageViewer
-import kotlinx.android.synthetic.main.avatar.view.*
+import chat.rocket.android.widget.AvatarTextDrawable
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.android.synthetic.main.item_message.view.*
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
@@ -37,8 +38,6 @@ class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHol
     }
 
     override fun getItemCount(): Int = dataSet.size
-
-    override fun getItemViewType(position: Int): Int = position
 
     fun addDataSet(dataSet: List<MessageViewModel>) {
         val previousDataSetSize = this.dataSet.size
@@ -77,7 +76,12 @@ class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHol
 
         fun bind(message: MessageViewModel) = with(itemView) {
             messageViewModel = message
-            image_avatar.setImageURI(message.avatarUri)
+            val placeholder = AvatarTextDrawable(message.currentUsername ?: "",
+                    DrawableHelper.getAvatarBackgroundColor(message.currentUsername ?: "default"))
+            image_avatar.setImageURI(message.avatarUri) {
+                placeholder(placeholder)
+                error(placeholder)
+            }
             text_sender.content = message.senderName
             text_message_time.content = message.time
             text_content.content = message.content
@@ -89,7 +93,7 @@ class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHol
 
         private fun bindAttachment(message: MessageViewModel,
                                    attachment_container: View,
-                                   image_attachment: SimpleDraweeView,
+                                   image_attachment: ImageView,
                                    audio_video_attachment: View,
                                    file_name: TextView) {
             with(message) {
@@ -105,12 +109,13 @@ class PinnedMessagesAdapter : RecyclerView.Adapter<PinnedMessagesAdapter.ViewHol
                 when (message.attachmentType) {
                     is AttachmentType.Image -> {
                         imageVisible = true
-                        image_attachment.setImageURI(message.attachmentUrl)
+                        image_attachment.setImageURI(message.attachmentUrl) {
+                            placeholder(R.drawable.image_dummy)
+                            centerCrop()
+                            transition(DrawableTransitionOptions.withCrossFade())
+                        }
                         image_attachment.setOnClickListener { view ->
                             // TODO - implement a proper image viewer with a proper Transition
-                            ImageViewer.Builder(view.context, listOf(message.attachmentUrl))
-                                    .setStartPosition(0)
-                                    .show()
                         }
                     }
                     is AttachmentType.Video,

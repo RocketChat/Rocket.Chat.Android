@@ -116,4 +116,21 @@ object DrawableHelper {
         }
         return userStatusDrawable
     }
+
+    private val AVATAR_BACKGROUND_HEXADECIMAL_COLORS = intArrayOf(
+            0xFFF44336.toInt(), 0xFFE91E63.toInt(), 0xFF9C27B0.toInt(), 0xFF673AB7.toInt(), 0xFF3F51B5.toInt(),
+            0xFF2196F3.toInt(), 0xFF03A9F4.toInt(), 0xFF00BCD4.toInt(), 0xFF009688.toInt(), 0xFF4CAF50.toInt(),
+            0xFF8BC34A.toInt(), 0xFFCDDC39.toInt(), 0xFFFFC107.toInt(), 0xFFFF9800.toInt(), 0xFFFF5722.toInt(),
+            0xFF795548.toInt(), 0xFF9E9E9E.toInt(), 0xFF607D8B.toInt())
+
+    /**
+     * Returns a background color to be rendered on the avatar.
+     *
+     * @param string Gets the background color based on the provided string.
+     * @return A hexadecimal color.
+     * @see (Rocket.Chat/server/startup/avatar.js)
+     */
+    public fun getAvatarBackgroundColor(string: String): Int {
+        return AVATAR_BACKGROUND_HEXADECIMAL_COLORS[string.length % AVATAR_BACKGROUND_HEXADECIMAL_COLORS.size]
+    }
 }

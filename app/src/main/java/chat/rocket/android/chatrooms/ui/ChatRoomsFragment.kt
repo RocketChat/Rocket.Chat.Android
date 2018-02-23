@@ -18,6 +18,7 @@ import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
+import com.bumptech.glide.util.FixedPreloadSizeProvider
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import kotlinx.coroutines.experimental.CommonPool
@@ -25,6 +26,8 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
+
+
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var presenter: ChatRoomsPresenter
@@ -120,6 +123,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setupRecyclerView() {
         activity?.apply {
+            val size = resources.getDimensionPixelSize(R.dimen.avatar_size)
+            val sizeProvider = FixedPreloadSizeProvider<ChatRoom>(size, size)
             recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(this, 144, 32))
             recycler_view.itemAnimator = DefaultItemAnimator()
