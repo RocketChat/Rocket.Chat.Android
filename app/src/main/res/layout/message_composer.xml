@@ -40,8 +40,8 @@
 
             <ImageButton
                 android:id="@+id/button_add_reaction"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="bottom"
                 android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -64,8 +64,8 @@
 
             <ImageButton
                 android:id="@+id/button_show_attachment_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="bottom"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/msg_content_description_show_attachment_options"
@@ -73,8 +73,8 @@
 
             <ImageButton
                 android:id="@+id/button_send"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="bottom"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/msg_content_description_send_message"
