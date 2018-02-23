@@ -128,48 +128,21 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun listenToChanges() {
-//        val list = Arrays.asList(Observable.just(text_name), Observable.just(text_username),Observable.just(text_email), Observable.just(text_avatar_url))
-//        Observables.combineLatest(
-//                text_name.asObservable(),
-//                text_username.asObservable(),
-//                text_email.asObservable(),
-//                text_avatar_url.asObservable()
-//        )
-//        // combine function
-//        { text_name, text_username, text_email, text_avatar_url->
-//            // verify data and return a boolean
-//            return@combineLatest text_name.toString() != currentName || text_username !=currentUsername || text_email != currentEmail || text_avatar_url != currentAvatar
-//        }.subscribe({ isValid->
-//                    if (isValid) {
-//                        startActionMode()
-//                    } else {
-//                        finishActionMode()
-//                    }
-//                })
-
-
-
-//        listOfObservables.subscribe({ t ->
-//            if (t.first.toString() != currentName || t.second.toString() != currentUsername) {
-//                startActionMode()
-//            } else {
-//                finishActionMode()
-//            }
-//        })
-        Observables.combineLatest(text_name.asObservable(),text_username.asObservable()).subscribe({ t ->
-            if (t.first.toString() != currentName || t.second.toString() != currentUsername) {
-                startActionMode()
-            } else {
-                finishActionMode()
-            }
-        })
-        Observables.combineLatest(text_email.asObservable(), text_avatar_url.asObservable()).subscribe({ t ->
-            if (t.first.toString() != currentEmail || (t.second.toString() != "" && t.second.toString() != currentAvatar) ) {
-                startActionMode()
-            } else {
-                finishActionMode()
-            }
-        })
+        Observables.combineLatest(
+                text_name.asObservable(),
+                text_username.asObservable(),
+                text_email.asObservable(),
+                text_avatar_url.asObservable()
+        )
+        { text_name, text_username, text_email, text_avatar_url->
+            return@combineLatest (text_name.toString() != currentName || text_username.toString() !=currentUsername || text_email.toString() != currentEmail || (text_avatar_url.toString()!="" && text_avatar_url.toString()!= currentAvatar))
+        }.subscribe({ isValid->
+                    if (isValid) {
+                        startActionMode()
+                    } else {
+                        finishActionMode()
+                    }
+                })
     }
 
     private fun startActionMode() {
