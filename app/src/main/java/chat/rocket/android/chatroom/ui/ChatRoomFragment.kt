@@ -247,6 +247,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
         }
     }
 
+    override fun onKeyPressed(keyCode: Int) {
+        when (keyCode) {
+            KeyEvent.KEYCODE_BACK -> with(text_message) {
+                    if (selectionStart > 0) {
+                        text.delete(selectionStart - 1, selectionStart)
+                    }
+                }
+            else -> throw IllegalArgumentException("pressed key not expected")
+        }
+    }
+
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
         button_add_reaction.setImageResource(drawableId)
         button_add_reaction.setTag(drawableId)

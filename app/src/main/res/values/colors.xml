@@ -31,5 +31,6 @@
 
     <color name="linkTextColor">#FF074481</color>
     <color name="linkBackgroundColor">#30074481</color>
+    <color name="colorEmojiIcon">#FF767676</color>
 
 </resources>

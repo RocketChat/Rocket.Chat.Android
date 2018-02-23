@@ -9,10 +9,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import chat.rocket.android.R
@@ -22,6 +19,8 @@ import chat.rocket.android.util.extensions.setVisible
 class EmojiFragment : Fragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
+    private lateinit var searchView: View
+    private lateinit var backspaceView: View
     private lateinit var parentContainer: ViewGroup
     private var editor: View? = null
     private var decorLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
@@ -55,6 +54,8 @@ class EmojiFragment : Fragment() {
         val view = inflater.inflate(R.layout.emoji_popup_layout, container, false)
         parentContainer = view.findViewById(R.id.emoji_keyboard_container)
         viewPager = view.findViewById(R.id.pager_categories)
+        searchView = view.findViewById(R.id.emoji_search)
+        backspaceView = view.findViewById(R.id.emoji_backspace)
         tabLayout = view.findViewById(R.id.tabs)
         tabLayout.setupWithViewPager(viewPager)
         return view
@@ -68,17 +69,12 @@ class EmojiFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val callback = when (activity) {
-            is EmojiKeyboardListener -> activity as EmojiKeyboardListener
-            else -> {
-                val fragments = activity?.supportFragmentManager?.fragments
-                if (fragments == null || fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
-                    throw IllegalStateException("activity/fragment should implement EmojiKeyboardListener interface")
-                }
-                fragments[0] as EmojiKeyboardListener
-            }
-        }
+        setupLayout()
+        setupViewPager()
+        setupBottomBar()
+    }
 
+    private fun setupLayout() {
         activity?.let {
             val decorView = it.getWindow().decorView
             decorLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -119,25 +115,53 @@ class EmojiFragment : Fragment() {
         if (storedHeight > 0) {
             setKeyboardHeight(storedHeight)
         }
+    }
 
-        viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
-            override fun onEmojiAdded(emoji: Emoji) {
-                EmojiRepository.addToRecents(emoji)
-                callback.onEmojiAdded(emoji)
-            }
-        })
+    private fun setupBottomBar() {
+        searchView.setOnClickListener {
 
-        for (category in EmojiCategory.values()) {
-            val tab = tabLayout.getTabAt(category.ordinal)
-            val tabView = layoutInflater.inflate(R.layout.emoji_picker_tab, null)
-            tab?.setCustomView(tabView)
-            val textView = tabView.findViewById(R.id.image_category) as ImageView
-            textView.setImageResource(category.resourceIcon())
         }
 
-        val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
-            EmojiCategory.RECENTS.ordinal
-        viewPager.setCurrentItem(currentTab)
+        backspaceView.setOnClickListener {
+            listener?.onKeyPressed(KeyEvent.KEYCODE_BACK)
+        }
+    }
+
+    private fun setupViewPager() {
+        activity?.let {
+            val callback = when (it) {
+                is EmojiKeyboardListener -> it as EmojiKeyboardListener
+                else -> {
+                    val fragments = it.supportFragmentManager.fragments
+                    if (fragments == null || fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
+                        throw IllegalStateException("activity/fragment should implement EmojiKeyboardListener interface")
+                    }
+                    fragments[0] as EmojiKeyboardListener
+                }
+            }
+            viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
+                override fun onKeyPressed(keyCode: Int) {
+                    // do nothing
+                }
+
+                override fun onEmojiAdded(emoji: Emoji) {
+                    EmojiRepository.addToRecents(emoji)
+                    callback.onEmojiAdded(emoji)
+                }
+            })
+
+            for (category in EmojiCategory.values()) {
+                val tab = tabLayout.getTabAt(category.ordinal)
+                val tabView = layoutInflater.inflate(R.layout.emoji_picker_tab, null)
+                tab?.setCustomView(tabView)
+                val textView = tabView.findViewById(R.id.image_category) as ImageView
+                textView.setImageResource(category.resourceIcon())
+            }
+
+            val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
+                EmojiCategory.RECENTS.ordinal
+            viewPager.setCurrentItem(currentTab)
+        }
     }
 
     private fun setKeyboardHeight(height: Int) {
@@ -229,10 +253,19 @@ class EmojiFragment : Fragment() {
 
     interface EmojiKeyboardListener {
         /**
-         * Callback after an emoji is selected on the picker.
+         * When an emoji is selected on the picker.
          *
          * @param emoji The selected emoji
          */
         fun onEmojiAdded(emoji: Emoji)
+
+        /**
+         * When backspace key is clicked.
+         *
+         * @param keyCode The key code pressed as defined
+         *
+         * @see android.view.KeyEvent
+         */
+        fun onKeyPressed(keyCode: Int)
     }
 }
