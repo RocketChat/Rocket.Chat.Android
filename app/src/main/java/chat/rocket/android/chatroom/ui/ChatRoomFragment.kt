@@ -108,7 +108,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
         super.onActivityCreated(savedInstanceState)
         attachOrGetEmojiFragment()
         text_message.addTextChangedListener(EmojiFragment.EmojiTextWatcher(text_message))
-        text_message.requestFocus()
     }
 
     override fun onDestroyView() {
@@ -116,11 +115,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
         handler.removeCallbacksAndMessages(null)
         unsubscribeTextMessage()
         super.onDestroyView()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        hideAllKeyboards()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -411,8 +405,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                     }
                 }
             }
-
-            text_message.requestFocus()
         }
     }
 
