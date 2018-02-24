@@ -1,6 +1,7 @@
 package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
+import DrawableHelper
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -69,7 +70,21 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
-            textView.content = chatRoom.name
+            when (chatRoom.type) {
+                is RoomType.Channel -> {
+                    textView.textContent = "#" + chatRoom.name
+                }
+                is RoomType.PrivateGroup -> {
+                    DrawableHelper.compoundDrawable(textView, DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, context))
+                    textView.textContent = chatRoom.name
+                }
+                is RoomType.DirectMessage -> {
+                    textView.textContent = "@" + chatRoom.name
+                }
+                else -> {
+                    textView.textContent = chatRoom.name
+                }
+            }
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {

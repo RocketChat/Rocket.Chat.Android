@@ -1,13 +1,14 @@
 package chat.rocket.android.chatroom.ui
 
+import DrawableHelper
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.common.model.RoomType
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -73,6 +74,24 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         text_room_name.textContent = chatRoomName
+        when (chatRoomType) {
+            RoomType.CHANNEL.toString() -> {
+                text_room_name.textContent = "#" + chatRoomName
+            }
+            RoomType.PRIVATE_GROUP.toString() -> {
+                val drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, this)
+                DrawableHelper.wrapDrawable(drawable)
+                DrawableHelper.tintDrawable(drawable, this, R.color.white)
+                DrawableHelper.compoundDrawable(text_room_name, drawable)
+                text_room_name.textContent = chatRoomName
+            }
+            RoomType.DIRECT_MESSAGE.toString() -> {
+                text_room_name.textContent = "@" + chatRoomName
+            }
+            else -> {
+                text_room_name.textContent = chatRoomName
+            }
+        }
         toolbar.setNavigationOnClickListener {
             finishActivity()
         }
