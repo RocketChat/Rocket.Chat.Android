@@ -3,7 +3,6 @@ package chat.rocket.android.chatroom.presentation
 import android.net.Uri
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.domain.UriInteractor
-import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
@@ -35,8 +34,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val uriInteractor: UriInteractor,
                                             private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
-                                            private val mapper: ViewModelMapper,
-                                            private val oldMapper: MessageViewModelMapper) {
+                                            private val mapper: ViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
     private var subId: String? = null
     private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
