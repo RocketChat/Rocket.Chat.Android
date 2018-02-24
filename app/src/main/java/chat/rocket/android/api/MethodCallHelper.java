@@ -408,6 +408,11 @@ public class MethodCallHelper {
                 .onSuccessTask(CONVERT_TO_JSON_OBJECT);
     }
 
+    public Task<JSONObject> setCurrentRoom(final String roomId) {
+        return call("setCurrentRoom", TIMEOUT_MS, () -> new JSONArray().put(roomId))
+                .onSuccessTask(CONVERT_TO_JSON_OBJECT);
+    }
+    
     public Task<Void> createChannel(final String name, final boolean readOnly) {
         return call("createChannel", TIMEOUT_MS, () -> new JSONArray()
                 .put(name)
