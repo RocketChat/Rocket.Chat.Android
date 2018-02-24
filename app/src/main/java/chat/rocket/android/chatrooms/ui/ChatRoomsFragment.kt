@@ -75,6 +75,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         setupToolbar()
         setupRecyclerView()
         presenter.loadChatRooms()
+        swipe_refresh_layout.setOnRefreshListener {
+            presenter.loadChatRooms()
+            swipe_refresh_layout.isRefreshing = false
+        }
     }
 
     override fun onDestroyView() {
