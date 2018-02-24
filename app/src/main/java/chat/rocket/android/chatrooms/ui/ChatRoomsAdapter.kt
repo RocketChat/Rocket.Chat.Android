@@ -66,7 +66,8 @@ class ChatRoomsAdapter(private val context: Context,
             val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else "@${chatRoom.name}"
             drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId)) {
                 transition(withCrossFade())
-                placeholder(placeholder)}
+                placeholder(placeholder)
+            }
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {

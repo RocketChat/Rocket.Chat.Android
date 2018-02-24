@@ -5,12 +5,9 @@ import android.widget.ImageView
 import chat.rocket.android.core.GlideApp
 import chat.rocket.android.core.GlideRequest
 
-inline fun ImageView.setImageURI(url: String?) {
-    GlideApp.with(this).load(url).into(this)
-}
-
-fun ImageView.setImageURI(url: String?, block: GlideRequest<Drawable>.() -> GlideRequest<Drawable>) {
+fun ImageView.setImageURI(url: String?, block: GlideRequest<Drawable>.() -> Unit = { this }) {
     GlideApp.with(this).load(url).apply {
-        block()
+        this.block()
+        this
     }.into(this)
 }
