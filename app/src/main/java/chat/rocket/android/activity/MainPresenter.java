@@ -163,6 +163,8 @@ public class MainPresenter extends BasePresenter<MainContract.View>
     private void openRoom() {
         String hostname = RocketChatCache.INSTANCE.getSelectedServerHostname();
         String roomId = RocketChatCache.INSTANCE.getSelectedRoomId();
+        methodCallHelper.setCurrentRoom(roomId)
+                .continueWith(new LogIfError());
 
         if (roomId == null || roomId.length() == 0) {
             view.showHome();
