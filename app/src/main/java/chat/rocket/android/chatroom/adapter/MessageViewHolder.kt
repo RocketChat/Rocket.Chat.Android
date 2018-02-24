@@ -8,7 +8,9 @@ import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
-import kotlinx.android.synthetic.main.avatar.view.*
+import chat.rocket.android.util.extensions.setImageURI
+import chat.rocket.android.widget.AvatarTextDrawable
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.item_message.view.*
 import ru.whalemare.sheetmenu.extension.inflate
 import ru.whalemare.sheetmenu.extension.toList
@@ -21,6 +23,8 @@ class MessageViewHolder(
     enableActions: Boolean
 ) : BaseViewHolder<MessageViewModel>(itemView),
     MenuItem.OnMenuItemClickListener {
+
+    val placeholder = AvatarTextDrawable()
 
     init {
         itemView.text_content.movementMethod = LinkMovementMethod()
@@ -49,7 +53,10 @@ class MessageViewHolder(
             text_message_time.text = data.time
             text_sender.text = data.senderName
             text_content.text = data.content
-            image_avatar.setImageURI(data.avatar)
+            image_avatar.setImageURI(data.avatar) {
+                transition(withCrossFade())
+                placeholder(placeholder)
+            }
         }
     }
 
