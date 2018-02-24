@@ -2,7 +2,7 @@ package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
 import android.content.Context
-import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -28,8 +28,6 @@ class ChatRoomsAdapter(private val context: Context,
 
     override fun getItemCount(): Int = dataSet.size
 
-    override fun getItemViewType(position: Int): Int = position
-
     fun updateRooms(newRooms: List<ChatRoom>)  {
         dataSet.clear()
         dataSet.addAll(newRooms)
@@ -45,16 +43,27 @@ class ChatRoomsAdapter(private val context: Context,
             bindUnreadMessages(chatRoom, text_total_unread_messages)
 
             if (chatRoom.alert || chatRoom.unread > 0) {
-                text_chat_name.alpha = 1F
-                text_last_message_date_time.setTextColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
-                text_last_message.setTextColor(ResourcesCompat.getColor(resources, android.R.color.primary_text_light, null))
+                text_chat_name.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorSecondaryText))
+                text_last_message_date_time.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorAccent))
+                text_last_message.setTextColor(ContextCompat.getColor(context,
+                        android.R.color.primary_text_light))
+            } else {
+                text_chat_name.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorPrimaryText))
+                text_last_message_date_time.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorSecondaryText))
+                text_last_message.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorSecondaryText))
             }
 
             setOnClickListener { listener(chatRoom) }
         }
 
         private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
-            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoom.name))
+            val avatarId = /*if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else chatRoom.id*/ chatRoom.name
+            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId))
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
@@ -66,6 +75,8 @@ class ChatRoomsAdapter(private val context: Context,
             if (lastMessage != null) {
                 val localDateTime = DateTimeHelper.getLocalDateTime(lastMessage.timestamp)
                 textView.textContent = DateTimeHelper.getDate(localDateTime, context)
+            } else {
+                textView.textContent = ""
             }
         }
 
@@ -101,6 +112,7 @@ class ChatRoomsAdapter(private val context: Context,
                     textView.textContent = context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
                     textView.setVisible(true)
                 }
+                else -> textView.setVisible(false)
             }
         }
     }

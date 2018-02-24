@@ -15,9 +15,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -144,7 +145,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
         return true
     }
 
-    override fun showMessages(dataSet: List<MessageViewModel>) {
+    override fun showMessages(dataSet: List<BaseViewModel<*>>) {
         activity?.apply {
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter)
@@ -161,9 +162,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
                     })
                 }
             }
+
             val oldMessagesCount = adapter.itemCount
-            adapter.addDataSet(dataSet)
-            if (oldMessagesCount == 0 && dataSet.size > 0) {
+            adapter.appendData(dataSet)
+            if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
             }
         }
@@ -182,8 +184,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
 
     override fun showInvalidFileMessage() = showMessage(getString(R.string.msg_invalid_file))
 
-    override fun showNewMessage(message: MessageViewModel) {
-        adapter.addItem(message)
+    override fun showNewMessage(message: List<BaseViewModel<*>>) {
+        adapter.prependData(message)
         recycler_view.scrollToPosition(0)
     }
 
@@ -204,8 +206,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
         actionSnackbar.dismiss()
     }
 
-    override fun dispatchUpdateMessage(index: Int, message: MessageViewModel) {
-        adapter.updateItem(message)
+    override fun dispatchUpdateMessage(index: Int, message: List<BaseViewModel<*>>) {
+        adapter.updateItem(message.last())
     }
 
     override fun dispatchDeleteMessage(msgId: String) {
