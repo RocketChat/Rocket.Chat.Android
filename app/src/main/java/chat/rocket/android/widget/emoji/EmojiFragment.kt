@@ -24,7 +24,7 @@ class EmojiFragment : Fragment() {
     private var editor: View? = null
     private var decorLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
     var softKeyboardVisible = false
-    var listener: EmojiKeyboardListener? = null
+    var listener: Listener? = null
 
     companion object {
         const val PREF_EMOJI_RECENTS = "PREF_EMOJI_RECENTS"
@@ -131,16 +131,16 @@ class EmojiFragment : Fragment() {
     private fun setupViewPager() {
         activity?.let {
             val callback = when (it) {
-                is EmojiKeyboardListener -> it as EmojiKeyboardListener
+                is Listener -> it as Listener
                 else -> {
                     val fragments = it.supportFragmentManager.fragments
-                    if (fragments == null || fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
-                        throw IllegalStateException("activity/fragment should implement EmojiKeyboardListener interface")
+                    if (fragments == null || fragments.size == 0 || !(fragments[0] is Listener)) {
+                        throw IllegalStateException("activity/fragment should implement Listener interface")
                     }
-                    fragments[0] as EmojiKeyboardListener
+                    fragments[0] as Listener
                 }
             }
-            viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
+            viewPager.adapter = CategoryPagerAdapter(object : Listener {
                 override fun onEmojiPanelExpanded() {
                     // do nothing
                 }
@@ -270,7 +270,7 @@ class EmojiFragment : Fragment() {
      */
     fun isCollapsed() = parentContainer.visibility == View.GONE
 
-    interface EmojiKeyboardListener {
+    interface Listener {
         /**
          * When an emoji is selected on the picker.
          *
