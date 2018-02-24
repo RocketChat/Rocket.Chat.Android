@@ -76,8 +76,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         setupRecyclerView()
         presenter.loadChatRooms()
         swipe_refresh_layout.setOnRefreshListener {
-            presenter.loadChatRooms()
             swipe_refresh_layout.isRefreshing = false
+            searchView?.setQuery("", true)
+            presenter.loadChatRooms()
         }
     }
 
