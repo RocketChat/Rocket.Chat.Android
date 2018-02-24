@@ -1,7 +1,7 @@
 package chat.rocket.android.chatroom.presentation
 
 import android.net.Uri
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
@@ -12,7 +12,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param dataSet The data set to show.
      */
-    fun showMessages(dataSet: List<MessageViewModel>)
+    fun showMessages(dataSet: List<BaseViewModel<*>>)
 
     /**
      * Send a message to a chat room.
@@ -43,7 +43,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param message The (recent) message sent to a chat room.
      */
-    fun showNewMessage(message: MessageViewModel)
+    fun showNewMessage(message: List<BaseViewModel<*>>)
 
     /**
      * Dispatch to the recycler views adapter that we should remove a message.
@@ -57,7 +57,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param index The index of the changed message
      */
-    fun dispatchUpdateMessage(index: Int, message: MessageViewModel)
+    fun dispatchUpdateMessage(index: Int, message: List<BaseViewModel<*>>)
 
     /**
      * Show reply status above the message composer.

@@ -63,7 +63,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
             var quoteNode = parser.parse("> $senderName $time")
             parentNode.appendChild(quoteNode)
             quoteNode.accept(QuoteMessageSenderVisitor(context, configuration, builder, senderName.length))
-            quoteNode = parser.parse("> ${toLenientMarkdown(quote.getOriginalMessage())}")
+            quoteNode = parser.parse("> ${toLenientMarkdown(quote.rawData.message)}")
             quoteNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         }
 
