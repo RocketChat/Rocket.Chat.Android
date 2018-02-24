@@ -44,14 +44,14 @@ class ChatRoomsAdapter(private val context: Context,
 
             if (chatRoom.alert || chatRoom.unread > 0) {
                 text_chat_name.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorSecondaryText))
+                        R.color.colorPrimaryText))
                 text_last_message_date_time.setTextColor(ContextCompat.getColor(context,
                         R.color.colorAccent))
                 text_last_message.setTextColor(ContextCompat.getColor(context,
                         android.R.color.primary_text_light))
             } else {
                 text_chat_name.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorPrimaryText))
+                        R.color.colorSecondaryText))
                 text_last_message_date_time.setTextColor(ContextCompat.getColor(context,
                         R.color.colorSecondaryText))
                 text_last_message.setTextColor(ContextCompat.getColor(context,
