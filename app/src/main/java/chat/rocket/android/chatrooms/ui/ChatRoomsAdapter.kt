@@ -1,7 +1,6 @@
 package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
-import DrawableHelper
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -15,7 +14,6 @@ import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.AvatarTextDrawable
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
@@ -63,18 +61,11 @@ class ChatRoomsAdapter(private val context: Context,
             setOnClickListener { listener(chatRoom) }
         }
 
-        private fun bindAvatar(chatRoom: ChatRoom, avatar: ImageView) {
-            if (chatRoom.type is RoomType.DirectMessage) {
-                avatar.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoom.name)) {
-                    transition(withCrossFade())
-                    placeholder(placeholder)
-                }
-            } else {
-                // TODO - cache it
-                val drawable = AvatarTextDrawable(chatRoom.name.take(1).toUpperCase(),
-                        DrawableHelper.getAvatarBackgroundColor(chatRoom.name))
-                avatar.setImageDrawable(drawable)
-            }
+        private fun bindAvatar(chatRoom: ChatRoom, drawee: ImageView) {
+            val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else "@${chatRoom.name}"
+            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId)) {
+                transition(withCrossFade())
+                placeholder(placeholder)}
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
