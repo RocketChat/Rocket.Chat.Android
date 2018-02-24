@@ -13,6 +13,7 @@ import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
@@ -63,7 +64,7 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
-            val avatarId = /*if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else chatRoom.id*/ chatRoom.name
+            val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else "@${chatRoom.name}"
             drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId))
         }
 
