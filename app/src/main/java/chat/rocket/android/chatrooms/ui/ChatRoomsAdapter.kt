@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
@@ -67,16 +68,16 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
-            textView.textContent = chatRoom.name
+            textView.content = chatRoom.name
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {
             val lastMessage = chatRoom.lastMessage
             if (lastMessage != null) {
                 val localDateTime = DateTimeHelper.getLocalDateTime(lastMessage.timestamp)
-                textView.textContent = DateTimeHelper.getDate(localDateTime, context)
+                textView.content = DateTimeHelper.getDate(localDateTime, context)
             } else {
-                textView.textContent = ""
+                textView.content = ""
             }
         }
 
@@ -88,16 +89,18 @@ class ChatRoomsAdapter(private val context: Context,
                 val senderUsername = lastMessageSender.username
                 when (senderUsername) {
                     chatRoom.name -> {
-                        textView.textContent = message
+                        textView.content = message
                     }
                 // TODO Change to MySelf
                 //                chatRoom.user?.username -> {
                 //                    holder.lastMessage.textContent = context.getString(R.string.msg_you) + ": $message"
                 //                }
                     else -> {
-                        textView.textContent = "@$senderUsername: $message"
+                        textView.content = "@$senderUsername: $message"
                     }
                 }
+            } else {
+                textView.content = ""
             }
         }
 
