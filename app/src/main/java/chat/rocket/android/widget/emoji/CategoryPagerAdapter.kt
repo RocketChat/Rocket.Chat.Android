@@ -9,9 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.widget.emoji.EmojiFragment.Listener
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
+import chat.rocket.android.widget.emoji.EmojiKeyboardPopup.Listener
 import java.util.*
 
 class CategoryPagerAdapter(val listener: Listener) : PagerAdapter() {

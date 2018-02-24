@@ -17,4 +17,6 @@
     <!-- Emoji -->
     <dimen name="picker_padding_bottom">16dp</dimen>
 
+    <dimen name="supposed_keyboard_height">252dp</dimen>
+
 </resources>

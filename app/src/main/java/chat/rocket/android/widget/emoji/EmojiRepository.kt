@@ -79,14 +79,14 @@ object EmojiRepository {
      */
     fun addToRecents(emoji: Emoji) {
         val emojiShortname = emoji.shortname
-        val recentsJson = JSONObject(preferences.getString(EmojiFragment.PREF_EMOJI_RECENTS, "{}"))
+        val recentsJson = JSONObject(preferences.getString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, "{}"))
         if (recentsJson.has(emojiShortname)) {
             val useCount = recentsJson.getInt(emojiShortname)
             recentsJson.put(emojiShortname, useCount + 1)
         } else {
             recentsJson.put(emojiShortname, 1)
         }
-        preferences.edit().putString(EmojiFragment.PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
+        preferences.edit().putString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
     }
 
     /**
@@ -96,7 +96,7 @@ object EmojiRepository {
      */
     fun getRecents(): List<Emoji> {
         val list = mutableListOf<Emoji>()
-        val recentsJson = JSONObject(preferences.getString(EmojiFragment.PREF_EMOJI_RECENTS, "{}"))
+        val recentsJson = JSONObject(preferences.getString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, "{}"))
         for (shortname in recentsJson.keys()) {
             val emoji = getEmojiByShortname(shortname)
             emoji?.let {
@@ -109,25 +109,6 @@ object EmojiRepository {
         })
         return list
     }
-
-    /**
-     * Store current soft keyboard height for later reference.
-     */
-    fun saveKeyboardHeight(height: Int) {
-        if (height <= 0) {
-            return
-        }
-        preferences.edit()
-                .putInt(EmojiFragment.PREF_KEYBOARD_HEIGHT, height)
-                .apply()
-    }
-
-    /**
-     * Get stored keyboard height.
-     *
-     * @return Height of the current soft keyboard.
-     */
-    fun getKeyboardHeight() = preferences.getInt(EmojiFragment.PREF_KEYBOARD_HEIGHT, 0)
 
     /**
      * Replace shortnames to unicode characters.

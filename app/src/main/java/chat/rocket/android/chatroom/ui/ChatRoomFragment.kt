@@ -24,7 +24,7 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.emoji.ComposerEditText
 import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiFragment
+import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
 import chat.rocket.android.widget.emoji.EmojiParser
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -52,7 +52,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 
-class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     @Inject lateinit var presenter: ChatRoomPresenter
     @Inject lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
@@ -60,6 +60,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
+    private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var isChatRoomReadOnly: Boolean = false
 
     private lateinit var actionSnackbar: ActionSnackbar
@@ -106,8 +107,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        attachOrGetEmojiFragment()
-        text_message.addTextChangedListener(EmojiFragment.EmojiTextWatcher(text_message))
+        text_message.addTextChangedListener(EmojiKeyboardPopup.EmojiTextWatcher(text_message))
     }
 
     override fun onDestroyView() {
@@ -212,10 +212,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
         adapter.removeItem(msgId)
     }
 
-    override fun restoreUIState() {
-        hideAllKeyboards()
-    }
-
     override fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String) {
         activity?.apply {
             citation = replyMarkdown
@@ -269,25 +265,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
         }
     }
 
-    override fun onEmojiPanelCollapsed() {
-        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-    }
-
-    override fun onEmojiPanelExpanded() {
-
-    }
-
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
         button_add_reaction.setImageResource(drawableId)
         button_add_reaction.setTag(drawableId)
-    }
-
-    private fun hideAllKeyboards() {
-        activity?.let {
-            KeyboardHelper.hideSoftKeyboard(it)
-            attachOrGetEmojiFragment()?.collapse()
-            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-        }
     }
 
     override fun showFileSelection(filter: Array<String>) {
@@ -329,28 +309,21 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
             input_container.setVisible(false)
         } else {
             subscribeTextMessage()
-
+            emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+            emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {
-                    activity?.let {
-                        val fragment = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
-                        if (fragment.isCollapsed()) {
-                            fragment.expandHidden()
-                        }
-                        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-                    }
                 }
 
                 override fun onKeyboardClosed() {
                     activity?.let {
-                        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-                        val fragment = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
-                        if (fragment.isCollapsed()) {
+                        if (!emojiKeyboardPopup.isKeyboardOpen) {
                             it.onBackPressed()
-                        } else {
-                            hideAllKeyboards()
                         }
+                        KeyboardHelper.hideSoftKeyboard(it)
+                        emojiKeyboardPopup.dismiss()
                     }
+                    setReactionButtonIcon(R.drawable.ic_reaction_24dp)
                 }
             }
 
@@ -358,11 +331,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
                 var textMessage = citation ?: ""
                 textMessage += text_message.textContent
                 sendMessage(textMessage)
-                attachOrGetEmojiFragment()?.let {
-                    if (it.softKeyboardVisible) {
-                        it.collapse()
-                    }
-                }
+
                 clearMessageComposition()
             }
 
@@ -370,7 +339,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
                 if (layout_message_attachment_options.isShown) {
                     hideAttachmentOptions()
                 } else {
-                    hideAllKeyboards()
                     showAttachmentOptions()
                 }
             }
@@ -390,33 +358,29 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.Listener {
             }
 
             button_add_reaction.setOnClickListener { view ->
-                activity?.let {
-                    val editor = text_message
-                    val emojiFragment = attachOrGetEmojiFragment()!!
-                    val tag = if (view.tag == null) R.drawable.ic_reaction_24dp else view.tag as Int
-                    when (tag) {
-                        R.drawable.ic_reaction_24dp -> {
-                            KeyboardHelper.hideSoftKeyboard(it)
-                            if (!emojiFragment.isExpanded()) {
-                                emojiFragment.show()
-                            }
-                            setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
-                        }
-                        R.drawable.ic_keyboard_black_24dp -> {
-                            KeyboardHelper.showSoftKeyboard(editor)
-                            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
-                        }
-                    }
-                }
+                openEmojiKeyboardPopup()
             }
         }
     }
 
-    private fun attachOrGetEmojiFragment(): EmojiFragment? {
-        return activity?.let {
-            val frag = EmojiFragment.getOrAttach(it, R.id.emoji_fragment_placeholder, composer)
-            frag.listener = this
-            frag
+    private fun openEmojiKeyboardPopup() {
+        if (!emojiKeyboardPopup.isShowing()) {
+            // If keyboard is visible, simply show the  popup
+            if (emojiKeyboardPopup.isKeyboardOpen) {
+                emojiKeyboardPopup.showAtBottom()
+            } else {
+                // Open the text keyboard first and immediately after that show the emoji popup
+                text_message.setFocusableInTouchMode(true)
+                text_message.requestFocus()
+                emojiKeyboardPopup.showAtBottomPending()
+                KeyboardHelper.showSoftKeyboard(text_message)
+
+            }
+            setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
+        } else {
+            // If popup is showing, simply dismiss it to show the undelying text keyboard
+            emojiKeyboardPopup.dismiss()
+            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         }
     }
 

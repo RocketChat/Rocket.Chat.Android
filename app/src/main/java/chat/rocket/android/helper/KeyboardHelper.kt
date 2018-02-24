@@ -1,10 +1,9 @@
 package chat.rocket.android.helper
 
-import android.graphics.Rect
-import android.view.View
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.app.Activity
 import android.content.Context
+import android.graphics.Rect
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 
 
@@ -36,7 +35,7 @@ object KeyboardHelper {
         val currentFocus = activity.currentFocus
         if (currentFocus != null) {
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+            inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
 
@@ -48,14 +47,7 @@ object KeyboardHelper {
     fun showSoftKeyboard(view: View) {
         if (view.requestFocus()) {
             val inputMethodManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-        }
-    }
-
-    fun restart(view: View) {
-        if (view.requestFocus()) {
-            val inputMethodManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.restartInput(view)
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 }
