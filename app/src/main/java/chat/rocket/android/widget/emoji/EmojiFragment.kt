@@ -131,7 +131,7 @@ class EmojiFragment : Fragment() {
     private fun setupViewPager() {
         activity?.let {
             val callback = when (it) {
-                is EmojiKeyboardListener -> it as EmojiKeyboardListener
+                is EmojiKeyboardListener -> it
                 else -> {
                     val fragments = it.supportFragmentManager.fragments
                     if (fragments == null || fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
@@ -162,14 +162,14 @@ class EmojiFragment : Fragment() {
             for (category in EmojiCategory.values()) {
                 val tab = tabLayout.getTabAt(category.ordinal)
                 val tabView = layoutInflater.inflate(R.layout.emoji_picker_tab, null)
-                tab?.setCustomView(tabView)
+                tab?.customView = tabView
                 val textView = tabView.findViewById(R.id.image_category) as ImageView
                 textView.setImageResource(category.resourceIcon())
             }
 
             val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
                 EmojiCategory.RECENTS.ordinal
-            viewPager.setCurrentItem(currentTab)
+            viewPager.currentItem = currentTab
         }
     }
 
