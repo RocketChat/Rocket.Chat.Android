@@ -14,6 +14,7 @@ import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.AvatarTextDrawable
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
