@@ -8,8 +8,10 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
@@ -31,8 +33,10 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.util.*
 import javax.inject.Inject
 
@@ -44,6 +48,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private lateinit var currentUsername: String
     private lateinit var currentEmail: String
     private var actionMode: ActionMode? = null
+    private var tempCameraUri: Uri? = null
     private var avatarImage: File? = null
     private var isAvatarChanged = false
     //request codes
@@ -136,9 +141,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     //open camera to capture picture
     private fun openCamera() {
         var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        avatarImage = createCameraImage()
         startActivityForResult(intent, CAMERA_REQUEST_CODE)
-
     }
 
     //open storage to pick image
@@ -149,11 +152,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         startActivityForResult(intent, READ_STORAGE_REQUEST_CODE)
     }
 
+    //create a file in the phone storage for sending to the server later on
     private fun createCameraImage(): File {
         val timeStamp = (Date().getTime()).toString()
         val imageFileName = "photo-" + timeStamp
-
-        return File.createTempFile(imageFileName, ".jpg", context!!.cacheDir)
+        val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(imageFileName, ".jpeg", storageDir)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -164,10 +168,21 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     //TODO add better method to store image into storage, presently image has a relatively poor quality (added by aniketsingh03)
                     try {
                         val bitmapImage: Bitmap = data!!.extras.get("data") as Bitmap
-                        val out = FileOutputStream(avatarImage)
-                        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, out)
-                        out.close()
+                        val bytes = ByteArrayOutputStream()
+                        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
                         image_avatar.setImageURI(data.data)
+
+                        avatarImage = createCameraImage()
+                        try {
+                            avatarImage!!.createNewFile()
+
+                            val outputStream = FileOutputStream(avatarImage)
+                            outputStream.write(bytes.toByteArray())
+                            outputStream.close()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+
                         isAvatarChanged = true
                         mObservable.onNext(isAvatarChanged)
                     } catch (e: Exception) {
@@ -180,8 +195,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             READ_STORAGE_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
-                    avatarImage = File(data!!.data.path)
-                    Toast.makeText(context, data.data.path, Toast.LENGTH_SHORT).show()
+                    avatarImage = File(data!!.data.getRealPathFromURI(context!!))
                     image_avatar.setImageURI(data.data)
                     isAvatarChanged = true
                     mObservable.onNext(isAvatarChanged)
@@ -286,5 +300,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_name.isEnabled = value
         text_username.isEnabled = value
         text_email.isEnabled = value
+        image_avatar.isEnabled = value
+        if (value == true)
+            image_avatar.alpha = 1.0f
+        else
+            image_avatar.alpha = 0.5f
     }
 }

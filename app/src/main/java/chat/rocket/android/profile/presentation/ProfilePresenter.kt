@@ -54,7 +54,6 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
                 //TODO check for problems here
                 val user = client.updateProfile(myselfId, email, name, username)
                 val avatar = client.setAvatar(avatarImage, "image/jpeg")
-                //Log.d("STATUS", "profile_update" + user )
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
             } catch (exception: RocketChatException) {

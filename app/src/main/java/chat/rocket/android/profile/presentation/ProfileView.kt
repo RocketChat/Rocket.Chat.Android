@@ -2,7 +2,6 @@ package chat.rocket.android.profile.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.core.model.Myself
 
 interface ProfileView : LoadingView, MessageView {
 
