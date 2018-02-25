@@ -105,8 +105,6 @@ dependencies {
 
     implementation libraries.aVLoadingIndicatorView
 
-    implementation libraries.swipeBackLayout
-
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
