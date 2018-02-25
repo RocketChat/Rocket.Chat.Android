@@ -1,6 +1,5 @@
 package chat.rocket.android.chatrooms.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
 import chat.rocket.android.R
-import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.util.extensions.inflate
@@ -72,13 +70,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_logout -> presenter.logout()
-        }
-        return true
-    }
-
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {
         activity.apply {
             launch(UI) {
@@ -105,15 +96,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun onLogout() {
-        activity?.apply {
-            finish()
-            val intent = Intent(this, AuthenticationActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
-    }
-
     private fun setupToolbar() {
         (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_chats)
     }
@@ -121,7 +103,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun setupRecyclerView() {
         activity?.apply {
             recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            recycler_view.addItemDecoration(DividerItemDecoration(this, 144, 32))
+            recycler_view.addItemDecoration(DividerItemDecoration(this,
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
             recycler_view.itemAnimator = DefaultItemAnimator()
             recycler_view.adapter = ChatRoomsAdapter(this) { chatRoom ->
                 presenter.loadChatRoom(chatRoom)

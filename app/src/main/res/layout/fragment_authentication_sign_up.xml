@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/text_headline"
-        style="@style/HeadlineTextView"
+        style="@style/Authentication.Headline.TextView"
         android:text="@string/title_sign_up"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -17,7 +17,7 @@
 
     <EditText
         android:id="@+id/text_name"
-        style="@style/EditText.Authentication"
+        style="@style/Authentication.EditText"
         android:layout_marginTop="32dp"
         android:drawableStart="@drawable/ic_person_black_24dp"
         android:hint="@string/msg_name"
@@ -29,7 +29,7 @@
 
     <EditText
         android:id="@+id/text_username"
-        style="@style/EditText.Authentication"
+        style="@style/Authentication.EditText"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_at_black_24dp"
         android:hint="@string/msg_username"
@@ -41,7 +41,7 @@
 
     <EditText
         android:id="@+id/text_password"
-        style="@style/EditText.Authentication"
+        style="@style/Authentication.EditText"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_lock_black_24dp"
         android:hint="@string/msg_password"
@@ -53,7 +53,7 @@
 
     <EditText
         android:id="@+id/text_email"
-        style="@style/EditText.Authentication"
+        style="@style/Authentication.EditText"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/ic_email_black_24dp"
         android:hint="@string/msg_email"
@@ -91,7 +91,7 @@
 
     <Button
         android:id="@+id/button_sign_up"
-        style="@style/AuthenticationButton"
+        style="@style/Authentication.Button"
         android:text="@string/title_sign_up"
         app:layout_constraintBottom_toBottomOf="parent" />
 

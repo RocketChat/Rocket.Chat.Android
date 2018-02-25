@@ -21,9 +21,12 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
+import kotlinx.android.synthetic.main.message_list.*
+import timber.log.Timber
 import javax.inject.Inject
 
 fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Fragment {
@@ -57,12 +60,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private var citation: String? = null
     private var editingMessageId: String? = null
 
+    private val compositeDisposable = CompositeDisposable()
+    private var playComposeMessageButtonsAnimation = true
+
     // For reveal and unreveal anim.
     private val hypotenuse by lazy { Math.hypot(root_layout.width.toDouble(), root_layout.height.toDouble()).toFloat() }
     private val max by lazy { Math.max(layout_message_attachment_options.width.toDouble(), layout_message_attachment_options.height.toDouble()).toFloat() }
     private val centerX by lazy { recycler_view.right }
     private val centerY by lazy { recycler_view.bottom }
-    val handler = Handler()
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,13 +91,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
-        setupComposer()
+
+        setupRecyclerView()
+        setupFab()
+        setupMessageComposer()
         setupActionSnackbar()
     }
 
     override fun onDestroyView() {
         presenter.unsubscribeMessages()
         handler.removeCallbacksAndMessages(null)
+        unsubscribeTextMessage()
         super.onDestroyView()
     }
 
@@ -156,20 +166,23 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun showInvalidFileMessage() = showMessage(getString(R.string.msg_invalid_file))
 
     override fun showNewMessage(message: MessageViewModel) {
-        text_message.textContent = ""
         adapter.addItem(message)
-        recycler_view.smoothScrollToPosition(0)
+        recycler_view.scrollToPosition(0)
     }
 
-    override fun disableMessageInput() {
+    override fun disableSendMessageButton() {
         button_send.isEnabled = false
-        text_message.isEnabled = false
     }
 
-    override fun enableMessageInput(clear: Boolean) {
+    override fun enableSendMessageButton() {
         button_send.isEnabled = true
-        text_message.isEnabled = true
-        if (clear) text_message.textContent = ""
+    }
+
+    override fun clearMessageComposition() {
+        citation = null
+        editingMessageId = null
+        text_message.textContent = ""
+        actionSnackbar.dismiss()
     }
 
     override fun dispatchUpdateMessage(index: Int, message: MessageViewModel) {
@@ -214,37 +227,53 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             text_message.textContent = text
             editingMessageId = messageId
         }
-
     }
 
-    private fun setupComposer() {
+    override fun showFileSelection(filter: Array<String>) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "*/*"
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
+        startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
+    }
+
+    override fun showInvalidFileSize(fileSize: Int, maxFileSize: Int) {
+        showMessage(getString(R.string.max_file_size_exceeded, fileSize, maxFileSize))
+    }
+
+    private fun setupRecyclerView() {
+        recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                Timber.i("Scrolling vertically: $dy")
+                if (!recyclerView.canScrollVertically(1)) {
+                    button_fab.hide()
+                } else {
+                    if (dy < 0 && !button_fab.isVisible()) {
+                        button_fab.show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun setupFab() {
+        button_fab.setOnClickListener {
+            recycler_view.scrollToPosition(0)
+            button_fab.hide()
+        }
+    }
+
+    private fun setupMessageComposer() {
         if (isChatRoomReadOnly) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else {
-            var playAnimation = true
-            text_message.asObservable(0)
-                .subscribe({ t ->
-                    if (t.isNotEmpty() && playAnimation) {
-                        button_show_attachment_options.fadeInOrOut(1F, 0F, 120)
-                        button_send.fadeInOrOut(0F, 1F, 120)
-                        playAnimation = false
-                    }
-
-                    if (t.isEmpty()) {
-                        button_send.fadeInOrOut(1F, 0F, 120)
-                        button_show_attachment_options.fadeInOrOut(0F, 1F, 120)
-                        playAnimation = true
-                    }
-                })
+            subscribeTextMessage()
 
             button_send.setOnClickListener {
-                var textMessage = citation ?: ""
-                textMessage += text_message.textContent
-                sendMessage(textMessage)
-                clearActionMessage()
+                var message = citation ?: ""
+                message += text_message.textContent
+                sendMessage(message)
             }
-
 
             button_show_attachment_options.setOnClickListener {
                 if (layout_message_attachment_options.isShown) {
@@ -254,16 +283,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                 }
             }
 
-            view_dim.setOnClickListener { hideAttachmentOptions() }
+            view_dim.setOnClickListener {
+                hideAttachmentOptions()
+            }
 
             button_files.setOnClickListener {
                 handler.postDelayed({
-                    performSAF()
-                }, 300)
+                    presenter.selectFile()
+                }, 200)
 
                 handler.postDelayed({
                     hideAttachmentOptions()
-                }, 600)
+                }, 400)
             }
         }
     }
@@ -271,15 +302,35 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private fun setupActionSnackbar() {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener({
-            clearActionMessage()
+            clearMessageComposition()
         })
     }
 
-    private fun clearActionMessage() {
-        citation = null
-        editingMessageId = null
-        text_message.text.clear()
-        actionSnackbar.dismiss()
+    private fun subscribeTextMessage() {
+        val disposable = text_message.asObservable(0)
+            .subscribe({ t -> setupComposeMessageButtons(t) })
+
+        compositeDisposable.add(disposable)
+    }
+
+    private fun unsubscribeTextMessage() {
+        if (!compositeDisposable.isDisposed) {
+            compositeDisposable.dispose()
+        }
+    }
+
+    private fun setupComposeMessageButtons(charSequence: CharSequence) {
+        if (charSequence.isNotEmpty() && playComposeMessageButtonsAnimation) {
+            button_show_attachment_options.fadeOut(1F, 0F, 120)
+            button_send.fadeIn(0F, 1F, 120)
+            playComposeMessageButtonsAnimation = false
+        }
+
+        if (charSequence.isEmpty()) {
+            button_send.fadeOut(1F, 0F, 120)
+            button_show_attachment_options.fadeIn(0F, 1F, 120)
+            playComposeMessageButtonsAnimation = true
+        }
     }
 
     private fun showAttachmentOptions() {
@@ -296,11 +347,5 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         layout_message_attachment_options.circularRevealOrUnreveal(centerX, centerY, max, 0F)
 
         view_dim.setVisible(false)
-    }
-
-    private fun performSAF() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
-        startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
     }
 }

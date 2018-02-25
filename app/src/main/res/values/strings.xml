@@ -17,7 +17,8 @@
     <string name="action_privacy_policy">Privacy Policy</string>
     <string name="action_search">Search</string>
     <string name="action_update">Update</string>
-    <string name="action_logout">Log Out</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
     <string name="action_files">Files</string>
 
     <!-- Regular information messages -->
@@ -83,5 +84,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
 
 </resources>

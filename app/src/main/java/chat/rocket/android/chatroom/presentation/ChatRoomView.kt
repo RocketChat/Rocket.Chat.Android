@@ -22,6 +22,11 @@ interface ChatRoomView : LoadingView, MessageView {
     fun sendMessage(text: String)
 
     /**
+     * Perform file selection with the mime type [filter]
+     */
+    fun showFileSelection(filter: Array<String>)
+
+    /**
      * Uploads a file to a chat room.
      *
      * @param uri The file URI to send.
@@ -75,7 +80,21 @@ interface ChatRoomView : LoadingView, MessageView {
      */
     fun showEditingAction(roomId: String, messageId: String, text: String)
 
-    fun disableMessageInput()
+    /**
+     * Disabling the send message button avoids the user tap this button multiple
+     * times to send a same message.
+     */
+    fun disableSendMessageButton()
 
-    fun enableMessageInput(clear: Boolean = false)
+    /**
+     * Enables the send message button.
+     */
+    fun enableSendMessageButton()
+
+    /**
+     * Clears the message composition.
+     */
+    fun clearMessageComposition()
+
+    fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 }

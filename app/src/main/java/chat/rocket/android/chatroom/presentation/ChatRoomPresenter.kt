@@ -15,7 +15,7 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.connect
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
-import chat.rocket.core.internal.realtime.unsubscibre
+import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
@@ -24,7 +24,6 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
-import java.io.File
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
@@ -39,7 +38,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     private val client = factory.create(serverInteractor.get()!!)
     private var subId: String? = null
     private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
-
     private val stateChannel = Channel<State>()
 
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
@@ -72,53 +70,49 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
-            view.disableMessageInput()
+            view.disableSendMessageButton()
             try {
+                // ignore message for now, will receive it on the stream
                 val message = if (messageId == null) {
                     client.sendMessage(chatRoomId, text)
                 } else {
                     client.updateMessage(chatRoomId, messageId, text)
                 }
-                // ignore message for now, will receive it on the stream
-                view.enableMessageInput(clear = true)
+                view.clearMessageComposition()
             } catch (ex: Exception) {
-                ex.printStackTrace()
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
+                   view.showGenericErrorMessage()
                 }
-                view.enableMessageInput()
+            } finally {
+                view.enableSendMessageButton()
             }
         }
+    }
+
+    fun selectFile() {
+        view.showFileSelection(settings.uploadMimeTypeFilter())
     }
 
     fun uploadFile(roomId: String, uri: Uri, msg: String) {
         launchUI(strategy) {
             view.showLoading()
-            var tempFile: File? = null
             try {
                 val fileName = async { uriInteractor.getFileName(uri) }.await()
                 val mimeType = async { uriInteractor.getMimeType(uri) }.await()
-                /* FIXME - this is a workaround for uploading files with the SDK
-                 *
-                 * https://developer.android.com/guide/topics/providers/document-provider.html
-                 *
-                 * We need to use contentResolver.openInputStream(uri) to open this file.
-                 * Since the SDK is not Android specific we cannot pass the Uri and let the
-                 * SDK handle the file.
-                 *
-                 * As a temporary workaround we are saving the contents to a temp file.
-                 *
-                 * A proper solution is to implement some interface to open the InputStream
-                 * and use a RequestBody based on https://github.com/square/okhttp/issues/3585
-                 */
-                tempFile = async { uriInteractor.tempFile(uri) }.await()
+                val fileSize = async { uriInteractor.getFileSize(uri) }.await()
+                val maxFileSize = settings.uploadMaxFileSize()
 
-                if (fileName == null || tempFile == null) {
-                    view.showInvalidFileMessage()
-                } else {
-                    client.uploadFile(roomId, tempFile, mimeType, msg, fileName)
+                when {
+                    fileName.isNullOrEmpty() -> view.showInvalidFileMessage()
+                    fileSize > maxFileSize -> view.showInvalidFileSize(fileSize, maxFileSize)
+                    else -> {
+                        Timber.d("Uploading to $roomId: $fileName - $mimeType")
+                        client.uploadFile(roomId, fileName!!, mimeType, msg, description = fileName) {
+                            uriInteractor.getInputStream(uri)
+                        }
+                    }
                 }
             } catch (ex: RocketChatException) {
                 Timber.d(ex)
@@ -128,13 +122,12 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     view.showGenericErrorMessage()
                 }
             } finally {
-                tempFile?.delete()
                 view.hideLoading()
             }
         }
     }
 
-    fun subscribeMessages(roomId: String) {
+    private fun subscribeMessages(roomId: String) {
         client.addStateChannel(stateChannel)
         launch(CommonPool + strategy.jobs) {
             for (status in stateChannel) {
@@ -180,7 +173,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launch(CommonPool) {
             client.removeStateChannel(stateChannel)
             subId?.let { subscriptionId ->
-                client.unsubscibre(subscriptionId)
+                client.unsubscribe(subscriptionId)
             }
         }
     }

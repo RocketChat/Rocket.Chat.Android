@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.support.v4.content.res.ResourcesCompat
 import android.text.Layout
 import android.text.Spannable
 import android.text.Spanned
@@ -78,8 +79,8 @@ class MessageParser @Inject constructor(val context: Application, private val co
             val user = matcher.group(2)
             val start = matcher.start(2)
             //TODO: should check if username actually exists prior to applying.
-            val linkColor = context.resources.getColor(R.color.linkTextColor)
-            val linkBackgroundColor = context.resources.getColor(R.color.linkBackgroundColor)
+            val linkColor = ResourcesCompat.getColor(context.resources, R.color.white, null)
+            val linkBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, null)
             val referSelf = currentUser != null && "@$currentUser" == user
             val usernameSpan = UsernameClickableSpan(linkBackgroundColor, linkColor, referSelf)
             result.setSpan(usernameSpan, start, start + user.length, 0)

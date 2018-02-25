@@ -7,22 +7,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_file_attachment"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/style_message_file_upload_content_bg"
-        android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_files_24dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLength="20"
-        android:maxLines="1"
-        android:padding="5dp"
-        android:visibility="gone"
-        tools:text="brazilian_anthem.mp4"
-        tools:visibility="visible" />
-
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_attachment"
         android:layout_width="match_parent"

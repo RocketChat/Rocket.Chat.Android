@@ -92,20 +92,20 @@ dependencies {
     implementation libraries.kotshiApi
 
     implementation libraries.frescoImageViewer
+    implementation (libraries.androidSvg) {
+        exclude group: 'org.jetbrains', module: 'annotations-java5'
+    }
 
-    implementation libraries.androidSvg
+    implementation libraries.markwon
+    implementation (libraries.markwonImageLoader) {
+        exclude group: 'com.caverock', module: 'androidsvg'
+    }
+
+    implementation libraries.sheetMenu
 
     implementation libraries.aVLoadingIndicatorView
 
-    implementation libraries.textDrawable
-
-    implementation libraries.markwon
-
-    implementation libraries.markwonImageLoader
-
-    implementation libraries.moshiLazyAdapters
-
-    implementation libraries.sheetMenu
+    implementation libraries.swipeBackLayout
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
@@ -126,7 +126,11 @@ kotlin {
 // FIXME - build and install the sdk into the app/libs directory
 // We were having some issues with the kapt generated files from the sdk when importing as a module
 task compileSdk(type:Exec) {
-    commandLine './build-sdk.sh'
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', 'build-sdk.sh'
+    } else {
+        commandLine './build-sdk.sh'
+    }
 }
 preBuild.dependsOn compileSdk
 

@@ -15,6 +15,7 @@
     <string name="action_privacy_policy">Política de Privacidade</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_update">Atualizar</string>
+    <string name="action_settings">Configurações</string>
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
 
@@ -79,5 +80,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Pinadas</string>
+
+    <!-- Upload Messages -->
+    <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
 
 </resources>

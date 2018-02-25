@@ -13,6 +13,8 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
+import me.imid.swipebacklayout.lib.SwipeBackLayout
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity
 import javax.inject.Inject
 
 
@@ -30,7 +32,7 @@ private const val INTENT_CHAT_ROOM_NAME = "chat_room_name"
 private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 private const val INTENT_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 
-class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class ChatRoomActivity : SwipeBackActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -53,6 +55,8 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         isChatRoomReadOnly = intent.getBooleanExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, true)
         requireNotNull(chatRoomType) { "no is_chat_room_read_only provided in Intent extras" }
+
+        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
 
         setupToolbar(chatRoomName)
 

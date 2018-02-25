@@ -1,23 +1,22 @@
 package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
-import DrawableHelper
 import android.content.Context
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
-import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_chat.view.*
+import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
 class ChatRoomsAdapter(private val context: Context,
                        private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
@@ -39,26 +38,23 @@ class ChatRoomsAdapter(private val context: Context,
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(chatRoom: ChatRoom) = with(itemView) {
-            bindAvatar(chatRoom, layout_avatar, image_avatar, image_room_avatar)
+            bindAvatar(chatRoom, image_avatar)
             bindName(chatRoom, text_chat_name)
             bindLastMessageDateTime(chatRoom, text_last_message_date_time)
             bindLastMessage(chatRoom, text_last_message)
             bindUnreadMessages(chatRoom, text_total_unread_messages)
 
+            if (chatRoom.alert || chatRoom.unread > 0) {
+                text_chat_name.alpha = 1F
+                text_last_message_date_time.setTextColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
+                text_last_message.setTextColor(ResourcesCompat.getColor(resources, android.R.color.primary_text_light, null))
+            }
+
             setOnClickListener { listener(chatRoom) }
         }
 
-        private fun bindAvatar(chatRoom: ChatRoom, avatarLayout: View, drawee: SimpleDraweeView, imageView: ImageView) {
-            val chatRoomName = chatRoom.name
-            if (chatRoom.type is RoomType.DirectMessage) {
-                drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoomName))
-                imageView.setVisible(false)
-                avatarLayout.setVisible(true)
-            } else {
-                imageView.setImageDrawable(DrawableHelper.getTextDrawable(chatRoomName))
-                avatarLayout.setVisible(false)
-                imageView.setVisible(true)
-            }
+        private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
+            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoom.name))
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
