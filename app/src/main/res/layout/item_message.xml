@@ -48,20 +48,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintLeft_toLeftOf="@id/top_container"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_container"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
-
-    <!-- TODO - Use separate adapter items for messages and attachments. -->
-    <include
-        android:id="@+id/message_attachment"
-        layout="@layout/message_attachment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        app:layout_constraintLeft_toLeftOf="@id/top_container"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_content" />
 
 </android.support.constraint.ConstraintLayout>

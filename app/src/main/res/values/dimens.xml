@@ -14,4 +14,7 @@
 
     <dimen name="message_time_text_size">12sp</dimen>
 
+    <!-- Emoji -->
+    <dimen name="picker_padding_bottom">16dp</dimen>
+
 </resources>

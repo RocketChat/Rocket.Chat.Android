@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
+import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.widget.emoji.EmojiFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -65,7 +66,16 @@ class ChatRoomActivity : SwipeBackActivity(), HasSupportFragmentInjector {
         }
     }
 
-    override fun onBackPressed() = finishActivity()
+    override fun onBackPressed() {
+        val frag = supportFragmentManager.findFragmentByTag(EmojiFragment.TAG) as EmojiFragment?
+        if (frag != null && frag.isExpanded()) {
+            frag.collapse()
+        } else {
+            KeyboardHelper.hideSoftKeyboard(this)
+            finishActivity()
+            super.onBackPressed()
+        }
+    }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector

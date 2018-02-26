@@ -27,7 +27,7 @@ import javax.inject.Inject
 class MessageParser @Inject constructor(val context: Application, private val configuration: SpannableConfiguration) {
 
     private val parser = Markwon.createParser()
-    private val regexUsername = Pattern.compile("([^\\S]|^)+(@[\\w.]+)",
+    private val regexUsername = Pattern.compile("([^\\S]|^)+(@[\\w.\\-]+)",
             Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
     private val regexLink = Pattern.compile("(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&/=]*)",
             Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
@@ -63,7 +63,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
             var quoteNode = parser.parse("> $senderName $time")
             parentNode.appendChild(quoteNode)
             quoteNode.accept(QuoteMessageSenderVisitor(context, configuration, builder, senderName.length))
-            quoteNode = parser.parse("> ${toLenientMarkdown(quote.getOriginalMessage())}")
+            quoteNode = parser.parse("> ${toLenientMarkdown(quote.rawData.message)}")
             quoteNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         }
 

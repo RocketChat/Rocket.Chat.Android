@@ -83,3 +83,5 @@ fun Map<String, Value<Any>>.uploadMimeTypeFilter(): Array<String> {
 fun Map<String, Value<Any>>.uploadMaxFileSize(): Int {
     return this[UPLOAD_MAX_FILE_SIZE]?.value?.let { it as Int } ?: Int.MAX_VALUE
 }
+
+fun Map<String, Value<Any>>.baseUrl() : String? = this[SITE_URL]?.value as String

@@ -3,7 +3,7 @@ package chat.rocket.android.chatroom.presentation
 import android.net.Uri
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.domain.UriInteractor
-import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
+import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -34,7 +34,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val uriInteractor: UriInteractor,
                                             private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
-                                            private val mapper: MessageViewModelMapper) {
+                                            private val mapper: ViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
     private var subId: String? = null
     private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
@@ -45,14 +45,14 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             view.showLoading()
             try {
                 val messages =
-                    client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
+                        client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                 messagesRepository.saveAll(messages)
 
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
                 // but should mark only when the user see the first unread message.
                 markRoomAsRead(chatRoomId)
-
-                val messagesViewModels = mapper.mapToViewModelList(messages, settings)
+              
+                val messagesViewModels = mapper.map(messages)
                 view.showMessages(messagesViewModels)
 
                 // Subscribe after getting the first page of messages from REST
@@ -247,9 +247,9 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     is RoomType.Custom -> "custom" //TODO: put appropriate callback string here.
                 }
                 view.showReplyingAction(
-                    user,
-                    "[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ",
-                    m.message
+                        user,
+                        "[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ",
+                        m.message
                 )
             }
         }
@@ -317,6 +317,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    fun dispatchRestoreUIState() {
+        view.restoreUIState()
+    }
+
     private suspend fun listenMessages(roomId: String) {
         launch(CommonPool + strategy.jobs) {
             for (message in client.messagesChannel) {
@@ -330,7 +334,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
-            val viewModelStreamedMessage = mapper.mapToViewModel(streamedMessage, settings)
+            val viewModelStreamedMessage = mapper.map(streamedMessage)
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {
