@@ -19,4 +19,7 @@
 
     <dimen name="supposed_keyboard_height">252dp</dimen>
 
+    <!-- Message -->
+    <dimen name="quote_padding">8dp</dimen>
+
 </resources>

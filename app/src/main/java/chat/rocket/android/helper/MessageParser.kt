@@ -134,7 +134,9 @@ class MessageParser @Inject constructor(val context: Application, private val co
             // pass to super to apply markdown
             super.visit(blockQuote)
 
-            builder.setSpan(QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), length, builder.length())
+            val padding = context.resources.getDimensionPixelSize(R.dimen.quote_padding)
+            builder.setSpan(QuoteMarginSpan(context.getDrawable(R.drawable.quote), padding), length,
+                    builder.length())
         }
     }
 
