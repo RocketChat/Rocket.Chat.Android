@@ -60,6 +60,7 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="8dp"
+            android:visibility="invisible"
             android:src="@drawable/ic_search_gray_24px" />
 
         <ImageView
@@ -74,6 +75,5 @@
             android:padding="8dp"
             android:src="@drawable/ic_backspace_gray_24dp" />
     </RelativeLayout>
-
 
 </android.support.constraint.ConstraintLayout>
