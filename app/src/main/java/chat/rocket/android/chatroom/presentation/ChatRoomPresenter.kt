@@ -48,6 +48,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                         client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                 messagesRepository.saveAll(messages)
 
+                // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
+                // but should mark only when the user see the first unread message.
+                markRoomAsRead(chatRoomId)
+              
                 val messagesViewModels = mapper.map(messages)
                 view.showMessages(messagesViewModels)
 
@@ -123,6 +127,17 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }
             } finally {
                 view.hideLoading()
+            }
+        }
+    }
+
+    fun markRoomAsRead(roomId: String) {
+        launchUI(strategy) {
+            try {
+                client.markAsRead(roomId)
+            } catch (ex: RocketChatException) {
+                view.showMessage(ex.message!!) // TODO Remove.
+                Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
             }
         }
     }
