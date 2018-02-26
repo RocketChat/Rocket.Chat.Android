@@ -32,7 +32,7 @@
         android:cursorVisible="false"
         android:hint="@string/default_server"
         android:imeOptions="actionDone"
-        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-/"
+        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-/:"
         android:inputType="textUri"
         android:paddingEnd="0dp"
         android:paddingStart="0dp" />
