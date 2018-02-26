@@ -34,8 +34,6 @@ class MessageParser @Inject constructor(val context: Application, private val co
     private val parser = Markwon.createParser()
     private val regexUsername = Pattern.compile("([^\\S]|^)+(@[\\w.\\-]+)",
             Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
-    private val regexLink = Pattern.compile("(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&/=]*)",
-            Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
     private val selfReferList = listOf("@all", "@here")
 
     /**
