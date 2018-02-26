@@ -37,18 +37,22 @@
 
         <activity
             android:name=".main.ui.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
 
         <activity
             android:name=".webview.WebViewActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
 
         <activity
             android:name=".chatroom.ui.PinnedMessagesActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
 
         <receiver

@@ -29,7 +29,6 @@ ext {
         markwon                : '1.0.3',
         sheetMenu              : '1.3.3',
         aVLoadingIndicatorView : '2.1.3',
-        swipeBackLayout        : '1.1.0',
 
         // For testing
         junit                  : '4.12',
