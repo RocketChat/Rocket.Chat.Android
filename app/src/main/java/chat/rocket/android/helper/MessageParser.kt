@@ -2,18 +2,14 @@ package chat.rocket.android.helper
 
 import android.app.Application
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Typeface
+import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Layout
 import android.text.Spannable
 import android.text.Spanned
-import android.text.TextPaint
 import android.text.style.*
-import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import org.commonmark.node.BlockQuote
@@ -31,6 +27,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
             Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
     private val regexLink = Pattern.compile("(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&/=]*)",
             Pattern.MULTILINE or Pattern.CASE_INSENSITIVE)
+    private val selfReferList = listOf("@all", "@here")
 
     /**
      * Render a markdown text message to Spannable.
@@ -73,17 +70,42 @@ class MessageParser @Inject constructor(val context: Application, private val co
     }
 
     private fun applySpans(text: CharSequence, currentUser: String?) {
+        if (text !is Spannable) return
+        applyMentionSpans(text, currentUser)
+    }
+
+    private fun applyMentionSpans(text: CharSequence, currentUser: String?) {
         val matcher = regexUsername.matcher(text)
         val result = text as Spannable
         while (matcher.find()) {
             val user = matcher.group(2)
             val start = matcher.start(2)
             //TODO: should check if username actually exists prior to applying.
-            val linkColor = ResourcesCompat.getColor(context.resources, R.color.white, null)
-            val linkBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, null)
-            val referSelf = currentUser != null && "@$currentUser" == user
-            val usernameSpan = UsernameClickableSpan(linkBackgroundColor, linkColor, referSelf)
-            result.setSpan(usernameSpan, start, start + user.length, 0)
+            with(context) {
+                val referSelf = when (user) {
+                    in selfReferList -> true
+                    "@$currentUser" -> true
+                    else -> false
+                }
+                val mentionTextColor: Int
+                val mentionBgColor: Int
+                if (referSelf) {
+                    mentionTextColor = ResourcesCompat.getColor(resources, R.color.white, theme)
+                    mentionBgColor = ResourcesCompat.getColor(context.resources,
+                            R.color.colorAccent, theme)
+                } else {
+                    mentionTextColor = ResourcesCompat.getColor(resources, R.color.colorAccent,
+                            theme)
+                    mentionBgColor = ResourcesCompat.getColor(resources,
+                            android.R.color.transparent, theme)
+                }
+
+                val padding = resources.getDimensionPixelSize(R.dimen.padding_mention).toFloat()
+                val radius = resources.getDimensionPixelSize(R.dimen.radius_mention).toFloat()
+                val usernameSpan = MentionSpan(mentionBgColor, mentionTextColor, radius, padding,
+                        referSelf)
+                result.setSpan(usernameSpan, start, start + user.length, 0)
+            }
         }
     }
 
@@ -117,7 +139,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
             // set time spans
             builder.setSpan(AbsoluteSizeSpan(res.getDimensionPixelSize(R.dimen.message_time_text_size)),
                     timeOffsetStart, builder.length())
-            builder.setSpan(ForegroundColorSpan(res.getColor(R.color.darkGray)),
+            builder.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.darkGray)),
                     timeOffsetStart, builder.length())
         }
     }
@@ -134,7 +156,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
             // pass to super to apply markdown
             super.visit(blockQuote)
 
-            val padding = context.resources.getDimensionPixelSize(R.dimen.quote_padding)
+            val padding = context.resources.getDimensionPixelSize(R.dimen.padding_quote)
             builder.setSpan(QuoteMarginSpan(context.getDrawable(R.drawable.quote), padding), length,
                     builder.length())
         }
@@ -176,24 +198,37 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class UsernameClickableSpan(private val linkBackgroundColor: Int,
-                                private val linkTextColor: Int,
-                                private val referSelf: Boolean) : ClickableSpan() {
+    class MentionSpan(private val backgroundColor: Int,
+                      private val textColor: Int,
+                      private val radius: Float,
+                      padding: Float,
+                      referSelf: Boolean) : ReplacementSpan() {
+        private val padding: Float = if (referSelf) padding else 0F
 
-        override fun onClick(widget: View) {
-            //TODO: Implement action when clicking on username, like showing user profile.
+        override fun getSize(paint: Paint,
+                             text: CharSequence,
+                             start: Int,
+                             end: Int,
+                             fm: Paint.FontMetricsInt?): Int {
+            return (padding + paint.measureText(text.subSequence(start, end).toString()) + padding).toInt()
         }
 
-        override fun updateDrawState(ds: TextPaint) {
-            if (referSelf) {
-                ds.color = Color.WHITE
-                ds.typeface = Typeface.DEFAULT_BOLD
-                ds.bgColor = linkTextColor
-            } else {
-                ds.color = linkTextColor
-                ds.bgColor = linkBackgroundColor
-            }
-            ds.isUnderlineText = false
+        override fun draw(canvas: Canvas,
+                          text: CharSequence,
+                          start: Int,
+                          end: Int,
+                          x: Float,
+                          top: Int,
+                          y: Int,
+                          bottom: Int,
+                          paint: Paint) {
+            val length = paint.measureText(text.subSequence(start, end).toString())
+            val rect = RectF(x, top.toFloat(), x + length + padding * 2,
+                    bottom.toFloat())
+            paint.setColor(backgroundColor)
+            canvas.drawRoundRect(rect, radius, radius, paint)
+            paint.setColor(textColor)
+            canvas.drawText(text, start, end, x + padding, y.toFloat(), paint)
         }
 
     }

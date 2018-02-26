@@ -58,6 +58,7 @@
                 android:background="@android:color/transparent"
                 android:hint="@string/msg_message"
                 android:inputType="textCapSentences|textMultiLine"
+                android:lineSpacingExtra="4dp"
                 android:maxLines="4"
                 android:minHeight="24dp"
                 android:scrollbars="vertical" />
