@@ -232,9 +232,9 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     is RoomType.Custom -> "custom" //TODO: put appropriate callback string here.
                 }
                 view.showReplyingAction(
-                        user,
-                        "[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ",
-                        m.message
+                        username = user,
+                        replyMarkdown = "[ ]($serverUrl/$room/$roomName?msg=$id) $mention ",
+                        quotedMessage = m.message
                 )
             }
         }
