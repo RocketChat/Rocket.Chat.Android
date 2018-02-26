@@ -220,6 +220,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             actionSnackbar.title = username
             actionSnackbar.text = quotedMessage
             actionSnackbar.show()
+            KeyboardHelper.showSoftKeyboard(text_message)
         }
     }
 
@@ -247,6 +248,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             actionSnackbar.show()
             text_message.textContent = text
             editingMessageId = messageId
+            KeyboardHelper.showSoftKeyboard(text_message)
         }
     }
 
@@ -390,6 +392,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener({
             clearMessageComposition()
+            KeyboardHelper.showSoftKeyboard(text_message)
         })
     }
 
