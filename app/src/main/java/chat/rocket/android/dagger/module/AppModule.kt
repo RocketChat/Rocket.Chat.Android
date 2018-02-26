@@ -39,6 +39,7 @@ import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -101,6 +102,9 @@ class AppModule {
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder().apply {
             addInterceptor(logger)
+            connectTimeout(15, TimeUnit.SECONDS)
+            readTimeout(20, TimeUnit.SECONDS)
+            writeTimeout(15, TimeUnit.SECONDS)
         }.build()
     }
 

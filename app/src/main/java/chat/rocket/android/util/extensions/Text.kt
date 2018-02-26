@@ -43,7 +43,7 @@ var TextView.hintContent: String
         hint = value
     }
 
-var TextView.content: CharSequence
+var TextView.content: CharSequence?
     get() = text
     set(value) {
         Markwon.unscheduleDrawables(this)
