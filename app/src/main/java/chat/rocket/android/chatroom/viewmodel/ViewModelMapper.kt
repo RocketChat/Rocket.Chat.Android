@@ -55,7 +55,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         return@withContext list
     }
 
-    private suspend fun translate(message: Message): List<BaseViewModel<*>>  = withContext(CommonPool) {
+    private suspend fun translate(message: Message): List<BaseViewModel<*>> = withContext(CommonPool) {
         val list = ArrayList<BaseViewModel<*>>()
 
         message.urls?.forEach {
@@ -172,7 +172,6 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             Timber.d("Will quote message Id: $msgIdToQuote")
             return if (msgIdToQuote != null) messagesRepository.getById(msgIdToQuote) else null
         }
-
         return null
     }
 
@@ -201,7 +200,19 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             is MessageType.UserAdded -> context.getString(R.string.message_user_added_by, message.message, message.sender?.username)
             is MessageType.RoomNameChanged -> context.getString(R.string.message_room_name_changed, message.message, message.sender?.username)
             is MessageType.UserRemoved -> context.getString(R.string.message_user_removed_by, message.message, message.sender?.username)
-            is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
+            is MessageType.MessagePinned -> {
+                val attachment = message.attachments?.get(0)
+                val pinnedSystemMessage = context.getString(R.string.message_pinned)
+                if (attachment != null && attachment is MessageAttachment) {
+                    return SpannableStringBuilder(pinnedSystemMessage)
+                            .apply {
+                                setSpan(StyleSpan(Typeface.ITALIC), 0, length, 0)
+                                setSpan(ForegroundColorSpan(Color.GRAY), 0, length, 0)
+                            }
+                            .append(quoteMessage(attachment.author!!, attachment.text!!, attachment.timestamp!!))
+                }
+                return pinnedSystemMessage
+            }
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }
