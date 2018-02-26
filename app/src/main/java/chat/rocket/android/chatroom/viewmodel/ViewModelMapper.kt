@@ -19,11 +19,13 @@ import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.Value
 import chat.rocket.core.model.attachment.*
+import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 import okhttp3.HttpUrl
 import timber.log.Timber
+import java.security.InvalidParameterException
 import javax.inject.Inject
 
 class ViewModelMapper @Inject constructor(private val context: Context,
@@ -81,7 +83,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val title = url.meta?.title
         val description = url.meta?.description
 
-        return UrlPreviewViewModel(url, message.id, title, hostname, description, thumb)
+        return UrlPreviewViewModel(message, url, message.id, title, hostname, description, thumb)
     }
 
     private fun mapAttachment(message: Message, attachment: Attachment): BaseViewModel<*>? {
@@ -96,12 +98,12 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val attachmentTitle = attachment.title
         val id = "${message.id}_${attachment.titleLink}".hashCode().toLong()
         return when (attachment) {
-            is ImageAttachment -> ImageAttachmentViewModel(attachment, message.id, attachmentUrl,
-                    attachmentTitle ?: "", id)
-            is VideoAttachment -> VideoAttachmentViewModel(attachment, message.id,
+            is ImageAttachment -> ImageAttachmentViewModel(message, attachment, message.id,
                     attachmentUrl, attachmentTitle ?: "", id)
-            is AudioAttachment -> AudioAttachmentViewModel(attachment,
-                    message.id, attachmentUrl, attachmentTitle ?: "", id)
+            is VideoAttachment -> VideoAttachmentViewModel(message, attachment, message.id,
+                    attachmentUrl, attachmentTitle ?: "", id)
+            is AudioAttachment -> AudioAttachmentViewModel(message, attachment, message.id,
+                    attachmentUrl, attachmentTitle ?: "", id)
             else -> null
         }
     }
@@ -143,10 +145,9 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
 
         val content = getContent(context, message, quote)
-        MessageViewModel(rawData = message, messageId = message.id,
+        MessageViewModel(message = message, rawData = message, messageId = message.id,
                 avatar = avatar!!, time = time, senderName = sender,
-                content = content.first, isPinned = message.pinned,
-                isSystemMessage = content.second)
+                content = content, isPinned = message.pinned)
     }
 
     private fun getSenderName(message: Message): CharSequence {
@@ -175,24 +176,11 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         return null
     }
 
-    private suspend fun getContent(context: Context, message: Message, quote: Message?): Pair<CharSequence, Boolean> {
-        var systemMessage = true
-        val content = when (message.type) {
-        //TODO: Add implementation for Welcome type.
-            is MessageType.MessageRemoved -> getSystemMessage(context.getString(R.string.message_removed))
-            is MessageType.UserJoined -> getSystemMessage(context.getString(R.string.message_user_joined_channel))
-            is MessageType.UserLeft -> getSystemMessage(context.getString(R.string.message_user_left))
-            is MessageType.UserAdded -> getSystemMessage(context.getString(R.string.message_user_added_by, message.message, message.sender?.username))
-            is MessageType.RoomNameChanged -> getSystemMessage(context.getString(R.string.message_room_name_changed, message.message, message.sender?.username))
-            is MessageType.UserRemoved -> getSystemMessage(context.getString(R.string.message_user_removed_by, message.message, message.sender?.username))
-            is MessageType.MessagePinned -> getSystemMessage(context.getString(R.string.message_pinned))
-            else -> {
-                systemMessage = false
-                getNormalMessage(message, quote)
-            }
+    private suspend fun getContent(context: Context, message: Message, quote: Message?): CharSequence {
+        return when (message.isSystemMessage()) {
+            true -> getSystemMessage(message, context)
+            false -> getNormalMessage(message, quote)
         }
-
-        return Pair(content, systemMessage)
     }
 
     private suspend fun getNormalMessage(message: Message, quote: Message?): CharSequence {
@@ -204,7 +192,20 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         return parser.renderMarkdown(message.message, quoteViewModel, currentUsername)
     }
 
-    private fun getSystemMessage(content: String): CharSequence {
+    private fun getSystemMessage(message: Message, context: Context): CharSequence {
+        val content = when (message.type) {
+        //TODO: Add implementation for Welcome type.
+            is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
+            is MessageType.UserJoined -> context.getString(R.string.message_user_joined_channel)
+            is MessageType.UserLeft -> context.getString(R.string.message_user_left)
+            is MessageType.UserAdded -> context.getString(R.string.message_user_added_by, message.message, message.sender?.username)
+            is MessageType.RoomNameChanged -> context.getString(R.string.message_room_name_changed, message.message, message.sender?.username)
+            is MessageType.UserRemoved -> context.getString(R.string.message_user_removed_by, message.message, message.sender?.username)
+            is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
+            else -> {
+                throw InvalidParameterException("Invalid message type: ${message.type}")
+            }
+        }
         //isSystemMessage = true
         val spannableMsg = SpannableStringBuilder(content)
         spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
