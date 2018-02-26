@@ -1,9 +1,11 @@
 package chat.rocket.android.chatroom.viewmodel
 
 import chat.rocket.android.R
+import chat.rocket.core.model.Message
 import chat.rocket.core.model.url.Url
 
 data class UrlPreviewViewModel(
+    override val message: Message,
     override val rawData: Url,
     override val messageId: String,
     val title: CharSequence?,
