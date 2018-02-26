@@ -9,9 +9,8 @@
     android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
     android:layout_marginTop="6dp">
 
-    <include
-        android:id="@+id/layout_avatar"
-        layout="@layout/avatar"
+    <ImageView
+        android:id="@+id/image_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
@@ -24,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toRightOf="@+id/layout_avatar">
+        app:layout_constraintLeft_toRightOf="@id/image_avatar">
 
         <TextView
             android:id="@+id/text_sender"

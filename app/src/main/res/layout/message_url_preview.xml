@@ -7,13 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="72dp"
-    android:layout_marginEnd="24dp">
+    android:layout_marginEnd="24dp" >
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/image_preview"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        app:actualImageScaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/text_host"

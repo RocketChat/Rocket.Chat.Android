@@ -6,23 +6,22 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
-import chat.rocket.android.util.extensions.content
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.*
+import chat.rocket.android.widget.AvatarTextDrawable
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
-import com.facebook.drawee.view.SimpleDraweeView
-import kotlinx.android.synthetic.main.avatar.view.*
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
 class ChatRoomsAdapter(private val context: Context,
                        private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
     var dataSet: MutableList<ChatRoom> = ArrayList()
+    val placeholder = AvatarTextDrawable()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.item_chat))
 
@@ -63,9 +62,12 @@ class ChatRoomsAdapter(private val context: Context,
             setOnClickListener { listener(chatRoom) }
         }
 
-        private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
+        private fun bindAvatar(chatRoom: ChatRoom, drawee: ImageView) {
             val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else "@${chatRoom.name}"
-            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId))
+            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId)) {
+                transition(withCrossFade())
+                placeholder(placeholder)
+            }
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {

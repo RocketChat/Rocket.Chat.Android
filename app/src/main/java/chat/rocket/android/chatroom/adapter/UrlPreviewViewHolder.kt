@@ -5,6 +5,7 @@ import android.net.Uri
 import android.view.View
 import chat.rocket.android.chatroom.viewmodel.UrlPreviewViewModel
 import chat.rocket.android.util.extensions.content
+import chat.rocket.android.util.extensions.setImageURI
 import chat.rocket.android.util.extensions.setVisible
 import kotlinx.android.synthetic.main.message_url_preview.view.*
 

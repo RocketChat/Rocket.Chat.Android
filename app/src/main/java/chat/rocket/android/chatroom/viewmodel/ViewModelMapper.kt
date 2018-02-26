@@ -97,7 +97,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val id = "${message.id}_${attachment.titleLink}".hashCode().toLong()
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentViewModel(attachment, message.id, attachmentUrl,
-                    attachmentTitle ?: "", id)
+                    attachmentTitle ?: "", id, attachment.imagePreview)
             is VideoAttachment -> VideoAttachmentViewModel(attachment, message.id,
                     attachmentUrl, attachmentTitle ?: "", id)
             is AudioAttachment -> AudioAttachmentViewModel(attachment,

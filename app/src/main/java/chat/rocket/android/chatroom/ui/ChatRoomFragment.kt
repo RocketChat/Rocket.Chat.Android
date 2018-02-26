@@ -320,7 +320,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiFragment.EmojiKeyboardLi
 
     private fun setupFab() {
         button_fab.setOnClickListener {
-            recycler_view.scrollToPosition(0)
+            recycler_view.scrollToBottom()
             button_fab.hide()
         }
     }

@@ -9,13 +9,12 @@
     android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
     android:orientation="vertical">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/image_attachment"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:visibility="visible"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:placeholderImage="@drawable/image_dummy" />
+        android:scaleType="centerCrop" />
 
     <FrameLayout
         android:id="@+id/audio_video_attachment"
