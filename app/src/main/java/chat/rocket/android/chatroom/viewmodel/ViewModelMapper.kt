@@ -151,6 +151,10 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     }
 
     private fun getSenderName(message: Message): CharSequence {
+        message.senderAlias?.let {
+            return it // Always give preference for Alias
+        }
+
         val username = message.sender?.username
         val realName = message.sender?.name
         val senderName = if (settings.useRealName()) realName else username
@@ -158,6 +162,10 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     }
 
     private fun getUserAvatar(message: Message): String? {
+        message.avatar?.let {
+            return it // Always give preference for overridden avatar from message
+        }
+
         val username = message.sender?.username ?: "?"
         return baseUrl?.let {
             UrlHelper.getAvatarUrl(baseUrl, username)
