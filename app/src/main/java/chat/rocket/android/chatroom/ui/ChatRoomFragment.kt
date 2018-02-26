@@ -221,6 +221,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             actionSnackbar.text = quotedMessage
             actionSnackbar.show()
             KeyboardHelper.showSoftKeyboard(text_message)
+            if (!recycler_view.isAtBottom()) {
+                if (adapter.itemCount > 0) {
+                    recycler_view.scrollToPosition(0)
+                }
+            }
         }
     }
 
@@ -317,6 +322,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {
+                    if (recycler_view.isAtBottom()) {
+                        if (adapter.itemCount > 0) {
+                            recycler_view.scrollToPosition(0)
+                        }
+                    }
                 }
 
                 override fun onKeyboardClosed() {
