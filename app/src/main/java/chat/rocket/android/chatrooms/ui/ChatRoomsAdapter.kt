@@ -72,19 +72,16 @@ class ChatRoomsAdapter(private val context: Context,
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
             when (chatRoom.type) {
                 is RoomType.Channel -> {
-                    textView.textContent = "#" + chatRoom.name
+                    DrawableHelper.compoundDrawable(textView, DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context))
                 }
                 is RoomType.PrivateGroup -> {
-                    DrawableHelper.compoundDrawable(textView, DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, context))
-                    textView.textContent = chatRoom.name
+                    DrawableHelper.compoundDrawable(textView, DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context))
                 }
                 is RoomType.DirectMessage -> {
-                    textView.textContent = "@" + chatRoom.name
-                }
-                else -> {
-                    textView.textContent = chatRoom.name
+                    DrawableHelper.compoundDrawable(textView, DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context))
                 }
             }
+            textView.textContent = chatRoom.name
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {

@@ -3,6 +3,7 @@ package chat.rocket.android.chatroom.ui
 import DrawableHelper
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import chat.rocket.android.R
@@ -74,24 +75,26 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         text_room_name.textContent = chatRoomName
+
+        var drawable: Drawable? = null
         when (chatRoomType) {
             RoomType.CHANNEL.toString() -> {
-                text_room_name.textContent = "#" + chatRoomName
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
             }
             RoomType.PRIVATE_GROUP.toString() -> {
-                val drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, this)
-                DrawableHelper.wrapDrawable(drawable)
-                DrawableHelper.tintDrawable(drawable, this, R.color.white)
-                DrawableHelper.compoundDrawable(text_room_name, drawable)
-                text_room_name.textContent = chatRoomName
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
             }
             RoomType.DIRECT_MESSAGE.toString() -> {
-                text_room_name.textContent = "@" + chatRoomName
-            }
-            else -> {
-                text_room_name.textContent = chatRoomName
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
             }
         }
+
+        drawable?.let {
+            DrawableHelper.wrapDrawable(it)
+            DrawableHelper.tintDrawable(it, this, R.color.white)
+            DrawableHelper.compoundDrawable(text_room_name, it)
+        }
+
         toolbar.setNavigationOnClickListener {
             finishActivity()
         }
