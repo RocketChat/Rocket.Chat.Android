@@ -1,8 +1,10 @@
 package chat.rocket.android.chatroom.viewmodel
 
+import chat.rocket.core.model.Message
 import java.security.InvalidParameterException
 
 interface BaseViewModel<out T> {
+    val message: Message
     val rawData: T
     val messageId: String
     val viewType: Int
