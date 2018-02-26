@@ -9,6 +9,7 @@
 
     <!-- Text colors -->
     <color name="colorPrimaryText">#DE000000</color>
+    <color name="colorSecondaryText">#787878</color>
 
     <!-- User status colors -->
     <color name="colorUserStatusOnline">#2FE1A8</color>
@@ -27,7 +28,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="red">#FFFF0000</color>
-    <color name="darkGray">#a0a0a0</color>
-    <color name="actionMenuColor">#727272</color>
+    <color name="darkGray">#FFa0a0a0</color>
+    <color name="actionMenuColor">#FF727272</color>
+    <color name="whitesmoke">#FFf1f1f1</color>
+
+    <color name="colorEmojiIcon">#FF767676</color>
 
 </resources>

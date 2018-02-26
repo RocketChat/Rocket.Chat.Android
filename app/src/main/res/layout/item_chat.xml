@@ -31,7 +31,6 @@
             style="@style/ChatRoom.Name.TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:alpha="0.6"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/text_last_message_date_time"
             app:layout_constraintTop_toTopOf="parent"

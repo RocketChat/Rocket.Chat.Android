@@ -14,4 +14,13 @@
 
     <dimen name="message_time_text_size">12sp</dimen>
 
+    <!-- Emoji -->
+    <dimen name="picker_padding_bottom">16dp</dimen>
+    <dimen name="supposed_keyboard_height">252dp</dimen>
+
+    <!-- Message -->
+    <dimen name="padding_quote">8dp</dimen>
+    <dimen name="padding_mention">4dp</dimen>
+    <dimen name="radius_mention">6dp</dimen>
+
 </resources>
