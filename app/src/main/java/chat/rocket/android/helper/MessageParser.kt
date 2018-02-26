@@ -1,22 +1,31 @@
 package chat.rocket.android.helper
 
 import android.app.Application
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.provider.Browser
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Layout
 import android.text.Spannable
 import android.text.Spanned
 import android.text.style.*
+import android.util.Patterns
+import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import org.commonmark.node.AbstractVisitor
 import org.commonmark.node.BlockQuote
+import org.commonmark.node.Text
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.renderer.SpannableMarkdownVisitor
+import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -40,20 +49,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
      */
     fun renderMarkdown(text: String, quote: MessageViewModel? = null, selfUsername: String? = null): CharSequence {
         val builder = SpannableBuilder()
-        var content: String = text
-
-        // Replace all url links to markdown url syntax.
-        val matcher = regexLink.matcher(content)
-        val consumed = mutableListOf<String>()
-        while (matcher.find()) {
-            val link = matcher.group(0)
-            // skip usernames
-            if (!link.startsWith("@") && !consumed.contains(link)) {
-                content = content.replace(link, "[$link]($link)")
-                consumed.add(link)
-            }
-        }
-
+        val content = text
         val parentNode = parser.parse(toLenientMarkdown(content))
         parentNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         quote?.apply {
@@ -63,9 +59,10 @@ class MessageParser @Inject constructor(val context: Application, private val co
             quoteNode = parser.parse("> ${toLenientMarkdown(quote.getOriginalMessage())}")
             quoteNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         }
-
+        parentNode.accept(LinkVisitor(builder))
         val result = builder.text()
         applySpans(result, selfUsername)
+
         return result
     }
 
@@ -141,6 +138,46 @@ class MessageParser @Inject constructor(val context: Application, private val co
                     timeOffsetStart, builder.length())
             builder.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.darkGray)),
                     timeOffsetStart, builder.length())
+        }
+    }
+
+    class LinkVisitor(private val builder: SpannableBuilder) : AbstractVisitor() {
+
+        override fun visit(text: Text) {
+            // Replace all url links to markdown url syntax.
+            val matcher = Patterns.WEB_URL.matcher(builder.text())
+            val consumed = mutableListOf<String>()
+
+            while (matcher.find()) {
+                val link = matcher.group(0)
+                // skip usernames
+                if (!link.startsWith("@") && link !in consumed) {
+                    builder.setSpan(object : ClickableSpan() {
+                        override fun onClick(view: View) {
+                            val uri = getUri(link)
+                            val context = view.context
+                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.packageName)
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                Timber.e("Actvity was not found for intent, $intent")
+                            }
+
+                        }
+                    }, matcher.start(0), matcher.end(0))
+                    consumed.add(link)
+                }
+            }
+            visitChildren(text)
+        }
+
+        private fun getUri(link: String): Uri {
+            val uri = Uri.parse(link)
+            if (uri.scheme == null) {
+                return Uri.parse("http://$link")
+            }
+            return uri
         }
     }
 
