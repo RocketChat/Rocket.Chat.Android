@@ -12,11 +12,9 @@ class MessageViewHolder(
 ) : BaseViewHolder<MessageViewModel>(itemView, listener) {
 
     init {
-        itemView.text_content.movementMethod = LinkMovementMethod()
-
-        // Manually add the long click listener to the text content
-        if (listener.isActionsEnabled()) {
-            itemView.text_content.setOnLongClickListener(longClickListener)
+        with(itemView) {
+            text_content.movementMethod = LinkMovementMethod()
+            setupActionMenu(text_content)
         }
     }
 
