@@ -27,6 +27,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
+                                            private val navigator: ChatRoomNavigator,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
@@ -316,6 +317,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             }
         }
     }
+
+    fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
 
     private suspend fun listenMessages(roomId: String) {
         launch(CommonPool + strategy.jobs) {
