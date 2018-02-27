@@ -16,6 +16,7 @@ ext {
         exoPlayer              : '2.6.0',
         playServices           : '11.8.0',
         room                   : '1.0.0',
+        extensions             : '1.1.0',
         rxKotlin               : '2.2.0',
         rxAndroid              : '2.0.2',
         moshi                  : '1.6.0-SNAPSHOT',
@@ -62,6 +63,7 @@ ext {
         room                   : "android.arch.persistence.room:runtime:${versions.room}",
         roomProcessor          : "android.arch.persistence.room:compiler:${versions.room}",
         roomRxjava             : "android.arch.persistence.room:rxjava2:${versions.room}",
+        extensions             : "android.arch.lifecycle:extensions:${versions.extensions}",
 
         rxKotlin               : "io.reactivex.rxjava2:rxkotlin:${versions.rxKotlin}",
         rxAndroid              : "io.reactivex.rxjava2:rxandroid:${versions.rxAndroid}",

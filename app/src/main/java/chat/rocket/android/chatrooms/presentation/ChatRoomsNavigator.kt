@@ -7,8 +7,8 @@ import chat.rocket.android.main.ui.MainActivity
 
 class ChatRoomsNavigator(private val activity: MainActivity, private val context: Context) {
 
-    fun toChatRoom(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean) {
-        activity.startActivity(context.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly))
+    fun toChatRoom(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, contentToShare: Any?) {
+        activity.startActivity(context.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, contentToShare))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 }

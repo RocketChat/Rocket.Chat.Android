@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Parcelable
 import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -28,6 +29,7 @@ import chat.rocket.android.widget.emoji.Emoji
 import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.internal.realtime.State
+import chat.rocket.android.widget.share.ui.ShareBottomSheetDialog.Companion.ARGUMENT_SHARED_CONTENT
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -35,15 +37,25 @@ import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import timber.log.Timber
+import java.util.ArrayList
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Fragment {
+fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, shareableContent: Any?): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
             putString(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
             putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
+            shareableContent?.let {
+                when (it) {
+                    is String -> putString(ARGUMENT_SHARED_CONTENT, it)
+                    is Uri -> putParcelable(ARGUMENT_SHARED_CONTENT, it)
+                    is ArrayList<*> -> if (it.size > 0 && it[0] is Uri) {
+                        putParcelableArrayList(ARGUMENT_SHARED_CONTENT, it as ArrayList<out Parcelable>)
+                    }
+                }
+            }
         }
     }
 }
@@ -63,6 +75,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
+    private var contentToShare: Any? = null
     private var isChatRoomReadOnly: Boolean = false
 
     private lateinit var actionSnackbar: ActionSnackbar
@@ -89,6 +102,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             chatRoomName = bundle.getString(BUNDLE_CHAT_ROOM_NAME)
             chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
             isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
+            contentToShare = bundle.get(ARGUMENT_SHARED_CONTENT)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -173,6 +187,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             adapter.appendData(dataSet)
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
+            }
+            contentToShare?.let {
+                when (it) {
+                    is String -> sendMessage(it)
+                    is Uri -> uploadFile(uri = it)
+                    is ArrayList<*> -> it.forEach { uri -> uploadFile(uri as Uri) }
+                }
+                contentToShare = null
             }
         }
     }

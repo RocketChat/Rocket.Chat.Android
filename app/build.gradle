@@ -72,6 +72,7 @@ dependencies {
     implementation libraries.room
     kapt libraries.roomProcessor
     implementation libraries.roomRxjava
+    implementation libraries.extensions
 
     implementation libraries.rxKotlin
     implementation libraries.rxAndroid

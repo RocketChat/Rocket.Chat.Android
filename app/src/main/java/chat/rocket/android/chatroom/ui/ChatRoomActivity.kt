@@ -3,8 +3,9 @@ package chat.rocket.android.chatroom.ui
 import DrawableHelper
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
@@ -12,6 +13,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.widget.share.ui.ShareBottomSheetDialog.Companion.ARGUMENT_SHARED_CONTENT
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import dagger.android.AndroidInjection
@@ -19,15 +21,23 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
+import java.util.*
 import javax.inject.Inject
 
 
-fun Context.chatRoomIntent(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean): Intent {
+fun Context.chatRoomIntent(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, contentToShare: Any?): Intent {
     return Intent(this, ChatRoomActivity::class.java).apply {
         putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
         putExtra(INTENT_CHAT_ROOM_NAME, chatRoomName)
         putExtra(INTENT_CHAT_ROOM_TYPE, chatRoomType)
         putExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
+        if (contentToShare != null) {
+            when (contentToShare) {
+                is String -> putExtra(ARGUMENT_SHARED_CONTENT, contentToShare)
+                is Parcelable -> putExtra(ARGUMENT_SHARED_CONTENT, contentToShare)
+                is ArrayList<*> -> putExtra(ARGUMENT_SHARED_CONTENT, contentToShare)
+            }
+        }
     }
 }
 
@@ -68,10 +78,17 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         isChatRoomReadOnly = intent.getBooleanExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, true)
         requireNotNull(chatRoomType) { "no is_chat_room_read_only provided in Intent extras" }
 
+        val shareableContent = when (intent.extras.get(ARGUMENT_SHARED_CONTENT)) {
+            is String -> intent.extras.get(ARGUMENT_SHARED_CONTENT)
+            is Uri -> intent.extras.get(ARGUMENT_SHARED_CONTENT)
+            is ArrayList<*> -> intent.extras.get(ARGUMENT_SHARED_CONTENT)
+            else -> null
+        }
+
         setupToolbar()
 
         addFragment("ChatRoomFragment", R.id.fragment_container) {
-            newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly)
+            newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, shareableContent)
         }
     }
 

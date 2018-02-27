@@ -58,7 +58,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
     }
 
-    fun loadChatRoom(chatRoom: ChatRoom) {
+    fun loadChatRoom(chatRoom: ChatRoom, contentToShare: Any? = null) {
         val roomName = if (chatRoom.type is RoomType.DirectMessage
                 && chatRoom.fullName != null
                 && settings.useRealName()) {
@@ -68,7 +68,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
 
         navigator.toChatRoom(chatRoom.id, roomName,
-                chatRoom.type.toString(), chatRoom.readonly ?: false)
+                chatRoom.type.toString(), chatRoom.readonly ?: false,
+                contentToShare)
     }
 
     /**

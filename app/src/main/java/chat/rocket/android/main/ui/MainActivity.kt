@@ -1,28 +1,25 @@
 package chat.rocket.android.main.ui
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.view.MenuItem
 import chat.rocket.android.R
-
-import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
-import chat.rocket.android.profile.ui.ProfileFragment
-import chat.rocket.android.settings.ui.SettingsFragment
-import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.util.extensions.showToast
-
+import chat.rocket.android.widget.share.ui.ShareBottomSheetDialog
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
@@ -38,6 +35,8 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         presenter.connect()
         setupToolbar()
         setupNavigationView()
+
+        handleIntent()
     }
 
     override fun onResume() {
@@ -69,6 +68,46 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
+
+    private fun handleIntent() {
+        intent?.let {
+            val type = it.type
+            when (it.action) {
+                Intent.ACTION_SEND -> if ("text/plain" == type) {
+                    handleTextReceived(it)
+                } else if (type?.startsWith("image/") ?: false) {
+                    handleImageReceived(it)
+                }
+                Intent.ACTION_SEND_MULTIPLE -> if (type?.startsWith("image/") ?: false) {
+                    handleMultipleImagesReceived(it)
+                }
+            }
+        }
+    }
+
+    private fun handleTextReceived(intent: Intent) {
+        val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        sharedText?.let {
+            ShareBottomSheetDialog.newInstance(sharedText).show(supportFragmentManager,
+                    "ShareBottomSheetDialog")
+        }
+    }
+
+    private fun handleImageReceived(intent: Intent) {
+        val imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM) as Uri?
+        imageUri?.let {
+            ShareBottomSheetDialog.newInstance(imageUri).show(supportFragmentManager,
+                    "ShareBottomSheetDialog")
+        }
+    }
+
+    private fun handleMultipleImagesReceived(intent: Intent) {
+        val imageUris: List<Uri>? = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
+        imageUris?.let {
+            ShareBottomSheetDialog.newInstance(ArrayList(imageUris)).show(supportFragmentManager,
+                    "ShareBottomSheetDialog")
+        }
+    }
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
