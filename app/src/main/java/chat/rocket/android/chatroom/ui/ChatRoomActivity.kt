@@ -91,9 +91,10 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
 
         drawable?.let {
-            DrawableHelper.wrapDrawable(it)
-            DrawableHelper.tintDrawable(it, this, R.color.white)
-            DrawableHelper.compoundDrawable(text_room_name, it)
+            val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+            val mutableDrawable = wrappedDrawable.mutate()
+            DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
+            DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
         }
 
         toolbar.setNavigationOnClickListener {

@@ -87,13 +87,14 @@ class ChatRoomsAdapter(private val context: Context,
             }
 
             drawable?.let {
-                DrawableHelper.wrapDrawable(it)
-                DrawableHelper.tintDrawable(it, context,
+                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+                val mutableDrawable = wrappedDrawable.mutate()
+                DrawableHelper.tintDrawable(mutableDrawable, context,
                         when (chatRoom.alert || chatRoom.unread > 0) {
                             true -> R.color.colorPrimaryText
                             false -> R.color.colorSecondaryText
                         })
-                DrawableHelper.compoundDrawable(textView, it)
+                DrawableHelper.compoundDrawable(textView, mutableDrawable)
             }
         }
 
