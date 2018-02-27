@@ -11,6 +11,8 @@ import android.view.*
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
@@ -26,6 +28,8 @@ import javax.inject.Inject
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var presenter: ChatRoomsPresenter
+    @Inject lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject lateinit var settingsRepository: SettingsRepository
     private var searchView: SearchView? = null
 
     companion object {
@@ -107,7 +111,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
                 resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
             recycler_view.itemAnimator = DefaultItemAnimator()
-            recycler_view.adapter = ChatRoomsAdapter(this) { chatRoom ->
+            // TODO - use a ViewModel Mapper instead of using settings on the adapter
+            recycler_view.adapter = ChatRoomsAdapter(this,
+                    settingsRepository.get(serverInteractor.get()!!)!!) { chatRoom ->
                 presenter.loadChatRoom(chatRoom)
             }
         }

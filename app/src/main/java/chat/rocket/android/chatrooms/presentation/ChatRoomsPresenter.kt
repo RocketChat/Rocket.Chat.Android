@@ -1,13 +1,11 @@
 package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.server.domain.GetChatRoomsInteractor
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.RefreshSettingsInteractor
-import chat.rocket.android.server.domain.SaveChatRoomsInteractor
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.RoomType
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.*
@@ -26,10 +24,12 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
                                              private val refreshSettingsInteractor: RefreshSettingsInteractor,
+                                             settingsRepository: SettingsRepository,
                                              factory: RocketChatClientFactory) {
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
     private var reloadJob: Deferred<List<ChatRoom>>? = null
+    private val settings = settingsRepository.get(currentServer)!!
 
     private val stateChannel = Channel<State>()
 
@@ -49,8 +49,18 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
     }
 
-    fun loadChatRoom(chatRoom: ChatRoom) = navigator.toChatRoom(chatRoom.id, chatRoom.name,
-            chatRoom.type.toString(), chatRoom.readonly ?: false)
+    fun loadChatRoom(chatRoom: ChatRoom) {
+        val roomName = if (chatRoom.type is RoomType.DirectMessage
+                && chatRoom.fullName != null
+                && settings.useRealName()) {
+            chatRoom.fullName!!
+        } else {
+            chatRoom.name
+        }
+
+        navigator.toChatRoom(chatRoom.id, roomName,
+                chatRoom.type.toString(), chatRoom.readonly ?: false)
+    }
 
     /**
      * Gets a [ChatRoom] list from local repository.
