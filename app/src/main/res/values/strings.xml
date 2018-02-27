@@ -8,6 +8,7 @@
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Profile</string>
+    <string name="title_members">Members (%d)</string>
     <string name="title_update_profile">Update profile</string>
 
     <!-- Actions -->
@@ -79,6 +80,9 @@
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
     <string name="permission_deleting_not_allowed">Deleting is not allowed</string>
     <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
+
+    <!-- Members List -->
+    <string name="title_members_list">Members List</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>

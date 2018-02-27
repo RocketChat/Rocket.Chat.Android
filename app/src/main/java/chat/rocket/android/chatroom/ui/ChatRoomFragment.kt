@@ -98,6 +98,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar(chatRoomName)
+
         presenter.loadMessages(chatRoomId, chatRoomType)
 
         setupRecyclerView()
@@ -133,6 +135,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_members_list -> {
+                presenter.toMembersList(chatRoomId, chatRoomType)
+            }
             R.id.action_pinned_messages -> {
                 val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
                     putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -434,5 +439,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         layout_message_attachment_options.circularRevealOrUnreveal(centerX, centerY, max, 0F)
 
         view_dim.setVisible(false)
+    }
+
+    private fun setupToolbar(toolbarTitle: String) {
+        (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
     }
 }
