@@ -3,6 +3,7 @@ package chat.rocket.android.chatrooms.ui
 import DateTimeHelper
 import DrawableHelper
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -70,18 +71,30 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
+            textView.textContent = chatRoom.name
+
+            var drawable: Drawable? = null
             when (chatRoom.type) {
                 is RoomType.Channel -> {
-                    DrawableHelper.compoundDrawable(textView, DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context))
+                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
                 }
                 is RoomType.PrivateGroup -> {
-                    DrawableHelper.compoundDrawable(textView, DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context))
+                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
                 }
                 is RoomType.DirectMessage -> {
-                    DrawableHelper.compoundDrawable(textView, DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context))
+                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
                 }
             }
-            textView.textContent = chatRoom.name
+
+            drawable?.let {
+                DrawableHelper.wrapDrawable(it)
+                DrawableHelper.tintDrawable(it, context,
+                        when (chatRoom.alert || chatRoom.unread > 0) {
+                            true -> R.color.colorPrimaryText
+                            false -> R.color.colorSecondaryText
+                        })
+                DrawableHelper.compoundDrawable(textView, it)
+            }
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {
