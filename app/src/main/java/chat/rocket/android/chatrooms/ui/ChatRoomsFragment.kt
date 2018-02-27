@@ -20,9 +20,7 @@ import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
@@ -78,12 +76,15 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         activity.apply {
             launch(UI) {
                 val adapter = recycler_view.adapter as ChatRoomsAdapter
-                val diff = async(CommonPool) {
+                // FIXME https://fabric.io/rocketchat3/android/apps/chat.rocket.android.dev/issues/5a90d4718cb3c2fa63b3f557?time=last-seven-days
+                // TODO - fix this bug to reenable DiffUtil
+                /*val diff = async(CommonPool) {
                     DiffUtil.calculateDiff(RoomsDiffCallback(adapter.dataSet, newDataSet))
-                }.await()
+                }.await()*/
 
                 adapter.updateRooms(newDataSet)
-                diff.dispatchUpdatesTo(adapter)
+                adapter.notifyDataSetChanged()
+                //diff.dispatchUpdatesTo(adapter)
             }
         }
     }

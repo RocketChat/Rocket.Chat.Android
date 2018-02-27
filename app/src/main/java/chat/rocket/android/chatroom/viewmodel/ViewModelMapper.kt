@@ -151,8 +151,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     }
 
     private fun getSenderName(message: Message): CharSequence {
-        message.senderAlias?.let {
-            return it // Always give preference for Alias
+        if (!message.senderAlias.isNullOrEmpty()) {
+            return message.senderAlias!!
         }
 
         val username = message.sender?.username
