@@ -46,11 +46,12 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
         }
     }
 
-    fun updateUserProfile(email: String, name: String, username: String, avatarUrl: String) {
+    fun updateUserProfile(email: String, name: String, username: String, avatarUrl: String="") {
         launchUI(strategy) {
             view.showLoading()
             try {
-                val userAvatar = client.setAvatar(avatarUrl)
+                if(avatarUrl!="")
+                    client.setAvatar(avatarUrl)
                 val user = client.updateProfile(myselfId, email, name, username)
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
