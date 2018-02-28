@@ -31,18 +31,9 @@ class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var appContext: Context // TODO we really need it? Check alternatives...
 
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
-            showSignUpView(false)
-            showOauthView(false)
-            showLoginButton(true)
-        } else {
-            if (isEditTextEmpty()) {
-                showSignUpView(true)
-                showOauthView(true)
-                showLoginButton(false)
-            }
-        }
+        areLoginOptionsNeeded()
     }
+
     private var isGlobalLayoutListenerSetUp = false
 
     companion object {
@@ -77,18 +68,7 @@ class LoginFragment : Fragment(), LoginView {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
-        isSocialMediaNeeded()
-    }
-
-    private fun showThreeSocialMethods() {
-        var count = 0
-        for (i in 0..social_accounts_container.childCount) {
-            val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
-            if (view.isEnabled && count < 3) {
-                view.visibility = View.VISIBLE
-                count++
-            }
-        }
+        areLoginOptionsNeeded()
     }
 
     override fun onDestroyView() {
@@ -185,6 +165,17 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun showNoInternetConnection() = showMessage(getString(R.string.msg_no_internet_connection))
 
+    private fun areLoginOptionsNeeded() {
+        if (!isEditTextEmpty() || KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
+            showSignUpView(false)
+            showOauthView(false)
+            showLoginButton(true)
+        } else {
+            showSignUpView(true)
+            showOauthView(true)
+            showLoginButton(false)
+        }
+    }
 
     private fun tintEditTextDrawableStart() {
         activity?.apply {
@@ -224,16 +215,6 @@ class LoginFragment : Fragment(), LoginView {
     // Returns true if *all* EditTexts are empty.
     private fun isEditTextEmpty(): Boolean = text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
 
-    private fun isSocialMediaNeeded() {
-        if (!isEditTextEmpty()) {
-            showSignUpView(false)
-            showOauthView(false)
-        } else {
-            showSignUpView(true)
-            showOauthView(true)
-        }
-    }
-
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({
             for (i in 0..social_accounts_container.childCount) {
@@ -241,6 +222,17 @@ class LoginFragment : Fragment(), LoginView {
                 if (view.isEnabled) view.visibility = View.VISIBLE
             }
         }, 1000)
+    }
+
+    private fun showThreeSocialMethods() {
+        var count = 0
+        for (i in 0..social_accounts_container.childCount) {
+            val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
+            if (view.isEnabled && count < 3) {
+                view.visibility = View.VISIBLE
+                count++
+            }
+        }
     }
 
     private fun scrollToBottom() {
