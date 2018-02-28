@@ -74,6 +74,12 @@ class LoginFragment : Fragment(), LoginView {
         setupSignUpListener()
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        isSocialMediaNeeded()
+    }
+
     private fun showThreeSocialMethods() {
         var count = 0
         for (i in 0..social_accounts_container.childCount) {
@@ -213,14 +219,20 @@ class LoginFragment : Fragment(), LoginView {
         button_log_in.isEnabled = value
         text_username_or_email.isEnabled = value
         text_password.isEnabled = value
-        if (!isEditTextEmpty()) {
-            showSignUpView(value)
-            showOauthView(value)
-        }
     }
 
     // Returns true if *all* EditTexts are empty.
     private fun isEditTextEmpty(): Boolean = text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
+
+    private fun isSocialMediaNeeded() {
+        if (!isEditTextEmpty()) {
+            showSignUpView(false)
+            showOauthView(false)
+        } else {
+            showSignUpView(true)
+            showOauthView(true)
+        }
+    }
 
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({
