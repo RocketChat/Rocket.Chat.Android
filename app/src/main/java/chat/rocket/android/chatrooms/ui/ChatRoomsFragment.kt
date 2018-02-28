@@ -20,7 +20,10 @@ import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
@@ -29,6 +32,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var serverInteractor: GetCurrentServerInteractor
     @Inject lateinit var settingsRepository: SettingsRepository
     private var searchView: SearchView? = null
+
+    private var listJob: Job? = null
 
     companion object {
         fun newInstance() = ChatRoomsFragment()
@@ -74,17 +79,19 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {
         activity.apply {
-            launch(UI) {
+            listJob?.cancel()
+            listJob = launch(UI) {
                 val adapter = recycler_view.adapter as ChatRoomsAdapter
                 // FIXME https://fabric.io/rocketchat3/android/apps/chat.rocket.android.dev/issues/5a90d4718cb3c2fa63b3f557?time=last-seven-days
                 // TODO - fix this bug to reenable DiffUtil
-                /*val diff = async(CommonPool) {
+                val diff = async(CommonPool) {
                     DiffUtil.calculateDiff(RoomsDiffCallback(adapter.dataSet, newDataSet))
-                }.await()*/
+                }.await()
 
-                adapter.updateRooms(newDataSet)
-                adapter.notifyDataSetChanged()
-                //diff.dispatchUpdatesTo(adapter)
+                if (isActive) {
+                    adapter.updateRooms(newDataSet)
+                    diff.dispatchUpdatesTo(adapter)
+                }
             }
         }
     }

@@ -112,7 +112,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     override fun onDestroyView() {
-        presenter.unsubscribeMessages()
+        presenter.unsubscribeMessages(chatRoomId)
         handler.removeCallbacksAndMessages(null)
         unsubscribeTextMessage()
         super.onDestroyView()

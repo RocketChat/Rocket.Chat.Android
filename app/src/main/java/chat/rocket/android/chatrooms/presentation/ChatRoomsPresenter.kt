@@ -2,14 +2,18 @@ package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infraestructure.chatRooms
+import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.RoomType
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.Subscription
-import chat.rocket.core.internal.realtime.*
-import chat.rocket.core.internal.rest.chatRooms
+import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.internal.realtime.StreamMessage
+import chat.rocket.core.internal.realtime.Type
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.*
@@ -25,13 +29,16 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
                                              private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                              settingsRepository: SettingsRepository,
-                                             factory: RocketChatClientFactory) {
-    private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
+                                             factory: ConnectionManagerFactory) {
+    private val manager: ConnectionManager = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
     private var reloadJob: Deferred<List<ChatRoom>>? = null
     private val settings = settingsRepository.get(currentServer)!!
 
+    private val subscriptionsChannel = Channel<StreamMessage<BaseRoom>>()
     private val stateChannel = Channel<State>()
+
+    private var lastState = manager.state
 
     fun loadChatRooms() {
         refreshSettingsInteractor.refreshAsync(currentServer)
@@ -75,8 +82,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     private suspend fun loadRooms(): List<ChatRoom> {
-        val chatRooms = client.chatRooms().update
+        val chatRooms = manager.chatRooms().update
         val sortedRooms = sortRooms(chatRooms)
+        Timber.d("Loaded rooms: ${sortedRooms.size}")
         saveChatRoomsInteractor.save(currentServer, sortedRooms)
         return sortedRooms
     }
@@ -87,6 +95,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     private fun updateRooms() {
+        Timber.d("Updating Rooms")
         launch {
             view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
         }
@@ -104,7 +113,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     // TODO - Temporary stuff, remove when adding DB support
     private suspend fun subscribeRoomUpdates() {
-        client.addStateChannel(stateChannel)
+        /*client.addStateChannel(stateChannel)
         launch(CommonPool + strategy.jobs) {
             for (status in stateChannel) {
                 Timber.d("Changing status to: $status")
@@ -124,7 +133,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             Timber.d("Done on statusChannel")
         }
 
-        when (client.state) {
+        when (manager.state) {
             State.Connected -> {
                 Timber.d("Already connected")
             }
@@ -143,11 +152,35 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 Timber.d("Got message: $message")
                 updateSubscription(message)
             }
+        }*/
+        manager.addStatusChannel(stateChannel)
+        manager.addRoomsAndSubscriptionsChannel(subscriptionsChannel)
+        launch(CommonPool + strategy.jobs) {
+            for (message in subscriptionsChannel) {
+                Timber.d("Got message: $message")
+                when (message.data) {
+                    is Room -> updateRoom(message as StreamMessage<Room>)
+                    is Subscription -> updateSubscription(message as StreamMessage<Subscription>)
+                }
+            }
+        }
+
+        lastState = manager.state
+        launch(CommonPool + strategy.jobs) {
+            for (state in stateChannel) {
+                Timber.d("Got new state: $state - last: $lastState")
+                if (state is State.Connected && lastState != state) {
+                    reloadRooms()
+                    updateRooms()
+                }
+                lastState = state
+            }
         }
     }
 
-    private fun updateRoom(message: StreamMessage<Room>) {
-        launchUI(strategy) {
+    private suspend fun updateRoom(message: StreamMessage<Room>) {
+        Timber.d("Update Room: ${message.type} - ${message.data.id} - ${message.data.name}")
+        //launchUI(strategy) {
             when (message.type) {
                 Type.Removed -> {
                     removeRoom(message.data.id)
@@ -163,11 +196,12 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             }
 
             updateRooms()
-        }
+        //}
     }
 
-    private fun updateSubscription(message: StreamMessage<Subscription>) {
-        launchUI(strategy) {
+    private suspend fun updateSubscription(message: StreamMessage<Subscription>) {
+        Timber.d("Update Subscription: ${message.type} - ${message.data.id} - ${message.data.name}")
+        //launchUI(strategy) {
             when (message.type) {
                 Type.Removed -> {
                     removeRoom(message.data.roomId)
@@ -183,7 +217,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             }
 
             updateRooms()
-        }
+        //}
     }
 
     private suspend fun reloadRooms() {
@@ -200,6 +234,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     // Update a ChatRoom with a Room information
     private fun updateRoom(room: Room) {
+        Timber.d("Updating Room: ${room.id} - ${room.name}")
         val chatRooms = getChatRoomsInteractor.get(currentServer).toMutableList()
         val chatRoom = chatRooms.find { chatRoom -> chatRoom.id == room.id }
         chatRoom?.apply {
@@ -230,6 +265,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     // Update a ChatRoom with a Subscription information
     private fun updateSubscription(subscription: Subscription) {
+        Timber.d("Updating subscrition: ${subscription.id} - ${subscription.name}")
         val chatRooms = getChatRoomsInteractor.get(currentServer).toMutableList()
         val chatRoom = chatRooms.find { chatRoom -> chatRoom.id == subscription.roomId }
         chatRoom?.apply {
@@ -261,6 +297,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     private fun removeRoom(id: String,
                            chatRooms: MutableList<ChatRoom> = getChatRoomsInteractor.get(currentServer).toMutableList()) {
+        Timber.d("Removing ROOM: $id")
         synchronized(this) {
             chatRooms.removeAll { chatRoom -> chatRoom.id == id }
         }
@@ -268,7 +305,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     fun disconnect() {
-        client.removeStateChannel(stateChannel)
-        client.disconnect()
+        manager.removeStatusChannel(stateChannel)
+        manager.removeRoomsAndSubscriptionsChannel(subscriptionsChannel)
     }
 }
