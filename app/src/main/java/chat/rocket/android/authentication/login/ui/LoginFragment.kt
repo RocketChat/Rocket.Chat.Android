@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import android.widget.ScrollView
+
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
@@ -22,6 +23,7 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
+
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
