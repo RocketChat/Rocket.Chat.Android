@@ -45,14 +45,12 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val messages =
-                        client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
+                val messages = client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                 messagesRepository.saveAll(messages)
 
-                // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
-                // but should mark only when the user see the first unread message.
+                // Marking the room as read after getting the messages successfully.
                 markRoomAsRead(chatRoomId)
-              
+
                 val messagesViewModels = mapper.map(messages)
                 view.showMessages(messagesViewModels)
 
@@ -326,12 +324,12 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 if (message.roomId != roomId) {
                     Timber.d("Ignoring message for room ${message.roomId}, expecting $roomId")
                 }
-                updateMessage(message)
+                updateMessage(message, roomId)
             }
         }
     }
 
-    private fun updateMessage(streamedMessage: Message) {
+    private fun updateMessage(streamedMessage: Message, roomId: String) {
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(streamedMessage)
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
@@ -342,6 +340,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 view.dispatchUpdateMessage(index, viewModelStreamedMessage)
             } else {
                 Timber.d("Adding new message")
+                markRoomAsRead(roomId)
                 messagesRepository.save(streamedMessage)
                 view.showNewMessage(viewModelStreamedMessage)
             }
