@@ -345,6 +345,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else {
+            button_send.alpha = 0f
+            button_send.setVisible(false)
+            button_show_attachment_options.alpha = 1f
+            button_show_attachment_options.setVisible(true)
+
             subscribeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
@@ -442,9 +447,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     private fun unsubscribeTextMessage() {
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
-        }
+        compositeDisposable.clear()
     }
 
     private fun setupComposeMessageButtons(charSequence: CharSequence) {
