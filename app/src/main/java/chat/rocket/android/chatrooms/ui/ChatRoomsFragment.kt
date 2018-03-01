@@ -1,6 +1,7 @@
 package chat.rocket.android.chatrooms.ui
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.DiffUtil
@@ -13,10 +14,9 @@ import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
+import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
@@ -32,6 +32,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var serverInteractor: GetCurrentServerInteractor
     @Inject lateinit var settingsRepository: SettingsRepository
     private var searchView: SearchView? = null
+    private val handler = Handler()
 
     private var listJob: Job? = null
 
@@ -46,6 +47,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override fun onDestroy() {
+        handler.removeCallbacks(dismissStatus)
         presenter.disconnect()
         super.onDestroy()
     }
@@ -107,6 +109,28 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun showMessage(message: String) = showToast(message)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    override fun showConnectionState(state: State) {
+        activity?.apply {
+            connection_status_text.fadeIn()
+            handler.removeCallbacks(dismissStatus)
+            when (state) {
+                is State.Connected -> {
+                    connection_status_text.text = getString(R.string.status_connected)
+                    handler.postDelayed(dismissStatus, 2000)
+                }
+                is State.Disconnected -> connection_status_text.text = getString(R.string.status_disconnected)
+                is State.Connecting -> connection_status_text.text = getString(R.string.status_connecting)
+                is State.Authenticating -> connection_status_text.text = getString(R.string.status_authenticating)
+                is State.Disconnecting -> connection_status_text.text = getString(R.string.status_disconnecting)
+                is State.Waiting -> connection_status_text.text = getString(R.string.status_waiting, state.seconds)
+            }
+        }
+    }
+
+    private val dismissStatus = {
+        connection_status_text.fadeOut()
+    }
 
     private fun setupToolbar() {
         (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_chats)

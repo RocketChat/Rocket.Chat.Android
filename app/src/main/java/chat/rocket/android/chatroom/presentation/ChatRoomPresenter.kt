@@ -18,6 +18,7 @@ import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
@@ -72,6 +73,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }
             } finally {
                 view.hideLoading()
+            }
+
+            if (offset == 0L) {
+                subscribeState()
             }
         }
     }
@@ -146,6 +151,26 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    private fun subscribeState() {
+        Timber.d("Subscribing to Status changes")
+        lastState = manager.state
+        manager.addStatusChannel(stateChannel)
+        launch(CommonPool + strategy.jobs) {
+            for (state in stateChannel) {
+                Timber.d("Got new state: $state - last: $lastState")
+                if (state != lastState) {
+                    launch(UI) {
+                        view.showConnectionState(state)
+                    }
+
+                    if (state is State.Connected) {
+                        loadMissingMessages()
+                    }
+                }
+                lastState = state
+            }
+        }
+    }
 
     private fun subscribeMessages(roomId: String) {
         manager.subscribeRoomMessages(roomId, messagesChannel)
@@ -154,18 +179,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             for (message in messagesChannel) {
                 Timber.d("New message for room ${message.roomId}")
                 updateMessage(message)
-            }
-        }
-
-        lastState = manager.state
-        manager.addStatusChannel(stateChannel)
-        launch(CommonPool + strategy.jobs) {
-            for (state in stateChannel) {
-                Timber.d("Got new state: $state - last: $lastState")
-                if (state is State.Connected && lastState != state) {
-                    loadMissingMessages()
-                }
-                lastState = state
             }
         }
     }

@@ -24,7 +24,8 @@ class ConnectionManager(internal val client: RocketChatClient) {
     private var roomsId: String? = null
 
     fun connect() {
-        if (connectJob?.isActive == true && client.state is State.Connected) {
+        if (connectJob?.isActive == true
+            && (state !is State.Disconnected)) {
             Timber.d("Already connected, just returning...")
             return
         }
@@ -35,8 +36,6 @@ class ConnectionManager(internal val client: RocketChatClient) {
         connectJob?.cancel()
 
         // Connect and setup
-        client.connect()
-
         client.addStateChannel(statusChannel)
         connectJob = launch {
             for (status in statusChannel) {
@@ -92,6 +91,8 @@ class ConnectionManager(internal val client: RocketChatClient) {
             }
         }
 
+        client.connect()
+
         // Broadcast initial state...
         val state = client.state
         for (channel in statusChannelList) {
@@ -109,6 +110,7 @@ class ConnectionManager(internal val client: RocketChatClient) {
     }
 
     fun disconnect() {
+        Timber.d("ConnectionManager DISCONNECT")
         client.removeStateChannel(statusChannel)
         client.disconnect()
         connectJob?.cancel()

@@ -60,6 +60,8 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.cardView
 
+    implementation libraries.androidKtx
+
     implementation libraries.dagger
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor

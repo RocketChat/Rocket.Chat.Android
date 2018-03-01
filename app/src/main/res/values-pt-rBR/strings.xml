@@ -84,4 +84,11 @@
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
 
+    <!-- Socket status -->
+    <string name="status_connected">conectado</string>
+    <string name="status_disconnected">desconetado</string>
+    <string name="status_connecting">conectando</string>
+    <string name="status_authenticating">autenticando</string>
+    <string name="status_disconnecting">desconectando</string>
+    <string name="status_waiting">conectando em %d segundos</string>
 </resources>

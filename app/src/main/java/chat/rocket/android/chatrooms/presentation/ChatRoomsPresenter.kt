@@ -17,6 +17,7 @@ import chat.rocket.core.internal.realtime.Type
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
@@ -44,15 +45,16 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         refreshSettingsInteractor.refreshAsync(currentServer)
         launchUI(strategy) {
             view.showLoading()
+            subscribeStatusChange()
             try {
                 view.updateChatRooms(loadRooms())
-                subscribeRoomUpdates()
             } catch (e: RocketChatException) {
                 Timber.e(e)
                 view.showMessage(e.message!!)
             } finally {
                 view.hideLoading()
             }
+            subscribeRoomUpdates()
         }
     }
 
@@ -111,48 +113,28 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
     }
 
-    // TODO - Temporary stuff, remove when adding DB support
-    private suspend fun subscribeRoomUpdates() {
-        /*client.addStateChannel(stateChannel)
+    private suspend fun subscribeStatusChange() {
+        lastState = manager.state
         launch(CommonPool + strategy.jobs) {
-            for (status in stateChannel) {
-                Timber.d("Changing status to: $status")
-                when (status) {
-                    State.Authenticating -> Timber.d("Authenticating")
-                    State.Connected -> {
-                        Timber.d("Connected")
-                        client.subscribeSubscriptions {
-                            Timber.d("subscriptions: $it")
-                        }
-                        client.subscribeRooms {
-                            Timber.d("rooms: $it")
-                        }
+            for (state in stateChannel) {
+                Timber.d("Got new state: $state - last: $lastState")
+                if (state != lastState) {
+                    launch(UI) {
+                        view.showConnectionState(state)
+                    }
+
+                    if (state is State.Connected) {
+                        reloadRooms()
+                        updateRooms()
                     }
                 }
-            }
-            Timber.d("Done on statusChannel")
-        }
-
-        when (manager.state) {
-            State.Connected -> {
-                Timber.d("Already connected")
-            }
-            else -> client.connect()
-        }
-
-        launch(CommonPool + strategy.jobs) {
-            for (message in client.roomsChannel) {
-                Timber.d("Got message: $message")
-                updateRoom(message)
+                lastState = state
             }
         }
+    }
 
-        launch(CommonPool + strategy.jobs) {
-            for (message in client.subscriptionsChannel) {
-                Timber.d("Got message: $message")
-                updateSubscription(message)
-            }
-        }*/
+    // TODO - Temporary stuff, remove when adding DB support
+    private suspend fun subscribeRoomUpdates() {
         manager.addStatusChannel(stateChannel)
         manager.addRoomsAndSubscriptionsChannel(subscriptionsChannel)
         launch(CommonPool + strategy.jobs) {
@@ -164,72 +146,60 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 }
             }
         }
-
-        lastState = manager.state
-        launch(CommonPool + strategy.jobs) {
-            for (state in stateChannel) {
-                Timber.d("Got new state: $state - last: $lastState")
-                if (state is State.Connected && lastState != state) {
-                    reloadRooms()
-                    updateRooms()
-                }
-                lastState = state
-            }
-        }
     }
 
     private suspend fun updateRoom(message: StreamMessage<Room>) {
         Timber.d("Update Room: ${message.type} - ${message.data.id} - ${message.data.name}")
-        //launchUI(strategy) {
-            when (message.type) {
-                Type.Removed -> {
-                    removeRoom(message.data.id)
-                }
-                Type.Updated -> {
-                    updateRoom(message.data)
-                }
-                Type.Inserted -> {
-                    // On insertion, just get all chatrooms again, since we can't create one just
-                    // from a Room
-                    reloadRooms()
-                }
+        when (message.type) {
+            Type.Removed -> {
+                removeRoom(message.data.id)
             }
+            Type.Updated -> {
+                updateRoom(message.data)
+            }
+            Type.Inserted -> {
+                // On insertion, just get all chatrooms again, since we can't create one just
+                // from a Room
+                reloadRooms()
+            }
+        }
 
-            updateRooms()
-        //}
+        updateRooms()
     }
 
     private suspend fun updateSubscription(message: StreamMessage<Subscription>) {
         Timber.d("Update Subscription: ${message.type} - ${message.data.id} - ${message.data.name}")
-        //launchUI(strategy) {
-            when (message.type) {
-                Type.Removed -> {
-                    removeRoom(message.data.roomId)
-                }
-                Type.Updated -> {
-                    updateSubscription(message.data)
-                }
-                Type.Inserted -> {
-                    // On insertion, just get all chatrooms again, since we can't create one just
-                    // from a Subscription
-                    reloadRooms()
-                }
+        when (message.type) {
+            Type.Removed -> {
+                removeRoom(message.data.roomId)
             }
+            Type.Updated -> {
+                updateSubscription(message.data)
+            }
+            Type.Inserted -> {
+                // On insertion, just get all chatrooms again, since we can't create one just
+                // from a Subscription
+                reloadRooms()
+            }
+        }
 
-            updateRooms()
-        //}
+        updateRooms()
     }
 
     private suspend fun reloadRooms() {
         Timber.d("realoadRooms()")
         reloadJob?.cancel()
 
-        reloadJob = async(CommonPool + strategy.jobs) {
-            delay(1000)
-            Timber.d("reloading rooms after wait")
-            loadRooms()
+        try {
+            reloadJob = async(CommonPool + strategy.jobs) {
+                delay(1000)
+                Timber.d("reloading rooms after wait")
+                loadRooms()
+            }
+            reloadJob?.await()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
-        reloadJob?.await()
     }
 
     // Update a ChatRoom with a Room information
