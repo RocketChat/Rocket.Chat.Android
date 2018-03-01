@@ -23,14 +23,12 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
+    private var CURRENT_STATE: String = "CURRENT_STATE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        setupToolbar()
-        setupNavigationView()
     }
 
     override fun onResume() {
@@ -39,6 +37,8 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
             presenter.toChatList()
             isFragmentAdded = true
         }
+        setupToolbar()
+        setupNavigationView()
     }
 
     override fun onLogout() {
@@ -86,4 +86,15 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
             }
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(CURRENT_STATE,isFragmentAdded)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        isFragmentAdded = if (savedInstanceState != null) savedInstanceState.getBoolean(CURRENT_STATE) else false
+    }
+
 }
