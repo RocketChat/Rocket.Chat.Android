@@ -18,8 +18,6 @@ class MembersAdapter(private var dataSet: List<MemberViewModel>) : RecyclerView.
 
     override fun getItemCount(): Int = dataSet.size
 
-    override fun getItemViewType(position: Int): Int = position
-
     fun appendData(dataSet: List<MemberViewModel>) {
         val previousDataSetSize = this.dataSet.size
         this.dataSet += dataSet
