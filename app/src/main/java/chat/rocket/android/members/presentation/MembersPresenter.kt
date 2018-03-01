@@ -24,7 +24,7 @@ class MembersPresenter @Inject constructor(private val view: MembersView,
             try {
                 view.showLoading()
 
-                val members = client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 30)
+                val members = client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 60)
                 val memberViewModels = mapper.mapToViewModelList(members.result)
                 view.showMembers(memberViewModels, members.total)
             } catch (ex: RocketChatException) {

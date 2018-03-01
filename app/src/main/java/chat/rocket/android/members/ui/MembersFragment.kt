@@ -19,7 +19,6 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.widget.DividerItemDecoration
-import chat.rocket.common.model.User
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
@@ -73,10 +72,10 @@ class MembersFragment : Fragment(), MembersView {
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view.layoutManager = linearLayoutManager
                 recycler_view.addItemDecoration(DividerItemDecoration(this))
-                if (dataSet.size >= 30) {
+                if (dataSet.size >= 60) {
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
-                            presenter.loadChatRoomsMembers(chatRoomId, chatRoomType, page * 30L)
+                            presenter.loadChatRoomsMembers(chatRoomId, chatRoomType, page * 60L)
                         }
                     })
                 }
