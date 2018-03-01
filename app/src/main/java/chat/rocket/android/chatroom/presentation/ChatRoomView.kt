@@ -4,6 +4,7 @@ import android.net.Uri
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
+import chat.rocket.core.internal.realtime.State
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -97,4 +98,6 @@ interface ChatRoomView : LoadingView, MessageView {
     fun clearMessageComposition()
 
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
+
+    fun showConnectionState(state: State)
 }

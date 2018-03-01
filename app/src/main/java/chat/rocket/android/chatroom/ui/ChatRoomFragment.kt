@@ -27,6 +27,7 @@ import chat.rocket.android.widget.emoji.ComposerEditText
 import chat.rocket.android.widget.emoji.Emoji
 import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
 import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.core.internal.realtime.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -112,7 +113,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     override fun onDestroyView() {
-        presenter.unsubscribeMessages()
+        presenter.unsubscribeMessages(chatRoomId)
         handler.removeCallbacksAndMessages(null)
         unsubscribeTextMessage()
         super.onDestroyView()
@@ -288,6 +289,28 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
     override fun showInvalidFileSize(fileSize: Int, maxFileSize: Int) {
         showMessage(getString(R.string.max_file_size_exceeded, fileSize, maxFileSize))
+    }
+
+    override fun showConnectionState(state: State) {
+        activity?.apply {
+            connection_status_text.fadeIn()
+            handler.removeCallbacks(dismissStatus)
+            when (state) {
+                is State.Connected -> {
+                    connection_status_text.text = getString(R.string.status_connected)
+                    handler.postDelayed(dismissStatus, 2000)
+                }
+                is State.Disconnected -> connection_status_text.text = getString(R.string.status_disconnected)
+                is State.Connecting -> connection_status_text.text = getString(R.string.status_connecting)
+                is State.Authenticating -> connection_status_text.text = getString(R.string.status_authenticating)
+                is State.Disconnecting -> connection_status_text.text = getString(R.string.status_disconnecting)
+                is State.Waiting -> connection_status_text.text = getString(R.string.status_waiting, state.seconds)
+            }
+        }
+    }
+
+    private val dismissStatus = {
+        connection_status_text.fadeOut()
     }
 
     private fun setupRecyclerView() {

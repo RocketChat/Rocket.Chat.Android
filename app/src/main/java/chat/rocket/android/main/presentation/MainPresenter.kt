@@ -2,6 +2,7 @@ package chat.rocket.android.main.presentation
 
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.RocketChatClient
@@ -13,9 +14,11 @@ import javax.inject.Inject
 class MainPresenter @Inject constructor(private val navigator: MainNavigator,
                                         private val serverInteractor: GetCurrentServerInteractor,
                                         private val localRepository: LocalRepository,
+                                        managerFactory: ConnectionManagerFactory,
                                         factory: RocketChatClientFactory) {
-    private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
+    private val manager = managerFactory.create(currentServer)
+    private val client: RocketChatClient = factory.create(currentServer)
 
     fun toChatList() = navigator.toChatList()
 
@@ -48,5 +51,13 @@ class MainPresenter @Inject constructor(private val navigator: MainNavigator,
             localRepository.clear(LocalRepository.KEY_PUSH_TOKEN)
         }
         localRepository.clearAllFromServer(currentServer)
+    }
+
+    fun connect() {
+        manager.connect()
+    }
+
+    fun disconnect() {
+        manager.disconnect()
     }
 }
