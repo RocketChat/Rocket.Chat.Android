@@ -15,10 +15,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
+import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.PeopleViewModel
+import chat.rocket.android.chatroom.viewmodel.RoomViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -62,8 +64,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
-    private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var isChatRoomReadOnly: Boolean = false
+
+    private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
 
     private lateinit var actionSnackbar: ActionSnackbar
     private var citation: String? = null
@@ -100,7 +103,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadMessages(chatRoomId, chatRoomType)
-
         setupRecyclerView()
         setupFab()
         setupMessageComposer()
@@ -169,6 +171,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
             }
+            presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
         }
     }
 
@@ -239,6 +242,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     override fun showMessage(resId: Int) = showToast(resId)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    override fun populateMembers(members: List<PeopleViewModel>) {
+        suggestions_view.addItems("@", members)
+    }
+
+    override fun populateRooms(rooms: List<RoomViewModel>) {
+        suggestions_view.addItems("#", rooms)
+    }
 
     override fun copyToClipboard(message: String) {
         activity?.apply {
@@ -398,16 +409,30 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
                 openEmojiKeyboardPopup()
             }
         }
+
+        suggestions_view.anchor(text_message)
+                .bindTokenAdapter(PeopleSuggestionsAdapter())
+                .bindTokenAdapter(RoomSuggestionsAdapter())
+                .addSuggestionProviderAction("@") { query ->
+                    if (query.isNotEmpty()) {
+                        presenter.spotlight(query, PEOPLE, true)
+                    }
+                }
+                .addSuggestionProviderAction("#") { query ->
+                    if (query.isNotEmpty()) {
+                        presenter.spotlight(query, ROOMS)
+                    }
+                }
     }
 
     private fun openEmojiKeyboardPopup() {
-        if (!emojiKeyboardPopup.isShowing()) {
+        if (!emojiKeyboardPopup.isShowing) {
             // If keyboard is visible, simply show the  popup
             if (emojiKeyboardPopup.isKeyboardOpen) {
                 emojiKeyboardPopup.showAtBottom()
             } else {
                 // Open the text keyboard first and immediately after that show the emoji popup
-                text_message.setFocusableInTouchMode(true)
+                text_message.isFocusableInTouchMode = true
                 text_message.requestFocus()
                 emojiKeyboardPopup.showAtBottomPending()
                 KeyboardHelper.showSoftKeyboard(text_message)

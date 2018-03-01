@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.view.ActionMode
 import android.view.*
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
@@ -51,7 +50,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String) {
         image_avatar.setImageURI(avatarUrl)
 
-        text_name.textContent = name
+        text_username.textContent = name
         text_username.textContent = username
         text_email.textContent = email
 
@@ -93,7 +92,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent)
+                presenter.updateUserProfile(text_email.textContent, text_username.textContent, text_username.textContent)
                 mode.finish()
                 true
             }
@@ -120,12 +119,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
-            DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_email), drawables)
+            DrawableHelper.compoundDrawables(arrayOf(text_username, text_username, text_email), drawables)
         }
     }
 
     private fun listenToChanges() {
-        Observables.combineLatest(text_name.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
+        Observables.combineLatest(text_username.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
                     if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail) {
                         startActionMode()
                     } else {
@@ -143,7 +142,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun finishActionMode() = actionMode?.finish()
 
     private fun enableUserInput(value: Boolean) {
-        text_name.isEnabled = value
+        text_username.isEnabled = value
         text_username.isEnabled = value
         text_email.isEnabled = value
     }
