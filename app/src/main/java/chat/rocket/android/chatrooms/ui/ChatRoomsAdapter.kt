@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
@@ -21,6 +23,7 @@ import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
 class ChatRoomsAdapter(private val context: Context,
+                       private val settings: PublicSettings,
                        private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
     var dataSet: MutableList<ChatRoom> = ArrayList()
 
@@ -69,7 +72,11 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
-            textView.content = chatRoom.name
+            if (chatRoom.type is RoomType.DirectMessage && settings.useRealName()) {
+                textView.content = chatRoom.fullName ?: chatRoom.name
+            } else {
+                textView.content = chatRoom.name
+            }
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {

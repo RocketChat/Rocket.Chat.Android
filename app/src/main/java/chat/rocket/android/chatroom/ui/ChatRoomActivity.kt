@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection
@@ -32,6 +34,11 @@ private const val INTENT_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 
 class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    // TODO - workaround for now... We will move to a single activity
+    @Inject lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject lateinit var managerFactory: ConnectionManagerFactory
+
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
@@ -41,6 +48,9 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room)
+
+        // Workaround for when we are coming to the app via the recents app and the app was killed.
+        managerFactory.create(serverInteractor.get()!!).connect()
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }

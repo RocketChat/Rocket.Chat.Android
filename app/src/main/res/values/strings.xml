@@ -90,4 +90,12 @@
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
 
+    <!-- Socket status -->
+    <string name="status_connected">connected</string>
+    <string name="status_disconnected">disconnected</string>
+    <string name="status_connecting">connecting</string>
+    <string name="status_authenticating">authenticating</string>
+    <string name="status_disconnecting">disconnecting</string>
+    <string name="status_waiting">connecting in %d seconds</string>
+
 </resources>
