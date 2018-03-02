@@ -53,6 +53,8 @@
     <string name="msg_content_description_show_attachment_options">Show attachment options</string>
     <string name="msg_you">You</string>
     <string name="msg_unknown">Unknown</string>
+    <string name="msg_email_address">E-mail address</string>
+    <string name="msg_utc_offset">UTC offset</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

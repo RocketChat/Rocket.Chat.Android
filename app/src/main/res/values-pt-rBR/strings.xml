@@ -51,6 +51,8 @@
     <string name="msg_content_description_show_attachment_options">Mostrar opções de anexo</string>
     <string name="msg_you">Você</string>
     <string name="msg_unknown">Desconhecido</string>
+    <string name="msg_email_address">Endereço de e-mail</string>
+    <string name="msg_utc_offset">Deslocamento de UTC</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
