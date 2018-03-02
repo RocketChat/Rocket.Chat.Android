@@ -34,4 +34,6 @@
 
     <color name="colorEmojiIcon">#FF767676</color>
 
+    <color name="colorDivider">#1F000000</color>
+
 </resources>

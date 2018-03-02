@@ -9,22 +9,53 @@
     android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
     android:layout_marginTop="6dp">
 
+    <LinearLayout
+        android:id="@+id/day_marker_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorDivider" />
+
+        <TextView
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textAppearance="@style/Message.DayMarker"
+            tools:text="Wednesday" />
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/colorDivider" />
+    </LinearLayout>
+
     <include
         android:id="@+id/layout_avatar"
         layout="@layout/avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/top_container" />
 
     <LinearLayout
         android:id="@+id/top_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toRightOf="@+id/layout_avatar">
+        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
+        app:layout_constraintStart_toEndOf="@+id/layout_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
 
         <TextView
             android:id="@+id/text_sender"
@@ -47,10 +78,11 @@
         style="@style/Message.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="2dp"
         app:layout_constraintLeft_toLeftOf="@id/top_container"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layout_avatar"
         app:layout_constraintTop_toBottomOf="@+id/top_container"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
 
