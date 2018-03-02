@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
-import chat.rocket.android.member.ui.MemberBottomSheetFragment
-import chat.rocket.android.member.ui.newInstance
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
@@ -73,7 +71,7 @@ class MembersFragment : Fragment(), MembersView {
             setupToolbar(total)
             if (adapter.itemCount == 0) {
                 adapter.prependData(dataSet)
-                if (dataSet.size >= 60) {
+                if (dataSet.size >= 59) { // TODO Check why the API retorns the specified count -1
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
                             presenter.loadChatRoomsMembers(chatRoomId, chatRoomType, page * 60L)
