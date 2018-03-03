@@ -148,11 +148,11 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             for (status in stateChannel) {
                 Timber.d("Changing status to: $status")
                 when (status) {
-                    State.Authenticating -> Timber.d("Authenticating")
-                    State.Connected -> {
+                    is State.Authenticating -> Timber.d("Authenticating")
+                    is State.Connected -> {
                         Timber.d("Connected")
-                        subId = client.subscribeRoomMessages(roomId) {
-                            Timber.d("subscribe messages for $roomId: $it")
+                        subId = client.subscribeRoomMessages(roomId) { success, _ ->
+                            Timber.d("subscribe messages for $roomId: $success")
                         }
                     }
                 }
@@ -161,10 +161,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
 
         when (client.state) {
-            State.Connected -> {
+            is State.Connected -> {
                 Timber.d("Already connected")
-                subId = client.subscribeRoomMessages(roomId) {
-                    Timber.d("subscribe messages for $roomId: $it")
+                subId = client.subscribeRoomMessages(roomId) { success, _ ->
+                    Timber.d("subscribe messages for $roomId: $success")
                 }
             }
             else -> client.connect()
