@@ -62,6 +62,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         presenter.loadChatRooms()
     }
 
+    override fun onDestroyView() {
+        listJob?.cancel()
+        super.onDestroyView()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.chatrooms, menu)
@@ -80,7 +85,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {
-        activity.apply {
+        activity?.apply {
             listJob?.cancel()
             listJob = launch(UI) {
                 val adapter = recycler_view.adapter as ChatRoomsAdapter
