@@ -20,6 +20,11 @@ class MessageViewHolder(
 
     override fun bindViews(data: MessageViewModel) {
         with(itemView) {
+           if(data.showDayMarker){
+                day.text = data.currentDayMarkerText
+                day_marker_layout.visibility = View.VISIBLE
+            } else day_marker_layout.visibility = View.GONE
+
             text_message_time.text = data.time
             text_sender.text = data.senderName
             text_content.text = data.content
