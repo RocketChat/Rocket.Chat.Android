@@ -144,10 +144,17 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             }
         }
 
+        val localDateTime = DateTimeHelper.getLocalDateTime(message.timestamp)
+        var dayMarkerText = DateTimeHelper.getDate(localDateTime,context)
+        val showDayMarker = false
+
+        if(dayMarkerText == getTime(message.timestamp))
+            dayMarkerText = "Today"
+
         val content = getContent(context, message, quote)
         MessageViewModel(message = message, rawData = message, messageId = message.id,
                 avatar = avatar!!, time = time, senderName = sender,
-                content = content, isPinned = message.pinned)
+                content = content, isPinned = message.pinned,currentDayMarkerText = dayMarkerText,showDayMarker = showDayMarker)
     }
 
     private fun getSenderName(message: Message): CharSequence {
