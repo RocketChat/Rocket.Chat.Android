@@ -19,6 +19,7 @@ import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -152,6 +153,25 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     override fun showMessages(dataSet: List<BaseViewModel<*>>) {
+
+
+        var prevMsgModel = dataSet[0]
+        //checking for all messages to assign true to the required showDayMaker
+        for (i in dataSet.indices) {
+            val msgModel = dataSet[i]
+            if(i>0){
+                prevMsgModel = dataSet[i-1]
+            }
+
+            if (msgModel is MessageViewModel && prevMsgModel is MessageViewModel){
+                val currentDayMarkerText = msgModel.currentDayMarkerText
+                val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                if(previousDayMarkerText!=currentDayMarkerText) {
+                    prevMsgModel.showDayMarker = true
+                }
+            }
+        }
+
         activity?.apply {
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter)
