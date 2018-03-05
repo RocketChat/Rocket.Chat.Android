@@ -432,24 +432,11 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
-<<<<<<< 61f4135f2fbe9097b2d53bf96aa9e55d47ec62d8
     fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
-=======
+
     fun loadChatRooms() {
         launchUI(strategy) {
             try {
-<<<<<<< 436e7d600706834b3573b0043507343d77f39652
-                val chatRooms = getChatRoomsInteractor.get(currentServer).map { chatRoom ->
-                    val name = chatRoom.name
-                    val fullName = chatRoom.fullName ?: ""
-                    ChatRoomViewModel(
-                            text = name,
-                            name = name,
-                            fullName = fullName,
-                            searchList = listOf(name, fullName)
-                    )
-                }
-=======
                 val chatRooms = getChatRoomsInteractor.get(currentServer)
                         .filterNot {
                             it.type is RoomType.DirectMessage || it.type is RoomType.Livechat
@@ -464,14 +451,12 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                     searchList = listOf(name, fullName)
                             )
                         }
->>>>>>> Revert erroneous refactoring
                 view.populateRooms(chatRooms)
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }
         }
     }
->>>>>>> Load rooms from subscriptions
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
