@@ -111,13 +111,8 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
   public boolean dispatchTouchEvent(MotionEvent ev) {
     if (ev.getAction() == MotionEvent.ACTION_DOWN) {
       View view = getCurrentFocus();
-      if (isShouldHideKeyboard(view, ev)) {
-        try {
-          hideSoftInput(view.getWindowToken());
-        } catch (NullPointerException e) {
-          throw new NullPointerException
-                  ("AbstractFragmentActivity: getWindowToken() returns null");
-        }
+      if (view != null && isShouldHideKeyboard(view, ev)) {
+        view.getWindowToken();
       }
     }
     return super.dispatchTouchEvent(ev);
@@ -127,8 +122,12 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
     if (view != null && (view instanceof EditText)) {
       int[] l = {0, 0};
       view.getLocationInWindow(l);
-      int left = l[0], top = l[1];
-      int bottom = top + view.getHeight(), right = left + view.getWidth();
+
+      int left = l[0];
+      int top = l[1];
+      int bottom = top + view.getHeight();
+      int right = left + view.getWidth();
+
       return !(ev.getX() > left && ev.getX() < right && ev.getY() > top && ev.getY() < bottom);
     }
     return false;
@@ -138,11 +137,8 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
     if (token != null) {
       InputMethodManager manager =
               (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-      try {
+      if (manager != null) {
         manager.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
-      } catch (NullPointerException e) {
-        throw new NullPointerException
-                ("AbstractFragmentActivity: hideSoftInputFromWindow() returns null");
       }
     }
   }
