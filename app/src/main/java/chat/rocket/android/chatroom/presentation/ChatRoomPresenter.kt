@@ -6,8 +6,8 @@ import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.ROOMS
 import chat.rocket.android.chatroom.domain.UriInteractor
-import chat.rocket.android.chatroom.viewmodel.PeopleViewModel
 import chat.rocket.android.chatroom.viewmodel.ChatRoomViewModel
+import chat.rocket.android.chatroom.viewmodel.PeopleViewModel
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UrlHelper
@@ -35,6 +35,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
+                                            private val navigator: ChatRoomNavigator,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
@@ -434,22 +435,29 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun loadChatRooms() {
         launchUI(strategy) {
             try {
-                val chatRooms = getChatRoomsInteractor.get(currentServer).map { chatRoom ->
-                    val name = chatRoom.name
-                    val fullName = chatRoom.fullName ?: ""
-                    ChatRoomViewModel(
-                            text = name,
-                            name = name,
-                            fullName = fullName,
-                            searchList = listOf(name, fullName)
-                    )
-                }
+                val chatRooms = getChatRoomsInteractor.get(currentServer)
+                        .filterNot {
+                            it.type.toString() == RoomType.DIRECT_MESSAGE.toString() ||
+                                    it.type.toString() == RoomType.DIRECT_MESSAGE.toString()
+                        }
+                        .map { chatRoom ->
+                            val name = chatRoom.name
+                            val fullName = chatRoom.fullName ?: ""
+                            ChatRoomViewModel(
+                                    text = name,
+                                    name = name,
+                                    fullName = fullName,
+                                    searchList = listOf(name, fullName)
+                            )
+                        }
                 view.populateRooms(chatRooms)
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }
         }
     }
+
+    fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {

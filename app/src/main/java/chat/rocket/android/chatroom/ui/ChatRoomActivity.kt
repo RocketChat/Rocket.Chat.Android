@@ -64,7 +64,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         isChatRoomReadOnly = intent.getBooleanExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, true)
         requireNotNull(chatRoomType) { "no is_chat_room_read_only provided in Intent extras" }
 
-        setupToolbar(chatRoomName)
+        setupToolbar()
 
         addFragment("ChatRoomFragment", R.id.fragment_container) {
             newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly)
@@ -79,13 +79,16 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return fragmentDispatchingAndroidInjector
     }
 
-    private fun setupToolbar(chatRoomName: String) {
+    private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        text_room_name.textContent = chatRoomName
         toolbar.setNavigationOnClickListener {
             finishActivity()
         }
+    }
+
+    fun setupToolbarTitle(toolbarTitle: String) {
+        text_room_name.textContent = toolbarTitle
     }
 
     private fun finishActivity() {

@@ -105,6 +105,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar(chatRoomName)
+
         presenter.loadMessages(chatRoomId, chatRoomType)
         presenter.loadChatRooms()
         setupRecyclerView()
@@ -141,6 +143,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_members_list -> {
+                presenter.toMembersList(chatRoomId, chatRoomType)
+            }
             R.id.action_pinned_messages -> {
                 val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
                     putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -356,6 +361,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else {
+            button_send.alpha = 0f
+            button_send.setVisible(false)
+            button_show_attachment_options.alpha = 1f
+            button_show_attachment_options.setVisible(true)
+
             subscribeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
@@ -469,9 +479,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     private fun unsubscribeTextMessage() {
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
-        }
+        compositeDisposable.clear()
     }
 
     private fun setupComposeMessageButtons(charSequence: CharSequence) {
@@ -502,5 +510,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         layout_message_attachment_options.circularRevealOrUnreveal(centerX, centerY, max, 0F)
 
         view_dim.setVisible(false)
+    }
+
+    private fun setupToolbar(toolbarTitle: String) {
+        (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
     }
 }
