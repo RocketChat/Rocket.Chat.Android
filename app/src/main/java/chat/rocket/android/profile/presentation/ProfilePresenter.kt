@@ -29,8 +29,8 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
                 val avatarUrl = UrlHelper.getAvatarUrl(serverUrl, myself.username!!)
                 view.showProfile(
                     avatarUrl,
-                    myself.name!!,
-                    myself.username!!,
+                    myself.name ?: "",
+                    myself.username ?: "",
                     myself.emails?.get(0)?.address!!
                 )
             } catch (exception: RocketChatException) {

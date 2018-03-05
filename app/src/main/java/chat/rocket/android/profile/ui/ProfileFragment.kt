@@ -50,7 +50,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String) {
         image_avatar.setImageURI(avatarUrl)
 
-        text_username.textContent = name
+        text_name.textContent = name
         text_username.textContent = username
         text_email.textContent = email
 
@@ -124,13 +124,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun listenToChanges() {
-        Observables.combineLatest(text_username.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
-                    if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail) {
-                        startActionMode()
-                    } else {
-                        finishActionMode()
-                    }
-                })
+        Observables.combineLatest(text_name.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
+            if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail) {
+                startActionMode()
+            } else {
+                finishActionMode()
+            }
+        })
     }
 
     private fun startActionMode() {
