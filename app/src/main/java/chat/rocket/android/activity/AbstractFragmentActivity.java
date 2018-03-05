@@ -1,11 +1,17 @@
 package chat.rocket.android.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
@@ -99,4 +105,42 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
   protected Fragment findFragmentByTag(String tag) {
     return getSupportFragmentManager().findFragmentByTag(tag);
   }
+
+  // Hide Keyboard when click blank area
+  @Override
+  public boolean dispatchTouchEvent(MotionEvent ev) {
+    if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+      View view = getCurrentFocus();
+      if (view != null && isShouldHideKeyboard(view, ev)) {
+        view.getWindowToken();
+      }
+    }
+    return super.dispatchTouchEvent(ev);
+  }
+
+  protected boolean isShouldHideKeyboard(View view, MotionEvent ev) {
+    if (view != null && (view instanceof EditText)) {
+      int[] l = {0, 0};
+      view.getLocationInWindow(l);
+
+      int left = l[0];
+      int top = l[1];
+      int bottom = top + view.getHeight();
+      int right = left + view.getWidth();
+
+      return !(ev.getX() > left && ev.getX() < right && ev.getY() > top && ev.getY() < bottom);
+    }
+    return false;
+  }
+
+  private void hideSoftInput(IBinder token) {
+    if (token != null) {
+      InputMethodManager manager =
+              (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      if (manager != null) {
+        manager.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+      }
+    }
+  }
+
 }
