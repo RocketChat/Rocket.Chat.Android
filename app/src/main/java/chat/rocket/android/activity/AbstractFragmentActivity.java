@@ -133,7 +133,7 @@ abstract class AbstractFragmentActivity extends RxAppCompatActivity {
     return false;
   }
 
-  private void hideSoftInput(IBinder token) {
+  protected void hideSoftInput(IBinder token) {
     if (token != null) {
       InputMethodManager manager =
               (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
