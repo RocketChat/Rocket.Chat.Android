@@ -54,8 +54,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_username.textContent = username
         text_email.textContent = email
 
-        currentName = name
-        currentUsername = username
+        currentName = username
+        currentUsername = name
         currentEmail = email
 
         profile_container.setVisible(true)
@@ -92,7 +92,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_username.textContent, text_username.textContent)
+                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent)
                 mode.finish()
                 true
             }
