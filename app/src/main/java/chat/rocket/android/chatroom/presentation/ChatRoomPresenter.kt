@@ -438,6 +438,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun loadChatRooms() {
         launchUI(strategy) {
             try {
+<<<<<<< 436e7d600706834b3573b0043507343d77f39652
                 val chatRooms = getChatRoomsInteractor.get(currentServer).map { chatRoom ->
                     val name = chatRoom.name
                     val fullName = chatRoom.fullName ?: ""
@@ -448,6 +449,22 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                             searchList = listOf(name, fullName)
                     )
                 }
+=======
+                val chatRooms = getChatRoomsInteractor.get(currentServer)
+                        .filterNot {
+                            it.type is RoomType.DirectMessage || it.type is RoomType.Livechat
+                        }
+                        .map { chatRoom ->
+                            val name = chatRoom.name
+                            val fullName = chatRoom.fullName ?: ""
+                            ChatRoomViewModel(
+                                    text = name,
+                                    name = name,
+                                    fullName = fullName,
+                                    searchList = listOf(name, fullName)
+                            )
+                        }
+>>>>>>> Revert erroneous refactoring
                 view.populateRooms(chatRooms)
             } catch (e: RocketChatException) {
                 Timber.e(e)
