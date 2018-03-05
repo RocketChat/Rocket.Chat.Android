@@ -24,7 +24,7 @@
             android:layout_marginTop="32dp" />
 
         <EditText
-            android:id="@+id/text_username"
+            android:id="@+id/text_name"
             style="@style/Profile.EditText"
             android:layout_marginTop="32dp"
             android:drawableStart="@drawable/ic_person_black_24dp"
