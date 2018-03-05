@@ -3,7 +3,7 @@ package chat.rocket.android.chatroom.presentation
 import android.net.Uri
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.chatroom.viewmodel.PeopleViewModel
-import chat.rocket.android.chatroom.viewmodel.RoomViewModel
+import chat.rocket.android.chatroom.viewmodel.ChatRoomViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.internal.realtime.State
@@ -103,5 +103,5 @@ interface ChatRoomView : LoadingView, MessageView {
 
     fun showConnectionState(state: State)
     fun populateMembers(members: List<PeopleViewModel>)
-    fun populateRooms(rooms: List<RoomViewModel>)
+    fun populateRooms(chatRooms: List<ChatRoomViewModel>)
 }
