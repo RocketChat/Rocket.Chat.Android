@@ -15,17 +15,16 @@
             android:id="@+id/action_profile"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="@string/title_profile" />
+
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/title_settings"/>
     </group>
 
     <group
         android:id="@+id/menu_section_2"
         android:checkableBehavior="none">
-
-        <item
-            android:id="@+id/action_settings"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/action_settings" />
-
         <item
             android:id="@+id/action_logout"
             android:icon="@drawable/ic_exit_to_app_black_24dp"

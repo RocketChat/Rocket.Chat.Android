@@ -50,8 +50,9 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                if(avatarUrl!="")
+                if(avatarUrl!="") {
                     client.setAvatar(avatarUrl)
+                }
                 val user = client.updateProfile(myselfId, email, name, username)
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
@@ -59,8 +60,8 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                        view.showGenericErrorMessage()
-                    }
+                    view.showGenericErrorMessage()
+                }
             } finally {
                 view.hideLoading()
             }
