@@ -9,6 +9,8 @@
     <string name="title_chats">Chats</string>
     <string name="title_profile">Profile</string>
     <string name="title_members">Members (%d)</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
 
     <!-- Actions -->
@@ -20,6 +22,12 @@
     <string name="action_settings">Settings</string>
     <string name="action_logout">Logout</string>
     <string name="action_files">Files</string>
+    <string name="action_confirm_password">Confirm Password Change</string>
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_password">Change Password</item>
+    </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">No internet connection</string>
@@ -31,6 +39,7 @@
     <string name="msg_password">password</string>
     <string name="msg_name">name</string>
     <string name="msg_email">email</string>
+    <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
     <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
@@ -55,6 +64,8 @@
     <string name="msg_unknown">Unknown</string>
     <string name="msg_email_address">E-mail address</string>
     <string name="msg_utc_offset">UTC offset</string>
+    <string name="msg_new_password">Enter New Password</string>
+    <string name="msg_confirm_password">Confirm New Password</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

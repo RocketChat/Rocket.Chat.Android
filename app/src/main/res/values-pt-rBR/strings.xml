@@ -8,6 +8,8 @@
     <string name="title_chats">Chats</string>
     <string name="title_profile">Perfil</string>
     <string name="title_members">Membros (%d)</string>
+    <string name="title_settings">Configurações</string>
+    <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
 
     <!-- Actions -->
@@ -19,6 +21,12 @@
     <string name="action_settings">Configurações</string>
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
+    <string name="action_confirm_password">Confirme a nova senha</string>
+
+    <!-- Settings List -->
+    <string-array name="settings_actions">
+        <item name="item_password">Alterar senha</item>
+    </string-array>
 
     <!-- Regular information messages -->
     <string name="msg_no_internet_connection">Sem conexão à internet</string>
@@ -30,6 +38,7 @@
     <string name="msg_password">senha</string>
     <string name="msg_name">nome</string>
     <string name="msg_email">email</string>
+    <string name="msg_avatar_url">URL do avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue através de contas sociais</string>
     <string name="msg_new_user">Novo usuário? %1$s</string>
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>
@@ -53,6 +62,8 @@
     <string name="msg_unknown">Desconhecido</string>
     <string name="msg_email_address">Endereço de e-mail</string>
     <string name="msg_utc_offset">Deslocamento de UTC</string>
+    <string name="msg_new_password">Informe a nova senha</string>
+    <string name="msg_confirm_password">Confirme a nova senha</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>

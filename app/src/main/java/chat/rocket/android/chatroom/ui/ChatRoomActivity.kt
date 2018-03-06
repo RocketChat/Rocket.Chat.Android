@@ -1,7 +1,9 @@
 package chat.rocket.android.chatroom.ui
 
+import DrawableHelper
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -10,6 +12,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.common.model.RoomType
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -82,6 +85,28 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        text_room_name.textContent = chatRoomName
+
+        var drawable: Drawable? = null
+        when (chatRoomType) {
+            RoomType.CHANNEL.toString() -> {
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
+            }
+            RoomType.PRIVATE_GROUP.toString() -> {
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
+            }
+            RoomType.DIRECT_MESSAGE.toString() -> {
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
+            }
+        }
+
+        drawable?.let {
+            val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+            val mutableDrawable = wrappedDrawable.mutate()
+            DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
+            DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
+        }
+
         toolbar.setNavigationOnClickListener {
             finishActivity()
         }
