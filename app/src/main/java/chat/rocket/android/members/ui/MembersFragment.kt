@@ -1,7 +1,6 @@
 package chat.rocket.android.members.ui
 
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -16,11 +15,12 @@ import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
 import chat.rocket.android.members.viewmodel.MemberViewModel
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
-import kotlinx.android.synthetic.main.member_bottom_sheet.*
 import javax.inject.Inject
 
 fun newInstance(chatRoomId: String, chatRoomType: String): Fragment {
@@ -37,9 +37,8 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 
 class MembersFragment : Fragment(), MembersView {
     @Inject lateinit var presenter: MembersPresenter
-    private val adapter: MembersAdapter = MembersAdapter { memberViewModel -> showMemberDetails(memberViewModel) }
+    private val adapter: MembersAdapter = MembersAdapter { memberViewModel -> presenter.toMemberDetails(memberViewModel) }
     private val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(member_bottom_sheet) }
 
     private lateinit var chatRoomId: String
     private lateinit var chatRoomType: String
@@ -72,7 +71,7 @@ class MembersFragment : Fragment(), MembersView {
             setupToolbar(total)
             if (adapter.itemCount == 0) {
                 adapter.prependData(dataSet)
-                if (dataSet.size >= 60) {
+                if (dataSet.size >= 59) { // TODO Check why the API retorns the specified count -1
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
                             presenter.loadChatRoomsMembers(chatRoomId, chatRoomType, page * 60L)
@@ -101,24 +100,6 @@ class MembersFragment : Fragment(), MembersView {
             recycler_view.addItemDecoration(DividerItemDecoration(this))
             recycler_view.adapter = adapter
         }
-    }
-
-    private fun showMemberDetails(memberViewModel: MemberViewModel) {
-        image_bottom_sheet_avatar.setImageURI(memberViewModel.avatarUri)
-        text_bottom_sheet_member_name.content = memberViewModel.realName
-        text_bottom_sheet_member_username.content = "@${memberViewModel.username}"
-
-        val memberEmail = memberViewModel.email
-        if (memberEmail != null) {
-            text_member_email_address.textContent = memberEmail
-        } else {
-            text_email_address.setVisible(false)
-            text_member_email_address.setVisible(false)
-        }
-
-        text_member_utc.content = memberViewModel.utcOffset.toString()
-
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun setupToolbar(totalMembers: Long) {
