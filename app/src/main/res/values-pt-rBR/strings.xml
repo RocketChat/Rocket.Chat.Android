@@ -29,6 +29,7 @@
     <string name="msg_password">senha</string>
     <string name="msg_name">nome</string>
     <string name="msg_email">email</string>
+    <string name="msg_avatar_url">URL do Avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue através de contas sociais</string>
     <string name="msg_new_user">Novo usuário? %1$s</string>
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>

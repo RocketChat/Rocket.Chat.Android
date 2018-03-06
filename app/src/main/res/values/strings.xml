@@ -30,6 +30,7 @@
     <string name="msg_password">password</string>
     <string name="msg_name">name</string>
     <string name="msg_email">email</string>
+    <string name="msg_avatar_url">Avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
     <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
