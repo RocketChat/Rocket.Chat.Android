@@ -128,21 +128,21 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun listenToChanges() {
-        Observables.combineLatest(
-                text_name.asObservable(),
-                text_username.asObservable(),
-                text_email.asObservable(),
-                text_avatar_url.asObservable()
-        )
-        { text_name, text_username, text_email, text_avatar_url->
-            return@combineLatest (text_name.toString() != currentName || text_username.toString() !=currentUsername || text_email.toString() != currentEmail || (text_avatar_url.toString()!="" && text_avatar_url.toString()!= currentAvatar))
-        }.subscribe({ isValid->
-                    if (isValid) {
-                        startActionMode()
-                    } else {
-                        finishActionMode()
-                    }
-                })
+        Observables.combineLatest(text_name.asObservable(),
+            text_username.asObservable(),
+            text_email.asObservable(),
+            text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
+                return@combineLatest (text_name.toString() != currentName ||
+                    text_username.toString() !=currentUsername ||
+                    text_email.toString() != currentEmail ||
+                    (text_avatar_url.toString() != "" && text_avatar_url.toString()!= currentAvatar))
+            }.subscribe({ isValid->
+                if (isValid) {
+                    startActionMode()
+                } else {
+                    finishActionMode()
+                }
+            })
     }
 
     private fun startActionMode() {

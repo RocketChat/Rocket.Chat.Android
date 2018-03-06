@@ -46,6 +46,7 @@
             android:drawableStart="@drawable/ic_email_black_24dp"
             android:hint="@string/msg_email"
             android:inputType="textEmailAddress" />
+
         <EditText
             android:id="@+id/text_avatar_url"
             style="@style/EditText.Profile"
