@@ -76,27 +76,27 @@ class ChatRoomsAdapter(private val context: Context,
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
             textView.textContent = chatRoom.name
 
-            var drawable: Drawable? = null
-            when (chatRoom.type) {
+            var drawable = when (chatRoom.type) {
                 is RoomType.Channel -> {
-                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
                 }
                 is RoomType.PrivateGroup -> {
-                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
                 }
                 is RoomType.DirectMessage -> {
-                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
                 }
+                else -> null
             }
 
             drawable?.let {
                 val wrappedDrawable = DrawableHelper.wrapDrawable(it)
                 val mutableDrawable = wrappedDrawable.mutate()
-                DrawableHelper.tintDrawable(mutableDrawable, context,
-                        when (chatRoom.alert || chatRoom.unread > 0) {
-                            true -> R.color.colorPrimaryText
-                            false -> R.color.colorSecondaryText
-                        })
+                val color = when (chatRoom.alert || chatRoom.unread > 0) {
+                    true -> R.color.colorPrimaryText
+                    false -> R.color.colorSecondaryText
+                }
+                DrawableHelper.tintDrawable(mutableDrawable, context, color)
                 DrawableHelper.compoundDrawable(textView, mutableDrawable)
             }
         }

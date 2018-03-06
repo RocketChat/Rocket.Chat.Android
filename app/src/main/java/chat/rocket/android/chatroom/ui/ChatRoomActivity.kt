@@ -13,6 +13,7 @@ import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.roomTypeOf
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -87,17 +88,18 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         text_room_name.textContent = chatRoomName
 
-        var drawable: Drawable? = null
-        when (chatRoomType) {
-            RoomType.CHANNEL.toString() -> {
-                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
+        val roomType = roomTypeOf(chatRoomType)
+        val drawable = when (roomType) {
+            is RoomType.Channel -> {
+                DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
             }
-            RoomType.PRIVATE_GROUP.toString() -> {
-                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
+            is RoomType.PrivateGroup -> {
+                DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
             }
-            RoomType.DIRECT_MESSAGE.toString() -> {
-                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
+            is RoomType.DirectMessage -> {
+                DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
             }
+            else -> null
         }
 
         drawable?.let {
