@@ -58,6 +58,7 @@ fun PublicSettings.gitlabEnabled(): Boolean = this[ACCOUNT_GITLAB]?.value == tru
 fun PublicSettings.wordpressEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
 
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
+fun PublicSettings.ldapEnabled(): Boolean = this[LDAP_ENABLE]?.value == true
 
 // Message settings
 fun PublicSettings.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true
