@@ -21,6 +21,8 @@ class MainPresenter @Inject constructor(private val navigator: MainNavigator,
 
     fun toUserProfile() = navigator.toUserProfile()
 
+    fun toSettings() = navigator.toSettings()
+
     /**
      * Logout from current server.
      */

@@ -1,20 +1,21 @@
 package chat.rocket.android.chatroom.ui
 
+import DrawableHelper
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.common.model.RoomType
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
-import me.imid.swipebacklayout.lib.SwipeBackLayout
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity
 import javax.inject.Inject
 
 
@@ -32,7 +33,7 @@ private const val INTENT_CHAT_ROOM_NAME = "chat_room_name"
 private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 private const val INTENT_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 
-class ChatRoomActivity : SwipeBackActivity(), HasSupportFragmentInjector {
+class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -56,8 +57,6 @@ class ChatRoomActivity : SwipeBackActivity(), HasSupportFragmentInjector {
         isChatRoomReadOnly = intent.getBooleanExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, true)
         requireNotNull(chatRoomType) { "no is_chat_room_read_only provided in Intent extras" }
 
-        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
-
         setupToolbar(chatRoomName)
 
         addFragment("ChatRoomFragment", R.id.fragment_container) {
@@ -65,7 +64,9 @@ class ChatRoomActivity : SwipeBackActivity(), HasSupportFragmentInjector {
         }
     }
 
-    override fun onBackPressed() = finishActivity()
+    override fun onBackPressed() {
+        finishActivity()
+    }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
@@ -75,6 +76,27 @@ class ChatRoomActivity : SwipeBackActivity(), HasSupportFragmentInjector {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         text_room_name.textContent = chatRoomName
+
+        var drawable: Drawable? = null
+        when (chatRoomType) {
+            RoomType.CHANNEL.toString() -> {
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
+            }
+            RoomType.PRIVATE_GROUP.toString() -> {
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
+            }
+            RoomType.DIRECT_MESSAGE.toString() -> {
+                drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
+            }
+        }
+
+        drawable?.let {
+            val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+            val mutableDrawable = wrappedDrawable.mutate()
+            DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
+            DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
+        }
+
         toolbar.setNavigationOnClickListener {
             finishActivity()
         }

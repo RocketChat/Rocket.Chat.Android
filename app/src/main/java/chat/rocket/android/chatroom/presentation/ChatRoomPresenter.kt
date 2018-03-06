@@ -3,7 +3,7 @@ package chat.rocket.android.chatroom.presentation
 import android.net.Uri
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.domain.UriInteractor
-import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
+import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -34,7 +34,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val uriInteractor: UriInteractor,
                                             private val messagesRepository: MessagesRepository,
                                             factory: RocketChatClientFactory,
-                                            private val mapper: MessageViewModelMapper) {
+                                            private val mapper: ViewModelMapper) {
     private val client = factory.create(serverInteractor.get()!!)
     private var subId: String? = null
     private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
@@ -45,10 +45,14 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             view.showLoading()
             try {
                 val messages =
-                    client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
+                        client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                 messagesRepository.saveAll(messages)
 
-                val messagesViewModels = mapper.mapToViewModelList(messages, settings)
+                // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
+                // but should mark only when the user see the first unread message.
+                markRoomAsRead(chatRoomId)
+              
+                val messagesViewModels = mapper.map(messages)
                 view.showMessages(messagesViewModels)
 
                 // Subscribe after getting the first page of messages from REST
@@ -127,17 +131,28 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    fun markRoomAsRead(roomId: String) {
+        launchUI(strategy) {
+            try {
+                client.markAsRead(roomId)
+            } catch (ex: RocketChatException) {
+                view.showMessage(ex.message!!) // TODO Remove.
+                Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
+            }
+        }
+    }
+
     private fun subscribeMessages(roomId: String) {
         client.addStateChannel(stateChannel)
         launch(CommonPool + strategy.jobs) {
             for (status in stateChannel) {
                 Timber.d("Changing status to: $status")
                 when (status) {
-                    State.Authenticating -> Timber.d("Authenticating")
-                    State.Connected -> {
+                    is State.Authenticating -> Timber.d("Authenticating")
+                    is State.Connected -> {
                         Timber.d("Connected")
-                        subId = client.subscribeRoomMessages(roomId) {
-                            Timber.d("subscribe messages for $roomId: $it")
+                        subId = client.subscribeRoomMessages(roomId) { success, _ ->
+                            Timber.d("subscribe messages for $roomId: $success")
                         }
                     }
                 }
@@ -146,10 +161,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
 
         when (client.state) {
-            State.Connected -> {
+            is State.Connected -> {
                 Timber.d("Already connected")
-                subId = client.subscribeRoomMessages(roomId) {
-                    Timber.d("subscribe messages for $roomId: $it")
+                subId = client.subscribeRoomMessages(roomId) { success, _ ->
+                    Timber.d("subscribe messages for $roomId: $success")
                 }
             }
             else -> client.connect()
@@ -232,9 +247,9 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     is RoomType.Custom -> "custom" //TODO: put appropriate callback string here.
                 }
                 view.showReplyingAction(
-                    user,
-                    "[ ](${serverUrl}/${room}/${roomName}?msg=${id}) ${mention} ",
-                    m.message
+                        username = user,
+                        replyMarkdown = "[ ]($serverUrl/$room/$roomName?msg=$id) $mention ",
+                        quotedMessage = m.message
                 )
             }
         }
@@ -315,7 +330,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
-            val viewModelStreamedMessage = mapper.mapToViewModel(streamedMessage, settings)
+            val viewModelStreamedMessage = mapper.map(streamedMessage)
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {

@@ -47,13 +47,17 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
         }
     }
 
-    fun updateUserProfile(email: String, name: String, username: String, avatarImage: File) {
+    fun updateUserProfile(email: String, name: String, username: String, avatarUrl: String = "", avatarImage: File?) {
         launchUI(strategy) {
             view.showLoading()
             try {
-                //TODO check for problems here
+                if (avatarUrl != "") {
+                    client.setAvatar(avatarUrl)
+                }
+                if (avatarImage != null)
+                    client.setAvatar(avatarImage, "image/jpeg")
+
                 val user = client.updateProfile(myselfId, email, name, username)
-                val avatar = client.setAvatar(avatarImage, "image/jpeg")
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
             } catch (exception: RocketChatException) {

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import android.widget.ScrollView
+
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
@@ -22,6 +23,7 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
+
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
@@ -31,18 +33,9 @@ class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var appContext: Context // TODO we really need it? Check alternatives...
 
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        if (KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
-            showSignUpView(false)
-            showOauthView(false)
-            showLoginButton(true)
-        } else {
-            if (isEditTextEmpty()) {
-                showSignUpView(true)
-                showOauthView(true)
-                showLoginButton(false)
-            }
-        }
+        areLoginOptionsNeeded()
     }
+
     private var isGlobalLayoutListenerSetUp = false
 
     companion object {
@@ -74,15 +67,10 @@ class LoginFragment : Fragment(), LoginView {
         setupSignUpListener()
     }
 
-    private fun showThreeSocialMethods() {
-        var count = 0
-        for (i in 0..social_accounts_container.childCount) {
-            val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
-            if (view.isEnabled && count < 3) {
-                view.visibility = View.VISIBLE
-                count++
-            }
-        }
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        areLoginOptionsNeeded()
     }
 
     override fun onDestroyView() {
@@ -179,6 +167,17 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun showNoInternetConnection() = showMessage(getString(R.string.msg_no_internet_connection))
 
+    private fun areLoginOptionsNeeded() {
+        if (!isEditTextEmpty() || KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
+            showSignUpView(false)
+            showOauthView(false)
+            showLoginButton(true)
+        } else {
+            showSignUpView(true)
+            showOauthView(true)
+            showLoginButton(false)
+        }
+    }
 
     private fun tintEditTextDrawableStart() {
         activity?.apply {
@@ -213,10 +212,6 @@ class LoginFragment : Fragment(), LoginView {
         button_log_in.isEnabled = value
         text_username_or_email.isEnabled = value
         text_password.isEnabled = value
-        if (!isEditTextEmpty()) {
-            showSignUpView(value)
-            showOauthView(value)
-        }
     }
 
     // Returns true if *all* EditTexts are empty.
@@ -229,6 +224,17 @@ class LoginFragment : Fragment(), LoginView {
                 if (view.isEnabled) view.visibility = View.VISIBLE
             }
         }, 1000)
+    }
+
+    private fun showThreeSocialMethods() {
+        var count = 0
+        for (i in 0..social_accounts_container.childCount) {
+            val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
+            if (view.isEnabled && count < 3) {
+                view.visibility = View.VISIBLE
+                count++
+            }
+        }
     }
 
     private fun scrollToBottom() {

@@ -12,8 +12,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 1008
-        versionName "2.0.0-dev6"
+        versionCode 1009
+        versionName "2.0.0-dev7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -104,8 +104,6 @@ dependencies {
     implementation libraries.sheetMenu
 
     implementation libraries.aVLoadingIndicatorView
-
-    implementation libraries.swipeBackLayout
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true

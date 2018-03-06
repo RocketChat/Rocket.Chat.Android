@@ -8,7 +8,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -20,6 +19,7 @@ import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
 import android.support.v7.view.ActionMode
 import android.util.Log
 import android.view.*
+import android.widget.ListAdapter
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
@@ -47,8 +47,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private lateinit var currentName: String
     private lateinit var currentUsername: String
     private lateinit var currentEmail: String
+    private lateinit var currentAvatar: String
     private var actionMode: ActionMode? = null
-    private var tempCameraUri: Uri? = null
     private var avatarImage: File? = null
     private var isAvatarChanged = false
     //request codes
@@ -99,10 +99,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_name.textContent = name
         text_username.textContent = username
         text_email.textContent = email
+        text_avatar_url.textContent = ""
 
         currentName = name
         currentUsername = username
         currentEmail = email
+        currentAvatar = avatarUrl
 
         profile_container.setVisible(true)
 
@@ -123,10 +125,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     //show dialog to choose whether to pick image from gallery or to click it from camera
     private fun openImagePickerChooserDialog() {
-        val choices = arrayOf("Open camera", "Pick an image from storage")
+        val choices = arrayOf("Take photo", "Choose photo from storage")
 
         val imagePickerChooserDialogBuilder = AlertDialog.Builder(context)
-        imagePickerChooserDialogBuilder.setTitle(getString(R.string.title_choose_image_from))
+        imagePickerChooserDialogBuilder.setTitle("")
         imagePickerChooserDialogBuilder.setItems(choices, object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 when (which) {
@@ -140,7 +142,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     //open camera to capture picture
     private fun openCamera() {
-        var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(intent, CAMERA_REQUEST_CODE)
     }
 
@@ -165,7 +167,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             CAMERA_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
                     //write image data to file
-                    //TODO add better method to store image into storage, presently image has a relatively poor quality (added by aniketsingh03)
                     try {
                         val bitmapImage: Bitmap = data!!.extras.get("data") as Bitmap
                         val bytes = ByteArrayOutputStream()
@@ -238,7 +239,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, avatarImage!!)
+                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, avatarImage)
+
                 mode.finish()
                 true
             }
@@ -261,11 +263,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
             val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
+            val linkDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_link_black_24dp, this)
 
-            val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
+            val drawables = arrayOf(personDrawable, atDrawable, emailDrawable, linkDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
-            DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_email), drawables)
+            DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_email, text_avatar_url), drawables)
         }
     }
 
@@ -286,6 +289,21 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 finishActionMode()
             }
         })
+        Observables.combineLatest(text_name.asObservable(),
+                text_username.asObservable(),
+                text_email.asObservable(),
+                text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
+            return@combineLatest (text_name.toString() != currentName ||
+                    text_username.toString() != currentUsername ||
+                    text_email.toString() != currentEmail ||
+                    (text_avatar_url.toString() != "" && text_avatar_url.toString() != currentAvatar))
+        }.subscribe({ isValid ->
+                    if (isValid) {
+                        startActionMode()
+                    } else {
+                        finishActionMode()
+                    }
+                })
     }
 
     private fun startActionMode() {
@@ -301,9 +319,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_username.isEnabled = value
         text_email.isEnabled = value
         image_avatar.isEnabled = value
-        if (value == true)
+        if (value)
             image_avatar.alpha = 1.0f
         else
             image_avatar.alpha = 0.5f
+        text_avatar_url.isEnabled = value
+
     }
 }
