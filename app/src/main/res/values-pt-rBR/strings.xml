@@ -7,6 +7,7 @@
     <string name="title_legal_terms">Termos Legais</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Perfil</string>
+    <string name="title_members">Membros (%d)</string>
     <string name="title_settings">Configurações</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
@@ -59,6 +60,8 @@
     <string name="msg_content_description_show_attachment_options">Mostrar opções de anexo</string>
     <string name="msg_you">Você</string>
     <string name="msg_unknown">Desconhecido</string>
+    <string name="msg_email_address">Endereço de e-mail</string>
+    <string name="msg_utc_offset">Deslocamento de UTC</string>
     <string name="msg_new_password">Informe a nova senha</string>
     <string name="msg_confirm_password">Confirme a nova senha</string>
 
@@ -89,10 +92,20 @@
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
     <string name="permission_pinning_not_allowed">Fixar não permitido</string>
 
+    <!-- Members List -->
+    <string name="title_members_list">Lista de Membros</string>
+
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Pinadas</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
 
+    <!-- Socket status -->
+    <string name="status_connected">conectado</string>
+    <string name="status_disconnected">desconetado</string>
+    <string name="status_connecting">conectando</string>
+    <string name="status_authenticating">autenticando</string>
+    <string name="status_disconnecting">desconectando</string>
+    <string name="status_waiting">conectando em %d segundos</string>
 </resources>

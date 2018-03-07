@@ -28,7 +28,7 @@ class RocketChatClientFactory @Inject constructor(val okHttpClient: OkHttpClient
         }
 
         Timber.d("Returning NEW client for: $url")
-        cache.put(url, client)
+        cache[url] = client
         return client
     }
 }

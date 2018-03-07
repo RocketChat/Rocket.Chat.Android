@@ -1,9 +1,11 @@
 package chat.rocket.android.chatroom.viewmodel
 
 import chat.rocket.android.R
+import chat.rocket.core.model.Message
 import chat.rocket.core.model.attachment.ImageAttachment
 
 data class ImageAttachmentViewModel(
+        override val message: Message,
         override val rawData: ImageAttachment,
         override val messageId: String,
         override val attachmentUrl: String,

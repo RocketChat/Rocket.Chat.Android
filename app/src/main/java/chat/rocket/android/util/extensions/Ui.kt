@@ -6,6 +6,8 @@ import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,3 +57,12 @@ fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) = To
 fun Fragment.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) = showToast(getString(resource), duration)
 
 fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) = activity!!.showToast(message, duration)
+
+fun RecyclerView.isAtBottom(): Boolean {
+    val manager: RecyclerView.LayoutManager? = layoutManager
+    if (manager is LinearLayoutManager) {
+        return manager.findFirstVisibleItemPosition() == 0
+    }
+
+    return false // or true??? we can't determine the first visible item.
+}

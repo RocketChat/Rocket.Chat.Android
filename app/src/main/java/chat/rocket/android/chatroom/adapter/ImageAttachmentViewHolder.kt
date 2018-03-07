@@ -5,7 +5,16 @@ import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
-class ImageAttachmentViewHolder(itemView: View) : BaseViewHolder<ImageAttachmentViewModel>(itemView) {
+class ImageAttachmentViewHolder(itemView: View, listener: ActionsListener)
+    : BaseViewHolder<ImageAttachmentViewModel>(itemView, listener) {
+
+    init {
+        with(itemView) {
+            setupActionMenu(attachment_container)
+            setupActionMenu(image_attachment)
+        }
+    }
+
     override fun bindViews(data: ImageAttachmentViewModel) {
         with(itemView) {
             image_attachment.setImageURI(data.attachmentUrl)

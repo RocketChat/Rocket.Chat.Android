@@ -7,14 +7,14 @@ import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extensions.isEmailValid
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
+import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.rest.login
-import chat.rocket.core.internal.rest.me
-import chat.rocket.core.internal.rest.registerPushToken
+import chat.rocket.core.internal.rest.*
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
@@ -93,15 +93,31 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         view.showLoading()
 
                         try {
-                            val token = client.login(usernameOrEmail, password)
-                            val me = client.me()
-                            multiServerRepository.save(
-                                server,
-                                TokenModel(token.userId, token.authToken)
-                            )
-                            localRepository.save(LocalRepository.USERNAME_KEY, me.username)
-                            registerPushToken()
-                            navigator.toChatList()
+                            var token: Token? = null
+                            if (usernameOrEmail.isEmailValid()) {
+                                token = client.loginWithEmail(usernameOrEmail, password)
+                            } else {
+                                val settings = settingsInteractor.get(server)
+                                if (settings != null) {
+                                    token = if (settings.ldapEnabled()) {
+                                        client.loginWithLdap(usernameOrEmail, password)
+                                    } else {
+                                        client.login(usernameOrEmail, password)
+                                    }
+                                } else {
+                                    navigator.toServerScreen()
+                                }
+                            }
+
+                            if (token != null) {
+                                val me = client.me()
+                                multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
+                                localRepository.save(LocalRepository.USERNAME_KEY, me.username)
+                                registerPushToken()
+                                navigator.toChatList()
+                            } else {
+                                view.showGenericErrorMessage()
+                            }
                         } catch (exception: RocketChatException) {
                             when (exception) {
                                 is RocketChatTwoFactorException -> {

@@ -8,6 +8,7 @@
     <string name="title_legal_terms">Legal Terms</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Profile</string>
+    <string name="title_members">Members (%d)</string>
     <string name="title_settings">Settings</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
@@ -61,6 +62,8 @@
     <string name="msg_content_description_show_attachment_options">Show attachment options</string>
     <string name="msg_you">You</string>
     <string name="msg_unknown">Unknown</string>
+    <string name="msg_email_address">E-mail address</string>
+    <string name="msg_utc_offset">UTC offset</string>
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
 
@@ -92,10 +95,21 @@
     <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
     <string name="permission_image_picking_not_allowed">Image cannot be accessed without read storage permissions</string>
 
+    <!-- Members List -->
+    <string name="title_members_list">Members List</string>
+
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
+
+    <!-- Socket status -->
+    <string name="status_connected">connected</string>
+    <string name="status_disconnected">disconnected</string>
+    <string name="status_connecting">connecting</string>
+    <string name="status_authenticating">authenticating</string>
+    <string name="status_disconnecting">disconnecting</string>
+    <string name="status_waiting">connecting in %d seconds</string>
 
 </resources>

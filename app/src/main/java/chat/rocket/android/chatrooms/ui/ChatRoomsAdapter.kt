@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
@@ -23,6 +25,7 @@ import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
 class ChatRoomsAdapter(private val context: Context,
+                       private val settings: PublicSettings,
                        private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
     var dataSet: MutableList<ChatRoom> = ArrayList()
 
@@ -73,27 +76,27 @@ class ChatRoomsAdapter(private val context: Context,
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
             textView.textContent = chatRoom.name
 
-            var drawable: Drawable? = null
-            when (chatRoom.type) {
+            var drawable = when (chatRoom.type) {
                 is RoomType.Channel -> {
-                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
                 }
                 is RoomType.PrivateGroup -> {
-                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
                 }
                 is RoomType.DirectMessage -> {
-                    drawable = DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
                 }
+                else -> null
             }
 
             drawable?.let {
                 val wrappedDrawable = DrawableHelper.wrapDrawable(it)
                 val mutableDrawable = wrappedDrawable.mutate()
-                DrawableHelper.tintDrawable(mutableDrawable, context,
-                        when (chatRoom.alert || chatRoom.unread > 0) {
-                            true -> R.color.colorPrimaryText
-                            false -> R.color.colorSecondaryText
-                        })
+                val color = when (chatRoom.alert || chatRoom.unread > 0) {
+                    true -> R.color.colorPrimaryText
+                    false -> R.color.colorSecondaryText
+                }
+                DrawableHelper.tintDrawable(mutableDrawable, context, color)
                 DrawableHelper.compoundDrawable(textView, mutableDrawable)
             }
         }
