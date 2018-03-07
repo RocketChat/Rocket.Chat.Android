@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/layout_message_composer"
-        android:background="@color/whitesmoke" />
+        android:background="@color/suggestion_background_color" />
 
     <include
         android:id="@+id/layout_message_composer"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="2dp"
-    android:background="@color/whitesmoke">
+    android:background="@color/suggestion_background_color">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/image_avatar_container"
         android:layout_toRightOf="@id/image_avatar_container"
-        android:background="@color/whitesmoke">
+        android:background="@color/suggestion_background_color">
 
         <TextView
             android:id="@+id/text_name"
