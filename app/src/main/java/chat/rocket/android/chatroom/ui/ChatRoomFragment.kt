@@ -167,7 +167,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun showNewMessage(message: MessageViewModel) {
         adapter.addItem(message)
-        recycler_view.scrollToPosition(0)
+//        recycler_view.scrollToPosition(0)
+//        Commenting this line to fix Bug#791
     }
 
     override fun disableSendMessageButton() {
