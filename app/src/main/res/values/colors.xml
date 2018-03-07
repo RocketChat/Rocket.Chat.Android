@@ -36,4 +36,7 @@
 
     <color name="colorEmojiIcon">#FF767676</color>
 
+    <color name="default_popup_background_color">#ffffffff</color>
+    <color name="default_popup_item_color">#ff000000</color>
+
 </resources>

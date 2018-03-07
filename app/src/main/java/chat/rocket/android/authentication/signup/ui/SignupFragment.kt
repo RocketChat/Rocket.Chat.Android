@@ -58,7 +58,7 @@ class SignupFragment : Fragment(), SignupView {
         setUpNewUserAgreementListener()
 
         button_sign_up.setOnClickListener {
-            presenter.signup(text_name.textContent, text_username.textContent, text_password.textContent, text_email.textContent)
+            presenter.signup(text_username.textContent, text_username.textContent, text_password.textContent, text_email.textContent)
         }
     }
 
@@ -69,8 +69,8 @@ class SignupFragment : Fragment(), SignupView {
 
     override fun alertBlankName() {
         AnimationHelper.vibrateSmartPhone(appContext)
-        AnimationHelper.shakeView(text_name)
-        text_name.requestFocus()
+        AnimationHelper.shakeView(text_username)
+        text_username.requestFocus()
     }
 
     override fun alertBlankUsername() {
@@ -122,7 +122,7 @@ class SignupFragment : Fragment(), SignupView {
         val drawables = arrayOf(personDrawable, atDrawable, lockDrawable, emailDrawable)
         DrawableHelper.wrapDrawables(drawables)
         DrawableHelper.tintDrawables(drawables, appContext, R.color.colorDrawableTintGrey)
-        DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_password, text_email), drawables)
+        DrawableHelper.compoundDrawables(arrayOf(text_username, text_username, text_password, text_email), drawables)
     }
 
     private fun setUpNewUserAgreementListener() {
@@ -149,7 +149,7 @@ class SignupFragment : Fragment(), SignupView {
 
     private fun enableUserInput(value: Boolean) {
         button_sign_up.isEnabled = value
-        text_name.isEnabled = value
+        text_username.isEnabled = value
         text_username.isEnabled = value
         text_password.isEnabled = value
         text_email.isEnabled = value

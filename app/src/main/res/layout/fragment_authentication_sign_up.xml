@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/text_name"
+        android:id="@+id/text_username"
         style="@style/Authentication.EditText"
         android:layout_marginTop="32dp"
         android:drawableStart="@drawable/ic_person_black_24dp"
@@ -37,7 +37,7 @@
         android:inputType="text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_name" />
+        app:layout_constraintTop_toBottomOf="@+id/text_username" />
 
     <EditText
         android:id="@+id/text_password"
