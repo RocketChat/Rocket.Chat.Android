@@ -1,0 +1,16 @@
+package chat.rocket.android.members.presentation
+
+import chat.rocket.android.core.behaviours.LoadingView
+import chat.rocket.android.core.behaviours.MessageView
+import chat.rocket.android.members.viewmodel.MemberViewModel
+
+interface MembersView: LoadingView, MessageView {
+
+    /**
+     * Shows a list of members of a room.
+     *
+     * @param dataSet The data set to show.
+     * @param total The total number of members.
+     */
+    fun showMembers(dataSet: List<MemberViewModel>, total: Long)
+}

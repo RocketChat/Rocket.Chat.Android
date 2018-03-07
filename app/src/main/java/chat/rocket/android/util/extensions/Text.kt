@@ -3,6 +3,7 @@ package chat.rocket.android.util.extensions
 import android.text.Spannable
 import android.text.Spanned
 import android.text.TextUtils
+import android.util.Patterns
 import android.widget.EditText
 import android.widget.TextView
 import chat.rocket.android.widget.emoji.EmojiParser
@@ -30,6 +31,8 @@ fun EditText.erase() {
         text.removeSpan(it)
     }
 }
+
+fun String.isEmailValid(): Boolean = Patterns.EMAIL_ADDRESS.matcher(this).matches()
 
 var TextView.textContent: String
     get() = text.toString()

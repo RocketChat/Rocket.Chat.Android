@@ -5,8 +5,8 @@
     android:id="@+id/attachment_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="72dp"
-    android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
+    android:paddingStart="72dp"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
     android:orientation="vertical">
 
     <com.facebook.drawee.view.SimpleDraweeView

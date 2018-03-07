@@ -6,41 +6,50 @@ import chat.rocket.android.chatroom.domain.UriInteractor
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.*
-import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
+import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
-import chat.rocket.core.internal.realtime.connect
-import chat.rocket.core.internal.realtime.subscribeRoomMessages
-import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
+import org.threeten.bp.Instant
 import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
+                                            private val navigator: ChatRoomNavigator,
                                             private val strategy: CancelStrategy,
                                             getSettingsInteractor: GetSettingsInteractor,
                                             private val serverInteractor: GetCurrentServerInteractor,
                                             private val permissions: GetPermissionsInteractor,
                                             private val uriInteractor: UriInteractor,
                                             private val messagesRepository: MessagesRepository,
-                                            factory: RocketChatClientFactory,
+                                            factory: ConnectionManagerFactory,
                                             private val mapper: ViewModelMapper) {
-    private val client = factory.create(serverInteractor.get()!!)
-    private var subId: String? = null
+    private val currentServer = serverInteractor.get()!!
+    private val manager = factory.create(currentServer)
+    private val client = manager.client
     private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
+    private val messagesChannel = Channel<Message>()
+
+    private var chatRoomId: String? = null
+    private var chatRoomType: String? = null
     private val stateChannel = Channel<State>()
+    private var lastState = manager.state
 
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
+        this.chatRoomId = chatRoomId
+        this.chatRoomType = chatRoomType
         launchUI(strategy) {
             view.showLoading()
             try {
@@ -55,10 +64,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 val messagesViewModels = mapper.map(messages)
                 view.showMessages(messagesViewModels)
 
-                // Subscribe after getting the first page of messages from REST
-                if (offset == 0L) {
-                    subscribeMessages(chatRoomId)
-                }
+                subscribeMessages(chatRoomId)
             } catch (ex: Exception) {
                 ex.printStackTrace()
                 ex.message?.let {
@@ -68,6 +74,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }
             } finally {
                 view.hideLoading()
+            }
+
+            if (offset == 0L) {
+                subscribeState()
             }
         }
     }
@@ -131,7 +141,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
-    fun markRoomAsRead(roomId: String) {
+    private fun markRoomAsRead(roomId: String) {
         launchUI(strategy) {
             try {
                 client.markAsRead(roomId)
@@ -142,55 +152,68 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
-    private fun subscribeMessages(roomId: String) {
-        client.addStateChannel(stateChannel)
+    private fun subscribeState() {
+        Timber.d("Subscribing to Status changes")
+        lastState = manager.state
+        manager.addStatusChannel(stateChannel)
         launch(CommonPool + strategy.jobs) {
-            for (status in stateChannel) {
-                Timber.d("Changing status to: $status")
-                when (status) {
-                    is State.Authenticating -> Timber.d("Authenticating")
-                    is State.Connected -> {
-                        Timber.d("Connected")
-                        subId = client.subscribeRoomMessages(roomId) { success, _ ->
-                            Timber.d("subscribe messages for $roomId: $success")
-                        }
+            for (state in stateChannel) {
+                Timber.d("Got new state: $state - last: $lastState")
+                if (state != lastState) {
+                    launch(UI) {
+                        view.showConnectionState(state)
+                    }
+
+                    if (state is State.Connected) {
+                        loadMissingMessages()
+                    }
+                }
+                lastState = state
+            }
+        }
+    }
+
+    private fun subscribeMessages(roomId: String) {
+        manager.subscribeRoomMessages(roomId, messagesChannel)
+
+        launch(CommonPool + strategy.jobs) {
+            for (message in messagesChannel) {
+                Timber.d("New message for room ${message.roomId}")
+                updateMessage(message)
+            }
+        }
+    }
+
+    private fun loadMissingMessages() {
+        launch(parent = strategy.jobs) {
+            if (chatRoomId != null && chatRoomType != null) {
+                val roomType = roomTypeOf(chatRoomType!!)
+                val lastMessage = messagesRepository.getByRoomId(chatRoomId!!).sortedByDescending { it.timestamp }.first()
+                val instant = Instant.ofEpochMilli(lastMessage.timestamp)
+                val messages = client.history(chatRoomId!!, roomType, count = 50,
+                        oldest = instant.toString())
+                Timber.d("History: $messages")
+
+                if (messages.result.isNotEmpty()) {
+                    val models = mapper.map(messages.result)
+                    messagesRepository.saveAll(messages.result)
+
+                    launchUI(strategy) {
+                        view.showNewMessage(models)
+                    }
+
+                    if (messages.result.size == 50) {
+                        // we loade at least count messages, try one more to fetch more messages
+                        loadMissingMessages()
                     }
                 }
             }
-            Timber.d("Done on statusChannel")
         }
-
-        when (client.state) {
-            is State.Connected -> {
-                Timber.d("Already connected")
-                subId = client.subscribeRoomMessages(roomId) { success, _ ->
-                    Timber.d("subscribe messages for $roomId: $success")
-                }
-            }
-            else -> client.connect()
-        }
-
-        launchUI(strategy) {
-            listenMessages(roomId)
-        }
-
-        // TODO - when we have a proper service, we won't need to take care of connection, just
-        // subscribe and listen...
-        /*launchUI(strategy) {
-            subId = client.subscribeRoomMessages(roomId) {
-                Timber.d("subscribe messages for $roomId: $it")
-            }
-            listenMessages(roomId)
-        }*/
     }
 
-    fun unsubscribeMessages() {
-        launch(CommonPool) {
-            client.removeStateChannel(stateChannel)
-            subId?.let { subscriptionId ->
-                client.unsubscribe(subscriptionId)
-            }
-        }
+    fun unsubscribeMessages(chatRoomId: String) {
+        manager.removeStatusChannel(stateChannel)
+        manager.unsubscribeRoomMessages(chatRoomId)
     }
 
     /**
@@ -317,16 +340,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
-    private suspend fun listenMessages(roomId: String) {
-        launch(CommonPool + strategy.jobs) {
-            for (message in client.messagesChannel) {
-                if (message.roomId != roomId) {
-                    Timber.d("Ignoring message for room ${message.roomId}, expecting $roomId")
-                }
-                updateMessage(message)
-            }
-        }
-    }
+    fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {

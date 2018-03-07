@@ -12,7 +12,12 @@ fun View.rotateBy(value: Float, duration: Long = 100) {
         .start()
 }
 
-fun View.fadeIn(startValue: Float, finishValue: Float, duration: Long = 200) {
+fun View.fadeIn(startValue: Float = 0f, finishValue: Float = 1f, duration: Long = 200) {
+    if (alpha == finishValue) {
+        setVisible(true)
+        return
+    }
+
     animate()
         .alpha(startValue)
         .setDuration(duration)
@@ -27,7 +32,12 @@ fun View.fadeIn(startValue: Float, finishValue: Float, duration: Long = 200) {
     setVisible(true)
 }
 
-fun View.fadeOut(startValue: Float, finishValue: Float, duration: Long = 200) {
+fun View.fadeOut(startValue: Float = 1f, finishValue: Float = 0f, duration: Long = 200) {
+    if (alpha == finishValue) {
+        setVisible(false)
+        return
+    }
+
     animate()
         .alpha(startValue)
         .setDuration(duration)

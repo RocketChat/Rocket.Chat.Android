@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        presenter.connect()
         setupToolbar()
         setupNavigationView()
     }
@@ -44,6 +45,13 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         if (!isFragmentAdded) {
             presenter.toChatList()
             isFragmentAdded = true
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) {
+            presenter.disconnect()
         }
     }
 

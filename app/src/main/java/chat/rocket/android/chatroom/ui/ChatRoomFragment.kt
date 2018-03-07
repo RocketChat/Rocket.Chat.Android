@@ -27,6 +27,7 @@ import chat.rocket.android.widget.emoji.ComposerEditText
 import chat.rocket.android.widget.emoji.Emoji
 import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
 import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.core.internal.realtime.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -98,6 +99,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar(chatRoomName)
+
         presenter.loadMessages(chatRoomId, chatRoomType)
 
         setupRecyclerView()
@@ -112,7 +115,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     override fun onDestroyView() {
-        presenter.unsubscribeMessages()
+        presenter.unsubscribeMessages(chatRoomId)
         handler.removeCallbacksAndMessages(null)
         unsubscribeTextMessage()
         super.onDestroyView()
@@ -133,6 +136,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_members_list -> {
+                presenter.toMembersList(chatRoomId, chatRoomType)
+            }
             R.id.action_pinned_messages -> {
                 val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
                     putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -220,6 +226,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             actionSnackbar.title = username
             actionSnackbar.text = quotedMessage
             actionSnackbar.show()
+            KeyboardHelper.showSoftKeyboard(text_message)
+            if (!recycler_view.isAtBottom()) {
+                if (adapter.itemCount > 0) {
+                    recycler_view.scrollToPosition(0)
+                }
+            }
         }
     }
 
@@ -247,6 +259,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             actionSnackbar.show()
             text_message.textContent = text
             editingMessageId = messageId
+            KeyboardHelper.showSoftKeyboard(text_message)
         }
     }
 
@@ -283,6 +296,28 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         showMessage(getString(R.string.max_file_size_exceeded, fileSize, maxFileSize))
     }
 
+    override fun showConnectionState(state: State) {
+        activity?.apply {
+            connection_status_text.fadeIn()
+            handler.removeCallbacks(dismissStatus)
+            when (state) {
+                is State.Connected -> {
+                    connection_status_text.text = getString(R.string.status_connected)
+                    handler.postDelayed(dismissStatus, 2000)
+                }
+                is State.Disconnected -> connection_status_text.text = getString(R.string.status_disconnected)
+                is State.Connecting -> connection_status_text.text = getString(R.string.status_connecting)
+                is State.Authenticating -> connection_status_text.text = getString(R.string.status_authenticating)
+                is State.Disconnecting -> connection_status_text.text = getString(R.string.status_disconnecting)
+                is State.Waiting -> connection_status_text.text = getString(R.string.status_waiting, state.seconds)
+            }
+        }
+    }
+
+    private val dismissStatus = {
+        connection_status_text.fadeOut()
+    }
+
     private fun setupRecyclerView() {
         recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -310,11 +345,21 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else {
+            button_send.alpha = 0f
+            button_send.setVisible(false)
+            button_show_attachment_options.alpha = 1f
+            button_show_attachment_options.setVisible(true)
+
             subscribeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {
+                    if (recycler_view.isAtBottom()) {
+                        if (adapter.itemCount > 0) {
+                            recycler_view.scrollToPosition(0)
+                        }
+                    }
                 }
 
                 override fun onKeyboardClosed() {
@@ -390,6 +435,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener({
             clearMessageComposition()
+            KeyboardHelper.showSoftKeyboard(text_message)
         })
     }
 
@@ -401,9 +447,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     private fun unsubscribeTextMessage() {
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
-        }
+        compositeDisposable.clear()
     }
 
     private fun setupComposeMessageButtons(charSequence: CharSequence) {
@@ -434,5 +478,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         layout_message_attachment_options.circularRevealOrUnreveal(centerX, centerY, max, 0F)
 
         view_dim.setVisible(false)
+    }
+
+    private fun setupToolbar(toolbarTitle: String) {
+        (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
     }
 }

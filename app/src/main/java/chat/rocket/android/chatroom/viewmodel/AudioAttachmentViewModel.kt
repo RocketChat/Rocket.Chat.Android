@@ -1,9 +1,11 @@
 package chat.rocket.android.chatroom.viewmodel
 
 import chat.rocket.android.R
+import chat.rocket.core.model.Message
 import chat.rocket.core.model.attachment.AudioAttachment
 
 data class AudioAttachmentViewModel(
+        override val message: Message,
         override val rawData: AudioAttachment,
         override val messageId: String,
         override val attachmentUrl: String,
