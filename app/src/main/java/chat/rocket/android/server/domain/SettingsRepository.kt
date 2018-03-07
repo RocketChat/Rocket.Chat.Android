@@ -48,30 +48,31 @@ const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
  * If you need to access a Setting, add a const val key above, add it to the filter on
  * ServerPresenter.kt and a extension function to access it
  */
-fun Map<String, Value<Any>>.googleEnabled(): Boolean = this[ACCOUNT_GOOGLE]?.value == true
-fun Map<String, Value<Any>>.facebookEnabled(): Boolean = this[ACCOUNT_FACEBOOK]?.value == true
-fun Map<String, Value<Any>>.githubEnabled(): Boolean = this[ACCOUNT_GITHUB]?.value == true
-fun Map<String, Value<Any>>.linkedinEnabled(): Boolean = this[ACCOUNT_LINKEDIN]?.value == true
-fun Map<String, Value<Any>>.meteorEnabled(): Boolean = this[ACCOUNT_METEOR]?.value == true
-fun Map<String, Value<Any>>.twitterEnabled(): Boolean = this[ACCOUNT_TWITTER]?.value == true
-fun Map<String, Value<Any>>.gitlabEnabled(): Boolean = this[ACCOUNT_GITLAB]?.value == true
-fun Map<String, Value<Any>>.wordpressEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
+fun PublicSettings.googleEnabled(): Boolean = this[ACCOUNT_GOOGLE]?.value == true
+fun PublicSettings.facebookEnabled(): Boolean = this[ACCOUNT_FACEBOOK]?.value == true
+fun PublicSettings.githubEnabled(): Boolean = this[ACCOUNT_GITHUB]?.value == true
+fun PublicSettings.linkedinEnabled(): Boolean = this[ACCOUNT_LINKEDIN]?.value == true
+fun PublicSettings.meteorEnabled(): Boolean = this[ACCOUNT_METEOR]?.value == true
+fun PublicSettings.twitterEnabled(): Boolean = this[ACCOUNT_TWITTER]?.value == true
+fun PublicSettings.gitlabEnabled(): Boolean = this[ACCOUNT_GITLAB]?.value == true
+fun PublicSettings.wordpressEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
 
-fun Map<String, Value<Any>>.useRealName(): Boolean = this[USE_REALNAME]?.value == true
+fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
+fun PublicSettings.ldapEnabled(): Boolean = this[LDAP_ENABLE]?.value == true
 
 // Message settings
-fun Map<String, Value<Any>>.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true
-fun Map<String, Value<Any>>.showEditedStatus(): Boolean = this[SHOW_EDITED_STATUS]?.value == true
-fun Map<String, Value<Any>>.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING]?.value == true
-fun Map<String, Value<Any>>.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
-fun Map<String, Value<Any>>.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
+fun PublicSettings.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true
+fun PublicSettings.showEditedStatus(): Boolean = this[SHOW_EDITED_STATUS]?.value == true
+fun PublicSettings.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING]?.value == true
+fun PublicSettings.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
+fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
 
-fun Map<String, Value<Any>>.registrationEnabled(): Boolean {
+fun PublicSettings.registrationEnabled(): Boolean {
     val value = this[ACCOUNT_REGISTRATION]
     return value?.value == "Public"
 }
 
-fun Map<String, Value<Any>>.uploadMimeTypeFilter(): Array<String> {
+fun PublicSettings.uploadMimeTypeFilter(): Array<String> {
     val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value
     values?.let { it as String }?.split(",")?.let {
         return it.mapToTypedArray { it.trim() }
@@ -80,6 +81,8 @@ fun Map<String, Value<Any>>.uploadMimeTypeFilter(): Array<String> {
     return arrayOf("*/*")
 }
 
-fun Map<String, Value<Any>>.uploadMaxFileSize(): Int {
+fun PublicSettings.uploadMaxFileSize(): Int {
     return this[UPLOAD_MAX_FILE_SIZE]?.value?.let { it as Int } ?: Int.MAX_VALUE
 }
+
+fun PublicSettings.baseUrl(): String? = this[SITE_URL]?.value as String

@@ -8,18 +8,26 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
+import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.widget.emoji.ComposerEditText
+import chat.rocket.android.widget.emoji.Emoji
+import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
+import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.core.internal.realtime.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -46,7 +54,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 
-class ChatRoomFragment : Fragment(), ChatRoomView {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     @Inject lateinit var presenter: ChatRoomPresenter
     @Inject lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
@@ -54,6 +62,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
+    private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var isChatRoomReadOnly: Boolean = false
 
     private lateinit var actionSnackbar: ActionSnackbar
@@ -90,6 +99,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar(chatRoomName)
+
         presenter.loadMessages(chatRoomId, chatRoomType)
 
         setupRecyclerView()
@@ -98,8 +109,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         setupActionSnackbar()
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        text_message.addTextChangedListener(EmojiKeyboardPopup.EmojiTextWatcher(text_message))
+    }
+
     override fun onDestroyView() {
-        presenter.unsubscribeMessages()
+        presenter.unsubscribeMessages(chatRoomId)
         handler.removeCallbacksAndMessages(null)
         unsubscribeTextMessage()
         super.onDestroyView()
@@ -120,6 +136,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_members_list -> {
+                presenter.toMembersList(chatRoomId, chatRoomType)
+            }
             R.id.action_pinned_messages -> {
                 val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
                     putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -132,12 +151,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         return true
     }
 
-    override fun showMessages(dataSet: List<MessageViewModel>) {
+    override fun showMessages(dataSet: List<BaseViewModel<*>>) {
         activity?.apply {
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+                linearLayoutManager.stackFromEnd = true
                 recycler_view.layoutManager = linearLayoutManager
                 recycler_view.itemAnimator = DefaultItemAnimator()
                 if (dataSet.size >= 30) {
@@ -148,7 +168,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                     })
                 }
             }
-            adapter.addDataSet(dataSet)
+
+            val oldMessagesCount = adapter.itemCount
+            adapter.appendData(dataSet)
+            if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
+                recycler_view.scrollToPosition(0)
+            }
         }
     }
 
@@ -165,9 +190,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun showInvalidFileMessage() = showMessage(getString(R.string.msg_invalid_file))
 
-    override fun showNewMessage(message: MessageViewModel) {
-        adapter.addItem(message)
-//        recycler_view.scrollToPosition(0)
+
+    override fun showNewMessage(message: List<BaseViewModel<*>>) {
+        adapter.prependData(message)
+//         recycler_view.scrollToPosition(0)
 //        Commenting this line to fix Bug-#791
     }
 
@@ -177,6 +203,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun enableSendMessageButton() {
         button_send.isEnabled = true
+        text_message.isEnabled = true
+        text_message.erase()
     }
 
     override fun clearMessageComposition() {
@@ -186,8 +214,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         actionSnackbar.dismiss()
     }
 
-    override fun dispatchUpdateMessage(index: Int, message: MessageViewModel) {
-        adapter.updateItem(message)
+    override fun dispatchUpdateMessage(index: Int, message: List<BaseViewModel<*>>) {
+        adapter.updateItem(message.last())
     }
 
     override fun dispatchDeleteMessage(msgId: String) {
@@ -200,6 +228,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             actionSnackbar.title = username
             actionSnackbar.text = quotedMessage
             actionSnackbar.show()
+            KeyboardHelper.showSoftKeyboard(text_message)
+            if (!recycler_view.isAtBottom()) {
+                if (adapter.itemCount > 0) {
+                    recycler_view.scrollToPosition(0)
+                }
+            }
         }
     }
 
@@ -227,7 +261,30 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             actionSnackbar.show()
             text_message.textContent = text
             editingMessageId = messageId
+            KeyboardHelper.showSoftKeyboard(text_message)
         }
+    }
+
+    override fun onEmojiAdded(emoji: Emoji) {
+        val cursorPosition = text_message.selectionStart
+        if (cursorPosition > -1) {
+            text_message.text.insert(cursorPosition, EmojiParser.parse(emoji.shortname))
+            text_message.setSelection(cursorPosition + emoji.unicode.length)
+        }
+    }
+
+    override fun onNonEmojiKeyPressed(keyCode: Int) {
+        when (keyCode) {
+            KeyEvent.KEYCODE_BACK -> with(text_message) {
+                if (selectionStart > 0) text.delete(selectionStart - 1, selectionStart)
+            }
+            else -> throw IllegalArgumentException("pressed key not expected")
+        }
+    }
+
+    private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
+        button_add_reaction.setImageResource(drawableId)
+        button_add_reaction.setTag(drawableId)
     }
 
     override fun showFileSelection(filter: Array<String>) {
@@ -239,6 +296,28 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     override fun showInvalidFileSize(fileSize: Int, maxFileSize: Int) {
         showMessage(getString(R.string.max_file_size_exceeded, fileSize, maxFileSize))
+    }
+
+    override fun showConnectionState(state: State) {
+        activity?.apply {
+            connection_status_text.fadeIn()
+            handler.removeCallbacks(dismissStatus)
+            when (state) {
+                is State.Connected -> {
+                    connection_status_text.text = getString(R.string.status_connected)
+                    handler.postDelayed(dismissStatus, 2000)
+                }
+                is State.Disconnected -> connection_status_text.text = getString(R.string.status_disconnected)
+                is State.Connecting -> connection_status_text.text = getString(R.string.status_connecting)
+                is State.Authenticating -> connection_status_text.text = getString(R.string.status_authenticating)
+                is State.Disconnecting -> connection_status_text.text = getString(R.string.status_disconnecting)
+                is State.Waiting -> connection_status_text.text = getString(R.string.status_waiting, state.seconds)
+            }
+        }
+    }
+
+    private val dismissStatus = {
+        connection_status_text.fadeOut()
     }
 
     private fun setupRecyclerView() {
@@ -268,12 +347,41 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else {
+            button_send.alpha = 0f
+            button_send.setVisible(false)
+            button_show_attachment_options.alpha = 1f
+            button_show_attachment_options.setVisible(true)
+
             subscribeTextMessage()
+            emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+            emojiKeyboardPopup.listener = this
+            text_message.listener = object : ComposerEditText.ComposerEditTextListener {
+                override fun onKeyboardOpened() {
+                    if (recycler_view.isAtBottom()) {
+                        if (adapter.itemCount > 0) {
+                            recycler_view.scrollToPosition(0)
+                        }
+                    }
+                }
+
+                override fun onKeyboardClosed() {
+                    activity?.let {
+                        if (!emojiKeyboardPopup.isKeyboardOpen) {
+                            it.onBackPressed()
+                        }
+                        KeyboardHelper.hideSoftKeyboard(it)
+                        emojiKeyboardPopup.dismiss()
+                    }
+                    setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+                }
+            }
 
             button_send.setOnClickListener {
-                var message = citation ?: ""
-                message += text_message.textContent
-                sendMessage(message)
+                var textMessage = citation ?: ""
+                textMessage += text_message.textContent
+                sendMessage(textMessage)
+
+                clearMessageComposition()
             }
 
             button_show_attachment_options.setOnClickListener {
@@ -297,6 +405,31 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
                     hideAttachmentOptions()
                 }, 400)
             }
+
+            button_add_reaction.setOnClickListener { view ->
+                openEmojiKeyboardPopup()
+            }
+        }
+    }
+
+    private fun openEmojiKeyboardPopup() {
+        if (!emojiKeyboardPopup.isShowing()) {
+            // If keyboard is visible, simply show the  popup
+            if (emojiKeyboardPopup.isKeyboardOpen) {
+                emojiKeyboardPopup.showAtBottom()
+            } else {
+                // Open the text keyboard first and immediately after that show the emoji popup
+                text_message.setFocusableInTouchMode(true)
+                text_message.requestFocus()
+                emojiKeyboardPopup.showAtBottomPending()
+                KeyboardHelper.showSoftKeyboard(text_message)
+
+            }
+            setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
+        } else {
+            // If popup is showing, simply dismiss it to show the undelying text keyboard
+            emojiKeyboardPopup.dismiss()
+            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         }
     }
 
@@ -304,20 +437,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener({
             clearMessageComposition()
+            KeyboardHelper.showSoftKeyboard(text_message)
         })
     }
 
     private fun subscribeTextMessage() {
         val disposable = text_message.asObservable(0)
-            .subscribe({ t -> setupComposeMessageButtons(t) })
+                .subscribe({ t -> setupComposeMessageButtons(t) })
 
         compositeDisposable.add(disposable)
     }
 
     private fun unsubscribeTextMessage() {
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
-        }
+        compositeDisposable.clear()
     }
 
     private fun setupComposeMessageButtons(charSequence: CharSequence) {
@@ -348,5 +480,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
         layout_message_attachment_options.circularRevealOrUnreveal(centerX, centerY, max, 0F)
 
         view_dim.setVisible(false)
+    }
+
+    private fun setupToolbar(toolbarTitle: String) {
+        (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
     }
 }

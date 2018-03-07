@@ -11,6 +11,7 @@ ext {
         // Main dependencies
         support                : '27.0.2',
         constraintLayout       : '1.0.2',
+        androidKtx             : '0.1',
         dagger                 : '2.14.1',
         exoPlayer              : '2.6.0',
         playServices           : '11.8.0',
@@ -29,7 +30,6 @@ ext {
         markwon                : '1.0.3',
         sheetMenu              : '1.3.3',
         aVLoadingIndicatorView : '2.1.3',
-        swipeBackLayout        : '1.1.0',
 
         // For testing
         junit                  : '4.12',
@@ -49,6 +49,8 @@ ext {
         design                 : "com.android.support:design:${versions.support}",
         constraintLayout       : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
         cardView               : "com.android.support:cardview-v7:${versions.support}",
+
+        androidKtx             :  "androidx.core:core-ktx:${versions.androidKtx}",
 
         dagger                 : "com.google.dagger:dagger:${versions.dagger}",
         daggerSupport          : "com.google.dagger:dagger-android-support:${versions.dagger}",

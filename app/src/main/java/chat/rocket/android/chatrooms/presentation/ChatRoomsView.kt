@@ -2,6 +2,7 @@ package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
+import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.model.ChatRoom
 
 interface ChatRoomsView : LoadingView, MessageView {
@@ -17,4 +18,6 @@ interface ChatRoomsView : LoadingView, MessageView {
      *  Shows no chat rooms to display.
      */
     fun showNoChatRoomsToDisplay()
+
+    fun showConnectionState(state: State)
 }

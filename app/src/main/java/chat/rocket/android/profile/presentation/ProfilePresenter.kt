@@ -9,6 +9,7 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
 import javax.inject.Inject
 
@@ -45,10 +46,13 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
         }
     }
 
-    fun updateUserProfile(email: String, name: String, username: String) {
+    fun updateUserProfile(email: String, name: String, username: String, avatarUrl: String = "") {
         launchUI(strategy) {
             view.showLoading()
             try {
+                if(avatarUrl!="") {
+                    client.setAvatar(avatarUrl)
+                }
                 val user = client.updateProfile(myselfId, email, name, username)
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
@@ -56,8 +60,8 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                        view.showGenericErrorMessage()
-                    }
+                    view.showGenericErrorMessage()
+                }
             } finally {
                 view.hideLoading()
             }

@@ -1,72 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <View
-        android:id="@+id/divider"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/composer"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorDividerMessageComposer" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text_room_is_read_only"
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorDividerMessageComposer" />
+
+        <TextView
+            android:id="@+id/text_room_is_read_only"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/msg_this_room_is_read_only"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        <LinearLayout
+            android:id="@+id/input_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/divider">
+
+            <ImageButton
+                android:id="@+id/button_add_reaction"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/msg_content_description_show_attachment_options"
+                android:src="@drawable/ic_reaction_24dp" />
+
+            <chat.rocket.android.widget.emoji.ComposerEditText
+                android:id="@+id/text_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="@string/msg_message"
+                android:inputType="textCapSentences|textMultiLine"
+                android:lineSpacingExtra="4dp"
+                android:maxLines="4"
+                android:minHeight="24dp"
+                android:scrollbars="vertical" />
+
+            <ImageButton
+                android:id="@+id/button_show_attachment_options"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/msg_content_description_show_attachment_options"
+                android:src="@drawable/ic_add_24dp" />
+
+            <ImageButton
+                android:id="@+id/button_send"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/msg_content_description_send_message"
+                android:src="@drawable/ic_send_24dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/emoji_fragment_placeholder"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/white"
-        android:gravity="center"
-        android:text="@string/msg_this_room_is_read_only"
-        android:textColor="@color/black"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
+        android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/input_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/divider">
-
-        <ImageButton
-            android:id="@+id/button_add_reaction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/msg_content_description_show_attachment_options"
-            android:src="@drawable/ic_reaction_24dp" />
-
-        <EditText
-            android:id="@+id/text_message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:hint="@string/msg_message"
-            android:maxLines="4" />
-
-        <ImageButton
-            android:id="@+id/button_show_attachment_options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/msg_content_description_show_attachment_options"
-            android:src="@drawable/ic_add_24dp" />
-
-        <ImageButton
-            android:id="@+id/button_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/msg_content_description_send_message"
-            android:src="@drawable/ic_send_24dp"
-            android:visibility="gone" />
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

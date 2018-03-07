@@ -7,10 +7,16 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.view.MenuItem
 import chat.rocket.android.R
+
+import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
+import chat.rocket.android.profile.ui.ProfileFragment
+import chat.rocket.android.settings.ui.SettingsFragment
+import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.util.extensions.showToast
+
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -29,6 +35,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        presenter.connect()
         setupToolbar()
         setupNavigationView()
     }
@@ -38,6 +45,13 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         if (!isFragmentAdded) {
             presenter.toChatList()
             isFragmentAdded = true
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) {
+            presenter.disconnect()
         }
     }
 
@@ -80,6 +94,9 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
             }
             R.id.action_profile -> {
                 presenter.toUserProfile()
+            }
+            R.id.action_settings -> {
+                presenter.toSettings()
             }
             R.id.action_logout -> {
                 presenter.logout()
