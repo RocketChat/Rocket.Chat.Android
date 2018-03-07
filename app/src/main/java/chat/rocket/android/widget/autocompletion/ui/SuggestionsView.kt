@@ -1,8 +1,13 @@
 package chat.rocket.android.widget.autocompletion.ui
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
 import android.support.transition.Slide
 import android.support.transition.TransitionManager
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,6 +19,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
+import chat.rocket.android.R
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicInteger
@@ -43,6 +49,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
                 false)
         recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.addItemDecoration(TopItemDecoration(context, R.drawable.suggestions_menu_decorator))
         recyclerView.layoutManager = layoutManager
         recyclerView.visibility = View.GONE
         addView(recyclerView)
@@ -190,5 +197,30 @@ class SuggestionsView : FrameLayout, TextWatcher {
     private fun expand() {
         TransitionManager.beginDelayedTransition(this, SLIDE_TRANSITION)
         recyclerView.visibility = View.VISIBLE
+    }
+
+    private class TopItemDecoration() : RecyclerView.ItemDecoration() {
+        private lateinit var divider: Drawable
+        private val padding = Rect()
+
+        // Custom divider will be used.
+        constructor(context: Context, @DrawableRes drawableResId: Int) : this() {
+            val customDrawable = ContextCompat.getDrawable(context, drawableResId)
+            if (customDrawable != null) {
+                divider = customDrawable
+            }
+        }
+
+        override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+            val left = parent.paddingLeft
+            val right = (parent.width - parent.paddingRight)
+
+            val parentParams = parent.layoutParams as FrameLayout.LayoutParams
+            val top = parent.top - parentParams.topMargin - parent.paddingTop
+            val bottom = top + divider.intrinsicHeight
+
+            divider.setBounds(left, top, right, bottom)
+            divider.draw(c)
+        }
     }
 }
