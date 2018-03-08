@@ -31,7 +31,7 @@ private const val NO_STATE_INDEX = 0
 
 class SuggestionsView : FrameLayout, TextWatcher {
     private val recyclerView: RecyclerView
-    // Maps tokens to their respecive adapters.
+    // Maps tokens to their respective adapters.
     private val adaptersByToken = hashMapOf<String, SuggestionsAdapter<out BaseSuggestionViewHolder>>()
     private val externalProvidersByToken = hashMapOf<String, ((query: String) -> Unit)>()
     private val localProvidersByToken = hashMapOf<String, HashMap<String, List<SuggestionModel>>>()
