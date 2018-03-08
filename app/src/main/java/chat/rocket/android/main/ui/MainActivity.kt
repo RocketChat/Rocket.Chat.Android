@@ -12,6 +12,7 @@ import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.startsWithOneOf
 import chat.rocket.android.widget.share.ui.ShareBottomSheetDialog
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -74,18 +75,18 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
             val type = it.type
             when (it.action) {
                 Intent.ACTION_SEND -> if ("text/plain" == type) {
-                    handleTextReceived(it)
-                } else if (type?.startsWith("image/") ?: false) {
-                    handleImageReceived(it)
+                    handlePlainTextReceived(it)
+                } else if (type.startsWithOneOf("image/", "video/")) {
+                    handleMediaReceived(it)
                 }
-                Intent.ACTION_SEND_MULTIPLE -> if (type?.startsWith("image/") ?: false) {
-                    handleMultipleImagesReceived(it)
+                Intent.ACTION_SEND_MULTIPLE -> if (type.startsWithOneOf("image/", "video/")) {
+                    handleMultipleMediasReceived(it)
                 }
             }
         }
     }
 
-    private fun handleTextReceived(intent: Intent) {
+    private fun handlePlainTextReceived(intent: Intent) {
         val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
         sharedText?.let {
             ShareBottomSheetDialog.newInstance(sharedText).show(supportFragmentManager,
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         }
     }
 
-    private fun handleImageReceived(intent: Intent) {
+    private fun handleMediaReceived(intent: Intent) {
         val imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM) as Uri?
         imageUri?.let {
             ShareBottomSheetDialog.newInstance(imageUri).show(supportFragmentManager,
@@ -101,10 +102,10 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         }
     }
 
-    private fun handleMultipleImagesReceived(intent: Intent) {
-        val imageUris: List<Uri>? = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
-        imageUris?.let {
-            ShareBottomSheetDialog.newInstance(ArrayList(imageUris)).show(supportFragmentManager,
+    private fun handleMultipleMediasReceived(intent: Intent) {
+        val mediaUris: List<Uri>? = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
+        mediaUris?.let {
+            ShareBottomSheetDialog.newInstance(ArrayList(it)).show(supportFragmentManager,
                     "ShareBottomSheetDialog")
         }
     }

@@ -22,5 +22,4 @@ class ChatRoomsViewModel : ViewModel() {
     }
 
     fun getSelectedChatRoom(): LiveData<Pair<ChatRoom, Any>> = selectedChatRoom
-
 }

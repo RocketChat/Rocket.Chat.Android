@@ -17,6 +17,16 @@ fun String.ifEmpty(value: String): String {
     return this
 }
 
+fun String?.startsWithOneOf(vararg possibilities: String, ignoreCase: Boolean = false): Boolean {
+    if (this == null) return false
+    for (s in possibilities) {
+        if (this.startsWith(s, ignoreCase)) {
+            return true
+        }
+    }
+    return false
+}
+
 fun CharSequence.ifEmpty(value: String): CharSequence {
     if (isEmpty()) {
         return value
