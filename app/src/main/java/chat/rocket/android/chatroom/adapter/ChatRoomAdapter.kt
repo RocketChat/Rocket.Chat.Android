@@ -8,14 +8,15 @@ import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.viewmodel.*
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
-    private val roomType: String,
-    private val roomName: String,
-    private val presenter: ChatRoomPresenter?,
-    private val enableActions: Boolean = true
+        private val roomType: String,
+        private val roomName: String,
+        private val presenter: ChatRoomPresenter?,
+        private val enableActions: Boolean = true
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private val dataSet = ArrayList<BaseViewModel<*>>()
@@ -25,7 +26,7 @@ class ChatRoomAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
-        return when(viewType.toViewType()) {
+        return when (viewType.toViewType()) {
             BaseViewModel.ViewType.MESSAGE -> {
                 val view = parent.inflate(R.layout.item_message)
                 MessageViewHolder(view, actionsListener)
@@ -86,16 +87,25 @@ class ChatRoomAdapter(
     }
 
     fun prependData(dataSet: List<BaseViewModel<*>>) {
-        this.dataSet.addAll(0, dataSet)
+        val lastMessage = this.dataSet.first()
+        val lastId = lastMessage.messageId
+        val lastType = lastMessage.viewType
+        this.dataSet.addAll(0, dataSet.filterNot { lastType == it.viewType && lastId == it.messageId })
         notifyItemRangeInserted(0, dataSet.size)
     }
 
     fun updateItem(message: BaseViewModel<*>) {
         val index = dataSet.indexOfLast { it.messageId == message.messageId }
+        val indexOfFirst = dataSet.indexOfFirst { it.messageId == message.messageId }
         Timber.d("index: $index")
         if (index > -1) {
             dataSet[index] = message
             notifyItemChanged(index)
+            // Delete message only if current is a system message update, i.e.: Message Removed
+            if (message.message.isSystemMessage() && indexOfFirst > -1 && indexOfFirst != index) {
+                dataSet.removeAt(indexOfFirst)
+                notifyItemRemoved(indexOfFirst)
+            }
         }
     }
 
