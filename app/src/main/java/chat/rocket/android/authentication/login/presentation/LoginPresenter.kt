@@ -4,9 +4,11 @@ import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
+import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extensions.generateRandomString
 import chat.rocket.android.util.extensions.isEmailValid
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
@@ -41,38 +43,56 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
             return
         }
 
-        view.showSignUpView(settings.registrationEnabled())
+        if (settings.casEnabled()) {
+            // Hiding the views in order to show the WebView instead.
+            view.hideUsernameOrEmailView()
+            view.hidePasswordView()
+            view.hideSignUpView()
+            view.hideOauthView()
+            view.hideLoginButton()
 
-        var hasSocial = false
-        if (settings.facebookEnabled()) {
-            view.enableLoginByFacebook()
-            hasSocial = true
+            view.showLoading()
+            val token = generateRandomString(17)
+            view.showCasView(UrlHelper.getCasUrl(settings.casLoginUrl(), server, token), token)
+        } else {
+            if (settings.registrationEnabled()){
+                view.showSignUpView()
+            }
+
+            var hasSocial = false
+            if (settings.facebookEnabled()) {
+                view.enableLoginByFacebook()
+                hasSocial = true
+            }
+            if (settings.githubEnabled()) {
+                view.enableLoginByGithub()
+                hasSocial = true
+            }
+            if (settings.googleEnabled()) {
+                view.enableLoginByGoogle()
+                hasSocial = true
+            }
+            if (settings.linkedinEnabled()) {
+                view.enableLoginByLinkedin()
+                hasSocial = true
+            }
+            if (settings.meteorEnabled()) {
+                view.enableLoginByMeteor()
+                hasSocial = true
+            }
+            if (settings.twitterEnabled()) {
+                view.enableLoginByTwitter()
+                hasSocial = true
+            }
+            if (settings.gitlabEnabled()) {
+                view.enableLoginByGitlab()
+                hasSocial = true
+            }
+
+            if (hasSocial) {
+                view.showOauthView()
+            }
         }
-        if (settings.githubEnabled()) {
-            view.enableLoginByGithub()
-            hasSocial = true
-        }
-        if (settings.googleEnabled()) {
-            view.enableLoginByGoogle()
-            hasSocial = true
-        }
-        if (settings.linkedinEnabled()) {
-            view.enableLoginByLinkedin()
-            hasSocial = true
-        }
-        if (settings.meteorEnabled()) {
-            view.enableLoginByMeteor()
-            hasSocial = true
-        }
-        if (settings.twitterEnabled()) {
-            view.enableLoginByTwitter()
-            hasSocial = true
-        }
-        if (settings.gitlabEnabled()) {
-            view.enableLoginByGitlab()
-            hasSocial = true
-        }
-        view.showOauthView(hasSocial)
     }
 
     fun authenticate(usernameOrEmail: String, password: String) {
@@ -110,9 +130,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                             }
 
                             if (token != null) {
-                                val me = client.me()
-                                multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
-                                localRepository.save(LocalRepository.USERNAME_KEY, me.username)
+                                saveToken(server, TokenModel(token.userId, token.authToken), client.me().username)
                                 registerPushToken()
                                 navigator.toChatList()
                             } else {
@@ -140,6 +158,41 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                 }
             }
         }
+    }
+
+    fun authenticateWithCas(casCredential: String) {
+        launchUI(strategy) {
+            if (NetworkHelper.hasInternetAccess()) {
+                view.showLoading()
+                try {
+                    val server = serverInteractor.get()
+                    if (server != null) {
+                        val token = client.loginWithCas(casCredential)
+                        saveToken(server, TokenModel(token.userId, token.authToken), client.me().username)
+                        registerPushToken()
+                        navigator.toChatList()
+                    } else {
+                        navigator.toServerScreen()
+                    }
+                } catch (exception: RocketChatException) {
+                    exception.message?.let {
+                        view.showMessage(it)
+                    }.ifNull {
+                        view.showGenericErrorMessage()
+                    }
+                } finally {
+                    view.hideLoading()
+                }
+            } else {
+                view.showNoInternetConnection()
+            }
+        }
+    }
+
+    private suspend fun saveToken(server: String, tokenModel: TokenModel, username: String?) {
+        multiServerRepository.save(server, tokenModel)
+        localRepository.save(LocalRepository.USERNAME_KEY, username)
+        registerPushToken()
     }
 
     fun signup() = navigator.toSignUp()

@@ -29,6 +29,8 @@ const val USE_REALNAME = "UI_Use_Real_Name"
 const val ALLOW_ROOM_NAME_SPECIAL_CHARS = "UI_Allow_room_names_with_special_chars"
 const val FAVORITE_ROOMS = "Favorite_Rooms"
 const val LDAP_ENABLE = "LDAP_Enable"
+const val CAS_ENABLE = "CAS_enabled"
+const val CAS_LOGIN_URL = "CAS_login_url"
 const val UPLOAD_STORAGE_TYPE = "FileUpload_Storage_Type"
 const val UPLOAD_MAX_FILE_SIZE = "FileUpload_MaxFileSize"
 const val UPLOAD_WHITELIST_MIMETYPES = "FileUpload_MediaTypeWhiteList"
@@ -59,6 +61,8 @@ fun PublicSettings.wordpressEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value 
 
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
 fun PublicSettings.ldapEnabled(): Boolean = this[LDAP_ENABLE]?.value == true
+fun PublicSettings.casEnabled(): Boolean = this[CAS_ENABLE]?.value == true
+fun PublicSettings.casLoginUrl(): String = this[CAS_LOGIN_URL]?.value.toString()
 
 // Message settings
 fun PublicSettings.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true

@@ -1,7 +1,9 @@
 package chat.rocket.android.authentication.login.ui
 
 import DrawableHelper
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,9 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ImageButton
 import android.widget.ScrollView
-
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
@@ -23,7 +26,6 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
-
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
@@ -47,7 +49,8 @@ class LoginFragment : Fragment(), LoginView {
         AndroidSupportInjection.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_log_in)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        container?.inflate(R.layout.fragment_authentication_log_in)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,12 +70,6 @@ class LoginFragment : Fragment(), LoginView {
         setupSignUpListener()
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-
-        areLoginOptionsNeeded()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         if (isGlobalLayoutListenerSetUp) {
@@ -81,30 +78,29 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
-    override fun showOauthView(value: Boolean) {
-        if (value) {
-            social_accounts_container.setVisible(true)
-            button_fab.setVisible(true)
-
-            // We need to setup the layout to hide and show the oauth interface when the soft keyboard is shown
-            // (means that the user touched the text_username_or_email or text_password EditText to fill that respective fields).
-            if (!isGlobalLayoutListenerSetUp) {
-                scroll_view.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-                isGlobalLayoutListenerSetUp = true
-            }
-        } else {
-            social_accounts_container.setVisible(false)
-            button_fab.setVisible(false)
+    override fun showCasView(casUrl: String, requestedToken: String) {
+        activity?.apply {
+            // We need to update the view headline, since the CAS allows the log in or sign up
+            text_headline.textContent = getString(R.string.title_log_in_or_sign_up)
+            setupWebView(casUrl, requestedToken)
         }
     }
 
-    override fun setupFabListener() {
-        button_fab.setOnClickListener({
-            button_fab.hide()
-            showRemainingSocialAccountsView()
-            scrollToBottom()
-        })
+    override fun showSignUpView() = text_new_to_rocket_chat.setVisible(true)
+
+    override fun showOauthView() {
+        social_accounts_container.setVisible(true)
+        button_fab.setVisible(true)
+
+        // We need to setup the layout to hide and show the oauth interface when the soft keyboard is shown
+        // (means that the user touched the text_username_or_email or text_password EditText to fill that respective fields).
+        if (!isGlobalLayoutListenerSetUp) {
+            scroll_view.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+            isGlobalLayoutListenerSetUp = true
+        }
     }
+
+    override fun showLoginButton() = button_log_in.setVisible(true)
 
     override fun enableLoginByFacebook() {
         button_facebook.isEnabled = true
@@ -134,7 +130,26 @@ class LoginFragment : Fragment(), LoginView {
         button_gitlab.isEnabled = true
     }
 
-    override fun showSignUpView(value: Boolean) = text_new_to_rocket_chat.setVisible(value)
+    override fun setupFabListener() {
+        button_fab.setOnClickListener({
+            button_fab.hide()
+            showRemainingSocialAccountsView()
+            scrollToBottom()
+        })
+    }
+
+    override fun hideUsernameOrEmailView() = text_username_or_email.setVisible(false)
+
+    override fun hidePasswordView() = text_password.setVisible(false)
+
+    override fun hideSignUpView() = text_new_to_rocket_chat.setVisible(false)
+
+    override fun hideOauthView() {
+        social_accounts_container.setVisible(false)
+        button_fab.setVisible(false)
+    }
+
+    override fun hideLoginButton() = button_log_in.setVisible(false)
 
     override fun alertWrongUsernameOrEmail() {
         AnimationHelper.vibrateSmartPhone(appContext)
@@ -164,24 +179,25 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-
-    override fun showNoInternetConnection() = showMessage(getString(R.string.msg_no_internet_connection))
+    override fun showNoInternetConnection() =
+        showMessage(getString(R.string.msg_no_internet_connection))
 
     private fun areLoginOptionsNeeded() {
         if (!isEditTextEmpty() || KeyboardHelper.isSoftKeyboardShown(scroll_view.rootView)) {
-            showSignUpView(false)
-            showOauthView(false)
-            showLoginButton(true)
+            hideSignUpView()
+            hideOauthView()
+            showLoginButton()
         } else {
-            showSignUpView(true)
-            showOauthView(true)
-            showLoginButton(false)
+            showSignUpView()
+            showOauthView()
+            hideLoginButton()
         }
     }
 
     private fun tintEditTextDrawableStart() {
         activity?.apply {
-            val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_assignment_ind_black_24dp, this)
+            val personDrawable =
+                DrawableHelper.getDrawableFromId(R.drawable.ic_assignment_ind_black_24dp, this)
             val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, this)
 
             val drawables = arrayOf(personDrawable, lockDrawable)
@@ -189,10 +205,6 @@ class LoginFragment : Fragment(), LoginView {
             DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawables(arrayOf(text_username_or_email, text_password), drawables)
         }
-    }
-
-    private fun showLoginButton(value: Boolean) {
-        button_log_in.setVisible(value)
     }
 
     private fun setupSignUpListener() {
@@ -215,7 +227,8 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     // Returns true if *all* EditTexts are empty.
-    private fun isEditTextEmpty(): Boolean = text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
+    private fun isEditTextEmpty(): Boolean =
+        text_username_or_email.textContent.isBlank() && text_password.textContent.isEmpty()
 
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({
@@ -241,5 +254,34 @@ class LoginFragment : Fragment(), LoginView {
         scroll_view.postDelayed({
             scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
         }, 1250)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setupWebView(webPageUrl: String, requestedToken: String) {
+        web_view.settings.javaScriptEnabled = true
+        web_view.webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+                // The user can be already logged in the CAS, so check if the URL contains "ticket"
+                // (that means he/she is successful authenticated and we don't need to wait until the page is finished.
+                if (url.contains("ticket")) {
+                    authenticateWithCas(requestedToken)
+                }
+            }
+
+            override fun onPageFinished(view: WebView, url: String) {
+                if (url.contains("ticket")) {
+                    authenticateWithCas(requestedToken)
+                } else {
+                    hideLoading()
+                    web_view.setVisible(true)
+                }
+            }
+        }
+        web_view.loadUrl(webPageUrl)
+    }
+
+    private fun authenticateWithCas(requestedToken: String) {
+        web_view.setVisible(false)
+        presenter.authenticateWithCas(requestedToken)
     }
 }
