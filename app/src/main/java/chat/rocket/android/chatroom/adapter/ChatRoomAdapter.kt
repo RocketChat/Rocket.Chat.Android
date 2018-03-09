@@ -87,11 +87,13 @@ class ChatRoomAdapter(
     }
 
     fun prependData(dataSet: List<BaseViewModel<*>>) {
-        val lastMessage = this.dataSet.first()
-        val lastId = lastMessage.messageId
-        val lastType = lastMessage.viewType
-        this.dataSet.addAll(0, dataSet.filterNot { lastType == it.viewType && lastId == it.messageId })
-        notifyItemRangeInserted(0, dataSet.size)
+        val item = dataSet.firstOrNull { newItem ->
+            this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType } > -1
+        }
+        if (item == null) {
+            this.dataSet.addAll(0, dataSet)
+            notifyItemRangeInserted(0, dataSet.size)
+        }
     }
 
     fun updateItem(message: BaseViewModel<*>) {

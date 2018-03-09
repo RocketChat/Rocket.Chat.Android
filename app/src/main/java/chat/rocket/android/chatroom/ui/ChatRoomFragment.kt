@@ -213,9 +213,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     override fun dispatchUpdateMessage(index: Int, message: List<BaseViewModel<*>>) {
-        if (message.size == 1) {
-            adapter.updateItem(message.last())
-        } else {
+        adapter.updateItem(message.last())
+        if (message.size > 1) {
             adapter.updateItem(message.last())
             adapter.prependData(listOf(message.first()))
         }
