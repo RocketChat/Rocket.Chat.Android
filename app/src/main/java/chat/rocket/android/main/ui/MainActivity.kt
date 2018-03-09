@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
                 } else if (type.startsWithOneOf("image/", "video/")) {
                     handleMediaReceived(it)
                 }
-                Intent.ACTION_SEND_MULTIPLE -> if (type.startsWithOneOf("image/", "video/")) {
+                Intent.ACTION_SEND_MULTIPLE -> if (type.startsWithOneOf("image/", "video/", "*/")) {
                     handleMultipleMediasReceived(it)
                 }
             }
@@ -88,25 +88,38 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
     private fun handlePlainTextReceived(intent: Intent) {
         val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
-        sharedText?.let {
-            ShareBottomSheetDialog.newInstance(sharedText).show(supportFragmentManager,
-                    "ShareBottomSheetDialog")
-        }
+        sharedText?.let { showShareBottomSheet(it) }
     }
 
     private fun handleMediaReceived(intent: Intent) {
         val imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM) as Uri?
-        imageUri?.let {
-            ShareBottomSheetDialog.newInstance(imageUri).show(supportFragmentManager,
-                    "ShareBottomSheetDialog")
-        }
+        imageUri?.let { showShareBottomSheet(it) }
     }
 
     private fun handleMultipleMediasReceived(intent: Intent) {
         val mediaUris: List<Uri>? = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
-        mediaUris?.let {
-            ShareBottomSheetDialog.newInstance(ArrayList(it)).show(supportFragmentManager,
+        mediaUris?.let { showShareBottomSheet(it) }
+    }
+
+    private fun <T> showShareBottomSheet(content: T) {
+        supportFragmentManager.findFragmentByTag("ShareBottomSheetDialog")?.let {
+            supportFragmentManager.beginTransaction().remove(it).commit()
+        }
+
+        when (content) {
+            is List<*> -> {
+                if (content.isNotEmpty() && content[0] is Uri) {
+                    content as List<Uri>
+                    ShareBottomSheetDialog.newInstance(ArrayList(content)).show(supportFragmentManager,
+                            "ShareBottomSheetDialog")
+                } else throw IllegalArgumentException("Tried to receive unsupported shared content")
+            }
+            is Uri -> ShareBottomSheetDialog.newInstance(content).show(supportFragmentManager,
                     "ShareBottomSheetDialog")
+            is String -> ShareBottomSheetDialog.newInstance(content).show(supportFragmentManager,
+                    "ShareBottomSheetDialog")
+            else -> throw IllegalArgumentException("Tried to receive unsupported shared content")
+
         }
     }
 

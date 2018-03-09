@@ -6,9 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.text.Editable
-import android.text.TextWatcher
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +21,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_share.*
 import java.util.*
 import javax.inject.Inject
 
-class ShareBottomSheetDialog : BottomSheetDialogFragment(), ShareView, TextWatcher {
+class ShareBottomSheetDialog : BottomSheetDialogFragment(), ShareView {
     @Inject lateinit var presenter: SharePresenter
     @Inject lateinit var settingsRepository: SettingsRepository
     @Inject lateinit var serverInteractor: GetCurrentServerInteractor
@@ -63,18 +61,19 @@ class ShareBottomSheetDialog : BottomSheetDialogFragment(), ShareView, TextWatch
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        text_share_search.addTextChangedListener(this)
         adapter = ShareRoomAdapter(settingsRepository.get(serverInteractor.get()!!)!!, { chatRoom, content ->
             chatRoomsViewModel.selectChatRoom(chatRoom, content)
             this.dismiss()
         })
-        val layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL,
-                false)
+        val layoutManager = GridLayoutManager(view.context, 4)
         recycler_share.layoutManager = layoutManager
         recycler_share.itemAnimator = DefaultItemAnimator()
         recycler_share.adapter = adapter
         chatRoomsViewModel.getChatRooms().observe(this, Observer { chatRooms ->
-            chatRooms?.let { adapter.updateRooms(it, contentToShare) }
+            chatRooms?.let {
+                adapter.updateRooms(it, contentToShare)
+                chatRoomsViewModel.getChatRooms().removeObservers(this)
+            }
         })
     }
 
@@ -96,18 +95,6 @@ class ShareBottomSheetDialog : BottomSheetDialogFragment(), ShareView, TextWatch
     }
 
     override fun showRoomsForSharing(rooms: List<String>) {
-
-    }
-
-    override fun afterTextChanged(s: Editable) {
-        presenter.getAvailableRooms(s.toString())
-    }
-
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-    }
-
-    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
     }
 }
