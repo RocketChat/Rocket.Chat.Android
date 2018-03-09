@@ -130,6 +130,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         var quote: Message? = null
 
         val urls = ArrayList<Url>()
+        var messageWithQuote: Message? = null
         message.urls?.let {
             if (it.isEmpty()) return@let
             for (url in it) {
@@ -139,12 +140,20 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                     val serverUrl = HttpUrl.parse(baseUrl)
                     if (quoteUrl != null && serverUrl != null) {
                         quote = makeQuote(quoteUrl, serverUrl)
+                        if (quote != null) {
+                            if (quote != null) {
+                                messageWithQuote = message.copy(
+                                        message = message.message.replace("[ ](${url.url})", "").trim()
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
 
-        val content = getContent(context, message, quote)
+
+        val content = getContent(context, messageWithQuote ?: message, quote)
         MessageViewModel(message = message, rawData = message, messageId = message.id,
                 avatar = avatar!!, time = time, senderName = sender,
                 content = content, isPinned = message.pinned)
@@ -194,7 +203,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         var quoteViewModel: MessageViewModel? = null
         if (quote != null) {
             val quoteMessage: Message = quote
-            quoteViewModel = map(quoteMessage).first { it is MessageViewModel } as MessageViewModel
+            quoteViewModel = mapMessage(quoteMessage)
         }
         return parser.renderMarkdown(message.message, quoteViewModel, currentUsername)
     }
