@@ -139,13 +139,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                     val quoteUrl = HttpUrl.parse(url.url)
                     val serverUrl = HttpUrl.parse(baseUrl)
                     if (quoteUrl != null && serverUrl != null) {
-                        quote = makeQuote(quoteUrl, serverUrl)
-                        if (quote != null) {
-                            if (quote != null) {
-                                messageWithQuote = message.copy(
-                                        message = message.message.replace("[ ](${url.url})", "").trim()
-                                )
-                            }
+                        quote = makeQuote(quoteUrl, serverUrl)?.let {
+                            getMessageWithoutQuoteMarkdown(it)
                         }
                     }
                 }
@@ -153,10 +148,17 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
 
 
-        val content = getContent(context, messageWithQuote ?: message, quote)
-        MessageViewModel(message = message, rawData = message, messageId = message.id,
-                avatar = avatar!!, time = time, senderName = sender,
+        val content = getContent(context, getMessageWithoutQuoteMarkdown(message), quote)
+        MessageViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
+                messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
                 content = content, isPinned = message.pinned)
+    }
+
+    private fun getMessageWithoutQuoteMarkdown(message: Message): Message {
+        val baseUrl = settings.baseUrl()
+        return message.copy(
+                message = message.message.replace("\\[\\s\\]\\($baseUrl.*\\)".toRegex(), "").trim()
+        )
     }
 
     private fun getSenderName(message: Message): CharSequence {
