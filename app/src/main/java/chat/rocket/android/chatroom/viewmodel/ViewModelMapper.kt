@@ -130,7 +130,6 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         var quote: Message? = null
 
         val urls = ArrayList<Url>()
-        var messageWithQuote: Message? = null
         message.urls?.let {
             if (it.isEmpty()) return@let
             for (url in it) {
@@ -146,7 +145,6 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                 }
             }
         }
-
 
         val content = getContent(context, getMessageWithoutQuoteMarkdown(message), quote)
         MessageViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
