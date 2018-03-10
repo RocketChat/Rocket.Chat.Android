@@ -12,6 +12,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
+    <string name="title_create_new_channel">Create New Channel</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -66,6 +67,11 @@
     <string name="msg_utc_offset">UTC offset</string>
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
+    <string name="private_channel_type">Private</string>
+    <string name="public_channel_type">Public</string>
+    <string name="private_channel_type_description"></string>
+    <string name="public_channel_description"></string>
+    <string name="new_channel_edit_text_hint">Channel Name</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

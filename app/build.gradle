@@ -53,7 +53,6 @@ dependencies {
     implementation libraries.kotlin
     implementation libraries.coroutines
     implementation libraries.coroutinesAndroid
-
     implementation libraries.appCompat
     implementation libraries.recyclerview
     implementation libraries.design
