@@ -9,7 +9,7 @@ import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
-import chat.rocket.android.webview.webViewIntent
+import chat.rocket.android.webview.ui.webViewIntent
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity, internal val context: Context) {
 
@@ -37,10 +37,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity, int
     }
 
     fun toChatList() {
-        val chatList = Intent(activity, MainActivity::class.java).apply {
-            //TODO any parameter to pass
-        }
-        activity.startActivity(chatList)
+        activity.startActivity(Intent(activity, MainActivity::class.java))
         activity.finish()
     }
 
