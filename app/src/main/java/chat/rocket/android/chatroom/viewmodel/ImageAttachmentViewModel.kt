@@ -10,7 +10,9 @@ data class ImageAttachmentViewModel(
         override val messageId: String,
         override val attachmentUrl: String,
         override val attachmentTitle: CharSequence,
-        override val id: Long
+        override val id: Long,
+        override val reactions: List<ReactionViewModel>,
+        override var isTailMessage: Boolean = false
 ) : BaseFileAttachmentViewModel<ImageAttachment> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.IMAGE_ATTACHMENT.viewType

@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
@@ -13,10 +14,10 @@ import ru.whalemare.sheetmenu.extension.inflate
 import ru.whalemare.sheetmenu.extension.toList
 
 abstract class BaseViewHolder<T : BaseViewModel<*>>(
-    itemView: View,
-    private val listener: ActionsListener
+        itemView: View,
+        private val listener: ActionsListener
 ) : RecyclerView.ViewHolder(itemView),
-    MenuItem.OnMenuItemClickListener {
+        MenuItem.OnMenuItemClickListener {
     var data: T? = null
 
     init {
@@ -26,6 +27,20 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
     fun bind(data: T) {
         this.data = data
         bindViews(data)
+        bindReactions()
+    }
+
+    private fun bindReactions() {
+        data?.let {
+            if (it.isTailMessage) {
+                val recyclerView = itemView.findViewById(R.id.recycler_view_reactions) as RecyclerView
+                val adapter = MessageReactionsAdapter()
+                val manager = GridLayoutManager(itemView.context, 6)
+                recyclerView.layoutManager = manager
+                recyclerView.adapter = adapter
+                adapter.addReactions(it.reactions)
+            }
+        }
     }
 
     abstract fun bindViews(data: T)

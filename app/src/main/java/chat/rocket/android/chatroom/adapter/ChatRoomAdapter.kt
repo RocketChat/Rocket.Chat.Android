@@ -61,6 +61,24 @@ class ChatRoomAdapter(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+        if (holder !is MessageViewHolder) {
+            if (position + 1 < itemCount) {
+                val messageAbove = dataSet[position + 1]
+                if (messageAbove.messageId == dataSet[position].messageId) {
+                    dataSet[position].isTailMessage = true
+                }
+            }
+        } else {
+            if (position == 0) {
+                dataSet[0].isTailMessage = true
+            }
+            else if (position - 1 > 0) {
+                if (dataSet[position - 1].messageId != dataSet[position].messageId) {
+                    dataSet[position].isTailMessage = true
+                }
+            }
+        }
+
         when (holder) {
             is MessageViewHolder -> holder.bind(dataSet[position] as MessageViewModel)
             is ImageAttachmentViewHolder -> holder.bind(dataSet[position] as ImageAttachmentViewModel)

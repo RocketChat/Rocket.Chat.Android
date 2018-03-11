@@ -9,6 +9,8 @@ interface BaseViewModel<out T> {
     val messageId: String
     val viewType: Int
     val layoutId: Int
+    val reactions: List<ReactionViewModel>
+    var isTailMessage: Boolean
 
     enum class ViewType(val viewType: Int) {
         MESSAGE(0),
