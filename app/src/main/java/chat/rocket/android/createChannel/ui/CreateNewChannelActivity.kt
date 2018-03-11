@@ -70,7 +70,7 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
         private_channel.setOnClickListener {
             channelType = "private"
-            
+
             channel_type.text = getString(R.string.private_channel_type)
             channel_description.text = getString(R.string.public_channel_description)
 
