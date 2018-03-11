@@ -12,10 +12,10 @@ import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
-    private val roomType: String,
-    private val roomName: String,
-    private val presenter: ChatRoomPresenter?,
-    private val enableActions: Boolean = true
+        private val roomType: String,
+        private val roomName: String,
+        private val presenter: ChatRoomPresenter?,
+        private val enableActions: Boolean = true
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private val dataSet = ArrayList<BaseViewModel<*>>()
@@ -25,7 +25,7 @@ class ChatRoomAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
-        return when(viewType.toViewType()) {
+        return when (viewType.toViewType()) {
             BaseViewModel.ViewType.MESSAGE -> {
                 val view = parent.inflate(R.layout.item_message)
                 MessageViewHolder(view, actionsListener)
@@ -65,16 +65,15 @@ class ChatRoomAdapter(
             if (position + 1 < itemCount) {
                 val messageAbove = dataSet[position + 1]
                 if (messageAbove.messageId == dataSet[position].messageId) {
-                    dataSet[position].isTailMessage = true
+                    messageAbove.nextDownStreamMessage = dataSet[position]
                 }
             }
         } else {
             if (position == 0) {
-                dataSet[0].isTailMessage = true
-            }
-            else if (position - 1 > 0) {
+                dataSet[0].nextDownStreamMessage = null
+            } else if (position - 1 > 0) {
                 if (dataSet[position - 1].messageId != dataSet[position].messageId) {
-                    dataSet[position].isTailMessage = true
+                    dataSet[position].nextDownStreamMessage = null
                 }
             }
         }
@@ -109,11 +108,16 @@ class ChatRoomAdapter(
     }
 
     fun updateItem(message: BaseViewModel<*>) {
-        val index = dataSet.indexOfLast { it.messageId == message.messageId }
+        var index = dataSet.indexOfLast { it.messageId == message.messageId }
         Timber.d("index: $index")
         if (index > -1) {
+            message.nextDownStreamMessage = dataSet[index].nextDownStreamMessage
             dataSet[index] = message
             notifyItemChanged(index)
+            while (dataSet[index].nextDownStreamMessage != null) {
+                dataSet[index].nextDownStreamMessage!!.reactions = message.reactions
+                notifyItemChanged(--index)
+            }
         }
     }
 

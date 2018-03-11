@@ -12,8 +12,8 @@ data class MessageViewModel(
         override val senderName: CharSequence,
         override val content: CharSequence,
         override val isPinned: Boolean,
-        override val reactions: List<ReactionViewModel>,
-        override var isTailMessage: Boolean = false
+        override var reactions: List<ReactionViewModel>,
+        override var nextDownStreamMessage: BaseViewModel<*>? = null
 ) : BaseMessageViewModel<Message> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.MESSAGE.viewType

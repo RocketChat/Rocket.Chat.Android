@@ -32,7 +32,7 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
 
     private fun bindReactions() {
         data?.let {
-            if (it.isTailMessage) {
+            if (it.nextDownStreamMessage == null) {
                 val recyclerView = itemView.findViewById(R.id.recycler_view_reactions) as RecyclerView
                 val adapter = MessageReactionsAdapter()
                 val manager = GridLayoutManager(itemView.context, 6)

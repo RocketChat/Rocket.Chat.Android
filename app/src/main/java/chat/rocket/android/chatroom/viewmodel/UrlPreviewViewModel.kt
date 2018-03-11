@@ -12,8 +12,8 @@ data class UrlPreviewViewModel(
         val hostname: String,
         val description: CharSequence?,
         val thumbUrl: String?,
-        override val reactions: List<ReactionViewModel>,
-        override var isTailMessage: Boolean = false
+        override var reactions: List<ReactionViewModel>,
+        override var nextDownStreamMessage: BaseViewModel<*>? = null
 ) : BaseViewModel<Url> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.URL_PREVIEW.viewType
