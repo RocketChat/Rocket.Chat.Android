@@ -62,6 +62,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         currentAvatar = avatarUrl
 
         profile_container.setVisible(true)
+        layout_avatar_profile.setVisible(true)
 
         listenToChanges()
     }
