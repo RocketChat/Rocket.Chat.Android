@@ -6,40 +6,31 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:theme="@style/ToolbarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_create_new_channel"
+            android:textColor="@color/colorLightTheme"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/create_channel_action_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:alpha="0.7"
+            android:enabled="false"
+            android:gravity="end"
+            android:text="@string/create_new_channel_action"
+            android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title_create_new_channel"
-                android:textColor="@color/colorLightTheme"
-                android:textSize="20sp"
-                />
-
-            <TextView
-                android:id="@+id/create_channel_action_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:alpha="0.5"
-                android:textColor="@color/colorLightTheme"
-                android:background="?selectableItemBackground"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="@string/create_new_channel_action"
-                android:textSize="16sp" />
-        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.constraint.ConstraintLayout
@@ -94,6 +85,7 @@
             android:id="@+id/channel_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/private_channel_type"
             android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/public_channel" />
@@ -109,8 +101,8 @@
         <View
             android:id="@+id/separator"
             android:layout_width="0dp"
-            android:layout_height="0.1dp"
-            android:layout_marginTop="4dp"
+            android:layout_height="0.2dp"
+            android:layout_marginTop="8dp"
             android:background="@color/colorDividerMessageComposer"
             app:layout_constraintTop_toBottomOf="@id/channel_description" />
 
@@ -118,7 +110,7 @@
             android:id="@+id/placeholder"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
             android:src="@drawable/ic_hashtag_black"
             app:layout_constraintBottom_toBottomOf="@id/channel_name_text_input_layout"
             app:layout_constraintEnd_toStartOf="@id/channel_name_text_input_layout"
@@ -129,8 +121,8 @@
             android:id="@+id/channel_name_text_input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:focusable="true"
             android:hint="@string/new_channel_edit_text_hint"
             app:layout_constraintEnd_toEndOf="parent"

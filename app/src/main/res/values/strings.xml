@@ -69,8 +69,8 @@
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="private_channel_type">Private</string>
     <string name="public_channel_type">Public</string>
-    <string name="private_channel_type_description"></string>
-    <string name="public_channel_description"></string>
+    <string name="private_channel_type_description">Visible only to you and those whom you invite</string>
+    <string name="public_channel_description">Visible to everyone</string>
     <string name="new_channel_edit_text_hint">Channel Name</string>
     <string name="create_new_channel_action">CREATE</string>
 

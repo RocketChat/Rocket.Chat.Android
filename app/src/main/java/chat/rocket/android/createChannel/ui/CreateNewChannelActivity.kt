@@ -16,10 +16,11 @@ import javax.inject.Inject
 class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
     @Inject
     lateinit var presenter: CreateNewChannelPresenter
+    private var channelType: String = "public"
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.home -> {
+            android.R.id.home -> {
                 finish()
                 return true
             }
@@ -38,38 +39,50 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
     private fun setUpToolBar() {
         setSupportActionBar(toolbar)
-        supportActionBar?.title = getString(R.string.title_create_new_channel)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         RxTextView.textChanges(channel_name_edit_text).subscribe { text ->
-            create_channel_action_text.isEnabled = text != ""
-            if (text != "")
-                create_channel_action_text.alpha = 1.0f
+            create_channel_action_text.isEnabled = text.isNotEmpty()
+            if (text.isEmpty())
+                create_channel_action_text.alpha = 0.8f
             else
-                create_channel_action_text.alpha = 0.5f
+                create_channel_action_text.alpha = 1.0f
         }
     }
 
-    private fun setUpOnClickListeners(){
-        public_channel.setOnClickListener{
+    private fun setUpOnClickListeners() {
+        public_channel.setOnClickListener {
+            channelType = "public"
+
             channel_type.text = getString(R.string.public_channel_type)
             channel_description.text = getString(R.string.private_channel_type_description)
+
             placeholder.setImageDrawable(getDrawable(R.drawable.ic_hashtag_black))
+
             (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(resources.getColor(R.color.colorLightTheme))
             (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.red))
+
             private_channel.background = getDrawable(R.drawable.button_border)
             public_channel.background = getDrawable(R.drawable.button_solid)
+
             private_channel.setTextColor(resources.getColor(R.color.red))
             public_channel.setTextColor(resources.getColor(R.color.colorLightTheme))
         }
 
-        private_channel.setOnClickListener{
+        private_channel.setOnClickListener {
+            channelType = "private"
+            
             channel_type.text = getString(R.string.private_channel_type)
             channel_description.text = getString(R.string.public_channel_description)
+
             placeholder.setImageDrawable(getDrawable(R.drawable.ic_room_lock))
+
             (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(resources.getColor(R.color.red))
             (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.colorLightTheme))
+            (getDrawable(R.drawable.button_solid) as GradientDrawable).setStroke(1, resources.getColor(R.color.red))
+
             private_channel.background = getDrawable(R.drawable.button_border)
             public_channel.background = getDrawable(R.drawable.button_solid)
+
             private_channel.setTextColor(resources.getColor(R.color.colorLightTheme))
             public_channel.setTextColor(resources.getColor(R.color.red))
         }
