@@ -50,9 +50,9 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
-            android:name=".create_channel.ui.CreateNewChannelActivity"
+            android:name=".createChannel.ui.CreateNewChannelActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
             android:name=".chatroom.ui.PinnedMessagesActivity"

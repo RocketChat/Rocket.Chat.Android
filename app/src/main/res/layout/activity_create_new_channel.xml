@@ -2,96 +2,145 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp">
+    android:layout_height="match_parent">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/button_top_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.03" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/button_bottom_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.09" />
-
-    <Button
-        android:id="@+id/public_channel"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:background="@drawable/button_solid"
-        android:text="@string/public_channel_type"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/button_bottom_guideline"
-        app:layout_constraintEnd_toStartOf="@+id/private_channel"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/button_top_guideline" />
-
-    <Button
-        android:id="@+id/private_channel"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:background="@drawable/button_border"
-        android:text="@string/private_channel_type"
-        android:textColor="@color/red"
-        app:layout_constraintBottom_toBottomOf="@id/button_bottom_guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/public_channel"
-        app:layout_constraintTop_toTopOf="@id/button_top_guideline" />
-
-    <TextView
-        android:id="@+id/channel_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/private_channel_type"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/public_channel" />
-
-    <TextView
-        android:id="@+id/channel_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/private_channel_type_description"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/channel_type" />
-
-    <View
-        android:id="@+id/separator"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="0.1dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/colorDividerMessageComposer"
-        app:layout_constraintTop_toBottomOf="@id/channel_description" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="6dp"
-        android:src="@drawable/ic_hashtag_black"
-        app:layout_constraintBottom_toBottomOf="@id/channel_name_text_input_layout"
-        app:layout_constraintTop_toTopOf="@id/channel_name_text_input_layout" />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/channel_name_text_input_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_height="56dp"
+        android:theme="@style/ToolbarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/separator"
-        android:focusable="true"
-        android:hint="@string/new_channel_edit_text_hint">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/channel_name_edit_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_create_new_channel"
+                android:textColor="@color/colorLightTheme"
+                android:textSize="20sp"
+                />
+
+            <TextView
+                android:id="@+id/create_channel_action_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.5"
+                android:textColor="@color/colorLightTheme"
+                android:background="?selectableItemBackground"
+                android:enabled="false"
+                android:gravity="end"
+                android:text="@string/create_new_channel_action"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/button_top_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.03" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/button_bottom_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.09" />
+
+        <Button
+            android:id="@+id/public_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/button_solid"
+            android:text="@string/public_channel_type"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/button_bottom_guideline"
+            app:layout_constraintEnd_toStartOf="@+id/private_channel"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/button_top_guideline" />
+
+        <Button
+            android:id="@+id/private_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/button_border"
+            android:text="@string/private_channel_type"
+            android:textColor="@color/red"
+            app:layout_constraintBottom_toBottomOf="@id/button_bottom_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/public_channel"
+            app:layout_constraintTop_toTopOf="@id/button_top_guideline" />
+
+        <TextView
+            android:id="@+id/channel_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/private_channel_type"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/public_channel" />
+
+        <TextView
+            android:id="@+id/channel_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/private_channel_type_description"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/channel_type" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="0dp"
+            android:layout_height="0.1dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorDividerMessageComposer"
+            app:layout_constraintTop_toBottomOf="@id/channel_description" />
+
+        <ImageView
+            android:id="@+id/placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="6dp"
+            android:src="@drawable/ic_hashtag_black"
+            app:layout_constraintBottom_toBottomOf="@id/channel_name_text_input_layout"
+            app:layout_constraintEnd_toStartOf="@id/channel_name_text_input_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/channel_name_text_input_layout" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/channel_name_text_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:focusable="true"
+            android:hint="@string/new_channel_edit_text_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/placeholder"
+            app:layout_constraintTop_toBottomOf="@id/separator">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/channel_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.design.widget.TextInputLayout>
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

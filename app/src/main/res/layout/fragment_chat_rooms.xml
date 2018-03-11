@@ -52,6 +52,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:src="@drawable/ic_add_24dp"
-        android:backgroundTint="@color/black"
+        app:backgroundTint="@color/black"
         />
 </RelativeLayout>

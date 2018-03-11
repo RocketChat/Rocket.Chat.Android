@@ -13,7 +13,7 @@ import android.view.*
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
-import chat.rocket.android.create_channel.ui.CreateNewChannelActivity
+import chat.rocket.android.createChannel.ui.CreateNewChannelActivity
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.*

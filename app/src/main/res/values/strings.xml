@@ -72,6 +72,7 @@
     <string name="private_channel_type_description"></string>
     <string name="public_channel_description"></string>
     <string name="new_channel_edit_text_hint">Channel Name</string>
+    <string name="create_new_channel_action">CREATE</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
