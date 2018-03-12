@@ -66,6 +66,7 @@
     <string name="msg_utc_offset">Deslocamento de UTC</string>
     <string name="msg_new_password">Informe a nova senha</string>
     <string name="msg_confirm_password">Confirme a nova senha</string>
+    <string name="msg_unread_messages">Mensagens não lidas</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>

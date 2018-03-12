@@ -29,8 +29,8 @@ class MainNavigator(internal val activity: MainActivity, internal val context: C
         }
     }
 
-    fun toChatRoom(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean) {
-        activity.startActivity(context.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly))
+    fun toChatRoom(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, chatRoomLastSeen: Long) {
+        activity.startActivity(context.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 }
