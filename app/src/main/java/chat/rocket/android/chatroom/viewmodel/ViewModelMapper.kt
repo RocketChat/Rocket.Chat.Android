@@ -149,7 +149,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val content = getContent(context, getMessageWithoutQuoteMarkdown(message), quote)
         MessageViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
                 messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
-                content = content, isPinned = message.pinned)
+                content = content, isPinned = message.pinned, isFirstUnread = false)
     }
 
     private fun getMessageWithoutQuoteMarkdown(message: Message): Message {
