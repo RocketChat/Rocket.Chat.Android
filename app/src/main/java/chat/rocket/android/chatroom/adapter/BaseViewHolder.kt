@@ -32,13 +32,20 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
 
     private fun bindReactions() {
         data?.let {
+            val recyclerView = itemView.findViewById(R.id.recycler_view_reactions) as RecyclerView
+            val adapter: MessageReactionsAdapter
+            if (recyclerView.adapter == null) {
+                adapter = MessageReactionsAdapter()
+            } else {
+                adapter = recyclerView.adapter as MessageReactionsAdapter
+                adapter.clear()
+            }
+
             if (it.nextDownStreamMessage == null) {
-                val recyclerView = itemView.findViewById(R.id.recycler_view_reactions) as RecyclerView
-                val adapter = MessageReactionsAdapter()
                 val manager = GridLayoutManager(itemView.context, 6)
                 recyclerView.layoutManager = manager
                 recyclerView.adapter = adapter
-                adapter.addReactions(it.reactions)
+                adapter.addReactions(it.reactions.filterNot { it.shortname.startsWith(":") })
             }
         }
     }

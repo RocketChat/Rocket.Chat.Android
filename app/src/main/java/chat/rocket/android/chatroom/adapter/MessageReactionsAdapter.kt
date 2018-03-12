@@ -34,6 +34,12 @@ class MessageReactionsAdapter : RecyclerView.Adapter<MessageReactionsViewHolder>
         notifyItemRangeInserted(0, reactions.size)
     }
 
+    fun clear() {
+        val oldSize = reactions.size
+        reactions.clear()
+        notifyItemRangeRemoved(0, oldSize)
+    }
+
     class MessageReactionsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         @Inject lateinit var localRepository: LocalRepository
 

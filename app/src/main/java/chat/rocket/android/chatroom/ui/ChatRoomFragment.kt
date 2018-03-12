@@ -171,6 +171,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
             val oldMessagesCount = adapter.itemCount
             adapter.appendData(dataSet)
+            recycler_view.scrollToPosition(92)
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
             }
