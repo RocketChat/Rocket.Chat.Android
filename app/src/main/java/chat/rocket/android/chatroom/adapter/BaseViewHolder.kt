@@ -13,6 +13,7 @@ import chat.rocket.core.model.isSystemMessage
 import ru.whalemare.sheetmenu.extension.inflate
 import ru.whalemare.sheetmenu.extension.toList
 
+
 abstract class BaseViewHolder<T : BaseViewModel<*>>(
         itemView: View,
         private val listener: ActionsListener
