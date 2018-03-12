@@ -16,6 +16,8 @@ import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
+import kotlinx.coroutines.experimental.delay
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
@@ -159,6 +161,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                 try {
                     val server = serverInteractor.get()
                     if (server != null) {
+                        delay(3, TimeUnit.SECONDS)
                         val token = client.loginWithCas(casToken)
                         saveToken(server, TokenModel(token.userId, token.authToken), client.me().username)
                         registerPushToken()
@@ -170,8 +173,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     exception.message?.let {
                         view.showMessage(it)
                     }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
+                        view.showGenericErrorMessage()
+                    }
                 } finally {
                     view.hideLoading()
                     view.enableUserInput()
