@@ -73,6 +73,7 @@
     <string name="public_channel_description">Visible to everyone</string>
     <string name="new_channel_edit_text_hint">Channel Name</string>
     <string name="create_new_channel_action">CREATE</string>
+    <string name="add_members_helper_text">Add Members</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
