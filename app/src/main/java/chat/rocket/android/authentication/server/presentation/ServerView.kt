@@ -7,7 +7,7 @@ import chat.rocket.android.core.behaviours.MessageView
 interface ServerView : LoadingView, MessageView, InternetView {
 
     /**
-     * Notifies the user about an invalid inputted server URL.
+     * Shows an invalid server URL message.
      */
-    fun showInvalidServerUrl()
+    fun showInvalidServerUrlMessage()
 }

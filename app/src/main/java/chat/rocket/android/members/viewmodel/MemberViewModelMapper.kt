@@ -8,7 +8,7 @@ import chat.rocket.core.model.Value
 import javax.inject.Inject
 
 class MemberViewModelMapper @Inject constructor(serverInteractor: GetCurrentServerInteractor, getSettingsInteractor: GetSettingsInteractor) {
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
+    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
     private val baseUrl = settings.baseUrl()
 
     fun mapToViewModelList(memberList: List<User>): List<MemberViewModel> {
