@@ -440,13 +440,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             subscribeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
+
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {
-                    if (recycler_view.isAtBottom()) {
+                    var index = 0
+                    if (!recycler_view.isNearBottom()) {
                         if (adapter.itemCount > 0) {
-                            recycler_view.scrollToPosition(0)
+                            index = (recycler_view.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                         }
                     }
+                    handler.postDelayed({recycler_view.scrollToPosition(index)}, 300)
                 }
 
                 override fun onKeyboardClosed() {
