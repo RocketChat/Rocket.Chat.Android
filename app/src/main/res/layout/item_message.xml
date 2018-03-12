@@ -4,10 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="6dp"
-    android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-    android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-    android:layout_marginTop="6dp">
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="@dimen/message_item_top_and_bottom_padding"
+    android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
+    android:focusable="true">
 
     <include
         android:id="@+id/layout_avatar"

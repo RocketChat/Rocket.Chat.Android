@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-    android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-    android:layout_marginTop="12dp">
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
+    android:paddingBottom="@dimen/chat_item_top_and_bottom_padding">
 
     <include
         android:id="@+id/layout_avatar"
