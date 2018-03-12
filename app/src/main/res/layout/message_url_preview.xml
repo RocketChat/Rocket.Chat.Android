@@ -5,6 +5,7 @@
     android:id="@+id/url_preview_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
     android:paddingEnd="24dp"
     android:paddingStart="72dp">
 

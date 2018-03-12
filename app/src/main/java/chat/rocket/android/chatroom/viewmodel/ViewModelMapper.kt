@@ -140,16 +140,19 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                     val quoteUrl = HttpUrl.parse(url.url)
                     val serverUrl = HttpUrl.parse(baseUrl)
                     if (quoteUrl != null && serverUrl != null) {
-                        quote = makeQuote(quoteUrl, serverUrl)
+                        quote = makeQuote(quoteUrl, serverUrl)?.let {
+                            getMessageWithoutQuoteMarkdown(it)
+                        }
                     }
                 }
             }
         }
 
-        val content = getContent(context, message, quote)
-        MessageViewModel(message = message, rawData = message, messageId = message.id,
-                avatar = avatar!!, time = time, senderName = sender,
-                content = content, isPinned = message.pinned, reactions = getReactions(message))
+        val content = getContent(context, getMessageWithoutQuoteMarkdown(message), quote)
+        MessageViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
+                messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
+                content = content, isPinned = message.pinned, reactions = getReactions(message),
+                isFirstUnread = false)
     }
 
     private fun getReactions(message: Message): List<ReactionViewModel> {
@@ -169,6 +172,13 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             list
         }
         return reactions ?: emptyList()
+    }
+
+    private fun getMessageWithoutQuoteMarkdown(message: Message): Message {
+        val baseUrl = settings.baseUrl()
+        return message.copy(
+                message = message.message.replace("\\[\\s\\]\\($baseUrl.*\\)".toRegex(), "").trim()
+        )
     }
 
     private fun getSenderName(message: Message): CharSequence {
@@ -215,7 +225,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         var quoteViewModel: MessageViewModel? = null
         if (quote != null) {
             val quoteMessage: Message = quote
-            quoteViewModel = map(quoteMessage).first { it is MessageViewModel } as MessageViewModel
+            quoteViewModel = mapMessage(quoteMessage)
         }
         return parser.renderMarkdown(message.message, quoteViewModel, currentUsername)
     }

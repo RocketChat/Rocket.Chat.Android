@@ -9,6 +9,7 @@ import chat.rocket.android.chatroom.viewmodel.*
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import java.security.InvalidParameterException
 
@@ -105,12 +106,18 @@ class ChatRoomAdapter(
     }
 
     fun prependData(dataSet: List<BaseViewModel<*>>) {
-        this.dataSet.addAll(0, dataSet)
-        notifyItemRangeInserted(0, dataSet.size)
+        val item = dataSet.firstOrNull { newItem ->
+            this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType } > -1
+        }
+        if (item == null) {
+            this.dataSet.addAll(0, dataSet)
+            notifyItemRangeInserted(0, dataSet.size)
+        }
     }
 
     fun updateItem(message: BaseViewModel<*>) {
         var index = dataSet.indexOfLast { it.messageId == message.messageId }
+        val indexOfFirst = dataSet.indexOfFirst { it.messageId == message.messageId }
         Timber.d("index: $index")
         if (index > -1) {
             message.nextDownStreamMessage = dataSet[index].nextDownStreamMessage
@@ -119,6 +126,11 @@ class ChatRoomAdapter(
             while (dataSet[index].nextDownStreamMessage != null) {
                 dataSet[index].nextDownStreamMessage!!.reactions = message.reactions
                 notifyItemChanged(--index)
+            }
+            // Delete message only if current is a system message update, i.e.: Message Removed
+            if (message.message.isSystemMessage() && indexOfFirst > -1 && indexOfFirst != index) {
+                dataSet.removeAt(indexOfFirst)
+                notifyItemRemoved(indexOfFirst)
             }
         }
     }

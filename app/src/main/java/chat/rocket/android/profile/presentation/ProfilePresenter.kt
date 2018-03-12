@@ -38,8 +38,8 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                        view.showGenericErrorMessage()
-                    }
+                    view.showGenericErrorMessage()
+                }
             } finally {
                 view.hideLoading()
             }
