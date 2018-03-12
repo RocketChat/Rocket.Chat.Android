@@ -1,5 +1,8 @@
 package chat.rocket.android.chatrooms.ui
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -9,9 +12,14 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
+import android.widget.CheckBox
+import android.widget.RadioGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.helper.ChatRoomsSortOrder
+import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.*
@@ -27,10 +35,12 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
+
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var presenter: ChatRoomsPresenter
     @Inject lateinit var serverInteractor: GetCurrentServerInteractor
     @Inject lateinit var settingsRepository: SettingsRepository
+    private lateinit var preferences: SharedPreferences
     private var searchView: SearchView? = null
     private val handler = Handler()
 
@@ -44,6 +54,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
+        preferences = context?.getSharedPreferences("temp", Context.MODE_PRIVATE)!!
     }
 
     override fun onDestroy() {
@@ -82,6 +93,51 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 return queryChatRoomsByName(newText)
             }
         })
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_sort -> {
+                val dialogLayout = layoutInflater.inflate(R.layout.chatroom_sort_dialog, null)
+                val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
+                val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+
+                val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_sort)
+                val groupByTypeCheckBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
+
+                radioGroup.check(when (sortType) {
+                    0 -> R.id.radio_sort_alphabetical
+                    else -> R.id.radio_sort_activity
+                })
+                radioGroup.setOnCheckedChangeListener({ _, checkedId ->
+                    run {
+                        SharedPreferenceHelper.putInt(Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
+                            R.id.radio_sort_alphabetical -> 0
+                            R.id.radio_sort_activity -> 1
+                            else -> 1
+                        })
+                        presenter.updatedSortedChatRooms()
+                        recycler_view.scrollTo(0, 0)
+                    }
+                })
+
+                groupByTypeCheckBox.isChecked = groupByType
+                groupByTypeCheckBox.setOnCheckedChangeListener({ _, isChecked ->
+                    SharedPreferenceHelper.putBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, isChecked)
+                    presenter.updatedSortedChatRooms()
+                    recycler_view.scrollTo(0, 0)
+                })
+
+                val dialogSort = AlertDialog.Builder(context)
+                        .setTitle(R.string.dialog_sort_title)
+                        .setView(dialogLayout)
+                        .setPositiveButton("Done", { dialog, _ -> dialog.dismiss() })
+
+                dialogSort.show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {

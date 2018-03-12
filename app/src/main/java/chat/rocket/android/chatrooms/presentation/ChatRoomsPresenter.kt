@@ -1,6 +1,9 @@
 package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.helper.ChatRoomsSortOrder
+import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
@@ -15,12 +18,15 @@ import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.StreamMessage
 import chat.rocket.core.internal.realtime.Type
 import chat.rocket.core.model.ChatRoom
+import chat.rocket.core.model.Message
 import chat.rocket.core.model.Room
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
@@ -91,9 +97,56 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         return sortedRooms
     }
 
+    fun updatedSortedChatRooms() {
+        val currentServer = serverInteractor.get()!!
+        launchUI(strategy) {
+            val roomList = getChatRoomsInteractor.get(currentServer)
+            view.updateChatRooms(sortRooms(roomList))
+        }
+    }
+
     private fun sortRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
+        val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
+        val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+
         val openChatRooms = getOpenChatRooms(chatRooms)
-        return sortChatRooms(openChatRooms)
+
+        return when (sortType) {
+            ChatRoomsSortOrder.ALPHABETICAL -> {
+                when (groupByType) {
+                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenBy { it.name })
+                    false -> openChatRooms.sortedWith(compareBy(ChatRoom::name))
+                }
+            }
+            ChatRoomsSortOrder.ACTIVITY -> {
+                when (groupByType) {
+                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenByDescending { it.lastMessage?.timestamp })
+                    false -> openChatRooms.sortedByDescending { chatRoom ->
+                        chatRoom.lastMessage?.timestamp
+                    }
+                }
+            }
+            else -> {
+                openChatRooms
+            }
+        }
+    }
+
+    private fun compareBy(selector: KProperty<Message?>): Comparator<ChatRoom> {
+        return Comparator { a, b -> (a.lastMessage?.timestamp!! - b.lastMessage?.timestamp!!).toInt() }
+    }
+
+    private fun compareBy(selector: KProperty1<ChatRoom, RoomType>): Comparator<ChatRoom> {
+        return Comparator { a, b -> getTypeConstant(a.type) - getTypeConstant(b.type) }
+    }
+
+    private fun getTypeConstant(roomType: RoomType): Int {
+        return when (roomType) {
+            is RoomType.Channel -> Constants.CHATROOM_CHANNEL
+            is RoomType.PrivateGroup -> Constants.CHATROOM_PRIVATE_GROUP
+            is RoomType.DirectMessage -> Constants.CHATROOM_DM
+            else -> 0
+        }
     }
 
     private fun updateRooms() {
