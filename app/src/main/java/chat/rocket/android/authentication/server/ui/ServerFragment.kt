@@ -30,7 +30,8 @@ class ServerFragment : Fragment(), ServerView {
         AndroidSupportInjection.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_server)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        container?.inflate(R.layout.fragment_authentication_server)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,7 +44,7 @@ class ServerFragment : Fragment(), ServerView {
         relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
-    override fun showInvalidServerUrl() = showMessage(getString(R.string.msg_invalid_server_url))
+    override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
 
     override fun showLoading() {
         enableUserInput(false)

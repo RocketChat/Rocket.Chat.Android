@@ -4,17 +4,20 @@ import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
+import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extensions.generateRandomString
 import chat.rocket.android.util.extensions.isEmailValid
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
-import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
+import kotlinx.coroutines.experimental.delay
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
@@ -28,51 +31,69 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
 
-    fun setup() {
+    fun setupView() {
         val server = serverInteractor.get()
         if (server == null) {
             navigator.toServerScreen()
             return
         }
-
         val settings = settingsInteractor.get(server)
-        if (settings == null) {
-            navigator.toServerScreen()
-            return
+
+        if (settings.isLoginFormEnabled()) {
+            view.showFormView()
+            view.setupLoginButtonListener()
+            view.setupGlobalListener()
+        } else {
+            view.hideFormView()
         }
 
-        view.showSignUpView(settings.registrationEnabled())
+        if (settings.isRegistrationEnabledForNewUsers()) {
+            view.showSignUpView()
+            view.setupSignUpView()
+        }
 
-        var hasSocial = false
-        if (settings.facebookEnabled()) {
+        if (settings.isCasAuthenticationEnabled()) {
+            val token = generateRandomString(17)
+            view.setupCasButtonListener(UrlHelper.getCasUrl(settings.casLoginUrl(), server, token), token)
+            view.showCasButton()
+        }
+
+        var totalSocialAccountsEnabled = 0
+        if (settings.isFacebookAuthenticationEnabled()) {
             view.enableLoginByFacebook()
-            hasSocial = true
+            totalSocialAccountsEnabled++
         }
-        if (settings.githubEnabled()) {
+        if (settings.isGithubAuthenticationEnabled()) {
             view.enableLoginByGithub()
-            hasSocial = true
+            totalSocialAccountsEnabled++
         }
-        if (settings.googleEnabled()) {
+        if (settings.isGoogleAuthenticationEnabled()) {
             view.enableLoginByGoogle()
-            hasSocial = true
+            totalSocialAccountsEnabled++
         }
-        if (settings.linkedinEnabled()) {
+        if (settings.isLinkedinAuthenticationEnabled()) {
             view.enableLoginByLinkedin()
-            hasSocial = true
+            totalSocialAccountsEnabled++
         }
-        if (settings.meteorEnabled()) {
+        if (settings.isMeteorAuthenticationEnabled()) {
             view.enableLoginByMeteor()
-            hasSocial = true
+            totalSocialAccountsEnabled++
         }
-        if (settings.twitterEnabled()) {
+        if (settings.isTwitterAuthenticationEnabled()) {
             view.enableLoginByTwitter()
-            hasSocial = true
+            totalSocialAccountsEnabled++
         }
-        if (settings.gitlabEnabled()) {
+        if (settings.isGitlabAuthenticationEnabled()) {
             view.enableLoginByGitlab()
-            hasSocial = true
+            totalSocialAccountsEnabled++
         }
-        view.showOauthView(hasSocial)
+
+        if (totalSocialAccountsEnabled > 0) {
+            view.showOauthView()
+            if (totalSocialAccountsEnabled > 3) {
+                view.setupFabListener()
+            }
+        }
     }
 
     fun authenticate(usernameOrEmail: String, password: String) {
@@ -90,34 +111,23 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
             else -> {
                 launchUI(strategy) {
                     if (NetworkHelper.hasInternetAccess()) {
+                        view.disableUserInput()
                         view.showLoading()
-
                         try {
-                            var token: Token? = null
-                            if (usernameOrEmail.isEmailValid()) {
-                                token = client.loginWithEmail(usernameOrEmail, password)
+                            val token = if (usernameOrEmail.isEmailValid()) {
+                                client.loginWithEmail(usernameOrEmail, password)
                             } else {
                                 val settings = settingsInteractor.get(server)
-                                if (settings != null) {
-                                    token = if (settings.ldapEnabled()) {
-                                        client.loginWithLdap(usernameOrEmail, password)
-                                    } else {
-                                        client.login(usernameOrEmail, password)
-                                    }
+                                if (settings.isLdapAuthenticationEnabled()) {
+                                    client.loginWithLdap(usernameOrEmail, password)
                                 } else {
-                                    navigator.toServerScreen()
+                                    client.login(usernameOrEmail, password)
                                 }
                             }
 
-                            if (token != null) {
-                                val me = client.me()
-                                multiServerRepository.save(server, TokenModel(token.userId, token.authToken))
-                                localRepository.save(LocalRepository.USERNAME_KEY, me.username)
-                                registerPushToken()
-                                navigator.toChatList()
-                            } else {
-                                view.showGenericErrorMessage()
-                            }
+                            saveToken(server, TokenModel(token.userId, token.authToken), client.me().username)
+                            registerPushToken()
+                            navigator.toChatList()
                         } catch (exception: RocketChatException) {
                             when (exception) {
                                 is RocketChatTwoFactorException -> {
@@ -133,6 +143,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                             }
                         } finally {
                             view.hideLoading()
+                            view.enableUserInput()
                         }
                     } else {
                         view.showNoInternetConnection()
@@ -142,7 +153,45 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
     }
 
+    fun authenticateWithCas(casToken: String) {
+        launchUI(strategy) {
+            if (NetworkHelper.hasInternetAccess()) {
+                view.disableUserInput()
+                view.showLoading()
+                try {
+                    val server = serverInteractor.get()
+                    if (server != null) {
+                        delay(3, TimeUnit.SECONDS)
+                        val token = client.loginWithCas(casToken)
+                        saveToken(server, TokenModel(token.userId, token.authToken), client.me().username)
+                        registerPushToken()
+                        navigator.toChatList()
+                    } else {
+                        navigator.toServerScreen()
+                    }
+                } catch (exception: RocketChatException) {
+                    exception.message?.let {
+                        view.showMessage(it)
+                    }.ifNull {
+                        view.showGenericErrorMessage()
+                    }
+                } finally {
+                    view.hideLoading()
+                    view.enableUserInput()
+                }
+            } else {
+                view.showNoInternetConnection()
+            }
+        }
+    }
+
     fun signup() = navigator.toSignUp()
+
+    private suspend fun saveToken(server: String, tokenModel: TokenModel, username: String?) {
+        multiServerRepository.save(server, tokenModel)
+        localRepository.save(LocalRepository.USERNAME_KEY, username)
+        registerPushToken()
+    }
 
     private suspend fun registerPushToken() {
         localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
