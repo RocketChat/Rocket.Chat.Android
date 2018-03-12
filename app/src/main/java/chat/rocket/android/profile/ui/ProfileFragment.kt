@@ -8,18 +8,19 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
 import android.support.v7.view.ActionMode
 import android.util.Log
 import android.view.*
-import android.widget.ListAdapter
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
@@ -50,13 +51,14 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private lateinit var currentAvatar: String
     private var actionMode: ActionMode? = null
     private var avatarImage: File? = null
+    private var avatarImageUri: Uri? = null
     private var isAvatarChanged = false
     //request codes
     private var CHOOSE_PICKER_MODE = 193
     private val CAMERA_REQUEST_CODE = 108
     private val READ_STORAGE_REQUEST_CODE = 109
 
-    private var mObservable: Subject<Boolean> = PublishSubject.create()
+    private var imageObservable: Subject<Boolean> = PublishSubject.create()
 
 
     companion object {
@@ -90,7 +92,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 val permissionCheck = ContextCompat.checkSelfPermission(context!!,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 if (permissionCheck != PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), CHOOSE_PICKER_MODE)
+                    ActivityCompat.requestPermissions(activity as FragmentActivity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), CHOOSE_PICKER_MODE)
                 } else {
                     openImagePickerChooserDialog()
                 }
@@ -125,7 +127,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     //show dialog to choose whether to pick image from gallery or to click it from camera
     private fun openImagePickerChooserDialog() {
-        val choices = arrayOf("Take photo", "Choose photo from storage")
+        val choices = arrayOf(getString(R.string.action_open_camera), getString(R.string.action_choose_image_from_gallery))
 
         val imagePickerChooserDialogBuilder = AlertDialog.Builder(context)
         imagePickerChooserDialogBuilder.setTitle("")
@@ -168,7 +170,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 if (resultCode == RESULT_OK) {
                     //write image data to file
                     try {
-                        val bitmapImage: Bitmap = data!!.extras.get("data") as Bitmap
+                        avatarImageUri = data!!.data
+                        val bitmapImage: Bitmap = data.extras.get("data") as Bitmap
                         val bytes = ByteArrayOutputStream()
                         bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
                         image_avatar.setImageURI(data.data)
@@ -185,7 +188,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                         }
 
                         isAvatarChanged = true
-                        mObservable.onNext(isAvatarChanged)
+                        imageObservable.onNext(isAvatarChanged)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -196,10 +199,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             READ_STORAGE_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
-                    avatarImage = File(data!!.data.getRealPathFromURI(context!!))
+                    avatarImageUri = data!!.data
+                    avatarImage = File(data.data.getRealPathFromURI(context!!))
                     image_avatar.setImageURI(data.data)
                     isAvatarChanged = true
-                    mObservable.onNext(isAvatarChanged)
+                    imageObservable.onNext(isAvatarChanged)
                 } else {
                     Log.d("ERROR_CODE", resultCode.toString())
                 }
@@ -239,7 +243,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, avatarImage)
+                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, avatarImage, avatarImageUri)
 
                 mode.finish()
                 true
@@ -274,7 +278,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     private fun listenToChanges() {
         //setup rx for avatar
-        mObservable.subscribe({ _ ->
+        imageObservable.subscribe({ _ ->
             if (isAvatarChanged) {
                 startActionMode()
             } else {

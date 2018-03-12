@@ -22,6 +22,8 @@
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
+    <string name="action_choose_image_from_gallery">Escolher foto da galeria</string>
+    <string name="action_open_camera">Tirar foto</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -91,6 +93,7 @@
     <string name="permission_editing_not_allowed">Edição não permitida</string>
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
     <string name="permission_pinning_not_allowed">Fixar não permitido</string>
+    <string name="permission_image_picking_not_allowed">A imagem não pode ser acessada sem a permissão para ler o armazenamento.</string>
 
     <!-- Members List -->
     <string name="title_members_list">Lista de Membros</string>

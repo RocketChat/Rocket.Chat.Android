@@ -1,5 +1,7 @@
 package chat.rocket.android.profile.presentation
 
+import android.net.Uri
+import chat.rocket.android.chatroom.domain.UriInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -16,6 +18,7 @@ import javax.inject.Inject
 
 class ProfilePresenter @Inject constructor(private val view: ProfileView,
                                            private val strategy: CancelStrategy,
+                                           private  val uriInteractor: UriInteractor,
                                            serverInteractor: GetCurrentServerInteractor,
                                            factory: RocketChatClientFactory) {
     private val serverUrl = serverInteractor.get()!!
@@ -38,7 +41,7 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
-                }.ifNull {
+                    }.ifNull {
                             view.showGenericErrorMessage()
                         }
             } finally {
@@ -47,15 +50,17 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
         }
     }
 
-    fun updateUserProfile(email: String, name: String, username: String, avatarUrl: String = "", avatarImage: File?) {
+    fun updateUserProfile(email: String, name: String, username: String, avatarUrl: String = "", avatarImage: File?, avatarImageUri: Uri?) {
         launchUI(strategy) {
             view.showLoading()
             try {
                 if (avatarUrl != "") {
                     client.setAvatar(avatarUrl)
                 }
-                if (avatarImage != null)
-                    client.setAvatar(avatarImage, "image/jpeg")
+                if (avatarImage != null){
+                    val mimeType = uriInteractor.getMimeType(avatarImageUri!!)
+                    client.setAvatar(avatarImage,mimeType)
+                }
 
                 val user = client.updateProfile(myselfId, email, name, username)
                 view.showProfileUpdateSuccessfullyMessage()
@@ -63,7 +68,7 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
-                }.ifNull {
+                    }.ifNull {
                             view.showGenericErrorMessage()
                         }
             } finally {
