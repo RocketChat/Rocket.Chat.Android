@@ -1,14 +1,20 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.PopupWindow
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.ReactionViewModel
 import chat.rocket.android.dagger.DaggerLocalComponent
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.widget.emoji.*
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
@@ -39,7 +45,8 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         if (holder is SingleReactionViewHolder) {
             holder.bind(reactions[position])
         } else {
-
+            holder as AddReactionViewHolder
+            holder.bind(reactions[0].messageId)
         }
     }
 
@@ -91,6 +98,41 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     }
 
     class AddReactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private lateinit var viewPager: ViewPager
+        private lateinit var tabLayout: TabLayout
 
+        fun bind(messageId: String) {
+            itemView as ImageView
+            itemView.setOnClickListener {
+                val ep = EmojiPickerPopup(itemView.context)
+                ep.show()
+            }
+        }
+
+        private fun setupViewPager() {
+            itemView.context.let {
+                viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardPopup.Listener {
+                    override fun onNonEmojiKeyPressed(keyCode: Int) {
+                        // do nothing
+                    }
+
+                    override fun onEmojiAdded(emoji: Emoji) {
+                        EmojiRepository.addToRecents(emoji)
+                    }
+                })
+
+                for (category in EmojiCategory.values()) {
+                    val tab = tabLayout.getTabAt(category.ordinal)
+                    val tabView = LayoutInflater.from(it).inflate(R.layout.emoji_picker_tab, null)
+                    tab?.setCustomView(tabView)
+                    val textView = tabView.findViewById(R.id.image_category) as ImageView
+                    textView.setImageResource(category.resourceIcon())
+                }
+
+                val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
+                    EmojiCategory.RECENTS.ordinal
+                viewPager.setCurrentItem(currentTab)
+            }
+        }
     }
 }

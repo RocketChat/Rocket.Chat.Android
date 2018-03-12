@@ -159,7 +159,10 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                 val usernames = it.getUsernames(shortname) ?: emptyList()
                 val count = usernames.size
                 list.add(
-                        ReactionViewModel(EmojiParser.parse(shortname), count, usernames)
+                        ReactionViewModel(messageId = message.id,
+                                shortname = EmojiParser.parse(shortname),
+                                count = count,
+                                usernames = usernames)
                 )
             }
             list

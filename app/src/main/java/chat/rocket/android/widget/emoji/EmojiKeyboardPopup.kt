@@ -28,7 +28,7 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
     }
 
     override fun onCreateView(inflater: LayoutInflater): View {
-        val view = inflater.inflate(R.layout.emoji_popup_layout, null, false)
+        val view = inflater.inflate(R.layout.emoji_keyboard, null)
         parentContainer = view.findViewById(R.id.emoji_keyboard_container)
         viewPager = view.findViewById(R.id.pager_categories)
         searchView = view.findViewById(R.id.emoji_search)
