@@ -23,10 +23,7 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.widget.emoji.ComposerEditText
-import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
-import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.android.widget.emoji.*
 import chat.rocket.core.internal.realtime.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -54,7 +51,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 
-class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
     @Inject lateinit var presenter: ChatRoomPresenter
     @Inject lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
@@ -154,7 +151,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     override fun showMessages(dataSet: List<BaseViewModel<*>>) {
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter)
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
+                        reactionListener = this@ChatRoomFragment)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 linearLayoutManager.stackFromEnd = true
@@ -279,6 +277,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             }
             else -> throw IllegalArgumentException("pressed key not expected")
         }
+    }
+
+    override fun onEmojiReactionAdded(messageId: String, emoji: Emoji) {
+        presenter.react(messageId, emoji.shortname)
     }
 
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {

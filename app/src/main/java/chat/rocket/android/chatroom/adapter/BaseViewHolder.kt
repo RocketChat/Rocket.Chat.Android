@@ -1,16 +1,14 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.content.Context
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.widget.emoji.Emoji
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import com.google.android.flexbox.FlexDirection
@@ -21,7 +19,8 @@ import ru.whalemare.sheetmenu.extension.toList
 
 abstract class BaseViewHolder<T : BaseViewModel<*>>(
         itemView: View,
-        private val listener: ActionsListener
+        private val listener: ActionsListener,
+        var reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.ViewHolder(itemView),
         MenuItem.OnMenuItemClickListener {
     var data: T? = null
@@ -48,6 +47,11 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
             }
 
             if (it.nextDownStreamMessage == null) {
+                adapter.listener = object : EmojiReactionListener {
+                    override fun onEmojiReactionAdded(messageId: String, emoji: Emoji) {
+                        reactionListener?.onEmojiReactionAdded(messageId, emoji)
+                    }
+                }
                 val context = itemView.context
                 val manager = FlexboxLayoutManager(context, FlexDirection.ROW)
                 recyclerView.layoutManager = manager

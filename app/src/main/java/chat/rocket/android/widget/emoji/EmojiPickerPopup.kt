@@ -15,6 +15,7 @@ import chat.rocket.android.R
 class EmojiPickerPopup(context: Context) : Dialog(context) {
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
+    var listener: EmojiKeyboardListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,22 +26,23 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
         tabLayout = findViewById(R.id.tabs)
         tabLayout.setupWithViewPager(viewPager)
         setupViewPager()
+        setSize()
+    }
+
+    private fun setSize() {
         val lp = WindowManager.LayoutParams()
         lp.copyFrom(window.attributes)
         val dialogWidth = lp.width
-        val dialogHeight = lp.height
-
-        window.setLayout(dialogWidth, context.resources.getDimensionPixelSize(R.dimen.picker_popup_height))
+        val dialogHeight = context.resources.getDimensionPixelSize(R.dimen.picker_popup_height)
+        window.setLayout(dialogWidth, dialogHeight)
     }
 
     private fun setupViewPager() {
-        viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardPopup.Listener {
-            override fun onNonEmojiKeyPressed(keyCode: Int) {
-                // do nothing
-            }
-
+        viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListenerAdapter() {
             override fun onEmojiAdded(emoji: Emoji) {
                 EmojiRepository.addToRecents(emoji)
+                dismiss()
+                listener?.onEmojiAdded(emoji)
             }
         })
 

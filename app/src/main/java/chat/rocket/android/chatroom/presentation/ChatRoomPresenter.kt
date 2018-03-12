@@ -348,7 +348,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun react(messageId: String, emoji: String) {
         launchUI(strategy) {
             try {
-                client.react(messageId, emoji)
+                client.react(messageId, emoji.removeSurrounding(":"))
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }

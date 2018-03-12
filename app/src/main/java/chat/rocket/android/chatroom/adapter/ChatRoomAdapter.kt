@@ -7,6 +7,7 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.viewmodel.*
 import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
 import timber.log.Timber
 import java.security.InvalidParameterException
@@ -15,7 +16,8 @@ class ChatRoomAdapter(
         private val roomType: String,
         private val roomName: String,
         private val presenter: ChatRoomPresenter?,
-        private val enableActions: Boolean = true
+        private val enableActions: Boolean = true,
+        private val reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private val dataSet = ArrayList<BaseViewModel<*>>()
@@ -28,23 +30,23 @@ class ChatRoomAdapter(
         return when (viewType.toViewType()) {
             BaseViewModel.ViewType.MESSAGE -> {
                 val view = parent.inflate(R.layout.item_message)
-                MessageViewHolder(view, actionsListener)
+                MessageViewHolder(view, actionsListener, reactionListener)
             }
             BaseViewModel.ViewType.IMAGE_ATTACHMENT -> {
                 val view = parent.inflate(R.layout.message_attachment)
-                ImageAttachmentViewHolder(view, actionsListener)
+                ImageAttachmentViewHolder(view, actionsListener, reactionListener)
             }
             BaseViewModel.ViewType.AUDIO_ATTACHMENT -> {
                 val view = parent.inflate(R.layout.message_attachment)
-                AudioAttachmentViewHolder(view, actionsListener)
+                AudioAttachmentViewHolder(view, actionsListener, reactionListener)
             }
             BaseViewModel.ViewType.VIDEO_ATTACHMENT -> {
                 val view = parent.inflate(R.layout.message_attachment)
-                VideoAttachmentViewHolder(view, actionsListener)
+                VideoAttachmentViewHolder(view, actionsListener, reactionListener)
             }
             BaseViewModel.ViewType.URL_PREVIEW -> {
                 val view = parent.inflate(R.layout.message_url_preview)
-                UrlPreviewViewHolder(view, actionsListener)
+                UrlPreviewViewHolder(view, actionsListener, reactionListener)
             }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
