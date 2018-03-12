@@ -287,6 +287,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         presenter.react(messageId, emoji.shortname)
     }
 
+    override fun showReactionsPopup(messageId: String) {
+        context?.let {
+            val emojiPickerPopup = EmojiPickerPopup(it)
+            emojiPickerPopup.listener = object : EmojiListenerAdapter() {
+                override fun onEmojiAdded(emoji: Emoji) {
+                    onReactionAdded(messageId, emoji)
+                }
+            }
+            emojiPickerPopup.show()
+        }
+    }
+
     private fun setReactionButtonIcon(@DrawableRes drawableId: Int) {
         button_add_reaction.setImageResource(drawableId)
         button_add_reaction.setTag(drawableId)

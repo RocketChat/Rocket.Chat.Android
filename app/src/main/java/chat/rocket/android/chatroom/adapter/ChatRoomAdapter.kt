@@ -155,6 +155,7 @@ class ChatRoomAdapter(
                             }
                         }
                     }
+                    R.id.action_menu_msg_react -> presenter?.showReactions(id)
                     else -> TODO("Not implemented")
                 }
             }

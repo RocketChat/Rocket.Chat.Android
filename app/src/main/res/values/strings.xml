@@ -88,6 +88,7 @@
     <string name="action_msg_star">Star Message</string>
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
+    <string name="action_msg_add_reaction">Add reaction</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>

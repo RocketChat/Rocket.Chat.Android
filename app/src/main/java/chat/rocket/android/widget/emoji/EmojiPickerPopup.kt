@@ -38,7 +38,7 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
     }
 
     private fun setupViewPager() {
-        viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListenerAdapter() {
+        viewPager.adapter = CategoryPagerAdapter(object : EmojiListenerAdapter() {
             override fun onEmojiAdded(emoji: Emoji) {
                 EmojiRepository.addToRecents(emoji)
                 dismiss()

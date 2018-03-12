@@ -11,7 +11,7 @@ import chat.rocket.android.chatroom.viewmodel.ReactionViewModel
 import chat.rocket.android.dagger.DaggerLocalComponent
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiKeyboardListenerAdapter
+import chat.rocket.android.widget.emoji.EmojiListenerAdapter
 import chat.rocket.android.widget.emoji.EmojiPickerPopup
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import java.util.concurrent.CopyOnWriteArrayList
@@ -122,7 +122,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
             itemView as ImageView
             itemView.setOnClickListener {
                 val emojiPickerPopup = EmojiPickerPopup(itemView.context)
-                emojiPickerPopup.listener = object : EmojiKeyboardListenerAdapter() {
+                emojiPickerPopup.listener = object : EmojiListenerAdapter() {
                     override fun onEmojiAdded(emoji: Emoji) {
                         listener?.onReactionAdded(messageId, emoji)
                     }

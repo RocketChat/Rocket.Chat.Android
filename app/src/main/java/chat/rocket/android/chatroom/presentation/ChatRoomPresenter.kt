@@ -355,6 +355,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    fun showReactions(messageId: String) {
+        view.showReactionsPopup(messageId)
+    }
+
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(streamedMessage)
