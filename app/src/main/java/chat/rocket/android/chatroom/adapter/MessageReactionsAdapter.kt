@@ -71,6 +71,9 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         notifyItemRangeRemoved(0, oldSize)
     }
 
+    fun contains(reactionShortname: String) =
+            reactions.firstOrNull { it.shortname ==  reactionShortname} != null
+
     class SingleReactionViewHolder(view: View,
                                    private val listener: EmojiReactionListener?)
         : RecyclerView.ViewHolder(view), View.OnClickListener {

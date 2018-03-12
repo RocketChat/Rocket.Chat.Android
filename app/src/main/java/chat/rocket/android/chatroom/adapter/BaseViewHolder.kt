@@ -53,7 +53,9 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
                     }
 
                     override fun onReactionAdded(messageId: String, emoji: Emoji) {
-                        reactionListener?.onReactionAdded(messageId, emoji)
+                        if (!adapter.contains(emoji.shortname)) {
+                            reactionListener?.onReactionAdded(messageId, emoji)
+                        }
                     }
                 }
                 val context = itemView.context
