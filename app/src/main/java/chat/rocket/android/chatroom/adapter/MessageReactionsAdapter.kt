@@ -36,7 +36,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
             }
             else -> {
                 view = inflater.inflate(R.layout.item_reaction, parent, false)
-                SingleReactionViewHolder(view)
+                SingleReactionViewHolder(view, listener)
             }
         }
     }
@@ -71,8 +71,13 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         notifyItemRangeRemoved(0, oldSize)
     }
 
-    class SingleReactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class SingleReactionViewHolder(view: View,
+                                   private val listener: EmojiReactionListener?)
+        : RecyclerView.ViewHolder(view), View.OnClickListener {
         @Inject lateinit var localRepository: LocalRepository
+        @Volatile lateinit var reaction: ReactionViewModel
+        @Volatile
+        var clickHandled = false
 
         init {
             DaggerLocalComponent.builder()
@@ -82,10 +87,12 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         }
 
         fun bind(reaction: ReactionViewModel) {
+            clickHandled = false
+            this.reaction = reaction
             with(itemView) {
                 val emojiTextView = findViewById<TextView>(R.id.text_emoji)
                 val countTextView = findViewById<TextView>(R.id.text_count)
-                emojiTextView.text = reaction.shortname
+                emojiTextView.text = reaction.unicode
                 countTextView.text = reaction.count.toString()
                 val myself = localRepository.get(LocalRepository.USERNAME_KEY)
                 if (reaction.usernames.contains(myself)) {
@@ -93,18 +100,31 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                     val resources = context.resources
                     countTextView.setTextColor(resources.getColor(R.color.colorAccent))
                 }
+
+                emojiTextView.setOnClickListener(this@SingleReactionViewHolder)
+                countTextView.setOnClickListener(this@SingleReactionViewHolder)
+            }
+        }
+
+        override fun onClick(v: View?) {
+            synchronized(this) {
+                if (!clickHandled) {
+                    clickHandled = true
+                    listener?.onReactionTouched(reaction.messageId, reaction.shortname)
+                }
             }
         }
     }
 
-    class AddReactionViewHolder(view: View, val listener: EmojiReactionListener?) : RecyclerView.ViewHolder(view) {
+    class AddReactionViewHolder(view: View,
+                                private val listener: EmojiReactionListener?) : RecyclerView.ViewHolder(view) {
         fun bind(messageId: String) {
             itemView as ImageView
             itemView.setOnClickListener {
                 val emojiPickerPopup = EmojiPickerPopup(itemView.context)
                 emojiPickerPopup.listener = object : EmojiKeyboardListenerAdapter() {
                     override fun onEmojiAdded(emoji: Emoji) {
-                        listener?.onEmojiReactionAdded(messageId, emoji)
+                        listener?.onReactionAdded(messageId, emoji)
                     }
                 }
                 emojiPickerPopup.show()

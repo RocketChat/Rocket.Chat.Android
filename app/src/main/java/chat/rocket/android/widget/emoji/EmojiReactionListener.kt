@@ -7,5 +7,13 @@ interface EmojiReactionListener {
      * @param messageId The id of the message being reacted.
      * @param emoji The emoji used to react.
      */
-    fun onEmojiReactionAdded(messageId: String, emoji: Emoji)
+    fun onReactionAdded(messageId: String, emoji: Emoji)
+
+    /**
+     * Callback when an added reaction is touched.
+     *
+     * @param messageId The id of the message with the reaction.
+     * @param emojiShortname The shortname of the emoji (:grin:, :smiley:, etc).
+     */
+    fun onReactionTouched(messageId: String, emojiShortname: String)
 }

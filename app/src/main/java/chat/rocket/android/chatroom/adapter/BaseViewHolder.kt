@@ -48,15 +48,19 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
 
             if (it.nextDownStreamMessage == null) {
                 adapter.listener = object : EmojiReactionListener {
-                    override fun onEmojiReactionAdded(messageId: String, emoji: Emoji) {
-                        reactionListener?.onEmojiReactionAdded(messageId, emoji)
+                    override fun onReactionTouched(messageId: String, emojiShortname: String) {
+                        reactionListener?.onReactionTouched(messageId, emojiShortname)
+                    }
+
+                    override fun onReactionAdded(messageId: String, emoji: Emoji) {
+                        reactionListener?.onReactionAdded(messageId, emoji)
                     }
                 }
                 val context = itemView.context
                 val manager = FlexboxLayoutManager(context, FlexDirection.ROW)
                 recyclerView.layoutManager = manager
                 recyclerView.adapter = adapter
-                adapter.addReactions(it.reactions.filterNot { it.shortname.startsWith(":") })
+                adapter.addReactions(it.reactions.filterNot { it.unicode.startsWith(":") })
             }
         }
     }

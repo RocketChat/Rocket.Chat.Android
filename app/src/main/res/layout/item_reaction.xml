@@ -7,6 +7,7 @@
     android:layout_marginRight="2dp"
     android:layout_marginTop="2dp"
     android:layout_marginBottom="2dp"
+    android:descendantFocusability="beforeDescendants"
     android:background="@drawable/rounded_background"
     android:orientation="horizontal">
 

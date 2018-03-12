@@ -279,7 +279,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onEmojiReactionAdded(messageId: String, emoji: Emoji) {
+    override fun onReactionTouched(messageId: String, emojiShortname: String) {
+        presenter.react(messageId, emojiShortname)
+    }
+
+    override fun onReactionAdded(messageId: String, emoji: Emoji) {
         presenter.react(messageId, emoji.shortname)
     }
 
