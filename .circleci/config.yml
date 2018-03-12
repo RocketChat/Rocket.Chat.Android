@@ -5,16 +5,17 @@ jobs:
     docker:
       - image: circleci/android:api-25-alpha
     environment:
-      ANDROID_HOME: /usr/local/android-sdk-linux
+      # ANDROID_HOME: /usr/local/android-sdk-linux
       # GRADLE_OPTS: '-Xmx1536M -Dorg.gradle.jvmargs="-Xmx1536M -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError"'
-      JAVA_OPTS: "-Xms518m -Xmx1536M"
+      # JAVA_OPTS: "-Xms518m -Xmx1536M"
+      JVM_OPTS: -Xmx3200m
     steps:
       - checkout
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-#      - run:
-#         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this. 
-#         command: sudo chmod +x ./gradlew
+      - run:
+        name: Chmod permissions #if permission for Gradlew Dependencies fail, use this. 
+        command: sudo chmod +x ./gradlew
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
