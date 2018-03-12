@@ -14,6 +14,9 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
+          name: Clone SDK code
+          command: git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git Rocket.Chat.Kotlin.SDK
+      - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this. 
           command: sudo chmod +x ./gradlew
       - run:
