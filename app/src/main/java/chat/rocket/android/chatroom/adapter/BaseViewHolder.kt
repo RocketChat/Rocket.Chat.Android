@@ -1,15 +1,20 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
 import ru.whalemare.sheetmenu.extension.inflate
 import ru.whalemare.sheetmenu.extension.toList
 
@@ -43,7 +48,8 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
             }
 
             if (it.nextDownStreamMessage == null) {
-                val manager = GridLayoutManager(itemView.context, 6)
+                val context = itemView.context
+                val manager = FlexboxLayoutManager(context, FlexDirection.ROW)
                 recyclerView.layoutManager = manager
                 recyclerView.adapter = adapter
                 adapter.addReactions(it.reactions.filterNot { it.shortname.startsWith(":") })
