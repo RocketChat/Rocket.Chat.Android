@@ -6,27 +6,51 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.adapter.MessageReactionsAdapter.MessageReactionsViewHolder
 import chat.rocket.android.chatroom.viewmodel.ReactionViewModel
 import chat.rocket.android.dagger.DaggerLocalComponent
 import chat.rocket.android.infrastructure.LocalRepository
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
-class MessageReactionsAdapter : RecyclerView.Adapter<MessageReactionsViewHolder>() {
+class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    companion object {
+        private const val REACTION_VIEW_TYPE = 0
+        private const val ADD_REACTION_VIEW_TYPE = 1
+    }
+
     private val reactions = CopyOnWriteArrayList<ReactionViewModel>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageReactionsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.item_reaction, parent, false)
-        return MessageReactionsViewHolder(view)
+        val view: View
+        return when (viewType) {
+            ADD_REACTION_VIEW_TYPE -> {
+                view = inflater.inflate(R.layout.item_add_reaction, parent, false)
+                AddReactionViewHolder(view)
+            }
+            else -> {
+                view = inflater.inflate(R.layout.item_reaction, parent, false)
+                SingleReactionViewHolder(view)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: MessageReactionsViewHolder, position: Int) {
-        holder.bind(reactions[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is SingleReactionViewHolder) {
+            holder.bind(reactions[position])
+        } else {
+
+        }
     }
 
-    override fun getItemCount() = reactions.size
+    override fun getItemCount() = if (reactions.isEmpty()) 0 else reactions.size + 1
+
+    override fun getItemViewType(position: Int): Int {
+        if (position == reactions.size) {
+            return ADD_REACTION_VIEW_TYPE
+        }
+        return REACTION_VIEW_TYPE
+    }
 
     fun addReactions(reactions: List<ReactionViewModel>) {
         this.reactions.clear()
@@ -40,7 +64,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<MessageReactionsViewHolder>
         notifyItemRangeRemoved(0, oldSize)
     }
 
-    class MessageReactionsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class SingleReactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         @Inject lateinit var localRepository: LocalRepository
 
         init {
@@ -64,5 +88,9 @@ class MessageReactionsAdapter : RecyclerView.Adapter<MessageReactionsViewHolder>
                 }
             }
         }
+    }
+
+    class AddReactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
     }
 }
