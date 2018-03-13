@@ -10,6 +10,7 @@ import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.getRoomPinnedMessages
+import chat.rocket.core.internal.rest.unpinMessage
 import chat.rocket.core.model.Value
 import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
@@ -48,6 +49,16 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    fun unpinMessage(messageId: String) {
+        launchUI(strategy) {
+            try {
+                client.unpinMessage(messageId)
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }

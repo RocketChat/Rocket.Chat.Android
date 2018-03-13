@@ -5,6 +5,7 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
+import chat.rocket.android.chatroom.presentation.PinnedMessagesPresenter
 import chat.rocket.android.chatroom.viewmodel.*
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.widget.emoji.EmojiReactionListener
@@ -17,6 +18,7 @@ class ChatRoomAdapter(
         private val roomType: String,
         private val roomName: String,
         private val presenter: ChatRoomPresenter?,
+        private val pinnedMessagesPresenter: PinnedMessagesPresenter?,
         private val enableActions: Boolean = true,
         private val reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
@@ -148,6 +150,13 @@ class ChatRoomAdapter(
     }
 
     val actionsListener = object : BaseViewHolder.ActionsListener {
+        override fun onPinMessageSelected(message: Message) {
+            with(message){
+                pinnedMessagesPresenter?.unpinMessage(id)
+                removeItem(id)
+            }
+        }
+
         override fun isActionsEnabled(): Boolean = enableActions
 
         override fun onActionSelected(item: MenuItem, message: Message) {

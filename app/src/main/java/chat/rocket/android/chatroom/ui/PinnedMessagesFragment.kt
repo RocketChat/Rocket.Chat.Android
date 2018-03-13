@@ -76,7 +76,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
         activity?.apply {
             if (recycler_view_pinned.adapter == null) {
                 // TODO - add a better constructor for this case...
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, null, false)
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, null, presenter, false)
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view_pinned.layoutManager = linearLayoutManager

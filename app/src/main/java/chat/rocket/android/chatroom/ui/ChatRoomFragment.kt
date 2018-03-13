@@ -177,7 +177,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter, pinnedMessagesPresenter = null,
                         reactionListener = this@ChatRoomFragment)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)

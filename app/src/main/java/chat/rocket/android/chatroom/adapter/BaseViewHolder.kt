@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
@@ -72,6 +73,7 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
     interface ActionsListener {
         fun isActionsEnabled(): Boolean
         fun onActionSelected(item: MenuItem, message: Message)
+        fun onPinMessageSelected(message: Message)
     }
 
     val longClickListener = { view: View ->
@@ -88,9 +90,26 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
         true
     }
 
+    private val pinLongClickListener = View.OnLongClickListener {
+        val builder = AlertDialog.Builder(it.context)
+        builder.setTitle(R.string.action_msg_unpin)
+                .setMessage(R.string.unpin_alert_message)
+                .setPositiveButton(R.string.action_msg_yes) { _, _ ->
+                    data.let {
+                        listener.onPinMessageSelected(it!!.message)
+                    }
+                }
+                .setNegativeButton(R.string.action_msg_cancel) { _, _ -> }
+
+        builder.show()
+        true
+    }
+
     internal fun setupActionMenu(view: View) {
         if (listener.isActionsEnabled()) {
             view.setOnLongClickListener(longClickListener)
+        }else{
+            view.setOnLongClickListener(pinLongClickListener)
         }
     }
 
