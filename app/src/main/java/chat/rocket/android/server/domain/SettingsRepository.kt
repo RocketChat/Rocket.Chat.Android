@@ -68,6 +68,7 @@ fun PublicSettings.isTwitterAuthenticationEnabled(): Boolean = this[ACCOUNT_TWIT
 fun PublicSettings.isGitlabAuthenticationEnabled(): Boolean = this[ACCOUNT_GITLAB]?.value == true
 fun PublicSettings.isWordpressAuthenticationEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
 
+fun PublicSettings.favicon(): String = this[FAVICON_512]?.value.toString()
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
 
 // Message settings

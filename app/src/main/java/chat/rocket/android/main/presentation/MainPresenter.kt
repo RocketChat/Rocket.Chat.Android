@@ -1,7 +1,9 @@
 package chat.rocket.android.main.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.main.viewmodel.NavHeaderViewModelMapper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -11,6 +13,7 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.realtime.disconnect
 import chat.rocket.core.internal.rest.logout
+import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
 import javax.inject.Inject
 
@@ -20,7 +23,8 @@ class MainPresenter @Inject constructor(private val view: MainView,
                                         private val serverInteractor: GetCurrentServerInteractor,
                                         private val localRepository: LocalRepository,
                                         managerFactory: ConnectionManagerFactory,
-                                        factory: RocketChatClientFactory) {
+                                        factory: RocketChatClientFactory,
+                                        private val mapper: NavHeaderViewModelMapper) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
     private val client: RocketChatClient = factory.create(currentServer)
@@ -30,6 +34,20 @@ class MainPresenter @Inject constructor(private val view: MainView,
     fun toUserProfile() = navigator.toUserProfile()
 
     fun toSettings() = navigator.toSettings()
+
+    fun setupNavHeader() {
+        launchUI(strategy) {
+            try {
+                view.setupNavHeader(mapper.mapToViewModel(client.me()))
+            } catch (exception: RocketChatException) {
+                exception.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                        view.showGenericErrorMessage()
+                    }
+            }
+        }
+    }
 
     /**
      * Logout from current server.
