@@ -19,12 +19,15 @@ import javax.inject.Inject
 
 class SignupFragment : Fragment(), SignupView {
     @Inject lateinit var presenter: SignupPresenter
-
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        if (KeyboardHelper.isSoftKeyboardShown(constraint_layout.rootView)) {
-            text_new_user_agreement.setVisible(false)
+        if (KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)) {
+            bottom_container.setVisible(false)
         } else {
-            text_new_user_agreement.setVisible(true)
+            bottom_container.apply {
+                postDelayed({
+                    setVisible(true)
+                }, 3)
+            }
         }
     }
 
@@ -48,7 +51,7 @@ class SignupFragment : Fragment(), SignupView {
             tintEditTextDrawableStart()
         }
 
-        constraint_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        relative_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
 
         setUpNewUserAgreementListener()
 
@@ -58,8 +61,8 @@ class SignupFragment : Fragment(), SignupView {
     }
 
     override fun onDestroyView() {
+        relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
         super.onDestroyView()
-        constraint_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
     override fun alertBlankName() {
