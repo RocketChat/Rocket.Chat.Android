@@ -1,7 +1,9 @@
 package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
+import DrawableHelper
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -72,10 +74,30 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
-            if (chatRoom.type is RoomType.DirectMessage && settings.useRealName()) {
-                textView.content = chatRoom.fullName ?: chatRoom.name
-            } else {
-                textView.content = chatRoom.name
+            textView.textContent = chatRoom.name
+
+            var drawable = when (chatRoom.type) {
+                is RoomType.Channel -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
+                }
+                is RoomType.PrivateGroup -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
+                }
+                is RoomType.DirectMessage -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
+                }
+                else -> null
+            }
+
+            drawable?.let {
+                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+                val mutableDrawable = wrappedDrawable.mutate()
+                val color = when (chatRoom.alert || chatRoom.unread > 0) {
+                    true -> R.color.colorPrimaryText
+                    false -> R.color.colorSecondaryText
+                }
+                DrawableHelper.tintDrawable(mutableDrawable, context, color)
+                DrawableHelper.compoundDrawable(textView, mutableDrawable)
             }
         }
 

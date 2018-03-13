@@ -9,6 +9,7 @@ import android.widget.TextView
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
 import ru.noties.markwon.Markwon
+import java.security.SecureRandom
 
 fun String.ifEmpty(value: String): String {
     if (isEmpty()) {
@@ -33,6 +34,17 @@ fun EditText.erase() {
 }
 
 fun String.isEmailValid(): Boolean = Patterns.EMAIL_ADDRESS.matcher(this).matches()
+
+fun generateRandomString(stringLength: Int): String {
+    val base = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    val secureRandom = SecureRandom()
+
+    val stringBuilder = StringBuilder(stringLength)
+    for (i in 0 until stringLength) {
+        stringBuilder.append(base[secureRandom.nextInt(base.length)])
+    }
+    return stringBuilder.toString()
+}
 
 var TextView.textContent: String
     get() = text.toString()

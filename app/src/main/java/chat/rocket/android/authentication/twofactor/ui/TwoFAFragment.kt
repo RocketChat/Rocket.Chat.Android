@@ -12,10 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import chat.rocket.android.R
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAPresenter
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
-import chat.rocket.android.helper.AnimationHelper
-import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_two_fa.*
 import javax.inject.Inject
@@ -65,10 +62,8 @@ class TwoFAFragment : Fragment(), TwoFAView {
     }
 
     override fun alertBlankTwoFactorAuthenticationCode() {
-        activity?.let {
-            AnimationHelper.vibrateSmartPhone(it)
-            AnimationHelper.shakeView(text_two_factor_auth)
-        }
+        vibrateSmartPhone()
+        text_two_factor_auth.shake()
     }
 
     override fun alertInvalidTwoFactorAuthenticationCode() = showMessage(getString(R.string.msg_invalid_2fa_code))

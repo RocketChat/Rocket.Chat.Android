@@ -1,6 +1,7 @@
 package chat.rocket.android.members.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.members.viewmodel.MemberViewModel
 import chat.rocket.android.members.viewmodel.MemberViewModelMapper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -13,6 +14,7 @@ import chat.rocket.core.internal.rest.getMembers
 import javax.inject.Inject
 
 class MembersPresenter @Inject constructor(private val view: MembersView,
+                                           private val navigator: MembersNavigator,
                                            private val strategy: CancelStrategy,
                                            private val serverInteractor: GetCurrentServerInteractor,
                                            factory: RocketChatClientFactory,
@@ -37,5 +39,15 @@ class MembersPresenter @Inject constructor(private val view: MembersView,
                 view.hideLoading()
             }
         }
+    }
+
+    fun toMemberDetails(memberViewModel: MemberViewModel) {
+        val avatarUri = memberViewModel.avatarUri.toString()
+        val realName = memberViewModel.realName.toString()
+        val username = "@${memberViewModel.username}"
+        val email = memberViewModel.email ?: ""
+        val utcOffset =  memberViewModel.utcOffset.toString()
+
+        navigator.toMemberDetails(avatarUri, realName, username, email, utcOffset)
     }
 }

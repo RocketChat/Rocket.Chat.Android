@@ -13,7 +13,10 @@ data class MessageViewModel(
         override val content: CharSequence,
         override val isPinned: Boolean,
         var currentDayMarkerText: String,
-        var showDayMarker: Boolean
+        var showDayMarker: Boolean,
+        override var reactions: List<ReactionViewModel>,
+        override var nextDownStreamMessage: BaseViewModel<*>? = null,
+        var isFirstUnread: Boolean
 ) : BaseMessageViewModel<Message> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.MESSAGE.viewType

@@ -4,10 +4,13 @@ import android.view.View
 import chat.rocket.android.chatroom.viewmodel.AudioAttachmentViewModel
 import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
-class AudioAttachmentViewHolder(itemView: View, listener: ActionsListener)
-    : BaseViewHolder<AudioAttachmentViewModel>(itemView, listener) {
+class AudioAttachmentViewHolder(itemView: View,
+                                listener: ActionsListener,
+                                reactionListener: EmojiReactionListener? = null)
+    : BaseViewHolder<AudioAttachmentViewModel>(itemView, listener, reactionListener) {
 
     init {
         with(itemView) {

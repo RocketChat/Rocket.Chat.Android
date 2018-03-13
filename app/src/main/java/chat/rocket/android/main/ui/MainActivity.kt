@@ -1,5 +1,6 @@
 package chat.rocket.android.main.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,12 +15,14 @@ import chat.rocket.android.util.extensions.showToast
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector {
+    @Inject lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
@@ -62,6 +65,8 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
+    override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
+
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 
     private fun setupToolbar() {
@@ -88,6 +93,9 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
             }
             R.id.action_profile -> {
                 presenter.toUserProfile()
+            }
+            R.id.action_settings -> {
+                presenter.toSettings()
             }
             R.id.action_logout -> {
                 presenter.logout()

@@ -2,11 +2,14 @@ package chat.rocket.android.chatroom.adapter
 
 import android.view.View
 import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
-class ImageAttachmentViewHolder(itemView: View, listener: ActionsListener)
-    : BaseViewHolder<ImageAttachmentViewModel>(itemView, listener) {
+class ImageAttachmentViewHolder(itemView: View,
+                                listener: ActionsListener,
+                                reactionListener: EmojiReactionListener? = null)
+    : BaseViewHolder<ImageAttachmentViewModel>(itemView, listener, reactionListener) {
 
     init {
         with(itemView) {
