@@ -25,7 +25,7 @@ ext {
         rxBinding              : '2.0.0',
         fresco                 : '1.8.1',
         kotshi                 : '0.3.0',
-        frescoImageViewer      : '0.5.0',
+        frescoImageViewer      : '0.5.1',
         androidSvg             : 'master-SNAPSHOT',
         markwon                : '1.0.3',
         sheetMenu              : '1.3.3',
@@ -84,7 +84,7 @@ ext {
         kotshiApi              : "se.ansman.kotshi:api:${versions.kotshi}",
         kotshiCompiler         : "se.ansman.kotshi:compiler:${versions.kotshi}",
 
-        frescoImageViewer      : "com.github.stfalcon:frescoimageviewer:${versions.frescoImageViewer}",
+        frescoImageViewer      : "com.github.luciofm:FrescoImageViewer:${versions.frescoImageViewer}",
         androidSvg             : "com.github.BigBadaboom:androidsvg:${versions.androidSvg}",
 
         markwon                : "ru.noties:markwon:${versions.markwon}",

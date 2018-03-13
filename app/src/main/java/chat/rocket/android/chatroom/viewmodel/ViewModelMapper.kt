@@ -94,16 +94,20 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseViewModel<*>? {
-        val attachmentUrl = attachmentUrl("$baseUrl${attachment.url}")
-        val attachmentTitle = attachment.title
-        val id = "${message.id}_${attachment.titleLink}".hashCode().toLong()
+        val attachmentUrl = if (attachment.url.startsWith("http")) {
+            attachment.url
+        } else {
+            attachmentUrl("$baseUrl${attachment.url}")
+        }
+        val attachmentTitle = attachment.attachmentTitle
+        val id = "${message.id}_${attachment.url}".hashCode().toLong()
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle ?: "", id)
+                    attachmentUrl, attachmentTitle, id)
             is VideoAttachment -> VideoAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle ?: "", id)
+                    attachmentUrl, attachmentTitle, id)
             is AudioAttachment -> AudioAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle ?: "", id)
+                    attachmentUrl, attachmentTitle, id)
             else -> null
         }
     }
@@ -282,3 +286,15 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
     }
 }
+
+internal val FileAttachment.attachmentTitle: String
+    get() {
+        title?.let { return it }
+
+        val fileUrl = HttpUrl.parse(url)
+        fileUrl?.let {
+            return it.pathSegments().last()
+        }
+
+        return ""
+    }
