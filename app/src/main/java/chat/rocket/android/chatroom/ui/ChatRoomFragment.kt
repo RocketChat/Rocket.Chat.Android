@@ -29,18 +29,21 @@ import chat.rocket.android.widget.emoji.Emoji
 import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.internal.realtime.State
-import chat.rocket.core.model.Message
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
-import kotlinx.android.synthetic.main.item_chat.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import timber.log.Timber
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, chatRoomLastSeen: Long): Fragment {
+fun newInstance(chatRoomId: String,
+                chatRoomName: String,
+                chatRoomType: String,
+                isChatRoomReadOnly: Boolean,
+                chatRoomLastSeen: Long,
+                isSubscribed: Boolean = true): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -48,6 +51,7 @@ fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, 
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
             putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
             putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
+            putBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED, isSubscribed)
         }
     }
 }
@@ -58,6 +62,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
+private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     @Inject lateinit var presenter: ChatRoomPresenter
@@ -67,6 +72,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
+    private var isSubscribed: Boolean = true
     private var isChatRoomReadOnly: Boolean = false
     private var chatRoomLastSeen: Long = -1
     private lateinit var actionSnackbar: ActionSnackbar
@@ -93,6 +99,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             chatRoomName = bundle.getString(BUNDLE_CHAT_ROOM_NAME)
             chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
             isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
+            isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
@@ -158,13 +165,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
     override fun showMessages(dataSet: List<BaseViewModel<*>>) {
         // track the message sent immediately after the current message
-        var prevMessageViewModel : MessageViewModel? = null
+        var prevMessageViewModel: MessageViewModel? = null
 
         // Loop over received messages to determine first unread
         for (i in dataSet.indices) {
             val msgModel = dataSet[i]
 
-            if (msgModel is MessageViewModel){
+            if (msgModel is MessageViewModel) {
                 val msg = msgModel.rawData
                 if (msg.timestamp < chatRoomLastSeen) {
                     // This message was sent before the last seen of the room. Hence, it was seen.
@@ -344,6 +351,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         }
     }
 
+    override fun onJoined() {
+        input_container.setVisible(true)
+        button_join_chat.setVisible(false)
+        isSubscribed = true
+        setupMessageComposer()
+    }
+
     private val dismissStatus = {
         connection_status_text.fadeOut()
     }
@@ -374,6 +388,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         if (isChatRoomReadOnly) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
+        } else if (!isSubscribed) {
+            input_container.setVisible(false)
+            button_join_chat.setVisible(true)
+            button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
             button_send.alpha = 0f
             button_send.setVisible(false)

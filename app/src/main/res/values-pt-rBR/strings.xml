@@ -24,6 +24,8 @@
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
+    <string name="action_join_chat">Entrar no Chat</string>
+
 
     <!-- Settings List -->
     <string-array name="settings_actions">

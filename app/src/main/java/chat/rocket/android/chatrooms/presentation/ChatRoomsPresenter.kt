@@ -69,7 +69,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
 
         navigator.toChatRoom(chatRoom.id, roomName,
-                chatRoom.type.toString(), chatRoom.readonly ?: false, chatRoom.lastSeen ?: -1)
+                chatRoom.type.toString(), chatRoom.readonly ?: false,
+                chatRoom.lastSeen ?: -1,
+                chatRoom.open)
     }
 
     /**
@@ -107,7 +109,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         return rooms.map {
             ChatRoom(it.id, it.type, it.user, it.name ?: "",
                     it.fullName, it.readonly, it.updatedAt, null, null,
-                    it.topic, it.announcement, false, true, false,
+                    it.topic, it.announcement, false, false, false,
                     0L, null, 0L, it.lastMessage, client
             )
         }

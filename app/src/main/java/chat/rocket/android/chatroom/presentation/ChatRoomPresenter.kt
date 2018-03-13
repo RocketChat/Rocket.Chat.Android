@@ -342,6 +342,17 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
 
+    fun joinChat(chatRoomId: String) {
+        launchUI(strategy) {
+            try {
+                client.joinChat(chatRoomId)
+                view.onJoined()
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+            }
+        }
+    }
+
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(streamedMessage)
