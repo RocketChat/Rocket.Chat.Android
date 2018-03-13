@@ -185,7 +185,13 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideChatRoomsRepository(): ChatRoomsRepository {
+    fun provideRoomRepository(): RoomRepository {
+        return MemoryRoomRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRoomRepository(): ChatRoomsRepository {
         return MemoryChatRoomsRepository()
     }
 
@@ -205,6 +211,12 @@ class AppModule {
     @Singleton
     fun provideMessageRepository(): MessagesRepository {
         return MemoryMessagesRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UsersRepository {
+        return MemoryUsersRepository()
     }
 
     @Provides

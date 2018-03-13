@@ -134,7 +134,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private val dismissStatus = {
-        connection_status_text.fadeOut()
+        if (connection_status_text != null) {
+            connection_status_text.fadeOut()
+        }
     }
 
     private fun setupToolbar() {
