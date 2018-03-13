@@ -100,5 +100,10 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 
     fun showConnectionState(state: State)
+
+    /**
+     * This user has joined the chat callback.
+     */
+    fun onJoined()
     fun showReactionsPopup(messageId: String)
 }

@@ -25,6 +25,7 @@
     <string name="action_logout">Logout</string>
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
+    <string name="action_join_chat">Join Chat</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
