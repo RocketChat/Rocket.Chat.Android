@@ -22,6 +22,7 @@ import android.widget.FrameLayout
 import chat.rocket.android.R
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
 import java.lang.ref.WeakReference
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -31,6 +32,7 @@ private const val NO_STATE_INDEX = 0
 
 class SuggestionsView : FrameLayout, TextWatcher {
     private val recyclerView: RecyclerView
+    private val registeredTokens = CopyOnWriteArrayList<String>()
     // Maps tokens to their respective adapters.
     private val adaptersByToken = hashMapOf<String, SuggestionsAdapter<out BaseSuggestionViewHolder>>()
     private val externalProvidersByToken = hashMapOf<String, ((query: String) -> Unit)>()
@@ -160,6 +162,9 @@ class SuggestionsView : FrameLayout, TextWatcher {
     }
 
     fun addSuggestionProviderAction(token: String, provider: (query: String) -> Unit): SuggestionsView {
+        if (adaptersByToken[token] == null) {
+            throw IllegalStateException("token \"$token\" suggestion provider added without adapter")
+        }
         externalProvidersByToken.getOrPut(token, { provider })
         return this
     }
