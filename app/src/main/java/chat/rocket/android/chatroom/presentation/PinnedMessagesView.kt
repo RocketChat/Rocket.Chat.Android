@@ -1,6 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
@@ -11,5 +11,5 @@ interface PinnedMessagesView : MessageView, LoadingView {
      *
      * @param pinnedMessages The list of pinned messages.
      */
-    fun showPinnedMessages(pinnedMessages: List<MessageViewModel>)
+    fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>)
 }

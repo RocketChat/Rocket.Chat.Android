@@ -22,9 +22,14 @@
             android:icon="@drawable/ic_content_copy_black_24px"
             android:title="@string/action_msg_copy" />
 
+        <item
+            android:id="@+id/action_menu_msg_react"
+            android:icon="@drawable/ic_add_reaction"
+            android:title="@string/action_msg_add_reaction" />
+
         <!--<item-->
         <!--android:id="@+id/action_menu_msg_share"-->
-        <!--android:icon="@drawable/ic_share_black_24px"-->
+        <!--andrtextIconicon="@drawable/ic_share_black_24px"-->
         <!--android:title="@string/action_msg_share" />-->
 
         <item
@@ -34,7 +39,7 @@
 
         <!--<item-->
         <!--android:id="@+id/action_menu_msg_star"-->
-        <!--android:icon="@drawable/ic_star_black_24px"-->
+        <!--andrtextIconicon="@drawable/ic_star_black_24px"-->
         <!--android:title="@string/action_msg_star" />-->
     </group>
 

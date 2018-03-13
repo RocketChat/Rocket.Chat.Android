@@ -3,13 +3,17 @@ package chat.rocket.android.chatrooms.ui
 import DateTimeHelper
 import DrawableHelper
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
@@ -18,8 +22,10 @@ import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_chat.view.*
+import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
 class ChatRoomsAdapter(private val context: Context,
+                       private val settings: PublicSettings,
                        private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
     var dataSet: MutableList<ChatRoom> = ArrayList()
 
@@ -29,8 +35,6 @@ class ChatRoomsAdapter(private val context: Context,
 
     override fun getItemCount(): Int = dataSet.size
 
-    override fun getItemViewType(position: Int): Int = position
-
     fun updateRooms(newRooms: List<ChatRoom>)  {
         dataSet.clear()
         dataSet.addAll(newRooms)
@@ -39,37 +43,71 @@ class ChatRoomsAdapter(private val context: Context,
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(chatRoom: ChatRoom) = with(itemView) {
-            bindAvatar(chatRoom, layout_avatar, image_avatar, image_room_avatar)
+            bindAvatar(chatRoom, image_avatar)
             bindName(chatRoom, text_chat_name)
             bindLastMessageDateTime(chatRoom, text_last_message_date_time)
             bindLastMessage(chatRoom, text_last_message)
             bindUnreadMessages(chatRoom, text_total_unread_messages)
 
+            if (chatRoom.alert || chatRoom.unread > 0) {
+                text_chat_name.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorPrimaryText))
+                text_last_message_date_time.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorAccent))
+                text_last_message.setTextColor(ContextCompat.getColor(context,
+                        android.R.color.primary_text_light))
+            } else {
+                text_chat_name.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorSecondaryText))
+                text_last_message_date_time.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorSecondaryText))
+                text_last_message.setTextColor(ContextCompat.getColor(context,
+                        R.color.colorSecondaryText))
+            }
+
             setOnClickListener { listener(chatRoom) }
         }
 
-        private fun bindAvatar(chatRoom: ChatRoom, avatarLayout: View, drawee: SimpleDraweeView, imageView: ImageView) {
-            val chatRoomName = chatRoom.name
-            if (chatRoom.type is RoomType.DirectMessage) {
-                drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, chatRoomName))
-                imageView.setVisible(false)
-                avatarLayout.setVisible(true)
-            } else {
-                imageView.setImageDrawable(DrawableHelper.getTextDrawable(chatRoomName))
-                avatarLayout.setVisible(false)
-                imageView.setVisible(true)
-            }
+        private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
+            val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else "@${chatRoom.name}"
+            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId))
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
             textView.textContent = chatRoom.name
+
+            var drawable = when (chatRoom.type) {
+                is RoomType.Channel -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
+                }
+                is RoomType.PrivateGroup -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
+                }
+                is RoomType.DirectMessage -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
+                }
+                else -> null
+            }
+
+            drawable?.let {
+                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+                val mutableDrawable = wrappedDrawable.mutate()
+                val color = when (chatRoom.alert || chatRoom.unread > 0) {
+                    true -> R.color.colorPrimaryText
+                    false -> R.color.colorSecondaryText
+                }
+                DrawableHelper.tintDrawable(mutableDrawable, context, color)
+                DrawableHelper.compoundDrawable(textView, mutableDrawable)
+            }
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {
             val lastMessage = chatRoom.lastMessage
             if (lastMessage != null) {
                 val localDateTime = DateTimeHelper.getLocalDateTime(lastMessage.timestamp)
-                textView.textContent = DateTimeHelper.getDate(localDateTime, context)
+                textView.content = DateTimeHelper.getDate(localDateTime, context)
+            } else {
+                textView.content = ""
             }
         }
 
@@ -81,16 +119,18 @@ class ChatRoomsAdapter(private val context: Context,
                 val senderUsername = lastMessageSender.username
                 when (senderUsername) {
                     chatRoom.name -> {
-                        textView.textContent = message
+                        textView.content = message
                     }
                 // TODO Change to MySelf
                 //                chatRoom.user?.username -> {
                 //                    holder.lastMessage.textContent = context.getString(R.string.msg_you) + ": $message"
                 //                }
                     else -> {
-                        textView.textContent = "@$senderUsername: $message"
+                        textView.content = "@$senderUsername: $message"
                     }
                 }
+            } else {
+                textView.content = ""
             }
         }
 
@@ -105,6 +145,7 @@ class ChatRoomsAdapter(private val context: Context,
                     textView.textContent = context.getString(R.string.msg_more_than_ninety_nine_unread_messages)
                     textView.setVisible(true)
                 }
+                else -> textView.setVisible(false)
             }
         }
     }

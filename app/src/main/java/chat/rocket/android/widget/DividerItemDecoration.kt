@@ -14,7 +14,7 @@ import android.support.v7.widget.RecyclerView
 class DividerItemDecoration() : RecyclerView.ItemDecoration() {
     private lateinit var divider: Drawable
     private var boundStart = 0
-    private var boundRight = 0
+    private var boundEnd = 0
 
     // Default divider will be used.
     constructor(context: Context) : this() {
@@ -24,15 +24,15 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
         styledAttributes.recycle()
     }
 
-    // Default divider with custom boundaries (start and right) will be used.
-    constructor(context: Context, boundStart: Int, boundRight: Int) : this() {
+    // Default divider with custom boundaries (start and end) will be used.
+    constructor(context: Context, boundStart: Int, boundEnd: Int) : this() {
         val attrs = intArrayOf(android.R.attr.listDivider)
         val styledAttributes = context.obtainStyledAttributes(attrs)
         divider = styledAttributes.getDrawable(0)
         styledAttributes.recycle()
 
         this.boundStart = boundStart
-        this.boundRight = boundRight
+        this.boundEnd = boundEnd
     }
 
     // Custom divider will be used.
@@ -45,7 +45,7 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         val left = parent.paddingLeft + boundStart
-        val right = (parent.width - parent.paddingRight) - boundRight
+        val right = (parent.width - parent.paddingRight) - boundEnd
 
         val childCount = parent.childCount
         for (i in 0 until childCount) {

@@ -4,57 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-    android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-    android:layout_marginTop="12dp">
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
+    android:paddingBottom="@dimen/chat_item_top_and_bottom_padding">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/avatar_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <include
+        android:id="@+id/layout_avatar"
+        layout="@layout/avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/middle_container"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include
-            android:id="@+id/layout_avatar"
-            layout="@layout/avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:visibility="gone" />
-
-        <!-- We need to build the avatar with initials since the server returns a SVG file with a pre defined 50x50 pixel.
-            TODO: check to scale the SVG file on the app and remove the view bellow (or make the server to return a jpg file.
-            SVG scaling with fresco is impossible: http://frescolib.org/docs/resizing.html
-         -->
-        <ImageView
-            android:id="@+id/image_room_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:visibility="gone"
-            tools:ignore="contentDescription" />
-    </android.support.constraint.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/middle_container"
+        android:id="@+id/top_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/avatar_container"
-        app:layout_constraintRight_toLeftOf="@+id/right_container">
+        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
+        app:layout_constraintRight_toRightOf="parent">
 
         <TextView
             android:id="@+id/text_chat_name"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/ChatRoom.Name.TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/text_view_drawable_padding"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/text_last_message_date_time"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="General" />
+
+        <TextView
+            android:id="@+id/text_last_message_date_time"
+            style="@style/Timestamp.TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="5dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            tools:text="General" />
+            android:layout_marginStart="5dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/text_chat_name"
+            app:layout_constraintLeft_toRightOf="@+id/text_chat_name"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="11:45 AM" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottom_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_container">
 
         <TextView
             android:id="@+id/text_last_message"
@@ -62,53 +66,20 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/layout_unread_messages_badge"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="You: Type something" />
-    </android.support.constraint.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/right_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <TextView
-            android:id="@+id/text_last_message_date_time"
-            style="@style/TextAppearance.AppCompat.Caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_one"
-            app:layout_constraintRight_toRightOf="@+id/text_total_unread_messages"
-            tools:text="11:45" />
-
-        <TextView
-            android:id="@+id/text_total_unread_messages"
-            style="@style/TextAppearance.AppCompat.Caption"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/style_total_unread_messages"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_two"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:text="99+"
-            tools:visibility="visible" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_one"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="22dp" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="48dp" />
+        <include
+            android:id="@+id/layout_unread_messages_badge"
+            layout="@layout/unread_messages_badge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/text_last_message"
+            app:layout_constraintRight_toRightOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

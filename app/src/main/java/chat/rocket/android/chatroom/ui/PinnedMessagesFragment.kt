@@ -9,9 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.presentation.PinnedMessagesPresenter
 import chat.rocket.android.chatroom.presentation.PinnedMessagesView
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
@@ -39,7 +40,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
-    private lateinit var adapter: PinnedMessagesAdapter
+    private lateinit var adapter: ChatRoomAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,10 +72,11 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun showPinnedMessages(pinnedMessages: List<MessageViewModel>) {
+    override fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>) {
         activity?.apply {
             if (recycler_view_pinned.adapter == null) {
-                adapter = PinnedMessagesAdapter()
+                // TODO - add a better constructor for this case...
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, null, false)
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view_pinned.layoutManager = linearLayoutManager
@@ -88,7 +90,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
                 }
             }
 
-            adapter.addDataSet(pinnedMessages)
+            adapter.appendData(pinnedMessages)
         }
     }
 }

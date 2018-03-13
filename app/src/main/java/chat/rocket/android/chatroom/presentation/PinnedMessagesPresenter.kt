@@ -1,6 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
-import chat.rocket.android.chatroom.viewmodel.MessageViewModelMapper
+import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -11,6 +11,7 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.getRoomPinnedMessages
 import chat.rocket.core.model.Value
+import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                                                   private val strategy: CancelStrategy,
                                                   private val serverInteractor: GetCurrentServerInteractor,
                                                   private val roomsInteractor: GetChatRoomsInteractor,
-                                                  private val mapper: MessageViewModelMapper,
+                                                  private val mapper: ViewModelMapper,
                                                   factory: RocketChatClientFactory,
                                                   getSettingsInteractor: GetSettingsInteractor) {
 
@@ -41,8 +42,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                     val pinnedMessages =
                         client.getRoomPinnedMessages(roomId, room.type, pinnedMessagesListOffset)
                     pinnedMessagesListOffset = pinnedMessages.offset.toInt()
-                    val messageList = mapper.mapToViewModelList(pinnedMessages.result, settings)
-                        .filterNot { it.isSystemMessage }
+                    val messageList = mapper.map(pinnedMessages.result.filterNot { it.isSystemMessage() })
                     view.showPinnedMessages(messageList)
                     view.hideLoading()
                 }.ifNull {

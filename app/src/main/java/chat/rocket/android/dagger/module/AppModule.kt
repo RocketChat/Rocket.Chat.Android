@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatDatabase
-import chat.rocket.android.app.utils.CustomImageFormatConfigurator
 import chat.rocket.android.authentication.infraestructure.MemoryTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.dagger.qualifier.ForFresco
@@ -39,6 +38,7 @@ import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -101,6 +101,9 @@ class AppModule {
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder().apply {
             addInterceptor(logger)
+            connectTimeout(15, TimeUnit.SECONDS)
+            readTimeout(20, TimeUnit.SECONDS)
+            writeTimeout(15, TimeUnit.SECONDS)
         }.build()
     }
 
@@ -127,7 +130,6 @@ class AppModule {
         listeners.add(RequestLoggingListener())
 
         return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
-                .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig())
                 .setRequestListeners(listeners)
                 .setDownsampleEnabled(true)
                 //.experiment().setBitmapPrepareToDraw(true).experiment()
@@ -137,11 +139,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideDraweeConfig(): DraweeConfig {
-        val draweeConfigBuilder = DraweeConfig.newBuilder()
-
-        CustomImageFormatConfigurator.addCustomDrawableFactories(draweeConfigBuilder)
-
-        return draweeConfigBuilder.build()
+        return DraweeConfig.newBuilder().build()
     }
 
     @Provides
@@ -181,7 +179,13 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideChatRoomsRepository(): ChatRoomsRepository {
+    fun provideRoomRepository(): RoomRepository {
+        return MemoryRoomRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRoomRepository(): ChatRoomsRepository {
         return MemoryChatRoomsRepository()
     }
 
@@ -201,6 +205,12 @@ class AppModule {
     @Singleton
     fun provideMessageRepository(): MessagesRepository {
         return MemoryMessagesRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UsersRepository {
+        return MemoryUsersRepository()
     }
 
     @Provides

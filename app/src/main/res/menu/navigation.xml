@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+
+    <group
+        android:id="@+id/menu_section_1"
+        android:checkableBehavior="single">
+
         <item
             android:id="@+id/action_chat_rooms"
             android:checked="true"
@@ -11,6 +15,20 @@
             android:id="@+id/action_profile"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="@string/title_profile" />
+
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/title_settings"/>
+    </group>
+
+    <group
+        android:id="@+id/menu_section_2"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/action_logout"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/action_logout" />
     </group>
 
 </menu>
