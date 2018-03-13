@@ -25,6 +25,7 @@
     <string name="action_logout">Logout</string>
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
+    <string name="action_join_chat">Join Chat</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -68,6 +69,7 @@
     <string name="msg_utc_offset">UTC offset</string>
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
+    <string name="msg_unread_messages">Unread messages</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -90,6 +92,7 @@
     <string name="action_msg_star">Star Message</string>
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
+    <string name="action_msg_add_reaction">Add reaction</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>

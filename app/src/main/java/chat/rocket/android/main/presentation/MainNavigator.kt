@@ -2,6 +2,7 @@ package chat.rocket.android.main.presentation
 
 import android.content.Context
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.ui.chatRoomIntent
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.ui.ProfileFragment
@@ -26,5 +27,16 @@ class MainNavigator(internal val activity: MainActivity, internal val context: C
         activity.addFragment("SettingsFragment", R.id.fragment_container) {
             SettingsFragment.newInstance()
         }
+    }
+
+    fun toChatRoom(chatRoomId: String,
+                   chatRoomName: String,
+                   chatRoomType: String,
+                   isChatRoomReadOnly: Boolean,
+                   chatRoomLastSeen: Long,
+                   isChatRoomSubscribed: Boolean) {
+        activity.startActivity(context.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType,
+                isChatRoomReadOnly, chatRoomLastSeen, isChatRoomSubscribed))
+        activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 }

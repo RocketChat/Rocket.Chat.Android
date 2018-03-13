@@ -4,6 +4,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
@@ -11,12 +12,12 @@ import chat.rocket.android.server.infraestructure.chatRooms
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
-import chat.rocket.common.model.BaseRoom
-import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.*
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.StreamMessage
 import chat.rocket.core.internal.realtime.Type
+import chat.rocket.core.internal.rest.spotlight
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Room
@@ -30,7 +31,7 @@ import kotlin.reflect.KProperty1
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
-                                             private val navigator: ChatRoomsNavigator,
+                                             private val navigator: MainNavigator,
                                              private val serverInteractor: GetCurrentServerInteractor,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
@@ -39,6 +40,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              factory: ConnectionManagerFactory) {
     private val manager: ConnectionManager = factory.create(serverInteractor.get()!!)
     private val currentServer = serverInteractor.get()!!
+    private val client = manager.client
     private var reloadJob: Deferred<List<ChatRoom>>? = null
     private val settings = settingsRepository.get(currentServer)!!
 
@@ -74,7 +76,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
 
         navigator.toChatRoom(chatRoom.id, roomName,
-                chatRoom.type.toString(), chatRoom.readonly ?: false)
+                chatRoom.type.toString(), chatRoom.readonly ?: false,
+                chatRoom.lastSeen ?: -1,
+                chatRoom.open)
     }
 
     /**
@@ -85,7 +89,36 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         val currentServer = serverInteractor.get()!!
         launchUI(strategy) {
             val roomList = getChatRoomsInteractor.getByName(currentServer, name)
-            view.updateChatRooms(roomList)
+            if (roomList.isEmpty()) {
+                val (users, rooms) = client.spotlight(name)
+                val chatRoomsCombined = mutableListOf<ChatRoom>()
+                chatRoomsCombined.addAll(usersToChatRooms(users))
+                chatRoomsCombined.addAll(roomsToChatRooms(rooms))
+                view.updateChatRooms(chatRoomsCombined)
+            } else {
+                view.updateChatRooms(roomList)
+            }
+        }
+    }
+
+    private suspend fun usersToChatRooms(users: List<User>): List<ChatRoom> {
+        return users.map {
+            ChatRoom(it.id, RoomType.DIRECT_MESSAGE, SimpleUser(
+                    username = it.username, name = it.name, id = null), it.name ?: "",
+                    it.name, false, null, null, null,
+                    null, null, false, false, false,
+                    0L, null, 0L, null, client
+            )
+        }
+    }
+
+    private suspend fun roomsToChatRooms(rooms: List<Room>): List<ChatRoom> {
+        return rooms.map {
+            ChatRoom(it.id, it.type, it.user, it.name ?: "",
+                    it.fullName, it.readonly, it.updatedAt, null, null,
+                    it.topic, it.announcement, false, false, false,
+                    0L, null, 0L, it.lastMessage, client
+            )
         }
     }
 

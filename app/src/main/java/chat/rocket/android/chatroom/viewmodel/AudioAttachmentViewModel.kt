@@ -10,8 +10,10 @@ data class AudioAttachmentViewModel(
         override val messageId: String,
         override val attachmentUrl: String,
         override val attachmentTitle: CharSequence,
-        override val id: Long
-) : BaseFileAttachmentViewModel<AudioAttachment> {
+        override val id: Long,
+        override var reactions: List<ReactionViewModel>,
+        override var nextDownStreamMessage: BaseViewModel<*>? = null
+        ) : BaseFileAttachmentViewModel<AudioAttachment> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.AUDIO_ATTACHMENT.viewType
     override val layoutId: Int

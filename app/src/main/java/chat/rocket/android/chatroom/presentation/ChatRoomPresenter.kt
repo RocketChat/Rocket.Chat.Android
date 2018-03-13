@@ -60,7 +60,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
                 // but should mark only when the user see the first unread message.
                 markRoomAsRead(chatRoomId)
-              
+
                 val messagesViewModels = mapper.map(messages)
                 view.showMessages(messagesViewModels)
 
@@ -97,7 +97,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                   view.showGenericErrorMessage()
+                    view.showGenericErrorMessage()
                 }
             } finally {
                 view.enableSendMessageButton()
@@ -341,6 +341,34 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     }
 
     fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
+
+    fun joinChat(chatRoomId: String) {
+        launchUI(strategy) {
+            try {
+                client.joinChat(chatRoomId)
+                view.onJoined()
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+    /**
+     * Send an emoji reaction to a message.
+     */
+    fun react(messageId: String, emoji: String) {
+        launchUI(strategy) {
+            try {
+                client.toggleReaction(messageId, emoji.removeSurrounding(":"))
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+    fun showReactions(messageId: String) {
+        view.showReactionsPopup(messageId)
+    }
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
