@@ -458,6 +458,17 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    fun joinChat(chatRoomId: String) {
+        launchUI(strategy) {
+            try {
+                client.joinChat(chatRoomId)
+                view.onJoined()
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+            }
+        }
+    }
+
     /**
      * Send an emoji reaction to a message.
      */
