@@ -14,6 +14,7 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
+import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.TokenRepository
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
@@ -83,7 +84,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val title = url.meta?.title
         val description = url.meta?.description
 
-        return UrlPreviewViewModel(message, url, message.id, title, hostname, description, thumb)
+        return UrlPreviewViewModel(message, url, message.id, title, hostname, description, thumb,
+                getReactions(message))
     }
 
     private fun mapAttachment(message: Message, attachment: Attachment): BaseViewModel<*>? {
@@ -103,11 +105,11 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val id = "${message.id}_${attachment.url}".hashCode().toLong()
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id)
+                    attachmentUrl, attachmentTitle, id, getReactions(message))
             is VideoAttachment -> VideoAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id)
+                    attachmentUrl, attachmentTitle, id, getReactions(message))
             is AudioAttachment -> AudioAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id)
+                    attachmentUrl, attachmentTitle, id, getReactions(message))
             else -> null
         }
     }
@@ -153,7 +155,27 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val content = getContent(context, getMessageWithoutQuoteMarkdown(message), quote)
         MessageViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
                 messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
-                content = content, isPinned = message.pinned, isFirstUnread = false)
+                content = content, isPinned = message.pinned, reactions = getReactions(message),
+                isFirstUnread = false)
+    }
+
+    private fun getReactions(message: Message): List<ReactionViewModel> {
+        val reactions = message.reactions?.let {
+            val list = mutableListOf<ReactionViewModel>()
+            it.getShortNames().forEach { shortname ->
+                val usernames = it.getUsernames(shortname) ?: emptyList()
+                val count = usernames.size
+                list.add(
+                        ReactionViewModel(messageId = message.id,
+                                shortname = shortname,
+                                unicode = EmojiParser.parse(shortname),
+                                count = count,
+                                usernames = usernames)
+                )
+            }
+            list
+        }
+        return reactions ?: emptyList()
     }
 
     private fun getMessageWithoutQuoteMarkdown(message: Message): Message {

@@ -4,11 +4,14 @@ import android.view.View
 import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.interfaces.DraweeController
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
-class ImageAttachmentViewHolder(itemView: View, listener: ActionsListener)
-    : BaseViewHolder<ImageAttachmentViewModel>(itemView, listener) {
+class ImageAttachmentViewHolder(itemView: View,
+                                listener: ActionsListener,
+                                reactionListener: EmojiReactionListener? = null)
+    : BaseViewHolder<ImageAttachmentViewModel>(itemView, listener, reactionListener) {
 
     init {
         with(itemView) {

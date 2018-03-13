@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.widget.emoji.EmojiKeyboardPopup.Listener
 import java.util.*
 
-class CategoryPagerAdapter(val listener: Listener) : PagerAdapter() {
+class CategoryPagerAdapter(val listener: EmojiKeyboardListener) : PagerAdapter() {
+
     override fun isViewFromObject(view: View, obj: Any): Boolean {
         return view == obj
     }
@@ -46,7 +46,7 @@ class CategoryPagerAdapter(val listener: Listener) : PagerAdapter() {
 
     override fun getPageTitle(position: Int) = EmojiCategory.values()[position].textIcon()
 
-    class EmojiAdapter(val spanCount: Int, val listener: Listener) : RecyclerView.Adapter<EmojiRowViewHolder>() {
+    class EmojiAdapter(val spanCount: Int, val listener: EmojiKeyboardListener) : RecyclerView.Adapter<EmojiRowViewHolder>() {
         private var emojis = Collections.emptyList<Emoji>()
 
         fun addEmojis(emojis: List<Emoji>) {
@@ -66,7 +66,7 @@ class CategoryPagerAdapter(val listener: Listener) : PagerAdapter() {
         override fun getItemCount(): Int = emojis.size
     }
 
-    class EmojiRowViewHolder(itemView: View, val itemCount: Int, val spanCount: Int, val listener: Listener) : RecyclerView.ViewHolder(itemView) {
+    class EmojiRowViewHolder(itemView: View, val itemCount: Int, val spanCount: Int, val listener: EmojiKeyboardListener) : RecyclerView.ViewHolder(itemView) {
         private val emojiView: TextView = itemView.findViewById(R.id.emoji)
 
         fun bind(emoji: Emoji) {
