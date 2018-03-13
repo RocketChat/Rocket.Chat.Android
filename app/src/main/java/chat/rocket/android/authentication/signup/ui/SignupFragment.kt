@@ -56,7 +56,7 @@ class SignupFragment : Fragment(), SignupView {
         setUpNewUserAgreementListener()
 
         button_sign_up.setOnClickListener {
-            presenter.signup(text_name.textContent, text_username.textContent, text_password.textContent, text_email.textContent)
+            presenter.signup(text_username.textContent, text_username.textContent, text_password.textContent, text_email.textContent)
         }
     }
 
@@ -149,7 +149,7 @@ class SignupFragment : Fragment(), SignupView {
 
     private fun enableUserInput(value: Boolean) {
         button_sign_up.isEnabled = value
-        text_name.isEnabled = value
+        text_username.isEnabled = value
         text_username.isEnabled = value
         text_password.isEnabled = value
         text_email.isEnabled = value
