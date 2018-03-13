@@ -96,13 +96,9 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseViewModel<*>? {
-        val attachmentUrl = if (attachment.url.startsWith("http")) {
-            attachment.url
-        } else {
-            attachmentUrl("$baseUrl${attachment.url}")
-        }
-        val attachmentTitle = attachment.attachmentTitle
-        val id = "${message.id}_${attachment.url}".hashCode().toLong()
+        val attachmentUrl = attachmentUrl(attachment)
+        val attachmentTitle = attachmentTitle(attachment)
+        val id = attachmentId(message, attachment)
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentViewModel(message, attachment, message.id,
                     attachmentUrl, attachmentTitle, id, getReactions(message))
@@ -114,17 +110,39 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
     }
 
-    private fun attachmentUrl(url: String): String {
-        var response = url
-        val httpUrl = HttpUrl.parse(url)
-        httpUrl?.let {
-            response = it.newBuilder().apply {
-                addQueryParameter("rc_uid", token?.userId)
-                addQueryParameter("rc_token", token?.authToken)
-            }.build().toString()
-        }
+    private fun attachmentId(message: Message, attachment: FileAttachment): Long {
+        return "${message.id}_${attachment.url}".hashCode().toLong()
+    }
 
-        return response
+    private fun attachmentTitle(attachment: FileAttachment): CharSequence {
+        return with(attachment) {
+            title?.let { return@with it }
+
+            val fileUrl = HttpUrl.parse(url)
+            fileUrl?.let {
+                return@with it.pathSegments().last()
+            }
+
+            return@with ""
+        }
+    }
+
+    private fun attachmentUrl(attachment: FileAttachment): String {
+        return with(attachment) {
+            if (url.startsWith("http")) return@with url
+
+            val fullUrl = "$baseUrl$url"
+            val httpUrl = HttpUrl.parse(fullUrl)
+            httpUrl?.let {
+                return@with it.newBuilder().apply {
+                    addQueryParameter("rc_uid", token?.userId)
+                    addQueryParameter("rc_token", token?.authToken)
+                }.build().toString()
+            }
+
+            // Fallback to baseUrl + url
+            return@with fullUrl
+        }
     }
 
     private suspend fun mapMessage(message: Message): MessageViewModel = withContext(CommonPool) {
@@ -308,15 +326,3 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
     }
 }
-
-internal val FileAttachment.attachmentTitle: String
-    get() {
-        title?.let { return it }
-
-        val fileUrl = HttpUrl.parse(url)
-        fileUrl?.let {
-            return it.pathSegments().last()
-        }
-
-        return ""
-    }
