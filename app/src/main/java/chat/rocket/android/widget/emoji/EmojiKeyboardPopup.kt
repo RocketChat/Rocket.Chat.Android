@@ -21,14 +21,14 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
     private lateinit var searchView: View
     private lateinit var backspaceView: View
     private lateinit var parentContainer: ViewGroup
-    var listener: Listener? = null
+    var listener: EmojiKeyboardListener? = null
 
     companion object {
         const val PREF_EMOJI_RECENTS = "PREF_EMOJI_RECENTS"
     }
 
     override fun onCreateView(inflater: LayoutInflater): View {
-        val view = inflater.inflate(R.layout.emoji_popup_layout, null, false)
+        val view = inflater.inflate(R.layout.emoji_keyboard, null)
         parentContainer = view.findViewById(R.id.emoji_keyboard_container)
         viewPager = view.findViewById(R.id.pager_categories)
         searchView = view.findViewById(R.id.emoji_search)
@@ -55,20 +55,17 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
     private fun setupViewPager() {
         context.let {
             val callback = when (it) {
-                is Listener -> it
+                is EmojiKeyboardListener -> it
                 else -> {
                     val fragments = (it as AppCompatActivity).supportFragmentManager.fragments
-                    if (fragments == null || fragments.size == 0 || !(fragments[0] is Listener)) {
+                    if (fragments == null || fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
                         throw IllegalStateException("activity/fragment should implement Listener interface")
                     }
-                    fragments[0] as Listener
+                    fragments[0] as EmojiKeyboardListener
                 }
             }
-            viewPager.adapter = CategoryPagerAdapter(object : Listener {
-                override fun onNonEmojiKeyPressed(keyCode: Int) {
-                    // do nothing
-                }
 
+            viewPager.adapter = CategoryPagerAdapter(object : EmojiListenerAdapter() {
                 override fun onEmojiAdded(emoji: Emoji) {
                     EmojiRepository.addToRecents(emoji)
                     callback.onEmojiAdded(emoji)
@@ -78,14 +75,14 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
             for (category in EmojiCategory.values()) {
                 val tab = tabLayout.getTabAt(category.ordinal)
                 val tabView = LayoutInflater.from(context).inflate(R.layout.emoji_picker_tab, null)
-                tab?.setCustomView(tabView)
+                tab?.customView = tabView
                 val textView = tabView.findViewById(R.id.image_category) as ImageView
                 textView.setImageResource(category.resourceIcon())
             }
 
             val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
                 EmojiCategory.RECENTS.ordinal
-            viewPager.setCurrentItem(currentTab)
+            viewPager.currentItem = currentTab
         }
     }
 
@@ -131,23 +128,5 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         }
-    }
-
-    interface Listener {
-        /**
-         * When an emoji is selected on the picker.
-         *
-         * @param emoji The selected emoji
-         */
-        fun onEmojiAdded(emoji: Emoji)
-
-        /**
-         * When backspace key is clicked.
-         *
-         * @param keyCode The key code pressed as defined
-         *
-         * @see android.view.KeyEvent
-         */
-        fun onNonEmojiKeyPressed(keyCode: Int)
     }
 }

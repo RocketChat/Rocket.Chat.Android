@@ -342,6 +342,23 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
 
+    /**
+     * Send an emoji reaction to a message.
+     */
+    fun react(messageId: String, emoji: String) {
+        launchUI(strategy) {
+            try {
+                client.toggleReaction(messageId, emoji.removeSurrounding(":"))
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+    fun showReactions(messageId: String) {
+        view.showReactionsPopup(messageId)
+    }
+
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(streamedMessage)

@@ -85,10 +85,11 @@
     <string name="action_msg_quote">Citar</string>
     <string name="action_msg_delete">Remover</string>
     <string name="action_msg_pin">Fixar Mensagem</string>
-    <string name="action_msg_unpin">Desafixar Messagem</string>
+    <string name="action_msg_unpin">Desafixar Mensagem</string>
     <string name="action_msg_star">Favoritar Mensagem</string>
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando Mensagem</string>
+    <string name="action_msg_add_reaction">Adicionar reação</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
