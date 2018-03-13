@@ -105,4 +105,5 @@ interface ChatRoomView : LoadingView, MessageView {
      * This user has joined the chat callback.
      */
     fun onJoined()
+    fun showReactionsPopup(messageId: String)
 }

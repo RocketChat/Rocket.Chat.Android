@@ -59,6 +59,7 @@ dependencies {
     implementation libraries.design
     implementation libraries.constraintLayout
     implementation libraries.cardView
+    implementation libraries.flexbox
 
     implementation libraries.androidKtx
 

@@ -11,9 +11,7 @@ import chat.rocket.android.chatroom.di.PinnedMessagesFragmentProvider
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.PinnedMessagesActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
-import chat.rocket.android.chatrooms.di.ChatRoomsModule
 import chat.rocket.android.dagger.scope.PerActivity
-import chat.rocket.android.main.di.MainActivityProvider
 import chat.rocket.android.main.di.MainModule
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.di.MembersFragmentProvider
@@ -37,8 +35,6 @@ abstract class ActivityBuilder {
 
     @PerActivity
     @ContributesAndroidInjector(modules = [MainModule::class,
-        MainActivityProvider::class,
-        ChatRoomsModule::class,
         ChatRoomsFragmentProvider::class,
         ProfileFragmentProvider::class
     ])

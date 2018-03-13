@@ -24,10 +24,7 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.widget.emoji.ComposerEditText
-import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
-import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.android.widget.emoji.*
 import chat.rocket.core.internal.realtime.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -64,7 +61,7 @@ private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 
-class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
+class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
     @Inject lateinit var presenter: ChatRoomPresenter
     @Inject lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
@@ -187,7 +184,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter)
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
+                        reactionListener = this@ChatRoomFragment)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 linearLayoutManager.stackFromEnd = true
@@ -204,6 +202,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
 
             val oldMessagesCount = adapter.itemCount
             adapter.appendData(dataSet)
+            recycler_view.scrollToPosition(92)
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
             }
@@ -248,7 +247,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     override fun dispatchUpdateMessage(index: Int, message: List<BaseViewModel<*>>) {
         adapter.updateItem(message.last())
         if (message.size > 1) {
-            adapter.updateItem(message.last())
             adapter.prependData(listOf(message.first()))
         }
     }
@@ -314,6 +312,26 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
                 if (selectionStart > 0) text.delete(selectionStart - 1, selectionStart)
             }
             else -> throw IllegalArgumentException("pressed key not expected")
+        }
+    }
+
+    override fun onReactionTouched(messageId: String, emojiShortname: String) {
+        presenter.react(messageId, emojiShortname)
+    }
+
+    override fun onReactionAdded(messageId: String, emoji: Emoji) {
+        presenter.react(messageId, emoji.shortname)
+    }
+
+    override fun showReactionsPopup(messageId: String) {
+        context?.let {
+            val emojiPickerPopup = EmojiPickerPopup(it)
+            emojiPickerPopup.listener = object : EmojiListenerAdapter() {
+                override fun onEmojiAdded(emoji: Emoji) {
+                    onReactionAdded(messageId, emoji)
+                }
+            }
+            emojiPickerPopup.show()
         }
     }
 
