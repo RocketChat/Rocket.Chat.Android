@@ -1,15 +1,13 @@
-Ear_test
-
 ![Rocket.Chat logo](https://raw.githubusercontent.com/RocketChat/Rocket.Chat.Artwork/master/Logos/logo-dark.svg?sanitize=true)
 
 # Rocket.Chat Android native application
 
-[![CircleCI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop) [![Build Status](https://travis-ci.org/RocketChat/Rocket.Chat.Android.svg?branch=develop)](https://travis-ci.org/RocketChat/Rocket.Chat.Android) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a81156a8682e4649994270d3670c3c83)](https://www.codacy.com/app/matheusjardimb/Rocket.Chat.Android) 
+[![CircleCI](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop.svg?style=shield)](https://circleci.com/gh/RocketChat/Rocket.Chat.Android/tree/develop) [![Build Status](https://travis-ci.org/RocketChat/Rocket.Chat.Android.svg?branch=develop)](https://travis-ci.org/RocketChat/Rocket.Chat.Android) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a81156a8682e4649994270d3670c3c83)](https://www.codacy.com/app/matheusjardimb/Rocket.Chat.Android)
 
 ## Description
 Currently, the app is maintained in two branches, namely `v1+` and `v2+`. The `v1+` is maintained in the `develop` branch and the `v2+` is maintained in the `develop-2.x` branch. The older version is written partially in `java` and `kotlin`, but we intend to write the latest version completely in `kotlin`.
 
-Clone the repository by running `git clone https://github.com/RocketChat/Rocket.Chat.Android.git` in your terminal. To build the v1.0+ of the app, run `git checkout develop` and to build the v2.0+, run `git checkout develop-2.x`. 
+Clone the repository by running `git clone https://github.com/RocketChat/Rocket.Chat.Android.git` in your terminal. To build the v1.0+ of the app, run `git checkout develop` and to build the v2.0+, run `git checkout develop-2.x`.
 Since both the versions use `kotlin` for some or all of their classes, following are the common prerequisites for both versions:
 ## How to build
 - Android Studio 3.0+ comes with built in kotlin support, so install the latest version (3.0+) of Android Studio (recommended). For older versions, you need to manually install kotlin plugin. Go to `File > Settings > Plugins` and search for `kotlin` and install it. You'll need to restart the IDE in order to see the changes.
@@ -17,7 +15,7 @@ Since both the versions use `kotlin` for some or all of their classes, following
 - Kotlin is already configured in the project. To check, go to `Tools > Kotlin > Configure Kotlin in project`. A message saying kotlin is already configured in the project pops up. You can update kotlin to the latest version by going to `Tools > Kotlin > Configure Kotlin updates` and download the latest version of kotlin.
 
 ### Instructions specific to version
-#### v1.0+ 
+#### v1.0+
 - After checking out to `develop` branch as mentioned above, simply import the project in Android Studio.
 
 #### v2+
@@ -41,7 +39,7 @@ Two `jar` files will be found in this directory (the `common` and `core` jar fil
 - In order to build and install the apk directly to the connected device, run `./gradlew installDebug`.
 
 ### Android Studio
-- After importing the project in android studio, go to `Run > Run app` and then select your device, or create a new virtual device by following the wizard.     
+- After importing the project in android studio, go to `Run > Run app` and then select your device, or create a new virtual device by following the wizard.
 
 ## Bug report & Feature request
 
