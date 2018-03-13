@@ -200,25 +200,27 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launch(parent = strategy.jobs) {
             if (chatRoomId != null && chatRoomType != null) {
                 val roomType = roomTypeOf(chatRoomType!!)
-                val lastMessage = messagesRepository.getByRoomId(chatRoomId!!).sortedByDescending { it.timestamp }.first()
-                val instant = Instant.ofEpochMilli(lastMessage.timestamp)
-                val messages = client.history(chatRoomId!!, roomType, count = 50,
-                        oldest = instant.toString())
-                Timber.d("History: $messages")
+                messagesRepository.getByRoomId(chatRoomId!!)
+                        .sortedByDescending { it.timestamp }.firstOrNull()?.let { lastMessage ->
+                            val instant = Instant.ofEpochMilli(lastMessage.timestamp)
+                            val messages = client.history(chatRoomId!!, roomType, count = 50,
+                                    oldest = instant.toString())
+                            Timber.d("History: $messages")
 
-                if (messages.result.isNotEmpty()) {
-                    val models = mapper.map(messages.result)
-                    messagesRepository.saveAll(messages.result)
+                            if (messages.result.isNotEmpty()) {
+                                val models = mapper.map(messages.result)
+                                messagesRepository.saveAll(messages.result)
 
-                    launchUI(strategy) {
-                        view.showNewMessage(models)
-                    }
+                                launchUI(strategy) {
+                                    view.showNewMessage(models)
+                                }
 
-                    if (messages.result.size == 50) {
-                        // we loade at least count messages, try one more to fetch more messages
-                        loadMissingMessages()
-                    }
-                }
+                                if (messages.result.size == 50) {
+                                    // we loade at least count messages, try one more to fetch more messages
+                                    loadMissingMessages()
+                                }
+                            }
+                        }
             }
         }
     }
