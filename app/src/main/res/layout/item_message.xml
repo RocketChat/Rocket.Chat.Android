@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/new_messages_notif">
 
         <View
             android:layout_width="0px"
@@ -47,9 +47,8 @@
         layout="@layout/avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/new_messages_notif" />
+        app:layout_constraintTop_toTopOf="@+id/top_container" />
 
     <LinearLayout
         android:id="@+id/new_messages_notif"
@@ -81,7 +80,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/new_messages_notif"
         app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
         app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
 
@@ -108,6 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="2dp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="@id/top_container"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toEndOf="@+id/layout_avatar"

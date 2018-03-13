@@ -155,13 +155,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showMessages(dataSet: List<BaseViewModel<*>>) {
-        // track the message sent immediately after the current message
-        var prevMessageViewModel : MessageViewModel? = null
-
 
         var prevMsgModel = dataSet[0]
         //checking for all messages to assign true to the required showDayMaker
-	//Loop over received messages to determine first unread
         for (i in dataSet.indices) {
             val msgModel = dataSet[i]
             if(i>0){
@@ -175,8 +171,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     prevMsgModel.showDayMarker = true
                 }
             }
+        }
 
-               if (msgModel is MessageViewModel){
+        // track the message sent immediately after the current message
+        var prevMessageViewModel : MessageViewModel? = null
+
+        //Loop over received messages to determine first unread
+        for (i in dataSet.indices) {
+            val msgModel = dataSet[i]
+            if (msgModel is MessageViewModel) {
                 val msg = msgModel.rawData
                 if (msg.timestamp < chatRoomLastSeen) {
                     // This message was sent before the last seen of the room. Hence, it was seen.
