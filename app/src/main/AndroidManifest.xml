@@ -41,7 +41,12 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".webview.WebViewActivity"
+            android:name=".webview.ui.WebViewActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".webview.cas.ui.CasWebViewActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
 

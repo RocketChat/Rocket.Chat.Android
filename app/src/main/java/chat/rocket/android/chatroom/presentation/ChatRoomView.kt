@@ -104,4 +104,5 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showConnectionState(state: State)
     fun populateMembers(members: List<PeopleViewModel>)
     fun populateRooms(chatRooms: List<ChatRoomViewModel>)
+    fun showReactionsPopup(messageId: String)
 }

@@ -1,6 +1,7 @@
 package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
@@ -24,7 +25,7 @@ import javax.inject.Inject
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
-                                             private val navigator: ChatRoomsNavigator,
+                                             private val navigator: MainNavigator,
                                              private val serverInteractor: GetCurrentServerInteractor,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
@@ -68,7 +69,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         }
 
         navigator.toChatRoom(chatRoom.id, roomName,
-                chatRoom.type.toString(), chatRoom.readonly ?: false)
+                chatRoom.type.toString(), chatRoom.readonly ?: false, chatRoom.lastSeen ?: -1)
     }
 
     /**

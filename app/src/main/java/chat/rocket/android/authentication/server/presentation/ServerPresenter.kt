@@ -17,16 +17,14 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val refreshSettingsInteractor: RefreshSettingsInteractor) {
     fun connect(server: String) {
         if (!UrlHelper.isValidUrl(server)) {
-            view.showInvalidServerUrl()
+            view.showInvalidServerUrlMessage()
         } else {
             launchUI(strategy) {
                 if (NetworkHelper.hasInternetAccess()) {
                     view.showLoading()
-
                     try {
                         refreshSettingsInteractor.refresh(server)
                         serverInteractor.save(server)
-
                         navigator.toLogin()
                     } catch (ex: Exception) {
                         ex.message?.let {

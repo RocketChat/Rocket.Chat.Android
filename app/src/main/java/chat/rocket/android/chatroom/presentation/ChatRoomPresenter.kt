@@ -6,8 +6,8 @@ import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.ROOMS
 import chat.rocket.android.chatroom.domain.UriInteractor
-import chat.rocket.android.chatroom.viewmodel.PeopleViewModel
 import chat.rocket.android.chatroom.viewmodel.ChatRoomViewModel
+import chat.rocket.android.chatroom.viewmodel.PeopleViewModel
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UrlHelper
@@ -456,6 +456,23 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 Timber.e(e)
             }
         }
+    }
+
+    /**
+     * Send an emoji reaction to a message.
+     */
+    fun react(messageId: String, emoji: String) {
+        launchUI(strategy) {
+            try {
+                client.toggleReaction(messageId, emoji.removeSurrounding(":"))
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+    fun showReactions(messageId: String) {
+        view.showReactionsPopup(messageId)
     }
 
     private fun updateMessage(streamedMessage: Message) {
