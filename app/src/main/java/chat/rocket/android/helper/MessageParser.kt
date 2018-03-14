@@ -172,10 +172,12 @@ class MessageParser @Inject constructor(val context: Application, private val co
                 if (!link.startsWith("@") && link !in consumed) {
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
-                            val tabsbuilder = CustomTabsIntent.Builder()
-                            tabsbuilder.setToolbarColor(ContextCompat.getColor(view.context, R.color.colorPrimary))
-                            val customTabsIntent = tabsbuilder.build()
-                            customTabsIntent.launchUrl(view.context, getUri(link))
+                            with (view) {
+                                val tabsbuilder = CustomTabsIntent.Builder()
+                                tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
+                                val customTabsIntent = tabsbuilder.build()
+                                customTabsIntent.launchUrl(context, getUri(link))
+                            }
                         }
                     }, matcher.start(0), matcher.end(0))
                     consumed.add(link)
