@@ -1,5 +1,3 @@
-Ear_test
-
 ![Rocket.Chat logo](https://raw.githubusercontent.com/RocketChat/Rocket.Chat.Artwork/master/Logos/logo-dark.svg?sanitize=true)
 
 # Rocket.Chat Android native application
