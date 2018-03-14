@@ -494,10 +494,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupSuggestionsView() {
-        suggestions_view.anchor(text_message)
-                .registerTokenAdapter(PeopleSuggestionsAdapter())
-                .registerTokenAdapter(CommandSuggestionsAdapter())
-                .registerTokenAdapter(RoomSuggestionsAdapter())
+        suggestions_view.anchorTo(text_message)
+                .addTokenAdapter(PeopleSuggestionsAdapter())
+                .addTokenAdapter(CommandSuggestionsAdapter())
+                .addTokenAdapter(RoomSuggestionsAdapter())
                 .addSuggestionProviderAction("@") { query ->
                     if (query.isNotEmpty()) {
                         presenter.spotlight(query, PEOPLE, true)
@@ -508,8 +508,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                         presenter.loadChatRooms()
                     }
                 }
-                .addSuggestionProviderAction("/") { query ->
-                    presenter.loadCommands(query)
+                .addSuggestionProviderAction("/") { _ ->
+                    presenter.loadCommands()
                 }
 
         presenter.loadCommands()

@@ -6,10 +6,10 @@ import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.ROOMS
 import chat.rocket.android.chatroom.domain.UriInteractor
-import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
-import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
+import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
@@ -203,25 +203,25 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 val roomType = roomTypeOf(chatRoomType!!)
                 messagesRepository.getByRoomId(chatRoomId!!)
                         .sortedByDescending { it.timestamp }.firstOrNull()?.let { lastMessage ->
-                            val instant = Instant.ofEpochMilli(lastMessage.timestamp)
-                            val messages = client.history(chatRoomId!!, roomType, count = 50,
-                                    oldest = instant.toString())
-                            Timber.d("History: $messages")
+                    val instant = Instant.ofEpochMilli(lastMessage.timestamp)
+                    val messages = client.history(chatRoomId!!, roomType, count = 50,
+                            oldest = instant.toString())
+                    Timber.d("History: $messages")
 
-                            if (messages.result.isNotEmpty()) {
-                                val models = mapper.map(messages.result)
-                                messagesRepository.saveAll(messages.result)
+                    if (messages.result.isNotEmpty()) {
+                        val models = mapper.map(messages.result)
+                        messagesRepository.saveAll(messages.result)
 
-                                launchUI(strategy) {
-                                    view.showNewMessage(models)
-                                }
-
-                                if (messages.result.size == 50) {
-                                    // we loade at least count messages, try one more to fetch more messages
-                                    loadMissingMessages()
-                                }
-                            }
+                        launchUI(strategy) {
+                            view.showNewMessage(models)
                         }
+
+                        if (messages.result.size == 50) {
+                            // we loade at least count messages, try one more to fetch more messages
+                            loadMissingMessages()
+                        }
+                    }
+                }
             }
         }
     }
@@ -489,16 +489,12 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         view.showReactionsPopup(messageId)
     }
 
-    /**
-     * Loads the list of available commands.
-     */
-    fun loadCommands(query: String = "") {
+    fun loadCommands() {
         launchUI(strategy) {
             try {
                 //TODO: cache the commands
                 val commands = client.commands(0, 100).result
                 view.populateCommandSuggestions(commands.map {
-                    println(it)
                     CommandSuggestionViewModel(it.command, it.description ?: "", listOf(it.command))
                 })
             } catch (ex: RocketChatException) {

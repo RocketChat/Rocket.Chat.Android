@@ -21,6 +21,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import chat.rocket.android.R
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
+import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter.Companion.CONSTRAINT_BOUND_TO_START
 import java.lang.ref.WeakReference
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicInteger
@@ -77,6 +78,10 @@ class SuggestionsView : FrameLayout, TextWatcher {
 
         val new = s.subSequence(start, start + count).toString()
         if (adaptersByToken.containsKey(new)) {
+            val constraint = adapter(new).constraint
+            if (constraint == CONSTRAINT_BOUND_TO_START && start != 0) {
+                return
+            }
             swapAdapter(getAdapterForToken(new)!!)
             completionStartIndex.compareAndSet(NO_STATE_INDEX, start + 1)
             editor?.let {
@@ -125,14 +130,14 @@ class SuggestionsView : FrameLayout, TextWatcher {
 
     private fun getAdapterForToken(token: String): SuggestionsAdapter<*>? = adaptersByToken.get(token)
 
-    fun anchor(editText: EditText): SuggestionsView {
+    fun anchorTo(editText: EditText): SuggestionsView {
         editText.removeTextChangedListener(this)
         editText.addTextChangedListener(this)
         editor = WeakReference(editText)
         return this
     }
 
-    fun registerTokenAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
+    fun addTokenAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
         adaptersByToken.getOrPut(adapter.token, { adapter })
         return this
     }

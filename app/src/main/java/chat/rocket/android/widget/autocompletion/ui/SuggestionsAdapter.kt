@@ -7,9 +7,18 @@ import chat.rocket.android.widget.autocompletion.strategy.regex.StringMatchingCo
 import java.lang.reflect.Type
 import kotlin.properties.Delegates
 
-abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(val token: String, threshold: Int  = MAX_RESULT_COUNT) : RecyclerView.Adapter<VH>() {
+abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
+        val token: String,
+        val constraint: Int = CONSTRAINT_UNBOUND,
+        threshold: Int  = MAX_RESULT_COUNT) : RecyclerView.Adapter<VH>() {
     companion object {
+        // Any number of results.
         const val UNLIMITED_RESULT_COUNT = -1
+        // Trigger suggestions only if on the line start.
+        const val CONSTRAINT_BOUND_TO_START = 0
+        // Trigger suggestions from anywhere.
+        const val CONSTRAINT_UNBOUND = 1
+        // Maximum number of results to display by default.
         private const val MAX_RESULT_COUNT = 5
     }
     private var itemType: Type? = null
