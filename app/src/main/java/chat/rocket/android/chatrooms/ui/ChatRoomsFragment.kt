@@ -49,7 +49,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private val handler = Handler()
 
     private var listJob: Job? = null
-    private var baseAdapter: ChatRoomsAdapter? = null
     private var sectionedAdapter: SimpleSectionedRecyclerViewAdapter? = null
 
     companion object {
@@ -215,7 +214,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
 
-            baseAdapter = ChatRoomsAdapter(this,
+            val baseAdapter = ChatRoomsAdapter(this,
                     settingsRepository.get(serverInteractor.get()!!)) { chatRoom -> presenter.loadChatRoom(chatRoom) }
 
             sectionedAdapter = SimpleSectionedRecyclerViewAdapter(this, R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter!!)
@@ -225,14 +224,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private fun setSections() {
         //Don't add section if not grouping by RoomType
-        if (!SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)){
+        if (!SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)) {
             sectionedAdapter?.clearSections()
             return
         }
 
         val sections = ArrayList<SimpleSectionedRecyclerViewAdapter.Section>()
 
-        baseAdapter?.dataSet?.let {
+        sectionedAdapter?.baseAdapter?.dataSet?.let {
             var previousChatRoomType = ""
 
             for ((position, chatRoom) in it.withIndex()) {
