@@ -31,7 +31,7 @@ class CommandSuggestionsAdapter : SuggestionsAdapter<CommandSuggestionsViewHolde
                 val res = context.resources
                 val id = res.getIdentifier(item.description, "string", context.packageName)
                 val description = if (id > 0) res.getString(id) else ""
-                descriptionTextView.text = description
+                descriptionTextView.text = description.toLowerCase()
                 setOnClickListener {
                     itemClickListener?.onClick(item)
                 }

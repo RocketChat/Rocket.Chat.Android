@@ -499,6 +499,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupSuggestionsView() {
         suggestions_view.anchorTo(text_message)
+                .setMaximumHeight(resources.getDimensionPixelSize(R.dimen.suggestions_box_max_height))
                 .addTokenAdapter(PeopleSuggestionsAdapter())
                 .addTokenAdapter(CommandSuggestionsAdapter())
                 .addTokenAdapter(RoomSuggestionsAdapter())

@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
     android:background="@color/suggestion_background_color"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="2dp">
 
     <TextView
         android:id="@+id/text_command_name"
@@ -13,23 +15,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tools:text="/leave" />
 
     <TextView
         android:id="@+id/text_command_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:layout_toRightOf="@id/text_command_name"
-        android:gravity="end"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
         android:textColor="@color/gray_material"
-        android:layout_marginEnd="16dp"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tools:text="Leave a channel" />
 
 </RelativeLayout>

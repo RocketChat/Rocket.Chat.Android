@@ -40,6 +40,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
     private val localProvidersByToken = hashMapOf<String, HashMap<String, List<SuggestionModel>>>()
     private var editor: WeakReference<EditText>? = null
     private var completionStartIndex = AtomicInteger(NO_STATE_INDEX)
+    private var maxHeight: Int = 0
 
     companion object {
         private val SLIDE_TRANSITION = Slide(Gravity.BOTTOM).setDuration(200)
@@ -117,6 +118,15 @@ class SuggestionsView : FrameLayout, TextWatcher {
         }
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        if (maxHeight > 0) {
+            val hSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST)
+            super.onMeasure(widthMeasureSpec, hSpec)
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
+    }
+
     private fun swapAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
         recyclerView.adapter = adapter
         // Don't override if user has set an item click listener already
@@ -150,6 +160,13 @@ class SuggestionsView : FrameLayout, TextWatcher {
             if (completionStartIndex.get() > NO_STATE_INDEX && adapter.itemCount == 0) expand()
             adapter.addItems(list)
         }
+        return this
+    }
+
+    fun setMaximumHeight(height: Int): SuggestionsView {
+        check(height > 0)
+        this.maxHeight = height
+        requestLayout()
         return this
     }
 
