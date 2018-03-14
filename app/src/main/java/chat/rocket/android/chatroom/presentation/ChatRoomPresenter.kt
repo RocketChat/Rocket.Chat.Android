@@ -24,6 +24,7 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.rest.*
+import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
@@ -500,6 +501,35 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 })
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
+            }
+        }
+    }
+
+    fun runCommand(text: String, roomId: String) {
+        launchUI(strategy) {
+            try {
+                if (text.length == 1) {
+                    // we have just the slash, post it anyway
+                    sendMessage(roomId, text, null)
+                } else {
+                    val command = text.split(" ")
+                    val name = command[0].substring(1)
+                    var params: String = ""
+                    command.forEachIndexed { index, param ->
+                        if (index > 0) {
+                            params += "$param "
+                        }
+                    }
+                    val result = client.runCommand(Command(name, params), roomId)
+                    if (!result) {
+                        // failed, command is not valid so post it
+                        sendMessage(roomId, text, null)
+                    }
+                }
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+                // command is not valid, post it
+                sendMessage(roomId, text, null)
             }
         }
     }

@@ -216,7 +216,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun sendMessage(text: String) {
         if (!text.isBlank()) {
-            presenter.sendMessage(chatRoomId, text, editingMessageId)
+            if (!text.startsWith("/")) {
+                presenter.sendMessage(chatRoomId, text, editingMessageId)
+            } else {
+                presenter.runCommand(text, chatRoomId)
+            }
         }
     }
 
