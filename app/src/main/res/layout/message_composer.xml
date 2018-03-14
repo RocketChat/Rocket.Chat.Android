@@ -27,6 +27,18 @@
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
+        <Button
+            android:id="@+id/button_join_chat"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/white"
+            android:text="@string/action_join_chat"
+            android:textColor="@color/colorAccent"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
+
         <LinearLayout
             android:id="@+id/input_container"
             android:layout_width="match_parent"

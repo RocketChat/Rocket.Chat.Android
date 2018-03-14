@@ -27,6 +27,7 @@
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_choose_image_from_gallery">Choose photo from gallery</string>
     <string name="action_open_camera">Take photo</string>
+    <string name="action_join_chat">Join Chat</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -93,6 +94,7 @@
     <string name="action_msg_star">Star Message</string>
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
+    <string name="action_msg_add_reaction">Add reaction</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
