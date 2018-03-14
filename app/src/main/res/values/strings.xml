@@ -158,4 +158,5 @@
     <string name="dialog_sort_by_activity">Activity</string>
     <string name="dialog_group_by_type">Group by type</string>
     <string name="dialog_group_favourites">Group favourites</string>
+    <string name="chatroom_header">Header</string>
 </resources>
