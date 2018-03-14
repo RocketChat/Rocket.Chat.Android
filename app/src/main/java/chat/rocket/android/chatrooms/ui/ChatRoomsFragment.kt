@@ -25,6 +25,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
+import chat.rocket.common.model.RoomType
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
@@ -47,7 +48,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private val handler = Handler()
 
     private var listJob: Job? = null
-    private val sectionedAdapter:SimpleSectionedRecyclerViewAdapter? = null
+    private var baseAdapter: ChatRoomsAdapter? = null
+    private var sectionedAdapter: SimpleSectionedRecyclerViewAdapter? = null
 
     companion object {
         fun newInstance() = ChatRoomsFragment()
@@ -148,7 +150,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         activity?.apply {
             listJob?.cancel()
             listJob = launch(UI) {
-                setSections()
                 val adapter = recycler_view.adapter as SimpleSectionedRecyclerViewAdapter
                 // FIXME https://fabric.io/rocketchat3/android/apps/chat.rocket.android.dev/issues/5a90d4718cb3c2fa63b3f557?time=last-seven-days
                 // TODO - fix this bug to reenable DiffUtil
@@ -159,6 +160,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 if (isActive) {
                     adapter.baseAdapter.updateRooms(newDataSet)
                     diff.dispatchUpdatesTo(adapter)
+
+                    //Set sections always after data set is updated
+                    setSections()
                 }
             }
         }
@@ -228,23 +232,41 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom ->
                 presenter.loadChatRoom(chatRoom)
             }
+            baseAdapter = ChatRoomsAdapter(this,
+                    settingsRepository.get(serverInteractor.get()!!)) { chatRoom -> presenter.loadChatRoom(chatRoom) }
 
-            //Add your adapter to the sectionAdapter
-            val mSectionedAdapter = SimpleSectionedRecyclerViewAdapter(this, R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter)
-
-            //Apply this adapter to the RecyclerView
-            recycler_view.adapter = mSectionedAdapter
+            sectionedAdapter = SimpleSectionedRecyclerViewAdapter(this, R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter!!)
+            recycler_view.adapter = sectionedAdapter
         }
     }
 
-    private fun setSections(){
-        //This is the code to provide a sectioned list
+    private fun setSections() {
+        //Don't add section if not grouping by RoomType
+        if (!SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)){
+            sectionedAdapter?.clearSections()
+            return
+        }
+
         val sections = ArrayList<SimpleSectionedRecyclerViewAdapter.Section>()
 
-        //Sections
-        sections.add(SimpleSectionedRecyclerViewAdapter.Section(0, "Section 1"))
-        sections.add(SimpleSectionedRecyclerViewAdapter.Section(2, "Section 2"))
-        sections.add(SimpleSectionedRecyclerViewAdapter.Section(5, "Section 3"))
+        baseAdapter?.dataSet?.let {
+            var previousChatRoomType = ""
+
+            for ((position, chatRoom) in it.withIndex()) {
+                val type = chatRoom.type.toString()
+                if (type != previousChatRoomType) {
+                    val title = when (type) {
+                        RoomType.CHANNEL.toString() -> "Channels"
+                        RoomType.PRIVATE_GROUP.toString() -> "Private Groups"
+                        RoomType.DIRECT_MESSAGE.toString() -> "Direct Messages"
+                        RoomType.LIVECHAT.toString() -> "Live Chats"
+                        else -> "UNKNOWN"
+                    }
+                    sections.add(SimpleSectionedRecyclerViewAdapter.Section(position, title))
+                }
+                previousChatRoomType = chatRoom.type.toString()
+            }
+        }
 
         val dummy = arrayOfNulls<SimpleSectionedRecyclerViewAdapter.Section>(sections.size)
         sectionedAdapter?.setSections(sections.toArray(dummy))

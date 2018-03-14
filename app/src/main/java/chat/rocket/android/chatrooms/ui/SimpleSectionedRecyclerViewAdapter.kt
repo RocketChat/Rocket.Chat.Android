@@ -13,11 +13,9 @@ class SimpleSectionedRecyclerViewAdapter(private val context: Context, private v
                                          val baseAdapter: ChatRoomsAdapter) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var isValid = true
-    private val layoutInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private val sectionsHeaders = SparseArray<Section>()
 
     init {
-
         baseAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
                 isValid = baseAdapter.itemCount > 0
@@ -41,9 +39,8 @@ class SimpleSectionedRecyclerViewAdapter(private val context: Context, private v
         })
     }
 
-
-    class SectionViewHolder(view: View, mTextResourceid: Int) : RecyclerView.ViewHolder(view) {
-        var title: TextView = view.findViewById<View>(mTextResourceid) as TextView
+    class SectionViewHolder(view: View, textResourceId: Int) : RecyclerView.ViewHolder(view) {
+        var title: TextView = view.findViewById<View>(textResourceId) as TextView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, typeView: Int): RecyclerView.ViewHolder {
@@ -61,7 +58,6 @@ class SimpleSectionedRecyclerViewAdapter(private val context: Context, private v
         } else {
             baseAdapter.onBindViewHolder(viewHolder as ChatRoomsAdapter.ViewHolder, sectionedPositionToPosition(position))
         }
-
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -71,25 +67,17 @@ class SimpleSectionedRecyclerViewAdapter(private val context: Context, private v
             baseAdapter.getItemViewType(sectionedPositionToPosition(position)) + 1
     }
 
-
-    class Section(internal var firstPosition: Int, title: CharSequence) {
+    class Section(internal var firstPosition: Int, var title: CharSequence) {
         internal var sectionedPosition: Int = 0
-        var title: CharSequence
-            internal set
-
-        init {
-            this.title = title
-        }
     }
-
 
     fun setSections(sections: Array<Section>) {
         sectionsHeaders.clear()
 
-        Arrays.sort(sections) { o, o1 ->
+        Arrays.sort(sections) { section1, section2 ->
             when {
-                o.firstPosition == o1.firstPosition -> 0
-                o.firstPosition < o1.firstPosition -> -1
+                section1.firstPosition == section2.firstPosition -> 0
+                section1.firstPosition < section2.firstPosition -> -1
                 else -> 1
             }
         }
@@ -99,6 +87,11 @@ class SimpleSectionedRecyclerViewAdapter(private val context: Context, private v
             sectionsHeaders.append(section.sectionedPosition, section)
         }
 
+        notifyDataSetChanged()
+    }
+
+    fun clearSections(){
+        sectionsHeaders.clear()
         notifyDataSetChanged()
     }
 
@@ -132,7 +125,6 @@ class SimpleSectionedRecyclerViewAdapter(private val context: Context, private v
         return sectionsHeaders.get(position) != null
     }
 
-
     override fun getItemId(position: Int): Long {
         return when (isSectionHeaderPosition(position)) {
             true -> (Integer.MAX_VALUE - sectionsHeaders.indexOfKey(position)).toLong()
@@ -147,5 +139,4 @@ class SimpleSectionedRecyclerViewAdapter(private val context: Context, private v
     companion object {
         private const val SECTION_TYPE = 0
     }
-
 }
