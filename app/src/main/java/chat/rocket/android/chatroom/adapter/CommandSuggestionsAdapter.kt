@@ -27,8 +27,11 @@ class CommandSuggestionsAdapter : SuggestionsAdapter<CommandSuggestionsViewHolde
             with(itemView) {
                 val nameTextView = itemView.findViewById<TextView>(R.id.text_command_name)
                 val descriptionTextView = itemView.findViewById<TextView>(R.id.text_command_description)
-                nameTextView.text = item.text
-                descriptionTextView.text = item.description.replace("_", " ")
+                nameTextView.text = "/${item.text}"
+                val res = context.resources
+                val id = res.getIdentifier(item.description, "string", context.packageName)
+                val description = if (id > 0) res.getString(id) else ""
+                descriptionTextView.text = description
                 setOnClickListener {
                     itemClickListener?.onClick(item)
                 }
