@@ -495,9 +495,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupSuggestionsView() {
         suggestions_view.anchor(text_message)
-                .bindTokenAdapter(PeopleSuggestionsAdapter())
-                .bindTokenAdapter(CommandSuggestionsAdapter())
-                .bindTokenAdapter(RoomSuggestionsAdapter())
+                .registerTokenAdapter(PeopleSuggestionsAdapter())
+                .registerTokenAdapter(CommandSuggestionsAdapter())
+                .registerTokenAdapter(RoomSuggestionsAdapter())
                 .addSuggestionProviderAction("@") { query ->
                     if (query.isNotEmpty()) {
                         presenter.spotlight(query, PEOPLE, true)

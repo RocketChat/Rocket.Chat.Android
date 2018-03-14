@@ -7,14 +7,23 @@ import chat.rocket.android.widget.autocompletion.strategy.regex.StringMatchingCo
 import java.lang.reflect.Type
 import kotlin.properties.Delegates
 
-abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(val token: String) : RecyclerView.Adapter<VH>() {
-    private val strategy: CompletionStrategy = StringMatchingCompletionStrategy()
+abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(val token: String, threshold: Int  = MAX_RESULT_COUNT) : RecyclerView.Adapter<VH>() {
+    companion object {
+        const val UNLIMITED_RESULT_COUNT = -1
+        private const val MAX_RESULT_COUNT = 5
+    }
     private var itemType: Type? = null
     private var itemClickListener: ItemClickListener? = null
+    // Called to gather results when no results have previously matched.
     private var providerExternal: ((query: String) -> Unit)? = null
-    private var prefix: String by Delegates.observable("", { _, _, _ ->
-        strategy.autocompleteItems(prefix)
-        notifyItemRangeChanged(0, 5)
+    // Maximum number of results/suggestions to display.
+    private var resultsThreshold: Int = if (threshold > 0) threshold else UNLIMITED_RESULT_COUNT
+    // The strategy used for suggesting completions.
+    private val strategy: CompletionStrategy = StringMatchingCompletionStrategy(resultsThreshold)
+    // Current input term to look up for suggestions.
+    private var currentTerm: String by Delegates.observable("", { _, _, newTerm ->
+        val items = strategy.autocompleteItems(newTerm)
+        notifyDataSetChanged()
     })
 
     init {
@@ -29,21 +38,21 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(val token: Stri
         holder.bind(getItem(position), itemClickListener)
     }
 
-    override fun getItemCount() = strategy.autocompleteItems(prefix).size
+    override fun getItemCount() = strategy.autocompleteItems(currentTerm).size
 
     private fun getItem(position: Int): SuggestionModel {
-        return strategy.autocompleteItems(prefix)[position]
+        return strategy.autocompleteItems(currentTerm)[position]
     }
 
-    fun autocomplete(prefix: String) {
-        this.prefix = prefix.toLowerCase().trim()
+    fun autocomplete(newTerm: String) {
+        this.currentTerm = newTerm.toLowerCase().trim()
     }
 
     fun addItems(list: List<SuggestionModel>) {
         strategy.addAll(list)
         // Since we've just added new items we should check for possible new completion suggestions.
-        strategy.autocompleteItems(prefix)
-        notifyItemRangeChanged(0, 5)
+        strategy.autocompleteItems(currentTerm)
+        notifyDataSetChanged()
     }
 
     fun setOnClickListener(clickListener: ItemClickListener) {
@@ -52,11 +61,24 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(val token: Stri
 
     fun hasItemClickListener() = itemClickListener != null
 
-    fun prefix() = prefix
+    /**
+     * Return the current searched term.
+     */
+    fun term() = this.currentTerm
+
+    /**
+     * Set the maximum number of results to show.
+     *
+     * @param threshold The maximum number of suggestions to display.
+     */
+    fun setResultsThreshold(threshold: Int) {
+        check(threshold > 0)
+        resultsThreshold = threshold
+    }
 
     fun cancel() {
         strategy.addAll(emptyList())
-        strategy.autocompleteItems(prefix)
+        strategy.autocompleteItems(currentTerm)
         notifyDataSetChanged()
     }
 

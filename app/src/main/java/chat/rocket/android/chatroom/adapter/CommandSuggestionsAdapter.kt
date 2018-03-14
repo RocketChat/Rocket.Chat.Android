@@ -11,7 +11,7 @@ import chat.rocket.android.widget.autocompletion.model.SuggestionModel
 import chat.rocket.android.widget.autocompletion.ui.BaseSuggestionViewHolder
 import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter
 
-class CommandSuggestionsAdapter : SuggestionsAdapter<CommandSuggestionsViewHolder>("/") {
+class CommandSuggestionsAdapter : SuggestionsAdapter<CommandSuggestionsViewHolder>("/", UNLIMITED_RESULT_COUNT) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommandSuggestionsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.suggestion_command_item, parent,
@@ -27,7 +27,7 @@ class CommandSuggestionsAdapter : SuggestionsAdapter<CommandSuggestionsViewHolde
                 val nameTextView = itemView.findViewById<TextView>(R.id.text_command_name)
                 val descriptionTextView = itemView.findViewById<TextView>(R.id.text_command_description)
                 nameTextView.text = item.text
-                descriptionTextView.text = item.description
+                descriptionTextView.text = item.description.replace("_", " ")
                 setOnClickListener {
                     itemClickListener?.onClick(item)
                 }

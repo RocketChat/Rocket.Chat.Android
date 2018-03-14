@@ -132,7 +132,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
         return this
     }
 
-    fun bindTokenAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
+    fun registerTokenAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
         adaptersByToken.getOrPut(adapter.token, { adapter })
         return this
     }
@@ -141,7 +141,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
         if (list.isNotEmpty()) {
             val adapter = adapter(token)
             localProvidersByToken.getOrPut(token, { hashMapOf() })
-                    .put(adapter.prefix(), list)
+                    .put(adapter.term(), list)
             if (completionStartIndex.get() > NO_STATE_INDEX && adapter.itemCount == 0) expand()
             adapter.addItems(list)
         }
