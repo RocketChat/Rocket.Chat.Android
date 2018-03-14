@@ -114,7 +114,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
 
     private fun swapAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
         recyclerView.adapter = adapter
-        // Don't override if user set an item click listener already/
+        // Don't override if user has set an item click listener already
         if (!adapter.hasItemClickListener()) {
             setOnItemClickListener(adapter) {
                 // set default item click behavior
@@ -123,7 +123,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
         return this
     }
 
-    fun getAdapterForToken(token: String): SuggestionsAdapter<*>? = adaptersByToken.get(token)
+    private fun getAdapterForToken(token: String): SuggestionsAdapter<*>? = adaptersByToken.get(token)
 
     fun anchor(editText: EditText): SuggestionsView {
         editText.removeTextChangedListener(this)

@@ -15,16 +15,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
-import chat.rocket.android.chatroom.adapter.PEOPLE
-import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
-import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
-import chat.rocket.android.chatroom.viewmodel.ChatRoomViewModel
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
-import chat.rocket.android.chatroom.viewmodel.PeopleViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -287,12 +285,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun populateMembers(members: List<PeopleViewModel>) {
+    override fun populatePeopleSuggestions(members: List<PeopleSuggestionViewModel>) {
         suggestions_view.addItems("@", members)
     }
 
-    override fun populateRooms(chatRooms: List<ChatRoomViewModel>) {
+    override fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>) {
         suggestions_view.addItems("#", chatRooms)
+    }
+
+    override fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>) {
+        suggestions_view.addItems("/", commands)
     }
 
     override fun copyToClipboard(message: String) {
@@ -494,6 +496,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun setupSuggestionsView() {
         suggestions_view.anchor(text_message)
                 .bindTokenAdapter(PeopleSuggestionsAdapter())
+                .bindTokenAdapter(CommandSuggestionsAdapter())
                 .bindTokenAdapter(RoomSuggestionsAdapter())
                 .addSuggestionProviderAction("@") { query ->
                     if (query.isNotEmpty()) {
@@ -505,6 +508,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                         presenter.loadChatRooms()
                     }
                 }
+                .addSuggestionProviderAction("/") { query ->
+                    presenter.loadCommands(query)
+                }
+
+        presenter.loadCommands()
     }
 
     private fun openEmojiKeyboardPopup() {
