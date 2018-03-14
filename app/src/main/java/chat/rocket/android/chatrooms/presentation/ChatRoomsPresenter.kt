@@ -170,7 +170,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         return getChatRoomsWithPreviews(sortedRooms)
     }
 
-    fun updatedSortedChatRooms() {
+    fun updateSortedChatRooms() {
         val currentServer = serverInteractor.get()!!
         launchUI(strategy) {
             val roomList = getChatRoomsInteractor.get(currentServer)
