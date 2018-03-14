@@ -172,7 +172,8 @@ class MessageParser @Inject constructor(val context: Application, private val co
                 if (!link.startsWith("@") && link !in consumed) {
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
-                            val customTabsIntent = CustomTabsIntent.Builder().build()
+                            val tabsbuilder = CustomTabsIntent.Builder()
+                            val customTabsIntent = tabsbuilder.build()
                             customTabsIntent.launchUrl(view.context, getUri(link))
                         }
                     }, matcher.start(0), matcher.end(0))
