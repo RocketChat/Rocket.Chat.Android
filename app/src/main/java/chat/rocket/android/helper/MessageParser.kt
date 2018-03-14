@@ -173,6 +173,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
                             val tabsbuilder = CustomTabsIntent.Builder()
+                            tabsbuilder.setToolbarColor(R.color.colorPrimary)
                             val customTabsIntent = tabsbuilder.build()
                             customTabsIntent.launchUrl(view.context, getUri(link))
                         }
