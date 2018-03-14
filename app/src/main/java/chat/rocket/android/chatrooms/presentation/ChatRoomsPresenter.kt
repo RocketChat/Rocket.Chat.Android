@@ -96,7 +96,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 chatRoomsCombined.addAll(roomsToChatRooms(rooms))
                 view.updateChatRooms(chatRoomsCombined)
             } else {
-                view.updateChatRooms(roomList)
+                view.updateChatRooms(sortRooms(roomList))
             }
         }
     }
@@ -130,7 +130,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         return sortedRooms
     }
 
-    fun updatedSortedChatRooms() {
+    fun updateSortedChatRooms() {
         val currentServer = serverInteractor.get()!!
         launchUI(strategy) {
             val roomList = getChatRoomsInteractor.get(currentServer)

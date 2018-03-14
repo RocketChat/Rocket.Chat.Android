@@ -122,16 +122,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                             R.id.radio_sort_activity -> 1
                             else -> 1
                         })
-                        presenter.updatedSortedChatRooms()
-                        recycler_view.scrollTo(0, 0)
+                        presenter.updateSortedChatRooms()
+                        invalidateQueryOnSearch()
                     }
                 })
 
                 groupByTypeCheckBox.isChecked = groupByType
                 groupByTypeCheckBox.setOnCheckedChangeListener({ _, isChecked ->
                     SharedPreferenceHelper.putBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, isChecked)
-                    presenter.updatedSortedChatRooms()
-                    recycler_view.scrollTo(0, 0)
+                    presenter.updateSortedChatRooms()
+                    invalidateQueryOnSearch()
                 })
 
                 val dialogSort = AlertDialog.Builder(context)
@@ -143,6 +143,14 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun invalidateQueryOnSearch(){
+        searchView?.let {
+            if (!searchView!!.isIconified){
+                queryChatRoomsByName(searchView!!.query.toString())
+            }
+        }
     }
 
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {
