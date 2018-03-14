@@ -174,6 +174,10 @@ class MessageParser @Inject constructor(val context: Application, private val co
                         override fun onClick(view: View) {
                             val tabsbuilder = CustomTabsIntent.Builder()
                             tabsbuilder.setToolbarColor(R.color.colorPrimary)
+                            tabsbuilder.enableUrlBarHiding()
+                            tabsbuilder.setCloseButtonIcon(BitmapFactory.decodeResource(view.context.resources, R.drawable.ic_arrow_downward_24dp))
+                            tabsbuilder.setStartAnimations(view.context, R.anim.enter_from_right, R.anim.exit_to_left)
+                            tabsbuilder.setExitAnimations(view.context, R.anim.enter_from_left, R.anim.exit_to_right)
                             val customTabsIntent = tabsbuilder.build()
                             customTabsIntent.launchUrl(view.context, getUri(link))
                         }
