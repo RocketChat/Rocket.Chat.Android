@@ -122,4 +122,11 @@
     <string name="dialog_group_by_type">Agrupar por tipo</string>
     <string name="dialog_group_favourites">Grupos favoritos</string>
     <string name="chatroom_header">Cabeçalho</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Canais</string>
+    <string name="header_private_groups">Grupos Privados</string>
+    <string name="header_direct_messages">Mensagens diretas</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Desconhecido</string>
 </resources>
