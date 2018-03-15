@@ -8,6 +8,7 @@ interface MessagesRepository {
      * Get message by its message id.
      *
      * @param id The id of the message to get.
+     *
      * @return The Message object given by the id or null if message wasn't found.
      */
     fun getById(id: String): Message?
@@ -21,7 +22,18 @@ interface MessagesRepository {
     fun getByRoomId(rid: String): List<Message>
 
     /**
+     * Get most recent messages up to count different users.
+     *
+     * @param rid The id of the room the messages are.
+     * @param count The count last messages to get.
+     *
+     * @return List of last count messages.
+     */
+    fun getRecentMessages(rid: String, count: Long): List<Message>
+
+    /**
      * Get all messages. Use carefully!
+     *
      * @return All messages or an empty list.
      */
     fun getAll(): List<Message>

@@ -15,7 +15,7 @@
     <color name="colorUserStatusOnline">#2FE1A8</color>
     <color name="colorUserStatusBusy">#F33E5B</color>
     <color name="colorUserStatusAway">#FDD236</color>
-    <color name="colorUserStatusOffline">#1F2228</color>
+    <color name="colorUserStatusOffline">#d9d9d9</color>
 
     <color name="colorDrawableTintGrey">#9FA2A8</color>
 
@@ -35,5 +35,8 @@
     <color name="whitesmoke">#FFf1f1f1</color>
 
     <color name="colorEmojiIcon">#FF767676</color>
+
+    <!-- Suggestions -->
+    <color name="suggestion_background_color">@android:color/white</color>
 
 </resources>

@@ -13,10 +13,10 @@ import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
 import javax.inject.Inject
 
-class ProfilePresenter @Inject constructor (private val view: ProfileView,
-                                            private val strategy: CancelStrategy,
-                                            serverInteractor: GetCurrentServerInteractor,
-                                            factory: RocketChatClientFactory) {
+class ProfilePresenter @Inject constructor(private val view: ProfileView,
+                                           private val strategy: CancelStrategy,
+                                           serverInteractor: GetCurrentServerInteractor,
+                                           factory: RocketChatClientFactory) {
     private val serverUrl = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(serverUrl)
     private lateinit var myselfId: String
@@ -29,10 +29,10 @@ class ProfilePresenter @Inject constructor (private val view: ProfileView,
                 myselfId = myself.id
                 val avatarUrl = UrlHelper.getAvatarUrl(serverUrl, myself.username!!)
                 view.showProfile(
-                    avatarUrl,
-                    myself.name!!,
-                    myself.username!!,
-                    myself.emails?.get(0)?.address!!
+                        avatarUrl,
+                        myself.name ?: "",
+                        myself.username ?: "",
+                        myself.emails?.get(0)?.address!!
                 )
             } catch (exception: RocketChatException) {
                 exception.message?.let {

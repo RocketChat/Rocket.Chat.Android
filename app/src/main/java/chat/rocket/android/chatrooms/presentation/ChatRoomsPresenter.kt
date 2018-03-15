@@ -88,15 +88,19 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     fun chatRoomsByName(name: String) {
         val currentServer = serverInteractor.get()!!
         launchUI(strategy) {
-            val roomList = getChatRoomsInteractor.getByName(currentServer, name)
-            if (roomList.isEmpty()) {
-                val (users, rooms) = client.spotlight(name)
-                val chatRoomsCombined = mutableListOf<ChatRoom>()
-                chatRoomsCombined.addAll(usersToChatRooms(users))
-                chatRoomsCombined.addAll(roomsToChatRooms(rooms))
-                view.updateChatRooms(chatRoomsCombined)
-            } else {
-                view.updateChatRooms(sortRooms(roomList))
+            try {
+                val roomList = getChatRoomsInteractor.getByName(currentServer, name)
+                if (roomList.isEmpty()) {
+                    val (users, rooms) = client.spotlight(name)
+                    val chatRoomsCombined = mutableListOf<ChatRoom>()
+                    chatRoomsCombined.addAll(usersToChatRooms(users))
+                    chatRoomsCombined.addAll(roomsToChatRooms(rooms))
+                    view.updateChatRooms(chatRoomsCombined)
+                } else {
+                    view.updateChatRooms(sortRooms(roomList))
+                }
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
             }
         }
     }

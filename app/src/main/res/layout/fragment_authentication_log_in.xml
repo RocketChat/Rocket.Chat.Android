@@ -9,7 +9,6 @@
     tools:context=".authentication.login.ui.LoginFragment">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/middle_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
