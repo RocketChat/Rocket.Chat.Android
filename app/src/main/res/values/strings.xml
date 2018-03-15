@@ -159,4 +159,11 @@
     <string name="dialog_group_by_type">Group by type</string>
     <string name="dialog_group_favourites">Group favourites</string>
     <string name="chatroom_header">Header</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Channels</string>
+    <string name="header_private_groups">Private Groups</string>
+    <string name="header_direct_messages">Direct Messages</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Unknown</string>
 </resources>
