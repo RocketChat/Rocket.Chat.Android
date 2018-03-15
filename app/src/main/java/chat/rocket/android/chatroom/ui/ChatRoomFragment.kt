@@ -30,6 +30,7 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.emoji.*
+import chat.rocket.common.model.RoomType
 import chat.rocket.core.internal.realtime.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -149,10 +150,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         inflater.inflate(R.menu.chatroom_actions, menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        if (chatRoomType == RoomType.DIRECT_MESSAGE.toString())
+            menu?.findItem(R.id.action_chat_room_info)?.setVisible(false)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_members_list -> {
                 presenter.toMembersList(chatRoomId, chatRoomType)
+            }
+            R.id.action_chat_room_info -> {
+                presenter.toChatInfo(chatRoomId)
             }
             R.id.action_pinned_messages -> {
                 val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
@@ -277,9 +287,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun showLoading() = view_loading.setVisible(true)
+    override fun showLoading() = if (view_loading != null) view_loading.setVisible(true) else {}
 
-    override fun hideLoading() = view_loading.setVisible(false)
+    override fun hideLoading() = if (view_loading != null) view_loading.setVisible(false) else {}
 
     override fun showMessage(message: String) = showToast(message)
 
@@ -288,11 +298,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun populateMembers(members: List<PeopleViewModel>) {
-        suggestions_view.addItems("@", members)
+        suggestions_view?.addItems("@", members)
     }
 
     override fun populateRooms(chatRooms: List<ChatRoomViewModel>) {
-        suggestions_view.addItems("#", chatRooms)
+        suggestions_view?.addItems("#", chatRooms)
     }
 
     override fun copyToClipboard(message: String) {

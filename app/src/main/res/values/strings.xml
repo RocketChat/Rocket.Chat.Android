@@ -13,6 +13,11 @@
     <string name="title_settings">Settings</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
+    <string name="title_chat_room_info">Room Info</string>
+    <string name="title_description">Description</string>
+    <string name="title_announcement">Announcement</string>
+    <string name="title_topic">Topic</string>
+    <string name="title_muted_users">Muted Users</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>

@@ -12,6 +12,11 @@
     <string name="title_settings">Configurações</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
+    <string name="title_chat_room_info">Informação da sala</string>
+    <string name="title_description">Descrição</string>
+    <string name="title_announcement">Comunicação</string>
+    <string name="title_topic">Tópico</string>
+    <string name="title_muted_users">Usuários silenciados</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
