@@ -16,7 +16,6 @@
     <string name="title_description">Descrição</string>
     <string name="title_announcement">Comunicação</string>
     <string name="title_topic">Tópico</string>
-    <string name="title_muted_users">Usuários silenciados</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -74,6 +73,7 @@
     <string name="msg_new_password">Informe a nova senha</string>
     <string name="msg_confirm_password">Confirme a nova senha</string>
     <string name="msg_unread_messages">Mensagens não lidas</string>
+    <string name="msg_not_available">N/D</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>

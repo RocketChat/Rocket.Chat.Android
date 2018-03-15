@@ -92,9 +92,13 @@ class MembersFragment : Fragment(), MembersView {
         }
     }
 
-    override fun showLoading() = if (view_loading != null) view_loading.setVisible(true) else {}
+    override fun showLoading() {
+        view_loading?.show()
+    }
 
-    override fun hideLoading() = if (view_loading != null) view_loading.setVisible(false) else {}
+    override fun hideLoading() {
+        view_loading?.hide()
+    }
 
     override fun showMessage(resId: Int) = showToast(resId)
 

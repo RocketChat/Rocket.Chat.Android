@@ -1,6 +1,5 @@
 package chat.rocket.android.chatroom.information.presentation
 
-import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -11,7 +10,6 @@ import javax.inject.Inject
 class InformationPresenter @Inject constructor(private val view: InformationView,
                                                private val chatRoomsInteractor: GetChatRoomsInteractor,
                                                private val serverInteractor: GetCurrentServerInteractor,
-                                               private val navigator: ChatRoomNavigator,
                                                private val strategy: CancelStrategy) {
     fun loadRoomInfo(chatRoomId: String) {
         view.showLoading()
@@ -32,10 +30,4 @@ class InformationPresenter @Inject constructor(private val view: InformationView
             }
         }
     }
-
-    fun toMutedUsers(chatRoomId: String) {
-        navigator.toMutedUsersList(chatRoomId)
-    }
-
-
 }

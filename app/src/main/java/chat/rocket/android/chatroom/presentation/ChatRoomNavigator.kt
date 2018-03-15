@@ -19,10 +19,4 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
             newInstance(chatRoomId)
         }
     }
-
-    fun toMutedUsersList(chatRoomId: String) {
-        activity.addFragmentBackStack("MutedUsersFragment", R.id.fragment_container) {
-            newInstance(chatRoomId)
-        }
-    }
 }

@@ -10,7 +10,6 @@ import chat.rocket.android.chatroom.information.presentation.InformationView
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
@@ -58,26 +57,11 @@ class InformationFragment: Fragment(), InformationView {
     }
 
     override fun showLoading() {
-        progress.setVisible(true)
+        progress?.show()
     }
 
     override fun hideLoading() {
-        progress.setVisible(false)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        super.onPrepareOptionsMenu(menu)
-        menu?.add("Muted Users")
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.string.title_muted_users -> {
-                presenter.toMutedUsers(chatRoomId)
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
+        progress?.hide()
     }
 
     override fun showRoomInfo(room: ChatRoom) {
@@ -125,6 +109,6 @@ class InformationFragment: Fragment(), InformationView {
     }
 
     private fun getDisplayedText(text: String?): String {
-        return if (text.isNullOrBlank()) "N/A" else text!!
+        return if (text.isNullOrBlank()) getString(R.string.msg_not_available) else text!!
     }
 }
