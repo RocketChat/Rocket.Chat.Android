@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:backgroundTint="@color/colorLightTheme"
-            android:hint="@string/msg_search" />
+            android:hint="@string/msg_search"/>
 
         <View
             android:id="@+id/separator_1"

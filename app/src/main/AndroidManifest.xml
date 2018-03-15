@@ -54,6 +54,10 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
+        <activity android:name=".createChannel.addMembers.ui.AddMembersActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity
             android:name=".chatroom.ui.PinnedMessagesActivity"
             android:theme="@style/AppTheme"
