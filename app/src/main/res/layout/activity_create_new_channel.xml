@@ -4,44 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/layout_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="@color/colorPrimary"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_create_new_channel"
-            android:textColor="@color/colorLightTheme"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/create_channel_action_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:alpha="0.7"
-            android:background="?selectableItemBackground"
-            android:enabled="false"
-            android:gravity="end"
-            android:text="@string/create_new_channel_action"
-            android:textSize="16sp" />
-
-    </android.support.v7.widget.Toolbar>
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/layout_container"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_layout">
 
         <android.support.constraint.Guideline
             android:id="@+id/button_top_guideline"
@@ -126,7 +106,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:focusable="true"
-            android:hint="@string/new_channel_edit_text_hint"
+            android:hint="@string/msg_channel_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/placeholder"
             app:layout_constraintTop_toBottomOf="@id/separator_1">
@@ -159,7 +139,7 @@
                 android:id="@+id/add_members_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/add_members_helper_text"
+                android:text="@string/msg_add_members"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread"

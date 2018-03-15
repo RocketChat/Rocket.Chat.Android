@@ -10,10 +10,31 @@ import chat.rocket.android.createChannel.presentation.CreateNewChannelView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_create_new_channel.*
+import kotlinx.android.synthetic.main.layout_toolbar.*
 import javax.inject.Inject
 
 
 class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
+    override fun showLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun hideLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showMessage(resId: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showMessage(message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showGenericErrorMessage() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     @Inject
     lateinit var presenter: CreateNewChannelPresenter
     private var channelType: String = "public"
@@ -39,13 +60,16 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
     private fun setUpToolBar() {
         setSupportActionBar(toolbar)
+        toolbar_title.text = getString(R.string.title_create_new_channel)
+        toolbar_action_text.text = getString(R.string.action_create_new_channel)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         RxTextView.textChanges(channel_name_edit_text).subscribe { text ->
-            create_channel_action_text.isEnabled = text.isNotEmpty()
+            toolbar_action_text.isEnabled = text.isNotEmpty()
             if (text.isEmpty())
-                create_channel_action_text.alpha = 0.8f
+                toolbar_action_text.alpha = 0.8f
             else
-                create_channel_action_text.alpha = 1.0f
+                toolbar_action_text.alpha = 1.0f
         }
     }
 

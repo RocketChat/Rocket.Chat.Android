@@ -13,6 +13,7 @@
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_create_new_channel">Create New Channel</string>
+    <string name="title_add_members">Invite Members</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -67,13 +68,14 @@
     <string name="msg_utc_offset">UTC offset</string>
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
+    <string name="msg_channel_name">Channel Name</string>
+    <string name="msg_add_members">Add Members</string>
+    <string name="msg_search">Search</string>
+
     <string name="private_channel_type">Private</string>
     <string name="public_channel_type">Public</string>
     <string name="private_channel_type_description">Visible only to you and those whom you invite</string>
     <string name="public_channel_description">Visible to everyone</string>
-    <string name="new_channel_edit_text_hint">Channel Name</string>
-    <string name="create_new_channel_action">CREATE</string>
-    <string name="add_members_helper_text">Add Members</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -96,6 +98,8 @@
     <string name="action_msg_star">Star Message</string>
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
+    <string name="action_create_new_channel">CREATE</string>
+
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>

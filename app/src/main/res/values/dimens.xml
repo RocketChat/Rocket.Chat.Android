@@ -22,6 +22,7 @@
 
     <!--Toolbar-->
     <dimen name="toolbar_height">56dp</dimen>
+
     <!-- Message -->
     <dimen name="padding_quote">8dp</dimen>
     <dimen name="padding_mention">4dp</dimen>
