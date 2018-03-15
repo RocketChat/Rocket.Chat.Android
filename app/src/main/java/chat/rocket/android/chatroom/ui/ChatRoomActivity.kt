@@ -20,7 +20,6 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import javax.inject.Inject
-import timber.log.Timber
 
 
 fun Context.chatRoomIntent(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, chatRoomLastSeen: Long): Intent {

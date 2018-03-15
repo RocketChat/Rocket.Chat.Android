@@ -73,7 +73,7 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
     interface ActionsListener {
         fun isActionsEnabled(): Boolean
         fun onActionSelected(item: MenuItem, message: Message)
-        fun onPinMessageSelected(message: Message)
+        fun onPinMessageSelected(item: MenuItem, message: Message)
     }
 
     val longClickListener = { view: View ->
@@ -91,31 +91,36 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
     }
 
     private val pinLongClickListener = View.OnLongClickListener {
-        val builder = AlertDialog.Builder(it.context)
-        builder.setTitle(R.string.action_msg_unpin)
-                .setMessage(R.string.unpin_alert_message)
-                .setPositiveButton(R.string.action_msg_yes) { _, _ ->
-                    data.let {
-                        listener.onPinMessageSelected(it!!.message)
-                    }
-                }
-                .setNegativeButton(R.string.action_msg_cancel) { _, _ -> }
-
-        builder.show()
+        if (data?.message?.isSystemMessage() == false) {
+            val menuItems = it.context.inflate(R.menu.message_actions).toList()
+            menuItems.find { it.itemId == R.id.action_menu_msg_pin_unpin }?.apply {
+                val isPinned = data?.message?.pinned ?: false
+                setTitle(if (isPinned) R.string.action_msg_unpin else R.string.action_msg_pin)
+                isChecked = isPinned
+            }
+            val adapter = ActionListAdapter(menuItems, this@BaseViewHolder)
+            BottomSheetMenu(adapter).show(it.context)
+        }
         true
     }
 
     internal fun setupActionMenu(view: View) {
-        if (listener.isActionsEnabled()) {
-            view.setOnLongClickListener(longClickListener)
-        }else{
-            view.setOnLongClickListener(pinLongClickListener)
-        }
+//        if (listener.isActionsEnabled()) {
+//            view.setOnLongClickListener(longClickListener)
+//        }else{
+//            view.setOnLongClickListener(pinLongClickListener)
+//        }
+        view.setOnLongClickListener(longClickListener)
+
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         data?.let {
-            listener.onActionSelected(item, it.message)
+            if (listener.isActionsEnabled()){
+                listener.onActionSelected(item, it.message)
+            }else{
+                listener.onPinMessageSelected(item,it.message)
+            }
         }
         return true
     }

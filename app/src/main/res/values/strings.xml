@@ -79,6 +79,7 @@
     <string name="message_welcome">Welcome %s</string>
     <string name="message_removed">Message removed</string>
     <string name="message_pinned">Pinned a message:</string>
+    <string name="message_copied">message copied</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>

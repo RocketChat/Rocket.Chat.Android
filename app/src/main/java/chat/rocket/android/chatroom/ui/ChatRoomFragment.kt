@@ -14,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -36,6 +37,10 @@ import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import timber.log.Timber
 import javax.inject.Inject
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+
+
 
 fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, chatRoomLastSeen: Long): Fragment {
     return ChatRoomFragment().apply {
@@ -177,8 +182,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter, pinnedMessagesPresenter = null,
-                        reactionListener = this@ChatRoomFragment)
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
+                        reactionListener = this@ChatRoomFragment,pinnedMessagesPresenter = null)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 linearLayoutManager.stackFromEnd = true
@@ -277,6 +282,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         activity?.apply {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.primaryClip = ClipData.newPlainText("", message)
+            showMessage(getString(R.string.message_copied))
         }
     }
 
@@ -530,5 +536,31 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupToolbar(toolbarTitle: String) {
         (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val prefs = activity!!.getSharedPreferences("pinFunction", MODE_PRIVATE)
+        val action = prefs.getString("action", null)
+        if (action == "edit") {
+            val roomId = prefs.getString("roomId", null)
+            val messageId = prefs.getString("messageId", null)
+            val text = prefs.getString("text", null)
+            showEditingAction(roomId,messageId, text)
+        }else if(action == "reply"){
+            val username = prefs.getString("username", null)
+            val replyMarkdown = prefs.getString("replyMarkdown", null)
+            val quotedMessage = prefs.getString("quotedMessage", null)
+            showReplyingAction(username, replyMarkdown, quotedMessage)
+        }
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val editor = activity?.getSharedPreferences("pinFunction", MODE_PRIVATE)!!.edit()
+        editor.putString("action","null")
+        editor.apply()
     }
 }

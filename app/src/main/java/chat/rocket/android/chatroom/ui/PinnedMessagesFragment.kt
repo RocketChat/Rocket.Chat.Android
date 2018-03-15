@@ -1,5 +1,8 @@
 package chat.rocket.android.chatroom.ui
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -19,6 +22,9 @@ import chat.rocket.android.util.extensions.showToast
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_pinned_messages.*
 import javax.inject.Inject
+import android.content.Context.MODE_PRIVATE
+import chat.rocket.android.widget.emoji.*
+import timber.log.Timber
 
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 private const val BUNDLE_CHAT_ROOM_NAME = "chat_room_name"
@@ -34,7 +40,7 @@ fun newPinnedMessagesFragment(chatRoomId: String, chatRoomType: String, chatRoom
     }
 }
 
-class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
+class PinnedMessagesFragment : Fragment(), PinnedMessagesView, EmojiReactionListener{
 
     @Inject lateinit var presenter: PinnedMessagesPresenter
     private lateinit var chatRoomId: String
@@ -61,6 +67,61 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadPinnedMessages(chatRoomId)
     }
+
+    override fun copyToClipboard(message: String) {
+        activity?.apply {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.primaryClip = ClipData.newPlainText("", message)
+            showMessage(getString(R.string.message_copied))
+        }
+    }
+
+    override fun dispatchDeleteMessage(msgId: String) {
+        adapter.removeItem(msgId)
+    }
+
+    override fun showReactionsPopup(messageId: String) {
+        context?.let {
+            val emojiPickerPopup = EmojiPickerPopup(it)
+            emojiPickerPopup.listener = object : EmojiListenerAdapter() {
+                override fun onEmojiAdded(emoji: Emoji) {
+                    onReactionAdded(messageId, emoji)
+                    Timber.e("onEmojiAdded")
+                }
+            }
+            emojiPickerPopup.show()
+        }
+    }
+
+    override fun onReactionTouched(messageId: String, emojiShortname: String) {
+        presenter.react(messageId, emojiShortname)
+    }
+
+    override fun onReactionAdded(messageId: String, emoji: Emoji) {
+        presenter.react(messageId, emoji.shortname)
+    }
+
+    override fun showEditingAction(roomId: String, messageId: String, text: String) {
+        val editor = activity?.getSharedPreferences("pinFunction", MODE_PRIVATE)!!.edit()
+        editor.putString("action","edit")
+        editor.putString("roomId", roomId)
+        editor.putString("messageId", messageId)
+        editor.putString("text", text)
+        editor.apply()
+        (activity as PinnedMessagesActivity).finishActivity()
+
+    }
+
+    override fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String) {
+        val editor = activity?.getSharedPreferences("pinFunction", MODE_PRIVATE)!!.edit()
+        editor.putString("action","reply")
+        editor.putString("username", username)
+        editor.putString("replyMarkdown", replyMarkdown)
+        editor.putString("quotedMessage", quotedMessage)
+        editor.apply()
+        (activity as PinnedMessagesActivity).finishActivity()
+    }
+
 
     override fun showLoading() = view_loading.setVisible(true)
 
@@ -91,6 +152,6 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
             }
 
             adapter.appendData(pinnedMessages)
-        }
+            }
     }
 }
