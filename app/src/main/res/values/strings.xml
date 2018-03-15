@@ -70,6 +70,7 @@
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_unread_messages">Unread messages</string>
+    <string name="msg_no_chats_available">There are no messages yet in this channel</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

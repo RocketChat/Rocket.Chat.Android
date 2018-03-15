@@ -74,7 +74,10 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 markRoomAsRead(chatRoomId)
 
                 val messagesViewModels = mapper.map(messages)
-                view.showMessages(messagesViewModels)
+                if (messagesViewModels.isEmpty())
+                    view.showNoMessagesView()
+                else
+                    view.showMessages(messagesViewModels)
 
                 subscribeMessages(chatRoomId)
             } catch (ex: Exception) {
