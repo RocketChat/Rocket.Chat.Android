@@ -88,9 +88,22 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
                         }
                     })
                 }
+                togglePinView(pinnedMessages.size)
             }
 
             adapter.appendData(pinnedMessages)
         }
+    }
+
+    private fun togglePinView(size: Int) {
+     if (size == 0){
+         iv_pin_icon.visibility = View.VISIBLE
+         tv_pin_title.visibility = View.VISIBLE
+         tv_pin_description.visibility = View.VISIBLE
+     }else{
+         iv_pin_icon.visibility = View.GONE
+         tv_pin_title.visibility = View.GONE
+         tv_pin_description.visibility = View.GONE
+     }
     }
 }
