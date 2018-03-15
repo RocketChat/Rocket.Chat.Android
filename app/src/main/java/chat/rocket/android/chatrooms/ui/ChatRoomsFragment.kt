@@ -107,7 +107,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun showLoading() = view_loading.setVisible(true)
 
-    override fun hideLoading() = view_loading.setVisible(false)
+    override fun hideLoading() {
+        if (view_loading != null) {
+            view_loading.setVisible(false)
+        }
+    }
 
     override fun showMessage(resId: Int) = showToast(resId)
 

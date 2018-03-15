@@ -249,7 +249,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             val quoteMessage: Message = quote
             quoteViewModel = mapMessage(quoteMessage)
         }
-        return parser.renderMarkdown(message.message, quoteViewModel, currentUsername)
+
+        return parser.renderMarkdown(message, quoteViewModel, currentUsername)
     }
 
     private fun getSystemMessage(message: Message, context: Context): CharSequence {
@@ -270,7 +271,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                                 setSpan(StyleSpan(Typeface.ITALIC), 0, length, 0)
                                 setSpan(ForegroundColorSpan(Color.GRAY), 0, length, 0)
                             }
-                            .append(quoteMessage(attachment.author!!, attachment.text!!, attachment.timestamp!!))
+                            .append(quoteMessage(attachment.author!!, message, attachment.timestamp!!))
                 }
                 return pinnedSystemMessage
             }
@@ -310,7 +311,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         return spannableMsg
     }
 
-    private fun quoteMessage(author: String, text: String, timestamp: Long): CharSequence {
+    private fun quoteMessage(author: String, message: Message, timestamp: Long): CharSequence {
         return SpannableStringBuilder().apply {
             val header = "\n$author ${getTime(timestamp)}\n"
 
@@ -320,7 +321,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                 setSpan(AbsoluteSizeSpan(context.resources.getDimensionPixelSize(R.dimen.message_time_text_size)),
                         author.length + 1, length, 0)
             })
-            append(SpannableString(parser.renderMarkdown(text)).apply {
+            append(SpannableString(parser.renderMarkdown(message)).apply {
                 setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 0, length, 0)
             })
         }

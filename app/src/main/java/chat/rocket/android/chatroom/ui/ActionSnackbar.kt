@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.support.design.widget.BaseTransientBottomBar
 import android.support.v4.view.ViewCompat
 import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +42,7 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
 
     var text: String = ""
         set(value) {
-            val spannable = parser.renderMarkdown(value) as Spannable
+            val spannable = SpannableStringBuilder.valueOf(value)
             spannable.setSpan(MessageParser.QuoteMarginSpan(marginDrawable, 10), 0, spannable.length, 0)
             messageTextView.content = spannable
         }
