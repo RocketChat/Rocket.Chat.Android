@@ -49,6 +49,10 @@ class ChatRoomAdapter(
                 val view = parent.inflate(R.layout.message_url_preview)
                 UrlPreviewViewHolder(view, actionsListener, reactionListener)
             }
+            BaseViewModel.ViewType.MESSAGE_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_message_attachment)
+                MessageAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
             }
@@ -87,6 +91,7 @@ class ChatRoomAdapter(
             is AudioAttachmentViewHolder -> holder.bind(dataSet[position] as AudioAttachmentViewModel)
             is VideoAttachmentViewHolder -> holder.bind(dataSet[position] as VideoAttachmentViewModel)
             is UrlPreviewViewHolder -> holder.bind(dataSet[position] as UrlPreviewViewModel)
+            is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
         }
     }
 

@@ -4,9 +4,7 @@ import DateTimeHelper
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import chat.rocket.android.R
@@ -91,8 +89,19 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     private fun mapAttachment(message: Message, attachment: Attachment): BaseViewModel<*>? {
         return when (attachment) {
             is FileAttachment -> mapFileAttachment(message, attachment)
+            is MessageAttachment -> mapMessageAttachment(message, attachment)
             else -> null
         }
+    }
+
+    private fun mapMessageAttachment(message: Message, attachment: MessageAttachment): MessageAttachmentViewModel {
+        val attachmentAuthor = attachment.author!!
+        val attachmentText = attachment.text ?: ""
+        val time = getTime(attachment.timestamp!!)
+
+        return MessageAttachmentViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
+                messageId = message.id, time = time, senderName = attachmentAuthor,
+                content = attachmentText, isPinned = message.pinned, reactions = getReactions(message))
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseViewModel<*>? {
@@ -249,7 +258,6 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             val quoteMessage: Message = quote
             quoteViewModel = mapMessage(quoteMessage)
         }
-
         return parser.renderMarkdown(message, quoteViewModel, currentUsername)
     }
 
@@ -262,68 +270,17 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             is MessageType.UserAdded -> context.getString(R.string.message_user_added_by, message.message, message.sender?.username)
             is MessageType.RoomNameChanged -> context.getString(R.string.message_room_name_changed, message.message, message.sender?.username)
             is MessageType.UserRemoved -> context.getString(R.string.message_user_removed_by, message.message, message.sender?.username)
-            is MessageType.MessagePinned -> {
-                val attachment = message.attachments?.get(0)
-                val pinnedSystemMessage = context.getString(R.string.message_pinned)
-                if (attachment != null && attachment is MessageAttachment) {
-                    return SpannableStringBuilder(pinnedSystemMessage)
-                            .apply {
-                                setSpan(StyleSpan(Typeface.ITALIC), 0, length, 0)
-                                setSpan(ForegroundColorSpan(Color.GRAY), 0, length, 0)
-                            }
-                            .append(quoteMessage(attachment.author!!, message, attachment.timestamp!!))
-                }
-                return pinnedSystemMessage
-            }
+            is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }
         }
-        //isSystemMessage = true
         val spannableMsg = SpannableStringBuilder(content)
         spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
                 0)
         spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length,
                 0)
 
-        /*if (attachmentType == null) {
-            val username = message.sender?.username
-            val message = message.message
-
-            val usernameTextStartIndex = if (username != null) content.indexOf(username) else -1
-            val usernameTextEndIndex = if (username != null) usernameTextStartIndex + username.length else -1
-            val messageTextStartIndex = if (message.isNotEmpty()) content.indexOf(message) else -1
-            val messageTextEndIndex = messageTextStartIndex + message.length
-
-            if (usernameTextStartIndex > -1) {
-                spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), usernameTextStartIndex, usernameTextEndIndex,
-                        0)
-            }
-
-            if (messageTextStartIndex > -1) {
-                spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), messageTextStartIndex, messageTextEndIndex,
-                        0)
-            }
-        } else if (attachmentType == AttachmentType.Message) {
-            spannableMsg.append(quoteMessage(attachmentMessageAuthor!!, attachmentMessageText!!, attachmentTimestamp!!))
-        }*/
-
         return spannableMsg
-    }
-
-    private fun quoteMessage(author: String, message: Message, timestamp: Long): CharSequence {
-        return SpannableStringBuilder().apply {
-            val header = "\n$author ${getTime(timestamp)}\n"
-
-            append(SpannableString(header).apply {
-                setSpan(StyleSpan(Typeface.BOLD), 1, author.length + 1, 0)
-                setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 1, length, 0)
-                setSpan(AbsoluteSizeSpan(context.resources.getDimensionPixelSize(R.dimen.message_time_text_size)),
-                        author.length + 1, length, 0)
-            })
-            append(SpannableString(parser.renderMarkdown(message)).apply {
-                setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 0, length, 0)
-            })
-        }
     }
 }

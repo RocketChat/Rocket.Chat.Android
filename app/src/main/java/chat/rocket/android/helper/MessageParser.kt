@@ -4,15 +4,15 @@ import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
-import android.graphics.drawable.Drawable
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.net.Uri
 import android.provider.Browser
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
-import android.text.Layout
 import android.text.Spanned
-import android.text.style.*
+import android.text.style.ClickableSpan
+import android.text.style.ReplacementSpan
 import android.util.Patterns
 import android.view.View
 import chat.rocket.android.R
@@ -23,7 +23,6 @@ import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
 import org.commonmark.node.AbstractVisitor
-import org.commonmark.node.BlockQuote
 import org.commonmark.node.Document
 import org.commonmark.node.Text
 import ru.noties.markwon.Markwon
@@ -51,20 +50,12 @@ class MessageParser @Inject constructor(val context: Application, private val co
         val builder = SpannableBuilder()
         val content = EmojiRepository.shortnameToUnicode(text, true)
         val parentNode = parser.parse(toLenientMarkdown(content))
-        parentNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
-        quote?.apply {
-            var quoteNode = parser.parse("> $senderName $time")
-            parentNode.appendChild(quoteNode)
-            quoteNode.accept(QuoteMessageSenderVisitor(context, configuration, builder, senderName.length))
-            quoteNode = parser.parse("> ${toLenientMarkdown(quote.rawData.message)}")
-            quoteNode.accept(EmojiVisitor(builder, configuration))
-            quoteNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
-        }
+        parentNode.accept(SpannableMarkdownVisitor(configuration, builder))
         parentNode.accept(LinkVisitor(builder))
-        if (message.mentions != null) {
-            parentNode.accept(MentionVisitor(context, builder, message.mentions!!, selfUsername))
-        }
         parentNode.accept(EmojiVisitor(builder, configuration))
+        message.mentions?.let {
+            parentNode.accept(MentionVisitor(context, builder, it, selfUsername))
+        }
 
         return builder.text()
     }
@@ -74,32 +65,6 @@ class MessageParser @Inject constructor(val context: Application, private val co
         return text.trim().replace("\\*(.+)\\*".toRegex()) { "**${it.groupValues[1].trim()}**" }
                 .replace("\\~(.+)\\~".toRegex()) { "~~${it.groupValues[1].trim()}~~" }
                 .replace("\\_(.+)\\_".toRegex()) { "_${it.groupValues[1].trim()}_" }
-    }
-
-    class QuoteMessageSenderVisitor(private val context: Context,
-                                    configuration: SpannableConfiguration,
-                                    private val builder: SpannableBuilder,
-                                    private val senderNameLength: Int) : SpannableMarkdownVisitor(configuration, builder) {
-
-        override fun visit(blockQuote: BlockQuote) {
-
-            // mark current length
-            val length = builder.length()
-
-            // pass to super to apply markdown
-            super.visit(blockQuote)
-
-            val res = context.resources
-            val timeOffsetStart = length + senderNameLength + 1
-            builder.setSpan(QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), length, builder.length())
-            builder.setSpan(StyleSpan(Typeface.BOLD), length, length + senderNameLength)
-            builder.setSpan(ForegroundColorSpan(Color.BLACK), length, builder.length())
-            // set time spans
-            builder.setSpan(AbsoluteSizeSpan(res.getDimensionPixelSize(R.dimen.message_time_text_size)),
-                    timeOffsetStart, builder.length())
-            builder.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.darkGray)),
-                    timeOffsetStart, builder.length())
-        }
     }
 
     class MentionVisitor(context: Context,
@@ -188,58 +153,6 @@ class MessageParser @Inject constructor(val context: Application, private val co
                 return Uri.parse("http://$link")
             }
             return uri
-        }
-    }
-
-    class QuoteMessageBodyVisitor(private val context: Context,
-                                  configuration: SpannableConfiguration,
-                                  private val builder: SpannableBuilder) : SpannableMarkdownVisitor(configuration, builder) {
-
-        override fun visit(blockQuote: BlockQuote) {
-
-            // mark current length
-            val length = builder.length()
-
-            // pass to super to apply markdown
-            super.visit(blockQuote)
-
-            val padding = context.resources.getDimensionPixelSize(R.dimen.padding_quote)
-            builder.setSpan(QuoteMarginSpan(context.getDrawable(R.drawable.quote), padding), length,
-                    builder.length())
-        }
-    }
-
-    class QuoteMarginSpan(quoteDrawable: Drawable, private var pad: Int) : LeadingMarginSpan, LineHeightSpan {
-        private val drawable: Drawable = quoteDrawable
-
-        override fun getLeadingMargin(first: Boolean): Int {
-            return drawable.intrinsicWidth + pad
-        }
-
-        override fun drawLeadingMargin(c: Canvas, p: Paint, x: Int, dir: Int,
-                                       top: Int, baseline: Int, bottom: Int,
-                                       text: CharSequence, start: Int, end: Int,
-                                       first: Boolean, layout: Layout) {
-            val st = (text as Spanned).getSpanStart(this)
-            val itop = layout.getLineTop(layout.getLineForOffset(st))
-            val dw = drawable.intrinsicWidth
-            // XXX What to do about Paint?
-            drawable.setBounds(x, itop, x + dw, itop + layout.height)
-            drawable.draw(c)
-        }
-
-        override fun chooseHeight(text: CharSequence, start: Int, end: Int,
-                                  spanstartv: Int, v: Int,
-                                  fm: Paint.FontMetricsInt) {
-            if (end == (text as Spanned).getSpanEnd(this)) {
-                val ht = drawable.intrinsicHeight
-                var need = ht - (v + fm.descent - fm.ascent - spanstartv)
-                if (need > 0)
-                    fm.descent += need
-                need = ht - (v + fm.bottom - fm.top - spanstartv)
-                if (need > 0)
-                    fm.bottom += need
-            }
         }
     }
 

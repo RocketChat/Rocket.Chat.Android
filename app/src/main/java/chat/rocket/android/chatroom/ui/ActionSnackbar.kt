@@ -43,14 +43,12 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
     var text: String = ""
         set(value) {
             val spannable = SpannableStringBuilder.valueOf(value)
-            spannable.setSpan(MessageParser.QuoteMarginSpan(marginDrawable, 10), 0, spannable.length, 0)
             messageTextView.content = spannable
         }
 
     var title: String = ""
         set(value) {
             val spannable = Markwon.markdown(this.context, value) as Spannable
-            spannable.setSpan(MessageParser.QuoteMarginSpan(marginDrawable, 10), 0, spannable.length, 0)
             titleTextView.content = spannable
 
         }
@@ -69,17 +67,17 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
         override fun animateContentOut(delay: Int, duration: Int) {
             ViewCompat.setScaleY(content, 1f)
             ViewCompat.animate(content)
-                .scaleY(0f)
-                .setDuration(duration.toLong())
-                .startDelay = delay.toLong()
+                    .scaleY(0f)
+                    .setDuration(duration.toLong())
+                    .startDelay = delay.toLong()
         }
 
         override fun animateContentIn(delay: Int, duration: Int) {
             ViewCompat.setScaleY(content, 0f)
             ViewCompat.animate(content)
-                .scaleY(1f)
-                .setDuration(duration.toLong())
-                .startDelay = delay.toLong()
+                    .scaleY(1f)
+                    .setDuration(duration.toLong())
+                    .startDelay = delay.toLong()
         }
     }
 }
