@@ -11,7 +11,6 @@ import android.provider.Browser
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Layout
-import android.text.Spannable
 import android.text.Spanned
 import android.text.style.*
 import android.util.Patterns
@@ -25,6 +24,7 @@ import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
 import org.commonmark.node.AbstractVisitor
 import org.commonmark.node.BlockQuote
+import org.commonmark.node.Document
 import org.commonmark.node.Text
 import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
@@ -36,13 +36,6 @@ import javax.inject.Inject
 class MessageParser @Inject constructor(val context: Application, private val configuration: SpannableConfiguration) {
 
     private val parser = Markwon.createParser()
-    private val othersTextColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
-    private val othersBackgroundColor = ResourcesCompat.getColor(context.resources, android.R.color.transparent, context.theme)
-    private val myselfTextColor = ResourcesCompat.getColor(context.resources, R.color.white, context.theme)
-    private val myselfBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
-    private val mentionPadding = context.resources.getDimensionPixelSize(R.dimen.padding_mention).toFloat()
-    private val mentionRadius = context.resources.getDimensionPixelSize(R.dimen.radius_mention).toFloat()
-
 
     /**
      * Render a markdown text message to Spannable.
@@ -64,49 +57,16 @@ class MessageParser @Inject constructor(val context: Application, private val co
             parentNode.appendChild(quoteNode)
             quoteNode.accept(QuoteMessageSenderVisitor(context, configuration, builder, senderName.length))
             quoteNode = parser.parse("> ${toLenientMarkdown(quote.rawData.message)}")
-            quoteNode.accept(EmojiVisitor(builder))
+            quoteNode.accept(EmojiVisitor(builder, configuration))
             quoteNode.accept(QuoteMessageBodyVisitor(context, configuration, builder))
         }
         parentNode.accept(LinkVisitor(builder))
-        parentNode.accept(EmojiVisitor(builder))
-        val result = builder.text()
-        applySpans(result, message, selfUsername)
-
-        return result
-    }
-
-    private fun applySpans(text: CharSequence, message: Message, currentUser: String?) {
-        if (text !is Spannable || !containsAnyMentions(text, message.mentions)) return
-        applyMentionSpans(text, message.mentions!!, currentUser)
-    }
-
-    private fun containsAnyMentions(text: CharSequence, mentions: List<SimpleUser>?): Boolean {
-        return mentions != null && mentions.isNotEmpty() ||
-                text.contains("@all", true) ||
-                text.contains("@here", true)
-    }
-
-    private fun applyMentionSpans(text: Spannable, mentions: List<SimpleUser>, currentUser: String?) {
-        val mentionsList = mentions.map { it.username }.toMutableList()
-        mentionsList.add("all")
-        mentionsList.add("here")
-
-        mentionsList.toList().forEach {
-            if (it != null) {
-                val mentionMe = it == currentUser || it == "all" || it == "here"
-                var offset = text.indexOf("@$it", 0, true)
-                while (offset > -1) {
-                    val textColor = if (mentionMe) myselfTextColor else othersTextColor
-                    val backgroundColor = if (mentionMe) myselfBackgroundColor else othersBackgroundColor
-                    val usernameSpan = MentionSpan(backgroundColor, textColor, mentionRadius, mentionPadding,
-                            mentionMe)
-                    // Add 1 to end offset to include the @.
-                    val end = offset + it.length + 1
-                    text.setSpan(usernameSpan, offset, end, 0)
-                    offset = text.indexOf("@$it", end, true)
-                }
-            }
+        if (message.mentions != null) {
+            parentNode.accept(MentionVisitor(context, builder, message.mentions!!, selfUsername))
         }
+        parentNode.accept(EmojiVisitor(builder, configuration))
+
+        return builder.text()
     }
 
     // Convert to a lenient markdown consistent with Rocket.Chat web markdown instead of the official specs.
@@ -142,16 +102,52 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class EmojiVisitor(private val builder: SpannableBuilder) : AbstractVisitor() {
-        override fun visit(text: Text) {
-            val spannable = EmojiParser.parse(text.literal)
+    class MentionVisitor(context: Context,
+                         private val builder: SpannableBuilder,
+                         private val mentions: List<SimpleUser>,
+                         private val currentUser: String?) : AbstractVisitor() {
+        private val othersTextColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
+        private val othersBackgroundColor = ResourcesCompat.getColor(context.resources, android.R.color.transparent, context.theme)
+        private val myselfTextColor = ResourcesCompat.getColor(context.resources, R.color.white, context.theme)
+        private val myselfBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
+        private val mentionPadding = context.resources.getDimensionPixelSize(R.dimen.padding_mention).toFloat()
+        private val mentionRadius = context.resources.getDimensionPixelSize(R.dimen.radius_mention).toFloat()
+        override fun visit(t: Text) {
+            val text = t.literal
+            val mentionsList = mentions.map { it.username }.toMutableList()
+            mentionsList.add("all")
+            mentionsList.add("here")
+
+            mentionsList.toList().forEach {
+                if (it != null) {
+                    val mentionMe = it == currentUser || it == "all" || it == "here"
+                    var offset = text.indexOf("@$it", 0, true)
+                    while (offset > -1) {
+                        val textColor = if (mentionMe) myselfTextColor else othersTextColor
+                        val backgroundColor = if (mentionMe) myselfBackgroundColor else othersBackgroundColor
+                        val usernameSpan = MentionSpan(backgroundColor, textColor, mentionRadius, mentionPadding,
+                                mentionMe)
+                        // Add 1 to end offset to include the @.
+                        val end = offset + it.length + 1
+                        builder.setSpan(usernameSpan, offset, end, 0)
+                        offset = text.indexOf("@$it", end, true)
+                    }
+                }
+            }
+        }
+    }
+
+    class EmojiVisitor(private val builder: SpannableBuilder, configuration: SpannableConfiguration)
+        : SpannableMarkdownVisitor(configuration, builder) {
+        override fun visit(document: Document) {
+            val spannable = EmojiParser.parse(builder.text())
             if (spannable is Spanned) {
                 val spans = spannable.getSpans(0, spannable.length, EmojiTypefaceSpan::class.java)
                 spans.forEach {
-                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it), 0)
+                    builder.setSpan(it, spannable.getSpanStart(it),
+                            spannable.getSpanEnd(it), 0)
                 }
             }
-            visitChildren(text)
         }
     }
 
@@ -272,13 +268,11 @@ class MessageParser @Inject constructor(val context: Application, private val co
                           bottom: Int,
                           paint: Paint) {
             val length = paint.measureText(text.subSequence(start, end).toString())
-            val rect = RectF(x, top.toFloat(), x + length + padding * 2,
-                    bottom.toFloat())
+            val rect = RectF(x, top.toFloat(), x + length + padding * 2, bottom.toFloat())
             paint.color = backgroundColor
             canvas.drawRoundRect(rect, radius, radius, paint)
             paint.color = textColor
             canvas.drawText(text, start, end, x + padding, y.toFloat(), paint)
         }
-
     }
 }
