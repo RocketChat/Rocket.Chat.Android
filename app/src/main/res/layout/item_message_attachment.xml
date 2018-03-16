@@ -18,7 +18,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="56dp"
         android:background="@drawable/quote_vertical_bar"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/recycler_view_reactions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,14 +64,7 @@
         layout="@layout/layout_reactions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@+id/text_content"
+        app:layout_constraintStart_toStartOf="@+id/quote_bar"
         app:layout_constraintTop_toBottomOf="@+id/text_content" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
 </android.support.constraint.ConstraintLayout>

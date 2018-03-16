@@ -16,7 +16,6 @@ import android.text.style.ReplacementSpan
 import android.util.Patterns
 import android.view.View
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
@@ -40,19 +39,18 @@ class MessageParser @Inject constructor(val context: Application, private val co
      * Render a markdown text message to Spannable.
      *
      * @param message The [Message] object we're interested on rendering.
-     * @param quote An optional [MessageViewModel] to be quoted.
      * @param selfUsername This user username.
      *
      * @return A Spannable with the parsed markdown.
      */
-    fun renderMarkdown(message: Message, quote: MessageViewModel? = null, selfUsername: String? = null): CharSequence {
+    fun renderMarkdown(message: Message, selfUsername: String? = null): CharSequence {
         val text = message.message
         val builder = SpannableBuilder()
         val content = EmojiRepository.shortnameToUnicode(text, true)
         val parentNode = parser.parse(toLenientMarkdown(content))
         parentNode.accept(SpannableMarkdownVisitor(configuration, builder))
         parentNode.accept(LinkVisitor(builder))
-        parentNode.accept(EmojiVisitor(builder, configuration))
+        parentNode.accept(EmojiVisitor(configuration, builder))
         message.mentions?.let {
             parentNode.accept(MentionVisitor(context, builder, it, selfUsername))
         }
@@ -102,15 +100,14 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class EmojiVisitor(private val builder: SpannableBuilder, configuration: SpannableConfiguration)
+    class EmojiVisitor(configuration: SpannableConfiguration, private val builder: SpannableBuilder)
         : SpannableMarkdownVisitor(configuration, builder) {
         override fun visit(document: Document) {
             val spannable = EmojiParser.parse(builder.text())
             if (spannable is Spanned) {
                 val spans = spannable.getSpans(0, spannable.length, EmojiTypefaceSpan::class.java)
                 spans.forEach {
-                    builder.setSpan(it, spannable.getSpanStart(it),
-                            spannable.getSpanEnd(it), 0)
+                    builder.setSpan(it, spannable.getSpanStart(it), spannable.getSpanEnd(it), 0)
                 }
             }
         }

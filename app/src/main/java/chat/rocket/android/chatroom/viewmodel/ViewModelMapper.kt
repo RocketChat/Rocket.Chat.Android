@@ -23,7 +23,6 @@ import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 import okhttp3.HttpUrl
-import timber.log.Timber
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
@@ -96,8 +95,13 @@ class ViewModelMapper @Inject constructor(private val context: Context,
 
     private fun mapMessageAttachment(message: Message, attachment: MessageAttachment): MessageAttachmentViewModel {
         val attachmentAuthor = attachment.author!!
-        val attachmentText = attachment.text ?: ""
         val time = getTime(attachment.timestamp!!)
+        val attachmentText =  when (attachment.attachments.orEmpty().firstOrNull()) {
+            is ImageAttachment -> context.getString(R.string.msg_quote_photo)
+            is VideoAttachment -> context.getString(R.string.msg_quote_video)
+            is AudioAttachment -> context.getString(R.string.msg_quote_audio)
+            else -> attachment.text ?: ""
+        }
 
         return MessageAttachmentViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
                 messageId = message.id, time = time, senderName = attachmentAuthor,
@@ -159,27 +163,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
 
-        val baseUrl = settings.baseUrl()
-        var quote: Message? = null
-
-        val urls = ArrayList<Url>()
-        message.urls?.let {
-            if (it.isEmpty()) return@let
-            for (url in it) {
-                urls.add(url)
-                baseUrl?.let {
-                    val quoteUrl = HttpUrl.parse(url.url)
-                    val serverUrl = HttpUrl.parse(baseUrl)
-                    if (quoteUrl != null && serverUrl != null) {
-                        quote = makeQuote(quoteUrl, serverUrl)?.let {
-                            getMessageWithoutQuoteMarkdown(it)
-                        }
-                    }
-                }
-            }
-        }
-
-        val content = getContent(context, getMessageWithoutQuoteMarkdown(message), quote)
+        val content = getContent(context, getMessageWithoutQuoteMarkdown(message))
         MessageViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
                 messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
                 content = content, isPinned = message.pinned, reactions = getReactions(message),
@@ -236,29 +220,11 @@ class ViewModelMapper @Inject constructor(private val context: Context,
 
     private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
 
-    private fun makeQuote(quoteUrl: HttpUrl, serverUrl: HttpUrl): Message? {
-        if (quoteUrl.host() == serverUrl.host()) {
-            val msgIdToQuote = quoteUrl.queryParameter("msg")
-            Timber.d("Will quote message Id: $msgIdToQuote")
-            return if (msgIdToQuote != null) messagesRepository.getById(msgIdToQuote) else null
-        }
-        return null
-    }
-
-    private suspend fun getContent(context: Context, message: Message, quote: Message?): CharSequence {
+    private suspend fun getContent(context: Context, message: Message): CharSequence {
         return when (message.isSystemMessage()) {
             true -> getSystemMessage(message, context)
-            false -> getNormalMessage(message, quote)
+            false -> parser.renderMarkdown(message, currentUsername)
         }
-    }
-
-    private suspend fun getNormalMessage(message: Message, quote: Message?): CharSequence {
-        var quoteViewModel: MessageViewModel? = null
-        if (quote != null) {
-            val quoteMessage: Message = quote
-            quoteViewModel = mapMessage(quoteMessage)
-        }
-        return parser.renderMarkdown(message, quoteViewModel, currentUsername)
     }
 
     private fun getSystemMessage(message: Message, context: Context): CharSequence {

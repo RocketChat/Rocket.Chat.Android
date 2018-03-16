@@ -1,6 +1,5 @@
 package chat.rocket.android.chatroom.ui
 
-import android.graphics.drawable.Drawable
 import android.support.design.widget.BaseTransientBottomBar
 import android.support.v4.view.ViewCompat
 import android.text.Spannable
@@ -28,7 +27,6 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
             actionSnackbar.cancelView = view.findViewById(R.id.image_view_action_cancel_quote) as ImageView
             actionSnackbar.duration = BaseTransientBottomBar.LENGTH_INDEFINITE
             val spannable = Markwon.markdown(context, content).trim()
-            actionSnackbar.marginDrawable = context.getDrawable(R.drawable.quote)
             actionSnackbar.messageTextView.content = spannable
             return actionSnackbar
         }
@@ -38,7 +36,6 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
     lateinit var cancelView: View
     private lateinit var messageTextView: TextView
     private lateinit var titleTextView: TextView
-    private lateinit var marginDrawable: Drawable
 
     var text: String = ""
         set(value) {
