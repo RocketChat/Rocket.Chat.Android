@@ -62,6 +62,7 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
                 val manager = FlexboxLayoutManager(context, FlexDirection.ROW)
                 recyclerView.layoutManager = manager
                 recyclerView.adapter = adapter
+                println("* Update reactions ${it.reactions}")
                 adapter.addReactions(it.reactions.filterNot { it.unicode.startsWith(":") })
             }
         }

@@ -70,6 +70,11 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             list.add(it)
         }
 
+        for (i in list.size - 1 downTo 0) {
+            val next = if (i - 1 < 0) null else list[i - 1]
+            list[i].nextDownStreamMessage = next
+        }
+
         return@withContext list
     }
 
@@ -96,7 +101,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     private fun mapMessageAttachment(message: Message, attachment: MessageAttachment): MessageAttachmentViewModel {
         val attachmentAuthor = attachment.author!!
         val time = getTime(attachment.timestamp!!)
-        val attachmentText =  when (attachment.attachments.orEmpty().firstOrNull()) {
+        val attachmentText = when (attachment.attachments.orEmpty().firstOrNull()) {
             is ImageAttachment -> context.getString(R.string.msg_quote_photo)
             is VideoAttachment -> context.getString(R.string.msg_quote_video)
             is AudioAttachment -> context.getString(R.string.msg_quote_audio)

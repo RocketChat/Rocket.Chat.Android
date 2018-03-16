@@ -122,19 +122,22 @@ class ChatRoomAdapter(
 
     fun updateItem(message: BaseViewModel<*>) {
         var index = dataSet.indexOfLast { it.messageId == message.messageId }
-        val indexOfFirst = dataSet.indexOfFirst { it.messageId == message.messageId }
+        val indexOfNext = dataSet.indexOfFirst { it.messageId == message.messageId }
         Timber.d("index: $index")
         if (index > -1) {
             dataSet[index] = message
-            notifyItemChanged(index)
-            while (dataSet[index].nextDownStreamMessage != null) {
-                dataSet[index].nextDownStreamMessage!!.reactions = message.reactions
-                notifyItemChanged(--index)
+            dataSet.forEachIndexed { index, viewModel ->
+                if (viewModel.messageId == message.messageId) {
+                    if (viewModel.nextDownStreamMessage == null) {
+                        viewModel.reactions = message.reactions
+                    }
+                    notifyItemChanged(index)
+                }
             }
             // Delete message only if current is a system message update, i.e.: Message Removed
-            if (message.message.isSystemMessage() && indexOfFirst > -1 && indexOfFirst != index) {
-                dataSet.removeAt(indexOfFirst)
-                notifyItemRemoved(indexOfFirst)
+            if (message.message.isSystemMessage() && indexOfNext > -1 && indexOfNext != index) {
+                dataSet.removeAt(indexOfNext)
+                notifyItemRemoved(indexOfNext)
             }
         }
     }
