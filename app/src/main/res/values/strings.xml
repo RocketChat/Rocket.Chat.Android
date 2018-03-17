@@ -116,4 +116,6 @@
     <string name="status_disconnecting">disconnecting</string>
     <string name="status_waiting">connecting in %d seconds</string>
 
+    <string name="customtab_bookmark_label">Bookmark</string>
+
 </resources>

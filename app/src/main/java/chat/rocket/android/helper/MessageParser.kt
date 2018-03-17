@@ -20,6 +20,7 @@ import android.util.Patterns
 import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.customtab.CustomTabHelper
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
@@ -173,10 +174,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
                             with (view) {
-                                val tabsbuilder = CustomTabsIntent.Builder()
-                                tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
-                                val customTabsIntent = tabsbuilder.build()
-                                customTabsIntent.launchUrl(context, getUri(link))
+                                CustomTabHelper.openCustomTab(context, getUri(link))
                             }
                         }
                     }, matcher.start(0), matcher.end(0))

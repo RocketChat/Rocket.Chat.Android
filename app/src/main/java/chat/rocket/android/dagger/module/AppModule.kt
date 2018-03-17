@@ -18,6 +18,7 @@ import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.*
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.TimberLogger
+import chat.rocket.android.room.weblink.WebLinkDao
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.TokenRepository
@@ -78,6 +79,12 @@ class AppModule {
     @Singleton
     fun provideServerDao(database: RocketChatDatabase): ServerDao {
         return database.serverDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWebLinkDao(database: RocketChatDatabase): WebLinkDao {
+        return database.webLinkDao()
     }
 
     @Provides

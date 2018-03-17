@@ -114,4 +114,6 @@
     <string name="status_authenticating">autenticando</string>
     <string name="status_disconnecting">desconectando</string>
     <string name="status_waiting">conectando em %d segundos</string>
+
+    <string name="customtab_bookmark_label">marca páginas</string>
 </resources>
