@@ -1,13 +1,12 @@
 package chat.rocket.android.room.weblink
 
 import android.arch.persistence.room.*
-import io.reactivex.Single
 
 @Dao
 interface WebLinkDao {
 
     @Query("SELECT * FROM weblink")
-    fun getWebLinks(): Single<List<WebLinkEntity>>
+    fun getWebLinks(): List<WebLinkEntity>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertWebLink(webLinkEntity: WebLinkEntity)

@@ -5,9 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import chat.rocket.android.app.RocketChatApplication
-import chat.rocket.android.util.TimberLogger
 import chat.rocket.android.room.weblink.WebLinkDao
 import chat.rocket.android.room.weblink.WebLinkEntity
+import chat.rocket.android.util.TimberLogger
 import dagger.android.DaggerBroadcastReceiver
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

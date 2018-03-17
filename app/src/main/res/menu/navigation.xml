@@ -17,6 +17,11 @@
             android:title="@string/title_profile" />
 
         <item
+            android:id="@+id/action_web_links"
+            android:icon="@drawable/ic_bookmark_black"
+            android:title="@string/title_web_links" />
+
+        <item
             android:id="@+id/action_settings"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/title_settings"/>
