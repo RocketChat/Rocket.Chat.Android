@@ -8,6 +8,7 @@ import android.net.Uri
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.content.res.ResourcesCompat
 import chat.rocket.android.R
+import chat.rocket.android.util.TimberLogger
 
 object CustomTabHelper {
     fun openCustomTab(context: Context, uri: Uri) {
@@ -25,9 +26,10 @@ object CustomTabHelper {
     }
 
     private fun createPendingIntent(context: Context, actionSourceId: Int, uri: Uri): PendingIntent {
+        TimberLogger.debug("weblink : pending intent : " + uri.toString())
         val actionIntent = Intent(context.applicationContext, ActionBroadcastReceiver::class.java)
         actionIntent.putExtra(ActionBroadcastReceiver.KEY_ACTION_SOURCE, actionSourceId)
         actionIntent.putExtra(ActionBroadcastReceiver.KEY_WEB_LINK_URI, uri)
-        return PendingIntent.getBroadcast(context.applicationContext, actionSourceId, actionIntent, 0)
+        return PendingIntent.getBroadcast(context.applicationContext, actionSourceId, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 }
