@@ -99,6 +99,11 @@ class ChatRoomAdapter(
         }
     }
 
+    override fun onViewRecycled(holder: BaseViewHolder<*>?) {
+        (holder as? VideoAttachmentViewHolder)?.unbindView()
+        super.onViewRecycled(holder)
+    }
+
     fun appendData(dataSet: List<BaseViewModel<*>>) {
         val previousDataSetSize = this.dataSet.size
         this.dataSet.addAll(dataSet)
