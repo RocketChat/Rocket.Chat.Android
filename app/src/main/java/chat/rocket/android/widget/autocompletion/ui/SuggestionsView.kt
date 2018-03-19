@@ -36,7 +36,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
     private val externalProvidersByToken = hashMapOf<String, ((query: String) -> Unit)>()
     private val localProvidersByToken = hashMapOf<String, HashMap<String, List<SuggestionModel>>>()
     private var editor: WeakReference<EditText>? = null
-    private var completionStartIndex = AtomicInteger(NO_STATE_INDEX)
+    private var completionOffset = AtomicInteger(NO_STATE_INDEX)
 
     companion object {
         private val SLIDE_TRANSITION = Slide(Gravity.BOTTOM).setDuration(200)
@@ -62,7 +62,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
         // If we have a deletion.
         if (after == 0) {
             val deleted = s.subSequence(start, start + count).toString()
-            if (adaptersByToken.containsKey(deleted) && completionStartIndex.get() > NO_STATE_INDEX) {
+            if (adaptersByToken.containsKey(deleted) && completionOffset.get() > NO_STATE_INDEX) {
                 // We have removed the '@', '#' or any other action token so halt completion.
                 cancelSuggestions(true)
             }
@@ -73,11 +73,16 @@ class SuggestionsView : FrameLayout, TextWatcher {
         // If we don't have any adapter bound to any token bail out.
         if (adaptersByToken.isEmpty()) return
 
+        if (editor?.get() != null && editor?.get()?.selectionStart ?: 0 <= completionOffset.get()) {
+            completionOffset.set(NO_STATE_INDEX)
+            collapse()
+        }
+
         val new = s.subSequence(start, start + count).toString()
         if (adaptersByToken.containsKey(new)) {
             swapAdapter(getAdapterForToken(new)!!)
-            completionStartIndex.compareAndSet(NO_STATE_INDEX, start + 1)
-            editor?.let {
+            completionOffset.compareAndSet(NO_STATE_INDEX, start + 1)
+            this.editor?.let {
                 // Disable keyboard suggestions when autocompleting.
                 val editText = it.get()
                 if (editText != null) {
@@ -93,9 +98,9 @@ class SuggestionsView : FrameLayout, TextWatcher {
             return
         }
 
-        val prefixEndIndex = editor?.get()?.selectionStart ?: NO_STATE_INDEX
-        if (prefixEndIndex == NO_STATE_INDEX || prefixEndIndex < completionStartIndex.get()) return
-        val prefix = s.subSequence(completionStartIndex.get(), editor?.get()?.selectionStart ?: completionStartIndex.get()).toString()
+        val prefixEndIndex = this.editor?.get()?.selectionStart ?: NO_STATE_INDEX
+        if (prefixEndIndex == NO_STATE_INDEX || prefixEndIndex < completionOffset.get()) return
+        val prefix = s.subSequence(completionOffset.get(), this.editor?.get()?.selectionStart ?: completionOffset.get()).toString()
         recyclerView.adapter?.let {
             it as SuggestionsAdapter
             // we need to look up only after the '@'
@@ -140,7 +145,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
             val adapter = adapter(token)
             localProvidersByToken.getOrPut(token, { hashMapOf() })
                     .put(adapter.prefix(), list)
-            if (completionStartIndex.get() > NO_STATE_INDEX && adapter.itemCount == 0) expand()
+            if (completionOffset.get() > NO_STATE_INDEX && adapter.itemCount == 0) expand()
             adapter.addItems(list)
         }
         return this
@@ -172,7 +177,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
         // Reset completion start index only if we've deleted the token that triggered completion or
         // we finished the completion process.
         if (haltCompletion) {
-            completionStartIndex.set(NO_STATE_INDEX)
+            completionOffset.set(NO_STATE_INDEX)
         }
         collapse()
         // Re-enable keyboard suggestions.
@@ -185,7 +190,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
     private fun insertSuggestionOnEditor(item: SuggestionModel) {
         editor?.get()?.let {
             val suggestionText = item.text
-            it.text.replace(completionStartIndex.get(), it.selectionStart, "$suggestionText ")
+            it.text.replace(completionOffset.get(), it.selectionStart, "$suggestionText ")
         }
     }
 
