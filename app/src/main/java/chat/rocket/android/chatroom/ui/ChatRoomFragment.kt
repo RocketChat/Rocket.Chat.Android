@@ -493,7 +493,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupSuggestionsView() {
         suggestions_view.anchor(text_message)
-                .bindTokenAdapter(PeopleSuggestionsAdapter())
+                .bindTokenAdapter(PeopleSuggestionsAdapter(context!!))
                 .bindTokenAdapter(RoomSuggestionsAdapter())
                 .addSuggestionProviderAction("@") { query ->
                     if (query.isNotEmpty()) {

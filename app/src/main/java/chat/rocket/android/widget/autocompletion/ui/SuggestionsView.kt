@@ -94,7 +94,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
 
         if (new.startsWith(" ")) {
             // just halts the completion execution
-            cancelSuggestions(false)
+            cancelSuggestions(true)
             return
         }
 

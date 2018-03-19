@@ -6,21 +6,28 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 internal class StringMatchingCompletionStrategy : CompletionStrategy {
     private val list = CopyOnWriteArrayList<SuggestionModel>()
+    private val pinnedList = mutableListOf<SuggestionModel>()
 
     override fun autocompleteItems(prefix: String): List<SuggestionModel> {
-        return list.filter {
+        val partialResult = list.filter {
             it.searchList.forEach { word ->
                 if (word.contains(prefix, ignoreCase = true)) {
                     return@filter true
                 }
             }
             false
-        }.sortedByDescending { it.pinned }.take(5)
+        }.sortedByDescending { it.pinned }
+        val result = partialResult.take(5).toMutableList()
+        result.addAll(pinnedList)
+        return result.toList()
     }
 
     override fun addAll(list: List<SuggestionModel>) {
-//        this.list.removeAll { !it.pinned }
         this.list.addAllAbsent(list)
+    }
+
+    override fun addPinned(list: List<SuggestionModel>) {
+        this.pinnedList.addAll(list)
     }
 
     override fun getItem(prefix: String, position: Int): SuggestionModel {

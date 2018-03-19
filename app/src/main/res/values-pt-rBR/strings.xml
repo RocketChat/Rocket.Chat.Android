@@ -117,4 +117,8 @@
     <string name="status_authenticating">autenticando</string>
     <string name="status_disconnecting">desconectando</string>
     <string name="status_waiting">conectando em %d segundos</string>
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">Notifica todos nesta sala</string>
+    <string name="suggest_here_description">Notifica usuários ativos nesta sala</string>
 </resources>

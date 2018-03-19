@@ -12,9 +12,10 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(val token: Stri
     private var itemType: Type? = null
     private var itemClickListener: ItemClickListener? = null
     private var providerExternal: ((query: String) -> Unit)? = null
+    private var pinnedSuggestions: List<SuggestionModel>? = null
     private var prefix: String by Delegates.observable("", { _, _, _ ->
         strategy.autocompleteItems(prefix)
-        notifyItemRangeChanged(0, 5)
+        notifyDataSetChanged()
     })
 
     init {
@@ -33,6 +34,15 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(val token: Stri
 
     private fun getItem(position: Int): SuggestionModel {
         return strategy.autocompleteItems(prefix)[position]
+    }
+
+    /**
+     * Set suggestions that should always appear when prompted.
+     *
+     * @param suggestions The list of suggestions that will be pinned.
+     */
+    fun setPinnedSuggestions(suggestions: List<SuggestionModel>) {
+        this.strategy.addPinned(suggestions)
     }
 
     fun autocomplete(prefix: String) {

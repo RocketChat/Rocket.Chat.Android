@@ -119,4 +119,8 @@
     <string name="status_disconnecting">disconnecting</string>
     <string name="status_waiting">connecting in %d seconds</string>
 
+    <!--Suggestions-->
+    <string name="suggest_all_description">Notify all in this room</string>
+    <string name="suggest_here_description">Notify active users in this room</string>
+
 </resources>
