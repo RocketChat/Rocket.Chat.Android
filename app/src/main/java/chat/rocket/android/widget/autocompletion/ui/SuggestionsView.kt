@@ -21,12 +21,11 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import chat.rocket.android.R
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
+import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter.Companion.CONSTRAINT_BOUND_TO_START
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * This is a special index that means we're not at an autocompleting state.
- */
+//  This is a special index that means we're not at an autocompleting state.
 private const val NO_STATE_INDEX = 0
 
 class SuggestionsView : FrameLayout, TextWatcher {
@@ -37,6 +36,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
     private val localProvidersByToken = hashMapOf<String, HashMap<String, List<SuggestionModel>>>()
     private var editor: WeakReference<EditText>? = null
     private var completionOffset = AtomicInteger(NO_STATE_INDEX)
+    private var maxHeight: Int = 0
 
     companion object {
         private val SLIDE_TRANSITION = Slide(Gravity.BOTTOM).setDuration(200)
@@ -80,6 +80,10 @@ class SuggestionsView : FrameLayout, TextWatcher {
 
         val new = s.subSequence(start, start + count).toString()
         if (adaptersByToken.containsKey(new)) {
+            val constraint = adapter(new).constraint
+            if (constraint == CONSTRAINT_BOUND_TO_START && start != 0) {
+                return
+            }
             swapAdapter(getAdapterForToken(new)!!)
             completionOffset.compareAndSet(NO_STATE_INDEX, start + 1)
             this.editor?.let {
@@ -115,9 +119,18 @@ class SuggestionsView : FrameLayout, TextWatcher {
         }
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        if (maxHeight > 0) {
+            val hSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST)
+            super.onMeasure(widthMeasureSpec, hSpec)
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
+    }
+
     private fun swapAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
         recyclerView.adapter = adapter
-        // Don't override if user set an item click listener already/
+        // Don't override if user has set an item click listener already
         if (!adapter.hasItemClickListener()) {
             setOnItemClickListener(adapter) {
                 // set default item click behavior
@@ -126,16 +139,16 @@ class SuggestionsView : FrameLayout, TextWatcher {
         return this
     }
 
-    fun getAdapterForToken(token: String): SuggestionsAdapter<*>? = adaptersByToken.get(token)
+    private fun getAdapterForToken(token: String): SuggestionsAdapter<*>? = adaptersByToken.get(token)
 
-    fun anchor(editText: EditText): SuggestionsView {
+    fun anchorTo(editText: EditText): SuggestionsView {
         editText.removeTextChangedListener(this)
         editText.addTextChangedListener(this)
         editor = WeakReference(editText)
         return this
     }
 
-    fun bindTokenAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
+    fun addTokenAdapter(adapter: SuggestionsAdapter<*>): SuggestionsView {
         adaptersByToken.getOrPut(adapter.token, { adapter })
         return this
     }
@@ -144,10 +157,17 @@ class SuggestionsView : FrameLayout, TextWatcher {
         if (list.isNotEmpty()) {
             val adapter = adapter(token)
             localProvidersByToken.getOrPut(token, { hashMapOf() })
-                    .put(adapter.prefix(), list)
+                    .put(adapter.term(), list)
             if (completionOffset.get() > NO_STATE_INDEX && adapter.itemCount == 0) expand()
             adapter.addItems(list)
         }
+        return this
+    }
+
+    fun setMaximumHeight(height: Int): SuggestionsView {
+        check(height > 0)
+        this.maxHeight = height
+        requestLayout()
         return this
     }
 
@@ -165,6 +185,9 @@ class SuggestionsView : FrameLayout, TextWatcher {
     }
 
     fun addSuggestionProviderAction(token: String, provider: (query: String) -> Unit): SuggestionsView {
+        if (adaptersByToken[token] == null) {
+            throw IllegalStateException("token \"$token\" suggestion provider added without adapter")
+        }
         externalProvidersByToken.getOrPut(token, { provider })
         return this
     }

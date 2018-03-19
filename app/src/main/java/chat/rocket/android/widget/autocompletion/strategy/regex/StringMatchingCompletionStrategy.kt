@@ -2,11 +2,16 @@ package chat.rocket.android.widget.autocompletion.strategy.regex
 
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
 import chat.rocket.android.widget.autocompletion.strategy.CompletionStrategy
+import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter.Companion.RESULT_COUNT_UNLIMITED
 import java.util.concurrent.CopyOnWriteArrayList
 
-internal class StringMatchingCompletionStrategy : CompletionStrategy {
+internal class StringMatchingCompletionStrategy(private val threshold: Int = RESULT_COUNT_UNLIMITED) : CompletionStrategy {
     private val list = CopyOnWriteArrayList<SuggestionModel>()
     private val pinnedList = mutableListOf<SuggestionModel>()
+
+    init {
+        check(threshold >= RESULT_COUNT_UNLIMITED)
+    }
 
     override fun autocompleteItems(prefix: String): List<SuggestionModel> {
         val partialResult = list.filter {
@@ -17,9 +22,13 @@ internal class StringMatchingCompletionStrategy : CompletionStrategy {
             }
             false
         }.sortedByDescending { it.pinned }
-        val result = partialResult.take(5).toMutableList()
-        result.addAll(pinnedList)
-        return result.toList()
+        return if (threshold == RESULT_COUNT_UNLIMITED)
+            partialResult.toList()
+        else {
+            val result = partialResult.take(threshold).toMutableList()
+            result.addAll(pinnedList)
+            result.toList()
+        }
     }
 
     override fun addAll(list: List<SuggestionModel>) {
