@@ -120,7 +120,6 @@ class ChatRoomAdapter(
         val indexOfFirst = dataSet.indexOfFirst { it.messageId == message.messageId }
         Timber.d("index: $index")
         if (index > -1) {
-            message.nextDownStreamMessage = dataSet[index].nextDownStreamMessage
             dataSet[index] = message
             notifyItemChanged(index)
             while (dataSet[index].nextDownStreamMessage != null) {

@@ -96,31 +96,53 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseViewModel<*>? {
-        val attachmentUrl = attachmentUrl("$baseUrl${attachment.url}")
-        val attachmentTitle = attachment.title
-        val id = "${message.id}_${attachment.titleLink}".hashCode().toLong()
+        val attachmentUrl = attachmentUrl(attachment)
+        val attachmentTitle = attachmentTitle(attachment)
+        val id = attachmentId(message, attachment)
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle ?: "", id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message))
             is VideoAttachment -> VideoAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle ?: "", id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message))
             is AudioAttachment -> AudioAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle ?: "", id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message))
             else -> null
         }
     }
 
-    private fun attachmentUrl(url: String): String {
-        var response = url
-        val httpUrl = HttpUrl.parse(url)
-        httpUrl?.let {
-            response = it.newBuilder().apply {
-                addQueryParameter("rc_uid", token?.userId)
-                addQueryParameter("rc_token", token?.authToken)
-            }.build().toString()
-        }
+    private fun attachmentId(message: Message, attachment: FileAttachment): Long {
+        return "${message.id}_${attachment.url}".hashCode().toLong()
+    }
 
-        return response
+    private fun attachmentTitle(attachment: FileAttachment): CharSequence {
+        return with(attachment) {
+            title?.let { return@with it }
+
+            val fileUrl = HttpUrl.parse(url)
+            fileUrl?.let {
+                return@with it.pathSegments().last()
+            }
+
+            return@with ""
+        }
+    }
+
+    private fun attachmentUrl(attachment: FileAttachment): String {
+        return with(attachment) {
+            if (url.startsWith("http")) return@with url
+
+            val fullUrl = "$baseUrl$url"
+            val httpUrl = HttpUrl.parse(fullUrl)
+            httpUrl?.let {
+                return@with it.newBuilder().apply {
+                    addQueryParameter("rc_uid", token?.userId)
+                    addQueryParameter("rc_token", token?.authToken)
+                }.build().toString()
+            }
+
+            // Fallback to baseUrl + url
+            return@with fullUrl
+        }
     }
 
     private suspend fun mapMessage(message: Message): MessageViewModel = withContext(CommonPool) {

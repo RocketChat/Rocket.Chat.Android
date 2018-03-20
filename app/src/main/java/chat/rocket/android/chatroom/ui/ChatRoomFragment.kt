@@ -15,11 +15,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
+import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -37,7 +40,12 @@ import kotlinx.android.synthetic.main.message_list.*
 import timber.log.Timber
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, isChatRoomReadOnly: Boolean, chatRoomLastSeen: Long): Fragment {
+fun newInstance(chatRoomId: String,
+                chatRoomName: String,
+                chatRoomType: String,
+                isChatRoomReadOnly: Boolean,
+                chatRoomLastSeen: Long,
+                isSubscribed: Boolean = true): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -45,6 +53,7 @@ fun newInstance(chatRoomId: String, chatRoomName: String, chatRoomType: String, 
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
             putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
             putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
+            putBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED, isSubscribed)
         }
     }
 }
@@ -55,17 +64,18 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
+private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
     @Inject lateinit var presenter: ChatRoomPresenter
     @Inject lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
-
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
-    private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
+    private var isSubscribed: Boolean = true
     private var isChatRoomReadOnly: Boolean = false
+    private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var chatRoomLastSeen: Long = -1
     private lateinit var actionSnackbar: ActionSnackbar
     private var citation: String? = null
@@ -91,6 +101,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             chatRoomName = bundle.getString(BUNDLE_CHAT_ROOM_NAME)
             chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
             isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
+            isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
@@ -105,10 +116,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setupToolbar(chatRoomName)
 
         presenter.loadMessages(chatRoomId, chatRoomType)
-
+        presenter.loadChatRooms()
         setupRecyclerView()
         setupFab()
         setupMessageComposer()
+        setupSuggestionsView()
         setupActionSnackbar()
     }
 
@@ -174,11 +186,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
 
         // track the message sent immediately after the current message
-        var prevMessageViewModel : MessageViewModel? = null
+        var prevMessageViewModel: MessageViewModel? = null
 
-        //Loop over received messages to determine first unread
+        // Loop over received messages to determine first unread
         for (i in dataSet.indices) {
             val msgModel = dataSet[i]
+
             if (msgModel is MessageViewModel) {
                 val msg = msgModel.rawData
                 if (msg.timestamp < chatRoomLastSeen) {
@@ -217,12 +230,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             if (oldMessagesCount == 0 && dataSet.isNotEmpty()) {
                 recycler_view.scrollToPosition(0)
             }
+            presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
         }
     }
 
     override fun sendMessage(text: String) {
         if (!text.isBlank()) {
-            presenter.sendMessage(chatRoomId, text, editingMessageId)
+            if (!text.startsWith("/")) {
+                presenter.sendMessage(chatRoomId, text, editingMessageId)
+            } else {
+                presenter.runCommand(text, chatRoomId)
+            }
         }
     }
 
@@ -290,6 +308,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showMessage(resId: Int) = showToast(resId)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    override fun populatePeopleSuggestions(members: List<PeopleSuggestionViewModel>) {
+        suggestions_view.addItems("@", members)
+    }
+
+    override fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>) {
+        suggestions_view.addItems("#", chatRooms)
+    }
+
+    override fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>) {
+        suggestions_view.addItems("/", commands)
+    }
 
     override fun copyToClipboard(message: String) {
         activity?.apply {
@@ -380,6 +410,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
+    override fun onJoined() {
+        input_container.setVisible(true)
+        button_join_chat.setVisible(false)
+        isSubscribed = true
+        setupMessageComposer()
+    }
+
     private val dismissStatus = {
         connection_status_text.fadeOut()
     }
@@ -410,6 +447,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         if (isChatRoomReadOnly) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
+        } else if (!isSubscribed) {
+            input_container.setVisible(false)
+            button_join_chat.setVisible(true)
+            button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
             button_send.alpha = 0f
             button_send.setVisible(false)
@@ -476,14 +517,37 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
+    private fun setupSuggestionsView() {
+        suggestions_view.anchorTo(text_message)
+                .setMaximumHeight(resources.getDimensionPixelSize(R.dimen.suggestions_box_max_height))
+                .addTokenAdapter(PeopleSuggestionsAdapter())
+                .addTokenAdapter(CommandSuggestionsAdapter())
+                .addTokenAdapter(RoomSuggestionsAdapter())
+                .addSuggestionProviderAction("@") { query ->
+                    if (query.isNotEmpty()) {
+                        presenter.spotlight(query, PEOPLE, true)
+                    }
+                }
+                .addSuggestionProviderAction("#") { query ->
+                    if (query.isNotEmpty()) {
+                        presenter.loadChatRooms()
+                    }
+                }
+                .addSuggestionProviderAction("/") { _ ->
+                    presenter.loadCommands()
+                }
+
+        presenter.loadCommands()
+    }
+
     private fun openEmojiKeyboardPopup() {
-        if (!emojiKeyboardPopup.isShowing()) {
+        if (!emojiKeyboardPopup.isShowing) {
             // If keyboard is visible, simply show the  popup
             if (emojiKeyboardPopup.isKeyboardOpen) {
                 emojiKeyboardPopup.showAtBottom()
             } else {
                 // Open the text keyboard first and immediately after that show the emoji popup
-                text_message.setFocusableInTouchMode(true)
+                text_message.isFocusableInTouchMode = true
                 text_message.requestFocus()
                 emojiKeyboardPopup.showAtBottomPending()
                 KeyboardHelper.showSoftKeyboard(text_message)
