@@ -24,10 +24,17 @@ class CategoryPagerAdapter(val listener: EmojiKeyboardListener) : PagerAdapter()
         val recycler = view.findViewById(R.id.emojiRecyclerView) as RecyclerView
         val adapter = EmojiAdapter(layoutManager.spanCount, listener)
         val category = EmojiCategory.values().get(position)
+        val tv_recent_emoji : TextView = view.findViewById(R.id.tv_recent_emoji)
         val emojis = if (category != EmojiCategory.RECENTS) {
             EmojiRepository.getEmojisByCategory(category)
         } else {
             EmojiRepository.getRecents()
+        }
+        val recentEmojiSize = EmojiRepository.getRecents().size
+        if (category == EmojiCategory.RECENTS && recentEmojiSize == 0){
+            tv_recent_emoji.visibility = View.VISIBLE
+        }else{
+            tv_recent_emoji.visibility = View.GONE
         }
         adapter.addEmojis(emojis)
         recycler.layoutManager = layoutManager
