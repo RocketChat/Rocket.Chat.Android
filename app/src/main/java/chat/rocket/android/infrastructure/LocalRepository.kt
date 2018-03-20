@@ -17,3 +17,5 @@ interface LocalRepository {
 
     fun clearAllFromServer(server: String)
 }
+
+fun LocalRepository.checkIfMyself(username: String) = get(LocalRepository.USERNAME_KEY) == username

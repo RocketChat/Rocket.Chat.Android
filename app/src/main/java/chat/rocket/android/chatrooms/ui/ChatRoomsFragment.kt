@@ -12,6 +12,7 @@ import android.view.*
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.*
@@ -31,6 +32,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var presenter: ChatRoomsPresenter
     @Inject lateinit var serverInteractor: GetCurrentServerInteractor
     @Inject lateinit var settingsRepository: SettingsRepository
+    @Inject lateinit var localRepository: LocalRepository
     private var searchView: SearchView? = null
     private val handler = Handler()
 
@@ -156,7 +158,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
             recycler_view.adapter = ChatRoomsAdapter(this,
-                    settingsRepository.get(serverInteractor.get()!!)!!) { chatRoom ->
+                    settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom ->
                 presenter.loadChatRoom(chatRoom)
             }
         }
