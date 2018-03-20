@@ -169,17 +169,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showMessages(dataSet: List<BaseViewModel<*>>) {
 
         var prevMsgModel = dataSet[0]
-        //checking for all messages to assign true to the required showDayMaker
+
+        // checking for all messages to assign true to the required showDayMaker
         for (i in dataSet.indices) {
             val msgModel = dataSet[i]
-            if(i>0){
-                prevMsgModel = dataSet[i-1]
+            if (i > 0) {
+                prevMsgModel = dataSet[i - 1]
             }
 
-            if (msgModel is MessageViewModel && prevMsgModel is MessageViewModel){
+            if (msgModel is MessageViewModel && prevMsgModel is MessageViewModel) {
                 val currentDayMarkerText = msgModel.currentDayMarkerText
                 val previousDayMarkerText = prevMsgModel.currentDayMarkerText
-                if(previousDayMarkerText!=currentDayMarkerText) {
+                if (previousDayMarkerText != currentDayMarkerText) {
                     prevMsgModel.showDayMarker = true
                 }
             }
