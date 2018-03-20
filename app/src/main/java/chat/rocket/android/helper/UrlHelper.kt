@@ -12,7 +12,7 @@ object UrlHelper {
      * @return The avatar URL.
      */
     fun getAvatarUrl(serverUrl: String, avatarName: String, format: String = "jpeg"): String =
-        removeTrailingSlash(serverUrl) + "/avatar/" + removeTrailingSlash(avatarName) + "?format=$format"
+            removeTrailingSlash(serverUrl) + "/avatar/" + removeTrailingSlash(avatarName) + "?format=$format"
 
     /**
      * Returns the CAS URL.
@@ -23,7 +23,7 @@ object UrlHelper {
      * @return The avatar URL.
      */
     fun getCasUrl(casLoginUrl: String, serverUrl: String, token: String): String =
-        removeTrailingSlash(casLoginUrl) + "?service=" + removeTrailingSlash(serverUrl) + "/_cas/" + token
+            removeTrailingSlash(casLoginUrl) + "?service=" + removeTrailingSlash(serverUrl) + "/_cas/" + token
 
     /**
      * Returns the server's Terms of Service URL.
@@ -48,8 +48,8 @@ object UrlHelper {
      * @return An URL without trailing slash.
      */
     fun removeTrailingSlash(serverUrl: String): String {
-        return if (serverUrl[serverUrl.length - 1] == '/') {
-            serverUrl.replace("/+$", "")
+        return if (serverUrl.endsWith("/")) {
+            serverUrl.substring(0, serverUrl.length - 1)
         } else {
             serverUrl
         }

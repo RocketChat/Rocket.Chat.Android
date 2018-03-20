@@ -103,7 +103,9 @@ dependencies {
     implementation libraries.aVLoadingIndicatorView
     implementation libraries.stetho
 
-    implementation 'com.android.support:customtabs:27.0.2'
+    implementation libraries.customtab
+    implementation libraries.jsoup
+    implementation libraries.linkpreview
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true

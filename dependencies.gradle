@@ -32,6 +32,8 @@ ext {
         flexbox                : '0.3.2',
         customtab              : '27.0.2',
         stetho                 : '1.5.0',
+        jsoup                  : '1.8.3',
+        linkpreview            : '2.0.0',
 
         // For testing
         junit                  : '4.12',
@@ -98,6 +100,8 @@ ext {
 
         customtab              : "com.android.support:customtabs:${versions.customtab}",
         stetho                 : "com.facebook.stetho:stetho:${versions.stetho}",
+        jsoup                  : "org.jsoup:jsoup:${versions.jsoup}",
+        linkpreview            : "com.leocardz:link-preview:${versions.linkpreview}@aar",
 
         // For testing
         junit         : "junit:junit:$versions.junit",

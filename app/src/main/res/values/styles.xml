@@ -88,8 +88,18 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
-    <style name="WebLink.TextView" parent="android:TextAppearance">
+    <style name="WebLink.TextView.Title" parent="android:TextAppearance">
         <item name="android:textSize">16sp</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="WebLink.TextView.Description" parent="android:TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="WebLink.TextView.Link" parent="android:TextAppearance">
+        <item name="android:textSize">12sp</item>
         <item name="android:maxLines">1</item>
     </style>
 

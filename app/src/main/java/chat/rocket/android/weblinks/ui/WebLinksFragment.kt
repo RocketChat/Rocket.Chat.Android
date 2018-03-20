@@ -1,6 +1,5 @@
 package chat.rocket.android.weblinks.ui
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -9,13 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
-import chat.rocket.android.customtab.CustomTabHelper
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.room.weblink.WebLinkEntity
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.weblinks.presentation.WebLinksPresenter
 import chat.rocket.android.weblinks.presentation.WebLinksView
+import chat.rocket.android.webview.weblink.ui.webViewIntent
 import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.app_bar.*
@@ -68,7 +67,9 @@ class WebLinksFragment : Fragment(), WebLinksView {
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
             recycler_view.adapter = WebLinksAdapter(this,
                     { webLink ->
-                        run { CustomTabHelper.openCustomTab(this, Uri.parse(webLink.link)) }
+                        run {
+                            startActivity(this.webViewIntent(webLink.link, webLink.title))
+                        }
                     })
         }
     }

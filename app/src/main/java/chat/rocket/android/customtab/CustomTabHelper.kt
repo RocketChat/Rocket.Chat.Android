@@ -20,6 +20,7 @@ object CustomTabHelper {
         val icon = BitmapFactory.decodeResource(context.resources, R.drawable.ic_bookmark)
         val pendingIntent = createPendingIntent(context, ActionBroadcastReceiver.ACTION_ACTION_BUTTON, uri)
         customTabIntentBuilder.setActionButton(icon, actionLabel, pendingIntent)
+        customTabIntentBuilder.addDefaultShareMenuItem()
 
         val customTabIntent = customTabIntentBuilder.build()
         customTabIntent.launchUrl(context, uri)
