@@ -131,6 +131,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         presenter.unsubscribeMessages(chatRoomId)
         handler.removeCallbacksAndMessages(null)
         unsubscribeTextMessage()
+
+        // Hides the keyboard (if it's opened) before going to any view.
+        activity?.apply {
+            hideKeyboard()
+        }
         super.onDestroyView()
     }
 
