@@ -1,5 +1,6 @@
 package chat.rocket.android.chatrooms.presentation
 
+import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.*
@@ -30,6 +31,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
                                              private val refreshSettingsInteractor: RefreshSettingsInteractor,
+                                             private val viewModelMapper: ViewModelMapper,
                                              settingsRepository: SettingsRepository,
                                              factory: ConnectionManagerFactory) {
     private val manager: ConnectionManager = factory.create(serverInteractor.get()!!)
@@ -89,9 +91,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     val chatRoomsCombined = mutableListOf<ChatRoom>()
                     chatRoomsCombined.addAll(usersToChatRooms(users))
                     chatRoomsCombined.addAll(roomsToChatRooms(rooms))
-                    view.updateChatRooms(chatRoomsCombined)
+                    view.updateChatRooms(getChatRoomsWithPreviews(chatRoomsCombined.toList()))
                 } else {
-                    view.updateChatRooms(roomList)
+                    view.updateChatRooms(getChatRoomsWithPreviews(roomList))
                 }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
@@ -125,7 +127,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         val sortedRooms = sortRooms(chatRooms)
         Timber.d("Loaded rooms: ${sortedRooms.size}")
         saveChatRoomsInteractor.save(currentServer, sortedRooms)
-        return sortedRooms
+        return getChatRoomsWithPreviews(sortedRooms)
     }
 
     private fun sortRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
@@ -136,7 +138,17 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private fun updateRooms() {
         Timber.d("Updating Rooms")
         launch {
-            view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
+            view.updateChatRooms(getChatRoomsWithPreviews(getChatRoomsInteractor.get(currentServer)))
+        }
+    }
+
+    private suspend fun getChatRoomsWithPreviews(chatRooms: List<ChatRoom>): List<ChatRoom> {
+        return chatRooms.map {
+            if (it.lastMessage != null) {
+                it.copy(lastMessage = viewModelMapper.map(it.lastMessage!!).last().preview)
+            } else {
+                it
+            }
         }
     }
 

@@ -11,7 +11,10 @@ import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.baseUrl
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.TokenRepository
 import chat.rocket.core.model.Message
@@ -28,7 +31,6 @@ import javax.inject.Inject
 
 class ViewModelMapper @Inject constructor(private val context: Context,
                                           private val parser: MessageParser,
-                                          private val messagesRepository: MessagesRepository,
                                           tokenRepository: TokenRepository,
                                           localRepository: LocalRepository,
                                           serverInteractor: GetCurrentServerInteractor,
@@ -67,6 +69,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
 
         mapMessage(message).let {
+            if (list.size > 0) { it.preview = list[0].preview }
             list.add(it)
         }
 
@@ -87,10 +90,10 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val description = url.meta?.description
 
         return UrlPreviewViewModel(message, url, message.id, title, hostname, description, thumb,
-                getReactions(message))
+                getReactions(message), preview = message.copy(message = url.url))
     }
 
-    private fun mapAttachment(message: Message, attachment: Attachment): BaseViewModel<*>? {
+    private suspend fun mapAttachment(message: Message, attachment: Attachment): BaseViewModel<*>? {
         return when (attachment) {
             is FileAttachment -> mapFileAttachment(message, attachment)
             is MessageAttachment -> mapMessageAttachment(message, attachment)
@@ -98,19 +101,20 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
     }
 
-    private fun mapMessageAttachment(message: Message, attachment: MessageAttachment): MessageAttachmentViewModel {
+    private suspend fun mapMessageAttachment(message: Message, attachment: MessageAttachment): MessageAttachmentViewModel {
         val attachmentAuthor = attachment.author!!
         val time = getTime(attachment.timestamp!!)
         val attachmentText = when (attachment.attachments.orEmpty().firstOrNull()) {
-            is ImageAttachment -> context.getString(R.string.msg_quote_photo)
-            is VideoAttachment -> context.getString(R.string.msg_quote_video)
-            is AudioAttachment -> context.getString(R.string.msg_quote_audio)
+            is ImageAttachment -> context.getString(R.string.msg_preview_photo)
+            is VideoAttachment -> context.getString(R.string.msg_preview_video)
+            is AudioAttachment -> context.getString(R.string.msg_preview_audio)
             else -> attachment.text ?: ""
         }
-
-        return MessageAttachmentViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
+        val content = stripMessageQuotes(message)
+        return MessageAttachmentViewModel(message = content, rawData = message,
                 messageId = message.id, time = time, senderName = attachmentAuthor,
-                content = attachmentText, isPinned = message.pinned, reactions = getReactions(message))
+                content = attachmentText, isPinned = message.pinned, reactions = getReactions(message),
+                preview = message.copy(message = content.message))
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseViewModel<*>? {
@@ -119,11 +123,14 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val id = attachmentId(message, attachment)
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message),
+                    preview = message.copy(message = context.getString(R.string.msg_preview_photo)))
             is VideoAttachment -> VideoAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message),
+                    preview = message.copy(message = context.getString(R.string.msg_preview_video)))
             is AudioAttachment -> AudioAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message),
+                    preview = message.copy(message = context.getString(R.string.msg_preview_audio)))
             else -> null
         }
     }
@@ -167,12 +174,20 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
+        val preview = mapMessagePreview(message)
 
-        val content = getContent(context, getMessageWithoutQuoteMarkdown(message))
-        MessageViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
+        val content = getContent(stripMessageQuotes(message))
+        MessageViewModel(message = stripMessageQuotes(message), rawData = message,
                 messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
                 content = content, isPinned = message.pinned, reactions = getReactions(message),
-                isFirstUnread = false)
+                isFirstUnread = false, preview = preview)
+    }
+
+    private suspend fun mapMessagePreview(message: Message): Message {
+        return when (message.isSystemMessage()) {
+            false -> stripMessageQuotes(message)
+            true -> message.copy(message = getSystemMessage(message).toString())
+        }
     }
 
     private fun getReactions(message: Message): List<ReactionViewModel> {
@@ -194,7 +209,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         return reactions ?: emptyList()
     }
 
-    private fun getMessageWithoutQuoteMarkdown(message: Message): Message {
+    private suspend fun stripMessageQuotes(message: Message): Message {
         val baseUrl = settings.baseUrl()
         return message.copy(
                 message = message.message.replace("\\[\\s\\]\\($baseUrl.*\\)".toRegex(), "").trim()
@@ -225,14 +240,14 @@ class ViewModelMapper @Inject constructor(private val context: Context,
 
     private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
 
-    private suspend fun getContent(context: Context, message: Message): CharSequence {
+    private suspend fun getContent(message: Message): CharSequence {
         return when (message.isSystemMessage()) {
-            true -> getSystemMessage(message, context)
+            true -> getSystemMessage(message)
             false -> parser.renderMarkdown(message, currentUsername)
         }
     }
 
-    private fun getSystemMessage(message: Message, context: Context): CharSequence {
+    private fun getSystemMessage(message: Message): CharSequence {
         val content = when (message.type) {
         //TODO: Add implementation for Welcome type.
             is MessageType.MessageRemoved -> context.getString(R.string.message_removed)

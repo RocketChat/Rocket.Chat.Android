@@ -13,7 +13,8 @@ data class MessageAttachmentViewModel(
         val isPinned: Boolean,
         override var reactions: List<ReactionViewModel>,
         override var nextDownStreamMessage: BaseViewModel<*>? = null,
-        var messageLink: String? = null
+        var messageLink: String? = null,
+        override var preview: Message? = null
 ) : BaseViewModel<Message> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.MESSAGE_ATTACHMENT.viewType

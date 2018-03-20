@@ -288,7 +288,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 view.showReplyingAction(
                         username = user,
                         replyMarkdown = "[ ]($serverUrl/$room/$roomName?msg=$id) $mention ",
-                        quotedMessage = m.message
+                        quotedMessage = mapper.map(message).last().preview?.message ?: ""
                 )
             }
         }
