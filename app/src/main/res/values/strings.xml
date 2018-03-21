@@ -13,6 +13,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
+    <string name="title_alert_dialog">Alert</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -72,6 +73,7 @@
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_unread_messages">Unread messages</string>
+    <string name="msg_alert_dialog">You have chosen both the avatar image and avatar url. The url will be set as your profile image by default. Clear the avatar url field if you wish to set the selected image as your profile. Press OK to continue with your choice.</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -95,6 +97,8 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
+    <string name="action_ok_alert_dialog">Ok</string>
+    <string name="action_cancel_alert_dialog">Cancel</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>

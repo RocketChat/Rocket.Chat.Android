@@ -60,6 +60,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     private var imageObservable: Subject<Boolean> = PublishSubject.create()
 
+    private lateinit var alertDialogBuilder: AlertDialog.Builder
+    private lateinit var alertDialog: AlertDialog
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -76,6 +78,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
+        setupAlertDialog()
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
         }
@@ -103,8 +107,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_email.textContent = email
         text_avatar_url.textContent = ""
 
-        currentName = username
-        currentUsername = name
+        currentName = name
+        currentUsername = username
         currentEmail = email
         currentAvatar = avatarUrl
 
@@ -227,6 +231,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun showMessage(message: String) {
         isAvatarChanged = false
+        imageObservable.onNext(isAvatarChanged)
         showToast(message)
     }
 
@@ -243,9 +248,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, avatarImage, avatarImageUri)
-
-                mode.finish()
+                if (text_avatar_url.textContent != "" && text_avatar_url.textContent != currentAvatar && avatarImage != null) {
+                    alertDialog.show()
+                } else {
+                    presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, avatarImage, avatarImageUri)
+                    mode.finish()
+                }
                 true
             }
             else -> {
@@ -260,6 +268,25 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     private fun setupToolbar() {
         (activity as MainActivity).toolbar.title = getString(R.string.title_profile)
+    }
+
+    private fun setupAlertDialog() {
+        alertDialogBuilder = AlertDialog.Builder(activity)
+        alertDialogBuilder.setTitle(getString(R.string.title_alert_dialog))
+        alertDialogBuilder.setMessage(getString(R.string.msg_alert_dialog))
+        alertDialogBuilder.setPositiveButton(getString(R.string.action_ok_alert_dialog), object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                alertDialog.dismiss()
+                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, null, avatarImageUri)
+            }
+        })
+        alertDialogBuilder.setNegativeButton(getString(R.string.action_cancel_alert_dialog), object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                alertDialog.dismiss()
+            }
+        })
+
+        alertDialog = alertDialogBuilder.create()
     }
 
     private fun tintEditTextDrawableStart() {
@@ -286,23 +313,18 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             }
         })
 
-        Observables.combineLatest(text_name.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
-            if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail || isAvatarChanged) {
-                startActionMode()
-            } else if (!isAvatarChanged) {
-                finishActionMode()
-            }
-        })
         Observables.combineLatest(text_name.asObservable(),
                 text_username.asObservable(),
                 text_email.asObservable(),
-                text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
+                text_avatar_url.asObservable()
+        ) { text_name, text_username, text_email, text_avatar_url ->
+            Toast.makeText(activity, isAvatarChanged.toString(), Toast.LENGTH_LONG).show()
             return@combineLatest (text_name.toString() != currentName ||
                     text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail ||
                     (text_avatar_url.toString() != "" && text_avatar_url.toString() != currentAvatar))
         }.subscribe({ isValid ->
-            if (isValid) {
+            if (isValid || isAvatarChanged) {
                 startActionMode()
             } else {
                 finishActionMode()
@@ -319,14 +341,15 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun finishActionMode() = actionMode?.finish()
 
     private fun enableUserInput(value: Boolean) {
-        text_username.isEnabled = value
+        text_name.isEnabled = value
         text_username.isEnabled = value
         text_email.isEnabled = value
         image_avatar.isEnabled = value
-        if (value)
+        if (value) {
             image_avatar.alpha = 1.0f
-        else
+        } else {
             image_avatar.alpha = 0.5f
+        }
         text_avatar_url.isEnabled = value
 
     }
