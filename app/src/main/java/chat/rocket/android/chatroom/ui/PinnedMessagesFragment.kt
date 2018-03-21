@@ -97,13 +97,13 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
     private fun togglePinView(size: Int) {
      if (size == 0){
-         iv_pin_icon.visibility = View.VISIBLE
-         tv_pin_title.visibility = View.VISIBLE
-         tv_pin_description.visibility = View.VISIBLE
+         iv_pin_icon.setVisible(true)
+         tv_pin_title.setVisible(true)
+         tv_pin_description.setVisible(true)
      }else{
-         iv_pin_icon.visibility = View.GONE
-         tv_pin_title.visibility = View.GONE
-         tv_pin_description.visibility = View.GONE
+         iv_pin_icon.setVisible(false)
+         tv_pin_title.setVisible(false)
+         tv_pin_description.setVisible(false)
      }
     }
 }
