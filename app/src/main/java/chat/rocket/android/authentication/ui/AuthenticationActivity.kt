@@ -1,5 +1,7 @@
 package chat.rocket.android.authentication.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -19,7 +21,9 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
-        presenter.loadCredentials { authenticated ->
+        val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
+
+        presenter.loadCredentials(newServer) { authenticated ->
             if (authenticated) {
                 // just call onCreate, and the presenter will call the navigator...
                 super.onCreate(savedInstanceState)
@@ -42,5 +46,14 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         addFragment("ServerFragment", R.id.fragment_container) {
             ServerFragment.newInstance()
         }
+    }
+}
+
+const val INTENT_ADD_NEW_SERVER = "INTENT_ADD_NEW_SERVER"
+
+fun Context.newServerIntent(): Intent {
+    return Intent(this, AuthenticationActivity::class.java).apply {
+        putExtra(INTENT_ADD_NEW_SERVER, true)
+        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
 }

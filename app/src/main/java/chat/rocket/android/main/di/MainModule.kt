@@ -16,7 +16,7 @@ class MainModule {
 
     @Provides
     @PerActivity
-    fun provideMainNavigator(activity: MainActivity, context: Context) = MainNavigator(activity, context)
+    fun provideMainNavigator(activity: MainActivity) = MainNavigator(activity)
 
     @Provides
     fun provideMainView(activity: MainActivity): MainView = activity

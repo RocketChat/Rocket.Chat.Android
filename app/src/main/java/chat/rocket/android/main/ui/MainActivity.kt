@@ -5,12 +5,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.main.adapter.AccountSelector
+import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
+import chat.rocket.android.main.viewmodel.NavHeaderViewModel
+import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -19,6 +28,8 @@ import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.android.synthetic.main.nav_header.view.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector {
@@ -33,6 +44,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         setContentView(R.layout.activity_main)
 
         presenter.connect()
+        presenter.loadCurrentInfo()
         setupToolbar()
         setupNavigationView()
     }
@@ -52,11 +64,45 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         }
     }
 
-    override fun onLogout() {
-        finish()
-        val intent = Intent(this, AuthenticationActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+    override fun setupNavHeader(model: NavHeaderViewModel, accounts: List<Account>) {
+        Timber.d("Setting up nav header: $model")
+        val headerLayout = view_navigation.getHeaderView(0)
+        headerLayout.text_name.text = model.username
+        headerLayout.text_server.text = model.server
+        headerLayout.image_avatar.setImageURI(model.avatar)
+        headerLayout.server_logo.setImageURI(model.serverLogo)
+        setupAccountsList(headerLayout, accounts)
+    }
+
+    override fun closeServerSelection() {
+
+    }
+
+    private var expanded = false
+
+    private fun setupAccountsList(header: View, accounts: List<Account>) {
+        accounts_list.layoutManager = LinearLayoutManager(this)
+        accounts_list.adapter = AccountsAdapter(accounts, object : AccountSelector {
+            override fun onAccountSelected(serverUrl: String) {
+                presenter.changeServer(serverUrl)
+            }
+
+            override fun onAddedAccountSelected() {
+                presenter.addNewServer()
+            }
+
+        })
+
+        header.account_container.setOnClickListener {
+            header.account_expand.rotateBy(180f)
+            if (expanded) {
+                accounts_list.fadeOut()
+            } else {
+                accounts_list.fadeIn()
+            }
+
+            expanded = !expanded
+        }
     }
 
     override fun showMessage(resId: Int) = showToast(resId)

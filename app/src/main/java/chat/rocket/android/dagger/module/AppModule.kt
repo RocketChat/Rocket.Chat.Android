@@ -240,4 +240,9 @@ class AppModule {
     fun providePermissionInteractor(settingsRepository: SettingsRepository, serverRepository: CurrentServerRepository): GetPermissionsInteractor {
         return GetPermissionsInteractor(settingsRepository, serverRepository)
     }
+
+    @Provides
+    @Singleton
+    fun provideAccountsRepository(preferences: SharedPreferences, moshi: Moshi): AccountsRepository =
+            SharedPreferencesAccountsRepository(preferences, moshi)
 }

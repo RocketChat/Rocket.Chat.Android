@@ -3,6 +3,8 @@ package chat.rocket.android.authentication.presentation
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.MultiServerTokenRepository
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.common.model.Token
 import chat.rocket.core.TokenRepository
 import javax.inject.Inject
@@ -13,12 +15,12 @@ class AuthenticationPresenter @Inject constructor(private val navigator: Authent
                                                   private val settingsRepository: SettingsRepository,
                                                   private val tokenRepository: TokenRepository) {
 
-    fun loadCredentials(callback: (authenticated: Boolean) -> Unit) {
+    fun loadCredentials(newServer: Boolean, callback: (authenticated: Boolean) -> Unit) {
         val currentServer = getCurrentServerInteractor.get()
         val serverToken = currentServer?.let { multiServerRepository.get(currentServer) }
         val settings = currentServer?.let { settingsRepository.get(currentServer) }
 
-        if (currentServer == null || serverToken == null || settings == null) {
+        if (newServer || currentServer == null || serverToken == null || settings == null) {
             callback(false)
         } else {
             tokenRepository.save(Token(serverToken.userId, serverToken.authToken))

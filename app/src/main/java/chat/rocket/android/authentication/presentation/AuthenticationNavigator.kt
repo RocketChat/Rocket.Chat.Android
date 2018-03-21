@@ -1,6 +1,5 @@
 package chat.rocket.android.authentication.presentation
 
-import android.content.Context
 import android.content.Intent
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.ui.LoginFragment
@@ -11,7 +10,7 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.webview.ui.webViewIntent
 
-class AuthenticationNavigator(internal val activity: AuthenticationActivity, internal val context: Context) {
+class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
 
     fun toLogin() {
         activity.addFragmentBackStack("LoginFragment", R.id.fragment_container) {
@@ -32,7 +31,7 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity, int
     }
 
     fun toWebPage(url: String) {
-        activity.startActivity(context.webViewIntent(url))
+        activity.startActivity(activity.webViewIntent(url))
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
     }
 
