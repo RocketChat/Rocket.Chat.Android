@@ -41,9 +41,9 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
-                    }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             } finally {
                 view.hideLoading()
             }
@@ -68,9 +68,9 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             } catch (exception: RocketChatException) {
                 exception.message?.let {
                     view.showMessage(it)
-                    }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
             } finally {
                 view.hideLoading()
             }

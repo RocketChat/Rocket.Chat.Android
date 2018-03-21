@@ -174,25 +174,27 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 if (resultCode == RESULT_OK) {
                     //write image data to file
                     try {
-                        avatarImageUri = data!!.data
-                        val bitmapImage: Bitmap = data.extras.get("data") as Bitmap
-                        val bytes = ByteArrayOutputStream()
-                        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-                        image_avatar.setImageURI(data.data)
+                        if (data != null) {
+                            avatarImageUri = data.data
+                            val bitmapImage: Bitmap = data.extras.get("data") as Bitmap
+                            val bytes = ByteArrayOutputStream()
+                            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+                            image_avatar.setImageURI(data.data)
 
-                        avatarImage = createCameraImage()
-                        try {
-                            avatarImage!!.createNewFile()
+                            avatarImage = createCameraImage()
+                            try {
+                                avatarImage!!.createNewFile()
 
-                            val outputStream = FileOutputStream(avatarImage)
-                            outputStream.write(bytes.toByteArray())
-                            outputStream.close()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
+                                val outputStream = FileOutputStream(avatarImage)
+                                outputStream.write(bytes.toByteArray())
+                                outputStream.close()
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            }
+
+                            isAvatarChanged = true
+                            imageObservable.onNext(isAvatarChanged)
                         }
-
-                        isAvatarChanged = true
-                        imageObservable.onNext(isAvatarChanged)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -203,11 +205,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             READ_STORAGE_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
-                    avatarImageUri = data!!.data
-                    avatarImage = File(data.data.getRealPathFromURI(context!!))
-                    image_avatar.setImageURI(data.data)
-                    isAvatarChanged = true
-                    imageObservable.onNext(isAvatarChanged)
+                    if(data != null) {
+                        avatarImageUri = data.data
+                        avatarImage = File(data.data.getRealPathFromURI(context!!))
+                        image_avatar.setImageURI(data.data)
+                        isAvatarChanged = true
+                        imageObservable.onNext(isAvatarChanged)
+                    }
                 } else {
                     Log.d("ERROR_CODE", resultCode.toString())
                 }
