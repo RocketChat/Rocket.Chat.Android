@@ -12,7 +12,8 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatApplication
-import chat.rocket.android.customtab.CustomTabHelper
+import chat.rocket.android.customtab.CustomTab
+import chat.rocket.android.customtab.WebViewFallback
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.room.weblink.WebLinkDao
@@ -32,16 +33,17 @@ import javax.inject.Inject
 
 fun Context.webViewIntent(webPageUrl: String, title: String = "Web Chat"): Intent {
     return Intent(this, WebViewActivity::class.java).apply {
-        putExtra(INTENT_WEB_PAGE_URL, webPageUrl)
-        putExtra(INTENT_WEB_PAGE_TITLE, title)
+        putExtra(WebViewActivity.INTENT_WEB_PAGE_URL, webPageUrl)
+        putExtra(WebViewActivity.INTENT_WEB_PAGE_TITLE, title)
     }
 }
 
-private const val INTENT_WEB_PAGE_URL = "web_page_url"
-private const val INTENT_WEB_PAGE_TITLE = "web_page_title"
-
 //Simple WebView to load URL.
 class WebViewActivity : AppCompatActivity() {
+    companion object {
+        const val INTENT_WEB_PAGE_URL = "web_page_url"
+        const val INTENT_WEB_PAGE_TITLE = "web_page_title"
+    }
 
     @Inject
     lateinit var webLinkDao: WebLinkDao
@@ -110,7 +112,6 @@ class WebViewActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
         web_view.settings.javaScriptEnabled = true
-        web_view.settings.setSupportZoom(true)
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
@@ -121,9 +122,13 @@ class WebViewActivity : AppCompatActivity() {
                 val url = request?.url.toString()
                 var redirectedUrl: String? = ""
 
+                TimberLogger.debug("webpageurl : " + webPageUrl)
+                TimberLogger.debug("url : " + url)
+
                 runBlocking {
                     redirectedUrl = getRedirectedUrl(webPageUrl).await()
                 }
+                TimberLogger.debug("redirectedurl : " + redirectedUrl)
 
                 if (url.equals(webPageUrl, true)
                         || (redirectedUrl.equals(url, true) && !redirectedUrl.equals(webPageUrl))
@@ -131,7 +136,7 @@ class WebViewActivity : AppCompatActivity() {
                         || UrlHelper.removeTrailingSlash(url).equals(UrlHelper.removeTrailingSlash(webPageUrl), true)) {
                     return false
                 } else {
-                    CustomTabHelper.openCustomTab(this@WebViewActivity, Uri.parse(url))
+                    CustomTab.openCustomTab(this@WebViewActivity, Uri.parse(url), WebViewFallback())
                     return true
                 }
             }

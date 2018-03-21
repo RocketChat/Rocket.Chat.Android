@@ -68,7 +68,7 @@ class WebLinksFragment : Fragment(), WebLinksView {
             recycler_view.adapter = WebLinksAdapter(this,
                     { webLink ->
                         run {
-                            startActivity(this.webViewIntent(webLink.link, webLink.title))
+                            startActivity(this.webViewIntent(webLink.link, if (!webLink.title.isEmpty()) webLink.title else resources.getString(R.string.url_preview_title)))
                         }
                     })
         }

@@ -9,26 +9,42 @@ import android.support.customtabs.CustomTabsIntent
 import android.support.v4.content.res.ResourcesCompat
 import chat.rocket.android.R
 
-object CustomTabHelper {
-    fun openCustomTab(context: Context, uri: Uri) {
+object CustomTab {
+    fun openCustomTab(context: Context, uri: Uri, fallback: CustomTabFallback?) {
+
         val customTabIntentBuilder = CustomTabsIntent.Builder()
         customTabIntentBuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
 
         //Set action on clicking bookmark
         val actionLabel = context.resources.getString(R.string.customtab_bookmark_label)
         val icon = BitmapFactory.decodeResource(context.resources, R.drawable.ic_bookmark)
-        val pendingIntent = createPendingIntent(context, ActionBroadcastReceiver.ACTION_ACTION_BUTTON, uri)
+        val pendingIntent = createPendingIntent(context, ActionBroadcastReceiver.ACTION_ACTION_BUTTON)
         customTabIntentBuilder.setActionButton(icon, actionLabel, pendingIntent)
         customTabIntentBuilder.addDefaultShareMenuItem()
 
         val customTabIntent = customTabIntentBuilder.build()
-        customTabIntent.launchUrl(context, uri)
+        val packageName = CustomTabsHelper.getPackageNameToUse(context)
+
+        if (packageName == null) {
+            if (fallback != null) {
+                fallback.openUri(context, uri)
+            }
+        } else {
+            customTabIntent.intent.`package` = packageName
+            customTabIntent.launchUrl(context, uri)
+        }
     }
 
-    private fun createPendingIntent(context: Context, actionSourceId: Int, uri: Uri): PendingIntent {
+    private fun createPendingIntent(context: Context, actionSourceId: Int): PendingIntent {
         val actionIntent = Intent(context.applicationContext, ActionBroadcastReceiver::class.java)
         actionIntent.putExtra(ActionBroadcastReceiver.KEY_ACTION_SOURCE, actionSourceId)
-        actionIntent.putExtra(ActionBroadcastReceiver.KEY_WEB_LINK_URI, uri)
         return PendingIntent.getBroadcast(context.applicationContext, actionSourceId, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    /**
+     * To be used as a fallback to open the Uri when Custom Tabs is not available.
+     */
+    interface CustomTabFallback {
+        fun openUri(context: Context, uri: Uri)
     }
 }

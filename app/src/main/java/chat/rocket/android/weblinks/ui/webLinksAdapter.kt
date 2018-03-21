@@ -48,8 +48,11 @@ class WebLinksAdapter(private val context: Context,
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        private lateinit var webLinkEntity: WebLinkEntity
+
         fun bind(webLink: WebLinkEntity) = with(itemView) {
-            bindLink(webLink, text_link)
+            webLinkEntity = webLink
+            bindLink(webLink.link, text_link)
             setOnClickListener { listener(webLink) }
 
             val title = webLink.title
@@ -87,8 +90,10 @@ class WebLinksAdapter(private val context: Context,
                                 sourceContent.description, textViewDescription,
                                 imageUrl, imageView)
 
+                        webLinkEntity = WebLinkEntity(title, description, imageUrl, link)
+
                         launch {
-                            webLinkDao.updateWebLink(WebLinkEntity(title, description, imageUrl, link))
+                            webLinkDao.updateWebLink(webLinkEntity)
                         }
                     }
                 }
@@ -125,8 +130,8 @@ class WebLinksAdapter(private val context: Context,
             }
         }
 
-        private fun bindLink(webLink: WebLinkEntity, textView: TextView) {
-            textView.textContent = webLink.link
+        private fun bindLink(link: String, textView: TextView) {
+            textView.textContent = link
         }
     }
 }

@@ -2,7 +2,6 @@ package chat.rocket.android.customtab
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatApplication
@@ -27,20 +26,18 @@ class ActionBroadcastReceiver : DaggerBroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        val data = intent.dataString
-        if (data != null) {
+        val url = intent.dataString
+        if (url != null) {
             val actionId = intent.getIntExtra(KEY_ACTION_SOURCE, -1)
             if (actionId == ACTION_ACTION_BUTTON) {
-                val uri = intent.getParcelableExtra<Uri>(KEY_WEB_LINK_URI)
-
                 launch {
-                    val webLink = webLinkDao.getWebLink(uri.toString())
+                    val webLink = webLinkDao.getWebLink(url)
 
                     if (webLink != null) {
                         webLinkDao.deleteWebLink(webLink)
                         showToast(context.resources.getString(R.string.removed_bookmark))
                     } else {
-                        webLinkDao.insertWebLink(WebLinkEntity(link = uri.toString()))
+                        webLinkDao.insertWebLink(WebLinkEntity(link = url))
                         showToast(context.resources.getString(R.string.added_bookmark))
                     }
                 }
@@ -58,7 +55,6 @@ class ActionBroadcastReceiver : DaggerBroadcastReceiver() {
 
     companion object {
         const val KEY_ACTION_SOURCE = "action_source"
-        const val KEY_WEB_LINK_URI = "web_link_uri"
         const val ACTION_ACTION_BUTTON = 1
     }
 }
