@@ -496,7 +496,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 //TODO: cache the commands
                 val commands = client.commands(0, 100).result
                 view.populateCommandSuggestions(commands.map {
-                    println("${it.command} - ${it.description}")
                     CommandSuggestionViewModel(it.command, it.description ?: "", listOf(it.command))
                 })
             } catch (ex: RocketChatException) {
