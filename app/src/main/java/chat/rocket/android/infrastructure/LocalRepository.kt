@@ -7,6 +7,7 @@ interface LocalRepository {
         const val TOKEN_KEY = "token_"
         const val SETTINGS_KEY = "settings_"
         const val USERNAME_KEY = "my_username"
+        const val UNFINISHED_MSG_KEY = "unfinished_msg_"
     }
 
     fun save(key: String, value: String?)
