@@ -13,7 +13,10 @@ import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.customtab.CustomTabHelper
+import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.room.weblink.WebLinkDao
+import chat.rocket.android.room.weblink.WebLinkEntity
 import chat.rocket.android.util.TimberLogger
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,9 +24,11 @@ import kotlinx.android.synthetic.main.activity_web_view.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import java.net.HttpURLConnection
 import java.net.URL
+import javax.inject.Inject
 
 fun Context.webViewIntent(webPageUrl: String, title: String = "Web Chat"): Intent {
     return Intent(this, WebViewActivity::class.java).apply {
@@ -38,12 +43,16 @@ private const val INTENT_WEB_PAGE_TITLE = "web_page_title"
 //Simple WebView to load URL.
 class WebViewActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var webLinkDao: WebLinkDao
+
     private lateinit var webPageUrl: String
     private lateinit var webPageTitle: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
+        DaggerAppComponent.builder().application(RocketChatApplication.application).build().inject(this)
 
         webPageUrl = intent.getStringExtra(INTENT_WEB_PAGE_URL)
         webPageTitle = intent.getStringExtra(INTENT_WEB_PAGE_TITLE)
@@ -71,6 +80,23 @@ class WebViewActivity : AppCompatActivity() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         toolbar.setNavigationOnClickListener {
             finishActivity()
+        }
+        toolbar.inflateMenu(R.menu.web_links_bookmark)
+        toolbar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.action_bookmark) {
+                launch {
+                    val webLink = webLinkDao.getWebLink(webPageUrl)
+
+                    if (webLink != null) {
+                        webLinkDao.deleteWebLink(webLink)
+                        showToast(this@WebViewActivity.resources.getString(R.string.removed_bookmark))
+                    } else {
+                        webLinkDao.insertWebLink(WebLinkEntity(link = webPageUrl))
+                        showToast(this@WebViewActivity.resources.getString(R.string.added_bookmark))
+                    }
+                }
+            }
+            return@setOnMenuItemClickListener true
         }
     }
 
