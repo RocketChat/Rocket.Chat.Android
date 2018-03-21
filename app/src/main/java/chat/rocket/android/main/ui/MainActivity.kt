@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     }
 
     override fun closeServerSelection() {
-
+        view_navigation.getHeaderView(0).account_container.performClick()
     }
 
     private var expanded = false
