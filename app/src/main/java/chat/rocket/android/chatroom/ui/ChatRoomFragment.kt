@@ -214,7 +214,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showNoMessagesView() {
-        no_messages_view.visibility = View.VISIBLE
+        no_messages_view.setVisible(true)
     }
 
     override fun sendMessage(text: String) {
@@ -231,7 +231,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showInvalidFileMessage() = showMessage(getString(R.string.msg_invalid_file))
 
     override fun showNewMessage(message: List<BaseViewModel<*>>) {
-        no_messages_view.visibility = View.GONE
+        no_messages_view.setVisible(false)
 
         if (recycler_view.adapter == null) {
             initialiseRecyclerViewAdapter()
