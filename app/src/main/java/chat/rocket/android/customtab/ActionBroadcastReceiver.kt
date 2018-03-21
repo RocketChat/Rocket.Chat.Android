@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.room.weblink.WebLinkDao
 import chat.rocket.android.room.weblink.WebLinkEntity
-import chat.rocket.android.util.TimberLogger
 import dagger.android.DaggerBroadcastReceiver
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -32,17 +32,16 @@ class ActionBroadcastReceiver : DaggerBroadcastReceiver() {
             val actionId = intent.getIntExtra(KEY_ACTION_SOURCE, -1)
             if (actionId == ACTION_ACTION_BUTTON) {
                 val uri = intent.getParcelableExtra<Uri>(KEY_WEB_LINK_URI)
-                TimberLogger.debug("weblink: " + uri.toString())
 
                 launch {
                     val webLink = webLinkDao.getWebLink(uri.toString())
 
                     if (webLink != null) {
                         webLinkDao.deleteWebLink(webLink)
-                        showToast("Removed Bookmark")
+                        showToast(context.resources.getString(R.string.removed_bookmark))
                     } else {
                         webLinkDao.insertWebLink(WebLinkEntity(link = uri.toString()))
-                        showToast("Added Bookmark")
+                        showToast(context.resources.getString(R.string.added_bookmark))
                     }
                 }
             }

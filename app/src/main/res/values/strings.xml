@@ -117,6 +117,13 @@
     <string name="status_disconnecting">disconnecting</string>
     <string name="status_waiting">connecting in %d seconds</string>
 
+    <!--Web links-->
     <string name="customtab_bookmark_label">Bookmark</string>
+    <string name="added_bookmark">Added bookmark</string>
+    <string name="removed_bookmark">Removed Bookmark</string>
+    <string name="url_preview_image">Image</string>
+    <string name="url_preview_title">Web chat</string>
+    <string name="url_preview_description">Description</string>
+    <string name="url_preview_link">Link</string>
 
 </resources>
