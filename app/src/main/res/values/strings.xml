@@ -116,9 +116,6 @@
     <string name="status_disconnecting">disconnecting</string>
     <string name="status_waiting">connecting in %d seconds</string>
 
-    <!-- Emoji message-->
-    <string name="msg_no_recent_emoji">No recent emoji</string>
-
     <!-- Slash Commands -->
     <string name="Slash_Gimme_Description">Displays ༼ つ ◕_◕ ༽つ before your message</string>
     <string name="Slash_LennyFace_Description">Displays ( ͡° ͜ʖ ͡°) after your message</string>
@@ -142,4 +139,6 @@
     <string name="Guggy_Command_Description">Generates a gif based upon the provided text</string>
     <string name="Slash_Topic_Description">Set topic</string>
 
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">No recent emoji</string>
 </resources>

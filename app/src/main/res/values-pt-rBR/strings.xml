@@ -115,9 +115,6 @@
     <string name="status_disconnecting">desconectando</string>
     <string name="status_waiting">conectando em %d segundos</string>
 
-    <!-- Emoji message-->
-    <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
-
     <!-- Slash Commands -->
     <string name="Slash_Gimme_Description">Exibir ༼ つ ◕_◕ ༽つ antes de sua mensagem</string>
     <string name="Slash_LennyFace_Description">Exibir ( ͡° ͜ʖ ͡°) depois de sua mensagem</string>
@@ -140,4 +137,7 @@
     <string name="Join_the_given_channel">Entrar no canal especificado</string>
     <string name="Guggy_Command_Description">Gera um gif baseado no texto dado</string>
     <string name="Slash_Topic_Description">Definir tópico</string>
+
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
 </resources>
