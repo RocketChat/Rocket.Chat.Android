@@ -26,6 +26,7 @@
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_join_chat">Join Chat</string>
+    <string name="action_add_account">Add Account</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -138,6 +139,5 @@
     <string name="Join_the_given_channel">Join the given channel</string>
     <string name="Guggy_Command_Description">Generates a gif based upon the provided text</string>
     <string name="Slash_Topic_Description">Set topic</string>
-    <string name="add_account">Add Account</string>
 
 </resources>

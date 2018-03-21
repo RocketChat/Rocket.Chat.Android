@@ -25,6 +25,7 @@
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
+    <string name="action_add_account">Adicionar Conta</string>
 
 
     <!-- Settings List -->
