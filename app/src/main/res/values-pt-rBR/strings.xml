@@ -114,4 +114,7 @@
     <string name="status_authenticating">autenticando</string>
     <string name="status_disconnecting">desconectando</string>
     <string name="status_waiting">conectando em %d segundos</string>
+
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
 </resources>
