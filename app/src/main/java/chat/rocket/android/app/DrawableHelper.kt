@@ -117,4 +117,25 @@ object DrawableHelper {
         }
         return userStatusDrawable
     }
+
+    /**
+     * Returns the user status drawable.
+     *
+     * @param userStatus The user status.
+     * @param context The context.
+     * @return The user status drawable.
+     */
+
+    fun getUserStatusDrawableFromString(userStatus: String, context: Context): Drawable {
+        val userStatusDrawable = getDrawableFromId(R.drawable.ic_user_status_black, context).mutate()
+        wrapDrawable(userStatusDrawable)
+        when (userStatus) {
+            "Online" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOnline)
+            "Busy" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusBusy)
+            "Away" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusAway)
+            "Offline" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOffline)
+            else -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOffline)
+        }
+        return userStatusDrawable
+    }
 }

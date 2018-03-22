@@ -1,5 +1,6 @@
 package chat.rocket.android.member.ui
 
+import DrawableHelper
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
 import android.view.LayoutInflater
@@ -11,7 +12,7 @@ import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
 import kotlinx.android.synthetic.main.fragment_member_bottom_sheet.*
 
-fun newInstance(avatarUri: String, realName: String, username: String, email: String, utcOffset: String): BottomSheetDialogFragment {
+fun newInstance(avatarUri: String, realName: String, username: String, email: String, utcOffset: String, userStatus: String): BottomSheetDialogFragment {
     return MemberBottomSheetFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_AVATAR_URI, avatarUri)
@@ -19,6 +20,7 @@ fun newInstance(avatarUri: String, realName: String, username: String, email: St
             putString(BUNDLE_USERNAME, username)
             putString(BUNDLE_EMAIL, email)
             putString(BUNDLE_UTC_OFFSET, utcOffset)
+            putString(BUNDLE_USER_STATUS, userStatus)
         }
     }
 }
@@ -28,6 +30,7 @@ private const val BUNDLE_REAL_NAME = "real_name"
 private const val BUNDLE_USERNAME = "username"
 private const val BUNDLE_EMAIL = "email"
 private const val BUNDLE_UTC_OFFSET = "utc_offset"
+private const val BUNDLE_USER_STATUS = "user_status"
 
 class MemberBottomSheetFragment: BottomSheetDialogFragment() {
     private lateinit var avatarUri: String
@@ -35,6 +38,7 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
     private lateinit var username: String
     private lateinit var email: String
     private lateinit var utcOffset: String
+    private lateinit var userStatus: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +50,7 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
             username = bundle.getString(BUNDLE_USERNAME)
             email = bundle.getString(BUNDLE_EMAIL)
             utcOffset = bundle.getString(BUNDLE_UTC_OFFSET)
+            userStatus = bundle.getString(BUNDLE_USER_STATUS)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -76,5 +81,7 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
             text_utc.setVisible(false)
             text_member_utc.setVisible(false)
         }
+        val statusDrawable = DrawableHelper.getUserStatusDrawableFromString(userStatus, context!!)
+        user_status.setImageDrawable(statusDrawable)
     }
 }
