@@ -119,9 +119,9 @@ object DrawableHelper {
     }
 
     /**
-     * Returns the user status drawable.
+     * Returns the user status drawable on the basis of user status string
      *
-     * @param userStatus The user status.
+     * @param userStatus String that represents the user status.
      * @param context The context.
      * @return The user status drawable.
      */
