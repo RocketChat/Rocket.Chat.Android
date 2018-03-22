@@ -35,4 +35,9 @@
     <!-- Autocomplete Popup -->
     <dimen name="popup_max_height">150dp</dimen>
 
+    <!--Web links preview-->
+    <dimen name="image_web_link_preview">56dp</dimen>
+    <dimen name="margin_web_link_preview">16dp</dimen>
+    <dimen name="padding_web_link_preview_text">2dp</dimen>
+
 </resources>

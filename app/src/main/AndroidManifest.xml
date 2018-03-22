@@ -51,6 +51,11 @@
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".webview.weblink.ui.WebViewActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
             android:name=".chatroom.ui.ChatRoomActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
@@ -95,6 +100,8 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="12ac6e94f850aaffcdff52001af77ca415d06a43" />
+
+        <receiver android:name=".customtab.ActionBroadcastReceiver" />
     </application>
 
 </manifest>

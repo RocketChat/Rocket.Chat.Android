@@ -8,8 +8,15 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.ui.ProfileFragment
 import chat.rocket.android.settings.ui.SettingsFragment
 import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.weblinks.ui.WebLinksFragment
 
 class MainNavigator(internal val activity: MainActivity, internal val context: Context) {
+
+    fun toWebLinksList() {
+        activity.addFragment("WebLinksFragment", R.id.fragment_container) {
+            WebLinksFragment.newInstance()
+        }
+    }
 
     fun toChatList() {
         activity.addFragment("ChatRoomsFragment", R.id.fragment_container) {

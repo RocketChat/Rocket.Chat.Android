@@ -5,8 +5,11 @@ import android.arch.persistence.room.RoomDatabase
 
 import chat.rocket.android.server.infraestructure.ServerDao
 import chat.rocket.android.server.infraestructure.ServerEntity
+import chat.rocket.android.room.weblink.WebLinkDao
+import chat.rocket.android.room.weblink.WebLinkEntity
 
-@Database(entities = arrayOf(ServerEntity::class), version = 1, exportSchema = false)
+@Database(entities = [(ServerEntity::class), (WebLinkEntity::class)], version = 1, exportSchema = false)
 abstract class RocketChatDatabase : RoomDatabase() {
     abstract fun serverDao(): ServerDao
+    abstract fun webLinkDao(): WebLinkDao
 }

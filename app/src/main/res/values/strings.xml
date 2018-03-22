@@ -7,6 +7,7 @@
     <string name="title_sign_up">Sign up</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
+    <string name="title_web_links">Web Links</string>
     <string name="title_chats">Chats</string>
     <string name="title_profile">Profile</string>
     <string name="title_members">Members (%d)</string>
@@ -115,5 +116,14 @@
     <string name="status_authenticating">authenticating</string>
     <string name="status_disconnecting">disconnecting</string>
     <string name="status_waiting">connecting in %d seconds</string>
+
+    <!--Web links-->
+    <string name="customtab_bookmark_label">Bookmark</string>
+    <string name="added_bookmark">Added bookmark</string>
+    <string name="removed_bookmark">Removed Bookmark</string>
+    <string name="url_preview_image">Image</string>
+    <string name="url_preview_title">Web chat</string>
+    <string name="url_preview_description">Description</string>
+    <string name="url_preview_link">Link</string>
 
 </resources>

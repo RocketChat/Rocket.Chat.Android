@@ -25,6 +25,8 @@ class MainPresenter @Inject constructor(private val view: MainView,
     private val manager = managerFactory.create(currentServer)
     private val client: RocketChatClient = factory.create(currentServer)
 
+    fun toWebLinksList() = navigator.toWebLinksList()
+
     fun toChatList() = navigator.toChatList()
 
     fun toUserProfile() = navigator.toUserProfile()

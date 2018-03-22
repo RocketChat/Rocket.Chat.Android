@@ -1,25 +1,22 @@
 package chat.rocket.android.helper
 
 import android.app.Application
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.support.customtabs.CustomTabsIntent
-import android.provider.Browser
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Layout
 import android.text.Spannable
 import android.text.Spanned
-import android.text.TextUtils
 import android.text.style.*
 import android.util.Patterns
 import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.customtab.CustomTab
+import chat.rocket.android.customtab.WebViewFallback
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
@@ -30,7 +27,6 @@ import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.renderer.SpannableMarkdownVisitor
-import timber.log.Timber
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -173,10 +169,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
                             with (view) {
-                                val tabsbuilder = CustomTabsIntent.Builder()
-                                tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
-                                val customTabsIntent = tabsbuilder.build()
-                                customTabsIntent.launchUrl(context, getUri(link))
+                                CustomTab.openCustomTab(context, getUri(link), WebViewFallback())
                             }
                         }
                     }, matcher.start(0), matcher.end(0))

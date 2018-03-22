@@ -18,6 +18,7 @@ import chat.rocket.android.members.di.MembersFragmentProvider
 import chat.rocket.android.profile.di.ProfileFragmentProvider
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
+import chat.rocket.android.weblinks.di.WebLinksFragmentProvider
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -35,6 +36,7 @@ abstract class ActivityBuilder {
 
     @PerActivity
     @ContributesAndroidInjector(modules = [MainModule::class,
+        WebLinksFragmentProvider::class,
         ChatRoomsFragmentProvider::class,
         ProfileFragmentProvider::class
     ])

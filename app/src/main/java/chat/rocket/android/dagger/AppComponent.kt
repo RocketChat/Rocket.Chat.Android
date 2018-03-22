@@ -1,11 +1,14 @@
 package chat.rocket.android.dagger
 
 import android.app.Application
+import android.content.BroadcastReceiver
 import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.dagger.module.ActivityBuilder
 import chat.rocket.android.dagger.module.AppModule
 import chat.rocket.android.dagger.module.ServiceBuilder
 import chat.rocket.android.push.FirebaseTokenService
+import chat.rocket.android.weblinks.ui.WebLinksAdapter
+import chat.rocket.android.webview.weblink.ui.WebViewActivity
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
@@ -26,6 +29,12 @@ interface AppComponent {
     fun inject(app: RocketChatApplication)
 
     fun inject(service: FirebaseTokenService)
+
+    fun inject(broadcastReceiver: BroadcastReceiver)
+
+    fun inject(webLinksAdapter: WebLinksAdapter)
+
+    fun inject(webViewActivity: WebViewActivity)
 
     /*@Component.Builder
     abstract class Builder : AndroidInjector.Builder<RocketChatApplication>()*/
