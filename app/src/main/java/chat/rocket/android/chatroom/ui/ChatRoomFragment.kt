@@ -115,6 +115,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
     }
 
     override fun onDestroyView() {
+        presenter.saveUnfinishedMessage(chatRoomId, text_message.text.toString())
         presenter.unsubscribeMessages(chatRoomId)
         handler.removeCallbacksAndMessages(null)
         unsubscribeTextMessage()
@@ -350,6 +351,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.setVisible(true)
 
+            getUnfinishedMessage()
             subscribeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
@@ -407,6 +409,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
             button_add_reaction.setOnClickListener { view ->
                 openEmojiKeyboardPopup()
             }
+        }
+    }
+
+    private fun getUnfinishedMessage() {
+        val unfinishedMessage = presenter.getUnfinishedMessage(chatRoomId)
+        if (unfinishedMessage.isNotBlank() && activity != null) {
+            text_message.setText(unfinishedMessage)
+            KeyboardHelper.showSoftKeyboardOnActivityStart(activity!!, text_message)
         }
     }
 

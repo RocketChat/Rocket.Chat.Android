@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Rect
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
 
@@ -48,6 +49,17 @@ object KeyboardHelper {
         if (view.requestFocus()) {
             val inputMethodManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
+    /**
+     *  Show the soft keyboard for the given view at the start of activity or fragment.
+     *
+     *  @param view View to receive input focus.
+     */
+    fun showSoftKeyboardOnActivityStart(activity: Activity, view: View) {
+        if (view.requestFocus()) {
+            activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
     }
 }
