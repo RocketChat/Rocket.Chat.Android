@@ -15,7 +15,6 @@ import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
 import chat.rocket.android.members.viewmodel.MemberViewModel
-import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
@@ -23,9 +22,6 @@ import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
-import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
-import android.app.Activity
-import android.view.inputmethod.InputMethodManager
 
 
 fun newInstance(chatRoomId: String, chatRoomType: String): Fragment {
@@ -65,8 +61,6 @@ class MembersFragment : Fragment(), MembersView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
 
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
