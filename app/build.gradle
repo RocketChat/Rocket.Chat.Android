@@ -17,9 +17,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-    applicationVariants.all { variant ->
-        variant.resValue "string", "versionName", variant.versionName
-    }
     signingConfigs {
         release {
             storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
