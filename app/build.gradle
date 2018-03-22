@@ -17,6 +17,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+
     signingConfigs {
         release {
             storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
