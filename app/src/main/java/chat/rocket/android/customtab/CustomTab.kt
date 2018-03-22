@@ -26,9 +26,7 @@ object CustomTab {
         val packageName = CustomTabsHelper.getPackageNameToUse(context)
 
         if (packageName == null) {
-            if (fallback != null) {
-                fallback.openUri(context, uri)
-            }
+            fallback?.openUri(context, uri)
         } else {
             customTabIntent.intent.`package` = packageName
             customTabIntent.launchUrl(context, uri)

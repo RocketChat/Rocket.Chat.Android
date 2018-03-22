@@ -86,27 +86,31 @@ class WebViewActivity : AppCompatActivity() {
         toolbar.inflateMenu(R.menu.web_links_bookmark)
         toolbar.setOnMenuItemClickListener {
             if (it.itemId == R.id.action_bookmark) {
-                launch {
-                    val webLink = webLinkDao.getWebLink(webPageUrl)
-
-                    if (webLink != null) {
-                        webLinkDao.deleteWebLink(webLink)
-                        showToast(this@WebViewActivity.resources.getString(R.string.removed_bookmark))
-                    } else {
-                        webLinkDao.insertWebLink(WebLinkEntity(link = webPageUrl))
-                        showToast(this@WebViewActivity.resources.getString(R.string.added_bookmark))
-                    }
-                }
+                performBookmarkAction()
             }
             return@setOnMenuItemClickListener true
         }
     }
 
+    private fun performBookmarkAction() {
+        launch {
+            val webLink: WebLinkEntity? = webLinkDao.getWebLink(webPageUrl)
+
+            if (webLink != null) {
+                webLinkDao.deleteWebLink(webLink)
+                showToast(this@WebViewActivity.resources.getString(R.string.removed_bookmark))
+            } else {
+                webLinkDao.insertWebLink(WebLinkEntity(link = webPageUrl))
+                showToast(this@WebViewActivity.resources.getString(R.string.added_bookmark))
+            }
+        }
+    }
+
     private fun truncateString(string: String): String {
-        if (string.length >= 25)
-            return string.substring(0, 24) + "..."
+        return if (string.length >= 25)
+            string.substring(0, 24) + "..."
         else
-            return string
+            string
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -119,36 +123,35 @@ class WebViewActivity : AppCompatActivity() {
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                val url = request?.url.toString()
-                var redirectedUrl: String? = ""
-
-                TimberLogger.debug("webpageurl : " + webPageUrl)
-                TimberLogger.debug("url : " + url)
-
-                runBlocking {
-                    redirectedUrl = getRedirectedUrl(webPageUrl).await()
-                }
-                TimberLogger.debug("redirectedurl : " + redirectedUrl)
-
-                if (url.equals(webPageUrl, true)
-                        || (redirectedUrl.equals(url, true) && !redirectedUrl.equals(webPageUrl))
-                        || webPageUrl.contains(url, true)
-                        || UrlHelper.removeTrailingSlash(url).equals(UrlHelper.removeTrailingSlash(webPageUrl), true)) {
-                    return false
-                } else {
-                    CustomTab.openCustomTab(this@WebViewActivity, Uri.parse(url), WebViewFallback())
-                    return true
-                }
+                return isNewUrl(request?.url.toString())
             }
         }
         web_view.loadUrl(webPageUrl)
+    }
+
+    private fun isNewUrl(url: String): Boolean {
+        var redirectedUrl: String? = ""
+
+        runBlocking {
+            redirectedUrl = getRedirectedUrl(webPageUrl).await()
+        }
+
+        return if (url.equals(webPageUrl, true)
+                || (redirectedUrl.equals(url, true) && !redirectedUrl.equals(webPageUrl))
+                || webPageUrl.contains(url, true)
+                || UrlHelper.removeTrailingSlash(url).equals(UrlHelper.removeTrailingSlash(webPageUrl), true)) {
+            false
+        } else {
+            CustomTab.openCustomTab(this@WebViewActivity, Uri.parse(url), WebViewFallback())
+            true
+        }
     }
 
     fun showToast(string: String) {
         Observable.just(string)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Toast.makeText(RocketChatApplication.application.applicationContext, string, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RocketChatApplication.application.applicationContext, string, Toast.LENGTH_SHORT).show()
                 })
     }
 

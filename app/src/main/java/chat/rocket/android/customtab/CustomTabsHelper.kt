@@ -12,7 +12,7 @@ import java.util.*
  * Helper class for Custom Tabs.
  */
 object CustomTabsHelper {
-    private val TAG = "CustomTabsHelper"
+    private const val TAG = "CustomTabsHelper"
     private const val STABLE_PACKAGE = "com.android.chrome"
     private const val BETA_PACKAGE = "com.chrome.beta"
     private const val DEV_PACKAGE = "com.chrome.dev"

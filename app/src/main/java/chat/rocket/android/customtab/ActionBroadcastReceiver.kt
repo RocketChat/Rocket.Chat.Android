@@ -27,20 +27,22 @@ class ActionBroadcastReceiver : DaggerBroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         val url = intent.dataString
-        if (url != null) {
-            val actionId = intent.getIntExtra(KEY_ACTION_SOURCE, -1)
-            if (actionId == ACTION_ACTION_BUTTON) {
-                launch {
-                    val webLink = webLinkDao.getWebLink(url)
+        val actionId = intent.getIntExtra(KEY_ACTION_SOURCE, -1)
+        if (url != null && actionId == ACTION_ACTION_BUTTON) {
+            performBookmarkAction(context, url)
+        }
+    }
 
-                    if (webLink != null) {
-                        webLinkDao.deleteWebLink(webLink)
-                        showToast(context.resources.getString(R.string.removed_bookmark))
-                    } else {
-                        webLinkDao.insertWebLink(WebLinkEntity(link = url))
-                        showToast(context.resources.getString(R.string.added_bookmark))
-                    }
-                }
+    private fun performBookmarkAction(context: Context, url: String) {
+        launch {
+            val webLink: WebLinkEntity? = webLinkDao.getWebLink(url)
+
+            if (webLink != null) {
+                webLinkDao.deleteWebLink(webLink)
+                showToast(context.resources.getString(R.string.removed_bookmark))
+            } else {
+                webLinkDao.insertWebLink(WebLinkEntity(link = url))
+                showToast(context.resources.getString(R.string.added_bookmark))
             }
         }
     }
