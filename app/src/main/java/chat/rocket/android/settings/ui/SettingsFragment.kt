@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.settings.password.ui.PasswordActivity
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlin.reflect.KClass
 
-class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListener {
+class SettingsFragment: Fragment(), SettingsView,View.OnClickListener{
     companion object {
         fun newInstance() = SettingsFragment()
     }
@@ -28,19 +28,23 @@ class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListene
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-        setupListView()
+        setupListener()
+        setVersion()
     }
 
-    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        when (parent?.getItemAtPosition(position).toString()) {
-            "Change Password" -> {
-                startNewActivity(PasswordActivity::class)
-            }
+    private fun setVersion() {
+        val version = "Version "+ BuildConfig.VERSION_NAME
+        text_version_name.text = version
+    }
+
+    private fun setupListener() {
+        text_change_password.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.text_change_password -> startNewActivity(PasswordActivity::class)
         }
-    }
-
-    private fun setupListView() {
-        settings_list.onItemClickListener = this
     }
 
     private fun setupToolbar() {
