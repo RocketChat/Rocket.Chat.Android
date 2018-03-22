@@ -33,7 +33,7 @@ class SettingsFragment: Fragment(), SettingsView,View.OnClickListener{
     }
 
     private fun setVersion() {
-        val version = "Version "+ BuildConfig.VERSION_NAME
+        val version = resources.getString(R.string.version)+" " + BuildConfig.VERSION_NAME
         text_version_name.text = version
     }
 
