@@ -59,7 +59,7 @@ object KeyboardHelper {
      */
     fun showSoftKeyboardOnActivityStart(activity: Activity, view: View) {
         if (view.requestFocus()) {
-            activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         }
     }
 }

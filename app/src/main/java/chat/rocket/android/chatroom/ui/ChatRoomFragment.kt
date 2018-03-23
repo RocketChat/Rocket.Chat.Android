@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -416,7 +417,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardPopup.Listener {
         val unfinishedMessage = presenter.getUnfinishedMessage(chatRoomId)
         if (unfinishedMessage.isNotBlank() && activity != null) {
             text_message.setText(unfinishedMessage)
-            KeyboardHelper.showSoftKeyboardOnActivityStart(activity!!, text_message)
+            val orientation = resources.configuration.orientation
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                KeyboardHelper.showSoftKeyboardOnActivityStart(activity!!, text_message)
+            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                text_message.requestFocus()
+            }
         }
     }
 

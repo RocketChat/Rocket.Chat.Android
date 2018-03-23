@@ -362,15 +362,18 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     }
 
     /**
-     * Save unfinished message, when user left chat room without sending a message.
+     * Save unfinished message, when user left chat room without sending a message. It also clears
+     * saved message from local repository when unfinishedMessage is blank.
      *
      * @param chatRoomId Chat room Id.
      * @param unfinishedMessage The unfinished message to save.
      */
     fun saveUnfinishedMessage(chatRoomId: String, unfinishedMessage: String) {
+        val key = LocalRepository.UNFINISHED_MSG_KEY + chatRoomId
         if (unfinishedMessage.isNotBlank()) {
-            val key = LocalRepository.UNFINISHED_MSG_KEY + chatRoomId
             localRepository.save(key, unfinishedMessage)
+        } else {
+            localRepository.clear(key)
         }
     }
 
