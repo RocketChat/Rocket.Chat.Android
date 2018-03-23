@@ -516,6 +516,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 text_message.requestFocus()
             }
         }
+    }
 
     private fun setupSuggestionsView() {
         suggestions_view.anchorTo(text_message)
