@@ -13,8 +13,8 @@ class CancelStrategy @Inject constructor(owner: LifecycleOwner, val jobs: Job) :
         owner.lifecycle.addObserver(this)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onStop() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroy() {
         jobs.cancel()
     }
 }
