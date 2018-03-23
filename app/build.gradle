@@ -12,8 +12,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 1011
-        versionName "2.0.0-dev9"
+        versionCode 2000
+        versionName "2.0.0-alpha1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -32,7 +32,6 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            applicationIdSuffix ".dev"
         }
 
         debug {
@@ -59,6 +58,7 @@ dependencies {
     implementation libraries.design
     implementation libraries.constraintLayout
     implementation libraries.cardView
+    implementation libraries.flexbox
 
     implementation libraries.androidKtx
 
@@ -94,14 +94,9 @@ dependencies {
     implementation libraries.kotshiApi
 
     implementation libraries.frescoImageViewer
-    implementation (libraries.androidSvg) {
-        exclude group: 'org.jetbrains', module: 'annotations-java5'
-    }
 
     implementation libraries.markwon
-    implementation (libraries.markwonImageLoader) {
-        exclude group: 'com.caverock', module: 'androidsvg'
-    }
+    implementation libraries.markwonImageLoader
 
     implementation libraries.sheetMenu
 

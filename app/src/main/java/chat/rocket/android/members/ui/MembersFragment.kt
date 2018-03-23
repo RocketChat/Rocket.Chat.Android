@@ -23,6 +23,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
 
+
 fun newInstance(chatRoomId: String, chatRoomType: String): Fragment {
     return MembersFragment().apply {
         arguments = Bundle(1).apply {
@@ -60,6 +61,7 @@ class MembersFragment : Fragment(), MembersView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
         setupRecyclerView()

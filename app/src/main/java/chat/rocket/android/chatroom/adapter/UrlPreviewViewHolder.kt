@@ -6,10 +6,13 @@ import android.view.View
 import chat.rocket.android.chatroom.viewmodel.UrlPreviewViewModel
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.message_url_preview.view.*
 
-class UrlPreviewViewHolder(itemView: View, listener: ActionsListener)
-    : BaseViewHolder<UrlPreviewViewModel>(itemView, listener) {
+class UrlPreviewViewHolder(itemView: View,
+                           listener: ActionsListener,
+                           reactionListener: EmojiReactionListener? = null)
+    : BaseViewHolder<UrlPreviewViewModel>(itemView, listener, reactionListener) {
 
     init {
         with(itemView) {

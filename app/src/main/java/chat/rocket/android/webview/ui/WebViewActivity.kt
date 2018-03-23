@@ -1,4 +1,4 @@
-package chat.rocket.android.webview
+package chat.rocket.android.webview.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,6 +19,7 @@ fun Context.webViewIntent(webPageUrl: String): Intent {
 
 private const val INTENT_WEB_PAGE_URL = "web_page_url"
 
+// Simple WebView to load URL.
 class WebViewActivity : AppCompatActivity() {
     private lateinit var webPageUrl: String
 

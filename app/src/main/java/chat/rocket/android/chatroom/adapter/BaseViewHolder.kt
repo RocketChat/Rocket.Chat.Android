@@ -7,16 +7,22 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.widget.emoji.Emoji
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
 import ru.whalemare.sheetmenu.extension.inflate
 import ru.whalemare.sheetmenu.extension.toList
 
+
 abstract class BaseViewHolder<T : BaseViewModel<*>>(
-    itemView: View,
-    private val listener: ActionsListener
+        itemView: View,
+        private val listener: ActionsListener,
+        var reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.ViewHolder(itemView),
-    MenuItem.OnMenuItemClickListener {
+        MenuItem.OnMenuItemClickListener {
     var data: T? = null
 
     init {
@@ -26,6 +32,39 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
     fun bind(data: T) {
         this.data = data
         bindViews(data)
+        bindReactions()
+    }
+
+    private fun bindReactions() {
+        data?.let {
+            val recyclerView = itemView.findViewById(R.id.recycler_view_reactions) as RecyclerView
+            val adapter: MessageReactionsAdapter
+            if (recyclerView.adapter == null) {
+                adapter = MessageReactionsAdapter()
+            } else {
+                adapter = recyclerView.adapter as MessageReactionsAdapter
+                adapter.clear()
+            }
+
+            if (it.nextDownStreamMessage == null) {
+                adapter.listener = object : EmojiReactionListener {
+                    override fun onReactionTouched(messageId: String, emojiShortname: String) {
+                        reactionListener?.onReactionTouched(messageId, emojiShortname)
+                    }
+
+                    override fun onReactionAdded(messageId: String, emoji: Emoji) {
+                        if (!adapter.contains(emoji.shortname)) {
+                            reactionListener?.onReactionAdded(messageId, emoji)
+                        }
+                    }
+                }
+                val context = itemView.context
+                val manager = FlexboxLayoutManager(context, FlexDirection.ROW)
+                recyclerView.layoutManager = manager
+                recyclerView.adapter = adapter
+                adapter.addReactions(it.reactions.filterNot { it.unicode.startsWith(":") })
+            }
+        }
     }
 
     abstract fun bindViews(data: T)

@@ -1,5 +1,6 @@
 package chat.rocket.android.main.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,25 +8,21 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.view.MenuItem
 import chat.rocket.android.R
-
-import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
-import chat.rocket.android.profile.ui.ProfileFragment
-import chat.rocket.android.settings.ui.SettingsFragment
-import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.util.extensions.showToast
-
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector {
+    @Inject lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
@@ -67,6 +64,8 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
     override fun showMessage(message: String) = showToast(message)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 

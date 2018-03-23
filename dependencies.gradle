@@ -4,7 +4,7 @@ ext {
         compileSdk        : 27,
         targetSdk         : 27,
         buildTools        : '27.0.3',
-        kotlin            : '1.2.21',
+        kotlin            : '1.2.30',
         coroutine         : '0.22',
         dokka             : '0.9.15',
 
@@ -25,11 +25,11 @@ ext {
         rxBinding              : '2.0.0',
         fresco                 : '1.8.1',
         kotshi                 : '0.3.0',
-        frescoImageViewer      : '0.5.0',
-        androidSvg             : 'master-SNAPSHOT',
+        frescoImageViewer      : '0.5.1',
         markwon                : '1.0.3',
         sheetMenu              : '1.3.3',
         aVLoadingIndicatorView : '2.1.3',
+        flexbox                : '0.3.2',
 
         // For testing
         junit                  : '4.12',
@@ -49,6 +49,7 @@ ext {
         design                 : "com.android.support:design:${versions.support}",
         constraintLayout       : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
         cardView               : "com.android.support:cardview-v7:${versions.support}",
+        flexbox                : "com.google.android:flexbox:${versions.flexbox}",
 
         androidKtx             :  "androidx.core:core-ktx:${versions.androidKtx}",
 
@@ -84,8 +85,7 @@ ext {
         kotshiApi              : "se.ansman.kotshi:api:${versions.kotshi}",
         kotshiCompiler         : "se.ansman.kotshi:compiler:${versions.kotshi}",
 
-        frescoImageViewer      : "com.github.stfalcon:frescoimageviewer:${versions.frescoImageViewer}",
-        androidSvg             : "com.github.BigBadaboom:androidsvg:${versions.androidSvg}",
+        frescoImageViewer      : "com.github.luciofm:FrescoImageViewer:${versions.frescoImageViewer}",
 
         markwon                : "ru.noties:markwon:${versions.markwon}",
         markwonImageLoader     : "ru.noties:markwon-image-loader:${versions.markwon}",
@@ -93,8 +93,6 @@ ext {
         sheetMenu              : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
 
         aVLoadingIndicatorView : "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
-
-        swipeBackLayout        : "me.imid.swipebacklayout.lib:library:${versions.swipeBackLayout}",
 
         // For testing
         junit         : "junit:junit:$versions.junit",
