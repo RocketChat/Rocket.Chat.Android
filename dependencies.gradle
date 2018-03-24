@@ -39,7 +39,8 @@ ext {
         junit                  : '4.12',
         truth                  : '0.36',
         expresso               : '3.0.1',
-        mockito                : '2.10.0'
+        mockito                : '2.10.0',
+        slider                 : '2.0.6'
     ]
 
     libraries = [
@@ -102,6 +103,7 @@ ext {
         stetho                 : "com.facebook.stetho:stetho:${versions.stetho}",
         jsoup                  : "org.jsoup:jsoup:${versions.jsoup}",
         linkpreview            : "com.leocardz:link-preview:${versions.linkpreview}@aar",
+        slider                 : "com.r0adkll:slidableactivity:${versions.slider}",
 
         // For testing
         junit         : "junit:junit:$versions.junit",

@@ -11,6 +11,12 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <!--Translucent theme for Slider Activity-->
+    <style name="AppTheme.Translucent" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
     <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorPrimary</item>

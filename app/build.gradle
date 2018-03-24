@@ -106,6 +106,7 @@ dependencies {
     implementation libraries.customtab
     implementation libraries.jsoup
     implementation libraries.linkpreview
+    implementation libraries.slider
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
