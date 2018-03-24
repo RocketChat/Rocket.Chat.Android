@@ -95,10 +95,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        //push all content up when keyboard comes
-        activity!!.window.setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-
         val bundle = arguments
         if (bundle != null) {
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
@@ -412,6 +408,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
             }
         })
+
+        //scroll recycler view up when keyboard shows up
+        recycler_view.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (bottom < oldBottom) {
+                recycler_view.smoothScrollToPosition(0)
+            }
+        }
     }
 
     private fun setupFab() {
