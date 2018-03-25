@@ -19,6 +19,7 @@ import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.room.weblink.WebLinkDao
 import chat.rocket.android.room.weblink.WebLinkEntity
 import chat.rocket.android.util.TimberLogger
+import com.r0adkll.slidr.Slidr
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_web_view.*
@@ -62,6 +63,8 @@ class WebViewActivity : AppCompatActivity() {
         requireNotNull(webPageUrl) { "no web_page_url provided in Intent extras" }
 
         setupToolbar()
+
+        Slidr.attach(this)
     }
 
     override fun onResume() {
