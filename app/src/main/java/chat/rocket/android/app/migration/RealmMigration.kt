@@ -36,7 +36,7 @@ class RealmMigration : RealmMigration {
         if (oldVersion == 5L) {
             val userSchema = schema.get("RealmUser")
             try {
-                userSchema!!.addField(RealmUser.NAME, String::class.java)
+                userSchema?.addField(RealmUser.NAME, String::class.java)
             } catch (e: IllegalArgumentException) {
                 if (BuildConfig.DEBUG) {
                     e.printStackTrace()
