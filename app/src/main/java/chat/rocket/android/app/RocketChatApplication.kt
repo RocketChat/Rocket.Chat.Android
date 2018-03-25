@@ -10,12 +10,14 @@ import chat.rocket.android.app.migration.RocketChatLibraryModule
 import chat.rocket.android.app.migration.RocketChatServerModule
 import chat.rocket.android.app.migration.model.RealmBasedServerInfo
 import chat.rocket.android.app.migration.model.RealmPublicSetting
+import chat.rocket.android.app.migration.model.RealmSession
 import chat.rocket.android.app.migration.model.RealmUser
+import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.helper.CrashlyticsTree
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.MultiServerTokenRepository
-import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.common.model.Token
 import chat.rocket.core.TokenRepository
@@ -33,6 +35,8 @@ import dagger.android.HasServiceInjector
 import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -59,14 +63,15 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     lateinit var settingsRepository: SettingsRepository
     @Inject
     lateinit var tokenRepository: TokenRepository
+    @Inject
+    lateinit var accountRepository: AccountsRepository
+    @Inject
+    lateinit var saveCurrentServerRepository: SaveCurrentServerInteractor
 
     override fun onCreate() {
         super.onCreate()
 
         DaggerAppComponent.builder().application(this).build().inject(this)
-
-        // TODO - remove this when we have a proper service handling connection...
-        initCurrentServer()
 
         AndroidThreeTen.init(this)
         EmojiRepository.load(this)
@@ -74,10 +79,13 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         setupCrashlytics()
         setupFresco()
         setupTimber()
-        setupMigration()
+        startMigrationIfNeeded()
+
+        // TODO - remove this when we have a proper service handling connection...
+        initCurrentServer()
     }
 
-    private fun setupMigration() {
+    private fun startMigrationIfNeeded() {
         Realm.init(this)
         val serveListConfiguration = RealmConfiguration.Builder()
                 .name("server.list.realm")
@@ -90,10 +98,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         val serversInfoList = serverRealm.where(RealmBasedServerInfo::class.java).findAll().toList()
         serversInfoList.forEach { server ->
             val hostname = server.hostname
-            val authToken = server.session
             val url = if (server.insecure) "http://$hostname" else "https://$hostname"
-            val serverLogo = "$url/images/logo/android-chrome-192x192.png"
-            val serverBg = "$url/images/logo/mstile-310x150.png"
 
             val config = RealmConfiguration.Builder()
                     .name("${server.hostname}.realm")
@@ -105,39 +110,38 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
             val realm = Realm.getInstance(config)
             val user = realm.where(RealmUser::class.java)
                     .isNotEmpty(RealmUser.EMAILS).findFirst()
+            val session = realm.where(RealmSession::class.java).findFirst()
 
-            if (user != null) {
-                migrateServerInfo(url, authToken!!, serverLogo, serverBg, user)
-            }
             migratePublicSettings(url, realm)
-
+            if (user != null && session != null) {
+                val authToken = session.token
+                settingsRepository.get(url)
+                migrateServerInfo(url, authToken!!, settingsRepository.get(url), user)
+            }
             realm.close()
         }
         migrateCurrentServer(serversInfoList)
         serverRealm.close()
     }
 
-    private fun migrateServerInfo(url: String, authToken: String, serverLogo: String, serverBg: String, user: RealmUser) {
+    private fun migrateServerInfo(url: String, authToken: String, settings: PublicSettings, user: RealmUser) {
         val userId = user._id
-        val avatar = "$url/avatar/${user.username}?format=jpeg"
-
-        println("token_$url: ")
-        println("{\n" +
-                "   userId: $userId,\n" +
-                "   authToken: $authToken\n" +
-                "}")
-
-        println("ACCOUNT_KEY: ")
-        println("{\n" +
-                "   serverUrl: $url,\n" +
-                "   avatar: $avatar,\n" +
-                "   serverLogo: $serverLogo,\n" +
-                "   serverBg: $serverBg\n" +
-                "}")
+        val avatar = UrlHelper.getAvatarUrl(url, user.username!!)
+        val icon = settings.favicon()?.let {
+            UrlHelper.getServerLogoUrl(url, it)
+        }
+        val logo = settings.wideTile()?.let {
+            UrlHelper.getServerLogoUrl(url, it)
+        }
+        val account = Account(url, icon, logo, user.username!!, avatar)
+        launch(CommonPool) {
+            val tokenModel = TokenModel(userId!!, authToken)
+            multiServerRepository.save(url, tokenModel)
+            accountRepository.save(account)
+        }
     }
 
     private fun migratePublicSettings(url: String, realm: Realm) {
-        println("settings_$url: ")
         val settings = realm.where(RealmPublicSetting::class.java).findAll()
 
         val serverSettings = hashMapOf<String, Value<Any>>()
@@ -159,17 +163,17 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
             if (convertedSetting != null) {
                 val id = setting._id!!
-                serverSettings.put(setting._id!!, convertedSetting)
-                println("$id: $convertedSetting")
+                serverSettings.put(id, convertedSetting)
             }
         }
+        settingsRepository.save(url, serverSettings)
     }
 
     private fun migrateCurrentServer(serversList: List<RealmBasedServerInfo>) {
         var currentServer = getSharedPreferences("cache", Context.MODE_PRIVATE)
                 .getString("KEY_SELECTED_SERVER_HOSTNAME", null)
 
-        currentServer = if (serversList.toList().isNotEmpty()) {
+        currentServer = if (serversList.isNotEmpty()) {
             val server = serversList.find { it.hostname == currentServer }
             val hostname = server!!.hostname
             if (server.insecure) {
@@ -180,8 +184,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         } else {
             "http://$currentServer"
         }
-
-        println("current_server: $currentServer")
+        saveCurrentServerRepository.save(currentServer)
     }
 
     // TODO - remove this when we have a proper service handling connection...
