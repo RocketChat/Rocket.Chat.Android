@@ -79,13 +79,13 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         setupCrashlytics()
         setupFresco()
         setupTimber()
-        startMigrationIfNeeded()
+        migrateFromLegacy()
 
         // TODO - remove this when we have a proper service handling connection...
         initCurrentServer()
     }
 
-    private fun startMigrationIfNeeded() {
+    private fun migrateFromLegacy() {
         Realm.init(this)
         val serveListConfiguration = RealmConfiguration.Builder()
                 .name("server.list.realm")
