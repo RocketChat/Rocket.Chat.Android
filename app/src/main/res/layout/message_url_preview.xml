@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/url_preview_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingEnd="24dp"
+    android:paddingStart="72dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image_preview"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        app:actualImageScaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/text_host"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/colorSecondaryText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_preview"
+        tools:text="www.uol.com.br" />
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/text_host"
+        app:layout_constraintTop_toBottomOf="@id/text_host"
+        tools:text="Web page title" />
+
+    <TextView
+        android:id="@+id/text_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/text_host"
+        app:layout_constraintTop_toBottomOf="@id/text_title"
+        tools:text="description" />
+
+    <include
+        layout="@layout/layout_reactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/image_preview"
+        app:layout_constraintTop_toBottomOf="@+id/text_description" />
+</android.support.constraint.ConstraintLayout>

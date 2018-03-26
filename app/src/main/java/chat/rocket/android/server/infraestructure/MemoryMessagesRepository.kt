@@ -15,6 +15,11 @@ class MemoryMessagesRepository : MessagesRepository {
         return messages.filter { it.value.roomId == rid }.values.toList()
     }
 
+    override fun getRecentMessages(rid: String, count: Long): List<Message> {
+        return getByRoomId(rid).sortedByDescending { it.timestamp }
+                .distinctBy { it.sender }.take(count.toInt())
+    }
+
     override fun getAll(): List<Message> = messages.values.toList()
 
     override fun save(message: Message) {

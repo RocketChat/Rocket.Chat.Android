@@ -11,7 +11,19 @@ object UrlHelper {
      * @param avatarName The avatar name.
      * @return The avatar URL.
      */
-    fun getAvatarUrl(serverUrl: String, avatarName: String): String = removeTrailingSlash(serverUrl) + "/avatar/" + avatarName
+    fun getAvatarUrl(serverUrl: String, avatarName: String, format: String = "jpeg"): String =
+        removeTrailingSlash(serverUrl) + "/avatar/" + removeTrailingSlash(avatarName) + "?format=$format"
+
+    /**
+     * Returns the CAS URL.
+     *
+     * @param casLoginUrl The CAS login URL from the server settings.
+     * @param serverUrl The server URL.
+     * @param token The token to be send to the CAS server.
+     * @return The avatar URL.
+     */
+    fun getCasUrl(casLoginUrl: String, serverUrl: String, token: String): String =
+        removeTrailingSlash(casLoginUrl) + "?service=" + removeTrailingSlash(serverUrl) + "/_cas/" + token
 
     /**
      * Returns the server's Terms of Service URL.

@@ -1,7 +1,9 @@
 package chat.rocket.android.chatroom.di
 
 import android.arch.lifecycle.LifecycleOwner
+import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.presentation.ChatRoomView
+import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.ChatRoomFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
@@ -12,6 +14,9 @@ import kotlinx.coroutines.experimental.Job
 @Module
 @PerFragment
 class ChatRoomFragmentModule {
+
+    @Provides
+    fun provideChatRoomNavigator(activity: ChatRoomActivity) = ChatRoomNavigator(activity)
 
     @Provides
     fun chatRoomView(frag: ChatRoomFragment): ChatRoomView {
