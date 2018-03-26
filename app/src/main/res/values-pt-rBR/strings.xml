@@ -12,7 +12,6 @@
     <string name="title_settings">Configurações</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
-    <string name="title_about">Sobre</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -31,7 +30,6 @@
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Alterar senha</item>
-        <item name="item_about">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -71,7 +69,6 @@
     <string name="msg_new_password">Informe a nova senha</string>
     <string name="msg_confirm_password">Confirme a nova senha</string>
     <string name="msg_unread_messages">Mensagens não lidas</string>
-    <string name="msg_version">Versão</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
