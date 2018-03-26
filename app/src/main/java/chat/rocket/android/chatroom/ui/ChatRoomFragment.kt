@@ -419,13 +419,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
             }
         })
-
-        //scroll recycler view up when keyboard shows up
-        recycler_view.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            if (bottom < oldBottom) {
-                recycler_view.smoothScrollToPosition(0)
-            }
-        }
     }
 
     private fun setupFab() {
