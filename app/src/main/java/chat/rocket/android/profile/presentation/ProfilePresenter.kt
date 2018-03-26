@@ -54,7 +54,7 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                if (avatarUrl != "") {
+                if (avatarUrl.isNotEmpty()) {
                     client.setAvatar(avatarUrl)
                 }
                 if (avatarImage != null){
