@@ -71,12 +71,12 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                         client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                 messagesRepository.saveAll(messages)
 
+                val messagesViewModels = mapper.map(messages)
+                view.showMessages(messagesViewModels)
+
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
                 // but should mark only when the user see the first unread message.
                 markRoomAsRead(chatRoomId)
-
-                val messagesViewModels = mapper.map(messages)
-                view.showMessages(messagesViewModels)
 
                 subscribeMessages(chatRoomId)
             } catch (ex: Exception) {
@@ -230,6 +230,9 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun unsubscribeMessages(chatRoomId: String) {
         manager.removeStatusChannel(stateChannel)
         manager.unsubscribeRoomMessages(chatRoomId)
+        // All messages during the subscribed period are assumed to be read,
+        // and lastSeen is updated as the time when the user leaves the room
+        markRoomAsRead(chatRoomId)
     }
 
     /**
