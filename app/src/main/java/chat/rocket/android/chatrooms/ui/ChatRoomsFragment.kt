@@ -89,6 +89,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         val searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem?.actionView as SearchView
+        searchView?.maxWidth = Integer.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return queryChatRoomsByName(query)
