@@ -13,6 +13,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
+    <string name="title_about">About</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -30,6 +31,7 @@
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Change Password</item>
+        <item name="item_about">About</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -70,6 +72,9 @@
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_unread_messages">Unread messages</string>
+    <string name="msg_version">Version</string>
+    <string name="msg_build">Build</string>
+
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
