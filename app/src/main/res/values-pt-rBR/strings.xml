@@ -143,4 +143,6 @@
     <string name="Guggy_Command_Description">Gera um gif baseado no texto dado</string>
     <string name="Slash_Topic_Description">Definir tópico</string>
 
+    <!-- Emoji message-->
+    <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
 </resources>
