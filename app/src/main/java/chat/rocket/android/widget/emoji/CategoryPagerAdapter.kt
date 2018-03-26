@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
+import chat.rocket.android.util.extensions.setVisible
 import java.util.*
 
 class CategoryPagerAdapter(val listener: EmojiKeyboardListener) : PagerAdapter() {
@@ -24,10 +25,17 @@ class CategoryPagerAdapter(val listener: EmojiKeyboardListener) : PagerAdapter()
         val recycler = view.findViewById(R.id.emojiRecyclerView) as RecyclerView
         val adapter = EmojiAdapter(layoutManager.spanCount, listener)
         val category = EmojiCategory.values().get(position)
+        val emojiNoRecentText : TextView = view.findViewById(R.id.text_no_recent_emoji)
         val emojis = if (category != EmojiCategory.RECENTS) {
             EmojiRepository.getEmojisByCategory(category)
         } else {
             EmojiRepository.getRecents()
+        }
+        val recentEmojiSize = EmojiRepository.getRecents().size
+        if (category == EmojiCategory.RECENTS && recentEmojiSize == 0){
+            emojiNoRecentText.setVisible(true)
+        }else{
+            emojiNoRecentText.setVisible(false)
         }
         adapter.addEmojis(emojis)
         recycler.layoutManager = layoutManager
