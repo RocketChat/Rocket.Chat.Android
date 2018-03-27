@@ -15,7 +15,6 @@ import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.core.TokenRepository
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.Value
@@ -23,6 +22,7 @@ import chat.rocket.core.model.attachment.*
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import okhttp3.HttpUrl
 import timber.log.Timber
@@ -32,15 +32,17 @@ import javax.inject.Inject
 class ViewModelMapper @Inject constructor(private val context: Context,
                                           private val parser: MessageParser,
                                           private val messagesRepository: MessagesRepository,
+                                          private val getAccountInteractor: GetAccountInteractor,
                                           tokenRepository: TokenRepository,
-                                          localRepository: LocalRepository,
                                           serverInteractor: GetCurrentServerInteractor,
-                                          getSettingsInteractor: GetSettingsInteractor) {
+                                          getSettingsInteractor: GetSettingsInteractor,
+                                          localRepository: LocalRepository) {
 
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
+    private val currentServer = serverInteractor.get()!!
+    private val settings: Map<String, Value<Any>> = getSettingsInteractor.get(currentServer)
     private val baseUrl = settings.baseUrl()
-    private val currentUsername: String? = localRepository.get(LocalRepository.USERNAME_KEY)
-    private val token = tokenRepository.get()
+    private val token = tokenRepository.get(currentServer)
+    private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
 
     suspend fun map(message: Message): List<BaseViewModel<*>> {
         return translate(message)
@@ -249,6 +251,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             val quoteMessage: Message = quote
             quoteViewModel = mapMessage(quoteMessage)
         }
+
         return parser.renderMarkdown(message.message, quoteViewModel, currentUsername)
     }
 

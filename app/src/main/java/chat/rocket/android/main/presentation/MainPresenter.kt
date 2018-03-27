@@ -10,28 +10,32 @@ import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.registerPushToken
 import chat.rocket.core.internal.rest.unregisterPushToken
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainPresenter @Inject constructor(private val view: MainView,
-                                        private val strategy: CancelStrategy,
-                                        private val navigator: MainNavigator,
-                                        private val multiServerRepository: MultiServerTokenRepository,
-                                        private val serverInteractor: GetCurrentServerInteractor,
-                                        private val localRepository: LocalRepository,
-                                        private val navHeaderMapper: NavHeaderViewModelMapper,
-                                        private val saveAccountInteractor: SaveAccountInteractor,
-                                        private val getAccountsInteractor: GetAccountsInteractor,
-                                        private val removeAccountInterector: RemoveAccountInterector,
-                                        getSettingsInteractor: GetSettingsInteractor,
-                                        managerFactory: ConnectionManagerFactory,
-                                        factory: RocketChatClientFactory) {
+class MainPresenter @Inject constructor(
+    private val view: MainView,
+    private val strategy: CancelStrategy,
+    private val navigator: MainNavigator,
+    private val tokenRepository: TokenRepository,
+    private val serverInteractor: GetCurrentServerInteractor,
+    private val localRepository: LocalRepository,
+    private val navHeaderMapper: NavHeaderViewModelMapper,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    private val removeAccountInterector: RemoveAccountInterector,
+    private val factory: RocketChatClientFactory,
+    getSettingsInteractor: GetSettingsInteractor,
+    managerFactory: ConnectionManagerFactory
+) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
     private val client: RocketChatClient = factory.create(currentServer)
@@ -79,7 +83,7 @@ class MainPresenter @Inject constructor(private val view: MainView,
                 client.logout()
                 disconnect()
                 removeAccountInterector.remove(currentServer)
-                multiServerRepository.clear(currentServer)
+                tokenRepository.remove(currentServer)
                 navigator.toNewServer()
             } catch (exception: RocketChatException) {
                 exception.message?.let {
@@ -119,5 +123,11 @@ class MainPresenter @Inject constructor(private val view: MainView,
 
     fun addNewServer() {
         navigator.toServerScreen()
+    }
+
+    suspend fun refreshToken(token: String?) {
+        token?.let {
+            client.registerPushToken(it, getAccountsInteractor.get(), factory)
+        }
     }
 }

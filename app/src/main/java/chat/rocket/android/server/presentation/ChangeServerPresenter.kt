@@ -1,24 +1,26 @@
 package chat.rocket.android.server.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.launchUI
-import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.TokenRepository
 import javax.inject.Inject
 
-class ChangeServerPresenter @Inject constructor(private val view: ChangeServerView,
-                                                private val navigator: ChangeServerNavigator,
-                                                private val strategy: CancelStrategy,
-                                                private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
-                                                private val getCurrentServerInteractor: GetCurrentServerInteractor,
-                                                private val getAccountsInteractor: GetAccountsInteractor,
-                                                private val multiServerRepository: MultiServerTokenRepository,
-                                                private val settingsRepository: SettingsRepository,
-                                                private val tokenRepository: TokenRepository,
-                                                private val connectionManager: ConnectionManagerFactory) {
+class ChangeServerPresenter @Inject constructor(
+    private val view: ChangeServerView,
+    private val navigator: ChangeServerNavigator,
+    private val strategy: CancelStrategy,
+    private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
+    private val getCurrentServerInteractor: GetCurrentServerInteractor,
+    private val getAccountInteractor: GetAccountInteractor,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    private val settingsRepository: SettingsRepository,
+    private val tokenRepository: TokenRepository,
+    private val localRepository: LocalRepository,
+    private val connectionManager: ConnectionManagerFactory
+) {
     fun loadServer(newUrl: String?) {
         launchUI(strategy) {
             view.showProgress()
@@ -29,7 +31,7 @@ class ChangeServerPresenter @Inject constructor(private val view: ChangeServerVi
             }
 
             url?.let { serverUrl ->
-                val token = multiServerRepository.get(serverUrl)
+                val token = tokenRepository.get(serverUrl)
                 if (token == null) {
                     view.showInvalidCredentials()
                     view.hideProgress()
@@ -47,7 +49,11 @@ class ChangeServerPresenter @Inject constructor(private val view: ChangeServerVi
                     connectionManager.get(url)?.disconnect()
                 }
 
-                tokenRepository.save(Token(token.userId, token.authToken))
+                // Save the current username.
+                getAccountInteractor.get(serverUrl)?.let { account ->
+                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, account.userName)
+                }
+
                 saveCurrentServerInteractor.save(serverUrl)
                 view.hideProgress()
                 navigator.toChatRooms()
