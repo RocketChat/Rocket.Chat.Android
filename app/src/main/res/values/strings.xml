@@ -117,6 +117,22 @@
     <string name="status_disconnecting">disconnecting</string>
     <string name="status_waiting">connecting in %d seconds</string>
 
+    <!--Sort dialog-->
+    <string name="menu_chatroom_sort">Sort</string>
+    <string name="dialog_sort_title">Sort by</string>
+    <string name="dialog_sort_by_alphabet">Alphabetical</string>
+    <string name="dialog_sort_by_activity">Activity</string>
+    <string name="dialog_group_by_type">Group by type</string>
+    <string name="dialog_group_favourites">Group favourites</string>
+    <string name="chatroom_header">Header</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Channels</string>
+    <string name="header_private_groups">Private Groups</string>
+    <string name="header_direct_messages">Direct Messages</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Unknown</string>
+
     <!-- Slash Commands -->
     <string name="Slash_Gimme_Description">Displays ༼ つ ◕_◕ ༽つ before your message</string>
     <string name="Slash_LennyFace_Description">Displays ( ͡° ͜ʖ ͡°) after your message</string>
