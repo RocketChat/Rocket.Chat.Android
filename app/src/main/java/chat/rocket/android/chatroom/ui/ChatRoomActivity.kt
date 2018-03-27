@@ -85,9 +85,11 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         isChatRoomSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
 
-        addFragment("ChatRoomFragment", R.id.fragment_container) {
-            newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
-                    isChatRoomSubscribed)
+        if (supportFragmentManager.findFragmentByTag("ChatRoomFragment") == null) {
+            addFragment("ChatRoomFragment", R.id.fragment_container) {
+                newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
+                        isChatRoomSubscribed)
+            }
         }
 
         Slidr.attach(this)
