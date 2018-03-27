@@ -15,4 +15,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/text_no_recent_emoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/msg_no_recent_emoji"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
 </android.support.design.widget.CoordinatorLayout>
