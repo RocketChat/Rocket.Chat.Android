@@ -3,6 +3,7 @@ package chat.rocket.android.chatrooms.ui
 import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -14,11 +15,15 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.CheckBox
 import android.widget.RadioGroup
+import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.customtab.CustomTab
+import chat.rocket.android.customtab.WebViewFallback
 import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
@@ -27,8 +32,13 @@ import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.model.ChatRoom
+import com.facebook.drawee.view.SimpleDraweeView
+import com.leocardz.link.preview.library.LinkPreviewCallback
+import com.leocardz.link.preview.library.SourceContent
+import com.leocardz.link.preview.library.TextCrawler
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
+import kotlinx.android.synthetic.main.item_web_link.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
@@ -75,6 +85,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         setupToolbar()
         setupRecyclerView()
+        setUpWebSearch()
         presenter.loadChatRooms()
     }
 
@@ -263,6 +274,91 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         val dummy = arrayOfNulls<SimpleSectionedRecyclerViewAdapter.Section>(sections.size)
         sectionedAdapter?.setSections(sections.toArray(dummy))
+    }
+
+    private fun setUpWebSearch() {
+        //val link = "http://bizzbyster.github.io/search/"
+
+        val title = SharedPreferenceHelper.getString("web_search_title", "Web Search")
+        val description = SharedPreferenceHelper.getString("web_search_desc", "Description")
+        val imageUrl = SharedPreferenceHelper.getString("web_search_image", "")
+        val link = SharedPreferenceHelper.getString("web_search_link", "http://bizzbyster.github.io/search/")
+
+        updateUI(title, text_title,
+                description, text_description,
+                imageUrl, image_web_link,
+                link, text_link)
+
+        web_search.setOnClickListener({
+            CustomTab.openCustomTab(this.activity?.applicationContext!!, Uri.parse(link), WebViewFallback())
+        })
+
+        val linkPreviewCallback = object : LinkPreviewCallback {
+
+            override fun onPre() {
+                //Do nothing
+            }
+
+            override fun onPos(sourceContent: SourceContent?, b: Boolean) {
+                sourceContent?.let {
+                    val newTitle = sourceContent.title
+                    val newDescription = sourceContent.description
+                    val imageList = sourceContent.images
+                    var newImageUrl = ""
+
+                    if (imageList != null && imageList.size != 0) {
+                        newImageUrl = imageList[0]
+                    }
+
+                    updateUI(newTitle, text_title,
+                            newDescription, text_description,
+                            newImageUrl, image_web_link,
+                            link, text_link)
+
+                    launch {
+                        SharedPreferenceHelper.putString("web_search_title", newTitle)
+                        SharedPreferenceHelper.putString("web_search_desc", newDescription)
+                        SharedPreferenceHelper.putString("web_search_image", newImageUrl)
+                        SharedPreferenceHelper.putString("web_search_link", link)
+                    }
+                }
+            }
+        }
+        val textCrawler = TextCrawler()
+        textCrawler.makePreview(linkPreviewCallback, link)
+    }
+
+    private fun updateUI(title: String, textViewTitle: TextView,
+                         description: String, textViewDescription: TextView,
+                         imageUrl: String, imageView: SimpleDraweeView,
+                         link: String, textViewLink: TextView) {
+
+        if (!title.isEmpty()) {
+            textViewTitle.visibility = View.VISIBLE
+            textViewTitle.content = title
+        }
+
+        if (!description.isEmpty()) {
+            textViewDescription.visibility = View.VISIBLE
+            textViewDescription.content = description
+        }
+
+        if (title.isEmpty() && !description.isEmpty()) {
+            textViewDescription.visibility = View.GONE
+            textViewTitle.visibility = View.VISIBLE
+            textViewTitle.content = description
+        }
+
+        if (!imageUrl.isEmpty()) {
+            imageView.visibility = View.VISIBLE
+            imageView.setImageURI(imageUrl)
+        } else {
+            imageView.setActualImageResource(R.drawable.ic_link_black_24dp)
+        }
+
+        if (!link.isEmpty()) {
+            textViewLink.content = link
+        }
     }
 
     private fun queryChatRoomsByName(name: String?): Boolean {

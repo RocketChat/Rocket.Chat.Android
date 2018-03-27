@@ -6,10 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".chatrooms.ui.ChatRoomsFragment">
 
+    <include
+        android:id="@+id/web_search"
+        layout="@layout/item_web_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/web_search"
+        android:background="@color/colorDividerMessageComposer" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/divider" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
