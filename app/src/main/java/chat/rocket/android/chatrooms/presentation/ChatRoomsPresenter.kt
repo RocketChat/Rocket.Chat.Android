@@ -104,7 +104,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             ChatRoom(it.id, RoomType.DIRECT_MESSAGE, SimpleUser(
                     username = it.username, name = it.name, id = null), it.name ?: "",
                     it.name, false, null, null, null,
-                    null, null, false, false, false,
+                    null, null, null, false, false, false,
                     0L, null, 0L, null, client
             )
         }
@@ -114,7 +114,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         return rooms.map {
             ChatRoom(it.id, it.type, it.user, it.name ?: "",
                     it.fullName, it.readonly, it.updatedAt, null, null,
-                    it.topic, it.announcement, false, false, false,
+                    it.topic, it.description, it.announcement, false, false, false,
                     0L, null, 0L, it.lastMessage, client
             )
         }
@@ -255,6 +255,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     timestamp,
                     lastSeen,
                     room.topic,
+                    room.description,
                     room.announcement,
                     default,
                     open,
@@ -286,6 +287,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     subscription.timestamp ?: timestamp,
                     subscription.lastSeen ?: lastSeen,
                     topic,
+                    description,
                     announcement,
                     subscription.isDefault,
                     subscription.open,

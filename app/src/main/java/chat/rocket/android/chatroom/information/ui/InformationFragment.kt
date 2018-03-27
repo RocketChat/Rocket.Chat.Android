@@ -68,7 +68,7 @@ class InformationFragment: Fragment(), InformationView {
         room_name.text = getDisplayedText(room.name)
         bindChannelType(room.type, room_name)
 
-        room_description_text.text = getDisplayedText(room.fullName)
+        room_description_text.text = getDisplayedText(room.description)
         room_topic_text.text = getDisplayedText(room.topic)
         room_announcement_text.text = getDisplayedText(room.announcement)
 
