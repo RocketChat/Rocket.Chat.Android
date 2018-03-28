@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Parcelable
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Layout
@@ -13,6 +14,8 @@ import android.text.Spanned
 import android.text.style.*
 import android.util.Patterns
 import android.view.View
+import android.view.LayoutInflater
+import android.view.Gravity
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.customtab.CustomTab
@@ -29,6 +32,9 @@ import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.renderer.SpannableMarkdownVisitor
 import java.util.regex.Pattern
 import javax.inject.Inject
+import android.widget.Toast
+import android.widget.TextView
+import timber.log.Timber
 
 class MessageParser @Inject constructor(val context: Application, private val configuration: SpannableConfiguration) {
 
@@ -169,7 +175,19 @@ class MessageParser @Inject constructor(val context: Application, private val co
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
                             with (view) {
-                                CustomTab.openCustomTab(context, getUri(link), WebViewFallback())
+                                Timber.d("$link")
+                                if (link.startsWith("http://www.requiresinternet.com")) {
+                                    val layout = LayoutInflater.from(context).inflate(R.layout.custom_toast, findViewById(R.id.custom_toast_container))
+                                    val text = layout.findViewById<TextView>(R.id.text)
+                                    text.setText("Please credit your Viasat account to access this page")
+                                    val toast =  Toast(context)
+                                    toast.setGravity(Gravity.FILL_HORIZONTAL or Gravity.BOTTOM, 0, 0)
+                                    toast.setDuration(Toast.LENGTH_LONG)
+                                    toast.setView(layout)
+                                    toast.show()
+                                } else {
+                                    CustomTab.openCustomTab(context, getUri(link), WebViewFallback())
+                                }
                             }
                         }
                     }, matcher.start(0), matcher.end(0))
@@ -186,6 +204,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
             }
             return uri
         }
+
     }
 
     class QuoteMessageBodyVisitor(private val context: Context,

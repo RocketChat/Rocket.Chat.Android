@@ -31,6 +31,7 @@ import kotlinx.coroutines.experimental.runBlocking
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
+import timber.log.Timber
 
 fun Context.webViewIntent(webPageUrl: String, title: String = "Web Chat"): Intent {
     return Intent(this, WebViewActivity::class.java).apply {
@@ -126,6 +127,9 @@ class WebViewActivity : AppCompatActivity() {
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                Timber.d("%s", request?.url.toString())
+                if (request?.url.toString().startsWith("https://www.google.com/search", ignoreCase = true))
+                    return false
                 return isNewUrl(request?.url.toString())
             }
         }
