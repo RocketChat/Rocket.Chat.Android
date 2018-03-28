@@ -30,6 +30,7 @@ ext {
         sheetMenu              : '1.3.3',
         aVLoadingIndicatorView : '2.1.3',
         flexbox                : '0.3.2',
+        customTabs             : '27.0.2',
 
         // For testing
         junit                  : '4.12',
@@ -93,6 +94,8 @@ ext {
         sheetMenu              : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
 
         aVLoadingIndicatorView : "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
+
+        customTabs             : "com.android.support:customtabs:${versions.customTabs}",
 
         // For testing
         junit         : "junit:junit:$versions.junit",
