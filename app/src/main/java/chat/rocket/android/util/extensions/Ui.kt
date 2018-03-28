@@ -68,3 +68,12 @@ fun RecyclerView.isAtBottom(): Boolean {
 
     return false // or true??? we can't determine the first visible item.
 }
+
+fun RecyclerView.isNearBottom(): Boolean {
+    val manager: RecyclerView.LayoutManager? = layoutManager
+    if (manager is LinearLayoutManager) {
+        return manager.findFirstVisibleItemPosition() <= 3 // custom message threshold
+    }
+
+    return false
+}
