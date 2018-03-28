@@ -3,7 +3,6 @@ package chat.rocket.android.chatrooms.ui
 import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -11,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.CheckBox
@@ -21,9 +21,6 @@ import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
-import chat.rocket.android.helper.SharedPreferenceHelper
-import chat.rocket.android.customtab.CustomTab
-import chat.rocket.android.customtab.WebViewFallback
 import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
@@ -158,9 +155,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun invalidateQueryOnSearch(){
+    private fun invalidateQueryOnSearch() {
         searchView?.let {
-            if (!searchView!!.isIconified){
+            if (!searchView!!.isIconified) {
                 queryChatRoomsByName(searchView!!.query.toString())
             }
         }
@@ -234,7 +231,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.addItemDecoration(DividerItemDecoration(this,
                     resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
                     resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
-            recycler_view.itemAnimator = DefaultItemAnimator()
+            recycler_view.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
 
             val baseAdapter = ChatRoomsAdapter(this,
