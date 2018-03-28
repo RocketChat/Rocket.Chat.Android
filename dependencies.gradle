@@ -4,14 +4,14 @@ ext {
         compileSdk        : 27,
         targetSdk         : 27,
         buildTools        : '27.0.3',
-        kotlin            : '1.2.30',
-        coroutine         : '0.22',
-        dokka             : '0.9.15',
+        kotlin            : '1.2.31',
+        coroutine         : '0.22.5',
+        dokka             : '0.9.16',
 
         // Main dependencies
         support                : '27.0.2',
         constraintLayout       : '1.0.2',
-        androidKtx             : '0.1',
+        androidKtx             : '0.2',
         dagger                 : '2.14.1',
         exoPlayer              : '2.6.0',
         playServices           : '11.8.0',
@@ -19,7 +19,7 @@ ext {
         rxKotlin               : '2.2.0',
         rxAndroid              : '2.0.2',
         moshi                  : '1.6.0-SNAPSHOT',
-        okhttp                 : '3.9.1',
+        okhttp                 : '3.10.0',
         timber                 : '4.6.1',
         threeTenABP            : '1.0.5',
         rxBinding              : '2.0.0',
@@ -51,7 +51,7 @@ ext {
         cardView               : "com.android.support:cardview-v7:${versions.support}",
         flexbox                : "com.google.android:flexbox:${versions.flexbox}",
 
-        androidKtx             :  "androidx.core:core-ktx:${versions.androidKtx}",
+        androidKtx             : "androidx.core:core-ktx:${versions.androidKtx}",
 
         dagger                 : "com.google.dagger:dagger:${versions.dagger}",
         daggerSupport          : "com.google.dagger:dagger-android-support:${versions.dagger}",
