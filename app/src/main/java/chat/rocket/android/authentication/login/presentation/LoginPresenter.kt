@@ -108,6 +108,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         launchUI(strategy) {
             try {
                 val services = client.settingsOauth().services
+                val state = "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
+
                 if (services.isNotEmpty()) {
                     var totalSocialAccountsEnabled = 0
 
@@ -118,7 +120,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (settings.isGithubAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
                         if (clientId != null) {
-                            val state = generateRandomString(5)
                             view.setupGithubButtonListener(UrlHelper.getGithubOauthUrl(clientId, state), state)
                             view.enableLoginByGithub()
                             totalSocialAccountsEnabled++
@@ -143,8 +144,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (settings.isGitlabAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
                         if (clientId != null) {
-                            // TODO: Improve this code.
-                            val state = "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
                             view.setupGitlabButtonListener(UrlHelper.getGitlabOauthUrl(clientId, server!!, state), state)
                             view.enableLoginByGitlab()
                             totalSocialAccountsEnabled++

@@ -51,7 +51,7 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".webview.gitlab.ui.GitlabWebViewActivity"
+            android:name=".webview.oauth.ui.OauthWebViewActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
 
