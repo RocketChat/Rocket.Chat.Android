@@ -37,7 +37,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                                           serverInteractor: GetCurrentServerInteractor,
                                           getSettingsInteractor: GetSettingsInteractor) {
 
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
+    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
     private val baseUrl = settings.baseUrl()
     private val currentUsername: String? = localRepository.get(LocalRepository.USERNAME_KEY)
     private val token = tokenRepository.get()

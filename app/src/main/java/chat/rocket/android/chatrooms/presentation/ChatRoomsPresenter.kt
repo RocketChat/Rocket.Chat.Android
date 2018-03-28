@@ -36,7 +36,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private val currentServer = serverInteractor.get()!!
     private val client = manager.client
     private var reloadJob: Deferred<List<ChatRoom>>? = null
-    private val settings = settingsRepository.get(currentServer)!!
+    private val settings = settingsRepository.get(currentServer)
 
     private val subscriptionsChannel = Channel<StreamMessage<BaseRoom>>()
     private val stateChannel = Channel<State>()

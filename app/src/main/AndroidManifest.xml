@@ -51,6 +51,11 @@
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".webview.gitlab.ui.GitlabWebViewActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".chatroom.ui.ChatRoomActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />

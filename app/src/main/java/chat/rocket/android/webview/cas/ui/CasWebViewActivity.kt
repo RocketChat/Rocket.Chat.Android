@@ -13,7 +13,7 @@ import chat.rocket.android.R
 import kotlinx.android.synthetic.main.activity_web_view.*
 import kotlinx.android.synthetic.main.app_bar.*
 
-fun Context.webViewIntent(webPageUrl: String, casToken: String): Intent {
+fun Context.casWebViewIntent(webPageUrl: String, casToken: String): Intent {
     return Intent(this, CasWebViewActivity::class.java).apply {
         putExtra(INTENT_WEB_PAGE_URL, webPageUrl)
         putExtra(INTENT_CAS_TOKEN, casToken)
@@ -21,7 +21,7 @@ fun Context.webViewIntent(webPageUrl: String, casToken: String): Intent {
 }
 
 private const val INTENT_WEB_PAGE_URL = "web_page_url"
-private const val INTENT_CAS_TOKEN = "cas_token"
+const val INTENT_CAS_TOKEN = "cas_token"
 
 class CasWebViewActivity : AppCompatActivity() {
     private lateinit var webPageUrl: String
@@ -49,14 +49,14 @@ class CasWebViewActivity : AppCompatActivity() {
         if (web_view.canGoBack()) {
             web_view.goBack()
         } else {
-            finishActivity(false)
+            closeView()
         }
     }
 
     private fun setupToolbar() {
         toolbar.title = getString(R.string.title_authentication)
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
-        toolbar.setNavigationOnClickListener { finishActivity(false) }
+        toolbar.setNavigationOnClickListener { closeView() }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -64,16 +64,16 @@ class CasWebViewActivity : AppCompatActivity() {
         web_view.settings.javaScriptEnabled = true
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-                // The user can be already logged in the CAS, so check if the URL contains the "ticket" word
-                // (that means he/she is successful authenticated and we don't need to wait until the page is finished.
+                // The user may have already been logged in the CAS, so check if the URL contains the "ticket" word
+                // (that means the user is successful authenticated and we don't need to wait until the page is fully loaded).
                 if (url.contains("ticket")) {
-                    finishActivity(true)
+                    closeView(Activity.RESULT_OK)
                 }
             }
 
             override fun onPageFinished(view: WebView, url: String) {
                 if (url.contains("ticket")) {
-                    finishActivity(true)
+                    closeView(Activity.RESULT_OK)
                 } else {
                     view_loading.hide()
                 }
@@ -82,13 +82,9 @@ class CasWebViewActivity : AppCompatActivity() {
         web_view.loadUrl(webPageUrl)
     }
 
-    private fun finishActivity(setResultOk: Boolean) {
-        if (setResultOk) {
-            setResult(Activity.RESULT_OK, Intent().putExtra(INTENT_CAS_TOKEN, casToken))
-            finish()
-        } else {
-            super.onBackPressed()
-        }
+    private fun closeView(activityResult: Int = Activity.RESULT_CANCELED) {
+        setResult(activityResult, Intent().putExtra(INTENT_CAS_TOKEN, casToken))
+        finish()
         overridePendingTransition(R.anim.hold, R.anim.slide_down)
     }
 }

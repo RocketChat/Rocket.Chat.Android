@@ -26,6 +26,27 @@ object UrlHelper {
         removeTrailingSlash(casLoginUrl) + "?service=" + removeTrailingSlash(serverUrl) + "/_cas/" + token
 
     /**
+     * Returns the Github Oauth URL.
+     *
+     * @param clientId The GitHub client ID.
+     * @param state An unguessable random string used to protect against forgery attacks.
+     * @return The Github Oauth URL.
+     */
+    // TODO: Fix github url.
+    fun getGithubOauthUrl(clientId: String, state: String): String =
+        "https://github.com/login/oauth/authorize?scope=user:email&client_id=$clientId&state=$state"
+    /**
+     * Returns the Gitlab Oauth URL.
+     *
+     * @param clientId The Gitlab client ID.
+     * @param serverUrl The server URL.
+     * @param state An unguessable random string used to protect against forgery attacks.
+     * @return The Gitlab Oauth URL.
+     */
+    fun getGitlabOauthUrl(clientId: String, serverUrl: String, state: String): String =
+        "https://gitlab.com/oauth/authorize?client_id=$clientId&redirect_uri=${removeTrailingSlash(serverUrl)}/_oauth/gitlab?close&response_type=code&state=$state&scope=read_user"
+
+    /**
      * Returns the server's Terms of Service URL.
      *
      * @param serverUrl The server URL.

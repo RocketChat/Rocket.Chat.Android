@@ -24,7 +24,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                                                   getSettingsInteractor: GetSettingsInteractor) {
 
     private val client = factory.create(serverInteractor.get()!!)
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
+    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
     private var pinnedMessagesListOffset: Int = 0
 
     /**

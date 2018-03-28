@@ -152,7 +152,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
             recycler_view.adapter = ChatRoomsAdapter(this,
-                    settingsRepository.get(serverInteractor.get()!!)!!) { chatRoom ->
+                    settingsRepository.get(serverInteractor.get()!!)) { chatRoom ->
                 presenter.loadChatRoom(chatRoom)
             }
         }
