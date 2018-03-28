@@ -28,6 +28,7 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.webview.weblink.ui.webViewIntent
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.internal.realtime.State
@@ -290,7 +291,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 link, text_link)
 
         web_search.setOnClickListener({
-            CustomTab.openCustomTab(this.activity?.applicationContext!!, Uri.parse(link), WebViewFallback())
+            startActivity(this.activity?.webViewIntent(link, if (!title.isEmpty()) title else resources.getString(R.string.url_preview_title)))
         })
 
         val linkPreviewCallback = object : LinkPreviewCallback {
