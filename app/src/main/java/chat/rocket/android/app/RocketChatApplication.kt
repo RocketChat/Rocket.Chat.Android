@@ -91,7 +91,14 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         setupCrashlytics()
         setupFresco()
         setupTimber()
-        migrateFromLegacy()
+
+        // TODO - remove this and all realm stuff when we got to 80% in 2.0
+        try {
+            migrateFromLegacy()
+        } catch (ex: Exception) {
+            Timber.d(ex, "Error migrating old accounts")
+            ex.printStackTrace()
+        }
     }
 
     private fun migrateFromLegacy() {
@@ -144,8 +151,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         }
         val account = Account(url, icon, logo, user.username!!, avatar)
         launch(CommonPool) {
-            val tokenModel = TokenModel(userId!!, authToken)
-            multiServerRepository.save(url, tokenModel)
+            tokenRepository.save(url, Token(userId!!, authToken))
             accountRepository.save(account)
         }
     }
