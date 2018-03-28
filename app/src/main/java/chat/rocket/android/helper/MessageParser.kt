@@ -169,7 +169,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
                             with (view) {
-                                CustomTab.openCustomTab(context, getUri(link), WebViewFallback())
+                                CustomTab.openCustomTab(context, link, WebViewFallback())
                             }
                         }
                     }, matcher.start(0), matcher.end(0))
