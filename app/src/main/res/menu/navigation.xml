@@ -9,7 +9,7 @@
             android:id="@+id/action_chat_rooms"
             android:checked="true"
             android:icon="@drawable/ic_chat_bubble_black_24dp"
-            android:title="@string/title_chats" />
+            android:title="@string/title_home" />
 
         <item
             android:id="@+id/action_profile"
