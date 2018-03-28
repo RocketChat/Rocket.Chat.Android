@@ -5,7 +5,7 @@ import android.preference.PreferenceManager
 import chat.rocket.android.app.RocketChatApplication
 
 object SharedPreferenceHelper {
-    private var sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(RocketChatApplication.getAppContext())
+    private var sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(RocketChatApplication.application.applicationContext)
     private var editor: SharedPreferences.Editor? = sharedPreferences.edit()
 
     //Add more methods for other types if needed
@@ -30,7 +30,7 @@ object SharedPreferenceHelper {
         editor!!.putString(key, value).apply()
     }
 
-    fun getString(key: String, defaultValue: String): String? {
+    fun getString(key: String, defaultValue: String): String {
         return sharedPreferences.getString(key, defaultValue)
     }
 
