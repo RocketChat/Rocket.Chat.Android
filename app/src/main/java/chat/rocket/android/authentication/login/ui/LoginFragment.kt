@@ -219,6 +219,14 @@ class LoginFragment : Fragment(), LoginView {
         button_google.isClickable = true
     }
 
+    // TODO: Use custom tabs instead of web view. See https://github.com/RocketChat/Rocket.Chat.Android/issues/968
+    override fun setupGoogleButtonListener(googleUrl: String, state: String) {
+        button_google.setOnClickListener {
+            startActivityForResult(context?.oauthWebViewIntent(googleUrl, state), REQUEST_CODE_FOR_OAUTH)
+            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        }
+    }
+
     override fun enableLoginByLinkedin() {
         button_linkedin.isClickable = true
     }
