@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.app.Service
 import android.content.BroadcastReceiver
+import android.content.Context
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.helper.CrashlyticsTree
@@ -23,6 +24,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.*
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class RocketChatApplication : Application(), HasActivityInjector, HasServiceInjector, HasBroadcastReceiverInjector {
@@ -60,6 +62,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         // TODO - remove this when we have a proper service handling connection...
         initCurrentServer()
         application = this
+        context = WeakReference(applicationContext)
 
         AndroidThreeTen.init(this)
         EmojiRepository.load(this)
@@ -110,5 +113,10 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
     companion object {
         lateinit var application: RocketChatApplication
+        var context: WeakReference<Context>? = null
+
+        fun getAppContext(): Context? {
+            return context?.get()
+        }
     }
 }

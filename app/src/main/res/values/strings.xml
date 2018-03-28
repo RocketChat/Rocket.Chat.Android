@@ -117,14 +117,21 @@
     <string name="status_disconnecting">disconnecting</string>
     <string name="status_waiting">connecting in %d seconds</string>
 
-    <!--Web links-->
-    <string name="customtab_bookmark_label">Bookmark</string>
-    <string name="added_bookmark">Added bookmark</string>
-    <string name="removed_bookmark">Removed Bookmark</string>
-    <string name="url_preview_image">Image</string>
-    <string name="url_preview_title">Web chat</string>
-    <string name="url_preview_description">Description</string>
-    <string name="url_preview_link">Link</string>
+    <!--Sort dialog-->
+    <string name="menu_chatroom_sort">Sort</string>
+    <string name="dialog_sort_title">Sort by</string>
+    <string name="dialog_sort_by_alphabet">Alphabetical</string>
+    <string name="dialog_sort_by_activity">Activity</string>
+    <string name="dialog_group_by_type">Group by type</string>
+    <string name="dialog_group_favourites">Group favourites</string>
+    <string name="chatroom_header">Header</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Channels</string>
+    <string name="header_private_groups">Private Groups</string>
+    <string name="header_direct_messages">Direct Messages</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Unknown</string>
 
     <!-- Slash Commands -->
     <string name="Slash_Gimme_Description">Displays ༼ つ ◕_◕ ༽つ before your message</string>
@@ -151,4 +158,14 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">No recent emoji</string>
+    
+    <!--Web links-->
+    <string name="customtab_bookmark_label">Bookmark</string>
+    <string name="added_bookmark">Added bookmark</string>
+    <string name="removed_bookmark">Removed Bookmark</string>
+    <string name="url_preview_image">Image</string>
+    <string name="url_preview_title">Web chat</string>
+    <string name="url_preview_description">Description</string>
+    <string name="url_preview_link">Link</string>
+
 </resources>

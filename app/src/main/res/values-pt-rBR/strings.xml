@@ -115,15 +115,21 @@
     <string name="status_disconnecting">desconectando</string>
     <string name="status_waiting">conectando em %d segundos</string>
 
-    <!--Web links-->
-    <string name="customtab_bookmark_label">marca páginas</string>
-    <string name="title_web_links">Links da Web</string>
-    <string name="added_bookmark">Marcador adicionado</string>
-    <string name="removed_bookmark">Marcador removido</string>
-    <string name="url_preview_image">Imagem</string>
-    <string name="url_preview_title">Web chat</string>
-    <string name="url_preview_description">Descrição</string>
-    <string name="url_preview_link">Ligação</string>
+    <!--Sort dialog-->
+    <string name="menu_chatroom_sort">Ordenar</string>
+    <string name="dialog_sort_title">Ordenar por</string>
+    <string name="dialog_sort_by_alphabet">Alfabeticamente</string>
+    <string name="dialog_sort_by_activity">Atividade</string>
+    <string name="dialog_group_by_type">Agrupar por tipo</string>
+    <string name="dialog_group_favourites">Grupos favoritos</string>
+    <string name="chatroom_header">Cabeçalho</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Canais</string>
+    <string name="header_private_groups">Grupos Privados</string>
+    <string name="header_direct_messages">Mensagens diretas</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Desconhecido</string>
 
     <!-- Slash Commands -->
     <string name="Slash_Gimme_Description">Exibir ༼ つ ◕_◕ ༽つ antes de sua mensagem</string>
@@ -150,4 +156,14 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
+
+    <!--Web links-->
+    <string name="customtab_bookmark_label">marca páginas</string>
+    <string name="title_web_links">Links da Web</string>
+    <string name="added_bookmark">Marcador adicionado</string>
+    <string name="removed_bookmark">Marcador removido</string>
+    <string name="url_preview_image">Imagem</string>
+    <string name="url_preview_title">Web chat</string>
+    <string name="url_preview_description">Descrição</string>
+    <string name="url_preview_link">Ligação</string>
 </resources>
