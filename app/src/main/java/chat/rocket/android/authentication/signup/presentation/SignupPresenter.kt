@@ -62,7 +62,7 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                             // TODO This function returns a user token so should we save it?
                             client.login(username, password)
                             val me = client.me()
-                            localRepository.save(LocalRepository.USERNAME_KEY, me.username)
+                            localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                             saveAccount(me)
                             registerPushToken()
                             navigator.toChatList()

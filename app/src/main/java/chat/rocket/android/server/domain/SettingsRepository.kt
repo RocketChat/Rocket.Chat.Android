@@ -96,3 +96,4 @@ fun PublicSettings.uploadMaxFileSize(): Int {
 }
 
 fun PublicSettings.baseUrl(): String? = this[SITE_URL]?.value as String
+fun PublicSettings.siteName(): String? = this[SITE_NAME]?.value as String?

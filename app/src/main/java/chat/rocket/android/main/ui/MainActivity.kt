@@ -1,7 +1,6 @@
 package chat.rocket.android.main.ui
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +9,6 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import chat.rocket.android.R
-import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.adapter.AccountSelector
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.presentation.MainPresenter
@@ -21,6 +19,8 @@ import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
+import com.google.android.gms.gcm.GoogleCloudMessaging
+import com.google.android.gms.iid.InstanceID
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -29,6 +29,8 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.nav_header.view.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -42,6 +44,12 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        launch(CommonPool) {
+            val token = InstanceID.getInstance(this@MainActivity).getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
+            Timber.d("GCM token: $token")
+            presenter.refreshToken(token)
+        }
 
         presenter.connect()
         presenter.loadCurrentInfo()

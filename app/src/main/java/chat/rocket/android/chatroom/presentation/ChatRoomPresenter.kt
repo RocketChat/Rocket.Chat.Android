@@ -364,7 +364,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             try {
                 val members = client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
                 usersRepository.saveAll(members)
-                val self = localRepository.get(LocalRepository.USERNAME_KEY)
+                val self = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 // Take at most the 100 most recent messages distinguished by user. Can return less.
                 val recentMessages = messagesRepository.getRecentMessages(chatRoomId, 100)
                         .filterNot { filterSelfOut && it.sender?.username == self }
@@ -411,7 +411,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                         if (users.isNotEmpty()) {
                             usersRepository.saveAll(users)
                         }
-                        val self = localRepository.get(LocalRepository.USERNAME_KEY)
+                        val self = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                         view.populatePeopleSuggestions(users.map {
                             val username = it.username ?: ""
                             val name = it.name ?: ""
