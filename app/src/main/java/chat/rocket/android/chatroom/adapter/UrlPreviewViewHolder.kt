@@ -1,6 +1,5 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.content.Intent
 import android.net.Uri
 import android.support.customtabs.CustomTabsIntent
 import android.view.View
@@ -37,7 +36,7 @@ class UrlPreviewViewHolder(itemView: View,
             val customTabsIntent = tabsbuilder.build()
 
             url_preview_layout.setOnClickListener { view ->
-                customTabsIntent.launchUrl(context, Uri.parse(data.rawData.url))
+                customTabsIntent.launchUrl(context, Uri.parse(data.rawData.url.toLowerCase()))
             }
         }
     }

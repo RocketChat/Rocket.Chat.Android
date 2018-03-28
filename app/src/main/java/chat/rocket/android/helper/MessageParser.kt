@@ -176,7 +176,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                                 val tabsbuilder = CustomTabsIntent.Builder()
                                 tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
                                 val customTabsIntent = tabsbuilder.build()
-                                customTabsIntent.launchUrl(context, getUri(link))
+                                customTabsIntent.launchUrl(context, getUri(link.toLowerCase()))
                             }
                         }
                     }, matcher.start(0), matcher.end(0))
