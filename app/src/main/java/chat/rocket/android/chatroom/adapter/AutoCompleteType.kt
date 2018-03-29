@@ -6,5 +6,5 @@ const val PEOPLE = 0
 const val ROOMS = 1
 
 @Retention(AnnotationRetention.SOURCE)
-@IntDef(value = [PEOPLE, ROOMS])
+@IntDef(PEOPLE, ROOMS)
 annotation class AutoCompleteType

@@ -10,6 +10,7 @@ import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
@@ -27,6 +28,7 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                                           private val serverInteractor: GetCurrentServerInteractor,
                                           private val factory: RocketChatClientFactory,
                                           private val saveAccountInteractor: SaveAccountInteractor,
+                                          private val getAccountsInteractor: GetAccountsInteractor,
                                           settingsInteractor: GetSettingsInteractor) {
     private val currentServer = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(currentServer)
@@ -98,9 +100,10 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
 
     private suspend fun registerPushToken() {
         localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it)
+            client.registerPushToken(it, getAccountsInteractor.get(), factory)
         }
-        // TODO: Schedule push token registering when it comes up null
+        // TODO: When the push token is null, at some point we should receive it with
+        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
     }
 
     private suspend fun saveAccount(me: Myself) {
