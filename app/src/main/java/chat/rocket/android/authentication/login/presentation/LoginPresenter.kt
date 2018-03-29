@@ -24,6 +24,7 @@ private const val TYPE_LOGIN_CAS = 1
 private const val TYPE_LOGIN_OAUTH = 2
 private const val SERVICE_NAME_GITHUB = "github"
 private const val SERVICE_NAME_GOOGLE = "google"
+private const val SERVICE_NAME_LINKEDIN = "linkedin"
 private const val SERVICE_NAME_GILAB = "gitlab"
 
 class LoginPresenter @Inject constructor(private val view: LoginView,
@@ -135,8 +136,12 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         }
                     }
                     if (settings.isLinkedinAuthenticationEnabled()) {
-                        view.enableLoginByLinkedin()
-                        totalSocialAccountsEnabled++
+                        val clientId = getOauthClientId(services, SERVICE_NAME_LINKEDIN)
+                        if (clientId != null) {
+                            view.setupGoogleButtonListener(UrlHelper.getLinkedinOauthUrl(clientId, server!!, state), state)
+                            view.enableLoginByLinkedin()
+                            totalSocialAccountsEnabled++
+                        }
                     }
                     if (settings.isMeteorAuthenticationEnabled()) {
                         view.enableLoginByMeteor()

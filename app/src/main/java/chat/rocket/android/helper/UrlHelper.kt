@@ -47,6 +47,17 @@ object UrlHelper {
         "https://accounts.google.com/o/oauth2/v2/auth?client_id=$clientId&redirect_uri=${removeTrailingSlash(serverUrl)}/_oauth/google?close&response_type=code&state=$state&scope=email%20profile"
 
     /**
+     * Returns the Linkedin Oauth URL.
+     *
+     * @param clientId The Linkedin client ID.
+     * @param serverUrl The server URL.
+     * @param state An unguessable random string used to protect against forgery attacks.
+     * @return The Linkedin Oauth URL.
+     */
+    fun getLinkedinOauthUrl(clientId: String, serverUrl: String, state: String) =
+        "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=$clientId&redirect_uri=${removeTrailingSlash(serverUrl)}/_oauth/linkedin?close&state=$state"
+
+    /**
      * Returns the Gitlab Oauth URL.
      *
      * @param clientId The Gitlab client ID.
