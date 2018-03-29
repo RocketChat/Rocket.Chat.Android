@@ -13,9 +13,10 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_attachment"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="10dp"
         android:visibility="visible"
-        fresco:actualImageScaleType="centerCrop"
+        fresco:actualImageScaleType="fitStart"
         fresco:placeholderImage="@drawable/image_dummy" />
 
     <FrameLayout
@@ -37,6 +38,7 @@
         android:id="@+id/file_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         tools:text="Filename.png" />
 
     <include
