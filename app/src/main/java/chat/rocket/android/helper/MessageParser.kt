@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.support.customtabs.CustomTabsIntent
 import android.provider.Browser
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
@@ -171,16 +172,12 @@ class MessageParser @Inject constructor(val context: Application, private val co
                 if (!link.startsWith("@") && link !in consumed) {
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
-                            val uri = getUri(link)
-                            val context = view.context
-                            val intent = Intent(Intent.ACTION_VIEW, uri)
-                            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.packageName)
-                            try {
-                                context.startActivity(intent)
-                            } catch (e: ActivityNotFoundException) {
-                                Timber.e("Actvity was not found for intent, $intent")
+                            with (view) {
+                                val tabsbuilder = CustomTabsIntent.Builder()
+                                tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
+                                val customTabsIntent = tabsbuilder.build()
+                                customTabsIntent.launchUrl(context, getUri(link))
                             }
-
                         }
                     }, matcher.start(0), matcher.end(0))
                     consumed.add(link)
