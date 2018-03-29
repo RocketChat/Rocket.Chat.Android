@@ -11,7 +11,9 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
+import chat.rocket.android.main.viewmodel.NavHeaderViewModel
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -19,6 +21,7 @@ import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector {
@@ -33,8 +36,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         setContentView(R.layout.activity_main)
 
         presenter.connect()
+
         setupToolbar()
         setupNavigationView()
+        presenter.setupNavHeader()
     }
 
     override fun onResume() {
@@ -50,6 +55,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         if (isFinishing) {
             presenter.disconnect()
         }
+    }
+
+    override fun setupNavHeader(navHeaderViewModel: NavHeaderViewModel) {
+        val headerLayout = view_navigation.getHeaderView(0)
+        headerLayout.image_server_logo.setImageURI(navHeaderViewModel.serverLogoUri)
+        headerLayout.image_avatar.setImageURI(navHeaderViewModel.userAvatarUri)
+        headerLayout.text_user_display_name.textContent = navHeaderViewModel.userDisplayName
     }
 
     override fun onLogout() {
