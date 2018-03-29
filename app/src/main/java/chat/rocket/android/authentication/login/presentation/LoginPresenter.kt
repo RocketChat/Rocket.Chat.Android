@@ -145,7 +145,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (settings.isLinkedinAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_LINKEDIN)
                         if (clientId != null) {
-                            view.setupGoogleButtonListener(UrlHelper.getLinkedinOauthUrl(clientId, server!!, state), state)
+                            view.setupGoogleButtonListener(UrlHelper.getLinkedinOauthUrl(clientId, currentServer, state), state)
                             view.enableLoginByLinkedin()
                             totalSocialAccountsEnabled++
                         }
