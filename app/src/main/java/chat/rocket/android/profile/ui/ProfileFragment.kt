@@ -56,8 +56,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_email.textContent = email
         text_avatar_url.textContent = ""
 
-        currentName = username
-        currentUsername = name
+        currentName = name
+        currentUsername = username
         currentEmail = email
         currentAvatar = avatarUrl
 
