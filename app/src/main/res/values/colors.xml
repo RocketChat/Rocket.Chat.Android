@@ -34,6 +34,8 @@
     <color name="actionMenuColor">#FF727272</color>
     <color name="whitesmoke">#FFf1f1f1</color>
 
+    <color name="translucent_white">#70F1F1F1</color>
+
     <color name="colorEmojiIcon">#FF767676</color>
 
     <!-- Suggestions -->
