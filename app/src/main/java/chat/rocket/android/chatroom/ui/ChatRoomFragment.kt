@@ -234,7 +234,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         presenter.uploadFile(chatRoomId, uri, "")
     }
 
-    override fun showInvalidFileMessage() = showMessage(getString(R.string.msg_invalid_file))
+    override fun showInvalidFileMessage() {
+        showMessage(getString(R.string.msg_invalid_file))
+    }
 
     override fun showNewMessage(message: List<BaseViewModel<*>>) {
         adapter.prependData(message)
@@ -288,9 +290,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun hideLoading() = view_loading.setVisible(false)
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
