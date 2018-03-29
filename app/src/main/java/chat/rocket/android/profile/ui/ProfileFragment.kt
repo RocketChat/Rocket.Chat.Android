@@ -66,7 +66,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         listenToChanges()
     }
 
-    override fun showProfileUpdateSuccessfullyMessage() = showMessage(getString(R.string.msg_profile_update_successfully))
+    override fun showProfileUpdateSuccessfullyMessage() {
+        showMessage(getString(R.string.msg_profile_update_successfully))
+    }
 
     override fun showLoading() {
         enableUserInput(false)
@@ -80,9 +82,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         enableUserInput(true)
     }
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 

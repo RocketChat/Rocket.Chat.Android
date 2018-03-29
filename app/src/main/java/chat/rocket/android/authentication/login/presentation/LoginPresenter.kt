@@ -1,21 +1,25 @@
 package chat.rocket.android.authentication.login.presentation
 
 import chat.rocket.android.authentication.domain.model.TokenModel
+import chat.rocket.android.authentication.domain.model.toToken
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.generateRandomString
 import chat.rocket.android.util.extensions.isEmailValid
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
+import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.delay
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -23,13 +27,17 @@ import javax.inject.Inject
 class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val strategy: CancelStrategy,
                                          private val navigator: AuthenticationNavigator,
-                                         private val multiServerRepository: MultiServerTokenRepository,
+                                         private val tokenRepository: TokenRepository,
                                          private val localRepository: LocalRepository,
+                                         private val getAccountsInteractor: GetAccountsInteractor,
                                          private val settingsInteractor: GetSettingsInteractor,
                                          private val serverInteractor: GetCurrentServerInteractor,
-                                         factory: RocketChatClientFactory) {
+                                         private val saveAccountInteractor: SaveAccountInteractor,
+                                         private val factory: RocketChatClientFactory) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
-    private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
+    private val currentServer = serverInteractor.get()!!
+    private val client: RocketChatClient = factory.create(currentServer)
+    private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun setupView() {
         val server = serverInteractor.get()
@@ -125,7 +133,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                 }
                             }
 
-                            saveToken(server, TokenModel(token.userId, token.authToken), client.me().username)
+                            val me = client.me()
+                            saveToken(server, TokenModel(token.userId, token.authToken), me.username)
+                            saveAccount(me)
                             registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {
@@ -163,7 +173,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (server != null) {
                         delay(3, TimeUnit.SECONDS)
                         val token = client.loginWithCas(casToken)
-                        saveToken(server, TokenModel(token.userId, token.authToken), client.me().username)
+                        val me = client.me()
+                        saveToken(server, TokenModel(token.userId, token.authToken), me.username)
+                        saveAccount(me)
                         registerPushToken()
                         navigator.toChatList()
                     } else {
@@ -188,15 +200,28 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     fun signup() = navigator.toSignUp()
 
     private suspend fun saveToken(server: String, tokenModel: TokenModel, username: String?) {
-        multiServerRepository.save(server, tokenModel)
-        localRepository.save(LocalRepository.USERNAME_KEY, username)
+        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
+        tokenRepository.save(server, tokenModel.toToken())
         registerPushToken()
     }
 
     private suspend fun registerPushToken() {
         localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it)
+            client.registerPushToken(it, getAccountsInteractor.get(), factory)
         }
-        // TODO: Schedule push token registering when it comes up null
+        // TODO: When the push token is null, at some point we should receive it with
+        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
+    }
+
+    private suspend fun saveAccount(me: Myself) {
+        val icon = settings.favicon()?.let {
+            UrlHelper.getServerLogoUrl(currentServer, it)
+        }
+        val logo = settings.wideTile()?.let {
+            UrlHelper.getServerLogoUrl(currentServer, it)
+        }
+        val thumb = UrlHelper.getAvatarUrl(currentServer, me.username!!)
+        val account = Account(currentServer, icon, logo, me.username!!, thumb)
+        saveAccountInteractor.save(account)
     }
 }

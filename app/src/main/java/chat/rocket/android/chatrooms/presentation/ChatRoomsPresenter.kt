@@ -10,7 +10,10 @@ import chat.rocket.android.server.infraestructure.chatRooms
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
-import chat.rocket.common.model.*
+import chat.rocket.common.model.BaseRoom
+import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.SimpleUser
+import chat.rocket.common.model.User
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.StreamMessage
@@ -38,7 +41,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private val currentServer = serverInteractor.get()!!
     private val client = manager.client
     private var reloadJob: Deferred<List<ChatRoom>>? = null
-    private val settings = settingsRepository.get(currentServer)!!
+    private val settings = settingsRepository.get(currentServer)
 
     private val subscriptionsChannel = Channel<StreamMessage<BaseRoom>>()
     private val stateChannel = Channel<State>()
@@ -106,8 +109,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             ChatRoom(it.id, RoomType.DIRECT_MESSAGE, SimpleUser(
                     username = it.username, name = it.name, id = null), it.name ?: "",
                     it.name, false, null, null, null,
-                    null, null, false, false, false,
-                    0L, null, 0L, null, client
+                    null, null, null, false, false,
+                    false, 0L, 0L, null,
+                    null, client
             )
         }
     }
@@ -116,8 +120,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         return rooms.map {
             ChatRoom(it.id, it.type, it.user, it.name ?: "",
                     it.fullName, it.readonly, it.updatedAt, null, null,
-                    it.topic, it.announcement, false, false, false,
-                    0L, null, 0L, it.lastMessage, client
+                    it.topic, it.announcement, null, false, false,
+                    false, 0L, 0L, 0L, it.lastMessage,
+                    client
             )
         }
     }
@@ -137,7 +142,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     private fun updateRooms() {
         Timber.d("Updating Rooms")
-        launch {
+        launch(strategy.jobs) {
             view.updateChatRooms(getChatRoomsWithPreviews(getChatRoomsInteractor.get(currentServer)))
         }
     }
@@ -267,6 +272,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     timestamp,
                     lastSeen,
                     room.topic,
+                    room.description,
                     room.announcement,
                     default,
                     open,
@@ -284,7 +290,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     // Update a ChatRoom with a Subscription information
     private fun updateSubscription(subscription: Subscription) {
-        Timber.d("Updating subscrition: ${subscription.id} - ${subscription.name}")
+        Timber.d("Updating subscription: ${subscription.id} - ${subscription.name}")
         val chatRooms = getChatRoomsInteractor.get(currentServer).toMutableList()
         val chatRoom = chatRooms.find { chatRoom -> chatRoom.id == subscription.roomId }
         chatRoom?.apply {
@@ -298,6 +304,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     subscription.timestamp ?: timestamp,
                     subscription.lastSeen ?: lastSeen,
                     topic,
+                    description,
                     announcement,
                     subscription.isDefault,
                     subscription.open,
