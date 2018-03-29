@@ -53,7 +53,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
+    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
