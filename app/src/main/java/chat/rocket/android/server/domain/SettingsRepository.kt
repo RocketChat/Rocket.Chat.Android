@@ -29,7 +29,9 @@ const val ACCOUNT_GITLAB = "Accounts_OAuth_Gitlab"
 
 const val SITE_URL = "Site_Url"
 const val SITE_NAME = "Site_Name"
+const val FAVICON_196 = "Assets_favicon_192"
 const val FAVICON_512 = "Assets_favicon_512"
+const val WIDE_TILE_310 = "Assets_tile_310_wide"
 const val USE_REALNAME = "UI_Use_Real_Name"
 const val ALLOW_ROOM_NAME_SPECIAL_CHARS = "UI_Allow_room_names_with_special_chars"
 const val FAVORITE_ROOMS = "Favorite_Rooms"
@@ -69,6 +71,9 @@ fun PublicSettings.isGitlabAuthenticationEnabled(): Boolean = this[ACCOUNT_GITLA
 fun PublicSettings.isWordpressAuthenticationEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
 
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
+fun PublicSettings.faviconLarge(): String? = this[FAVICON_512]?.value as String?
+fun PublicSettings.favicon(): String? = this[FAVICON_196]?.value as String?
+fun PublicSettings.wideTile(): String? = this[WIDE_TILE_310]?.value as String?
 
 // Message settings
 fun PublicSettings.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true
@@ -91,3 +96,4 @@ fun PublicSettings.uploadMaxFileSize(): Int {
 }
 
 fun PublicSettings.baseUrl(): String? = this[SITE_URL]?.value as String
+fun PublicSettings.siteName(): String? = this[SITE_NAME]?.value as String?

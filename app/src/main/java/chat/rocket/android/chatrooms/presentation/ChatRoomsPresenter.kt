@@ -135,7 +135,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     private fun updateRooms() {
         Timber.d("Updating Rooms")
-        launch {
+        launch(strategy.jobs) {
             view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
         }
     }
