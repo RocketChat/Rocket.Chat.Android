@@ -231,6 +231,13 @@ class LoginFragment : Fragment(), LoginView {
         button_linkedin.isClickable = true
     }
 
+    override fun setupLinkedinButtonListener(linkedinUrl: String, state: String) {
+        button_linkedin.setOnClickListener {
+            startActivityForResult(context?.oauthWebViewIntent(linkedinUrl, state), REQUEST_CODE_FOR_OAUTH)
+            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        }
+    }
+
     override fun enableLoginByMeteor() {
         button_meteor.isClickable = true
     }
