@@ -402,7 +402,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
-    fun spotlight(query: String, @AutoCompleteType type: Long, filterSelfOut: Boolean = false) {
+    fun spotlight(query: String, @AutoCompleteType type: Int, filterSelfOut: Boolean = false) {
         launchUI(strategy) {
             try {
                 val (users, rooms) = client.spotlight(query)

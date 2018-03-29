@@ -24,7 +24,7 @@ import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.common.model.Token
-import chat.rocket.core.TokenRepository
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.model.Value
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
@@ -73,6 +73,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     lateinit var accountRepository: AccountsRepository
     @Inject
     lateinit var saveCurrentServerRepository: SaveCurrentServerInteractor
+    @Inject
     lateinit var prefs: SharedPreferences
     @Inject
     lateinit var getAccountsInteractor: GetAccountsInteractor
@@ -189,21 +190,23 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     }
 
     private fun migrateCurrentServer(serversList: List<RealmBasedServerInfo>) {
-        var currentServer = getSharedPreferences("cache", Context.MODE_PRIVATE)
-                .getString("KEY_SELECTED_SERVER_HOSTNAME", null)
+        if (getCurrentServerInteractor.get() == null) {
+            var currentServer = getSharedPreferences("cache", Context.MODE_PRIVATE)
+                    .getString("KEY_SELECTED_SERVER_HOSTNAME", null)
 
-        currentServer = if (serversList.isNotEmpty()) {
-            val server = serversList.find { it.hostname == currentServer }
-            val hostname = server!!.hostname
-            if (server.insecure) {
-                "http://$hostname"
+            currentServer = if (serversList.isNotEmpty()) {
+                val server = serversList.find { it.hostname == currentServer }
+                val hostname = server!!.hostname
+                if (server.insecure) {
+                    "http://$hostname"
+                } else {
+                    "https://$hostname"
+                }
             } else {
-                "https://$hostname"
+                "http://$currentServer"
             }
-        } else {
-            "http://$currentServer"
+            saveCurrentServerRepository.save(currentServer)
         }
-        saveCurrentServerRepository.save(currentServer)
     }
 
     private fun migrateInternalTokens() {

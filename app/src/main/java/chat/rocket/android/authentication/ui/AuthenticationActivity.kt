@@ -26,6 +26,8 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
+        setContentView(R.layout.activity_authentication)
+        setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
 
         launch(UI + job) {
@@ -48,11 +50,6 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     fun showServerInput(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_authentication)
-        setTheme(R.style.AuthenticationTheme)
-
-        super.onCreate(savedInstanceState)
-
         addFragment("ServerFragment", R.id.fragment_container) {
             ServerFragment.newInstance()
         }

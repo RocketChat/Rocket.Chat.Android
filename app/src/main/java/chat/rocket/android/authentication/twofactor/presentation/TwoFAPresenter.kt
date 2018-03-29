@@ -54,7 +54,7 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                                 client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
                             val me = client.me()
                             saveAccount(me)
-                            tokenRepository.save(token)
+                            tokenRepository.save(server, token)
                             registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {
