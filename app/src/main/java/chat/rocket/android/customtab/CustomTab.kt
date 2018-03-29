@@ -10,7 +10,9 @@ import android.support.v4.content.res.ResourcesCompat
 import chat.rocket.android.R
 
 object CustomTab {
-    fun openCustomTab(context: Context, uri: Uri, fallback: CustomTabFallback?) {
+    fun openCustomTab(context: Context, url: String, fallback: CustomTabFallback?) {
+
+        val uri = Uri.parse(url.toLowerCase())
 
         val customTabIntentBuilder = CustomTabsIntent.Builder()
         customTabIntentBuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))

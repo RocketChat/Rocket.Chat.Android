@@ -145,7 +145,7 @@ class WebViewActivity : AppCompatActivity() {
                 || UrlHelper.removeTrailingSlash(url).equals(UrlHelper.removeTrailingSlash(webPageUrl), true)) {
             false
         } else {
-            CustomTab.openCustomTab(this@WebViewActivity, Uri.parse(url), WebViewFallback())
+            CustomTab.openCustomTab(this@WebViewActivity, url, WebViewFallback())
             true
         }
     }

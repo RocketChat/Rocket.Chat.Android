@@ -34,7 +34,7 @@ class UrlPreviewViewHolder(itemView: View,
             text_description.content = data.description ?: ""
 
             url_preview_layout.setOnClickListener { view ->
-                CustomTab.openCustomTab(context, Uri.parse(data.rawData.url), WebViewFallback())
+                CustomTab.openCustomTab(context, data.rawData.url, WebViewFallback())
             }
         }
     }
