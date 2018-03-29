@@ -82,6 +82,7 @@ object CustomTabsHelper {
         } else if (packagesSupportingCustomTabs.contains(LOCAL_PACKAGE)) {
             sPackageNameToUse = LOCAL_PACKAGE
         }
+        
         return sPackageNameToUse
     }
 
