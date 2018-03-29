@@ -34,6 +34,8 @@ const val INTENT_OAUTH_CREDENTIAL_SECRET = "credential_secret"
 class OauthWebViewActivity : AppCompatActivity() {
     private lateinit var webPageUrl: String
     private lateinit var state: String
+    private var isWebViewSetUp: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,10 @@ class OauthWebViewActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        setupWebView()
+        if (!isWebViewSetUp) {
+            setupWebView()
+            isWebViewSetUp = true
+        }
     }
 
     override fun onBackPressed() {
@@ -62,14 +67,20 @@ class OauthWebViewActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        toolbar.title = getString(R.string.title_authentication)
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
-        toolbar.setNavigationOnClickListener { closeView() }
+        with(toolbar) {
+            title = getString(R.string.title_authentication)
+            setNavigationIcon(R.drawable.ic_close_white_24dp)
+            setNavigationOnClickListener { closeView() }
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
-        web_view.settings.javaScriptEnabled = true
+        with(web_view.settings) {
+            javaScriptEnabled = true
+            // TODO This is required to make Google OAuth work, but we shoud use Custom Tabs instead. See https://github.com/RocketChat/Rocket.Chat.Android/issues/968
+            userAgentString = "Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19"
+        }
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 if (url.contains(JSON_CREDENTIAL_TOKEN) && url.contains(JSON_CREDENTIAL_SECRET)) {
