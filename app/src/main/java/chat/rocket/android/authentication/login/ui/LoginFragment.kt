@@ -19,12 +19,17 @@ import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.webview.cas.ui.webViewIntent
+import chat.rocket.android.webview.cas.ui.INTENT_CAS_TOKEN
+import chat.rocket.android.webview.cas.ui.casWebViewIntent
+import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
+import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
+import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
 
 internal const val REQUEST_CODE_FOR_CAS = 1
+internal const val REQUEST_CODE_FOR_OAUTH = 2
 
 class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var presenter: LoginPresenter
@@ -64,10 +69,14 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_FOR_CAS) {
-            if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_FOR_CAS) {
                 data?.apply {
-                    presenter.authenticateWithCas(getStringExtra("cas_token"))
+                    presenter.authenticateWithCas(getStringExtra(INTENT_CAS_TOKEN))
+                }
+            } else if (requestCode == REQUEST_CODE_FOR_OAUTH) {
+                data?.apply {
+                    presenter.authenticateWithOauth(getStringExtra(INTENT_OAUTH_CREDENTIAL_TOKEN), getStringExtra(INTENT_OAUTH_CREDENTIAL_SECRET))
                 }
             }
         }
@@ -121,7 +130,7 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun setupLoginButtonListener() {
         button_log_in.setOnClickListener {
-            presenter.authenticate(text_username_or_email.textContent, text_password.textContent)
+            presenter.authenticateWithUserAndPassword(text_username_or_email.textContent, text_password.textContent)
         }
     }
 
@@ -147,7 +156,7 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun setupCasButtonListener(casUrl: String, casToken: String) {
         button_cas.setOnClickListener {
-            startActivityForResult(context?.webViewIntent(casUrl, casToken), REQUEST_CODE_FOR_CAS)
+            startActivityForResult(context?.casWebViewIntent(casUrl, casToken), REQUEST_CODE_FOR_CAS)
             activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
         }
     }
@@ -192,31 +201,60 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun enableLoginByFacebook() {
-        button_facebook.isEnabled = true
+        button_facebook.isClickable = true
     }
 
     override fun enableLoginByGithub() {
-        button_github.isEnabled = true
+        button_github.isClickable = true
+    }
+
+    override fun setupGithubButtonListener(githubUrl: String, state: String) {
+        button_github.setOnClickListener {
+            startActivityForResult(context?.oauthWebViewIntent(githubUrl, state), REQUEST_CODE_FOR_OAUTH)
+            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        }
     }
 
     override fun enableLoginByGoogle() {
-        button_google.isEnabled = true
+        button_google.isClickable = true
+    }
+
+    // TODO: Use custom tabs instead of web view. See https://github.com/RocketChat/Rocket.Chat.Android/issues/968
+    override fun setupGoogleButtonListener(googleUrl: String, state: String) {
+        button_google.setOnClickListener {
+            startActivityForResult(context?.oauthWebViewIntent(googleUrl, state), REQUEST_CODE_FOR_OAUTH)
+            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        }
     }
 
     override fun enableLoginByLinkedin() {
-        button_linkedin.isEnabled = true
+        button_linkedin.isClickable = true
+    }
+
+    override fun setupLinkedinButtonListener(linkedinUrl: String, state: String) {
+        button_linkedin.setOnClickListener {
+            startActivityForResult(context?.oauthWebViewIntent(linkedinUrl, state), REQUEST_CODE_FOR_OAUTH)
+            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        }
     }
 
     override fun enableLoginByMeteor() {
-        button_meteor.isEnabled = true
+        button_meteor.isClickable = true
     }
 
     override fun enableLoginByTwitter() {
-        button_twitter.isEnabled = true
+        button_twitter.isClickable = true
     }
 
     override fun enableLoginByGitlab() {
-        button_gitlab.isEnabled = true
+        button_gitlab.isClickable = true
+    }
+
+    override fun setupGitlabButtonListener(gitlabUrl: String, state: String) {
+        button_gitlab.setOnClickListener {
+            startActivityForResult(context?.oauthWebViewIntent(gitlabUrl, state), REQUEST_CODE_FOR_OAUTH)
+            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        }
     }
 
     override fun setupFabListener() {
@@ -253,8 +291,8 @@ class LoginFragment : Fragment(), LoginView {
         social_accounts_container.postDelayed({
             (0..social_accounts_container.childCount)
                 .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
-                .filter { it.isEnabled }
-                .forEach { it.visibility = View.VISIBLE }
+                .filter { it.isClickable }
+                .forEach { it.setVisible(true)}
         }, 1000)
     }
 
@@ -284,13 +322,10 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun showThreeSocialAccountsMethods() {
-        var count = 0
-        for (i in 0..social_accounts_container.childCount) {
-            val view = social_accounts_container.getChildAt(i) as? ImageButton ?: continue
-            if (view.isEnabled && count < 3) {
-                view.visibility = View.VISIBLE
-                count++
-            }
-        }
+        (0..social_accounts_container.childCount)
+            .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
+            .filter { it.isClickable  }
+            .take(3)
+            .forEach { it.setVisible(true) }
     }
 }

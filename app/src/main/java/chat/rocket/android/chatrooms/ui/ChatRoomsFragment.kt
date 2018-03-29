@@ -158,11 +158,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         activity?.apply {
             recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(this,
-                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
+                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
-            recycler_view.adapter = ChatRoomsAdapter(this,
+            recycler_view.adapter = ChatRoomsAdapter(
+                    this,
                     settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom ->
                 presenter.loadChatRoom(chatRoom)
             }

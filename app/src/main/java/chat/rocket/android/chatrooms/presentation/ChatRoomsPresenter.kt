@@ -106,23 +106,52 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     private suspend fun usersToChatRooms(users: List<User>): List<ChatRoom> {
         return users.map {
-            ChatRoom(it.id, RoomType.DIRECT_MESSAGE, SimpleUser(
-                    username = it.username, name = it.name, id = null), it.name ?: "",
-                    it.name, false, null, null, null,
-                    null, null, null, false, false,
-                    false, 0L, 0L, null,
-                    null, client
+            ChatRoom(id = it.id,
+                    type = RoomType.DIRECT_MESSAGE,
+                    user = SimpleUser(username = it.username, name = it.name, id = null),
+                    name = it.name ?: "",
+                    fullName = it.name,
+                    readonly = false,
+                    updatedAt = null,
+                    timestamp = null,
+                    lastSeen = null,
+                    topic = null,
+                    description = null,
+                    announcement = null,
+                    default = false,
+                    open = false,
+                    alert = false,
+                    unread = 0L,
+                    userMenstions = null,
+                    groupMentions = 0L,
+                    lastMessage = null,
+                    client = client
             )
         }
     }
 
     private suspend fun roomsToChatRooms(rooms: List<Room>): List<ChatRoom> {
         return rooms.map {
-            ChatRoom(it.id, it.type, it.user, it.name ?: "",
-                    it.fullName, it.readonly, it.updatedAt, null, null,
-                    it.topic, it.announcement, null, false, false,
-                    false, 0L, 0L, 0L, it.lastMessage,
-                    client
+            ChatRoom(id = it.id,
+                    type = it.type,
+                    user = it.user,
+                    name = it.name ?: "",
+                    fullName = it.fullName,
+                    readonly = it.readonly,
+                    updatedAt = it.updatedAt,
+                    timestamp = null,
+                    lastSeen = null,
+                    topic = it.topic,
+                    description = it.description,
+                    announcement = it.announcement,
+                    default = false,
+                    open = false,
+                    alert = false,
+                    unread = 0L,
+                    userMenstions = null,
+                    groupMentions = 0L,
+                    lastMessage = it.lastMessage,
+                    client = client
             )
         }
     }
