@@ -155,7 +155,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         }
         val account = Account(url, icon, logo, user.username!!, avatar)
         launch(CommonPool) {
-            tokenRepository.save(Token(userId!!, authToken))
+            tokenRepository.save(url, Token(userId!!, authToken))
             accountRepository.save(account)
         }
     }
@@ -214,14 +214,14 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
         getCurrentServerInteractor.get()?.let { serverUrl ->
             multiServerRepository.get(serverUrl)?.let { token ->
-                tokenRepository.save(Token(token.userId, token.authToken))
+                tokenRepository.save(serverUrl, Token(token.userId, token.authToken))
             }
         }
 
         runBlocking {
             getAccountsInteractor.get().forEach { account ->
                 multiServerRepository.get(account.serverUrl)?.let { token ->
-                    tokenRepository.save(token.toToken())
+                    tokenRepository.save(account.serverUrl, token.toToken())
                 }
             }
         }
