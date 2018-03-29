@@ -136,7 +136,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (settings.isGoogleAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GOOGLE)
                         if (clientId != null) {
-                            view.setupGoogleButtonListener(UrlHelper.getGoogleOauthUrl(clientId, server!!, state), state)
+                            view.setupGoogleButtonListener(UrlHelper.getGoogleOauthUrl(clientId, currentServer, state), state)
                             view.enableLoginByGoogle()
                             totalSocialAccountsEnabled++
                         }
