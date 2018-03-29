@@ -29,12 +29,12 @@ fun View.fadeIn(startValue: Float = 0f, finishValue: Float = 1f, duration: Long 
 
     animate()
         .alpha(startValue)
-        .setDuration(duration)
+        .setDuration(duration / 2)
         .setInterpolator(DecelerateInterpolator())
         .withEndAction({
             animate()
                 .alpha(finishValue)
-                .setDuration(duration)
+                .setDuration(duration / 2)
                 .setInterpolator(AccelerateInterpolator()).start()
         }).start()
 
