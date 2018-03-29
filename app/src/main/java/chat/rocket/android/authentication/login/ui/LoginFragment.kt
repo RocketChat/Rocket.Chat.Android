@@ -21,9 +21,9 @@ import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.webview.cas.ui.INTENT_CAS_TOKEN
 import chat.rocket.android.webview.cas.ui.casWebViewIntent
-import chat.rocket.android.webview.gitlab.ui.INTENT_OAUTH_CREDENTIAL_SECRET
-import chat.rocket.android.webview.gitlab.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
-import chat.rocket.android.webview.gitlab.ui.gitlabWebViewIntent
+import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
+import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
+import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
@@ -210,9 +210,8 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun setupGithubButtonListener(githubUrl: String, state: String) {
         button_github.setOnClickListener {
-            // TODO
-//            startActivityForResult(context?.githubWebViewIntent(url, state), REQUEST_CODE_FOR_OAUTH)
-//            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            startActivityForResult(context?.oauthWebViewIntent(githubUrl, state), REQUEST_CODE_FOR_OAUTH)
+            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
         }
     }
 
@@ -238,7 +237,7 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun setupGitlabButtonListener(gitlabUrl: String, state: String) {
         button_gitlab.setOnClickListener {
-            startActivityForResult(context?.gitlabWebViewIntent(gitlabUrl, state), REQUEST_CODE_FOR_OAUTH)
+            startActivityForResult(context?.oauthWebViewIntent(gitlabUrl, state), REQUEST_CODE_FOR_OAUTH)
             activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
         }
     }

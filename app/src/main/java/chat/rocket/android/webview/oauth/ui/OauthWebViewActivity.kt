@@ -1,4 +1,4 @@
-package chat.rocket.android.webview.gitlab.ui
+package chat.rocket.android.webview.oauth.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -16,8 +16,8 @@ import kotlinx.android.synthetic.main.activity_web_view.*
 import kotlinx.android.synthetic.main.app_bar.*
 import org.json.JSONObject
 
-fun Context.gitlabWebViewIntent(webPageUrl: String, state: String): Intent {
-    return Intent(this, GitlabWebViewActivity::class.java).apply {
+fun Context.oauthWebViewIntent(webPageUrl: String, state: String): Intent {
+    return Intent(this, OauthWebViewActivity::class.java).apply {
         putExtra(INTENT_WEB_PAGE_URL, webPageUrl)
         putExtra(INTENT_STATE, state)
     }
@@ -31,7 +31,7 @@ const val INTENT_OAUTH_CREDENTIAL_TOKEN = "credential_token"
 const val INTENT_OAUTH_CREDENTIAL_SECRET = "credential_secret"
 
 // Shows a WebView to the user authenticate with your Gitlab credentials.
-class GitlabWebViewActivity : AppCompatActivity() {
+class OauthWebViewActivity : AppCompatActivity() {
     private lateinit var webPageUrl: String
     private lateinit var state: String
 
