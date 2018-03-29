@@ -5,7 +5,6 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
@@ -17,36 +16,34 @@ import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.app.RemoteInput
 import android.text.Html
 import android.text.Spanned
-import android.util.Log
-import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
-import org.json.JSONObject
-import java.io.Serializable
+import chat.rocket.android.server.domain.GetAccountInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.siteName
+import chat.rocket.android.server.ui.changeServerIntent
+import chat.rocket.common.model.RoomType
+import com.squareup.moshi.Json
+import com.squareup.moshi.Moshi
+import kotlinx.coroutines.experimental.runBlocking
+import se.ansman.kotshi.JsonSerializable
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.collections.HashMap
-
-typealias TupleGroupIdMessageCount = Pair<Int, AtomicInteger>
+import javax.inject.Inject
 
 /**
  * Refer to: https://github.com/RocketChat/Rocket.Chat.Android/blob/9e846b7fde8fe0c74b9e0117c37ce49293308db5/app/src/main/java/chat/rocket/android/push/PushManager.kt
  * for old source code.
  */
-object PushManager {
-    const val EXTRA_NOT_ID = "chat.rocket.android.EXTRA_NOT_ID"
-    const val EXTRA_HOSTNAME = "chat.rocket.android.EXTRA_HOSTNAME"
-    const val EXTRA_PUSH_MESSAGE = "chat.rocket.android.EXTRA_PUSH_MESSAGE"
-    const val EXTRA_ROOM_ID = "chat.rocket.android.EXTRA_ROOM_ID"
-    private const val REPLY_LABEL = "REPLY"
-    private const val REMOTE_INPUT_REPLY = "REMOTE_INPUT_REPLY"
-
-    // Notifications received from the same server are grouped in a single bundled notification.
-    // This map associates a host to a group id.
-    private val groupMap = HashMap<String, TupleGroupIdMessageCount>()
-
-    // Map a hostname to a list of push messages that pertain to it.
-    private val hostToPushMessageList = HashMap<String, MutableList<PushMessage>>()
+class PushManager @Inject constructor(
+    private val groupedPushes: GroupedPush,
+    private val manager: NotificationManager,
+    private val moshi: Moshi,
+    private val getAccountInteractor: GetAccountInteractor,
+    private val getSettingsInteractor: GetSettingsInteractor,
+    private val context: Context
+) {
     private val randomizer = Random()
 
     /**
@@ -54,187 +51,108 @@ object PushManager {
      * on the *data* param bundle received.
      */
     @Synchronized
-    fun handle(context: Context, data: Bundle) {
-        val appContext = context.applicationContext
+    fun handle(data: Bundle) = runBlocking {
         val message = data["message"] as String?
-        val image = data["image"] as String?
         val ejson = data["ejson"] as String?
+        val title = data["title"] as String?
         val notId = data["notId"] as String? ?: randomizer.nextInt().toString()
+        val image = data["image"] as String?
         val style = data["style"] as String?
         val summaryText = data["summaryText"] as String?
         val count = data["count"] as String?
-        val title = data["title"] as String?
 
-        if (ejson == null || message == null || title == null) {
+        try {
+            val adapter = moshi.adapter<PushInfo>(PushInfo::class.java)
+            val info = adapter.fromJson(ejson)
+
+            val pushMessage = PushMessage(title!!, message!!, info!!, image, count, notId, summaryText, style)
+
+            Timber.d("Received push message: $pushMessage")
+
+            showNotification(pushMessage)
+        } catch (ex: Exception) {
+            Timber.d(ex, "Error parsing PUSH message: $data")
+            ex.printStackTrace()
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private suspend fun showNotification(pushMessage: PushMessage) {
+        if (!hasAccount(pushMessage.info.host)) {
+            Timber.d("ignoring push message: $pushMessage")
             return
         }
 
-        val lastPushMessage = PushMessage(title, message, image, ejson, count, notId, summaryText, style)
+        val notId = pushMessage.notificationId.toInt()
+        val host = pushMessage.info.host
+        val groupTuple = getGroupForHost(host)
 
-        // We should use Timber here
-        if (BuildConfig.DEBUG) {
-            Log.d(PushMessage::class.java.simpleName, lastPushMessage.toString())
+        groupTuple.second.incrementAndGet()
+        val notIdListForHostname: MutableList<PushMessage>? = groupedPushes.hostToPushMessageList.get(host)
+        if (notIdListForHostname == null) {
+            groupedPushes.hostToPushMessageList[host] = arrayListOf(pushMessage)
+        } else {
+            notIdListForHostname.add(0, pushMessage)
         }
 
-        showNotification(appContext, lastPushMessage)
-    }
+        val notification = createSingleNotification(pushMessage)
+        val pushMessageList = groupedPushes.hostToPushMessageList[host]
 
-    /**
-     * Clear all messages received to a given host the user is signed-in.
-     */
-    fun clearNotificationsByHost(host: String) {
-        hostToPushMessageList.remove(host)
-    }
-
-    /**
-     * Remove a notification solely by it's unique id.
-     */
-    fun clearNotificationsByNotificationId(notificationId: Int) {
-        if (hostToPushMessageList.isNotEmpty()) {
-            for (entry in hostToPushMessageList.entries) {
-                entry.value.removeAll {
-                    it.notificationId.toInt() == notificationId
-                }
-            }
+        notification?.let {
+            manager.notify(notId, notification)
         }
-    }
 
-    /**
-     * Clear notifications by the host they belong to and its unique id.
-     */
-    fun clearNotificationsByHostAndNotificationId(host: String?, notificationId: Int?) {
-        if (host == null || notificationId == null) {
-            return
-        }
-        if (hostToPushMessageList.isNotEmpty()) {
-            val notifications = hostToPushMessageList[host]
-            notifications?.let {
-                notifications.removeAll {
-                    it.notificationId.toInt() == notificationId
+        pushMessageList?.let {
+            if (pushMessageList.size > 1) {
+                val groupNotification = createGroupNotification(pushMessage)
+                groupNotification?.let {
+                    NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
                 }
             }
         }
     }
 
     private fun getGroupForHost(host: String): TupleGroupIdMessageCount {
-        val size = groupMap.size
-        var group = groupMap.get(host)
+        val size = groupedPushes.groupMap.size
+        var group = groupedPushes.groupMap[host]
         if (group == null) {
             group = TupleGroupIdMessageCount(size + 1, AtomicInteger(0))
-            groupMap.put(host, group)
+            groupedPushes.groupMap[host] = group
         }
         return group
     }
 
-    @SuppressLint("NewApi")
-    internal fun showNotification(context: Context, lastPushMessage: PushMessage) {
-        if (lastPushMessage.host == null || lastPushMessage.message == null || lastPushMessage.title == null) {
-            return
-        }
-        val manager: NotificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val notId = lastPushMessage.notificationId.toInt()
-        val host = lastPushMessage.host
-        val groupTuple = getGroupForHost(host)
-
-        groupTuple.second.incrementAndGet()
-        val notIdListForHostname: MutableList<PushMessage>? = hostToPushMessageList.get(host)
-        if (notIdListForHostname == null) {
-            hostToPushMessageList.put(host, arrayListOf(lastPushMessage))
-        } else {
-            notIdListForHostname.add(0, lastPushMessage)
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val notification = createSingleNotificationForNougatAndAbove(context, lastPushMessage)
-            val groupNotification = createGroupNotificationForNougatAndAbove(context, lastPushMessage)
-            notification?.let {
-                manager.notify(notId, notification)
-            }
-
-            groupNotification?.let {
-                manager.notify(groupTuple.first, groupNotification)
-            }
-        } else {
-            val notification = createSingleNotification(context, lastPushMessage)
-            val pushMessageList = hostToPushMessageList.get(host)
-
-            notification?.let {
-                NotificationManagerCompat.from(context).notify(notId, notification)
-            }
-
-            pushMessageList?.let {
-                if (pushMessageList.size > 1) {
-                    val groupNotification = createGroupNotification(context, lastPushMessage)
-                    groupNotification?.let {
-                        NotificationManagerCompat.from(context).notify(groupTuple.first, groupNotification)
-                    }
-                }
-            }
-        }
+    private suspend fun hasAccount(host: String): Boolean {
+        return getAccountInteractor.get(host) != null
     }
 
-    internal fun createGroupNotification(context: Context, lastPushMessage: PushMessage): Notification? {
-        with(lastPushMessage) {
-            if (host == null || message == null || title == null) {
-                return null
-            }
-            val id = lastPushMessage.notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, lastPushMessage)
-            val deleteIntent = getDismissIntent(context, lastPushMessage)
-            val builder = NotificationCompat.Builder(context)
-                    .setWhen(createdAt)
-                    .setContentTitle(title.fromHtml())
-                    .setContentText(message.fromHtml())
-                    .setGroup(host)
-                    .setGroupSummary(true)
-                    .setContentIntent(contentIntent)
-                    .setDeleteIntent(deleteIntent)
-                    .setMessageNotification()
+    @SuppressLint("NewApi")
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun createGroupNotification(pushMessage: PushMessage): Notification? {
+        with(pushMessage) {
+            val host = info.host
 
-            //TODO: Get Site_Name PublicSetting from cache
-            val subText = "Rocket.Chat"
-            if (subText.isNotEmpty()) {
-                builder.setSubText(subText)
-            }
+            val builder = createBaseNotificationBuilder(pushMessage, grouped = true)
+                    .setGroupSummary(true)
 
             if (style == null || style == "inbox") {
-                val pushMessageList = hostToPushMessageList.get(host)
+                val pushMessageList = groupedPushes.hostToPushMessageList[host]
 
                 pushMessageList?.let {
-                    val messageCount = pushMessageList.size
-                    val summary = summaryText?.replace("%n%", messageCount.toString())
-                            ?.fromHtml() ?: "$messageCount new messages"
-                    builder.setNumber(messageCount)
-                    if (messageCount > 1) {
-                        val firstPush = pushMessageList[0]
-                        val singleConversation = pushMessageList.filter {
-                            firstPush.sender?.username != it.sender?.username
-                        }.isEmpty()
+                    val count = pushMessageList.filter {
+                        it.title == title
+                    }.size
 
-                        val inbox = NotificationCompat.InboxStyle()
-                                .setBigContentTitle(if (singleConversation) title else summary)
+                    builder.setContentTitle(getTitle(count, title))
 
-                        for (push in pushMessageList) {
-                            if (singleConversation) {
-                                inbox.addLine(push.message)
-                            } else {
-                                inbox.addLine("<font color='black'>${push.title}</font> <font color='gray'>${push.message}</font>".fromHtml())
-                            }
-                        }
+                    val inbox = NotificationCompat.InboxStyle()
+                            .setBigContentTitle(getTitle(count, title))
 
-                        builder.setStyle(inbox)
-                    } else {
-                        val firstMsg = pushMessageList[0]
-                        if (firstMsg.host == null || firstMsg.message == null || firstMsg.title == null) {
-                            return null
-                        }
-                        val bigText = NotificationCompat.BigTextStyle()
-                                .bigText(firstMsg.message.fromHtml())
-                                .setBigContentTitle(firstMsg.title.fromHtml())
-
-                        builder.setStyle(bigText)
+                    for (push in pushMessageList) {
+                        inbox.addLine(push.message)
                     }
+
+                    builder.setStyle(inbox)
                 }
             } else {
                 val bigText = NotificationCompat.BigTextStyle()
@@ -250,167 +168,19 @@ object PushManager {
 
     @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.N)
-    internal fun createGroupNotificationForNougatAndAbove(context: Context, lastPushMessage: PushMessage): Notification? {
-        with(lastPushMessage) {
-            if (host == null || message == null || title == null) {
-                return null
-            }
-            val manager: NotificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val id = notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, lastPushMessage, grouped = true)
-            val deleteIntent = getDismissIntent(context, lastPushMessage)
+    private fun createSingleNotification(pushMessage: PushMessage): Notification? {
+        with(pushMessage) {
+            val host = info.host
 
-            val builder = Notification.Builder(context)
-                    .setWhen(createdAt)
-                    .setContentTitle(title.fromHtml())
-                    .setContentText(message.fromHtml())
-                    .setGroup(host)
-                    .setGroupSummary(true)
-                    .setContentIntent(contentIntent)
-                    .setDeleteIntent(deleteIntent)
-                    .setMessageNotification(context)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                builder.setChannelId(host)
-                val groupChannel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
-                groupChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                groupChannel.enableLights(false)
-                groupChannel.enableVibration(true)
-                groupChannel.setShowBadge(true)
-                manager.createNotificationChannel(groupChannel)
-            }
-
-            //TODO: Get Site_Name PublicSetting from cache
-            val subText = "Rocket.Chat"
-            if (subText.isNotEmpty()) {
-                builder.setSubText(subText)
-            }
-
-            if (style == null || style == "inbox") {
-                val pushMessageList = hostToPushMessageList.get(host)
-
-                pushMessageList?.let {
-                    val count = pushMessageList.filter {
-                        it.title == title
-                    }.size
-
-                    builder.setContentTitle(getTitle(count, title))
-
-                    val inbox = Notification.InboxStyle()
-                            .setBigContentTitle(getTitle(count, title))
-
-                    for (push in pushMessageList) {
-                        inbox.addLine(push.message)
-                    }
-
-                    builder.setStyle(inbox)
-                }
-            } else {
-                val bigText = Notification.BigTextStyle()
-                        .bigText(message.fromHtml())
-                        .setBigContentTitle(title.fromHtml())
-
-                builder.setStyle(bigText)
-            }
-
-            return builder.build()
-        }
-    }
-
-    internal fun createSingleNotification(context: Context, lastPushMessage: PushMessage): Notification? {
-        with(lastPushMessage) {
-            if (host == null || message == null || title == null) {
-                return null
-            }
-            val id = notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, lastPushMessage)
-            val deleteIntent = getDismissIntent(context, lastPushMessage)
-
-            val builder = NotificationCompat.Builder(context)
-                    .setWhen(createdAt)
-                    .setContentTitle(title.fromHtml())
-                    .setContentText(message.fromHtml())
+            val builder = createBaseNotificationBuilder(pushMessage)
                     .setGroupSummary(false)
-                    .setGroup(host)
-                    .setDeleteIntent(deleteIntent)
-                    .setContentIntent(contentIntent)
-                    .setMessageNotification()
-
-            //TODO: Get Site_Name PublicSetting from cache
-            val subText = "Rocket.Chat"
-            if (subText.isNotEmpty()) {
-                builder.setSubText(subText)
-            }
-
-            val pushMessageList = hostToPushMessageList.get(host)
-
-            pushMessageList?.let {
-                val lastPushMsg = pushMessageList.last()
-                if (lastPushMsg.host == null || lastPushMsg.message == null || lastPushMsg.title == null) {
-                    return null
-                }
-                if (pushMessageList.isNotEmpty()) {
-                    val messageCount = pushMessageList.size
-
-                    val bigText = NotificationCompat.BigTextStyle()
-                            .bigText(lastPushMsg.message.fromHtml())
-                            .setBigContentTitle(lastPushMsg.title.fromHtml())
-                    builder.setStyle(bigText).setNumber(messageCount)
-                }
-            }
-
-            return builder.build()
-        }
-    }
-
-    @SuppressLint("NewApi")
-    @RequiresApi(Build.VERSION_CODES.N)
-    internal fun createSingleNotificationForNougatAndAbove(context: Context, lastPushMessage: PushMessage): Notification? {
-        val manager: NotificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        with(lastPushMessage) {
-            if (host == null || message == null || title == null) {
-                return null
-            }
-            val id = notificationId.toInt()
-            val contentIntent = getContentIntent(context, id, lastPushMessage)
-            val deleteIntent = getDismissIntent(context, lastPushMessage)
-
-            val builder = Notification.Builder(context)
-                    .setWhen(createdAt)
-                    .setContentTitle(title.fromHtml())
-                    .setContentText(message.fromHtml())
-                    .setGroup(host)
-                    .setGroupSummary(false)
-                    .setDeleteIntent(deleteIntent)
-                    .setContentIntent(contentIntent)
-                    .setMessageNotification(context)
-                    .addReplyAction(context, lastPushMessage)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                builder.setChannelId(host)
-                val channel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
-                channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                channel.enableLights(false)
-                channel.enableVibration(true)
-                channel.setShowBadge(true)
-                manager.createNotificationChannel(channel)
-            }
-
-            //TODO: Get Site_Name PublicSetting from cache
-            val subText = "Rocket.Chat"
-            if (subText.isNotEmpty()) {
-                builder.setSubText(subText)
-            }
 
             if (style == null || "inbox" == style) {
-                val pushMessageList = hostToPushMessageList.get(host)
+                val pushMessageList = groupedPushes.hostToPushMessageList.get(host)
 
                 pushMessageList?.let {
                     val userMessages = pushMessageList.filter {
-                        it.notificationId == lastPushMessage.notificationId
+                        it.notificationId == pushMessage.notificationId
                     }
 
                     val count = pushMessageList.filter {
@@ -420,7 +190,7 @@ object PushManager {
                     builder.setContentTitle(getTitle(count, title))
 
                     if (count > 1) {
-                        val inbox = Notification.InboxStyle()
+                        val inbox = NotificationCompat.InboxStyle()
                         inbox.setBigContentTitle(getTitle(count, title))
                         for (push in userMessages) {
                             inbox.addLine(push.message)
@@ -428,19 +198,60 @@ object PushManager {
 
                         builder.setStyle(inbox)
                     } else {
-                        val bigTextStyle = Notification.BigTextStyle()
+                        val bigTextStyle = NotificationCompat.BigTextStyle()
                                 .bigText(message.fromHtml())
                         builder.setStyle(bigTextStyle)
                     }
                 }
             } else {
-                val bigTextStyle = Notification.BigTextStyle()
+                val bigTextStyle = NotificationCompat.BigTextStyle()
                         .bigText(message.fromHtml())
                 builder.setStyle(bigTextStyle)
             }
 
             return builder.build()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createBaseNotificationBuilder(pushMessage: PushMessage, grouped: Boolean = false): NotificationCompat.Builder {
+        return with(pushMessage) {
+            val id = notificationId.toInt()
+            val host = info.host
+            val contentIntent = getContentIntent(context, id, pushMessage, grouped)
+            val deleteIntent = getDismissIntent(context, pushMessage)
+
+            val builder = NotificationCompat.Builder(context, host)
+                    .setWhen(info.createdAt)
+                    .setContentTitle(title.fromHtml())
+                    .setContentText(message.fromHtml())
+                    .setGroup(host)
+                    .setDeleteIntent(deleteIntent)
+                    .setContentIntent(contentIntent)
+                    .setMessageNotification()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(host, host, NotificationManager.IMPORTANCE_HIGH)
+                channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                channel.enableLights(false)
+                channel.enableVibration(true)
+                channel.setShowBadge(true)
+                manager.createNotificationChannel(channel)
+            }
+
+            //TODO: Get Site_Name PublicSetting from cache
+            val subText = getSiteName(host)
+            if (subText.isNotEmpty()) {
+                builder.setSubText(subText)
+            }
+
+            return@with builder
+        }
+    }
+
+    private fun getSiteName(host: String): String {
+        val settings = getSettingsInteractor.get(host)
+        return settings.siteName() ?: "Rocket.Chat"
     }
 
     private fun getTitle(messageCount: Int, title: String): CharSequence {
@@ -450,18 +261,16 @@ object PushManager {
     private fun getDismissIntent(context: Context, pushMessage: PushMessage): PendingIntent {
         val deleteIntent = Intent(context, DeleteReceiver::class.java)
                 .putExtra(EXTRA_NOT_ID, pushMessage.notificationId.toInt())
-                .putExtra(EXTRA_HOSTNAME, pushMessage.host)
+                .putExtra(EXTRA_HOSTNAME, pushMessage.info.host)
         return PendingIntent.getBroadcast(context, pushMessage.notificationId.toInt(), deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, grouped: Boolean = false): PendingIntent {
-        val notificationIntent = Intent(context, MainActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                .putExtra(EXTRA_NOT_ID, notificationId)
-                .putExtra(EXTRA_HOSTNAME, pushMessage.host)
-        if (!grouped) {
-            notificationIntent.putExtra(EXTRA_ROOM_ID, pushMessage.rid)
-        }
+        val notificationIntent = context.changeServerIntent(pushMessage.info.host)
+        // TODO - add support to go directly to the chatroom
+        /*if (!grouped) {
+            notificationIntent.putExtra(EXTRA_ROOM_ID, pushMessage.info.roomId)
+        }*/
         return PendingIntent.getActivity(context, randomizer.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
@@ -472,18 +281,18 @@ object PushManager {
 
     //Notification.Builder extensions
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun Notification.Builder.addReplyAction(ctx: Context, pushMessage: PushMessage): Notification.Builder {
+    private fun Notification.Builder.addReplyAction(pushMessage: PushMessage): Notification.Builder {
         val replyRemoteInput = android.app.RemoteInput.Builder(REMOTE_INPUT_REPLY)
                 .setLabel(REPLY_LABEL)
                 .build()
         //TODO: Implement this when we have sendMessage call
-//        val replyIntent = Intent(ctx, ReplyReceiver::class.java)
+//        val replyIntent = Intent(context, ReplyReceiver::class.java)
 //        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Serializable)
 //        val pendingIntent = PendingIntent.getBroadcast(
-//                ctx, randomizer.nextInt(), replyIntent, 0)
+//                context, randomizer.nextInt(), replyIntent, 0)
 //        val replyAction =
 //                Notification.Action.Builder(
-//                        Icon.createWithResource(ctx, R.drawable.ic_reply), REPLY_LABEL, pendingIntent)
+//                        Icon.createWithResource(context, R.drawable.ic_reply), REPLY_LABEL, pendingIntent)
 //                        .addRemoteInput(replyRemoteInput)
 //                        .setAllowGeneratedReplies(true)
 //                        .build()
@@ -491,25 +300,8 @@ object PushManager {
         return this
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun Notification.Builder.setMessageNotification(ctx: Context): Notification.Builder {
-        val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val res = ctx.resources
-        val smallIcon = res.getIdentifier(
-                "rocket_chat_notification", "drawable", ctx.packageName)
-        with(this, {
-            setAutoCancel(true)
-            setShowWhen(true)
-            setColor(res.getColor(R.color.colorPrimary, ctx.theme))
-            setSmallIcon(smallIcon)
-            setSound(alarmSound)
-        })
-        return this
-    }
-
     // NotificationCompat.Builder extensions
     private fun NotificationCompat.Builder.addReplyAction(pushMessage: PushMessage): NotificationCompat.Builder {
-        val context = this.mContext
         val replyRemoteInput = RemoteInput.Builder(REMOTE_INPUT_REPLY)
                 .setLabel(REPLY_LABEL)
                 .build()
@@ -529,76 +321,66 @@ object PushManager {
 
     private fun NotificationCompat.Builder.setMessageNotification(): NotificationCompat.Builder {
         val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val ctx = this.mContext
-        val res = ctx.resources
+        val res = context.resources
         val smallIcon = res.getIdentifier(
-                "rocket_chat_notification", "drawable", ctx.packageName)
+                "rocket_chat_notification", "drawable", context.packageName)
         with(this, {
             setAutoCancel(true)
             setShowWhen(true)
-            color = ctx.resources.getColor(R.color.colorPrimary)
+            color = context.resources.getColor(R.color.colorPrimary)
             setDefaults(Notification.DEFAULT_ALL)
             setSmallIcon(smallIcon)
             setSound(alarmSound)
         })
         return this
     }
+}
 
-    internal data class PushMessage(
-            val title: String? = null,
-            val message: String? = null,
-            val image: String? = null,
-            val ejson: String? = null,
-            val count: String? = null,
-            val notificationId: String,
-            val summaryText: String? = null,
-            val style: String? = null) : Serializable {
-        val host: String?
-        val rid: String?
-        val type: String?
-        val channelName: String?
-        val sender: Sender?
-        val createdAt: Long
+data class PushMessage(
+    val title: String,
+    val message: String,
+    val info: PushInfo,
+    val image: String? = null,
+    val count: String? = null,
+    val notificationId: String,
+    val summaryText: String? = null,
+    val style: String? = null
+)
 
-        init {
-            val json = if (ejson == null) JSONObject() else JSONObject(ejson)
-            host = json.optString("host", null)
-            rid = json.optString("rid", null)
-            type = json.optString("type", null)
-            channelName = json.optString("name", null)
-            val senderJson = json.optString("sender", null)
-            if (senderJson != null && senderJson != "null") {
-                sender = Sender(senderJson)
-            } else {
-                sender = null
-            }
-            createdAt = System.currentTimeMillis()
-        }
-
-        data class Sender(val sender: String) : Serializable {
-            val _id: String?
-            val username: String?
-            val name: String?
-
-            init {
-                val json = JSONObject(sender)
-                _id = json.optString("_id", null)
-                username = json.optString("username", null)
-                name = json.optString("name", null)
-            }
-        }
+@JsonSerializable
+data class PushInfo(
+    @Json(name = "host") val hostname: String,
+    @Json(name = "rid") val roomId: String,
+    val type: RoomType,
+    val name: String?,
+    val sender: PushSender?
+) {
+    val createdAt: Long
+        get() = System.currentTimeMillis()
+    val host by lazy {
+        sanitizeUrl(hostname)
     }
 
-    /**
-     * BroadcastReceiver for dismissed notifications.
-     */
-    class DeleteReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val notId = intent?.extras?.getInt(EXTRA_NOT_ID)
-            val host = intent?.extras?.getString(EXTRA_HOSTNAME)
-            if (host != null && notId != null) {
-                clearNotificationsByHostAndNotificationId(host, notId)
-            }
+    private fun sanitizeUrl(baseUrl: String): String {
+        var url = baseUrl.trim()
+        while (url.endsWith('/')) {
+            url = url.dropLast(1)
         }
+
+        return url
     }
 }
+
+@JsonSerializable
+data class PushSender(
+    @Json(name = "_id") val id: String,
+    val username: String?,
+    val name: String?
+)
+
+const val EXTRA_NOT_ID = "chat.rocket.android.EXTRA_NOT_ID"
+const val EXTRA_HOSTNAME = "chat.rocket.android.EXTRA_HOSTNAME"
+const val EXTRA_PUSH_MESSAGE = "chat.rocket.android.EXTRA_PUSH_MESSAGE"
+const val EXTRA_ROOM_ID = "chat.rocket.android.EXTRA_ROOM_ID"
+private const val REPLY_LABEL = "REPLY"
+private const val REMOTE_INPUT_REPLY = "REMOTE_INPUT_REPLY"

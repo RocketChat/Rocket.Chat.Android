@@ -7,13 +7,19 @@ import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.encodeToBase64
+import chat.rocket.android.util.extensions.generateRandomString
+import chat.rocket.android.util.extensions.isEmail
+import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
+import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.delay
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -28,16 +34,17 @@ private const val SERVICE_NAME_GILAB = "gitlab"
 class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val strategy: CancelStrategy,
                                          private val navigator: AuthenticationNavigator,
-                                         private val multiServerRepository: MultiServerTokenRepository,
+                                         private val tokenRepository: TokenRepository,
                                          private val localRepository: LocalRepository,
-                                         private val settingsInteractor: GetSettingsInteractor,
+                                         private val getAccountsInteractor: GetAccountsInteractor,
+                                         settingsInteractor: GetSettingsInteractor,
                                          serverInteractor: GetCurrentServerInteractor,
-                                         factory: RocketChatClientFactory) {
+                                         private val saveAccountInteractor: SaveAccountInteractor,
+                                         private val factory: RocketChatClientFactory) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
-    private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
-    private val server = serverInteractor.get()
-    private val settings = settingsInteractor.get(server!!)
-    private lateinit var rocketChatToken: Token
+    private val currentServer = serverInteractor.get()!!
+    private val client: RocketChatClient = factory.create(currentServer)
+    private val settings: PublicSettings = settingsInteractor.get(currentServer)
     private lateinit var usernameOrEmail: String
     private lateinit var password: String
     private lateinit var credentialToken: String
@@ -92,7 +99,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     private fun setupCasView() {
         if (settings.isCasAuthenticationEnabled()) {
             val token = generateRandomString(17)
-            view.setupCasButtonListener(UrlHelper.getCasUrl(settings.casLoginUrl(), server!!, token), token)
+            view.setupCasButtonListener(UrlHelper.getCasUrl(settings.casLoginUrl(), currentServer, token), token)
             view.showCasButton()
         }
     }
@@ -144,7 +151,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (settings.isGitlabAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
                         if (clientId != null) {
-                            view.setupGitlabButtonListener(UrlHelper.getGitlabOauthUrl(clientId, server!!, state), state)
+                            view.setupGitlabButtonListener(UrlHelper.getGitlabOauthUrl(clientId, currentServer, state), state)
                             view.enableLoginByGitlab()
                             totalSocialAccountsEnabled++
                         }
@@ -174,9 +181,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                 view.disableUserInput()
                 view.showLoading()
                 try {
-                    when (loginType) {
+                    val token = when (loginType) {
                         TYPE_LOGIN_USER_EMAIL -> {
-                            rocketChatToken = if (usernameOrEmail.isEmail()) {
+                            if (usernameOrEmail.isEmail()) {
                                 client.loginWithEmail(usernameOrEmail, password)
                             } else {
                                 if (settings.isLdapAuthenticationEnabled()) {
@@ -188,13 +195,19 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         }
                         TYPE_LOGIN_CAS -> {
                             delay(3, TimeUnit.SECONDS)
-                            rocketChatToken = client.loginWithCas(credentialToken)
+                            client.loginWithCas(credentialToken)
                         }
                         TYPE_LOGIN_OAUTH -> {
-                            rocketChatToken = client.loginWithOauth(credentialToken, credentialSecret)
+                            client.loginWithOauth(credentialToken, credentialSecret)
+                        }
+                        else -> {
+                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS or TYPE_LOGIN_OAUTH")
                         }
                     }
-                    saveToken()
+                    val me = client.me()
+                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
+                    saveAccount(me)
+                    saveToken(token)
                     registerPushToken()
                     navigator.toChatList()
                 } catch (exception: RocketChatException) {
@@ -213,20 +226,32 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
     }
 
-    private suspend fun saveToken() {
-        multiServerRepository.save(server!!, TokenModel(rocketChatToken.userId, rocketChatToken.authToken))
-        localRepository.save(LocalRepository.USERNAME_KEY, client.me().username)
+    private fun saveToken(token: Token) {
+        tokenRepository.save(currentServer, token)
     }
 
     private suspend fun registerPushToken() {
         localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it)
+            client.registerPushToken(it, getAccountsInteractor.get(), factory)
         }
-        // TODO: Schedule push token registering when it comes up null
+        // TODO: When the push token is null, at some point we should receive it with
+        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
     }
 
     private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
         return listMap.find { map -> map.containsValue(serviceName) }
                 ?.get("appId")
+    }
+
+    private suspend fun saveAccount(me: Myself) {
+        val icon = settings.favicon()?.let {
+            UrlHelper.getServerLogoUrl(currentServer, it)
+        }
+        val logo = settings.wideTile()?.let {
+            UrlHelper.getServerLogoUrl(currentServer, it)
+        }
+        val thumb = UrlHelper.getAvatarUrl(currentServer, me.username!!)
+        val account = Account(currentServer, icon, logo, me.username!!, thumb)
+        saveAccountInteractor.save(account)
     }
 }

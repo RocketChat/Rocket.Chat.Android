@@ -15,6 +15,16 @@ object UrlHelper {
         removeTrailingSlash(serverUrl) + "/avatar/" + removeTrailingSlash(avatarName) + "?format=$format"
 
     /**
+     * Returns the server logo URL.
+     *
+     * @param serverUrl The server URL.
+     * @param favicon The faviconLarge from the server settings.
+     * @return The server logo URL.
+     */
+    fun getServerLogoUrl(serverUrl: String, favicon: String): String =
+            removeTrailingSlash(serverUrl) + "/$favicon"
+
+    /**
      * Returns the CAS URL.
      *
      * @param casLoginUrl The CAS login URL from the server settings.
