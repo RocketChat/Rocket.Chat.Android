@@ -15,11 +15,11 @@ import chat.rocket.android.app.migration.model.RealmBasedServerInfo
 import chat.rocket.android.app.migration.model.RealmPublicSetting
 import chat.rocket.android.app.migration.model.RealmSession
 import chat.rocket.android.app.migration.model.RealmUser
-import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.authentication.domain.model.toToken
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.helper.CrashlyticsTree
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.widget.emoji.EmojiRepository
@@ -76,6 +76,8 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     lateinit var prefs: SharedPreferences
     @Inject
     lateinit var getAccountsInteractor: GetAccountsInteractor
+    @Inject
+    lateinit var localRepository: LocalRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -94,10 +96,11 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
         // TODO - remove this and all realm stuff when we got to 80% in 2.0
         try {
-            migrateFromLegacy()
+            if (!localRepository.hasMigrated()) {
+                migrateFromLegacy()
+            }
         } catch (ex: Exception) {
             Timber.d(ex, "Error migrating old accounts")
-            ex.printStackTrace()
         }
     }
 
@@ -138,6 +141,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         }
         migrateCurrentServer(serversInfoList)
         serverRealm.close()
+        localRepository.setMigrated(true)
     }
 
     private fun migrateServerInfo(url: String, authToken: String, settings: PublicSettings, user: RealmUser) {
@@ -151,7 +155,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         }
         val account = Account(url, icon, logo, user.username!!, avatar)
         launch(CommonPool) {
-            tokenRepository.save(url, Token(userId!!, authToken))
+            tokenRepository.save(Token(userId!!, authToken))
             accountRepository.save(account)
         }
     }
@@ -210,14 +214,14 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
         getCurrentServerInteractor.get()?.let { serverUrl ->
             multiServerRepository.get(serverUrl)?.let { token ->
-                tokenRepository.save(serverUrl, Token(token.userId, token.authToken))
+                tokenRepository.save(Token(token.userId, token.authToken))
             }
         }
 
         runBlocking {
             getAccountsInteractor.get().forEach { account ->
                 multiServerRepository.get(account.serverUrl)?.let { token ->
-                    tokenRepository.save(account.serverUrl, token.toToken())
+                    tokenRepository.save(token.toToken())
                 }
             }
         }
@@ -254,5 +258,11 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         return broadcastReceiverInjector
     }
 }
+
+private fun LocalRepository.setMigrated(migrated: Boolean) {
+    save(LocalRepository.MIGRATION_FINISHED_KEY, migrated)
+}
+
+private fun LocalRepository.hasMigrated() = getBoolean(LocalRepository.MIGRATION_FINISHED_KEY)
 
 private const val INTERNAL_TOKEN_MIGRATION_NEEDED = "INTERNAL_TOKEN_MIGRATION_NEEDED"
