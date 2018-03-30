@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleOwner
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.dagger.scope.PerFragment
+import chat.rocket.android.weblinks.presentation.WebLinksView
 import dagger.Module
 import dagger.Provides
 
@@ -13,6 +14,11 @@ class ChatRoomsFragmentModule {
 
     @Provides
     fun chatRoomsView(frag: ChatRoomsFragment): ChatRoomsView {
+        return frag
+    }
+
+    @Provides
+    fun webLinksView(frag: ChatRoomsFragment): WebLinksView {
         return frag
     }
 
