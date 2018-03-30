@@ -56,8 +56,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_email.textContent = email
         text_avatar_url.textContent = ""
 
-        currentName = username
-        currentUsername = name
+        currentName = name
+        currentUsername = username
         currentEmail = email
         currentAvatar = avatarUrl
 
@@ -76,7 +76,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
+        if (view_loading != null) {
+            view_loading.setVisible(false)
+        }
         enableUserInput(true)
     }
 

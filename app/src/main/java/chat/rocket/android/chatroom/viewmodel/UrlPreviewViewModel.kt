@@ -13,7 +13,8 @@ data class UrlPreviewViewModel(
         val description: CharSequence?,
         val thumbUrl: String?,
         override var reactions: List<ReactionViewModel>,
-        override var nextDownStreamMessage: BaseViewModel<*>? = null
+        override var nextDownStreamMessage: BaseViewModel<*>? = null,
+        override var preview: Message? = null
 ) : BaseViewModel<Url> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.URL_PREVIEW.viewType

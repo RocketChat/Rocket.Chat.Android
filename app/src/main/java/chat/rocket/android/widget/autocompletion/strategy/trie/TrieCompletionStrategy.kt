@@ -27,5 +27,9 @@ class TrieCompletionStrategy : CompletionStrategy {
         }
     }
 
+    override fun addPinned(list: List<SuggestionModel>) {
+
+    }
+
     override fun size() = items.size
 }

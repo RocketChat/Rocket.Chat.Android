@@ -10,10 +10,10 @@ import kotlin.properties.Delegates
 abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
         val token: String,
         val constraint: Int = CONSTRAINT_UNBOUND,
-        threshold: Int  = MAX_RESULT_COUNT) : RecyclerView.Adapter<VH>() {
+        threshold: Int = MAX_RESULT_COUNT) : RecyclerView.Adapter<VH>() {
     companion object {
         // Any number of results.
-        const val UNLIMITED_RESULT_COUNT = -1
+        const val RESULT_COUNT_UNLIMITED = -1
         // Trigger suggestions only if on the line start.
         const val CONSTRAINT_BOUND_TO_START = 0
         // Trigger suggestions from anywhere.
@@ -21,12 +21,14 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
         // Maximum number of results to display by default.
         private const val MAX_RESULT_COUNT = 5
     }
+
     private var itemType: Type? = null
     private var itemClickListener: ItemClickListener? = null
     // Called to gather results when no results have previously matched.
     private var providerExternal: ((query: String) -> Unit)? = null
+    private var pinnedSuggestions: List<SuggestionModel>? = null
     // Maximum number of results/suggestions to display.
-    private var resultsThreshold: Int = if (threshold > 0) threshold else UNLIMITED_RESULT_COUNT
+    private var resultsThreshold: Int = if (threshold > 0) threshold else RESULT_COUNT_UNLIMITED
     // The strategy used for suggesting completions.
     private val strategy: CompletionStrategy = StringMatchingCompletionStrategy(resultsThreshold)
     // Current input term to look up for suggestions.
@@ -51,6 +53,15 @@ abstract class SuggestionsAdapter<VH : BaseSuggestionViewHolder>(
 
     private fun getItem(position: Int): SuggestionModel {
         return strategy.autocompleteItems(currentTerm)[position]
+    }
+
+    /**
+     * Set suggestions that should always appear when prompted.
+     *
+     * @param suggestions The list of suggestions that will be pinned.
+     */
+    fun setPinnedSuggestions(suggestions: List<SuggestionModel>) {
+        this.strategy.addPinned(suggestions)
     }
 
     fun autocomplete(newTerm: String) {
