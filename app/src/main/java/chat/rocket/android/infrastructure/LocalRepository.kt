@@ -23,3 +23,5 @@ interface LocalRepository {
         const val CURRENT_USERNAME_KEY = "username_"
     }
 }
+
+fun LocalRepository.checkIfMyself(username: String) = get(LocalRepository.CURRENT_USERNAME_KEY) == username

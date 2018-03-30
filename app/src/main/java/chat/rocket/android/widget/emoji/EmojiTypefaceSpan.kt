@@ -17,22 +17,22 @@ class EmojiTypefaceSpan(family: String, private val newType: Typeface) : Typefac
 
     private fun applyCustomTypeFace(paint: Paint, tf: Typeface) {
         val oldStyle: Int
-        val old = paint.getTypeface()
+        val old = paint.typeface
         if (old == null) {
             oldStyle = 0
         } else {
-            oldStyle = old.getStyle()
+            oldStyle = old.style
         }
 
         val fake = oldStyle and tf.style.inv()
         if (fake and Typeface.BOLD != 0) {
-            paint.setFakeBoldText(true)
+            paint.isFakeBoldText = true
         }
 
         if (fake and Typeface.ITALIC != 0) {
-            paint.setTextSkewX(-0.25f)
+            paint.textSkewX = -0.25f
         }
 
-        paint.setTypeface(tf)
+        paint.typeface = tf
     }
 }

@@ -12,7 +12,8 @@ data class VideoAttachmentViewModel(
         override val attachmentTitle: CharSequence,
         override val id: Long,
         override var reactions: List<ReactionViewModel>,
-        override var nextDownStreamMessage: BaseViewModel<*>? = null
+        override var nextDownStreamMessage: BaseViewModel<*>? = null,
+        override var preview: Message? = null
 ) : BaseFileAttachmentViewModel<VideoAttachment> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.VIDEO_ATTACHMENT.viewType

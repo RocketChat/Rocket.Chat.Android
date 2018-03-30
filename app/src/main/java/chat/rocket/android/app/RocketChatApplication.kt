@@ -24,7 +24,6 @@ import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.common.model.Token
-import chat.rocket.common.util.ifNull
 import chat.rocket.core.model.Value
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore

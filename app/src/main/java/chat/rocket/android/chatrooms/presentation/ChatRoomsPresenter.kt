@@ -1,5 +1,6 @@
 package chat.rocket.android.chatrooms.presentation
 
+import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.*
@@ -9,7 +10,10 @@ import chat.rocket.android.server.infraestructure.chatRooms
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
-import chat.rocket.common.model.*
+import chat.rocket.common.model.BaseRoom
+import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.SimpleUser
+import chat.rocket.common.model.User
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.State
 import chat.rocket.core.internal.realtime.StreamMessage
@@ -30,6 +34,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val getChatRoomsInteractor: GetChatRoomsInteractor,
                                              private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
                                              private val refreshSettingsInteractor: RefreshSettingsInteractor,
+                                             private val viewModelMapper: ViewModelMapper,
                                              settingsRepository: SettingsRepository,
                                              factory: ConnectionManagerFactory) {
     private val manager: ConnectionManager = factory.create(serverInteractor.get()!!)
@@ -89,9 +94,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     val chatRoomsCombined = mutableListOf<ChatRoom>()
                     chatRoomsCombined.addAll(usersToChatRooms(users))
                     chatRoomsCombined.addAll(roomsToChatRooms(rooms))
-                    view.updateChatRooms(chatRoomsCombined)
+                    view.updateChatRooms(getChatRoomsWithPreviews(chatRoomsCombined.toList()))
                 } else {
-                    view.updateChatRooms(roomList)
+                    view.updateChatRooms(getChatRoomsWithPreviews(roomList))
                 }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
@@ -156,7 +161,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         val sortedRooms = sortRooms(chatRooms)
         Timber.d("Loaded rooms: ${sortedRooms.size}")
         saveChatRoomsInteractor.save(currentServer, sortedRooms)
-        return sortedRooms
+        return getChatRoomsWithPreviews(sortedRooms)
     }
 
     private fun sortRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
@@ -167,7 +172,17 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private fun updateRooms() {
         Timber.d("Updating Rooms")
         launch(strategy.jobs) {
-            view.updateChatRooms(getChatRoomsInteractor.get(currentServer))
+            view.updateChatRooms(getChatRoomsWithPreviews(getChatRoomsInteractor.get(currentServer)))
+        }
+    }
+
+    private suspend fun getChatRoomsWithPreviews(chatRooms: List<ChatRoom>): List<ChatRoom> {
+        return chatRooms.map {
+            if (it.lastMessage != null) {
+                it.copy(lastMessage = viewModelMapper.map(it.lastMessage!!).last().preview)
+            } else {
+                it
+            }
         }
     }
 
@@ -304,7 +319,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     // Update a ChatRoom with a Subscription information
     private fun updateSubscription(subscription: Subscription) {
-        Timber.d("Updating subscrition: ${subscription.id} - ${subscription.name}")
+        Timber.d("Updating subscription: ${subscription.id} - ${subscription.name}")
         val chatRooms = getChatRoomsInteractor.get(currentServer).toMutableList()
         val chatRoom = chatRooms.find { chatRoom -> chatRoom.id == subscription.roomId }
         chatRoom?.apply {

@@ -12,7 +12,7 @@ import chat.rocket.android.widget.autocompletion.ui.BaseSuggestionViewHolder
 import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter
 
 class CommandSuggestionsAdapter : SuggestionsAdapter<CommandSuggestionsViewHolder>(token = "/",
-        constraint = CONSTRAINT_BOUND_TO_START, threshold = UNLIMITED_RESULT_COUNT) {
+        constraint = CONSTRAINT_BOUND_TO_START, threshold = RESULT_COUNT_UNLIMITED) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommandSuggestionsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.suggestion_command_item, parent,
