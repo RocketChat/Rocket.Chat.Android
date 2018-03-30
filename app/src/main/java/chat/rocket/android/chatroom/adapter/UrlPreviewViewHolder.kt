@@ -39,7 +39,7 @@ class UrlPreviewViewHolder(itemView: View,
             val customTabsIntent = tabsbuilder.build()
 
             url_preview_layout.setOnClickListener { view ->
-                customTabsIntent.launchUrl(context, Uri.parse(convertSchemeToLower(data.rawData.url))
+                customTabsIntent.launchUrl(context, Uri.parse(convertSchemeToLower(data.rawData.url)))
             }
         }
     }
