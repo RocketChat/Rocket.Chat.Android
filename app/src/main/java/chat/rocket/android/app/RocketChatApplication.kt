@@ -258,6 +258,10 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         return serviceDispatchingAndroidInjector
     }
 
+    override fun broadcastReceiverInjector(): AndroidInjector<BroadcastReceiver> {
+        return broadcastReceiverInjector
+    }
+
     companion object {
         var context: WeakReference<Context>? = null
         fun getAppContext(): Context? {

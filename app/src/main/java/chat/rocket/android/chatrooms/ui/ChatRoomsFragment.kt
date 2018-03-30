@@ -233,14 +233,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
 
             val baseAdapter = ChatRoomsAdapter(this,
-                    settingsRepository.get(serverInteractor.get()!!)) { chatRoom ->
-            recycler_view.adapter = ChatRoomsAdapter(
-                    this,
-                    settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom ->
-                presenter.loadChatRoom(chatRoom)
-            }
-            baseAdapter = ChatRoomsAdapter(this,
-                    settingsRepository.get(serverInteractor.get()!!)) { chatRoom -> presenter.loadChatRoom(chatRoom) }
+                    settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom -> presenter.loadChatRoom(chatRoom) }
 
             sectionedAdapter = SimpleSectionedRecyclerViewAdapter(this, R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter!!)
             recycler_view.adapter = sectionedAdapter
