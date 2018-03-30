@@ -1,9 +1,9 @@
 package chat.rocket.android.chatroom.ui
 
-import android.graphics.drawable.Drawable
 import android.support.design.widget.BaseTransientBottomBar
 import android.support.v4.view.ViewCompat
 import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +27,6 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
             actionSnackbar.cancelView = view.findViewById(R.id.image_view_action_cancel_quote) as ImageView
             actionSnackbar.duration = BaseTransientBottomBar.LENGTH_INDEFINITE
             val spannable = Markwon.markdown(context, content).trim()
-            actionSnackbar.marginDrawable = context.getDrawable(R.drawable.quote)
             actionSnackbar.messageTextView.content = spannable
             return actionSnackbar
         }
@@ -37,19 +36,16 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
     lateinit var cancelView: View
     private lateinit var messageTextView: TextView
     private lateinit var titleTextView: TextView
-    private lateinit var marginDrawable: Drawable
 
     var text: String = ""
         set(value) {
-            val spannable = parser.renderMarkdown(value) as Spannable
-            spannable.setSpan(MessageParser.QuoteMarginSpan(marginDrawable, 10), 0, spannable.length, 0)
+            val spannable = SpannableStringBuilder.valueOf(value)
             messageTextView.content = spannable
         }
 
     var title: String = ""
         set(value) {
             val spannable = Markwon.markdown(this.context, value) as Spannable
-            spannable.setSpan(MessageParser.QuoteMarginSpan(marginDrawable, 10), 0, spannable.length, 0)
             titleTextView.content = spannable
 
         }
@@ -68,17 +64,17 @@ class ActionSnackbar : BaseTransientBottomBar<ActionSnackbar> {
         override fun animateContentOut(delay: Int, duration: Int) {
             ViewCompat.setScaleY(content, 1f)
             ViewCompat.animate(content)
-                .scaleY(0f)
-                .setDuration(duration.toLong())
-                .startDelay = delay.toLong()
+                    .scaleY(0f)
+                    .setDuration(duration.toLong())
+                    .startDelay = delay.toLong()
         }
 
         override fun animateContentIn(delay: Int, duration: Int) {
             ViewCompat.setScaleY(content, 0f)
             ViewCompat.animate(content)
-                .scaleY(1f)
-                .setDuration(duration.toLong())
-                .startDelay = delay.toLong()
+                    .scaleY(1f)
+                    .setDuration(duration.toLong())
+                    .startDelay = delay.toLong()
         }
     }
 }

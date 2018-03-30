@@ -4,9 +4,7 @@ import DateTimeHelper
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import chat.rocket.android.R
@@ -22,10 +20,8 @@ import chat.rocket.core.model.attachment.*
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import okhttp3.HttpUrl
-import timber.log.Timber
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
@@ -72,7 +68,15 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
 
         mapMessage(message).let {
+            if (list.size > 0) {
+                it.preview = list[0].preview
+            }
             list.add(it)
+        }
+
+        for (i in list.size - 1 downTo 0) {
+            val next = if (i - 1 < 0) null else list[i - 1]
+            list[i].nextDownStreamMessage = next
         }
 
         return@withContext list
@@ -87,14 +91,31 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val description = url.meta?.description
 
         return UrlPreviewViewModel(message, url, message.id, title, hostname, description, thumb,
-                getReactions(message))
+                getReactions(message), preview = message.copy(message = url.url))
     }
 
-    private fun mapAttachment(message: Message, attachment: Attachment): BaseViewModel<*>? {
+    private suspend fun mapAttachment(message: Message, attachment: Attachment): BaseViewModel<*>? {
         return when (attachment) {
             is FileAttachment -> mapFileAttachment(message, attachment)
+            is MessageAttachment -> mapMessageAttachment(message, attachment)
             else -> null
         }
+    }
+
+    private suspend fun mapMessageAttachment(message: Message, attachment: MessageAttachment): MessageAttachmentViewModel {
+        val attachmentAuthor = attachment.author!!
+        val time = getTime(attachment.timestamp!!)
+        val attachmentText = when (attachment.attachments.orEmpty().firstOrNull()) {
+            is ImageAttachment -> context.getString(R.string.msg_preview_photo)
+            is VideoAttachment -> context.getString(R.string.msg_preview_video)
+            is AudioAttachment -> context.getString(R.string.msg_preview_audio)
+            else -> attachment.text ?: ""
+        }
+        val content = stripMessageQuotes(message)
+        return MessageAttachmentViewModel(message = content, rawData = message,
+                messageId = message.id, time = time, senderName = attachmentAuthor,
+                content = attachmentText, isPinned = message.pinned, reactions = getReactions(message),
+                preview = message.copy(message = content.message))
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseViewModel<*>? {
@@ -103,11 +124,14 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val id = attachmentId(message, attachment)
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message),
+                    preview = message.copy(message = context.getString(R.string.msg_preview_photo)))
             is VideoAttachment -> VideoAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message),
+                    preview = message.copy(message = context.getString(R.string.msg_preview_video)))
             is AudioAttachment -> AudioAttachmentViewModel(message, attachment, message.id,
-                    attachmentUrl, attachmentTitle, id, getReactions(message))
+                    attachmentUrl, attachmentTitle, id, getReactions(message),
+                    preview = message.copy(message = context.getString(R.string.msg_preview_audio)))
             else -> null
         }
     }
@@ -151,32 +175,20 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
+        val preview = mapMessagePreview(message)
 
-        val baseUrl = settings.baseUrl()
-        var quote: Message? = null
-
-        val urls = ArrayList<Url>()
-        message.urls?.let {
-            if (it.isEmpty()) return@let
-            for (url in it) {
-                urls.add(url)
-                baseUrl?.let {
-                    val quoteUrl = HttpUrl.parse(url.url)
-                    val serverUrl = HttpUrl.parse(baseUrl)
-                    if (quoteUrl != null && serverUrl != null) {
-                        quote = makeQuote(quoteUrl, serverUrl)?.let {
-                            getMessageWithoutQuoteMarkdown(it)
-                        }
-                    }
-                }
-            }
-        }
-
-        val content = getContent(context, getMessageWithoutQuoteMarkdown(message), quote)
-        MessageViewModel(message = getMessageWithoutQuoteMarkdown(message), rawData = message,
+        val content = getContent(stripMessageQuotes(message))
+        MessageViewModel(message = stripMessageQuotes(message), rawData = message,
                 messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
                 content = content, isPinned = message.pinned, reactions = getReactions(message),
-                isFirstUnread = false)
+                isFirstUnread = false, preview = preview)
+    }
+
+    private suspend fun mapMessagePreview(message: Message): Message {
+        return when (message.isSystemMessage()) {
+            false -> stripMessageQuotes(message)
+            true -> message.copy(message = getSystemMessage(message).toString())
+        }
     }
 
     private fun getReactions(message: Message): List<ReactionViewModel> {
@@ -198,7 +210,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         return reactions ?: emptyList()
     }
 
-    private fun getMessageWithoutQuoteMarkdown(message: Message): Message {
+    private suspend fun stripMessageQuotes(message: Message): Message {
         val baseUrl = settings.baseUrl()
         return message.copy(
                 message = message.message.replace("\\[\\s\\]\\($baseUrl.*\\)".toRegex(), "").trim()
@@ -229,33 +241,14 @@ class ViewModelMapper @Inject constructor(private val context: Context,
 
     private fun getTime(timestamp: Long) = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(timestamp))
 
-    private fun makeQuote(quoteUrl: HttpUrl, serverUrl: HttpUrl): Message? {
-        if (quoteUrl.host() == serverUrl.host()) {
-            val msgIdToQuote = quoteUrl.queryParameter("msg")
-            Timber.d("Will quote message Id: $msgIdToQuote")
-            return if (msgIdToQuote != null) messagesRepository.getById(msgIdToQuote) else null
-        }
-        return null
-    }
-
-    private suspend fun getContent(context: Context, message: Message, quote: Message?): CharSequence {
+    private suspend fun getContent(message: Message): CharSequence {
         return when (message.isSystemMessage()) {
-            true -> getSystemMessage(message, context)
-            false -> getNormalMessage(message, quote)
+            true -> getSystemMessage(message)
+            false -> parser.renderMarkdown(message, currentUsername)
         }
     }
 
-    private suspend fun getNormalMessage(message: Message, quote: Message?): CharSequence {
-        var quoteViewModel: MessageViewModel? = null
-        if (quote != null) {
-            val quoteMessage: Message = quote
-            quoteViewModel = mapMessage(quoteMessage)
-        }
-
-        return parser.renderMarkdown(message.message, quoteViewModel, currentUsername)
-    }
-
-    private fun getSystemMessage(message: Message, context: Context): CharSequence {
+    private fun getSystemMessage(message: Message): CharSequence {
         val content = when (message.type) {
         //TODO: Add implementation for Welcome type.
             is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
@@ -264,68 +257,17 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             is MessageType.UserAdded -> context.getString(R.string.message_user_added_by, message.message, message.sender?.username)
             is MessageType.RoomNameChanged -> context.getString(R.string.message_room_name_changed, message.message, message.sender?.username)
             is MessageType.UserRemoved -> context.getString(R.string.message_user_removed_by, message.message, message.sender?.username)
-            is MessageType.MessagePinned -> {
-                val attachment = message.attachments?.get(0)
-                val pinnedSystemMessage = context.getString(R.string.message_pinned)
-                if (attachment != null && attachment is MessageAttachment) {
-                    return SpannableStringBuilder(pinnedSystemMessage)
-                            .apply {
-                                setSpan(StyleSpan(Typeface.ITALIC), 0, length, 0)
-                                setSpan(ForegroundColorSpan(Color.GRAY), 0, length, 0)
-                            }
-                            .append(quoteMessage(attachment.author!!, attachment.text!!, attachment.timestamp!!))
-                }
-                return pinnedSystemMessage
-            }
+            is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }
         }
-        //isSystemMessage = true
         val spannableMsg = SpannableStringBuilder(content)
         spannableMsg.setSpan(StyleSpan(Typeface.ITALIC), 0, spannableMsg.length,
                 0)
         spannableMsg.setSpan(ForegroundColorSpan(Color.GRAY), 0, spannableMsg.length,
                 0)
 
-        /*if (attachmentType == null) {
-            val username = message.sender?.username
-            val message = message.message
-
-            val usernameTextStartIndex = if (username != null) content.indexOf(username) else -1
-            val usernameTextEndIndex = if (username != null) usernameTextStartIndex + username.length else -1
-            val messageTextStartIndex = if (message.isNotEmpty()) content.indexOf(message) else -1
-            val messageTextEndIndex = messageTextStartIndex + message.length
-
-            if (usernameTextStartIndex > -1) {
-                spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), usernameTextStartIndex, usernameTextEndIndex,
-                        0)
-            }
-
-            if (messageTextStartIndex > -1) {
-                spannableMsg.setSpan(StyleSpan(Typeface.BOLD_ITALIC), messageTextStartIndex, messageTextEndIndex,
-                        0)
-            }
-        } else if (attachmentType == AttachmentType.Message) {
-            spannableMsg.append(quoteMessage(attachmentMessageAuthor!!, attachmentMessageText!!, attachmentTimestamp!!))
-        }*/
-
         return spannableMsg
-    }
-
-    private fun quoteMessage(author: String, text: String, timestamp: Long): CharSequence {
-        return SpannableStringBuilder().apply {
-            val header = "\n$author ${getTime(timestamp)}\n"
-
-            append(SpannableString(header).apply {
-                setSpan(StyleSpan(Typeface.BOLD), 1, author.length + 1, 0)
-                setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 1, length, 0)
-                setSpan(AbsoluteSizeSpan(context.resources.getDimensionPixelSize(R.dimen.message_time_text_size)),
-                        author.length + 1, length, 0)
-            })
-            append(SpannableString(parser.renderMarkdown(text)).apply {
-                setSpan(MessageParser.QuoteMarginSpan(context.getDrawable(R.drawable.quote), 10), 0, length, 0)
-            })
-        }
     }
 }
