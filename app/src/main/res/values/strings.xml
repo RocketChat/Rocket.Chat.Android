@@ -150,4 +150,5 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">No recent emoji</string>
+  
 </resources>
