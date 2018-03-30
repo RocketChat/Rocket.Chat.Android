@@ -280,7 +280,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         val title = SharedPreferenceHelper.getString("web_search_title", "Web Search")
         val description = SharedPreferenceHelper.getString("web_search_desc", "Description")
         val imageUrl = SharedPreferenceHelper.getString("web_search_image", "")
-        val link = SharedPreferenceHelper.getString("web_search_link", "http://bizzbyster.github.io/search/")
+        val link = SharedPreferenceHelper.getString("web_search_link", "https://bizzbyster.github.io/search/")
 
         updateUI(title, text_title,
                 description, text_description,
