@@ -6,9 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.TextView
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatApplication
@@ -127,9 +130,20 @@ class WebViewActivity : AppCompatActivity() {
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                Timber.d("%s", request?.url.toString())
                 if (request?.url.toString().startsWith("https://www.google.com/search", ignoreCase = true))
                     return false
+// Uncomment to demo Persy facilitating paid access for clicking in search results
+//                if (request?.url.toString().startsWith("https://www.washingtonpost.com", ignoreCase = true)) {
+//                    val layout = LayoutInflater.from(view?.context).inflate(R.layout.custom_toast, findViewById(R.id.custom_toast_container))
+//                    val text = layout.findViewById<TextView>(R.id.text)
+//                    text.setText("Can I help you get access to this content?")
+//                    val toast =  Toast(view?.context)
+//                    toast.setGravity(Gravity.FILL_HORIZONTAL or Gravity.BOTTOM, 0, 0)
+//                    toast.setDuration(Toast.LENGTH_LONG)
+//                    toast.setView(layout)
+//                    toast.show()
+//                    return true
+//                }
                 return isNewUrl(request?.url.toString())
             }
         }
