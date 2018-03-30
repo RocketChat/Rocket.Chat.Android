@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Rocket.Chat</string>
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
@@ -48,7 +46,6 @@
     <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
     <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
     <string name="msg_2fa_code">कोड 2FA</string>
-    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">कल</string>
     <string name="msg_message">संदेश</string>
     <string name="msg_this_room_is_read_only">यह रूम केवल पढ़ने के लिए है</string>
@@ -66,7 +63,7 @@
     <string name="msg_content_description_show_attachment_options">अटैचमेंट विकल्प दिखाएं</string>
     <string name="msg_you">आप</string>
     <string name="msg_unknown">अनजान</string>
-    <string name="msg_email_address">ईमेल पता</string>
+    <string name="msg_email_address">ई-मेल एड्रेस</string>
     <string name="msg_utc_offset">यूटीसी ऑफ़सेट</string>
     <string name="msg_new_password">नया पासवर्ड दर्ज करें</string>
     <string name="msg_confirm_password">नए पासवर्ड की पुष्टि करें</string>
@@ -85,7 +82,7 @@
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
     <string name="action_msg_edit">संपादन करें</string>
-    <string name="action_msg_copy">प्रतिलिपि</string>
+    <string name="action_msg_copy">कॉपी</string>
     <string name="action_msg_quote">उद्धरण</string>
     <string name="action_msg_delete">मिटायें</string>
     <string name="action_msg_pin">संदेश को पिन करें</string>
