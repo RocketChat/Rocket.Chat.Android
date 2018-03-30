@@ -6,6 +6,17 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary">
 
+    <View
+        android:id="@+id/quote_bar"
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        android:background="@drawable/quote_vertical_bar"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_view_action_cancel_quote"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/text_view_action_text"
         android:layout_width="0dp"

@@ -14,6 +14,7 @@ data class MessageViewModel(
         override val isPinned: Boolean,
         override var reactions: List<ReactionViewModel>,
         override var nextDownStreamMessage: BaseViewModel<*>? = null,
+        override var preview: Message? = null,
         var isFirstUnread: Boolean
 ) : BaseMessageViewModel<Message> {
     override val viewType: Int

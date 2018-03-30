@@ -56,8 +56,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_email.textContent = email
         text_avatar_url.textContent = ""
 
-        currentName = username
-        currentUsername = name
+        currentName = name
+        currentUsername = username
         currentEmail = email
         currentAvatar = avatarUrl
 
@@ -66,7 +66,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         listenToChanges()
     }
 
-    override fun showProfileUpdateSuccessfullyMessage() = showMessage(getString(R.string.msg_profile_update_successfully))
+    override fun showProfileUpdateSuccessfullyMessage() {
+        showMessage(getString(R.string.msg_profile_update_successfully))
+    }
 
     override fun showLoading() {
         enableUserInput(false)
@@ -74,13 +76,19 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
+        if (view_loading != null) {
+            view_loading.setVisible(false)
+        }
         enableUserInput(true)
     }
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 

@@ -26,6 +26,7 @@
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_join_chat">Join Chat</string>
+    <string name="action_add_account">Add Account</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -70,6 +71,10 @@
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_unread_messages">Unread messages</string>
+    <string name="msg_preview_video">Video</string>
+    <string name="msg_preview_audio">Audio</string>
+    <string name="msg_preview_photo">Photo</string>
+    <string name="msg_no_messages_yet">No messages yet</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -115,6 +120,10 @@
     <string name="status_authenticating">authenticating</string>
     <string name="status_disconnecting">disconnecting</string>
     <string name="status_waiting">connecting in %d seconds</string>
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">Notify all in this room</string>
+    <string name="suggest_here_description">Notify active users in this room</string>
 
     <!-- Slash Commands -->
     <string name="Slash_Gimme_Description">Displays ༼ つ ◕_◕ ༽つ before your message</string>
