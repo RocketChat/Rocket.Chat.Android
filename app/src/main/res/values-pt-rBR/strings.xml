@@ -75,6 +75,7 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
+    <string name="msg_alert_dialog">Você escolheu a imagem do avatar e o URL do avatar. A URL será definida como sua imagem de perfil por padrão. Limpe o campo URL do avatar se quiser definir a imagem selecionada como seu perfil. Pressione OK para continuar com sua escolha.</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
@@ -98,6 +99,8 @@
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando Mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
+    <string name="action_ok_alert_dialog">Está bem</string>
+    <string name="action_cancel_alert_dialog">Cancelar</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
