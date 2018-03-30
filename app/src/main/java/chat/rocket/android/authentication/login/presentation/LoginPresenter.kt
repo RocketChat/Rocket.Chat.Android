@@ -163,19 +163,19 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     }
 
                     if (totalSocialAccountsEnabled > 0) {
-                        view.showOauthView()
+                        view.enableOauthView()
                         if (totalSocialAccountsEnabled > 3) {
                             view.setupFabListener()
                         }
                     } else {
-                        view.hideOauthView()
+                        view.disableOauthView()
                     }
                 } else {
-                    view.hideOauthView()
+                    view.disableOauthView()
                 }
             } catch (exception: RocketChatException) {
                 Timber.e(exception)
-                view.hideOauthView()
+                view.disableOauthView()
             }
         }
     }
