@@ -14,15 +14,21 @@ class EmojiParser {
          */
         fun parse(text: CharSequence): CharSequence {
             val unicodedText = EmojiRepository.shortnameToUnicode(text, true)
-            val spannableString = SpannableString.valueOf(unicodedText)
-            // Look for groups of emojis, set a CustomTypefaceSpan with the emojione font
-            val length = spannableString.length
+            var spannable = SpannableString.valueOf(unicodedText)
+            val typeface = EmojiRepository.cachedTypeface
+            // Look for groups of emojis, set a EmojiTypefaceSpan with the emojione font.
+            val length = spannable.length
             var inEmoji = false
             var emojiStart = 0
             var offset = 0
             while (offset < length) {
                 val codepoint = unicodedText.codePointAt(offset)
                 val count = Character.charCount(codepoint)
+                // Skip control characters.
+                if (codepoint == 0x2028) {
+                    offset += count
+                    continue
+                }
                 if (codepoint >= 0x200) {
                     if (!inEmoji) {
                         emojiStart = offset
@@ -30,18 +36,25 @@ class EmojiParser {
                     inEmoji = true
                 } else {
                     if (inEmoji) {
-                        spannableString.setSpan(EmojiTypefaceSpan("sans-serif", EmojiRepository.cachedTypeface),
+                        spannable.setSpan(EmojiTypefaceSpan("sans-serif", typeface),
                                 emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
                     inEmoji = false
                 }
                 offset += count
                 if (offset >= length && inEmoji) {
-                    spannableString.setSpan(EmojiTypefaceSpan("sans-serif", EmojiRepository.cachedTypeface),
+                    spannable.setSpan(EmojiTypefaceSpan("sans-serif", typeface),
                             emojiStart, offset, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }
-            return spannableString
+            return spannable
+        }
+
+        private fun calculateSurrogatePairs(scalar: Int): Pair<Int, Int> {
+            val temp: Int = (scalar - 0x10000) / 0x400
+            val s1: Int = Math.floor(temp.toDouble()).toInt() + 0xD800
+            val s2: Int = ((scalar - 0x10000) % 0x400) + 0xDC00
+            return Pair(s1, s2)
         }
     }
 }

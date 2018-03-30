@@ -30,7 +30,8 @@ class ServerFragment : Fragment(), ServerView {
         AndroidSupportInjection.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_server)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        container?.inflate(R.layout.fragment_authentication_server)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,7 +44,7 @@ class ServerFragment : Fragment(), ServerView {
         relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 
-    override fun showInvalidServerUrl() = showMessage(getString(R.string.msg_invalid_server_url))
+    override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
 
     override fun showLoading() {
         enableUserInput(false)
@@ -55,13 +56,21 @@ class ServerFragment : Fragment(), ServerView {
         enableUserInput(true)
     }
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int){
+        showToast(resId)
+    }
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
-    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+    override fun showGenericErrorMessage() {
+        showMessage(getString(R.string.msg_generic_error))
+    }
 
-    override fun showNoInternetConnection() = showMessage(getString(R.string.msg_no_internet_connection))
+    override fun showNoInternetConnection() {
+        showMessage(getString(R.string.msg_no_internet_connection))
+    }
 
     private fun enableUserInput(value: Boolean) {
         button_connect.isEnabled = value

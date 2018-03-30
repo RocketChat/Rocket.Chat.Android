@@ -5,9 +5,12 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.main.viewmodel.NavHeaderViewModel
+import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extensions.registerPushToken
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
@@ -15,6 +18,7 @@ import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.registerPushToken
 import chat.rocket.core.internal.rest.signup
+import chat.rocket.core.model.Myself
 import javax.inject.Inject
 
 class SignupPresenter @Inject constructor(private val view: SignupView,
@@ -22,8 +26,13 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                                           private val navigator: AuthenticationNavigator,
                                           private val localRepository: LocalRepository,
                                           private val serverInteractor: GetCurrentServerInteractor,
-                                          private val factory: RocketChatClientFactory) {
-    private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
+                                          private val factory: RocketChatClientFactory,
+                                          private val saveAccountInteractor: SaveAccountInteractor,
+                                          private val getAccountsInteractor: GetAccountsInteractor,
+                                          settingsInteractor: GetSettingsInteractor) {
+    private val currentServer = serverInteractor.get()!!
+    private val client: RocketChatClient = factory.create(currentServer)
+    private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
 
     fun signup(name: String, username: String, password: String, email: String) {
         val server = serverInteractor.get()
@@ -55,7 +64,8 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                             // TODO This function returns a user token so should we save it?
                             client.login(username, password)
                             val me = client.me()
-                            localRepository.save(LocalRepository.USERNAME_KEY, me.username)
+                            localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
+                            saveAccount(me)
                             registerPushToken()
                             navigator.toChatList()
                         } catch (exception: RocketChatException) {
@@ -90,8 +100,21 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
 
     private suspend fun registerPushToken() {
         localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
-            client.registerPushToken(it)
+            client.registerPushToken(it, getAccountsInteractor.get(), factory)
         }
-        // TODO: Schedule push token registering when it comes up null
+        // TODO: When the push token is null, at some point we should receive it with
+        // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
+    }
+
+    private suspend fun saveAccount(me: Myself) {
+        val icon = settings.favicon()?.let {
+            UrlHelper.getServerLogoUrl(currentServer, it)
+        }
+        val logo = settings.wideTile()?.let {
+            UrlHelper.getServerLogoUrl(currentServer, it)
+        }
+        val thumb = UrlHelper.getAvatarUrl(currentServer, me.username!!)
+        val account = Account(currentServer, icon, logo, me.username!!, thumb)
+        saveAccountInteractor.save(account)
     }
 }

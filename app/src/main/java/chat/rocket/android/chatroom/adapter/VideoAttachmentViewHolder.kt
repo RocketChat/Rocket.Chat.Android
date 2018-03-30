@@ -4,13 +4,20 @@ import android.view.View
 import chat.rocket.android.chatroom.viewmodel.VideoAttachmentViewModel
 import chat.rocket.android.player.PlayerActivity
 import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
-class VideoAttachmentViewHolder(itemView: View) : BaseViewHolder<VideoAttachmentViewModel>(itemView) {
+class VideoAttachmentViewHolder(itemView: View,
+                                listener: ActionsListener,
+                                reactionListener: EmojiReactionListener? = null)
+    : BaseViewHolder<VideoAttachmentViewModel>(itemView, listener, reactionListener) {
+
     init {
         with(itemView) {
             image_attachment.setVisible(false)
             audio_video_attachment.setVisible(true)
+            setupActionMenu(attachment_container)
+            setupActionMenu(audio_video_attachment)
         }
     }
 

@@ -6,6 +6,14 @@ import kotlinx.coroutines.experimental.withContext
 import javax.inject.Inject
 
 class GetChatRoomsInteractor @Inject constructor(private val repository: ChatRoomsRepository) {
+
+    /**
+     * Get all ChatRoom objects.
+     *
+     * @param url The server url.
+     *
+     * @return All the ChatRoom objects.
+     */
     fun get(url: String) = repository.get(url)
 
     /**

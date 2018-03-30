@@ -14,6 +14,21 @@
         android:layout_centerHorizontal="true"
         android:text="@string/title_sign_in_your_server" />
 
+    <EditText
+        android:id="@+id/text_server_url"
+        style="@style/Authentication.EditText"
+        android:layout_below="@id/text_headline"
+        android:layout_marginStart="-4dp"
+        android:layout_marginTop="32dp"
+        android:layout_toEndOf="@id/text_server_protocol"
+        android:cursorVisible="false"
+        android:hint="@string/default_server"
+        android:imeOptions="actionDone"
+        android:digits="0123456789abcdefghijklmnopqrstuvwxyz.-/:"
+        android:inputType="textUri"
+        android:paddingEnd="0dp"
+        android:paddingStart="4dp" />
+
     <TextView
         android:id="@+id/text_server_protocol"
         style="@style/Authentication.TextView"
@@ -21,21 +36,6 @@
         android:layout_marginTop="32dp"
         android:gravity="center_vertical"
         android:text="@string/default_protocol" />
-
-    <EditText
-        android:id="@+id/text_server_url"
-        style="@style/Authentication.EditText"
-        android:layout_below="@id/text_headline"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="32dp"
-        android:layout_toEndOf="@id/text_server_protocol"
-        android:cursorVisible="false"
-        android:hint="@string/default_server"
-        android:imeOptions="actionDone"
-        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-/:"
-        android:inputType="textUri"
-        android:paddingEnd="0dp"
-        android:paddingStart="0dp" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"

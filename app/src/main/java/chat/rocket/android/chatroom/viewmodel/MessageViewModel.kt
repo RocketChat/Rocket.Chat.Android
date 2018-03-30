@@ -4,6 +4,7 @@ import chat.rocket.android.R
 import chat.rocket.core.model.Message
 
 data class MessageViewModel(
+        override val message: Message,
         override val rawData: Message,
         override val messageId: String,
         override val avatar: String,
@@ -11,7 +12,10 @@ data class MessageViewModel(
         override val senderName: CharSequence,
         override val content: CharSequence,
         override val isPinned: Boolean,
-        val isSystemMessage: Boolean
+        override var reactions: List<ReactionViewModel>,
+        override var nextDownStreamMessage: BaseViewModel<*>? = null,
+        override var preview: Message? = null,
+        var isFirstUnread: Boolean
 ) : BaseMessageViewModel<Message> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.MESSAGE.viewType

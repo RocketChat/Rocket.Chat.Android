@@ -1,14 +1,22 @@
 package chat.rocket.android.chatrooms.ui
 
 import DateTimeHelper
+import DrawableHelper
 import android.content.Context
+import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.infrastructure.checkIfMyself
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
@@ -21,6 +29,8 @@ import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
 class ChatRoomsAdapter(private val context: Context,
+                       private val settings: PublicSettings,
+                       private val localRepository: LocalRepository,
                        private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
     var dataSet: MutableList<ChatRoom> = ArrayList()
 
@@ -30,7 +40,7 @@ class ChatRoomsAdapter(private val context: Context,
 
     override fun getItemCount(): Int = dataSet.size
 
-    fun updateRooms(newRooms: List<ChatRoom>)  {
+    fun updateRooms(newRooms: List<ChatRoom>) {
         dataSet.clear()
         dataSet.addAll(newRooms)
     }
@@ -69,7 +79,31 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
-            textView.content = chatRoom.name
+            textView.textContent = chatRoom.name
+
+            var drawable = when (chatRoom.type) {
+                is RoomType.Channel -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
+                }
+                is RoomType.PrivateGroup -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
+                }
+                is RoomType.DirectMessage -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
+                }
+                else -> null
+            }
+
+            drawable?.let {
+                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+                val mutableDrawable = wrappedDrawable.mutate()
+                val color = when (chatRoom.alert || chatRoom.unread > 0) {
+                    true -> R.color.colorPrimaryText
+                    false -> R.color.colorSecondaryText
+                }
+                DrawableHelper.tintDrawable(mutableDrawable, context, color)
+                DrawableHelper.compoundDrawable(textView, mutableDrawable)
+            }
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {
@@ -87,21 +121,30 @@ class ChatRoomsAdapter(private val context: Context,
             val lastMessageSender = lastMessage?.sender
             if (lastMessage != null && lastMessageSender != null) {
                 val message = lastMessage.message
-                val senderUsername = lastMessageSender.username
+                val senderUsername = if (settings.useRealName()) {
+                    lastMessageSender.name ?: lastMessageSender.username
+                } else {
+                    lastMessageSender.username
+                }
                 when (senderUsername) {
                     chatRoom.name -> {
                         textView.content = message
                     }
-                // TODO Change to MySelf
-                //                chatRoom.user?.username -> {
-                //                    holder.lastMessage.textContent = context.getString(R.string.msg_you) + ": $message"
-                //                }
                     else -> {
-                        textView.content = "@$senderUsername: $message"
+                        val user = if (localRepository.checkIfMyself(lastMessageSender.username!!)) {
+                            "${context.getString(R.string.msg_you)}: "
+                        } else {
+                            "$senderUsername: "
+                        }
+                        val spannable = SpannableStringBuilder(user)
+                        val len = spannable.length
+                        spannable.setSpan(ForegroundColorSpan(Color.BLACK), 0, len - 1, 0)
+                        spannable.append(message)
+                        textView.content = spannable
                     }
                 }
             } else {
-                textView.content = ""
+                textView.content = context.getText(R.string.msg_no_messages_yet)
             }
         }
 

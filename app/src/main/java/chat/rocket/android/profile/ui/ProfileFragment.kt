@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.view.ActionMode
 import android.view.*
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
@@ -24,6 +23,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private lateinit var currentName: String
     private lateinit var currentUsername: String
     private lateinit var currentEmail: String
+    private lateinit var currentAvatar: String
     private var actionMode: ActionMode? = null
 
     companion object {
@@ -54,17 +54,21 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         text_name.textContent = name
         text_username.textContent = username
         text_email.textContent = email
+        text_avatar_url.textContent = ""
 
         currentName = name
         currentUsername = username
         currentEmail = email
+        currentAvatar = avatarUrl
 
         profile_container.setVisible(true)
 
         listenToChanges()
     }
 
-    override fun showProfileUpdateSuccessfullyMessage() = showMessage(getString(R.string.msg_profile_update_successfully))
+    override fun showProfileUpdateSuccessfullyMessage() {
+        showMessage(getString(R.string.msg_profile_update_successfully))
+    }
 
     override fun showLoading() {
         enableUserInput(false)
@@ -72,13 +76,19 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
+        if (view_loading != null) {
+            view_loading.setVisible(false)
+        }
         enableUserInput(true)
     }
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
@@ -93,7 +103,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent)
+                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent)
                 mode.finish()
                 true
             }
@@ -116,22 +126,31 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
             val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
+            val linkDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_link_black_24dp, this)
 
-            val drawables = arrayOf(personDrawable, atDrawable, emailDrawable)
+            val drawables = arrayOf(personDrawable, atDrawable, emailDrawable, linkDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
-            DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_email), drawables)
+            DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_email, text_avatar_url), drawables)
         }
     }
 
     private fun listenToChanges() {
-        Observables.combineLatest(text_name.asObservable(), text_username.asObservable(), text_email.asObservable()).subscribe({ t ->
-                    if (t.first.toString() != currentName || t.second.toString() != currentUsername || t.third.toString() != currentEmail) {
-                        startActionMode()
-                    } else {
-                        finishActionMode()
-                    }
-                })
+        Observables.combineLatest(text_name.asObservable(),
+                text_username.asObservable(),
+                text_email.asObservable(),
+                text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
+            return@combineLatest (text_name.toString() != currentName ||
+                    text_username.toString() != currentUsername ||
+                    text_email.toString() != currentEmail ||
+                    (text_avatar_url.toString() != "" && text_avatar_url.toString() != currentAvatar))
+        }.subscribe({ isValid ->
+            if (isValid) {
+                startActionMode()
+            } else {
+                finishActionMode()
+            }
+        })
     }
 
     private fun startActionMode() {
@@ -143,8 +162,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun finishActionMode() = actionMode?.finish()
 
     private fun enableUserInput(value: Boolean) {
-        text_name.isEnabled = value
+        text_username.isEnabled = value
         text_username.isEnabled = value
         text_email.isEnabled = value
+        text_avatar_url.isEnabled = value
     }
 }

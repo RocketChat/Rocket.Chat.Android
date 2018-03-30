@@ -1,6 +1,5 @@
 package chat.rocket.android.chatroom.presentation
 
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
@@ -12,6 +11,7 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.getRoomPinnedMessages
 import chat.rocket.core.model.Value
+import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                                                   getSettingsInteractor: GetSettingsInteractor) {
 
     private val client = factory.create(serverInteractor.get()!!)
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
+    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
     private var pinnedMessagesListOffset: Int = 0
 
     /**
@@ -42,8 +42,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                     val pinnedMessages =
                         client.getRoomPinnedMessages(roomId, room.type, pinnedMessagesListOffset)
                     pinnedMessagesListOffset = pinnedMessages.offset.toInt()
-                    val messageList = mapper.map(pinnedMessages.result)
-                            .filter { it is MessageViewModel}.filterNot { (it as MessageViewModel).isSystemMessage }
+                    val messageList = mapper.map(pinnedMessages.result.filterNot { it.isSystemMessage() })
                     view.showPinnedMessages(messageList)
                     view.hideLoading()
                 }.ifNull {
