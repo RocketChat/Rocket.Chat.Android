@@ -12,6 +12,7 @@ import android.view.*
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.*
@@ -31,6 +32,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var presenter: ChatRoomsPresenter
     @Inject lateinit var serverInteractor: GetCurrentServerInteractor
     @Inject lateinit var settingsRepository: SettingsRepository
+    @Inject lateinit var localRepository: LocalRepository
     private var searchView: SearchView? = null
     private val handler = Handler()
 
@@ -108,11 +110,19 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun showLoading() = view_loading.setVisible(true)
 
-    override fun hideLoading() = view_loading.setVisible(false)
+    override fun hideLoading() {
+        if (view_loading != null) {
+            view_loading.setVisible(false)
+        }
+    }
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
@@ -148,12 +158,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         activity?.apply {
             recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(this,
-                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
+                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
-            recycler_view.adapter = ChatRoomsAdapter(this,
-                    settingsRepository.get(serverInteractor.get()!!)!!) { chatRoom ->
+            recycler_view.adapter = ChatRoomsAdapter(
+                    this,
+                    settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom ->
                 presenter.loadChatRoom(chatRoom)
             }
         }
