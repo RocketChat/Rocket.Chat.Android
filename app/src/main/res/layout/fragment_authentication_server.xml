@@ -27,7 +27,7 @@
         android:digits="0123456789abcdefghijklmnopqrstuvwxyz.-/:"
         android:inputType="textUri"
         android:paddingEnd="0dp"
-        android:paddingStart="2dp" />
+        android:paddingStart="4dp" />
 
     <TextView
         android:id="@+id/text_server_protocol"
