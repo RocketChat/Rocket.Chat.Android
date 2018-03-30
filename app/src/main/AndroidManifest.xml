@@ -34,6 +34,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".server.ui.ChangeServerActivity"
+            android:theme="@style/AuthenticationTheme" />
+
+        <activity
             android:name=".main.ui.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -45,6 +49,11 @@
             android:name=".webview.cas.ui.CasWebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <activity
+            android:name=".webview.oauth.ui.OauthWebViewActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
             android:theme="@style/AppTheme"

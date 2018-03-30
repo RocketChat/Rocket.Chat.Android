@@ -15,9 +15,7 @@ class SharedPreferencesSettingsRepository(private val localRepository: LocalRepo
     }
 
     override fun get(url: String): PublicSettings {
-        val settings = localRepository.get("$SETTINGS_KEY$url")!!
-        settings.let {
-            return adapter.fromJson(it)!!
-        }
+        val settings = localRepository.get("$SETTINGS_KEY$url")
+        return if (settings == null) hashMapOf() else adapter.fromJson(settings) ?: hashMapOf()
     }
 }

@@ -25,6 +25,7 @@
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
+    <string name="action_add_account">Adicionar Conta</string>
 
 
     <!-- Settings List -->
@@ -69,6 +70,10 @@
     <string name="msg_new_password">Informe a nova senha</string>
     <string name="msg_confirm_password">Confirme a nova senha</string>
     <string name="msg_unread_messages">Mensagens não lidas</string>
+    <string name="msg_preview_video">Vídeo</string>
+    <string name="msg_preview_audio">Audio</string>
+    <string name="msg_preview_photo">Foto</string>
+    <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
@@ -114,6 +119,10 @@
     <string name="status_authenticating">autenticando</string>
     <string name="status_disconnecting">desconectando</string>
     <string name="status_waiting">conectando em %d segundos</string>
+
+    <!--Suggestions-->
+    <string name="suggest_all_description">Notifica todos nesta sala</string>
+    <string name="suggest_here_description">Notifica usuários ativos nesta sala</string>
 
     <!-- Slash Commands -->
     <string name="Slash_Gimme_Description">Exibir ༼ つ ◕_◕ ༽つ antes de sua mensagem</string>
