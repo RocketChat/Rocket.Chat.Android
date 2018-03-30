@@ -9,6 +9,7 @@ object Constants {
     const val CHATROOM_CHANNEL = 0
     const val CHATROOM_PRIVATE_GROUP = 1
     const val CHATROOM_DM = 2
+    const val CHATROOM_LIVE_CHAT = 3
 }
 
 object ChatRoomsSortOrder {

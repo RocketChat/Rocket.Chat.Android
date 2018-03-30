@@ -6,27 +6,60 @@
     android:layout_height="match_parent"
     tools:context=".chatrooms.ui.ChatRoomsFragment">
 
-    <include
-        android:id="@+id/web_search"
-        layout="@layout/item_web_link"
+    <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/web_search"
+            layout="@layout/item_web_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/web_links_expand_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="Expand button"
+            android:padding="@dimen/chat_item_top_and_bottom_padding"
+            android:src="@drawable/ic_arrow_drop_down_black" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/web_search"
+        android:layout_below="@+id/relative_layout"
         android:background="@color/colorDividerMessageComposer" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/web_links_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/divider"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/divider_web_links"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/web_links_recycler_view"
+        android:background="@color/colorDividerMessageComposer"
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/divider" />
+        android:layout_below="@+id/divider_web_links" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"

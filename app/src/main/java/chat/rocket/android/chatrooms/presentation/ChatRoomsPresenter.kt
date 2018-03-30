@@ -182,6 +182,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             is RoomType.Channel -> Constants.CHATROOM_CHANNEL
             is RoomType.PrivateGroup -> Constants.CHATROOM_PRIVATE_GROUP
             is RoomType.DirectMessage -> Constants.CHATROOM_DM
+            is RoomType.Livechat -> Constants.CHATROOM_LIVE_CHAT
             else -> 0
         }
     }
