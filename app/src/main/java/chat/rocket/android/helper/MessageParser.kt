@@ -175,7 +175,6 @@ class MessageParser @Inject constructor(val context: Application, private val co
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
                             with (view) {
-                                Timber.d("$link")
                                 if (link.startsWith("http://www.requiresinternet.com")) {
                                     val layout = LayoutInflater.from(context).inflate(R.layout.custom_toast, findViewById(R.id.custom_toast_container))
                                     val text = layout.findViewById<TextView>(R.id.text)
@@ -186,7 +185,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                                     toast.setView(layout)
                                     toast.show()
                                 } else {
-                                    CustomTab.openCustomTab(context, getUri(link), WebViewFallback())
+                                    CustomTab.openCustomTab(context, link, WebViewFallback())
                                 }
                             }
                         }
