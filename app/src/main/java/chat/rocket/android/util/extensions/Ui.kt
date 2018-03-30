@@ -27,7 +27,8 @@ fun View.isVisible(): Boolean {
     return visibility == View.VISIBLE
 }
 
-fun ViewGroup.inflate(@LayoutRes resource: Int): View = LayoutInflater.from(context).inflate(resource, this, false)
+fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): View =
+        LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 
 fun AppCompatActivity.addFragment(tag: String, layoutId: Int, newInstance: () -> Fragment) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
@@ -36,10 +37,12 @@ fun AppCompatActivity.addFragment(tag: String, layoutId: Int, newInstance: () ->
             .commit()
 }
 
-fun AppCompatActivity.addFragmentBackStack(tag: String, layoutId: Int, newInstance: () -> Fragment) {
+fun AppCompatActivity.addFragmentBackStack(tag: String, layoutId: Int,
+                                           newInstance: () -> Fragment) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
     supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
+                    R.anim.enter_from_left, R.anim.exit_to_right)
             .replace(layoutId, fragment, tag)
             .addToBackStack(tag)
             .commit()
@@ -52,13 +55,17 @@ fun Activity.hideKeyboard() {
     }
 }
 
-fun Activity.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) = showToast(getString(resource), duration)
+fun Activity.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) =
+        showToast(getString(resource), duration)
 
-fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) = Toast.makeText(this, message, duration).show()
+fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) =
+        Toast.makeText(this, message, duration).show()
 
-fun Fragment.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) = showToast(getString(resource), duration)
+fun Fragment.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) =
+        showToast(getString(resource), duration)
 
-fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) = activity!!.showToast(message, duration)
+fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) =
+        activity?.showToast(message, duration)
 
 fun RecyclerView.isAtBottom(): Boolean {
     val manager: RecyclerView.LayoutManager? = layoutManager

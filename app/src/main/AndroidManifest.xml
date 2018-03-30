@@ -38,6 +38,10 @@
         </activity>
 
         <activity
+            android:name=".server.ui.ChangeServerActivity"
+            android:theme="@style/AuthenticationTheme" />
+
+        <activity
             android:name=".main.ui.MainActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
@@ -49,6 +53,11 @@
 
         <activity
             android:name=".webview.cas.ui.CasWebViewActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".webview.oauth.ui.OauthWebViewActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
 

@@ -2,16 +2,16 @@ package chat.rocket.android.server.infraestructure
 
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.TokenRepository
+import chat.rocket.android.server.domain.TokenRepository
 import okhttp3.OkHttpClient
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RocketChatClientFactory @Inject constructor(val okHttpClient: OkHttpClient,
-                                                  val repository: TokenRepository,
-                                                  val logger: PlatformLogger) {
+class RocketChatClientFactory @Inject constructor(private val okHttpClient: OkHttpClient,
+                                                  private val repository: TokenRepository,
+                                                  private val logger: PlatformLogger) {
     private val cache = HashMap<String, RocketChatClient>()
 
     fun create(url: String): RocketChatClient {

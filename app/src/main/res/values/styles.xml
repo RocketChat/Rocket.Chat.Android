@@ -88,6 +88,10 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
+    <style name="Message.Quote.TextView" parent="Message.TextView">
+        <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
     <style name="Timestamp.TextView" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textSize">10sp</item>
     </style>
