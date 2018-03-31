@@ -12,7 +12,7 @@ import chat.rocket.android.R
 object CustomTab {
     fun openCustomTab(context: Context, url: String, fallback: CustomTabFallback?) {
 
-        val uri = Uri.parse(url.toLowerCase())
+        val uri = Uri.parse(CustomTabsHelper.convertSchemeToLower(url))
 
         val customTabIntentBuilder = CustomTabsIntent.Builder()
         customTabIntentBuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))

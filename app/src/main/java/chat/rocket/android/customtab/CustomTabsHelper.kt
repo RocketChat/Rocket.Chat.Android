@@ -7,6 +7,7 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
 import java.util.*
+import okhttp3.HttpUrl
 
 /**
  * Helper class for Custom Tabs.
@@ -27,6 +28,19 @@ object CustomTabsHelper {
      */
     val packages: Array<String>
         get() = arrayOf("", STABLE_PACKAGE, BETA_PACKAGE, DEV_PACKAGE, LOCAL_PACKAGE)
+
+    /**
+     * Lower case the scheme to avoid a custom tabs bug.
+     */
+    fun convertSchemeToLower(url: String): String {
+
+        val httpUrl = HttpUrl.parse(url)
+        val scheme = httpUrl?.scheme()?.toLowerCase()
+       
+        return httpUrl?.newBuilder()
+            ?.scheme(scheme)
+            ?.build().toString()
+    }
 
     /**
      * Goes through all apps that handle VIEW intents and have a warmup service. Picks
