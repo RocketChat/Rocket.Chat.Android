@@ -1,6 +1,5 @@
 package chat.rocket.android.authentication.login.presentation
 
-import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
@@ -9,11 +8,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.encodeToBase64
-import chat.rocket.android.util.extensions.generateRandomString
-import chat.rocket.android.util.extensions.isEmail
-import chat.rocket.android.util.extensions.launchUI
-import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.android.util.extensions.*
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
@@ -123,8 +118,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     var totalSocialAccountsEnabled = 0
 
                     if (settings.isFacebookAuthenticationEnabled()) {
-                        view.enableLoginByFacebook()
-                        totalSocialAccountsEnabled++
+//                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByFacebook()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isGithubAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
@@ -151,12 +147,14 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         }
                     }
                     if (settings.isMeteorAuthenticationEnabled()) {
-                        view.enableLoginByMeteor()
-                        totalSocialAccountsEnabled++
+                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByMeteor()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isTwitterAuthenticationEnabled()) {
-                        view.enableLoginByTwitter()
-                        totalSocialAccountsEnabled++
+                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByTwitter()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isGitlabAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
