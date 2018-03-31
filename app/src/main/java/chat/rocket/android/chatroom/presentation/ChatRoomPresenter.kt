@@ -53,7 +53,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)!!
+    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
@@ -291,7 +291,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 view.showReplyingAction(
                         username = user,
                         replyMarkdown = "[ ]($serverUrl/$room/$roomName?msg=$id) $mention ",
-                        quotedMessage = m.message
+                        quotedMessage = mapper.map(message).last().preview?.message ?: ""
                 )
             }
         }
@@ -364,7 +364,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             try {
                 val members = client.getMembers(chatRoomId, roomTypeOf(chatRoomType), offset, 50).result
                 usersRepository.saveAll(members)
-                val self = localRepository.get(LocalRepository.USERNAME_KEY)
+                val self = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 // Take at most the 100 most recent messages distinguished by user. Can return less.
                 val recentMessages = messagesRepository.getRecentMessages(chatRoomId, 100)
                         .filterNot { filterSelfOut && it.sender?.username == self }
@@ -402,7 +402,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
-    fun spotlight(query: String, @AutoCompleteType type: Long, filterSelfOut: Boolean = false) {
+    fun spotlight(query: String, @AutoCompleteType type: Int, filterSelfOut: Boolean = false) {
         launchUI(strategy) {
             try {
                 val (users, rooms) = client.spotlight(query)
@@ -411,7 +411,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                         if (users.isNotEmpty()) {
                             usersRepository.saveAll(users)
                         }
-                        val self = localRepository.get(LocalRepository.USERNAME_KEY)
+                        val self = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                         view.populatePeopleSuggestions(users.map {
                             val username = it.username ?: ""
                             val name = it.name ?: ""
@@ -501,7 +501,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 //TODO: cache the commands
                 val commands = client.commands(0, 100).result
                 view.populateCommandSuggestions(commands.map {
-                    println("${it.command} - ${it.description}")
                     CommandSuggestionViewModel(it.command, it.description ?: "", listOf(it.command))
                 })
             } catch (ex: RocketChatException) {
