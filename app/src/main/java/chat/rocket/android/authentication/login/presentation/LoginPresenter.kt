@@ -118,8 +118,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     var totalSocialAccountsEnabled = 0
 
                     if (settings.isFacebookAuthenticationEnabled()) {
-                        view.enableLoginByFacebook()
-                        totalSocialAccountsEnabled++
+//                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByFacebook()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isGithubAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
@@ -146,12 +147,14 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         }
                     }
                     if (settings.isMeteorAuthenticationEnabled()) {
-                        view.enableLoginByMeteor()
-                        totalSocialAccountsEnabled++
+                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByMeteor()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isTwitterAuthenticationEnabled()) {
-                        view.enableLoginByTwitter()
-                        totalSocialAccountsEnabled++
+                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByTwitter()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isGitlabAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
