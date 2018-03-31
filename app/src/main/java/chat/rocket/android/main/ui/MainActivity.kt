@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         }
 
         header.image_avatar.setOnClickListener {
-            view_navigation.menu.getItem(1).isChecked = true
+            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
             presenter.toUserProfile()
             drawer_layout.closeDrawer(Gravity.START)
         }
