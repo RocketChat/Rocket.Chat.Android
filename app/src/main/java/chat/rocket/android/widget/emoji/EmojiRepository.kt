@@ -54,6 +54,10 @@ object EmojiRepository {
      */
     fun getAll() = ALL_EMOJIS
 
+//    fun findEmojiByUnicode(unicode: Int) {
+//        ALL_EMOJIS.find { it.unicode == }
+//    }
+
     /**
      * Get all emojis for a given category.
      *
@@ -119,10 +123,7 @@ object EmojiRepository {
         var result: String = input.toString()
 
         while (matcher.find()) {
-            val unicode = shortNameToUnicode.get(":${matcher.group(1)}:")
-            if (unicode == null) {
-                continue
-            }
+            val unicode = shortNameToUnicode.get(":${matcher.group(1)}:") ?: continue
 
             if (supported) {
                 result = result.replace(":" + matcher.group(1) + ":", unicode)
@@ -159,9 +160,7 @@ object EmojiRepository {
 
     private fun buildStringListFromJsonArray(array: JSONArray): List<String> {
         val list = ArrayList<String>(array.length())
-        for (i in 0..array.length() - 1) {
-            list.add(array.getString(i))
-        }
+        (0 until array.length()).mapTo(list) { array.getString(it) }
         return list
     }
 

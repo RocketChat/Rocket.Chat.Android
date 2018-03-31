@@ -97,7 +97,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                 val countTextView = findViewById<TextView>(R.id.text_count)
                 emojiTextView.text = reaction.unicode
                 countTextView.text = reaction.count.toString()
-                val myself = localRepository.get(LocalRepository.USERNAME_KEY)
+                val myself = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
                 if (reaction.usernames.contains(myself)) {
                     val context = itemView.context
                     val resources = context.resources

@@ -86,9 +86,11 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         isChatRoomSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
 
-        addFragment("ChatRoomFragment", R.id.fragment_container) {
-            newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
-                    isChatRoomSubscribed)
+        if (supportFragmentManager.findFragmentByTag("ChatRoomFragment") == null) {
+            addFragment("ChatRoomFragment", R.id.fragment_container) {
+                newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
+                        isChatRoomSubscribed)
+            }
         }
     }
 
@@ -100,31 +102,39 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return fragmentDispatchingAndroidInjector
     }
 
+    fun showRoomTypeIcon(showRoomTypeIcon: Boolean) {
+        if (showRoomTypeIcon) {
+            val roomType = roomTypeOf(chatRoomType)
+            val drawable = when (roomType) {
+                is RoomType.Channel -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
+                }
+                is RoomType.PrivateGroup -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
+                }
+                is RoomType.DirectMessage -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
+                }
+                else -> null
+            }
+
+            drawable?.let {
+                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+                val mutableDrawable = wrappedDrawable.mutate()
+                DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
+                DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
+            }
+        } else {
+            text_room_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+        }
+    }
+
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         text_room_name.textContent = chatRoomName
 
-        val roomType = roomTypeOf(chatRoomType)
-        val drawable = when (roomType) {
-            is RoomType.Channel -> {
-                DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
-            }
-            is RoomType.PrivateGroup -> {
-                DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
-            }
-            is RoomType.DirectMessage -> {
-                DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
-            }
-            else -> null
-        }
-
-        drawable?.let {
-            val wrappedDrawable = DrawableHelper.wrapDrawable(it)
-            val mutableDrawable = wrappedDrawable.mutate()
-            DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
-            DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
-        }
+        showRoomTypeIcon(true)
 
         toolbar.setNavigationOnClickListener {
             finishActivity()

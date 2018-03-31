@@ -3,6 +3,7 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -110,6 +111,8 @@ dependencies {
     androidTestImplementation(libraries.expressoCore, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    implementation 'com.android.support:customtabs:27.0.2'
 }
 
 kotlin {
