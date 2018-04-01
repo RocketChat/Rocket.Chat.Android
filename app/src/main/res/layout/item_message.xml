@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
         app:layout_constraintTop_toBottomOf="@+id/new_messages_notif">
 
         <View
@@ -85,7 +86,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
         app:layout_constraintTop_toBottomOf="@+id/day_marker_layout">
@@ -113,10 +113,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="2dp"
-        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="@id/top_container"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/layout_avatar"
         app:layout_constraintTop_toBottomOf="@+id/top_container"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
 
