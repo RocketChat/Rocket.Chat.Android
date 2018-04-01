@@ -276,7 +276,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         if (groupFavorites) {
             //set sections for favorite and room type
             rooms?.let {
-                val favRoomsSize = rooms.filter { chatRoom -> chatRoom.favourite }.size
+                val favRoomsSize = rooms.filter { chatRoom -> chatRoom.favorite }.size
 
                 if (favRoomsSize != 0) {
                     sections.add(SimpleSectionedRecyclerViewAdapter.Section(0, resources.getString(R.string.header_favorites)))

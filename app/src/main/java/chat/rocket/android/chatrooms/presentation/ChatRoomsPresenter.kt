@@ -187,8 +187,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
         val openChatRooms = getOpenChatRooms(chatRooms)
 
-        val favChatRooms = openChatRooms.filter { chatRoom -> chatRoom.favourite }
-        val notFavChatRooms = openChatRooms.filter { chatRoom -> !chatRoom.favourite }
+        val favChatRooms = openChatRooms.filter { chatRoom -> chatRoom.favorite }
+        val notFavChatRooms = openChatRooms.filter { chatRoom -> !chatRoom.favorite }
 
         return when (groupFavorites) {
             true -> {
