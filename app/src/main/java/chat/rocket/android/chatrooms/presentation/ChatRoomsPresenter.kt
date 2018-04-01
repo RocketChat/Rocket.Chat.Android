@@ -100,9 +100,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                     val chatRoomsCombined = mutableListOf<ChatRoom>()
                     chatRoomsCombined.addAll(usersToChatRooms(users))
                     chatRoomsCombined.addAll(roomsToChatRooms(rooms))
-                    view.updateChatRooms(getChatRoomsWithPreviews(chatRoomsCombined.toList()))
+                    view.updateChatRooms(sortRooms(getChatRoomsWithPreviews(chatRoomsCombined.toList())))
                 } else {
-                    view.updateChatRooms(getChatRoomsWithPreviews(roomList))
+                    view.updateChatRooms(sortRooms(getChatRoomsWithPreviews(roomList)))
                 }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
@@ -238,12 +238,6 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     private fun getOpenChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
         return chatRooms.filter(ChatRoom::open)
-    }
-
-    private fun sortChatRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
-        return chatRooms.sortedByDescending { chatRoom ->
-            chatRoom.lastMessage?.timestamp
-        }
     }
 
     private suspend fun subscribeStatusChange() {
