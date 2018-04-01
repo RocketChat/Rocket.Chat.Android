@@ -69,8 +69,10 @@ private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
-    @Inject lateinit var presenter: ChatRoomPresenter
-    @Inject lateinit var parser: MessageParser
+    @Inject
+    lateinit var presenter: ChatRoomPresenter
+    @Inject
+    lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -179,21 +181,22 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showMessages(dataSet: List<BaseViewModel<*>>) {
+        if (!dataSet.isEmpty()) {
+            var prevMsgModel = dataSet[0]
 
-        var prevMsgModel = dataSet[0]
+            // checking for all messages to assign true to the required showDayMaker
+            for (i in dataSet.indices) {
+                val msgModel = dataSet[i]
+                if (i > 0) {
+                    prevMsgModel = dataSet[i - 1]
+                }
 
-        // checking for all messages to assign true to the required showDayMaker
-        for (i in dataSet.indices) {
-            val msgModel = dataSet[i]
-            if (i > 0) {
-                prevMsgModel = dataSet[i - 1]
-            }
-
-            if (msgModel is MessageViewModel && prevMsgModel is MessageViewModel) {
-                val currentDayMarkerText = msgModel.currentDayMarkerText
-                val previousDayMarkerText = prevMsgModel.currentDayMarkerText
-                if (previousDayMarkerText != currentDayMarkerText) {
-                    prevMsgModel.showDayMarker = true
+                if (msgModel is MessageViewModel && prevMsgModel is MessageViewModel) {
+                    val currentDayMarkerText = msgModel.currentDayMarkerText
+                    val previousDayMarkerText = prevMsgModel.currentDayMarkerText
+                    if (previousDayMarkerText != currentDayMarkerText) {
+                        prevMsgModel.showDayMarker = true
+                    }
                 }
             }
         }
