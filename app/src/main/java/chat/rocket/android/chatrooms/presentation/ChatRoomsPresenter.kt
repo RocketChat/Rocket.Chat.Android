@@ -183,32 +183,52 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     private fun sortRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
         val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
         val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+        val groupFavorites = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, false)
 
         val openChatRooms = getOpenChatRooms(chatRooms)
 
-        return when (sortType) {
-            ChatRoomsSortOrder.ALPHABETICAL -> {
-                when (groupByType) {
-                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenBy { it.name })
-                    false -> openChatRooms.sortedWith(compareBy(ChatRoom::name))
-                }
+        val favChatRooms = openChatRooms.filter { chatRoom -> chatRoom.favourite }
+        val notFavChatRooms = openChatRooms.filter { chatRoom -> !chatRoom.favourite }
+
+        return when (groupFavorites) {
+            true -> {
+                val sortedFavChatRooms = getSortedAndGroupedByTypeRooms(favChatRooms, sortType, false)
+                val sortedNotFavChatRooms = getSortedAndGroupedByTypeRooms(notFavChatRooms, sortType, groupByType)
+
+                sortedFavChatRooms.plus(sortedNotFavChatRooms)
             }
-            ChatRoomsSortOrder.ACTIVITY -> {
-                when (groupByType) {
-                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenByDescending { it.lastMessage?.timestamp })
-                    false -> openChatRooms.sortedByDescending { chatRoom ->
-                        chatRoom.lastMessage?.timestamp
-                    }
-                }
-            }
-            else -> {
-                openChatRooms
+            false -> {
+                getSortedAndGroupedByTypeRooms(openChatRooms, sortType, groupByType)
             }
         }
     }
 
-    private fun compareBy(selector: KProperty1<ChatRoom, RoomType>): Comparator<ChatRoom> {
+    private fun getSortedAndGroupedByTypeRooms(rooms: List<ChatRoom>, sortType: Int, groupByType: Boolean): List<ChatRoom> {
+        return when (sortType) {
+            ChatRoomsSortOrder.ALPHABETICAL -> {
+                when (groupByType) {
+                    true -> rooms.sortedWith(compareByRoomType().thenBy { it.name })
+                    false -> rooms.sortedWith(compareBy(ChatRoom::name))
+                }
+            }
+            ChatRoomsSortOrder.ACTIVITY -> {
+                when (groupByType) {
+                    true -> rooms.sortedWith(compareByRoomType().then(compareByLastMessage()))
+                    false -> rooms.sortedWith(compareByLastMessage())
+                }
+            }
+            else -> {
+                rooms
+            }
+        }
+    }
+
+    private fun compareByRoomType(): Comparator<ChatRoom> {
         return Comparator { a, b -> getTypeConstant(a.type) - getTypeConstant(b.type) }
+    }
+
+    private fun compareByLastMessage(): Comparator<ChatRoom> {
+        return Comparator { a, b -> (b.lastMessage!!.timestamp - a.lastMessage!!.timestamp).toInt() }
     }
 
     private fun getTypeConstant(roomType: RoomType): Int {

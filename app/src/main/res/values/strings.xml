@@ -178,6 +178,8 @@
     <string name="chatroom_header">Header</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorites">Favorites</string>
+    <string name="header_conversations">Conversations</string>
     <string name="header_channel">Channels</string>
     <string name="header_private_groups">Private Groups</string>
     <string name="header_direct_messages">Direct Messages</string>
