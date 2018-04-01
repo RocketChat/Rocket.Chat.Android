@@ -33,6 +33,7 @@ internal const val REQUEST_CODE_FOR_OAUTH = 2
 
 class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var presenter: LoginPresenter
+    private var isOauthViewEnable = false
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         areLoginOptionsNeeded()
     }
@@ -182,14 +183,15 @@ class LoginFragment : Fragment(), LoginView {
         text_new_to_rocket_chat.setVisible(false)
     }
 
-    override fun showOauthView() {
+    override fun enableOauthView() {
+        isOauthViewEnable = true
         showThreeSocialAccountsMethods()
         social_accounts_container.setVisible(true)
     }
 
-    override fun hideOauthView() {
+    override fun disableOauthView() {
+        isOauthViewEnable = false
         social_accounts_container.setVisible(false)
-        button_fab.setVisible(false)
     }
 
     override fun showLoginButton() {
@@ -327,5 +329,18 @@ class LoginFragment : Fragment(), LoginView {
             .filter { it.isClickable  }
             .take(3)
             .forEach { it.setVisible(true) }
+    }
+
+    fun showOauthView() {
+        if (isOauthViewEnable) {
+            social_accounts_container.setVisible(true)
+        }
+    }
+
+    fun hideOauthView() {
+        if (isOauthViewEnable) {
+            social_accounts_container.setVisible(false)
+            button_fab.setVisible(false)
+        }
     }
 }

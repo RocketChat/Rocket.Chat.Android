@@ -125,6 +125,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setupMessageComposer()
         setupSuggestionsView()
         setupActionSnackbar()
+        activity?.apply {
+            (this as? ChatRoomActivity)?.showRoomTypeIcon(true)
+        }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
