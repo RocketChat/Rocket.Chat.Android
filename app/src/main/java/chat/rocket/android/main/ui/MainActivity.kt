@@ -111,6 +111,12 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
 
             expanded = !expanded
         }
+
+        header.image_avatar.setOnClickListener {
+            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
+            presenter.toUserProfile()
+            drawer_layout.closeDrawer(Gravity.START)
+        }
     }
 
     override fun showMessage(resId: Int) = showToast(resId)
