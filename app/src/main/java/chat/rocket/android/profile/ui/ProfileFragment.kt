@@ -4,7 +4,6 @@ import DrawableHelper
 import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -17,6 +16,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
 import android.support.v7.view.ActionMode
 import android.util.Log
@@ -27,6 +27,7 @@ import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.getPath
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.PublishSubject
@@ -52,6 +53,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private var actionMode: ActionMode? = null
     private var avatarImage: File? = null
     private var avatarImageUri: Uri? = null
+    private var tempCameraUri: Uri? = null
     private var isAvatarChanged = false
     //request codes
     private var CHOOSE_PICKER_MODE = 193
@@ -120,7 +122,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             CHOOSE_PICKER_MODE -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openImagePickerChooserDialog()
                 } else {
                     Toast.makeText(context, getString(R.string.permission_image_picking_not_allowed), Toast.LENGTH_SHORT).show()
@@ -132,38 +134,43 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     //show dialog to choose whether to pick image from gallery or to click it from camera
     private fun openImagePickerChooserDialog() {
         val choices = arrayOf(getString(R.string.action_open_camera), getString(R.string.action_choose_image_from_gallery))
-
         val imagePickerChooserDialogBuilder = AlertDialog.Builder(context)
         imagePickerChooserDialogBuilder.setTitle("")
-        imagePickerChooserDialogBuilder.setItems(choices, object : DialogInterface.OnClickListener {
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                when (which) {
-                    0 -> openCamera()
-                    1 -> openStorage()
-                }
+        imagePickerChooserDialogBuilder.setItems(choices) { _, which ->
+            when (which) {
+                0 -> openCamera()
+                1 -> openStorage()
             }
-        })
+        }
         imagePickerChooserDialogBuilder.show()
     }
 
     //open camera to capture picture
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, CAMERA_REQUEST_CODE)
+        if (intent.resolveActivity(context?.packageManager) != null) {
+            try {
+                avatarImage = createCameraImage()
+                tempCameraUri = context?.let { FileProvider.getUriForFile(it, "chat.rocket.android", avatarImage!!) }
+                startActivityForResult(intent, CAMERA_REQUEST_CODE)
+            } catch (ex: Throwable) {
+
+            }
+        }
     }
 
     //open storage to pick image
     private fun openStorage() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.setType("image/*")
+        intent.type = "image/*"
         startActivityForResult(intent, READ_STORAGE_REQUEST_CODE)
     }
 
     //create a file in the phone storage for sending to the server later on
     private fun createCameraImage(): File {
-        val timeStamp = (Date().getTime()).toString()
-        val imageFileName = "photo-" + timeStamp
+        val timeStamp = (Date().time).toString()
+        val imageFileName = "photo-$timeStamp"
         val storageDir = context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(imageFileName, ".jpeg", storageDir)
     }
@@ -175,13 +182,12 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     //write image data to file
                     try {
                         if (data != null) {
-                            avatarImageUri = data.data
+                            avatarImageUri = tempCameraUri
                             val bitmapImage: Bitmap = data.extras.get("data") as Bitmap
                             val bytes = ByteArrayOutputStream()
                             bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-                            image_avatar.setImageURI(data.data)
+                            image_avatar.setImageURI(Uri.fromFile(avatarImage))
 
-                            avatarImage = createCameraImage()
                             try {
                                 avatarImage!!.createNewFile()
 
@@ -205,10 +211,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             READ_STORAGE_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK) {
-                    if(data != null) {
+                    if (data != null) {
                         avatarImageUri = data.data
-                        avatarImage = File(data.data.getRealPathFromURI(context!!))
-                        image_avatar.setImageURI(data.data)
+                        image_avatar.setImageURI(avatarImageUri)
+                        avatarImage = File(getPath(context!!, avatarImageUri!!))
                         isAvatarChanged = true
                         imageObservable.onNext(isAvatarChanged)
                     }
@@ -284,17 +290,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         alertDialogBuilder = AlertDialog.Builder(activity)
         alertDialogBuilder.setTitle(getString(R.string.title_alert_dialog))
         alertDialogBuilder.setMessage(getString(R.string.msg_alert_dialog))
-        alertDialogBuilder.setPositiveButton(getString(R.string.action_ok_alert_dialog), object : DialogInterface.OnClickListener {
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                alertDialog.dismiss()
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, null, avatarImageUri)
-            }
-        })
-        alertDialogBuilder.setNegativeButton(getString(R.string.action_cancel_alert_dialog), object : DialogInterface.OnClickListener {
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                alertDialog.dismiss()
-            }
-        })
+        alertDialogBuilder.setPositiveButton(getString(R.string.action_ok_alert_dialog)) { _, _ ->
+            alertDialog.dismiss()
+            presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, null, avatarImageUri)
+        }
+        alertDialogBuilder.setNegativeButton(getString(R.string.action_cancel_alert_dialog)) { _, _ -> alertDialog.dismiss() }
 
         alertDialog = alertDialogBuilder.create()
     }
@@ -328,7 +328,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 text_email.asObservable(),
                 text_avatar_url.asObservable()
         ) { text_name, text_username, text_email, text_avatar_url ->
-            Toast.makeText(activity, isAvatarChanged.toString(), Toast.LENGTH_LONG).show()
             return@combineLatest (text_name.toString() != currentName ||
                     text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail ||
