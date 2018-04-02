@@ -289,6 +289,10 @@ class LoginFragment : Fragment(), LoginView {
         text_password.requestFocus()
     }
 
+    override fun alertRequiresUsername() {
+        showMessage(getString(R.string.msg_requires_username))
+    }
+
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({
             (0..social_accounts_container.childCount)

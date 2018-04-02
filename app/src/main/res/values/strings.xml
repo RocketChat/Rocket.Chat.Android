@@ -75,6 +75,7 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_no_messages_yet">No messages yet</string>
+    <string name="msg_requires_username">Username required: Please, create an username through the web version and come back to log in</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

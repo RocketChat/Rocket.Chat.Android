@@ -27,7 +27,6 @@
     <string name="action_join_chat">Entrar no Chat</string>
     <string name="action_add_account">Adicionar Conta</string>
 
-
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Alterar senha</item>
@@ -74,6 +73,7 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
+    <string name="msg_requires_username">Nome de usuário requerido: Por favor, erie um nome de usuário através da versão web e volte para fazer login</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
