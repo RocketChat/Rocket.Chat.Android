@@ -12,6 +12,7 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
@@ -57,11 +58,18 @@ class MainPresenter @Inject constructor(
                 saveAccount(model)
                 view.setupNavHeader(model, getAccountsInteractor.get())
             } catch (ex: Exception) {
-                Timber.d(ex, "Error loading my information for navheader")
-                ex.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
-                    view.showGenericErrorMessage()
+                when (ex) {
+                    is RocketChatAuthException -> {
+                        logout()
+                    }
+                    else -> {
+                        Timber.d(ex, "Error loading my information for navheader")
+                        ex.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
+                    }
                 }
             }
         }
@@ -83,17 +91,25 @@ class MainPresenter @Inject constructor(
             try {
                 clearTokens()
                 client.logout()
-                disconnect()
-                removeAccountInterector.remove(currentServer)
-                tokenRepository.remove(currentServer)
-                navigator.toNewServer()
             } catch (exception: RocketChatException) {
+                Timber.d(exception, "Error calling logout")
                 exception.message?.let {
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
             }
+
+            try {
+                disconnect()
+                removeAccountInterector.remove(currentServer)
+                tokenRepository.remove(currentServer)
+                navigator.toNewServer()
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error cleaning up the session...")
+            }
+
+            navigator.toNewServer()
         }
     }
 
@@ -102,7 +118,6 @@ class MainPresenter @Inject constructor(
         val pushToken = localRepository.get(LocalRepository.KEY_PUSH_TOKEN)
         if (pushToken != null) {
             client.unregisterPushToken(pushToken)
-            localRepository.clear(LocalRepository.KEY_PUSH_TOKEN)
         }
         localRepository.clearAllFromServer(currentServer)
     }
