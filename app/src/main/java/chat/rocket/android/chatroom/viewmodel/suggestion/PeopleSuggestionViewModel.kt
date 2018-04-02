@@ -3,7 +3,7 @@ package chat.rocket.android.chatroom.viewmodel.suggestion
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
 import chat.rocket.common.model.UserStatus
 
-class PeopleSuggestionViewModel(val imageUri: String,
+class PeopleSuggestionViewModel(val imageUri: String?,
                                 text: String,
                                 val username: String,
                                 val name: String,
