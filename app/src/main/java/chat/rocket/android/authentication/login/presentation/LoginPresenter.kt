@@ -274,14 +274,14 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
             val isRecommendedVersion = isRecommendedServerVersion(thisServerVersion)
             if (isRequiredVersion) {
                 if (isRecommendedVersion) {
-                    view.alertNotRecommendedVersion()
-                } else {
                     Timber.i("Your version is nice! (Requires: 0.62.0, Yours: $thisServerVersion)")
+                } else {
+                    view.alertNotRecommendedVersion()
                 }
             } else {
                 if (!isRecommendedVersion) {
                     view.blockAndAlertNotRequiredVersion()
-                    Timber.i("Oops. Looks like your server is out-of-date! Please, upgrade your server for a better experience!")
+                    Timber.i("Oops. Looks like your server is out-of-date! Minimum server version required ${BuildConfig.REQUIRED_SERVER_VERSION}!")
                 }
             }
         }

@@ -68,6 +68,13 @@
     <string name="msg_new_password">नया पासवर्ड दर्ज करें</string>
     <string name="msg_confirm_password">नए पासवर्ड की पुष्टि करें</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
+    <string name="msg_ok">OK</string>
+    <string name="msg_ver_not_recommended">
+        ऐसा लगता है कि आपका सर्वर संस्करण अनुशंसित संस्करण %1$s के नीचे है।\nआप अभी भी लॉगिन कर सकते हैं लेकिन आप अप्रत्याशित व्यवहार का अनुभव कर सकते हैं
+    </string>
+    <string name="msg_ver_not_minimum">
+        ऐसा लगता है कि आपका सर्वर संस्करण न्यूनतम आवश्यक संस्करण %1$s से कम है।\nकृपया लॉगिन करने के लिए अपने सर्वर को अपग्रेड करें!
+    </string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
