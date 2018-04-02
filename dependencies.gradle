@@ -20,7 +20,7 @@ ext {
         rxAndroid              : '2.0.2',
         moshi                  : '1.6.0-SNAPSHOT',
         okhttp                 : '3.10.0',
-        timber                 : '4.6.1',
+        timber                 : '4.7.0',
         threeTenABP            : '1.0.5',
         rxBinding              : '2.0.0',
         fresco                 : '1.8.1',
