@@ -30,12 +30,16 @@ android {
 
     buildTypes {
         release {
+            buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
+            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
+            buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
+            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
             applicationIdSuffix ".dev"
         }
     }
@@ -60,6 +64,7 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.cardView
     implementation libraries.flexbox
+    implementation libraries.customTabs
 
     implementation libraries.androidKtx
 
@@ -111,8 +116,6 @@ dependencies {
     androidTestImplementation(libraries.expressoCore, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    implementation 'com.android.support:customtabs:27.0.2'
 }
 
 kotlin {
