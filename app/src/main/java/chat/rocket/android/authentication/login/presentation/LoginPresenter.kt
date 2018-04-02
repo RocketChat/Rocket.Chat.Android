@@ -11,6 +11,7 @@ import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.*
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
@@ -219,10 +220,17 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     registerPushToken()
                     navigator.toChatList()
                 } catch (exception: RocketChatException) {
-                    exception.message?.let {
-                        view.showMessage(it)
-                    }.ifNull {
-                        view.showGenericErrorMessage()
+                    when (exception) {
+                        is RocketChatTwoFactorException -> {
+                            navigator.toTwoFA(usernameOrEmail, password)
+                        }
+                        else -> {
+                            exception.message?.let {
+                                view.showMessage(it)
+                            }.ifNull {
+                                view.showGenericErrorMessage()
+                            }
+                        }
                     }
                 } finally {
                     view.hideLoading()
