@@ -1,6 +1,7 @@
 package chat.rocket.android.main.ui
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.adapter.AccountSelector
 import chat.rocket.android.main.adapter.AccountsAdapter
@@ -39,6 +41,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
+    private var expanded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -86,7 +89,22 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         view_navigation.getHeaderView(0).account_container.performClick()
     }
 
-    private var expanded = false
+    override fun alertNotRecommendedVersion() {
+        AlertDialog.Builder(this)
+                .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
+    }
+
+    override fun blockAndAlertNotRequiredVersion() {
+        AlertDialog.Builder(this)
+                .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
+                .setOnDismissListener { presenter.logout() }
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
+    }
 
     private fun setupAccountsList(header: View, accounts: List<Account>) {
         accounts_list.layoutManager = LinearLayoutManager(this)
