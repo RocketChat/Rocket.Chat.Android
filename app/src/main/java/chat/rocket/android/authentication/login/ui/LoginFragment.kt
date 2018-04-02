@@ -289,6 +289,14 @@ class LoginFragment : Fragment(), LoginView {
         text_password.requestFocus()
     }
 
+    override fun alertNotRecommendedVersion() {
+
+    }
+
+    override fun blockAndAlertNotRequiredVersion() {
+
+    }
+
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({
             (0..social_accounts_container.childCount)

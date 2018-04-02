@@ -1,5 +1,6 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
@@ -268,17 +269,33 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     private fun checkServerInfo() {
         launchUI(strategy) {
             val serverInfo = client.serverInfo()
-            val isNiceVersion = isRequiredVersionOk(serverInfo.version)
-            if (isNiceVersion) {
-                Timber.i("Your version is nice! (Requires: 0.62.0, Yours: ${serverInfo.version})")
+            val thisServerVersion = serverInfo.version
+            val isRequiredVersion = isRequiredServerVersion(thisServerVersion)
+            val isRecommendedVersion = isRecommendedServerVersion(thisServerVersion)
+            if (isRequiredVersion) {
+                if (isRecommendedVersion) {
+                    view.alertNotRecommendedVersion()
+                } else {
+                    Timber.i("Your version is nice! (Requires: 0.62.0, Yours: $thisServerVersion)")
+                }
             } else {
-                Timber.i("Oops. Looks like your server is out-of-date! Please, upgrade your server for a better experience!")
+                if (!isRecommendedVersion) {
+                    view.blockAndAlertNotRequiredVersion()
+                    Timber.i("Oops. Looks like your server is out-of-date! Please, upgrade your server for a better experience!")
+                }
             }
         }
     }
 
-    private fun isRequiredVersionOk(version: String): Boolean {
-        val required = getVersionDistilled("0.62.0")
+    private fun isRequiredServerVersion(version: String): Boolean {
+        return isMinimumVersion(version, getVersionDistilled(BuildConfig.REQUIRED_SERVER_VERSION))
+    }
+
+    private fun isRecommendedServerVersion(version: String): Boolean {
+        return isMinimumVersion(version, getVersionDistilled(BuildConfig.RECOMMENDED_SERVER_VERSION))
+    }
+
+    private fun isMinimumVersion(version: String, required: VersionInfo): Boolean {
         val thisVersion = getVersionDistilled(version)
         with(thisVersion) {
             if (major < required.major) {

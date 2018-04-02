@@ -186,4 +186,14 @@ interface LoginView : LoadingView, MessageView, InternetView {
      * Alerts the user about a wrong inputted password.
      */
     fun alertWrongPassword()
+
+    /**
+     * Alerts the user about the server version not meeting the recommended server version.
+     */
+    fun alertNotRecommendedVersion()
+
+    /**
+     * Block user to proceed and alert him due to server having an unsupported server version.
+     */
+    fun blockAndAlertNotRequiredVersion()
 }
