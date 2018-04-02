@@ -293,7 +293,7 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun alertRequiresUsername() {
-        showMessage(getString(R.string.msg_requires_username))
+        showToast(getString(R.string.msg_requires_username), Toast.LENGTH_LONG)
     }
 
     override fun alertNotRecommendedVersion() {
