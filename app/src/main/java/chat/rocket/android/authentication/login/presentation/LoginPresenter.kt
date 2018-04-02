@@ -1,5 +1,6 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
@@ -9,8 +10,11 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.presentation.CheckServerPresenter
+import chat.rocket.android.util.VersionInfo
 import chat.rocket.android.util.extensions.*
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
@@ -38,7 +42,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                          settingsInteractor: GetSettingsInteractor,
                                          serverInteractor: GetCurrentServerInteractor,
                                          private val saveAccountInteractor: SaveAccountInteractor,
-                                         private val factory: RocketChatClientFactory) {
+                                         private val factory: RocketChatClientFactory)
+    : CheckServerPresenter(strategy, factory.create(serverInteractor.get()!!), view) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val currentServer = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(currentServer)
@@ -53,6 +58,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         setupUserRegistrationView()
         setupCasView()
         setupOauthServicesView()
+        checkServerInfo()
     }
 
     fun authenticateWithUserAndPassword(usernameOrEmail: String, password: String) {
@@ -219,10 +225,17 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     registerPushToken()
                     navigator.toChatList()
                 } catch (exception: RocketChatException) {
-                    exception.message?.let {
-                        view.showMessage(it)
-                    }.ifNull {
-                        view.showGenericErrorMessage()
+                    when (exception) {
+                        is RocketChatTwoFactorException -> {
+                            navigator.toTwoFA(usernameOrEmail, password)
+                        }
+                        else -> {
+                            exception.message?.let {
+                                view.showMessage(it)
+                            }.ifNull {
+                                view.showGenericErrorMessage()
+                            }
+                        }
                     }
                 } finally {
                     view.hideLoading()
