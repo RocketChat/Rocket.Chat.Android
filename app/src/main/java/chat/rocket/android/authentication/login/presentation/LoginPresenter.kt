@@ -9,6 +9,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.VersionInfo
 import chat.rocket.android.util.extensions.*
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.Token
@@ -53,6 +54,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         setupUserRegistrationView()
         setupCasView()
         setupOauthServicesView()
+        checkServerInfo()
     }
 
     fun authenticateWithUserAndPassword(usernameOrEmail: String, password: String) {
@@ -261,5 +263,65 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         val thumb = UrlHelper.getAvatarUrl(currentServer, me.username!!)
         val account = Account(currentServer, icon, logo, me.username!!, thumb)
         saveAccountInteractor.save(account)
+    }
+
+    private fun checkServerInfo() {
+        launchUI(strategy) {
+            val serverInfo = client.serverInfo()
+            val isNiceVersion = isRequiredVersionOk(serverInfo.version)
+            if (isNiceVersion) {
+                Timber.i("Your version is nice! (Requires: 0.62.0, Yours: ${serverInfo.version})")
+            } else {
+                Timber.i("Oops. Looks like your server is out-of-date! Please, upgrade your server for a better experience!")
+            }
+        }
+    }
+
+    private fun isRequiredVersionOk(version: String): Boolean {
+        val required = getVersionDistilled("0.62.0")
+        val thisVersion = getVersionDistilled(version)
+        with(thisVersion) {
+            if (major < required.major) {
+                return false
+            } else if (major > required.major) {
+                return true
+            }
+            if (minor < required.minor) {
+                return false
+            } else if (minor > required.minor) {
+                return true
+            }
+            return update >= required.update
+        }
+    }
+
+    private fun getVersionDistilled(version: String): VersionInfo {
+        var split = version.split("-")
+        if (split.isEmpty()) {
+            return VersionInfo(0, 0, 0, null, "0.0.0")
+        }
+        val ver = split[0]
+        var release: String? = null
+        if (split.size > 1) {
+            release = split[1]
+        }
+        split = ver.split(".")
+        val major = getVersionNumber(split, 0)
+        val minor = getVersionNumber(split, 1)
+        val update = getVersionNumber(split, 2)
+        return VersionInfo(
+                major = major,
+                minor = minor,
+                update = update,
+                release = release,
+                full = version)
+    }
+
+    private fun getVersionNumber(split: List<String>, index: Int): Int {
+        return try {
+            split.getOrNull(index)?.toInt() ?: 0
+        } catch (ex: NumberFormatException) {
+            0
+        }
     }
 }
