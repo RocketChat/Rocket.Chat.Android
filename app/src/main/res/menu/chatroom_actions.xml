@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/ic_star_border_white"
+        android:title="favorite"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_members_list"
         android:title="@string/title_members_list"
         app:showAsAction="never" />
