@@ -1,10 +1,11 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.authentication.server.presentation.VersionCheckView
 import chat.rocket.android.core.behaviours.InternetView
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
-interface LoginView : LoadingView, MessageView, InternetView {
+interface LoginView : LoadingView, MessageView, InternetView, VersionCheckView {
 
     /**
      * Shows the form view (i.e the username/email and password fields) if it is enabled by the server settings.
@@ -186,4 +187,9 @@ interface LoginView : LoadingView, MessageView, InternetView {
      * Alerts the user about a wrong inputted password.
      */
     fun alertWrongPassword()
+
+    /**
+     * Alerts the user about the need of creating an username using the web app when creating an user through OAuth.
+     */
+    fun alertRequiresUsername()
 }

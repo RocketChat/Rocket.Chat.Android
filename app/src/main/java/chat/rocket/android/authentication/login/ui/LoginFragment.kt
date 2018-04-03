@@ -2,6 +2,7 @@ package chat.rocket.android.authentication.login.ui
 
 import DrawableHelper
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,8 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import android.widget.ScrollView
+import android.widget.Toast
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
@@ -287,6 +290,31 @@ class LoginFragment : Fragment(), LoginView {
         vibrateSmartPhone()
         text_password.shake()
         text_password.requestFocus()
+    }
+
+    override fun alertRequiresUsername() {
+        showToast(getString(R.string.msg_requires_username), Toast.LENGTH_LONG)
+    }
+
+    override fun alertNotRecommendedVersion() {
+        context?.let {
+            AlertDialog.Builder(it)
+                    .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
+                    .setPositiveButton(R.string.msg_ok, null)
+                    .create()
+                    .show()
+        }
+    }
+
+    override fun blockAndAlertNotRequiredVersion() {
+        context?.let {
+            AlertDialog.Builder(it)
+                    .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
+                    .setOnDismissListener { activity?.onBackPressed() }
+                    .setPositiveButton(R.string.msg_ok, null)
+                    .create()
+                    .show()
+        }
     }
 
     private fun showRemainingSocialAccountsView() {

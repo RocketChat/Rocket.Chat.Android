@@ -79,6 +79,13 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_no_messages_yet">No messages yet</string>
+    <string name="msg_requires_username">Username required: Please, create an username through the web version and come back to log in.</string>
+    <string name="msg_ok">OK</string>
+    <string name="msg_ver_not_recommended">
+        Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
+    <string name="msg_ver_not_minimum">
+        Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
+    </string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -157,7 +164,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">No recent emoji</string>
-    
+
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Sort</string>
     <string name="dialog_sort_title">Sort by</string>
