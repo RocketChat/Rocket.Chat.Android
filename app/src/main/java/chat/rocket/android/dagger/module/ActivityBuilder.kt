@@ -2,6 +2,7 @@ package chat.rocket.android.dagger.module
 
 import chat.rocket.android.authentication.di.AuthenticationModule
 import chat.rocket.android.authentication.login.di.LoginFragmentProvider
+import chat.rocket.android.authentication.registerusername.di.RegisterUsernameFragmentProvider
 import chat.rocket.android.authentication.server.di.ServerFragmentProvider
 import chat.rocket.android.authentication.signup.di.SignupFragmentProvider
 import chat.rocket.android.authentication.twofactor.di.TwoFAFragmentProvider
@@ -30,6 +31,7 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = [AuthenticationModule::class,
         ServerFragmentProvider::class,
         LoginFragmentProvider::class,
+        RegisterUsernameFragmentProvider::class,
         SignupFragmentProvider::class,
         TwoFAFragmentProvider::class
     ])
