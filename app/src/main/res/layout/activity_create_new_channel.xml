@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,11 +13,24 @@
         app:layout_constraintBottom_toTopOf="@+id/layout_container"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="@color/black"
+        app:indicatorName="BallPulseIndicator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_layout"
+        tools:visibility="visible" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="8dp"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -67,8 +81,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/private_channel_type"
-            android:textColor="@color/black"
+            android:text="@string/public_channel_type"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/public_channel" />
 
         <TextView
@@ -76,14 +91,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@string/private_channel_type_description"
-            android:textColor="@color/black"
+            android:text="@string/public_channel_description"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="12sp"
             app:layout_constraintTop_toBottomOf="@id/channel_type" />
 
         <View
             android:id="@+id/separator_1"
             android:layout_width="0dp"
-            android:layout_height="0.2dp"
+            android:layout_height="0.5dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorDividerMessageComposer"
             app:layout_constraintTop_toBottomOf="@id/channel_description" />
@@ -114,13 +130,14 @@
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/channel_name_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
 
         <View
             android:id="@+id/separator_2"
             android:layout_width="0dp"
-            android:layout_height="0.2dp"
+            android:layout_height="0.5dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorDividerMessageComposer"
             app:layout_constraintTop_toBottomOf="@id/channel_name_text_input_layout" />
@@ -140,7 +157,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/msg_add_members"
-                android:textColor="@color/black"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
@@ -158,7 +176,7 @@
         <View
             android:id="@+id/separator_3"
             android:layout_width="0dp"
-            android:layout_height="0.2dp"
+            android:layout_height="0.5dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorDividerMessageComposer"
             app:layout_constraintTop_toBottomOf="@id/add_members_view" />
