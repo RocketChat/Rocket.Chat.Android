@@ -226,7 +226,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         registerPushToken()
                         navigator.toChatList()
                     } else if (loginType == TYPE_LOGIN_OAUTH) {
-                        view.alertRequiresUsername()
+                        navigator.toRegisterUsername(token.userId, token.authToken)
                     }
                 } catch (exception: RocketChatException) {
                     when (exception) {
