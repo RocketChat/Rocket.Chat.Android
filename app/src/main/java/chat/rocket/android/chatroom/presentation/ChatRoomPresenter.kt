@@ -49,8 +49,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val roomsRepository: RoomRepository,
                                             private val localRepository: LocalRepository,
                                             factory: ConnectionManagerFactory,
-                                            private val mapper: ViewModelMapper,
-                                            private val localRepository: LocalRepository) {
+                                            private val mapper: ViewModelMapper) {
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
@@ -85,8 +84,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                }
+                            view.showGenericErrorMessage()
+                        }
             } finally {
                 view.hideLoading()
             }
@@ -112,8 +111,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                }
+                            view.showGenericErrorMessage()
+                        }
             } finally {
                 view.enableSendMessageButton()
             }
@@ -148,8 +147,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
-                    view.showGenericErrorMessage()
-                }
+                            view.showGenericErrorMessage()
+                        }
             } finally {
                 view.hideLoading()
             }
@@ -164,7 +163,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 view.showMessage(ex.message!!) // TODO Remove.
                 Timber.e(ex) // FIXME: Right now we are only catching the exception with Timber.
             }
-            }
+        }
     }
 
     private fun subscribeState() {
@@ -563,7 +562,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
      * @param unfinishedMessage The unfinished message to save.
      */
     fun saveUnfinishedMessage(chatRoomId: String, unfinishedMessage: String) {
-        val key = LocalRepository.UNFINISHED_MSG_KEY + chatRoomId
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
         if (unfinishedMessage.isNotBlank()) {
             localRepository.save(key, unfinishedMessage)
         } else {
@@ -580,7 +579,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
      * @return Returns the unfinished message.
      */
     fun getUnfinishedMessage(chatRoomId: String): String {
-        val key = LocalRepository.UNFINISHED_MSG_KEY + chatRoomId
+        val key = "${currentServer}_${LocalRepository.UNFINISHED_MSG_KEY}$chatRoomId"
         return localRepository.get(key) ?: ""
     }
 }
