@@ -25,7 +25,7 @@
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
-
+    <string name="action_add_account">Adicionar Conta</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -69,6 +69,18 @@
     <string name="msg_new_password">Informe a nova senha</string>
     <string name="msg_confirm_password">Confirme a nova senha</string>
     <string name="msg_unread_messages">Mensagens não lidas</string>
+    <string name="msg_preview_video">Vídeo</string>
+    <string name="msg_preview_audio">Audio</string>
+    <string name="msg_preview_photo">Foto</string>
+    <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
+    <string name="msg_requires_username">Nome de usuário requerido: Por favor, crie um nome de usuário através da versão web e volte para fazer login.</string>
+    <string name="msg_ok">OK</string>
+    <string name="msg_ver_not_recommended">
+        Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.
+    </string>
+    <string name="msg_ver_not_minimum">
+        Parece que a versão do seu servidor está abaixo da mínima requerida %1$s.\nPor favor, atualize seus servidores antes de continuar!
+    </string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
@@ -115,6 +127,10 @@
     <string name="status_disconnecting">desconectando</string>
     <string name="status_waiting">conectando em %d segundos</string>
 
+    <!--Suggestions-->
+    <string name="suggest_all_description">Notifica todos nesta sala</string>
+    <string name="suggest_here_description">Notifica usuários ativos nesta sala</string>
+
     <!-- Slash Commands -->
     <string name="Slash_Gimme_Description">Exibir ༼ つ ◕_◕ ༽つ antes de sua mensagem</string>
     <string name="Slash_LennyFace_Description">Exibir ( ͡° ͜ʖ ͡°) depois de sua mensagem</string>
@@ -140,4 +156,20 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">Nenhum emoji recente</string>
+
+    <!-- Sorting and grouping-->
+    <string name="menu_chatroom_sort">Ordenar</string>
+    <string name="dialog_sort_title">Ordenar por</string>
+    <string name="dialog_sort_by_alphabet">Alfabeticamente</string>
+    <string name="dialog_sort_by_activity">Atividade</string>
+    <string name="dialog_group_by_type">Agrupar por tipo</string>
+    <string name="dialog_group_favourites">Grupos favoritos</string>
+    <string name="chatroom_header">Cabeçalho</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Canais</string>
+    <string name="header_private_groups">Grupos Privados</string>
+    <string name="header_direct_messages">Mensagens diretas</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Desconhecido</string>
 </resources>
