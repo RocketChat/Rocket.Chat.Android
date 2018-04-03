@@ -52,7 +52,7 @@
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme" />
 
         <activity
