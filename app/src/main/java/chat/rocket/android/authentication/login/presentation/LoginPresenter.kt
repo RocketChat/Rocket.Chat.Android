@@ -218,12 +218,16 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                             throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS or TYPE_LOGIN_OAUTH")
                         }
                     }
-                    val me = client.me()
-                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
-                    saveAccount(me)
-                    saveToken(token)
-                    registerPushToken()
-                    navigator.toChatList()
+                    val username = client.me().username
+                    if (username != null) {
+                        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
+                        saveAccount(username)
+                        saveToken(token)
+                        registerPushToken()
+                        navigator.toChatList()
+                    } else if (loginType == TYPE_LOGIN_OAUTH) {
+                        view.alertRequiresUsername()
+                    }
                 } catch (exception: RocketChatException) {
                     when (exception) {
                         is RocketChatTwoFactorException -> {
@@ -247,6 +251,23 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
     }
 
+    private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
+        return listMap.find { map -> map.containsValue(serviceName) }
+                ?.get("appId")
+    }
+
+    private suspend fun saveAccount(username: String) {
+        val icon = settings.favicon()?.let {
+            UrlHelper.getServerLogoUrl(currentServer, it)
+        }
+        val logo = settings.wideTile()?.let {
+            UrlHelper.getServerLogoUrl(currentServer, it)
+        }
+        val thumb = UrlHelper.getAvatarUrl(currentServer, username)
+        val account = Account(currentServer, icon, logo, username, thumb)
+        saveAccountInteractor.save(account)
+    }
+
     private fun saveToken(token: Token) {
         tokenRepository.save(currentServer, token)
     }
@@ -257,22 +278,5 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
         // TODO: When the push token is null, at some point we should receive it with
         // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
-    }
-
-    private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
-        return listMap.find { map -> map.containsValue(serviceName) }
-                ?.get("appId")
-    }
-
-    private suspend fun saveAccount(me: Myself) {
-        val icon = settings.favicon()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
-        }
-        val logo = settings.wideTile()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
-        }
-        val thumb = UrlHelper.getAvatarUrl(currentServer, me.username!!)
-        val account = Account(currentServer, icon, logo, me.username!!, thumb)
-        saveAccountInteractor.save(account)
     }
 }
