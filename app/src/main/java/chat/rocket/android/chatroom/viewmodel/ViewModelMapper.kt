@@ -103,8 +103,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     }
 
     private suspend fun mapMessageAttachment(message: Message, attachment: MessageAttachment): MessageAttachmentViewModel {
-        val attachmentAuthor = attachment.author!!
-        val time = getTime(attachment.timestamp!!)
+        val attachmentAuthor = attachment.author
+        val time = attachment.timestamp?.let { getTime(it) }
         val attachmentText = when (attachment.attachments.orEmpty().firstOrNull()) {
             is ImageAttachment -> context.getString(R.string.msg_preview_photo)
             is VideoAttachment -> context.getString(R.string.msg_preview_video)
