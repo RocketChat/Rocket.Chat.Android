@@ -51,15 +51,4 @@ object KeyboardHelper {
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.SHOW_IMPLICIT)
         }
     }
-
-    /**
-     *  Show the soft keyboard for the given view at the start of activity or fragment.
-     *
-     *  @param view View to receive input focus.
-     */
-    fun showSoftKeyboardOnActivityStart(activity: Activity, view: View) {
-        if (view.requestFocus()) {
-            activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        }
-    }
 }
