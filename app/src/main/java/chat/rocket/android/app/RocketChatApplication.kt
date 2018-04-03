@@ -39,6 +39,7 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import timber.log.Timber
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -86,6 +87,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
         // TODO - remove this on the future, temporary migration stuff for pre-release versions.
         migrateInternalTokens()
+        context = WeakReference(applicationContext)
 
         AndroidThreeTen.init(this)
         EmojiRepository.load(this)
@@ -258,6 +260,13 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
     override fun broadcastReceiverInjector(): AndroidInjector<BroadcastReceiver> {
         return broadcastReceiverInjector
+    }
+
+    companion object {
+        var context: WeakReference<Context>? = null
+        fun getAppContext(): Context? {
+            return context?.get()
+        }
     }
 }
 

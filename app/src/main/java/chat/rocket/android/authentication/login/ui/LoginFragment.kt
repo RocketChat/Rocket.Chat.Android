@@ -2,6 +2,7 @@ package chat.rocket.android.authentication.login.ui
 
 import DrawableHelper
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,8 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import android.widget.ScrollView
+import android.widget.Toast
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
@@ -33,6 +36,7 @@ internal const val REQUEST_CODE_FOR_OAUTH = 2
 
 class LoginFragment : Fragment(), LoginView {
     @Inject lateinit var presenter: LoginPresenter
+    private var isOauthViewEnable = false
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         areLoginOptionsNeeded()
     }
@@ -182,14 +186,15 @@ class LoginFragment : Fragment(), LoginView {
         text_new_to_rocket_chat.setVisible(false)
     }
 
-    override fun showOauthView() {
+    override fun enableOauthView() {
+        isOauthViewEnable = true
         showThreeSocialAccountsMethods()
         social_accounts_container.setVisible(true)
     }
 
-    override fun hideOauthView() {
+    override fun disableOauthView() {
+        isOauthViewEnable = false
         social_accounts_container.setVisible(false)
-        button_fab.setVisible(false)
     }
 
     override fun showLoginButton() {
@@ -287,6 +292,31 @@ class LoginFragment : Fragment(), LoginView {
         text_password.requestFocus()
     }
 
+    override fun alertRequiresUsername() {
+        showToast(getString(R.string.msg_requires_username), Toast.LENGTH_LONG)
+    }
+
+    override fun alertNotRecommendedVersion() {
+        context?.let {
+            AlertDialog.Builder(it)
+                    .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
+                    .setPositiveButton(R.string.msg_ok, null)
+                    .create()
+                    .show()
+        }
+    }
+
+    override fun blockAndAlertNotRequiredVersion() {
+        context?.let {
+            AlertDialog.Builder(it)
+                    .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
+                    .setOnDismissListener { activity?.onBackPressed() }
+                    .setPositiveButton(R.string.msg_ok, null)
+                    .create()
+                    .show()
+        }
+    }
+
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed({
             (0..social_accounts_container.childCount)
@@ -327,5 +357,18 @@ class LoginFragment : Fragment(), LoginView {
             .filter { it.isClickable  }
             .take(3)
             .forEach { it.setVisible(true) }
+    }
+
+    fun showOauthView() {
+        if (isOauthViewEnable) {
+            social_accounts_container.setVisible(true)
+        }
+    }
+
+    fun hideOauthView() {
+        if (isOauthViewEnable) {
+            social_accounts_container.setVisible(false)
+            button_fab.setVisible(false)
+        }
     }
 }
