@@ -1,6 +1,5 @@
 package chat.rocket.android.main.presentation
 
-import android.content.Context
 import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.chatroom.ui.chatRoomIntent
@@ -36,9 +35,10 @@ class MainNavigator(internal val activity: MainActivity) {
                    chatRoomType: String,
                    isChatRoomReadOnly: Boolean,
                    chatRoomLastSeen: Long,
-                   isChatRoomSubscribed: Boolean) {
+                   isChatRoomSubscribed: Boolean,
+                   isFavorite: Boolean) {
         activity.startActivity(activity.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType,
-                isChatRoomReadOnly, chatRoomLastSeen, isChatRoomSubscribed))
+                isChatRoomReadOnly, chatRoomLastSeen, isChatRoomSubscribed, isFavorite))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 

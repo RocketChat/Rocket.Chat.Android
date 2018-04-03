@@ -17,10 +17,10 @@ import android.widget.RadioGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
-import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.*
@@ -107,9 +107,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 val dialogLayout = layoutInflater.inflate(R.layout.chatroom_sort_dialog, null)
                 val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
                 val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+                val groupFavorites = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, false)
 
                 val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_sort)
                 val groupByTypeCheckBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
+                val groupFavouritesCheckBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_favourites)
 
                 radioGroup.check(when (sortType) {
                     0 -> R.id.radio_sort_alphabetical
@@ -134,6 +136,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     invalidateQueryOnSearch()
                 })
 
+                groupFavouritesCheckBox.isChecked = groupFavorites
+                groupFavouritesCheckBox.setOnCheckedChangeListener({ _, isChecked ->
+                    SharedPreferenceHelper.putBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, isChecked)
+                    presenter.updateSortedChatRooms()
+                    invalidateQueryOnSearch()
+                })
+
                 val dialogSort = AlertDialog.Builder(context)
                         .setTitle(R.string.dialog_sort_title)
                         .setView(dialogLayout)
@@ -145,9 +154,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun invalidateQueryOnSearch(){
+    private fun invalidateQueryOnSearch() {
         searchView?.let {
-            if (!searchView!!.isIconified){
+            if (!searchView!!.isIconified) {
                 queryChatRoomsByName(searchView!!.query.toString())
             }
         }
@@ -241,35 +250,70 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun setSections() {
-        //Don't add section if not grouping by RoomType
-        if (!SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)) {
+        val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+        val groupFavorites = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, false)
+
+        //Don't add section if not grouping by RoomType and Favorites
+        if (!groupByType && !groupFavorites) {
             sectionedAdapter?.clearSections()
             return
         }
 
+        val rooms = sectionedAdapter?.baseAdapter?.dataSet
         val sections = ArrayList<SimpleSectionedRecyclerViewAdapter.Section>()
 
-        sectionedAdapter?.baseAdapter?.dataSet?.let {
-            var previousChatRoomType = ""
+        if (groupFavorites) {
+            //set sections for favorite and room type
+            rooms?.let {
+                val favRoomsSize = rooms.filter { chatRoom -> chatRoom.favorite }.size
 
-            for ((position, chatRoom) in it.withIndex()) {
-                val type = chatRoom.type.toString()
-                if (type != previousChatRoomType) {
-                    val title = when (type) {
-                        RoomType.CHANNEL.toString() -> resources.getString(R.string.header_channel)
-                        RoomType.PRIVATE_GROUP.toString() -> resources.getString(R.string.header_private_groups)
-                        RoomType.DIRECT_MESSAGE.toString() -> resources.getString(R.string.header_direct_messages)
-                        RoomType.LIVECHAT.toString() -> resources.getString(R.string.header_live_chats)
-                        else -> resources.getString(R.string.header_unknown)
-                    }
-                    sections.add(SimpleSectionedRecyclerViewAdapter.Section(position, title))
+                if (favRoomsSize != 0) {
+                    sections.add(SimpleSectionedRecyclerViewAdapter.Section(0, resources.getString(R.string.header_favorites)))
                 }
-                previousChatRoomType = chatRoom.type.toString()
+
+                when (groupByType) {
+                    true -> sections.addAll(getSectionsForList(rooms, favRoomsSize, it.size))
+                    false -> when (favRoomsSize != 0) {
+                        true -> sections.add(SimpleSectionedRecyclerViewAdapter.Section(favRoomsSize, resources.getString(R.string.header_conversations)))
+                        false -> {
+                            //Do nothing
+                        }
+                    }
+
+                }
+            }
+        } else {
+            //set sections for only room type
+            rooms?.let {
+                if (rooms.size != 0) {
+                    sections.addAll(getSectionsForList(it, 0, it.size))
+                }
             }
         }
 
         val dummy = arrayOfNulls<SimpleSectionedRecyclerViewAdapter.Section>(sections.size)
         sectionedAdapter?.setSections(sections.toArray(dummy))
+    }
+
+    private fun getSectionsForList(rooms: List<ChatRoom>, start: Int, end: Int): ArrayList<SimpleSectionedRecyclerViewAdapter.Section> {
+        val sections = ArrayList<SimpleSectionedRecyclerViewAdapter.Section>()
+        var previousChatRoomType = ""
+
+        for ((position, chatRoom) in rooms.subList(start, end).withIndex()) {
+            val type = chatRoom.type.toString()
+            if (type != previousChatRoomType) {
+                val title = when (type) {
+                    RoomType.CHANNEL.toString() -> resources.getString(R.string.header_channel)
+                    RoomType.PRIVATE_GROUP.toString() -> resources.getString(R.string.header_private_groups)
+                    RoomType.DIRECT_MESSAGE.toString() -> resources.getString(R.string.header_direct_messages)
+                    RoomType.LIVECHAT.toString() -> resources.getString(R.string.header_live_chats)
+                    else -> resources.getString(R.string.header_unknown)
+                }
+                sections.add(SimpleSectionedRecyclerViewAdapter.Section(position + start, title))
+            }
+            previousChatRoomType = chatRoom.type.toString()
+        }
+        return sections
     }
 
     private fun queryChatRoomsByName(name: String?): Boolean {

@@ -45,7 +45,8 @@ fun newInstance(chatRoomId: String,
                 chatRoomType: String,
                 isChatRoomReadOnly: Boolean,
                 chatRoomLastSeen: Long,
-                isSubscribed: Boolean = true): Fragment {
+                isSubscribed: Boolean = true,
+                isFavorite: Boolean): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -54,6 +55,7 @@ fun newInstance(chatRoomId: String,
             putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
             putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
             putBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED, isSubscribed)
+            putBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE, isFavorite)
         }
     }
 }
@@ -65,6 +67,7 @@ private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
+private const val BUNDLE_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
     @Inject lateinit var presenter: ChatRoomPresenter
@@ -75,6 +78,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var chatRoomType: String
     private var isSubscribed: Boolean = true
     private var isChatRoomReadOnly: Boolean = false
+    private var isFavorite: Boolean = false
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var chatRoomLastSeen: Long = -1
     private lateinit var actionSnackbar: ActionSnackbar
@@ -103,6 +107,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
             isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
             isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
+            isFavorite = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
@@ -157,10 +162,23 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.chatroom_actions, menu)
+        setFavoriteIcon(menu.findItem(R.id.action_favorite))
+    }
+
+    private fun setFavoriteIcon(menuItem: MenuItem){
+        when(isFavorite){
+            true -> menuItem.setIcon(R.drawable.ic_star)
+            false -> menuItem.setIcon(R.drawable.ic_star_border_white)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_favorite -> {
+                isFavorite=!isFavorite
+                presenter.toggleFavorite(isFavorite)
+                setFavoriteIcon(item)
+            }
             R.id.action_members_list -> {
                 presenter.toMembersList(chatRoomId, chatRoomType)
             }

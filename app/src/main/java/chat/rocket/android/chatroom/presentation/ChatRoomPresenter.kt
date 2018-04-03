@@ -23,6 +23,7 @@ import chat.rocket.common.model.UserStatus
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.internal.realtime.toggleFavorite
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
@@ -115,6 +116,18 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }
             } finally {
                 view.enableSendMessageButton()
+            }
+        }
+    }
+
+    fun toggleFavorite(favorite: Boolean) {
+        launchUI(strategy) {
+            try {
+                chatRoomId?.run {
+                    client.toggleFavorite(chatRoomId!!, favorite)
+                }
+            } catch (e: Exception) {
+                view.showGenericErrorMessage()
             }
         }
     }
