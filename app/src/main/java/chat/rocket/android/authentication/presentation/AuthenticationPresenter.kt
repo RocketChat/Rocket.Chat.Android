@@ -25,7 +25,7 @@ class AuthenticationPresenter @Inject constructor(
             localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, account.userName)
         }
 
-        if (newServer || currentServer == null || serverToken == null || settings == null) {
+        if (newServer || currentServer == null || serverToken == null || settings == null || account?.userName == null) {
             callback(false)
         } else {
             callback(true)
