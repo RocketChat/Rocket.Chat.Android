@@ -79,6 +79,13 @@
     <string name="msg_no_messages_yet">No messages yet</string>
     <string name="msg_version">Version</string>
     <string name="msg_build">Build</string>
+    <string name="msg_requires_username">Username required: Please, create an username through the web version and come back to log in.</string>
+    <string name="msg_ok">OK</string>
+    <string name="msg_ver_not_recommended">
+        Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
+    <string name="msg_ver_not_minimum">
+        Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
+    </string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -154,4 +161,20 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">No recent emoji</string>
+
+    <!-- Sorting and grouping-->
+    <string name="menu_chatroom_sort">Sort</string>
+    <string name="dialog_sort_title">Sort by</string>
+    <string name="dialog_sort_by_alphabet">Alphabetical</string>
+    <string name="dialog_sort_by_activity">Activity</string>
+    <string name="dialog_group_by_type">Group by type</string>
+    <string name="dialog_group_favourites">Group favourites</string>
+    <string name="chatroom_header">Header</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Channels</string>
+    <string name="header_private_groups">Private Groups</string>
+    <string name="header_direct_messages">Direct Messages</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Unknown</string>
 </resources>
