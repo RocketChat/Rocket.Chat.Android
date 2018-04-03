@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     tools:context=".profile.ui.ProfileFragment">
+    
+    <ScrollView
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/profile_container"
@@ -55,6 +59,7 @@
             android:hint="@string/msg_avatar_url"
             android:inputType="text" />
     </LinearLayout>
+    </ScrollView>
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
