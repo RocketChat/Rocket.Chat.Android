@@ -73,7 +73,7 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
-    <string name="msg_requires_username">Nome de usuário requerido: Por favor, erie um nome de usuário através da versão web e volte para fazer login</string>
+    <string name="msg_requires_username">Nome de usuário requerido: Por favor, crie um nome de usuário através da versão web e volte para fazer login.</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.
