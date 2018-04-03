@@ -507,13 +507,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun getUnfinishedMessage() {
         val unfinishedMessage = presenter.getUnfinishedMessage(chatRoomId)
-        if (unfinishedMessage.isNotBlank() && activity != null) {
+        if (unfinishedMessage.isNotBlank()) {
             text_message.setText(unfinishedMessage)
             val orientation = resources.configuration.orientation
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                KeyboardHelper.showSoftKeyboardOnActivityStart(activity!!, text_message)
-            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                text_message.requestFocus()
+                KeyboardHelper.showSoftKeyboard(text_message)
+            } else {
+                //TODO show keyboard in full screen mode when landscape orientation
             }
         }
     }
