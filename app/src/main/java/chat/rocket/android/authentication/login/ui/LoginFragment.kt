@@ -292,6 +292,10 @@ class LoginFragment : Fragment(), LoginView {
         text_password.requestFocus()
     }
 
+    override fun alertRequiresUsername() {
+        showToast(getString(R.string.msg_requires_username), Toast.LENGTH_LONG)
+    }
+
     override fun alertNotRecommendedVersion() {
         context?.let {
             AlertDialog.Builder(it)

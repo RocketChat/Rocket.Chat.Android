@@ -75,6 +75,7 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_no_messages_yet">No messages yet</string>
+    <string name="msg_requires_username">Username required: Please, create an username through the web version and come back to log in.</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
