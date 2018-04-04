@@ -9,7 +9,7 @@ ext {
         dokka             : '0.9.16',
 
         // Main dependencies
-        support                : '27.0.2',
+        support                : '27.1.0',
         constraintLayout       : '1.0.2',
         androidKtx             : '0.2',
         dagger                 : '2.14.1',
@@ -20,7 +20,7 @@ ext {
         rxAndroid              : '2.0.2',
         moshi                  : '1.6.0-SNAPSHOT',
         okhttp                 : '3.10.0',
-        timber                 : '4.6.1',
+        timber                 : '4.7.0',
         threeTenABP            : '1.0.5',
         rxBinding              : '2.0.0',
         fresco                 : '1.8.1',
@@ -37,7 +37,6 @@ ext {
         expresso               : '3.0.1',
         mockito                : '2.10.0'
     ]
-
     libraries = [
         kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",
         coroutines             : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}",
