@@ -55,6 +55,11 @@ fun Activity.hideKeyboard() {
     }
 }
 
+fun Activity.showKeyboard(view: View) {
+    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(view, InputMethodManager.RESULT_UNCHANGED_SHOWN)
+}
+
 fun Activity.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) =
         showToast(getString(resource), duration)
 

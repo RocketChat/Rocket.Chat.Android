@@ -4,6 +4,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in your server</string>
     <string name="title_log_in">Log in</string>
+    <string name="title_register_username">Register username</string>
     <string name="title_sign_up">Sign up</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
@@ -17,6 +18,7 @@
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
+    <string name="action_use_this_username">Use this username</string>
     <string name="action_login_or_sign_up">Tap this button to log in or create an account</string>
     <string name="action_terms_of_service">Terms of Service</string>
     <string name="action_privacy_policy">Privacy Policy</string>
