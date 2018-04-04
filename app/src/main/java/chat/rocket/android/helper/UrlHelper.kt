@@ -22,7 +22,7 @@ object UrlHelper {
      * @return The server logo URL.
      */
     fun getServerLogoUrl(serverUrl: String, favicon: String): String =
-            removeTrailingSlash(serverUrl) + "/$favicon"
+        removeTrailingSlash(serverUrl) + "/$favicon"
 
     /**
      * Returns the CAS URL.
@@ -34,49 +34,6 @@ object UrlHelper {
      */
     fun getCasUrl(casLoginUrl: String, serverUrl: String, token: String): String =
         removeTrailingSlash(casLoginUrl) + "?service=" + removeTrailingSlash(serverUrl) + "/_cas/" + token
-
-    /**
-     * Returns the Github Oauth URL.
-     *
-     * @param clientId The GitHub client ID.
-     * @param state An unguessable random string used to protect against forgery attacks.
-     * @return The Github Oauth URL.
-     */
-    fun getGithubOauthUrl(clientId: String, state: String): String =
-        "https://github.com/login/oauth/authorize?scope=user:email&client_id=$clientId&state=$state"
-
-    /**
-     * Returns the Google Oauth URL.
-     *
-     * @param clientId The Google client ID.
-     * @param serverUrl The server URL.
-     * @param state An unguessable random string used to protect against forgery attacks.
-     * @return The Google Oauth URL.
-     */
-    fun getGoogleOauthUrl(clientId: String, serverUrl: String, state: String) =
-        "https://accounts.google.com/o/oauth2/v2/auth?client_id=$clientId&redirect_uri=${removeTrailingSlash(serverUrl)}/_oauth/google?close&response_type=code&state=$state&scope=email%20profile"
-
-    /**
-     * Returns the Linkedin Oauth URL.
-     *
-     * @param clientId The Linkedin client ID.
-     * @param serverUrl The server URL.
-     * @param state An unguessable random string used to protect against forgery attacks.
-     * @return The Linkedin Oauth URL.
-     */
-    fun getLinkedinOauthUrl(clientId: String, serverUrl: String, state: String) =
-        "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=$clientId&redirect_uri=${removeTrailingSlash(serverUrl)}/_oauth/linkedin?close&state=$state"
-
-    /**
-     * Returns the Gitlab Oauth URL.
-     *
-     * @param clientId The Gitlab client ID.
-     * @param serverUrl The server URL.
-     * @param state An unguessable random string used to protect against forgery attacks.
-     * @return The Gitlab Oauth URL.
-     */
-    fun getGitlabOauthUrl(clientId: String, serverUrl: String, state: String): String =
-        "https://gitlab.com/oauth/authorize?client_id=$clientId&redirect_uri=${removeTrailingSlash(serverUrl)}/_oauth/gitlab?close&response_type=code&state=$state&scope=read_user"
 
     /**
      * Returns the server's Terms of Service URL.
