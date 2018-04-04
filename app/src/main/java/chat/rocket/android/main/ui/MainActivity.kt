@@ -49,9 +49,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         setContentView(R.layout.activity_main)
 
         launch(CommonPool) {
-            val token = InstanceID.getInstance(this@MainActivity).getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
-            Timber.d("GCM token: $token")
-            presenter.refreshToken(token)
+            try {
+                val token = InstanceID.getInstance(this@MainActivity).getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
+                Timber.d("GCM token: $token")
+                presenter.refreshToken(token)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Missing play services...")
+            }
         }
 
         presenter.connect()
