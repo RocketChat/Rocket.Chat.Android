@@ -28,7 +28,15 @@
             layout="@layout/message_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </FrameLayout>
+
+    <chat.rocket.android.widget.autocompletion.ui.SuggestionsView
+        android:id="@+id/suggestions_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layout_message_composer"
+        android:background="@color/suggestion_background_color" />
 
     <include
         android:id="@+id/layout_message_composer"
@@ -58,15 +66,15 @@
         android:id="@+id/connection_status_text"
         android:layout_width="match_parent"
         android:layout_height="32dp"
+        android:alpha="0"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
-        android:textColor="@color/white"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/white"
         android:visibility="gone"
-        android:alpha="0"
         tools:alpha="1"
-        tools:visibility="visible"
-        tools:text="connected"/>
+        tools:text="connected"
+        tools:visibility="visible" />
 
 </RelativeLayout>

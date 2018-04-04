@@ -9,7 +9,6 @@
     tools:context=".authentication.login.ui.LoginFragment">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/middle_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -45,6 +44,19 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_username_or_email" />
 
+        <Button
+            android:id="@+id/button_cas"
+            style="@style/Authentication.Button"
+            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginTop="16dp"
+            android:text="@string/action_login_or_sign_up"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_password"
+            tools:visibility="visible" />
+
         <TextView
             android:id="@+id/text_new_to_rocket_chat"
             android:layout_width="wrap_content"
@@ -57,7 +69,7 @@
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_password"
+            app:layout_constraintTop_toBottomOf="@+id/button_cas"
             tools:visibility="visible" />
 
         <com.wang.avi.AVLoadingIndicatorView
@@ -69,7 +81,7 @@
             app:indicatorName="BallPulseIndicator"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_password"
+            app:layout_constraintTop_toBottomOf="@+id/button_cas"
             tools:visibility="visible" />
 
         <LinearLayout
@@ -101,6 +113,7 @@
                 android:layout_width="290dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
+                android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_facebook"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_facebook"
@@ -112,6 +125,7 @@
                 android:layout_width="290dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
+                android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_github"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_github"
@@ -123,6 +137,7 @@
                 android:layout_width="290dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
+                android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_google"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:src="@drawable/ic_google"
@@ -134,6 +149,7 @@
                 android:layout_width="290dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
+                android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_linkedin"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_linkedin"
@@ -145,6 +161,7 @@
                 android:layout_width="290dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
+                android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_meteor"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_meteor"
@@ -156,6 +173,7 @@
                 android:layout_width="290dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
+                android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_twitter"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_twitter"
@@ -167,6 +185,7 @@
                 android:layout_width="290dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
+                android:clickable="false"
                 android:contentDescription="@string/msg_content_description_log_in_using_gitlab"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_gitlab"
@@ -195,9 +214,8 @@
             android:id="@+id/button_log_in"
             style="@style/Authentication.Button"
             android:text="@string/title_log_in"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

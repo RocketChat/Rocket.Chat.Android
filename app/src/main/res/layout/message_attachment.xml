@@ -5,9 +5,10 @@
     android:id="@+id/attachment_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="72dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
     android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
-    android:orientation="vertical">
+    android:paddingStart="72dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_attachment"
@@ -37,5 +38,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Filename.png" />
+
+    <include
+        layout="@layout/layout_reactions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
