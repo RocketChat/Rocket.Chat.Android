@@ -144,7 +144,8 @@ class MainPresenter @Inject constructor(
 
     suspend fun refreshToken(token: String?) {
         token?.let {
-            client.registerPushToken(it, getAccountsInteractor.get(), factory)
+            localRepository.save(LocalRepository.KEY_PUSH_TOKEN, token)
+            client.registerPushToken(token, getAccountsInteractor.get(), factory)
         }
     }
 }

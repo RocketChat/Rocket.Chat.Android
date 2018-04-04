@@ -187,9 +187,4 @@ interface LoginView : LoadingView, MessageView, InternetView, VersionCheckView {
      * Alerts the user about a wrong inputted password.
      */
     fun alertWrongPassword()
-
-    /**
-     * Alerts the user about the need of creating an username using the web app when creating an user through OAuth.
-     */
-    fun alertRequiresUsername()
 }
