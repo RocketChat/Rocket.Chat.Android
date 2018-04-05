@@ -18,6 +18,9 @@ interface ChatRoomView : LoadingView, MessageView {
      */
     fun showMessages(dataSet: List<BaseViewModel<*>>)
 
+    //show a view in case no messages are available in a chat room
+    fun showNoMessagesView()
+
     /**
      * Send a message to a chat room.
      *

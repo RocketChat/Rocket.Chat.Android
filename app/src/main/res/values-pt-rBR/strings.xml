@@ -75,6 +75,7 @@
     <string name="msg_new_password">Informe a nova senha</string>
     <string name="msg_confirm_password">Confirme a nova senha</string>
     <string name="msg_unread_messages">Mensagens não lidas</string>
+    <string name="msg_no_chats_available">Não há mensagens neste canal ainda</string>
     <string name="msg_preview_video">Vídeo</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>

@@ -77,6 +77,7 @@
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_unread_messages">Unread messages</string>
+    <string name="msg_no_chats_available">There are no messages in this channel yet</string>
     <string name="msg_preview_video">Video</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>

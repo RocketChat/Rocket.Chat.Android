@@ -79,6 +79,13 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 // but should mark only when the user see the first unread message.
                 markRoomAsRead(chatRoomId)
 
+                val messagesViewModels = mapper.map(messages)
+                if (messagesViewModels.isEmpty()) {
+                    view.showNoMessagesView()
+                } else {
+                    view.showMessages(messagesViewModels)
+                }
+
                 subscribeMessages(chatRoomId)
             } catch (ex: Exception) {
                 ex.printStackTrace()

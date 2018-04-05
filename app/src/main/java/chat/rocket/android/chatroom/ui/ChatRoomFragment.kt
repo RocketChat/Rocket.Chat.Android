@@ -65,9 +65,12 @@ private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
-    @Inject lateinit var presenter: ChatRoomPresenter
-    @Inject lateinit var parser: MessageParser
+    @Inject
+    lateinit var presenter: ChatRoomPresenter
+    @Inject
+    lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
+    private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
@@ -197,13 +200,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
         activity?.apply {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
-                        reactionListener = this@ChatRoomFragment)
-                recycler_view.adapter = adapter
-                val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-                linearLayoutManager.stackFromEnd = true
-                recycler_view.layoutManager = linearLayoutManager
-                recycler_view.itemAnimator = DefaultItemAnimator()
+                initialiseRecyclerViewAdapter()
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
@@ -264,6 +261,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
+    override fun showNoMessagesView() {
+        no_messages_view.setVisible(true)
+    }
+
     override fun sendMessage(text: String) {
         if (!text.isBlank()) {
             if (!text.startsWith("/")) {
@@ -284,6 +285,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showNewMessage(message: List<BaseViewModel<*>>) {
+        no_messages_view.setVisible(false)
+
+        if (recycler_view.adapter == null) {
+            initialiseRecyclerViewAdapter()
+        }
         adapter.prependData(message)
         recycler_view.scrollToPosition(0)
         verticalScrollOffset.set(0)
@@ -455,6 +461,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         button_join_chat.setVisible(false)
         isSubscribed = true
         setupMessageComposer()
+    }
+
+    private fun initialiseRecyclerViewAdapter() {
+        adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
+                reactionListener = this@ChatRoomFragment)
+        recycler_view.adapter = adapter
+        linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        linearLayoutManager.stackFromEnd = true
+        recycler_view.layoutManager = linearLayoutManager
+        recycler_view.itemAnimator = DefaultItemAnimator()
     }
 
     private val dismissStatus = {
