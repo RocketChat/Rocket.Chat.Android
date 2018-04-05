@@ -3,20 +3,22 @@ package chat.rocket.android.authentication.signup.presentation
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.main.viewmodel.NavHeaderViewModel
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extensions.privacyPolicyUrl
 import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.android.util.extensions.serverLogoUrl
+import chat.rocket.android.util.extensions.termsOfServiceUrl
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.me
-import chat.rocket.core.internal.rest.registerPushToken
 import chat.rocket.core.internal.rest.signup
 import chat.rocket.core.model.Myself
 import javax.inject.Inject
@@ -60,10 +62,10 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
 
                         try {
                             // TODO This function returns a user so should we save it?
-                            client.signup(email, name, username, password)
+                            retryIO("signup") { client.signup(email, name, username, password) }
                             // TODO This function returns a user token so should we save it?
-                            client.login(username, password)
-                            val me = client.me()
+                            retryIO("login") { client.login(username, password) }
+                            val me = retryIO("me") { client.me() }
                             localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                             saveAccount(me)
                             registerPushToken()
@@ -88,13 +90,13 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
 
     fun termsOfService() {
         serverInteractor.get()?.let {
-            navigator.toWebPage(UrlHelper.getTermsOfServiceUrl(it))
+            navigator.toWebPage(it.termsOfServiceUrl())
         }
     }
 
     fun privacyPolicy() {
         serverInteractor.get()?.let {
-            navigator.toWebPage(UrlHelper.getPrivacyPolicyUrl(it))
+            navigator.toWebPage(it.privacyPolicyUrl())
         }
     }
 
@@ -108,12 +110,12 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
 
     private suspend fun saveAccount(me: Myself) {
         val icon = settings.favicon()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
+            currentServer.serverLogoUrl(it)
         }
         val logo = settings.wideTile()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
+            currentServer.serverLogoUrl(it)
         }
-        val thumb = UrlHelper.getAvatarUrl(currentServer, me.username!!)
+        val thumb = currentServer.avatarUrl(me.username!!)
         val account = Account(currentServer, icon, logo, me.username!!, thumb)
         saveAccountInteractor.save(account)
     }
