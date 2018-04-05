@@ -72,6 +72,7 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
     interface ActionsListener {
         fun isActionsEnabled(): Boolean
         fun onActionSelected(item: MenuItem, message: Message)
+        fun onPinMessageSelected(item: MenuItem, message: Message)
     }
 
     val longClickListener = { view: View ->
@@ -89,14 +90,16 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
     }
 
     internal fun setupActionMenu(view: View) {
-        if (listener.isActionsEnabled()) {
-            view.setOnLongClickListener(longClickListener)
-        }
+        view.setOnLongClickListener(longClickListener)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         data?.let {
-            listener.onActionSelected(item, it.message)
+            if (listener.isActionsEnabled()){
+                listener.onActionSelected(item, it.message)
+                }else{
+                listener.onPinMessageSelected(item,it.message)
+                }
         }
         return true
     }

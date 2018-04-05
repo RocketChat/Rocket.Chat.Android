@@ -59,7 +59,7 @@ class PinnedMessagesActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-    private fun finishActivity() {
+    fun finishActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
     }
