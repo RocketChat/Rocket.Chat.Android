@@ -5,6 +5,7 @@ import chat.rocket.android.authentication.server.presentation.VersionCheckView
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.util.VersionInfo
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.retryIO
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.serverInfo
 import timber.log.Timber
@@ -14,21 +15,25 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
                                                 private val view: VersionCheckView) {
     internal fun checkServerInfo() {
         launchUI(strategy) {
-            val serverInfo = client.serverInfo()
-            val thisServerVersion = serverInfo.version
-            val isRequiredVersion = isRequiredServerVersion(thisServerVersion)
-            val isRecommendedVersion = isRecommendedServerVersion(thisServerVersion)
-            if (isRequiredVersion) {
-                if (isRecommendedVersion) {
-                    Timber.i("Your version is nice! (Requires: 0.62.0, Yours: $thisServerVersion)")
+            try {
+                val serverInfo = retryIO(description = "serverInfo", times = 5) { client.serverInfo() }
+                val thisServerVersion = serverInfo.version
+                val isRequiredVersion = isRequiredServerVersion(thisServerVersion)
+                val isRecommendedVersion = isRecommendedServerVersion(thisServerVersion)
+                if (isRequiredVersion) {
+                    if (isRecommendedVersion) {
+                        Timber.i("Your version is nice! (Requires: 0.62.0, Yours: $thisServerVersion)")
+                    } else {
+                        view.alertNotRecommendedVersion()
+                    }
                 } else {
-                    view.alertNotRecommendedVersion()
+                    if (!isRecommendedVersion) {
+                        view.blockAndAlertNotRequiredVersion()
+                        Timber.i("Oops. Looks like your server is out-of-date! Minimum server version required ${BuildConfig.REQUIRED_SERVER_VERSION}!")
+                    }
                 }
-            } else {
-                if (!isRecommendedVersion) {
-                    view.blockAndAlertNotRequiredVersion()
-                    Timber.i("Oops. Looks like your server is out-of-date! Minimum server version required ${BuildConfig.REQUIRED_SERVER_VERSION}!")
-                }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error getting server info")
             }
         }
     }

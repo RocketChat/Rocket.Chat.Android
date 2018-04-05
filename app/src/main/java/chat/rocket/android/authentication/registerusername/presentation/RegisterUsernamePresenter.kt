@@ -3,13 +3,15 @@ package chat.rocket.android.authentication.registerusername.presentation
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.android.util.extensions.serverLogoUrl
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
@@ -41,7 +43,9 @@ class RegisterUsernamePresenter @Inject constructor(
                 if (NetworkHelper.hasInternetAccess()) {
                     view.showLoading()
                     try {
-                        val me = client.updateOwnBasicInformation(username = username)
+                        val me = retryIO("updateOwnBasicInformation(username = $username)") {
+                            client.updateOwnBasicInformation(username = username)
+                        }
                         val registeredUsername = me.username
                         if (registeredUsername != null) {
                             saveAccount(registeredUsername)
@@ -75,12 +79,12 @@ class RegisterUsernamePresenter @Inject constructor(
 
     private suspend fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
+            currentServer.serverLogoUrl(it)
         }
         val logo = settings.wideTile()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
+            currentServer.serverLogoUrl(it)
         }
-        val thumb = UrlHelper.getAvatarUrl(currentServer, username)
+        val thumb = currentServer.avatarUrl(username)
         val account = Account(currentServer, icon, logo, username, thumb)
         saveAccountInteractor.save(account)
     }

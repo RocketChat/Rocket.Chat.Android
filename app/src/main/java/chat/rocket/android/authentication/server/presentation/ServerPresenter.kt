@@ -3,10 +3,10 @@ package chat.rocket.android.authentication.server.presentation
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.util.extensions.isValidUrl
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.util.ifNull
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                           private val getAccountsInteractor: GetAccountsInteractor) {
     fun connect(server: String) {
-        if (!UrlHelper.isValidUrl(server)) {
+        if (!server.isValidUrl()) {
             view.showInvalidServerUrlMessage()
         } else {
             launchUI(strategy) {
