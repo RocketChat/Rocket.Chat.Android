@@ -97,6 +97,7 @@
     <string name="message_welcome">Welcome %s</string>
     <string name="message_removed">Message removed</string>
     <string name="message_pinned">Pinned a message:</string>
+    <string name="message_copied">message copied</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
@@ -110,6 +111,8 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
+    <string name="action_msg_yes">Yes</string>
+    <string name="action_msg_cancel">Cancel</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
@@ -121,6 +124,7 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>
+    <string name="unpin_alert_message">Are you sure you want to unpin this message?</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
