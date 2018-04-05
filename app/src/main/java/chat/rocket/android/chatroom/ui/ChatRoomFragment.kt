@@ -212,6 +212,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 recycler_view.layoutManager = linearLayoutManager
                 recycler_view.itemAnimator = DefaultItemAnimator()
                 if (dataSet.size >= 30) {
+                    endlessRecyclerViewScrollListener = object :
+                            EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
+                        override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
+                            presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
+                        }
+                    }
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
                 }
                 recycler_view.addOnLayoutChangeListener(layoutChangeListener)
@@ -242,11 +248,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    private val endlessRecyclerViewScrollListener = object : EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
-        override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
-            presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
-        }
-    }
+    private lateinit var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener
 
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
         var state = AtomicInteger(RecyclerView.SCROLL_STATE_IDLE)
