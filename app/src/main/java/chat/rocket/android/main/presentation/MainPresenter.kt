@@ -17,6 +17,8 @@ import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.realtime.UserStatus
+import chat.rocket.core.internal.realtime.setDefaultStatus
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
@@ -145,6 +147,21 @@ class MainPresenter @Inject constructor(
 
     fun addNewServer() {
         navigator.toServerScreen()
+    }
+
+    fun changeStatus(userStatus: UserStatus) {
+        launchUI(strategy) {
+            try {
+                client.setDefaultStatus(userStatus)
+                view.showUserStatus(userStatus)
+            } catch (ex: RocketChatException) {
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
+        }
     }
 
     suspend fun refreshToken(token: String?) {

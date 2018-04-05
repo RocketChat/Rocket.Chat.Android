@@ -28,7 +28,11 @@
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_join_chat">Join Chat</string>
-    <string name="action_add_account">Add Account</string>
+    <string name="action_add_account">Add account</string>
+    <string name="action_online">Online</string>
+    <string name="action_away">Away</string>
+    <string name="action_busy">Busy</string>
+    <string name="action_invisible">Invisible</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
