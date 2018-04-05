@@ -36,10 +36,8 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
-import kotlin.math.absoluteValue
 
 fun newInstance(chatRoomId: String,
                 chatRoomName: String,
@@ -127,7 +125,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         activity?.apply {
             (this as? ChatRoomActivity)?.showRoomTypeIcon(true)
         }
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -218,10 +215,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
                 recycler_view.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                     val y = oldBottom - bottom
-                    if (y.absoluteValue > 0) {
+                    if (Math.abs(y) > 0) {
                         // if y is positive the keyboard is up else it's down
                         recycler_view.post {
-                            if (y > 0 || verticalScrollOffset.get().absoluteValue >= y.absoluteValue) {
+                            if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
                                 recycler_view.scrollBy(0, y)
                             } else {
                                 recycler_view.scrollBy(0, verticalScrollOffset.get())
@@ -297,10 +294,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         button_send.isEnabled = false
     }
 
-    override fun enableSendMessageButton() {
+    override fun enableSendMessageButton(sendFailed: Boolean) {
         button_send.isEnabled = true
         text_message.isEnabled = true
-        text_message.erase()
+        if (!sendFailed) {
+            clearMessageComposition()
+        }
     }
 
     override fun clearMessageComposition() {
@@ -466,7 +465,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun setupRecyclerView() {
         recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                Timber.i("Scrolling vertically: $dy")
                 if (!recyclerView.canScrollVertically(1)) {
                     button_fab.hide()
                 } else {
@@ -523,8 +521,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 var textMessage = citation ?: ""
                 textMessage += text_message.textContent
                 sendMessage(textMessage)
-
-                clearMessageComposition()
             }
 
             button_show_attachment_options.setOnClickListener {
@@ -589,7 +585,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 text_message.requestFocus()
                 emojiKeyboardPopup.showAtBottomPending()
                 KeyboardHelper.showSoftKeyboard(text_message)
-
             }
             setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
         } else {
