@@ -177,10 +177,12 @@
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_favorites">पसंदीदा</string>
+    <string name="header_conversations">बातचीत</string>
     <string name="header_channel">चैनलों</string>
     <string name="header_private_groups">निजी समूहों</string>
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
-    <string name="header_live_chats">Live Chats</string>
+    <string name="header_live_chats">लाइव चैट</string>
     <string name="header_unknown">अज्ञात</string>
 
     <!--Notifications-->
