@@ -34,6 +34,7 @@ import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import org.threeten.bp.Instant
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
@@ -102,19 +103,20 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
             try {
                 // ignore message for now, will receive it on the stream
                 val message = if (messageId == null) {
-                    client.sendMessage(chatRoomId, text)
+                    val id = UUID.randomUUID().toString()
+                    client.sendMessage(id, chatRoomId, text)
                 } else {
                     client.updateMessage(chatRoomId, messageId, text)
                 }
                 view.clearMessageComposition()
+                view.enableSendMessageButton(false)
             } catch (ex: Exception) {
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
-            } finally {
-                view.enableSendMessageButton()
+                view.enableSendMessageButton(true)
             }
         }
     }
@@ -511,9 +513,11 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             try {
                 if (text.length == 1) {
+                    view.disableSendMessageButton()
                     // we have just the slash, post it anyway
                     sendMessage(roomId, text, null)
                 } else {
+                    view.disableSendMessageButton()
                     val command = text.split(" ")
                     val name = command[0].substring(1)
                     var params: String = ""
@@ -527,6 +531,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                         // failed, command is not valid so post it
                         sendMessage(roomId, text, null)
                     }
+                    view.enableSendMessageButton(false)
                 }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
