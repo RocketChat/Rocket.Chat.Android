@@ -27,7 +27,11 @@
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
-    <string name="action_add_account">Adicionar Conta</string>
+    <string name="action_add_account">Adicionar conta</string>
+    <string name="action_online">Online</string>
+    <string name="action_away">Ausente</string>
+    <string name="action_busy">Ocupado</string>
+    <string name="action_invisible">Invisível</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
