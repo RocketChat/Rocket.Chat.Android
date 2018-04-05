@@ -37,6 +37,7 @@ import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
+import kotlin.math.absoluteValue
 
 fun newInstance(chatRoomId: String,
                 chatRoomName: String,
