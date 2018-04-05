@@ -108,7 +108,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 } else {
                     client.updateMessage(chatRoomId, messageId, text)
                 }
-                view.clearMessageComposition()
                 view.enableSendMessageButton(false)
             } catch (ex: Exception) {
                 ex.message?.let {
@@ -220,7 +219,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                         }
 
                         if (messages.result.size == 50) {
-                            // we loade at least count messages, try one more to fetch more messages
+                            // we loaded at least count messages, try one more to fetch more messages
                             loadMissingMessages()
                         }
                     }

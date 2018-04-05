@@ -291,7 +291,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun disableSendMessageButton() {
         button_send.isEnabled = false
-        text_message.isEnabled = false
     }
 
     override fun enableSendMessageButton(sendFailed: Boolean) {
@@ -585,7 +584,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 text_message.requestFocus()
                 emojiKeyboardPopup.showAtBottomPending()
                 KeyboardHelper.showSoftKeyboard(text_message)
-
             }
             setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
         } else {
