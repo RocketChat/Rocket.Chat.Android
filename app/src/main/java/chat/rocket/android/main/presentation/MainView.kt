@@ -18,10 +18,10 @@ interface MainView : MessageView, VersionCheckView {
     /**
      * Setups the navigation header.
      *
-     * @param model The [NavHeaderViewModel].
+     * @param viewModel The [NavHeaderViewModel].
      * @param accounts The list of accounts.
      */
-    fun setupNavHeader(model: NavHeaderViewModel, accounts: List<Account>)
+    fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>)
 
     fun closeServerSelection()
 }

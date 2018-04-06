@@ -57,7 +57,6 @@ class MainPresenter @Inject constructor(
             try {
                 val me = retryIO("me") { client.me() }
                 val model = navHeaderMapper.mapToViewModel(me)
-
                 saveAccount(model)
                 view.setupNavHeader(model, getAccountsInteractor.get())
             } catch (ex: Exception) {
@@ -78,11 +77,17 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(me: NavHeaderViewModel) {
+    private suspend fun saveAccount(viewModel: NavHeaderViewModel) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
-        val account = Account(currentServer, icon, me.serverLogo, me.username, me.avatar)
+        val account = Account(
+            currentServer,
+            icon,
+            viewModel.serverLogo,
+            viewModel.userDisplayName,
+            viewModel.userAvatar
+        )
         saveAccountInteractor.save(account)
     }
 
