@@ -12,6 +12,7 @@ import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.chatRooms
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.RoomType
@@ -94,7 +95,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             try {
                 val roomList = getChatRoomsInteractor.getByName(currentServer, name)
                 if (roomList.isEmpty()) {
-                    val (users, rooms) = client.spotlight(name)
+                    val (users, rooms) = retryIO("spotlight($name)") {
+                        client.spotlight(name)
+                    }
                     val chatRoomsCombined = mutableListOf<ChatRoom>()
                     chatRoomsCombined.addAll(usersToChatRooms(users))
                     chatRoomsCombined.addAll(roomsToChatRooms(rooms))
@@ -161,7 +164,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     private suspend fun loadRooms(): List<ChatRoom> {
-        val chatRooms = manager.chatRooms().update
+        val chatRooms = retryIO("chatRooms") { manager.chatRooms().update }
         val sortedRooms = sortRooms(chatRooms)
         Timber.d("Loaded rooms: ${sortedRooms.size}")
         saveChatRoomsInteractor.save(currentServer, sortedRooms)
