@@ -95,5 +95,5 @@ fun PublicSettings.uploadMaxFileSize(): Int {
     return this[UPLOAD_MAX_FILE_SIZE]?.value?.let { it as Int } ?: Int.MAX_VALUE
 }
 
-fun PublicSettings.baseUrl(): String? = this[SITE_URL]?.value as String
+fun PublicSettings.baseUrl(): String? = this[SITE_URL]?.value as String?
 fun PublicSettings.siteName(): String? = this[SITE_NAME]?.value as String?

@@ -5,7 +5,6 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.common.RocketChatException
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.registerPushToken
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.google.android.gms.iid.InstanceID
@@ -35,17 +34,19 @@ class FirebaseTokenService : FirebaseInstanceIdService() {
         // default push gateway. We should register this project's own project sender id into it.
         val gcmToken = InstanceID.getInstance(this)
                 .getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
-        val currentServer = getCurrentServerInteractor.get()!!
-        val client = factory.create(currentServer)
+        val currentServer = getCurrentServerInteractor.get()
+        val client = currentServer?.let { factory.create(currentServer) }
 
         gcmToken?.let {
             localRepository.save(LocalRepository.KEY_PUSH_TOKEN, gcmToken)
-            launch {
-                try {
-                    Timber.d("Registering push token: $gcmToken for ${client.url}")
-                    client.registerPushToken(gcmToken)
-                } catch (ex: RocketChatException) {
-                    Timber.e(ex)
+            client?.let {
+                launch {
+                    try {
+                        Timber.d("Registering push token: $gcmToken for ${client.url}")
+                        client.registerPushToken(gcmToken)
+                    } catch (ex: RocketChatException) {
+                        Timber.e(ex)
+                    }
                 }
             }
         }
