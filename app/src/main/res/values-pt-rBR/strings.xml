@@ -85,7 +85,6 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
     <string name="msg_alert_dialog">Você escolheu a imagem do avatar e o URL do avatar. A URL será definida como sua imagem de perfil por padrão. Limpe o campo URL do avatar se quiser definir a imagem selecionada como seu perfil. Pressione OK para continuar com sua escolha.</string>
-    <string name="msg_requires_username">Nome de usuário requerido: Por favor, crie um nome de usuário através da versão web e volte para fazer login.</string>
     <string name="msg_version">Versão</string>
     <string name="msg_build">Build</string>
     <string name="msg_ok">OK</string>
