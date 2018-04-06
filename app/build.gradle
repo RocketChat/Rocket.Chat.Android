@@ -3,6 +3,7 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -12,8 +13,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 2000
-        versionName "2.0.0-alpha1"
+        versionCode 2003
+        versionName "2.0.0-beta3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -29,12 +30,16 @@ android {
 
     buildTypes {
         release {
+            buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
+            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
+            buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
+            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
             applicationIdSuffix ".dev"
         }
     }
@@ -59,6 +64,7 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.cardView
     implementation libraries.flexbox
+    implementation libraries.customTabs
 
     implementation libraries.androidKtx
 

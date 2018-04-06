@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
@@ -15,7 +16,6 @@ import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
 import chat.rocket.android.members.viewmodel.MemberViewModel
-import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
@@ -23,9 +23,6 @@ import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
-import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
-import android.app.Activity
-import android.view.inputmethod.InputMethodManager
 
 
 fun newInstance(chatRoomId: String, chatRoomType: String): Fragment {
@@ -65,8 +62,6 @@ class MembersFragment : Fragment(), MembersView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
 
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
@@ -89,16 +84,31 @@ class MembersFragment : Fragment(), MembersView {
             } else {
                 adapter.appendData(dataSet)
             }
+            if (this is ChatRoomActivity) {
+                this.showRoomTypeIcon(false)
+            }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            (activity as ChatRoomActivity).showRoomTypeIcon(true)
+            return super.onOptionsItemSelected(item)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun showLoading() = view_loading.setVisible(true)
 
     override fun hideLoading() = view_loading.setVisible(false)
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 

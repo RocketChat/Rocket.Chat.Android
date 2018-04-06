@@ -2,6 +2,7 @@ package chat.rocket.android.dagger.module
 
 import chat.rocket.android.authentication.di.AuthenticationModule
 import chat.rocket.android.authentication.login.di.LoginFragmentProvider
+import chat.rocket.android.authentication.registerusername.di.RegisterUsernameFragmentProvider
 import chat.rocket.android.authentication.server.di.ServerFragmentProvider
 import chat.rocket.android.authentication.signup.di.SignupFragmentProvider
 import chat.rocket.android.authentication.twofactor.di.TwoFAFragmentProvider
@@ -16,6 +17,8 @@ import chat.rocket.android.main.di.MainModule
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.di.MembersFragmentProvider
 import chat.rocket.android.profile.di.ProfileFragmentProvider
+import chat.rocket.android.server.di.ChangeServerModule
+import chat.rocket.android.server.ui.ChangeServerActivity
 import chat.rocket.android.settings.password.di.PasswordFragmentProvider
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import dagger.Module
@@ -28,6 +31,7 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = [AuthenticationModule::class,
         ServerFragmentProvider::class,
         LoginFragmentProvider::class,
+        RegisterUsernameFragmentProvider::class,
         SignupFragmentProvider::class,
         TwoFAFragmentProvider::class
     ])
@@ -51,4 +55,8 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class])
     abstract fun bindPasswordActivity(): PasswordActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [ChangeServerModule::class])
+    abstract fun bindChangeServerActivity(): ChangeServerActivity
 }

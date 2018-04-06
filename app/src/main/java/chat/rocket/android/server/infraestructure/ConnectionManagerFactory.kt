@@ -19,4 +19,6 @@ class ConnectionManagerFactory @Inject constructor(private val factory: RocketCh
         cache[url] = manager
         return manager
     }
+
+    fun get(url: String) = cache[url]
 }
