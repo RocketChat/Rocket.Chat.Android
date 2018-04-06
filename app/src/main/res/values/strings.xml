@@ -15,6 +15,7 @@
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_alert_dialog">Alert</string>
+    <string name="title_about">About</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -31,11 +32,16 @@
     <string name="action_choose_image_from_gallery">Choose photo from gallery</string>
     <string name="action_open_camera">Take photo</string>
     <string name="action_join_chat">Join Chat</string>
-    <string name="action_add_account">Add Account</string>
+    <string name="action_add_account">Add account</string>
+    <string name="action_online">Online</string>
+    <string name="action_away">Away</string>
+    <string name="action_busy">Busy</string>
+    <string name="action_invisible">Invisible</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Change Password</item>
+        <item name="item_password">About</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -81,6 +87,8 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_no_messages_yet">No messages yet</string>
+    <string name="msg_version">Version</string>
+    <string name="msg_build">Build</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>

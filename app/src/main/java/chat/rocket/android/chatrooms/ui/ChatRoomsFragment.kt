@@ -158,15 +158,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             listJob?.cancel()
             listJob = launch(UI) {
                 val adapter = recycler_view.adapter as SimpleSectionedRecyclerViewAdapter
-                // FIXME https://fabric.io/rocketchat3/android/apps/chat.rocket.android.dev/issues/5a90d4718cb3c2fa63b3f557?time=last-seven-days
-                // TODO - fix this bug to reenable DiffUtil
-                val diff = async(CommonPool) {
+                // FIXME https://fabric.io/rocketchat3/android/apps/chat.rocket.android/issues/5ac2916c36c7b235275ccccf
+                // TODO - fix this bug to re-enable DiffUtil
+                /*val diff = async(CommonPool) {
                     DiffUtil.calculateDiff(RoomsDiffCallback(adapter.baseAdapter.dataSet, newDataSet))
-                }.await()
+                }.await()*/
 
                 if (isActive) {
                     adapter.baseAdapter.updateRooms(newDataSet)
-                    diff.dispatchUpdatesTo(adapter)
+                    // TODO - fix crash to re-enable diff.dispatchUpdatesTo(adapter)
+                    adapter.notifyDataSetChanged()
 
                     //Set sections always after data set is updated
                     setSections()
