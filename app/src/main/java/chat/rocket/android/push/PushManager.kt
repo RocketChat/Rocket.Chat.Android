@@ -82,7 +82,7 @@ class PushManager @Inject constructor(
     }
 
     @SuppressLint("NewApi")
-    private suspend fun showNotification(pushMessage: PushMessage) {
+    suspend fun showNotification(pushMessage: PushMessage) {
         if (!hasAccount(pushMessage.info.host)) {
             Timber.d("ignoring push message: $pushMessage")
             return

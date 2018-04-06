@@ -17,17 +17,8 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
 import chat.rocket.android.push.GroupedPush
-import chat.rocket.android.server.domain.AccountsRepository
-import chat.rocket.android.server.domain.ChatRoomsRepository
-import chat.rocket.android.server.domain.CurrentServerRepository
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.GetPermissionsInteractor
-import chat.rocket.android.server.domain.MessagesRepository
-import chat.rocket.android.server.domain.MultiServerTokenRepository
-import chat.rocket.android.server.domain.RoomRepository
-import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.push.PushManager
+import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
 import chat.rocket.android.server.infraestructure.MemoryMessagesRepository
 import chat.rocket.android.server.infraestructure.MemoryRoomRepository
@@ -275,4 +266,16 @@ class AppModule {
     @Provides
     @Singleton
     fun provideGroupedPush() = GroupedPush()
+
+    @Provides
+    @Singleton
+    fun providePushManager(
+            context: Context,
+            groupedPushes: GroupedPush,
+            manager: NotificationManager,
+            moshi: Moshi,
+            getAccountInteractor: GetAccountInteractor,
+            getSettingsInteractor: GetSettingsInteractor): PushManager {
+        return PushManager(groupedPushes, manager, moshi, getAccountInteractor, getSettingsInteractor, context)
+    }
 }

@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.app.RemoteInput
 import android.widget.Toast
 import chat.rocket.android.R
@@ -26,6 +27,8 @@ class DirectReplyReceiver : BroadcastReceiver() {
     lateinit var factory: ConnectionManagerFactory
     @Inject
     lateinit var groupedPushes: GroupedPush
+    @Inject
+    lateinit var pushManager: PushManager
 
     override fun onReceive(context: Context, intent: Intent) {
         AndroidInjection.inject(this, context)
@@ -33,18 +36,22 @@ class DirectReplyReceiver : BroadcastReceiver() {
             val message = intent.getParcelableExtra<PushMessage>(EXTRA_PUSH_MESSAGE)
             message?.let {
                 launch(UI) {
+                    val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    val notificationId = it.notificationId.toInt()
+                    val hostname = it.info.host
                     try {
                         println(it)
                         sendMessage(it, extractReplyMessage(intent))
-                        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                        clearNotificationsByHostAndNotificationId(it.info.host, it.notificationId.toInt())
-                        manager.cancel(it.notificationId.toInt())
+                        clearNotificationsByHostAndNotificationId(hostname, notificationId)
+                        manager.cancel(notificationId)
                         val feedback = context.getString(R.string.notif_success_sending, it.title)
                         Toast.makeText(context, feedback, Toast.LENGTH_SHORT).show()
                     } catch (ex: RocketChatException) {
                         Timber.e(ex)
                         val feedback = context.getString(R.string.notif_error_sending)
                         Toast.makeText(context, feedback, Toast.LENGTH_SHORT).show()
+                        clearNotificationsByHostAndNotificationId(hostname, notificationId)
+                        pushManager.showNotification(it)
                     }
                 }
             }
