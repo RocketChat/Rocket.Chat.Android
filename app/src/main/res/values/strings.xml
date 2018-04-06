@@ -118,7 +118,6 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
-    <string name="action_ok_alert_dialog">Ok</string>
     <string name="action_cancel_alert_dialog">Cancel</string>
 
     <!-- Permission messages -->

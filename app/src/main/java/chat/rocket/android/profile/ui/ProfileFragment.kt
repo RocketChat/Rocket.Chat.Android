@@ -264,7 +264,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                if (text_avatar_url.textContent != "" && text_avatar_url.textContent != currentAvatar && avatarImage != null) {
+                if (text_avatar_url.textContent.isNotBlank() && text_avatar_url.textContent != currentAvatar && avatarImage != null) {
                     alertDialog.show()
                 } else {
                     presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, avatarImage, avatarImageUri)
@@ -290,7 +290,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         alertDialogBuilder = AlertDialog.Builder(activity)
         alertDialogBuilder.setTitle(getString(R.string.title_alert_dialog))
         alertDialogBuilder.setMessage(getString(R.string.msg_alert_dialog))
-        alertDialogBuilder.setPositiveButton(getString(R.string.action_ok_alert_dialog)) { _, _ ->
+        alertDialogBuilder.setPositiveButton(getString(R.string.msg_ok)) { _, _ ->
             alertDialog.dismiss()
             presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, null, avatarImageUri)
         }
@@ -331,7 +331,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             return@combineLatest (text_name.toString() != currentName ||
                     text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail ||
-                    (text_avatar_url.toString() != "" && text_avatar_url.toString() != currentAvatar))
+                    (text_avatar_url.isNotEmpty() && text_avatar_url.toString() != currentAvatar))
         }.subscribe({ isValid ->
             if (isValid || isAvatarChanged) {
                 startActionMode()

@@ -13,6 +13,7 @@
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
+    <string name="title_alert_dialog">चेतावनी</string>
     <string name="title_about">परिचय</string>
 
     <!-- Actions -->
@@ -33,6 +34,8 @@
     <string name="action_away">दूर</string>
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
+    <string name="action_choose_image_from_gallery">गैलरी से फोटो चुनें</string>
+    <string name="action_open_camera">फोटो लो</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -90,6 +93,7 @@
     </string>
     <string name="msg_version">वर्शन</string>
     <string name="msg_build">बिल्ड</string>
+    <string name="msg_alert_dialog">आपने अवतार छवि और अवतार यूआरएल दोनों को चुना है। यूआरएल को डिफ़ॉल्ट रूप से आपकी प्रोफ़ाइल छवि के रूप में सेट किया जाएगा। अगर आप चयनित छवि को अपनी प्रोफ़ाइल के रूप में सेट करना चाहते हैं तो अवतार यूआरएल फ़ील्ड साफ़ करें। अपनी पसंद के साथ जारी रखने के लिए ओके दबाएं</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
@@ -113,11 +117,13 @@
     <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
+    <string name="action_cancel_alert_dialog">रद्द करें</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
     <string name="permission_deleting_not_allowed">हटाने की अनुमति नहीं है</string>
     <string name="permission_pinning_not_allowed">पिनि करने की अनुमति नहीं है</string>
+    <string name="permission_image_picking_not_allowed">पढ़ने की अनुमति के बिना चित्र को एक्सेस नहीं किया जा सकता</string>
 
     <!-- Members List -->
     <string name="title_members_list">सदस्यों की सूची</string>
