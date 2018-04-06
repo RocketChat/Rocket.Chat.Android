@@ -13,6 +13,7 @@
     <string name="title_settings">Configurações</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
+    <string name="title_about">Sobre</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -36,6 +37,7 @@
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Alterar senha</item>
+        <item name="item_password">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -79,6 +81,8 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
+    <string name="msg_version">Versão</string>
+    <string name="msg_build">Build</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.

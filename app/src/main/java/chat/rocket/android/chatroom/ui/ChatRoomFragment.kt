@@ -37,6 +37,7 @@ import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
+import kotlin.math.absoluteValue
 
 fun newInstance(chatRoomId: String,
                 chatRoomName: String,
@@ -132,6 +133,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onDestroyView() {
+        recycler_view.removeOnScrollListener(endlessRecyclerViewScrollListener)
+        recycler_view.removeOnScrollListener(onScrollListener)
+        recycler_view.removeOnLayoutChangeListener(layoutChangeListener)
+
         presenter.unsubscribeMessages(chatRoomId)
         handler.removeCallbacksAndMessages(null)
         unsubscribeTextMessage()
@@ -200,58 +205,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
                         reactionListener = this@ChatRoomFragment)
                 recycler_view.adapter = adapter
-                val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-                linearLayoutManager.stackFromEnd = true
-                recycler_view.layoutManager = linearLayoutManager
-                recycler_view.itemAnimator = DefaultItemAnimator()
                 if (dataSet.size >= 30) {
-                    recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                        override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
-                            presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
-                        }
-                    })
+                    recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
                 }
-
-                recycler_view.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-                    val y = oldBottom - bottom
-                    if (Math.abs(y) > 0) {
-                        // if y is positive the keyboard is up else it's down
-                        recycler_view.post {
-                            if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
-                                recycler_view.scrollBy(0, y)
-                            } else {
-                                recycler_view.scrollBy(0, verticalScrollOffset.get())
-                            }
-                        }
-                    }
-                }
-
-                recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    var state = AtomicInteger(RecyclerView.SCROLL_STATE_IDLE)
-
-                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                        state.compareAndSet(RecyclerView.SCROLL_STATE_IDLE, newState)
-                        when (newState) {
-                            RecyclerView.SCROLL_STATE_IDLE -> {
-                                if (!state.compareAndSet(RecyclerView.SCROLL_STATE_SETTLING, newState)) {
-                                    state.compareAndSet(RecyclerView.SCROLL_STATE_DRAGGING, newState)
-                                }
-                            }
-                            RecyclerView.SCROLL_STATE_DRAGGING -> {
-                                state.compareAndSet(RecyclerView.SCROLL_STATE_IDLE, newState)
-                            }
-                            RecyclerView.SCROLL_STATE_SETTLING -> {
-                                state.compareAndSet(RecyclerView.SCROLL_STATE_DRAGGING, newState)
-                            }
-                        }
-                    }
-
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        if (state.get() != RecyclerView.SCROLL_STATE_IDLE) {
-                            verticalScrollOffset.getAndAdd(dy)
-                        }
-                    }
-                })
+                recycler_view.addOnLayoutChangeListener(layoutChangeListener)
+                recycler_view.addOnScrollListener(onScrollListener)
             }
 
             val oldMessagesCount = adapter.itemCount
@@ -261,6 +219,61 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 verticalScrollOffset.set(0)
             }
             presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
+        }
+    }
+
+    private val layoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+        val y = oldBottom - bottom
+        if (y.absoluteValue > 0 && isAdded) {
+            // if y is positive the keyboard is up else it's down
+            recycler_view.post {
+                if (y > 0 || verticalScrollOffset.get().absoluteValue >= y.absoluteValue) {
+                    recycler_view.scrollBy(0, y)
+                } else {
+                    recycler_view.scrollBy(0, verticalScrollOffset.get())
+                }
+            }
+        }
+    }
+
+    private lateinit var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener
+
+    private val onScrollListener = object : RecyclerView.OnScrollListener() {
+        var state = AtomicInteger(RecyclerView.SCROLL_STATE_IDLE)
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            state.compareAndSet(RecyclerView.SCROLL_STATE_IDLE, newState)
+            when (newState) {
+                RecyclerView.SCROLL_STATE_IDLE -> {
+                    if (!state.compareAndSet(RecyclerView.SCROLL_STATE_SETTLING, newState)) {
+                        state.compareAndSet(RecyclerView.SCROLL_STATE_DRAGGING, newState)
+                    }
+                }
+                RecyclerView.SCROLL_STATE_DRAGGING -> {
+                    state.compareAndSet(RecyclerView.SCROLL_STATE_IDLE, newState)
+                }
+                RecyclerView.SCROLL_STATE_SETTLING -> {
+                    state.compareAndSet(RecyclerView.SCROLL_STATE_DRAGGING, newState)
+                }
+            }
+        }
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            if (state.get() != RecyclerView.SCROLL_STATE_IDLE) {
+                verticalScrollOffset.getAndAdd(dy)
+            }
+        }
+    }
+
+    private val fabScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            if (!recyclerView.canScrollVertically(1)) {
+                button_fab.hide()
+            } else {
+                if (dy < 0 && !button_fab.isVisible()) {
+                    button_fab.show()
+                }
+            }
         }
     }
 
@@ -462,17 +475,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupRecyclerView() {
-        recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (!recyclerView.canScrollVertically(1)) {
-                    button_fab.hide()
-                } else {
-                    if (dy < 0 && !button_fab.isVisible()) {
-                        button_fab.show()
-                    }
-                }
+        // Initialize the endlessRecyclerViewScrollListener so we don't NPE at onDestroyView
+        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        linearLayoutManager.stackFromEnd = true
+        recycler_view.layoutManager = linearLayoutManager
+        recycler_view.itemAnimator = DefaultItemAnimator()
+        endlessRecyclerViewScrollListener = object :
+                EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
+                presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }
-        })
+        }
+        recycler_view.addOnScrollListener(fabScrollListener)
     }
 
     private fun setupFab() {

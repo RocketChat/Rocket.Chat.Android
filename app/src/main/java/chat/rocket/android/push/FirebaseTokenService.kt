@@ -5,7 +5,6 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.common.RocketChatException
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.registerPushToken
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.google.android.gms.iid.InstanceID
