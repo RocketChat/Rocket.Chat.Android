@@ -1,5 +1,7 @@
 package chat.rocket.android.helper
 
+import chat.rocket.android.util.extensions.removeTrailingSlash
+
 object OauthHelper {
 
     /**
@@ -27,7 +29,7 @@ object OauthHelper {
     fun getGoogleOauthUrl(clientId: String, serverUrl: String, state: String): String {
         return "https://accounts.google.com/o/oauth2/v2/auth" +
                 "?client_id=$clientId" +
-                "&redirect_uri=${UrlHelper.removeTrailingSlash(serverUrl)}/_oauth/google?close" +
+                "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/google?close" +
                 "&state=$state" +
                 "&response_type=code" +
                 "&scope=email%20profile"
@@ -44,7 +46,7 @@ object OauthHelper {
     fun getLinkedinOauthUrl(clientId: String, serverUrl: String, state: String): String {
         return "https://linkedin.com/oauth/v2/authorization" +
                 "?client_id=$clientId" +
-                "&redirect_uri=${UrlHelper.removeTrailingSlash(serverUrl)}/_oauth/linkedin?close" +
+                "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/linkedin?close" +
                 "&state=$state" +
                 "&response_type=code"
     }
@@ -60,7 +62,7 @@ object OauthHelper {
     fun getGitlabOauthUrl(clientId: String, serverUrl: String, state: String): String {
         return  "https://gitlab.com/oauth/authorize" +
                 "?client_id=$clientId" +
-                "&redirect_uri=${UrlHelper.removeTrailingSlash(serverUrl)}/_oauth/gitlab?close" +
+                "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/gitlab?close" +
                 "&state=$state" +
                 "&response_type=code" +
                 "&scope=read_user"

@@ -9,9 +9,9 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
@@ -103,8 +103,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     }
 
     private suspend fun mapMessageAttachment(message: Message, attachment: MessageAttachment): MessageAttachmentViewModel {
-        val attachmentAuthor = attachment.author!!
-        val time = getTime(attachment.timestamp!!)
+        val attachmentAuthor = attachment.author
+        val time = attachment.timestamp?.let { getTime(it) }
         val attachmentText = when (attachment.attachments.orEmpty().firstOrNull()) {
             is ImageAttachment -> context.getString(R.string.msg_preview_photo)
             is VideoAttachment -> context.getString(R.string.msg_preview_video)
@@ -235,7 +235,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
 
         val username = message.sender?.username ?: "?"
         return baseUrl?.let {
-            UrlHelper.getAvatarUrl(baseUrl, username)
+            baseUrl.avatarUrl(username)
         }
     }
 

@@ -1,25 +1,22 @@
 package chat.rocket.android.authentication.login.presentation
 
-import chat.rocket.android.BuildConfig
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.helper.OauthHelper
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
-import chat.rocket.android.util.VersionInfo
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
-import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.delay
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -103,7 +100,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     private fun setupCasView() {
         if (settings.isCasAuthenticationEnabled()) {
             val token = generateRandomString(17)
-            view.setupCasButtonListener(UrlHelper.getCasUrl(settings.casLoginUrl(), currentServer, token), token)
+            view.setupCasButtonListener(settings.casLoginUrl().casUrl(currentServer, token), token)
             view.showCasButton()
         }
     }
@@ -118,7 +115,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     private fun setupOauthServicesView() {
         launchUI(strategy) {
             try {
-                val services = client.settingsOauth().services
+                val services = retryIO("settingsOauth()") {
+                    client.settingsOauth().services
+                }
                 if (services.isNotEmpty()) {
                     val state = "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
                     var totalSocialAccountsEnabled = 0
@@ -195,30 +194,32 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                 view.disableUserInput()
                 view.showLoading()
                 try {
-                    val token = when (loginType) {
-                        TYPE_LOGIN_USER_EMAIL -> {
-                            if (usernameOrEmail.isEmail()) {
-                                client.loginWithEmail(usernameOrEmail, password)
-                            } else {
-                                if (settings.isLdapAuthenticationEnabled()) {
-                                    client.loginWithLdap(usernameOrEmail, password)
+                    val token = retryIO("login") {
+                        when (loginType) {
+                            TYPE_LOGIN_USER_EMAIL -> {
+                                if (usernameOrEmail.isEmail()) {
+                                    client.loginWithEmail(usernameOrEmail, password)
                                 } else {
-                                    client.login(usernameOrEmail, password)
+                                    if (settings.isLdapAuthenticationEnabled()) {
+                                        client.loginWithLdap(usernameOrEmail, password)
+                                    } else {
+                                        client.login(usernameOrEmail, password)
+                                    }
                                 }
                             }
-                        }
-                        TYPE_LOGIN_CAS -> {
-                            delay(3, TimeUnit.SECONDS)
-                            client.loginWithCas(credentialToken)
-                        }
-                        TYPE_LOGIN_OAUTH -> {
-                            client.loginWithOauth(credentialToken, credentialSecret)
-                        }
-                        else -> {
-                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS or TYPE_LOGIN_OAUTH")
+                            TYPE_LOGIN_CAS -> {
+                                delay(3, TimeUnit.SECONDS)
+                                client.loginWithCas(credentialToken)
+                            }
+                            TYPE_LOGIN_OAUTH -> {
+                                client.loginWithOauth(credentialToken, credentialSecret)
+                            }
+                            else -> {
+                                throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS or TYPE_LOGIN_OAUTH")
+                            }
                         }
                     }
-                    val username = client.me().username
+                    val username = retryIO("me()") { client.me().username }
                     if (username != null) {
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
                         saveAccount(username)
@@ -226,7 +227,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         registerPushToken()
                         navigator.toChatList()
                     } else if (loginType == TYPE_LOGIN_OAUTH) {
-                        view.alertRequiresUsername()
+                        navigator.toRegisterUsername(token.userId, token.authToken)
                     }
                 } catch (exception: RocketChatException) {
                     when (exception) {
@@ -258,12 +259,12 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
 
     private suspend fun saveAccount(username: String) {
         val icon = settings.favicon()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
+            currentServer.serverLogoUrl(it)
         }
         val logo = settings.wideTile()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
+            currentServer.serverLogoUrl(it)
         }
-        val thumb = UrlHelper.getAvatarUrl(currentServer, username)
+        val thumb = currentServer.avatarUrl(username)
         val account = Account(currentServer, icon, logo, username, thumb)
         saveAccountInteractor.save(account)
     }

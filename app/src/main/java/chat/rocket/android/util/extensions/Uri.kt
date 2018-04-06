@@ -29,14 +29,14 @@ fun Uri.getFileName(context: Context): String? {
 fun Uri.getFileSize(context: Context): Int {
     val cursor = context.contentResolver.query(this, null, null, null, null, null)
 
-    var fileSize: String? = null
-    cursor.use { cursor ->
+    val fileSize = cursor?.use {
         val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-        if (cursor != null && cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             if (!cursor.isNull(sizeIndex)) {
-                fileSize = cursor.getString(sizeIndex)
+                return@use cursor.getString(sizeIndex)
             }
         }
+        return@use null
     }
     return fileSize?.toIntOrNull() ?: -1
 }
