@@ -13,6 +13,7 @@
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
+    <string name="title_about">परिचय</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -36,6 +37,7 @@
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">पासवर्ड बदलें</item>
+        <item name="item_password">परिचय</item>
     </string-array>
 
     <!-- Regular information messages -->
@@ -86,6 +88,8 @@
     <string name="msg_ver_not_minimum">
         ऐसा लगता है कि आपका सर्वर संस्करण न्यूनतम आवश्यक संस्करण %1$s से कम है।\nकृपया लॉगिन करने के लिए अपने सर्वर को अपग्रेड करें!
     </string>
+    <string name="msg_version">वर्शन</string>
+    <string name="msg_build">बिल्ड</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
