@@ -21,6 +21,7 @@ import android.support.v4.app.RemoteInput
 import android.text.Html
 import android.text.Spanned
 import chat.rocket.android.R
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.siteName
@@ -292,13 +293,9 @@ class PushManager @Inject constructor(
         val replyRemoteInput = android.app.RemoteInput.Builder(REMOTE_INPUT_REPLY)
                 .setLabel(replyTextHint)
                 .build()
-        //TODO: Implement this when we have sendMessage call
         val replyIntent = Intent(context, DirectReplyReceiver::class.java)
         replyIntent.action = ACTION_REPLY
-        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Parcelable)
-        val filter = IntentFilter().apply {
-            addAction(ACTION_REPLY)
-        }
+        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage)
         val pendingIntent = PendingIntent.getBroadcast(
                 context, randomizer.nextInt(), replyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val replyAction = Notification.Action.Builder(
@@ -316,15 +313,7 @@ class PushManager @Inject constructor(
         val replyRemoteInput = RemoteInput.Builder(REMOTE_INPUT_REPLY)
                 .setLabel(replyTextHint)
                 .build()
-        //TODO: Implement when we have sendMessage call
-        val replyIntent = Intent(context, DirectReplyReceiver::class.java)
-        replyIntent.action = ACTION_REPLY
-        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Parcelable)
-        val filter = IntentFilter().apply {
-            addAction(ACTION_REPLY)
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
-                context, randomizer.nextInt(), replyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = getReplyPendingIntent(pushMessage)
         val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_reply_black_24px, replyTextHint, pendingIntent)
                 .addRemoteInput(replyRemoteInput)
                 .setAllowGeneratedReplies(true)
@@ -332,6 +321,38 @@ class PushManager @Inject constructor(
 
         this.addAction(replyAction)
         return this
+    }
+
+    private fun getReplyIntent(pushMessage: PushMessage): Intent {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Intent(context, DirectReplyReceiver::class.java)
+        } else {
+            Intent(context, MainActivity::class.java).also {
+                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }.also {
+            it.action = ACTION_REPLY
+            it.putExtra(EXTRA_PUSH_MESSAGE, pushMessage)
+        }
+    }
+
+    private fun getReplyPendingIntent(pushMessage: PushMessage): PendingIntent {
+        val replyIntent = getReplyIntent(pushMessage)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            PendingIntent.getBroadcast(
+                    context,
+                    randomizer.nextInt(),
+                    replyIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        } else {
+            PendingIntent.getActivity(
+                    context,
+                    randomizer.nextInt(),
+                    replyIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
     }
 
     private fun NotificationCompat.Builder.setMessageNotification(): NotificationCompat.Builder {
