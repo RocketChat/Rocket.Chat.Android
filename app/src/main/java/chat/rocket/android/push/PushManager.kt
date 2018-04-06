@@ -7,8 +7,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.graphics.drawable.Icon
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -284,27 +282,6 @@ class PushManager @Inject constructor(
     // CharSequence extensions
     private fun CharSequence.fromHtml(): Spanned {
         return Html.fromHtml(this as String)
-    }
-
-    //Notification.Builder extensions
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun Notification.Builder.addReplyAction(pushMessage: PushMessage): Notification.Builder {
-        val replyTextHint = context.getText(R.string.notif_action_reply_hint)
-        val replyRemoteInput = android.app.RemoteInput.Builder(REMOTE_INPUT_REPLY)
-                .setLabel(replyTextHint)
-                .build()
-        val replyIntent = Intent(context, DirectReplyReceiver::class.java)
-        replyIntent.action = ACTION_REPLY
-        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage)
-        val pendingIntent = PendingIntent.getBroadcast(
-                context, randomizer.nextInt(), replyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val replyAction = Notification.Action.Builder(
-                Icon.createWithResource(context, R.drawable.ic_reply_black_24px), replyTextHint, pendingIntent)
-                .addRemoteInput(replyRemoteInput)
-                .setAllowGeneratedReplies(true)
-                .build()
-        this.addAction(replyAction)
-        return this
     }
 
     // NotificationCompat.Builder extensions
