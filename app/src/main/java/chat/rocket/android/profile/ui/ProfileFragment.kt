@@ -331,7 +331,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             return@combineLatest (text_name.toString() != currentName ||
                     text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail ||
-                    (text_avatar_url.isNotEmpty() && text_avatar_url.toString() != currentAvatar))
+                    (text_avatar_url.isNotBlank() && text_avatar_url.toString() != currentAvatar))
         }.subscribe({ isValid ->
             if (isValid || isAvatarChanged) {
                 startActionMode()
