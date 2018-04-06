@@ -28,7 +28,11 @@
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
-    <string name="action_add_account">Adicionar Conta</string>
+    <string name="action_add_account">Adicionar conta</string>
+    <string name="action_online">Online</string>
+    <string name="action_away">Ausente</string>
+    <string name="action_busy">Ocupado</string>
+    <string name="action_invisible">Invisível</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -52,7 +56,7 @@
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">ontem</string>
-    <string name="msg_message">Messagem</string>
+    <string name="msg_message">Mensagem</string>
     <string name="msg_this_room_is_read_only">Este chat é apenas de leitura</string>
     <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
     <string name="msg_invalid_file">Arquivo inválido</string>

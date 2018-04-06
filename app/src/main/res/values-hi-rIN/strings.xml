@@ -29,6 +29,10 @@
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
     <string name="action_add_account">खाता जोड़ो</string>
+    <string name="action_online">ऑनलाइन</string>
+    <string name="action_away">दूर</string>
+    <string name="action_busy">व्यस्त</string>
+    <string name="action_invisible">अदृश्य</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">

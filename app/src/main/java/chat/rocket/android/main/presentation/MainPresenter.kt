@@ -1,7 +1,6 @@
 package chat.rocket.android.main.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.viewmodel.NavHeaderViewModel
 import chat.rocket.android.main.viewmodel.NavHeaderViewModelMapper
@@ -12,10 +11,14 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.android.util.extensions.serverLogoUrl
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.realtime.UserStatus
+import chat.rocket.core.internal.realtime.setDefaultStatus
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
@@ -52,7 +55,7 @@ class MainPresenter @Inject constructor(
         checkServerInfo()
         launchUI(strategy) {
             try {
-                val me = client.me()
+                val me = retryIO("me") { client.me() }
                 val model = navHeaderMapper.mapToViewModel(me)
 
                 saveAccount(model)
@@ -77,7 +80,7 @@ class MainPresenter @Inject constructor(
 
     private suspend fun saveAccount(me: NavHeaderViewModel) {
         val icon = settings.favicon()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
+            currentServer.serverLogoUrl(it)
         }
         val account = Account(currentServer, icon, me.serverLogo, me.username, me.avatar)
         saveAccountInteractor.save(account)
@@ -90,7 +93,7 @@ class MainPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 clearTokens()
-                client.logout()
+                retryIO("logout") { client.logout() }
             } catch (exception: RocketChatException) {
                 Timber.d(exception, "Error calling logout")
                 exception.message?.let {
@@ -117,7 +120,11 @@ class MainPresenter @Inject constructor(
         serverInteractor.clear()
         val pushToken = localRepository.get(LocalRepository.KEY_PUSH_TOKEN)
         if (pushToken != null) {
-            client.unregisterPushToken(pushToken)
+            try {
+                retryIO("unregisterPushToken") { client.unregisterPushToken(pushToken) }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error unregistering push token")
+            }
         }
         localRepository.clearAllFromServer(currentServer)
     }
@@ -140,6 +147,21 @@ class MainPresenter @Inject constructor(
 
     fun addNewServer() {
         navigator.toServerScreen()
+    }
+
+    fun changeStatus(userStatus: UserStatus) {
+        launchUI(strategy) {
+            try {
+                client.setDefaultStatus(userStatus)
+                view.showUserStatus(userStatus)
+            } catch (ex: RocketChatException) {
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
+        }
     }
 
     suspend fun refreshToken(token: String?) {
