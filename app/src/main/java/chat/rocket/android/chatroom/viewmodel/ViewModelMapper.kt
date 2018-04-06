@@ -9,9 +9,9 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
@@ -235,7 +235,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
 
         val username = message.sender?.username ?: "?"
         return baseUrl?.let {
-            UrlHelper.getAvatarUrl(baseUrl, username)
+            baseUrl.avatarUrl(username)
         }
     }
 

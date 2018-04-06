@@ -1,7 +1,8 @@
 package chat.rocket.android.main.viewmodel
 
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.*
+import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.core.model.Myself
 import javax.inject.Inject
 
@@ -15,9 +16,9 @@ class NavHeaderViewModelMapper @Inject constructor(
     fun mapToViewModel(me: Myself): NavHeaderViewModel {
         val displayName = mapDisplayName(me)
         val status = me.status
-        val avatar = me.username?.let { UrlHelper.getAvatarUrl(currentServer, it) }
+        val avatar = me.username?.let { currentServer.avatarUrl(it) }
         val image = settings.wideTile() ?: settings.faviconLarge()
-        val logo = image?.let { UrlHelper.getServerLogoUrl(currentServer, it) }
+        val logo = image?.let { currentServer.serverLogoUrl(it) }
 
         return NavHeaderViewModel(displayName, status, avatar, currentServer, logo)
     }

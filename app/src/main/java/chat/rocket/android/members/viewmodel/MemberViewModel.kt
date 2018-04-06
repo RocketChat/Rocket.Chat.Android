@@ -1,7 +1,7 @@
 package chat.rocket.android.members.viewmodel
 
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.common.model.User
 import chat.rocket.core.model.Value
 
@@ -25,7 +25,7 @@ class MemberViewModel(private val member: User, private val settings: Map<String
     private fun getUserAvatar(): String? {
         val username = member.username ?: "?"
         return baseUrl?.let {
-            UrlHelper.getAvatarUrl(baseUrl, username, "png")
+            baseUrl.avatarUrl(username,"png")
         }
     }
 
