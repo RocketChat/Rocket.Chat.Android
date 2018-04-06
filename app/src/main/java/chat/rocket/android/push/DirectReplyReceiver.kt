@@ -29,6 +29,8 @@ class DirectReplyReceiver : BroadcastReceiver() {
     lateinit var groupedPushes: GroupedPush
     @Inject
     lateinit var pushManager: PushManager
+    @Inject
+    lateinit var manager: NotificationManager
 
     override fun onReceive(context: Context, intent: Intent) {
         AndroidInjection.inject(this, context)
@@ -36,7 +38,6 @@ class DirectReplyReceiver : BroadcastReceiver() {
             val message = intent.getParcelableExtra<PushMessage>(EXTRA_PUSH_MESSAGE)
             message?.let {
                 launch(UI) {
-                    val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     val notificationId = it.notificationId.toInt()
                     val hostname = it.info.host
                     try {
