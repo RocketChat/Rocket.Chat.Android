@@ -40,7 +40,6 @@ class DirectReplyReceiver : BroadcastReceiver() {
                     val notificationId = it.notificationId.toInt()
                     val hostname = it.info.host
                     try {
-                        println(it)
                         sendMessage(it, extractReplyMessage(intent))
                         clearNotificationsByHostAndNotificationId(hostname, notificationId)
                         manager.cancel(notificationId)
