@@ -261,7 +261,8 @@ class AppModule {
             SharedPreferencesAccountsRepository(preferences, moshi)
 
     @Provides
-    fun provideNotificationManager(context: Context): NotificationManager = context.systemService()
+    fun provideNotificationManager(context: Context): NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Provides
     @Singleton
