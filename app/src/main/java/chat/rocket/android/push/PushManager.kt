@@ -7,9 +7,13 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.drawable.Icon
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
@@ -17,16 +21,17 @@ import android.support.v4.app.RemoteInput
 import android.text.Html
 import android.text.Spanned
 import chat.rocket.android.R
-import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.server.domain.GetAccountInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.roomTypeOf
 import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.experimental.runBlocking
 import se.ansman.kotshi.JsonSerializable
+import se.ansman.kotshi.KotshiConstructor
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -37,12 +42,12 @@ import javax.inject.Inject
  * for old source code.
  */
 class PushManager @Inject constructor(
-    private val groupedPushes: GroupedPush,
-    private val manager: NotificationManager,
-    private val moshi: Moshi,
-    private val getAccountInteractor: GetAccountInteractor,
-    private val getSettingsInteractor: GetSettingsInteractor,
-    private val context: Context
+        private val groupedPushes: GroupedPush,
+        private val manager: NotificationManager,
+        private val moshi: Moshi,
+        private val getAccountInteractor: GetAccountInteractor,
+        private val getSettingsInteractor: GetSettingsInteractor,
+        private val context: Context
 ) {
     private val randomizer = Random()
 
@@ -209,7 +214,8 @@ class PushManager @Inject constructor(
                 builder.setStyle(bigTextStyle)
             }
 
-            return builder.build()
+            return builder.addReplyAction(pushMessage)
+                    .build()
         }
     }
 
@@ -282,40 +288,49 @@ class PushManager @Inject constructor(
     //Notification.Builder extensions
     @RequiresApi(Build.VERSION_CODES.N)
     private fun Notification.Builder.addReplyAction(pushMessage: PushMessage): Notification.Builder {
+        val replyTextHint = context.getText(R.string.notif_action_reply_hint)
         val replyRemoteInput = android.app.RemoteInput.Builder(REMOTE_INPUT_REPLY)
-                .setLabel(REPLY_LABEL)
+                .setLabel(replyTextHint)
                 .build()
         //TODO: Implement this when we have sendMessage call
-//        val replyIntent = Intent(context, ReplyReceiver::class.java)
-//        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Serializable)
-//        val pendingIntent = PendingIntent.getBroadcast(
-//                context, randomizer.nextInt(), replyIntent, 0)
-//        val replyAction =
-//                Notification.Action.Builder(
-//                        Icon.createWithResource(context, R.drawable.ic_reply), REPLY_LABEL, pendingIntent)
-//                        .addRemoteInput(replyRemoteInput)
-//                        .setAllowGeneratedReplies(true)
-//                        .build()
-//        this.addAction(replyAction)
+        val replyIntent = Intent(context, DirectReplyReceiver::class.java)
+        replyIntent.action = ACTION_REPLY
+        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Parcelable)
+        val filter = IntentFilter().apply {
+            addAction(ACTION_REPLY)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+                context, randomizer.nextInt(), replyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val replyAction = Notification.Action.Builder(
+                Icon.createWithResource(context, R.drawable.ic_reply_black_24px), replyTextHint, pendingIntent)
+                .addRemoteInput(replyRemoteInput)
+                .setAllowGeneratedReplies(true)
+                .build()
+        this.addAction(replyAction)
         return this
     }
 
     // NotificationCompat.Builder extensions
     private fun NotificationCompat.Builder.addReplyAction(pushMessage: PushMessage): NotificationCompat.Builder {
+        val replyTextHint = context.getText(R.string.notif_action_reply_hint)
         val replyRemoteInput = RemoteInput.Builder(REMOTE_INPUT_REPLY)
-                .setLabel(REPLY_LABEL)
+                .setLabel(replyTextHint)
                 .build()
         //TODO: Implement when we have sendMessage call
-//        val replyIntent = Intent(context, ReplyReceiver::class.java)
-//        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Serializable)
-//        val pendingIntent = PendingIntent.getBroadcast(
-//                context, randomizer.nextInt(), replyIntent, 0)
-//        val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_reply, REPLY_LABEL, pendingIntent)
-//                .addRemoteInput(replyRemoteInput)
-//                .setAllowGeneratedReplies(true)
-//                .build()
-//
-//        this.addAction(replyAction)
+        val replyIntent = Intent(context, DirectReplyReceiver::class.java)
+        replyIntent.action = ACTION_REPLY
+        replyIntent.putExtra(EXTRA_PUSH_MESSAGE, pushMessage as Parcelable)
+        val filter = IntentFilter().apply {
+            addAction(ACTION_REPLY)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+                context, randomizer.nextInt(), replyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_reply_black_24px, replyTextHint, pendingIntent)
+                .addRemoteInput(replyRemoteInput)
+                .setAllowGeneratedReplies(true)
+                .build()
+
+        this.addAction(replyAction)
         return this
     }
 
@@ -337,29 +352,71 @@ class PushManager @Inject constructor(
 }
 
 data class PushMessage(
-    val title: String,
-    val message: String,
-    val info: PushInfo,
-    val image: String? = null,
-    val count: String? = null,
-    val notificationId: String,
-    val summaryText: String? = null,
-    val style: String? = null
-)
+        val title: String,
+        val message: String,
+        val info: PushInfo,
+        val image: String? = null,
+        val count: String? = null,
+        val notificationId: String,
+        val summaryText: String? = null,
+        val style: String? = null
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readParcelable(PushMessage::class.java.classLoader),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString())
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(title)
+        parcel.writeString(message)
+        parcel.writeParcelable(info, flags)
+        parcel.writeString(image)
+        parcel.writeString(count)
+        parcel.writeString(notificationId)
+        parcel.writeString(summaryText)
+        parcel.writeString(style)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<PushMessage> {
+        override fun createFromParcel(parcel: Parcel): PushMessage {
+            return PushMessage(parcel)
+        }
+
+        override fun newArray(size: Int): Array<PushMessage?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 @JsonSerializable
-data class PushInfo(
-    @Json(name = "host") val hostname: String,
-    @Json(name = "rid") val roomId: String,
-    val type: RoomType,
-    val name: String?,
-    val sender: PushSender?
-) {
+data class PushInfo @KotshiConstructor constructor(
+        @Json(name = "host") val hostname: String,
+        @Json(name = "rid") val roomId: String,
+        val type: RoomType,
+        val name: String?,
+        val sender: PushSender?
+) : Parcelable {
     val createdAt: Long
         get() = System.currentTimeMillis()
     val host by lazy {
         sanitizeUrl(hostname)
     }
+
+    constructor(parcel: Parcel) : this(
+            parcel.readString(),
+            parcel.readString(),
+            roomTypeOf(parcel.readString()),
+            parcel.readString(),
+            parcel.readParcelable(PushInfo::class.java.classLoader))
 
     private fun sanitizeUrl(baseUrl: String): String {
         var url = baseUrl.trim()
@@ -369,18 +426,65 @@ data class PushInfo(
 
         return url
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(hostname)
+        parcel.writeString(roomId)
+        parcel.writeString(type.toString())
+        parcel.writeString(name)
+        parcel.writeParcelable(sender, flags)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<PushInfo> {
+        override fun createFromParcel(parcel: Parcel): PushInfo {
+            return PushInfo(parcel)
+        }
+
+        override fun newArray(size: Int): Array<PushInfo?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
 
 @JsonSerializable
-data class PushSender(
-    @Json(name = "_id") val id: String,
-    val username: String?,
-    val name: String?
-)
+data class PushSender @KotshiConstructor constructor(
+        @Json(name = "_id") val id: String,
+        val username: String?,
+        val name: String?
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString())
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeString(username)
+        parcel.writeString(name)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<PushSender> {
+        override fun createFromParcel(parcel: Parcel): PushSender {
+            return PushSender(parcel)
+        }
+
+        override fun newArray(size: Int): Array<PushSender?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 const val EXTRA_NOT_ID = "chat.rocket.android.EXTRA_NOT_ID"
 const val EXTRA_HOSTNAME = "chat.rocket.android.EXTRA_HOSTNAME"
 const val EXTRA_PUSH_MESSAGE = "chat.rocket.android.EXTRA_PUSH_MESSAGE"
 const val EXTRA_ROOM_ID = "chat.rocket.android.EXTRA_ROOM_ID"
-private const val REPLY_LABEL = "REPLY"
-private const val REMOTE_INPUT_REPLY = "REMOTE_INPUT_REPLY"
+const val ACTION_REPLY = "chat.rocket.android.ACTION_REPLY"
+const val REMOTE_INPUT_REPLY = "REMOTE_INPUT_REPLY"
