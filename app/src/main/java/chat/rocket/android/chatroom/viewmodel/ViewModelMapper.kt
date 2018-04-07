@@ -9,9 +9,9 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
@@ -68,8 +68,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
 
         mapMessage(message).let {
-            if (list.size > 0) {
-                it.preview = list[0].preview
+            if (list.isNotEmpty()) {
+                it.preview = list.first().preview
             }
             list.add(it)
         }
@@ -213,7 +213,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     private suspend fun stripMessageQuotes(message: Message): Message {
         val baseUrl = settings.baseUrl()
         return message.copy(
-                message = message.message.replace("\\[\\s\\]\\($baseUrl.*\\)".toRegex(), "").trim()
+                message = message.message.replace("\\[[^\\]]+\\]\\($baseUrl[^)]+\\)".toRegex(), "").trim()
         )
     }
 
@@ -235,7 +235,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
 
         val username = message.sender?.username ?: "?"
         return baseUrl?.let {
-            UrlHelper.getAvatarUrl(baseUrl, username)
+            baseUrl.avatarUrl(username)
         }
     }
 

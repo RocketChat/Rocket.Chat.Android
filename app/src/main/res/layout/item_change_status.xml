@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="?android:dividerHorizontal"
+    android:orientation="vertical"
+    android:showDividers="end">
+
+    <TextView
+        android:id="@+id/text_online"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_status_online_24dp"
+        android:text="@string/action_online" />
+
+    <TextView
+        android:id="@+id/text_away"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_status_away_24dp"
+        android:text="@string/action_away" />
+
+    <TextView
+        android:id="@+id/text_busy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_status_busy_24dp"
+        android:text="@string/action_busy" />
+
+    <TextView
+        android:id="@+id/text_invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_status_invisible_24dp"
+        android:text="@string/action_invisible" />
+
+</LinearLayout>
