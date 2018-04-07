@@ -12,9 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
@@ -55,6 +53,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private var avatarImageUri: Uri? = null
     private var tempCameraUri: Uri? = null
     private var isAvatarChanged = false
+    private var updateProfileRequest = false
+    private var isContentChanged = false
     //request codes
     private var CHOOSE_PICKER_MODE = 193
     private val CAMERA_REQUEST_CODE = 108
@@ -98,7 +98,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                 val permissionCheck = ContextCompat.checkSelfPermission(context!!,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 if (permissionCheck != PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(activity as FragmentActivity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), CHOOSE_PICKER_MODE)
+                    requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), CHOOSE_PICKER_MODE)
                 } else {
                     openImagePickerChooserDialog()
                 }
@@ -230,6 +230,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun showLoading() {
+        updateProfileRequest = false
         enableUserInput(false)
         view_loading.setVisible(true)
     }
@@ -242,16 +243,25 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun showMessage(resId: Int) {
+        image_avatar.setImageURI(currentAvatar)
+        isAvatarChanged = false
         showToast(resId)
     }
 
     override fun showMessage(message: String) {
+        if(!message.equals(getString(R.string.msg_profile_update_successfully))){
+            image_avatar.setImageURI(currentAvatar)
+        }
         isAvatarChanged = false
         imageObservable.onNext(isAvatarChanged)
         showToast(message)
     }
 
-    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+    override fun showGenericErrorMessage(){
+        image_avatar.setImageURI(currentAvatar)
+        isAvatarChanged = false
+        showMessage(getString(R.string.msg_generic_error))
+    }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.profile, menu)
@@ -264,9 +274,10 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.action_profile -> {
-                if (text_avatar_url.textContent.isNotBlank() && text_avatar_url.textContent != currentAvatar && avatarImage != null) {
+                if (text_avatar_url.textContent.isNotBlank() && text_avatar_url.textContent != currentAvatar && isAvatarChanged) {
                     alertDialog.show()
                 } else {
+                    updateProfileRequest = true
                     presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent, avatarImage, avatarImageUri)
                     mode.finish()
                 }
@@ -279,6 +290,15 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
+        if (isContentChanged && !updateProfileRequest){
+            image_avatar.setImageURI(currentAvatar)
+            text_name.textContent = currentName
+            text_username.textContent = currentUsername
+            text_email.textContent = currentEmail
+            text_avatar_url.textContent = ""
+            isAvatarChanged = false
+            avatarImage = null
+        }
         actionMode = null
     }
 
@@ -316,6 +336,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun listenToChanges() {
         //setup rx for avatar
         imageObservable.subscribe({ _ ->
+            isContentChanged = isAvatarChanged
             if (isAvatarChanged) {
                 startActionMode()
             } else {
@@ -333,7 +354,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     text_email.toString() != currentEmail ||
                     (text_avatar_url.isNotBlank() && text_avatar_url.toString() != currentAvatar))
         }.subscribe({ isValid ->
-            if (isValid || isAvatarChanged) {
+            isContentChanged = (isValid || isAvatarChanged)
+            if (isContentChanged) {
                 startActionMode()
             } else {
                 finishActionMode()
