@@ -3,6 +3,7 @@ package chat.rocket.android.authentication.presentation
 import android.content.Intent
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.ui.LoginFragment
+import chat.rocket.android.authentication.registerusername.ui.RegisterUsernameFragment
 import chat.rocket.android.authentication.signup.ui.SignupFragment
 import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
@@ -35,6 +36,12 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     fun toWebPage(url: String) {
         activity.startActivity(activity.webViewIntent(url))
         activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+    }
+
+    fun toRegisterUsername(userId: String, authToken: String) {
+        activity.addFragmentBackStack("RegisterUsernameFragment", R.id.fragment_container) {
+            RegisterUsernameFragment.newInstance(userId, authToken)
+        }
     }
 
     fun toChatList() {

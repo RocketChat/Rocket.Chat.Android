@@ -203,11 +203,6 @@ class SuggestionsView : FrameLayout, TextWatcher {
             completionOffset.set(NO_STATE_INDEX)
         }
         collapse()
-        // Re-enable keyboard suggestions.
-        val editText = editor?.get()
-        if (editText != null) {
-            editText.inputType = editText.inputType and InputType.TYPE_TEXT_VARIATION_FILTER.inv()
-        }
     }
 
     private fun insertSuggestionOnEditor(item: SuggestionModel) {
