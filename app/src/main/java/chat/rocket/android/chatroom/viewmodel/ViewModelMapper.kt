@@ -68,8 +68,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
 
         mapMessage(message).let {
-            if (list.size > 0) {
-                it.preview = list[0].preview
+            if (list.isNotEmpty()) {
+                it.preview = list.first().preview
             }
             list.add(it)
         }
@@ -213,7 +213,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     private suspend fun stripMessageQuotes(message: Message): Message {
         val baseUrl = settings.baseUrl()
         return message.copy(
-                message = message.message.replace("\\[\\s\\]\\($baseUrl.*\\)".toRegex(), "").trim()
+                message = message.message.replace("\\[[^\\]]+\\]\\($baseUrl[^)]+\\)".toRegex(), "").trim()
         )
     }
 
