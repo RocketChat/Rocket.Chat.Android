@@ -1,25 +1,22 @@
 # Mobile Team Releases Planning
 
-This document describes how the mobile team is planning each one of the releases.
+This document describes the suggested method by which our mobile teams should plan for releases.
 
 **What’s a release?**
 
-The release is every version of the app that’s sent to the store as a production release. The release is always a major/minor update, like from (1.0.0 to 1.1.0 or to 2.0.0). Patch releases (from 1.0.0 to 1.0.1) won’t follow this steps and are considered hotfixes releases. Our versioning is following the [Semantic Versioning 2.0.0](https://semver.org) guide.
-
+The release is every version of the app that’s sent to the store as a production release. The release is always a major/minor update, like from (1.0.0 to 1.1.0 or to 2.0.0). Patch releases (from 1.0.0 to 1.0.1) won’t follow these steps and are considered hotfixes releases. Our versioning is following the [Semantic Versioning 2.0.0](https://semver.org) guide.
 
 **What are the important days of a release?**
 
 The first release candidate (TestFlight and Beta) needs be done by 27th of each month. The release will always happen on day 5th of each month, unless there’s some critical crash/bug happening.
 
-
 **What happens if something could not be done in time for the release candidate?**
 
-In general, if it’s a new feature, it’ll be postpone for the next release only.
-
+In general, if it’s a new feature, it’ll be postponed for the next release only. Under extreme circumstances, when it will result in significant business impact a extraordinary release could happen. 
 
 **When do we plan the release features/improvements/bugs?**
 
-Every month can be a different day between 27th and 5th to plan the next release. The leader of the team will schedule the team and the all team will be able to participate of the planning. At this moment, most of the issues will be assigned to each member of the team.
+Every month can be a different day between 27th and 5th to plan the next release. The leader of the team will schedule the session and all the team will be able to participate in the planning. At this moment, most of the issues will be assigned to each member of the team.
 
 Example (in April, 2018):
 
