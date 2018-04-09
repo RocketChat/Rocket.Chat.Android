@@ -49,7 +49,11 @@ fun Uri.getMimeType(context: Context): String {
         context.contentResolver.getType(this)
     } else {
         val fileExtension = MimeTypeMap.getFileExtensionFromUrl(toString())
-        MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase())
+        if (fileExtension != null) {
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase())
+        } else {
+            "application/octet-stream"
+        }
     }
 }
 
