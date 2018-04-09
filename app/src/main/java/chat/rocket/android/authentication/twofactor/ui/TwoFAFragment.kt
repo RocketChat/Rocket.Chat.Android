@@ -91,8 +91,6 @@ class TwoFAFragment : Fragment(), TwoFAView {
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun showNoInternetConnection() = showMessage(getString(R.string.msg_no_internet_connection))
-
     private fun tintEditTextDrawableStart() {
         activity?.apply {
             val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_vpn_key_black_24dp, this)

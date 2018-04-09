@@ -2,7 +2,6 @@ package chat.rocket.android.authentication.login.presentation
 
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.helper.OauthHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
@@ -190,64 +189,60 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
 
     private fun doAuthentication(loginType: Int) {
         launchUI(strategy) {
-            if (NetworkHelper.hasInternetAccess()) {
-                view.disableUserInput()
-                view.showLoading()
-                try {
-                    val token = retryIO("login") {
-                        when (loginType) {
-                            TYPE_LOGIN_USER_EMAIL -> {
-                                if (usernameOrEmail.isEmail()) {
-                                    client.loginWithEmail(usernameOrEmail, password)
+            view.disableUserInput()
+            view.showLoading()
+            try {
+                val token = retryIO("login") {
+                    when (loginType) {
+                        TYPE_LOGIN_USER_EMAIL -> {
+                            if (usernameOrEmail.isEmail()) {
+                                client.loginWithEmail(usernameOrEmail, password)
+                            } else {
+                                if (settings.isLdapAuthenticationEnabled()) {
+                                    client.loginWithLdap(usernameOrEmail, password)
                                 } else {
-                                    if (settings.isLdapAuthenticationEnabled()) {
-                                        client.loginWithLdap(usernameOrEmail, password)
-                                    } else {
-                                        client.login(usernameOrEmail, password)
-                                    }
+                                    client.login(usernameOrEmail, password)
                                 }
                             }
-                            TYPE_LOGIN_CAS -> {
-                                delay(3, TimeUnit.SECONDS)
-                                client.loginWithCas(credentialToken)
-                            }
-                            TYPE_LOGIN_OAUTH -> {
-                                client.loginWithOauth(credentialToken, credentialSecret)
-                            }
-                            else -> {
-                                throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS or TYPE_LOGIN_OAUTH")
-                            }
                         }
-                    }
-                    val username = retryIO("me()") { client.me().username }
-                    if (username != null) {
-                        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
-                        saveAccount(username)
-                        saveToken(token)
-                        registerPushToken()
-                        navigator.toChatList()
-                    } else if (loginType == TYPE_LOGIN_OAUTH) {
-                        navigator.toRegisterUsername(token.userId, token.authToken)
-                    }
-                } catch (exception: RocketChatException) {
-                    when (exception) {
-                        is RocketChatTwoFactorException -> {
-                            navigator.toTwoFA(usernameOrEmail, password)
+                        TYPE_LOGIN_CAS -> {
+                            delay(3, TimeUnit.SECONDS)
+                            client.loginWithCas(credentialToken)
+                        }
+                        TYPE_LOGIN_OAUTH -> {
+                            client.loginWithOauth(credentialToken, credentialSecret)
                         }
                         else -> {
-                            exception.message?.let {
-                                view.showMessage(it)
-                            }.ifNull {
-                                view.showGenericErrorMessage()
-                            }
+                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS or TYPE_LOGIN_OAUTH")
                         }
                     }
-                } finally {
-                    view.hideLoading()
-                    view.enableUserInput()
                 }
-            } else {
-                view.showNoInternetConnection()
+                val username = retryIO("me()") { client.me().username }
+                if (username != null) {
+                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
+                    saveAccount(username)
+                    saveToken(token)
+                    registerPushToken()
+                    navigator.toChatList()
+                } else if (loginType == TYPE_LOGIN_OAUTH) {
+                    navigator.toRegisterUsername(token.userId, token.authToken)
+                }
+            } catch (exception: RocketChatException) {
+                when (exception) {
+                    is RocketChatTwoFactorException -> {
+                        navigator.toTwoFA(usernameOrEmail, password)
+                    }
+                    else -> {
+                        exception.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
+                    }
+                }
+            } finally {
+                view.hideLoading()
+                view.enableUserInput()
             }
         }
     }
