@@ -85,10 +85,6 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         showMessage(getString(R.string.msg_generic_error))
     }
 
-    override fun showNoInternetConnection() {
-        showMessage(getString(R.string.msg_no_internet_connection))
-    }
-
     private fun tintEditTextDrawableStart() {
         activity?.apply {
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)

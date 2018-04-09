@@ -68,10 +68,6 @@ class ServerFragment : Fragment(), ServerView {
         showMessage(getString(R.string.msg_generic_error))
     }
 
-    override fun showNoInternetConnection() {
-        showMessage(getString(R.string.msg_no_internet_connection))
-    }
-
     private fun enableUserInput(value: Boolean) {
         button_connect.isEnabled = value
         text_server_url.isEnabled = value
