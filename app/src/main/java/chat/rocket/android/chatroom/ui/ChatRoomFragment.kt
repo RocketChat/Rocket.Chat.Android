@@ -228,10 +228,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private val layoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
         val y = oldBottom - bottom
-        if (y.absoluteValue > 0 && isAdded) {
+        if (Math.abs(y) > 0 && isAdded) {
             // if y is positive the keyboard is up else it's down
             recycler_view.post {
-                if (y > 0 || verticalScrollOffset.get().absoluteValue >= y.absoluteValue) {
+                if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
                     recycler_view.scrollBy(0, y)
                 } else {
                     recycler_view.scrollBy(0, verticalScrollOffset.get())
