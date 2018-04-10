@@ -10,8 +10,13 @@ fun String.removeTrailingSlash(): String {
     }
 }
 
-fun String.avatarUrl(avatar: String, format: String = "jpeg") =
-    "${removeTrailingSlash()}/avatar/${avatar.removeTrailingSlash()}?format=$format"
+fun String.avatarUrl(avatar: String, isGroupOrChannel: Boolean = false, format: String = "jpeg"): String {
+    return if (isGroupOrChannel) {
+        "${removeTrailingSlash()}/avatar/%23${avatar.removeTrailingSlash()}?format=$format"
+    } else {
+        "${removeTrailingSlash()}/avatar/${avatar.removeTrailingSlash()}?format=$format"
+    }
+}
 
 fun String.serverLogoUrl(favicon: String) = "${removeTrailingSlash()}/$favicon"
 
