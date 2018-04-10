@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/author_attachment_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="@dimen/message_item_top_and_bottom_padding">
+
+    <View
+        android:id="@+id/quote_bar"
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="56dp"
+        android:background="@drawable/quote_vertical_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/recycler_view_reactions"/>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/author_icon"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/quote_bar"
+        tools:src="@tools:sample/avatars"/>
+
+    <TextView
+        android:id="@+id/text_author_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/colorAccent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/author_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="#5571 - User profile from SSO must not have password change option" />
+
+    <TextView
+        android:id="@+id/text_fields"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/text_author_name"
+        app:layout_constraintStart_toStartOf="@id/text_author_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
+
+    <include
+        layout="@layout/layout_reactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/quote_bar"
+        app:layout_constraintTop_toBottomOf="@id/text_fields" />
+
+</android.support.constraint.ConstraintLayout>

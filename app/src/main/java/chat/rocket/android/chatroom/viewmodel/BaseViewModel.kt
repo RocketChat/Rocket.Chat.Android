@@ -20,7 +20,8 @@ interface BaseViewModel<out T> {
         IMAGE_ATTACHMENT(3),
         VIDEO_ATTACHMENT(4),
         AUDIO_ATTACHMENT(5),
-        MESSAGE_ATTACHMENT(6)
+        MESSAGE_ATTACHMENT(6),
+        AUTHOR_ATTACHMENT(7)
     }
 }
 

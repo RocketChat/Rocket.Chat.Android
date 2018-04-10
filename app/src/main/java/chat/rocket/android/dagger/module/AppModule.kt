@@ -5,7 +5,7 @@ import android.app.NotificationManager
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.content.systemService
+import androidx.core.content.systemService
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatDatabase
@@ -261,8 +261,7 @@ class AppModule {
             SharedPreferencesAccountsRepository(preferences, moshi)
 
     @Provides
-    fun provideNotificationManager(context: Context): NotificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    fun provideNotificationManager(context: Context): NotificationManager = context.systemService()
 
     @Provides
     @Singleton
