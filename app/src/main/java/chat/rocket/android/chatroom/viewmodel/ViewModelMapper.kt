@@ -17,6 +17,7 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
@@ -254,9 +255,9 @@ class ViewModelMapper @Inject constructor(private val context: Context,
 
     private fun getSenderName(message: Message): CharSequence {
         val username = message.sender?.username
-        if (!message.senderAlias.isNullOrEmpty()) {
+        message.senderAlias.isNotNullNorEmpty { alias ->
             return buildSpannedString {
-                append(message.senderAlias!!)
+                append(alias)
                 username?.let {
                     append(" ")
                     scale(0.8f) {
