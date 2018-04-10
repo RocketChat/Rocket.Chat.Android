@@ -74,14 +74,17 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
-            val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else "@${chatRoom.name}"
-            drawee.setImageURI(chatRoom.client.url.avatarUrl(avatarId))
+            if (chatRoom.type is RoomType.DirectMessage) {
+                drawee.setImageURI(chatRoom.client.url.avatarUrl(chatRoom.name))
+            } else {
+                drawee.setImageURI(chatRoom.client.url.avatarUrl(chatRoom.name, true))
+            }
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
             textView.textContent = chatRoom.name
 
-            var drawable = when (chatRoom.type) {
+            val drawable = when (chatRoom.type) {
                 is RoomType.Channel -> {
                     DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
                 }
