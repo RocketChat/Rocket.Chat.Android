@@ -41,7 +41,6 @@
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">कोई इंटरनेट कनेक्शन नहीं है</string>
     <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
     <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>

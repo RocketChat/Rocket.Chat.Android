@@ -2,7 +2,6 @@ package chat.rocket.android.authentication.signup.presentation
 
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
@@ -57,31 +56,26 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
             else -> {
                 val client = factory.create(server)
                 launchUI(strategy) {
-                    if (NetworkHelper.hasInternetAccess()) {
-                        view.showLoading()
-
-                        try {
-                            // TODO This function returns a user so should we save it?
-                            retryIO("signup") { client.signup(email, name, username, password) }
-                            // TODO This function returns a user token so should we save it?
-                            retryIO("login") { client.login(username, password) }
-                            val me = retryIO("me") { client.me() }
-                            localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
-                            saveAccount(me)
-                            registerPushToken()
-                            navigator.toChatList()
-                        } catch (exception: RocketChatException) {
-                            exception.message?.let {
-                                view.showMessage(it)
-                            }.ifNull {
-                                view.showGenericErrorMessage()
-                            }
-                        } finally {
-                            view.hideLoading()
-
+                    view.showLoading()
+                    try {
+                        // TODO This function returns a user so should we save it?
+                        retryIO("signup") { client.signup(email, name, username, password) }
+                        // TODO This function returns a user token so should we save it?
+                        retryIO("login") { client.login(username, password) }
+                        val me = retryIO("me") { client.me() }
+                        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
+                        saveAccount(me)
+                        registerPushToken()
+                        navigator.toChatList()
+                    } catch (exception: RocketChatException) {
+                        exception.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
                         }
-                    } else {
-                        view.showNoInternetConnection()
+                    } finally {
+                        view.hideLoading()
+
                     }
                 }
             }

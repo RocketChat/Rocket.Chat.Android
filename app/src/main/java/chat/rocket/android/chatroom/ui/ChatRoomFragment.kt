@@ -1,16 +1,20 @@
 package chat.rocket.android.chatroom.ui
 
+import android.Manifest
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.DrawableRes
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -226,10 +230,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private val layoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
         val y = oldBottom - bottom
-        if (y.absoluteValue > 0 && isAdded) {
+        if (Math.abs(y) > 0 && isAdded) {
             // if y is positive the keyboard is up else it's down
             recycler_view.post {
-                if (y > 0 || verticalScrollOffset.get().absoluteValue >= y.absoluteValue) {
+                if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
                     recycler_view.scrollBy(0, y)
                 } else {
                     recycler_view.scrollBy(0, verticalScrollOffset.get())
@@ -437,10 +441,31 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showFileSelection(filter: Array<String>) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
-        startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
+        activity?.let {
+            if (ContextCompat.checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(it,
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        1)
+            } else {
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.type = "*/*"
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
+                startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            1 -> {
+                if (!(grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)) {
+                    handler.postDelayed({
+                        hideAttachmentOptions()
+                    }, 400)
+                }
+            }
+        }
     }
 
     override fun showInvalidFileSize(fileSize: Int, maxFileSize: Int) {

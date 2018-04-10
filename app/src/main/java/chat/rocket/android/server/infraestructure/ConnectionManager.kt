@@ -9,10 +9,11 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 class ConnectionManager(internal val client: RocketChatClient) {
-    private val statusChannelList = ArrayList<Channel<State>>()
+    private val statusChannelList = CopyOnWriteArrayList<Channel<State>>()
     private val statusChannel = Channel<State>()
     private var connectJob: Job? = null
 
