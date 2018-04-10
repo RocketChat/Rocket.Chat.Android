@@ -2,6 +2,9 @@ package chat.rocket.android.chatroom.presentation
 
 import android.net.Uri
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
+import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.internal.realtime.State
@@ -89,8 +92,10 @@ interface ChatRoomView : LoadingView, MessageView {
 
     /**
      * Enables the send message button.
+     *
+     * @param sendFailed Whether the sent message has failed.
      */
-    fun enableSendMessageButton()
+    fun enableSendMessageButton(sendFailed: Boolean)
 
     /**
      * Clears the message composition.
@@ -100,4 +105,19 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 
     fun showConnectionState(state: State)
+    fun populatePeopleSuggestions(members: List<PeopleSuggestionViewModel>)
+    fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>)
+    /**
+     * This user has joined the chat callback.
+     */
+    fun onJoined()
+
+    fun showReactionsPopup(messageId: String)
+
+    /**
+     * Show list of commands.
+     *
+     * @param commands The list of available commands.
+     */
+    fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>)
 }

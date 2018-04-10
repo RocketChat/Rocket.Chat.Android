@@ -1,41 +1,67 @@
 package chat.rocket.android.main.ui
 
-import android.content.Intent
+import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-
-import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
-import chat.rocket.android.profile.ui.ProfileFragment
-import chat.rocket.android.settings.ui.SettingsFragment
-import chat.rocket.android.util.extensions.addFragment
-import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.main.adapter.Selector
+import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
+import chat.rocket.android.main.viewmodel.NavHeaderViewModel
+import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
-
+import chat.rocket.core.internal.realtime.UserStatus
+import com.google.android.gms.gcm.GoogleCloudMessaging
+import com.google.android.gms.iid.InstanceID
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.android.synthetic.main.nav_header.view.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector {
+    @Inject lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
+    private var expanded = false
+    private val headerLayout by lazy { view_navigation.getHeaderView(0) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        launch(CommonPool) {
+            try {
+                val token = InstanceID.getInstance(this@MainActivity).getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
+                Timber.d("GCM token: $token")
+                presenter.refreshToken(token)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Missing play services...")
+            }
+        }
+
         presenter.connect()
+        presenter.loadCurrentInfo()
         setupToolbar()
         setupNavigationView()
     }
@@ -55,11 +81,87 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
         }
     }
 
-    override fun onLogout() {
-        finish()
-        val intent = Intent(this, AuthenticationActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+    override fun showUserStatus(userStatus: UserStatus) {
+        headerLayout.apply {
+            image_user_status.setImageDrawable(
+                DrawableHelper.getUserStatusDrawable(
+                    userStatus,
+                    this.context
+                )
+            )
+        }
+    }
+
+    override fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>) {
+        Timber.d("Setting up nav header: $viewModel")
+        with(headerLayout) {
+            image_user_status.setImageDrawable(
+                DrawableHelper.getUserStatusDrawable(
+                    viewModel.userStatus!!,
+                    this.context
+                )
+            )
+            text_user_name.text = viewModel.userDisplayName
+            text_server_url.text = viewModel.serverUrl
+            image_avatar.setImageURI(viewModel.userAvatar)
+            server_logo.setImageURI(viewModel.serverLogo)
+            setupAccountsList(headerLayout, accounts)
+        }
+    }
+
+    override fun closeServerSelection() {
+        view_navigation.getHeaderView(0).account_container.performClick()
+    }
+
+    override fun alertNotRecommendedVersion() {
+        AlertDialog.Builder(this)
+                .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
+    }
+
+    override fun blockAndAlertNotRequiredVersion() {
+        AlertDialog.Builder(this)
+                .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
+                .setOnDismissListener { presenter.logout() }
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
+    }
+
+    private fun setupAccountsList(header: View, accounts: List<Account>) {
+        accounts_list.layoutManager = LinearLayoutManager(this)
+        accounts_list.adapter = AccountsAdapter(accounts, object : Selector {
+            override fun onStatusSelected(userStatus: UserStatus) {
+                presenter.changeStatus(userStatus)
+            }
+
+            override fun onAccountSelected(serverUrl: String) {
+                presenter.changeServer(serverUrl)
+            }
+
+            override fun onAddedAccountSelected() {
+                presenter.addNewServer()
+            }
+        })
+
+        header.account_container.setOnClickListener {
+            header.image_account_expand.rotateBy(180f)
+            if (expanded) {
+                accounts_list.fadeOut()
+            } else {
+                accounts_list.fadeIn()
+            }
+
+            expanded = !expanded
+        }
+
+        header.image_avatar.setOnClickListener {
+            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
+            presenter.toUserProfile()
+            drawer_layout.closeDrawer(Gravity.START)
+        }
     }
 
     override fun showMessage(resId: Int) = showToast(resId)
@@ -67,6 +169,8 @@ class MainActivity : AppCompatActivity(), MainView, HasSupportFragmentInjector {
     override fun showMessage(message: String) = showToast(message)
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 

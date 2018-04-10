@@ -66,7 +66,9 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         listenToChanges()
     }
 
-    override fun showProfileUpdateSuccessfullyMessage() = showMessage(getString(R.string.msg_profile_update_successfully))
+    override fun showProfileUpdateSuccessfullyMessage() {
+        showMessage(getString(R.string.msg_profile_update_successfully))
+    }
 
     override fun showLoading() {
         enableUserInput(false)
@@ -74,13 +76,19 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
+        if (view_loading != null) {
+            view_loading.setVisible(false)
+        }
         enableUserInput(true)
     }
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
@@ -129,20 +137,20 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     private fun listenToChanges() {
         Observables.combineLatest(text_name.asObservable(),
-            text_username.asObservable(),
-            text_email.asObservable(),
-            text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
-                return@combineLatest (text_name.toString() != currentName ||
-                    text_username.toString() !=currentUsername ||
+                text_username.asObservable(),
+                text_email.asObservable(),
+                text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
+            return@combineLatest (text_name.toString() != currentName ||
+                    text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail ||
-                    (text_avatar_url.toString() != "" && text_avatar_url.toString()!= currentAvatar))
-            }.subscribe({ isValid->
-                if (isValid) {
-                    startActionMode()
-                } else {
-                    finishActionMode()
-                }
-            })
+                    (text_avatar_url.toString() != "" && text_avatar_url.toString() != currentAvatar))
+        }.subscribe({ isValid ->
+            if (isValid) {
+                startActionMode()
+            } else {
+                finishActionMode()
+            }
+        })
     }
 
     private fun startActionMode() {
@@ -154,7 +162,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun finishActionMode() = actionMode?.finish()
 
     private fun enableUserInput(value: Boolean) {
-        text_name.isEnabled = value
+        text_username.isEnabled = value
         text_username.isEnabled = value
         text_email.isEnabled = value
         text_avatar_url.isEnabled = value

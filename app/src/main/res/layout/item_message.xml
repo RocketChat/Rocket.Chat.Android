@@ -4,10 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="6dp"
-    android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
-    android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
-    android:layout_marginTop="6dp">
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="@dimen/message_item_top_and_bottom_padding"
+    android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
+    android:focusable="true">
 
     <include
         android:id="@+id/layout_avatar"
@@ -16,7 +19,37 @@
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/new_messages_notif" />
+
+    <LinearLayout
+        android:id="@+id/new_messages_notif"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <View
+            android:layout_gravity="center"
+            android:layout_height="1dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:background="@color/red"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/msg_unread_messages"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red" />
+        <View
+            android:layout_gravity="center"
+            android:layout_height="1dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:background="@color/red"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/top_container"
@@ -24,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/new_messages_notif"
         app:layout_constraintLeft_toRightOf="@+id/layout_avatar">
 
         <TextView
@@ -47,11 +81,18 @@
         style="@style/Message.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="2dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintLeft_toLeftOf="@id/top_container"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_container"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
+
+    <include layout="@layout/layout_reactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/text_content"
+        app:layout_constraintStart_toStartOf="@+id/text_content"
+        app:layout_constraintTop_toBottomOf="@+id/text_content" />
 
 </android.support.constraint.ConstraintLayout>
