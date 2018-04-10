@@ -13,8 +13,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 2007
-        versionName "2.0.0-beta5"
+        versionCode 2008
+        versionName "2.0.0-beta6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

@@ -42,7 +42,6 @@
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">No internet connection</string>
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_profile_update_successfully">Profile update successfully</string>
