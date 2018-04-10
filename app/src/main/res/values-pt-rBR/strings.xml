@@ -123,6 +123,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Pinadas</string>
+    <string name="no_pinned_messages">Nenhuma mensagem pinada</string>
+    <string name="no_pinned_description">Todas as mensagens pinadas\naparecerão aqui</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
