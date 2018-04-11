@@ -86,31 +86,39 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun tintEditTextDrawableStart() {
-        activity?.apply {
-            val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_assignment_ind_black_24dp, this)
-            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, this)
+        ui {
+            val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_assignment_ind_black_24dp, it)
+            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, it)
 
             val drawables = arrayOf(personDrawable, lockDrawable)
             DrawableHelper.wrapDrawables(drawables)
-            DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawables(drawables, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawables(arrayOf(text_username_or_email, text_password), drawables)
         }
     }
 
     override fun showLoading() {
-        view_loading.setVisible(true)
+        ui {
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
+        ui {
+            view_loading.setVisible(false)
+        }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() {
@@ -118,152 +126,208 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun showFormView() {
-        text_username_or_email.setVisible(true)
-        text_password.setVisible(true)
+        ui {
+            text_username_or_email.setVisible(true)
+            text_password.setVisible(true)
+        }
     }
 
     override fun hideFormView() {
-        text_username_or_email.setVisible(false)
-        text_password.setVisible(false)
+        ui {
+            text_username_or_email.setVisible(false)
+            text_password.setVisible(false)
+        }
     }
 
     override fun setupLoginButtonListener() {
-        button_log_in.setOnClickListener {
-            presenter.authenticateWithUserAndPassword(text_username_or_email.textContent, text_password.textContent)
+        ui {
+            button_log_in.setOnClickListener {
+                presenter.authenticateWithUserAndPassword(text_username_or_email.textContent,
+                        text_password.textContent)
+            }
         }
     }
 
     override fun enableUserInput() {
-        button_log_in.isEnabled = true
-        text_username_or_email.isEnabled = true
-        text_password.isEnabled = true
+        ui {
+            button_log_in.isEnabled = true
+            text_username_or_email.isEnabled = true
+            text_password.isEnabled = true
+        }
     }
 
     override fun disableUserInput() {
-        button_log_in.isEnabled = false
-        text_username_or_email.isEnabled = false
-        text_password.isEnabled = false
+        ui {
+            button_log_in.isEnabled = false
+            text_username_or_email.isEnabled = false
+            text_password.isEnabled = false
+        }
     }
 
     override fun showCasButton() {
-        button_cas.setVisible(true)
+        ui {
+            button_cas.setVisible(true)
+        }
     }
 
     override fun hideCasButton() {
-        button_cas.setVisible(false)
+        ui {
+            button_cas.setVisible(false)
+        }
     }
 
     override fun setupCasButtonListener(casUrl: String, casToken: String) {
-        button_cas.setOnClickListener {
-            startActivityForResult(context?.casWebViewIntent(casUrl, casToken), REQUEST_CODE_FOR_CAS)
-            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        ui { activity ->
+            button_cas.setOnClickListener {
+                startActivityForResult(activity.casWebViewIntent(casUrl, casToken),
+                        REQUEST_CODE_FOR_CAS)
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
         }
     }
 
     override fun showSignUpView() {
-        text_new_to_rocket_chat.setVisible(true)
+        ui {
+            text_new_to_rocket_chat.setVisible(true)
+        }
     }
 
     override fun setupSignUpView() {
-        val signUp = getString(R.string.title_sign_up)
-        val newToRocketChat = String.format(getString(R.string.msg_new_user), signUp)
+        ui {
+            val signUp = getString(R.string.title_sign_up)
+            val newToRocketChat = String.format(getString(R.string.msg_new_user), signUp)
 
-        text_new_to_rocket_chat.text = newToRocketChat
+            text_new_to_rocket_chat.text = newToRocketChat
 
-        val signUpListener = object : ClickableSpan() {
-            override fun onClick(view: View) = presenter.signup()
+            val signUpListener = object : ClickableSpan() {
+                override fun onClick(view: View) = presenter.signup()
+            }
+
+            TextHelper.addLink(text_new_to_rocket_chat, arrayOf(signUp), arrayOf(signUpListener))
         }
-
-        TextHelper.addLink(text_new_to_rocket_chat, arrayOf(signUp), arrayOf(signUpListener))
     }
 
     override fun hideSignUpView() {
-        text_new_to_rocket_chat.setVisible(false)
+        ui {
+            text_new_to_rocket_chat.setVisible(false)
+        }
     }
 
     override fun enableOauthView() {
-        isOauthViewEnable = true
-        showThreeSocialAccountsMethods()
-        social_accounts_container.setVisible(true)
+        ui {
+            isOauthViewEnable = true
+            showThreeSocialAccountsMethods()
+            social_accounts_container.setVisible(true)
+        }
     }
 
     override fun disableOauthView() {
-        isOauthViewEnable = false
-        social_accounts_container.setVisible(false)
+        ui {
+            isOauthViewEnable = false
+            social_accounts_container.setVisible(false)
+        }
     }
 
     override fun showLoginButton() {
-        button_log_in.setVisible(true)
+        ui {
+            button_log_in.setVisible(true)
+        }
     }
 
     override fun hideLoginButton() {
-        button_log_in.setVisible(false)
+        ui {
+            button_log_in.setVisible(false)
+        }
     }
 
     override fun enableLoginByFacebook() {
-        button_facebook.isClickable = true
+        ui {
+            button_facebook.isClickable = true
+        }
     }
 
     override fun enableLoginByGithub() {
-        button_github.isClickable = true
+        ui {
+            button_github.isClickable = true
+        }
     }
 
     override fun setupGithubButtonListener(githubUrl: String, state: String) {
-        button_github.setOnClickListener {
-            startActivityForResult(context?.oauthWebViewIntent(githubUrl, state), REQUEST_CODE_FOR_OAUTH)
-            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        ui { activity ->
+            button_github.setOnClickListener {
+                startActivityForResult(activity.oauthWebViewIntent(githubUrl, state), REQUEST_CODE_FOR_OAUTH)
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
         }
     }
 
     override fun enableLoginByGoogle() {
-        button_google.isClickable = true
+        ui {
+            button_google.isClickable = true
+        }
     }
 
     // TODO: Use custom tabs instead of web view. See https://github.com/RocketChat/Rocket.Chat.Android/issues/968
     override fun setupGoogleButtonListener(googleUrl: String, state: String) {
-        button_google.setOnClickListener {
-            startActivityForResult(context?.oauthWebViewIntent(googleUrl, state), REQUEST_CODE_FOR_OAUTH)
-            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        ui { activity ->
+            button_google.setOnClickListener {
+                startActivityForResult(activity.oauthWebViewIntent(googleUrl, state), REQUEST_CODE_FOR_OAUTH)
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
         }
     }
 
     override fun enableLoginByLinkedin() {
-        button_linkedin.isClickable = true
+        ui {
+            button_linkedin.isClickable = true
+        }
     }
 
     override fun setupLinkedinButtonListener(linkedinUrl: String, state: String) {
-        button_linkedin.setOnClickListener {
-            startActivityForResult(context?.oauthWebViewIntent(linkedinUrl, state), REQUEST_CODE_FOR_OAUTH)
-            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        ui { activity ->
+            button_linkedin.setOnClickListener {
+                startActivityForResult(activity.oauthWebViewIntent(linkedinUrl, state), REQUEST_CODE_FOR_OAUTH)
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
         }
     }
 
     override fun enableLoginByMeteor() {
-        button_meteor.isClickable = true
+        ui {
+            button_meteor.isClickable = true
+        }
     }
 
     override fun enableLoginByTwitter() {
-        button_twitter.isClickable = true
+        ui {
+            button_twitter.isClickable = true
+        }
     }
 
     override fun enableLoginByGitlab() {
-        button_gitlab.isClickable = true
+        ui {
+            button_gitlab.isClickable = true
+        }
     }
 
     override fun setupGitlabButtonListener(gitlabUrl: String, state: String) {
-        button_gitlab.setOnClickListener {
-            startActivityForResult(context?.oauthWebViewIntent(gitlabUrl, state), REQUEST_CODE_FOR_OAUTH)
-            activity?.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+        ui { activity ->
+            button_gitlab.setOnClickListener {
+                startActivityForResult(activity.oauthWebViewIntent(gitlabUrl, state), REQUEST_CODE_FOR_OAUTH)
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
         }
     }
 
     override fun setupFabListener() {
-        button_fab.setVisible(true)
-        button_fab.setOnClickListener({
-            button_fab.hide()
-            showRemainingSocialAccountsView()
-            scrollToBottom()
-        })
+        ui {
+            button_fab.setVisible(true)
+            button_fab.setOnClickListener({
+                button_fab.hide()
+                showRemainingSocialAccountsView()
+                scrollToBottom()
+            })
+        }
     }
 
     override fun setupGlobalListener() {
@@ -276,19 +340,23 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun alertWrongUsernameOrEmail() {
-        vibrateSmartPhone()
-        text_username_or_email.shake()
-        text_username_or_email.requestFocus()
+        ui {
+            vibrateSmartPhone()
+            text_username_or_email.shake()
+            text_username_or_email.requestFocus()
+        }
     }
 
     override fun alertWrongPassword() {
-        vibrateSmartPhone()
-        text_password.shake()
-        text_password.requestFocus()
+        ui {
+            vibrateSmartPhone()
+            text_password.shake()
+            text_password.requestFocus()
+        }
     }
 
     override fun alertNotRecommendedVersion() {
-        context?.let {
+        ui {
             AlertDialog.Builder(it)
                     .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
                     .setPositiveButton(R.string.msg_ok, null)
@@ -298,7 +366,7 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun blockAndAlertNotRequiredVersion() {
-        context?.let {
+        ui {
             AlertDialog.Builder(it)
                     .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
                     .setOnDismissListener { activity?.onBackPressed() }
@@ -313,14 +381,14 @@ class LoginFragment : Fragment(), LoginView {
             (0..social_accounts_container.childCount)
                 .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
                 .filter { it.isClickable }
-                .forEach { it.setVisible(true)}
+                .forEach { ui { it.setVisible(true) }}
         }, 1000)
     }
 
     // Scrolling to the bottom of the screen.
     private fun scrollToBottom() {
         scroll_view.postDelayed({
-            scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
+            ui { scroll_view.fullScroll(ScrollView.FOCUS_DOWN) }
         }, 1250)
     }
 
@@ -350,13 +418,13 @@ class LoginFragment : Fragment(), LoginView {
             .forEach { it.setVisible(true) }
     }
 
-    fun showOauthView() {
+    private fun showOauthView() {
         if (isOauthViewEnable) {
             social_accounts_container.setVisible(true)
         }
     }
 
-    fun hideOauthView() {
+    private fun hideOauthView() {
         if (isOauthViewEnable) {
             social_accounts_container.setVisible(false)
             button_fab.setVisible(false)
