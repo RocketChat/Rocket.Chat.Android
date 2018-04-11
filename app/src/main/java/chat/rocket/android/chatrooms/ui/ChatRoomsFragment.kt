@@ -36,6 +36,7 @@ import kotlinx.coroutines.experimental.NonCancellable.isActive
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -204,6 +205,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun showConnectionState(state: State) {
+        Timber.d("Got new state: $state")
         ui {
             connection_status_text.fadeIn()
             handler.removeCallbacks(dismissStatus)
