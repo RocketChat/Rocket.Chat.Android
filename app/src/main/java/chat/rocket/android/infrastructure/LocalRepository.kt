@@ -1,7 +1,5 @@
 package chat.rocket.android.infrastructure
 
-import chat.rocket.core.model.Myself
-
 interface LocalRepository {
 
     fun save(key: String, value: String?)
