@@ -62,6 +62,7 @@ class MessageService : JobService() {
                         attachments = message.attachments,
                         alias = message.senderAlias
                 )
+                messageRepository.save(message.copy(isTemporary = false))
             }
         }
     }
