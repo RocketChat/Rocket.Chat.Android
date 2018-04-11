@@ -106,42 +106,40 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
         launchUI(strategy) {
-            view.disableSendMessageButton()
             try {
                 // ignore message for now, will receive it on the stream
                 val id = UUID.randomUUID().toString()
-                val message = retryIO {
-                    if (messageId == null) {
-                        val username = localRepository.username()
-                        val newMessage = Message(
-                                id = id,
-                                roomId = chatRoomId,
-                                message = text,
-                                timestamp = Instant.now().epochSecond,
-                                sender = SimpleUser(null, username, username),
-                                attachments = null,
-                                avatar = currentServer.avatarUrl(username!!),
-                                channels = null,
-                                editedAt = null,
-                                editedBy = null,
-                                groupable = false,
-                                parseUrls = false,
-                                pinned = false,
-                                mentions = emptyList(),
-                                reactions = null,
-                                senderAlias = null,
-                                type = null,
-                                updatedAt = null,
-                                urls = null,
-                                isTemporary = true
-                        )
-                        messagesRepository.save(newMessage)
-                        view.showNewMessage(mapper.map(newMessage))
-                        client.sendMessage(id, chatRoomId, text)
-                    } else {
-                        client.updateMessage(chatRoomId, messageId, text)
-                    }
+                val message = if (messageId == null) {
+                    val username = localRepository.username()
+                    val newMessage = Message(
+                            id = id,
+                            roomId = chatRoomId,
+                            message = text,
+                            timestamp = Instant.now().epochSecond,
+                            sender = SimpleUser(null, username, username),
+                            attachments = null,
+                            avatar = currentServer.avatarUrl(username!!),
+                            channels = null,
+                            editedAt = null,
+                            editedBy = null,
+                            groupable = false,
+                            parseUrls = false,
+                            pinned = false,
+                            mentions = emptyList(),
+                            reactions = null,
+                            senderAlias = null,
+                            type = null,
+                            updatedAt = null,
+                            urls = null,
+                            isTemporary = true
+                    )
+                    messagesRepository.save(newMessage)
+                    view.showNewMessage(mapper.map(newMessage))
+                    client.sendMessage(id, chatRoomId, text)
+                } else {
+                    client.updateMessage(chatRoomId, messageId, text)
                 }
+
                 view.enableSendMessageButton()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error sending message...")
