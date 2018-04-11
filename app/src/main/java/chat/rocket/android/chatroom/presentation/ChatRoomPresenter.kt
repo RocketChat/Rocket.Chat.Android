@@ -113,6 +113,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 val message = retryIO {
                     if (messageId == null) {
                         val username = localRepository.username()
+                        println(username?.avatarUrl(username))
                         val newMessage = Message(
                                 id = id,
                                 roomId = chatRoomId,
@@ -120,7 +121,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                 timestamp = Instant.now().epochSecond,
                                 sender = SimpleUser(null, username, username),
                                 attachments = null,
-                                avatar = username?.avatarUrl(username),
+                                avatar = currentServer.avatarUrl(username!!),
                                 channels = null,
                                 editedAt = null,
                                 editedBy = null,
