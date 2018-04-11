@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.view.View
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
@@ -8,9 +9,9 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class MessageViewHolder(
-    itemView: View,
-    listener: ActionsListener,
-    reactionListener: EmojiReactionListener? = null
+        itemView: View,
+        listener: ActionsListener,
+        reactionListener: EmojiReactionListener? = null
 ) : BaseViewHolder<MessageViewModel>(itemView, listener, reactionListener) {
 
     init {
@@ -29,6 +30,9 @@ class MessageViewHolder(
             text_sender.text = data.senderName
             text_content.text = data.content
             image_avatar.setImageURI(data.avatar)
+            text_content.setTextColor(
+                    if (data.isTemporary) Color.GRAY else Color.BLACK
+            )
         }
     }
 }

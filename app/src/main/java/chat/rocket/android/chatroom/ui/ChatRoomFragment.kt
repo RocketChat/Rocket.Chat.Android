@@ -70,8 +70,10 @@ private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
-    @Inject lateinit var presenter: ChatRoomPresenter
-    @Inject lateinit var parser: MessageParser
+    @Inject
+    lateinit var presenter: ChatRoomPresenter
+    @Inject
+    lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -310,12 +312,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         button_send.isEnabled = false
     }
 
-    override fun enableSendMessageButton(sendFailed: Boolean) {
+    override fun enableSendMessageButton() {
         button_send.isEnabled = true
         text_message.isEnabled = true
-        if (!sendFailed) {
-            clearMessageComposition()
-        }
+        clearMessageComposition()
     }
 
     override fun clearMessageComposition() {

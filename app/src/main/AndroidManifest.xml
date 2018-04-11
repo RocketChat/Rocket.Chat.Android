@@ -100,13 +100,18 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+        <service
+            android:name=".chatroom.service.MessageService"
+            android:exported="false">
+        </service>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="12ac6e94f850aaffcdff52001af77ca415d06a43" />
 
-        <activity android:name=".settings.about.ui.AboutActivity"
-            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".settings.about.ui.AboutActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

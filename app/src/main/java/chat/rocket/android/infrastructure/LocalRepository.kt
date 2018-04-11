@@ -1,5 +1,7 @@
 package chat.rocket.android.infrastructure
 
+import chat.rocket.core.model.Myself
+
 interface LocalRepository {
 
     fun save(key: String, value: String?)
@@ -24,4 +26,5 @@ interface LocalRepository {
     }
 }
 
-fun LocalRepository.checkIfMyself(username: String) = get(LocalRepository.CURRENT_USERNAME_KEY) == username
+fun LocalRepository.checkIfMyself(username: String) = username() == username
+fun LocalRepository.username() = get(LocalRepository.CURRENT_USERNAME_KEY)

@@ -123,6 +123,8 @@ class ChatRoomAdapter(
         if (item == null) {
             this.dataSet.addAll(0, dataSet)
             notifyItemRangeInserted(0, dataSet.size)
+        } else {
+            dataSet.forEach { updateItem(it) }
         }
     }
 
