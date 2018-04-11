@@ -7,7 +7,7 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewMo
 import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.internal.realtime.socket.model.State
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -105,7 +105,9 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 
     fun showConnectionState(state: State)
+
     fun populatePeopleSuggestions(members: List<PeopleSuggestionViewModel>)
+
     fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>)
     /**
      * This user has joined the chat callback.

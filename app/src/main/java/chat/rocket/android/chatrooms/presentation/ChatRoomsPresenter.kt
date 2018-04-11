@@ -19,9 +19,9 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.User
 import chat.rocket.core.internal.model.Subscription
-import chat.rocket.core.internal.realtime.State
-import chat.rocket.core.internal.realtime.StreamMessage
-import chat.rocket.core.internal.realtime.Type
+import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.internal.realtime.socket.model.StreamMessage
+import chat.rocket.core.internal.realtime.socket.model.Type
 import chat.rocket.core.internal.rest.spotlight
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
