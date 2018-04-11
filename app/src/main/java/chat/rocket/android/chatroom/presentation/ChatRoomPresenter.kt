@@ -54,7 +54,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                             private val roomsRepository: RoomRepository,
                                             private val localRepository: LocalRepository,
                                             factory: ConnectionManagerFactory,
-                                            private val mapper: ViewModelMapper) {
+                                            private val mapper: ViewModelMapper,
+                                            private val jobSchedulerInteractor: JobSchedulerInteractor) {
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
@@ -131,13 +132,11 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                                 senderAlias = null,
                                 type = null,
                                 updatedAt = null,
-                                urls = null
+                                urls = null,
+                                isTemporary = true
                         )
-                        val offlineMessage = mapper.map(newMessage).map {
-                            it.isTemporary = true
-                            it
-                        }
-                        view.showNewMessage(offlineMessage)
+                        messagesRepository.save(newMessage)
+                        view.showNewMessage(mapper.map(newMessage))
                         client.sendMessage(id, chatRoomId, text)
                     } else {
                         client.updateMessage(chatRoomId, messageId, text)
@@ -151,6 +150,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
+                jobSchedulerInteractor.scheduleSendingMessages()
             } finally {
                 view.enableSendMessageButton()
             }

@@ -102,8 +102,8 @@
         </service>
         <service
             android:name=".chatroom.service.MessageService"
-            android:exported="false">
-        </service>
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
