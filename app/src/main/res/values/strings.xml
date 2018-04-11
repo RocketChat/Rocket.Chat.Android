@@ -16,6 +16,7 @@
     <string name="title_update_profile">Update profile</string>
     <string name="title_create_new_channel">Create New Channel</string>
     <string name="title_add_members">Invite Members</string>
+    <string name="title_about">About</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -41,10 +42,10 @@
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Change Password</item>
+        <item name="item_password">About</item>
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">No internet connection</string>
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_profile_update_successfully">Profile update successfully</string>
@@ -88,6 +89,8 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_no_messages_yet">No messages yet</string>
+    <string name="msg_version">Version</string>
+    <string name="msg_build">Build</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
@@ -191,4 +194,9 @@
     <string name="header_direct_messages">Direct Messages</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Unknown</string>
+
+    <!--Notifications-->
+    <string name="notif_action_reply_hint">REPLY</string>
+    <string name="notif_error_sending">Reply has failed. Please try again.</string>
+    <string name="notif_success_sending">Message sent to %1$s!</string>
 </resources>

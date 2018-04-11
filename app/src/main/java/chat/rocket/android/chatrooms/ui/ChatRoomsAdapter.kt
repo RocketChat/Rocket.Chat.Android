@@ -12,11 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.checkIfMyself
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
@@ -74,14 +74,17 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindAvatar(chatRoom: ChatRoom, drawee: SimpleDraweeView) {
-            val avatarId = if (chatRoom.type is RoomType.DirectMessage) chatRoom.name else "@${chatRoom.name}"
-            drawee.setImageURI(UrlHelper.getAvatarUrl(chatRoom.client.url, avatarId))
+            if (chatRoom.type is RoomType.DirectMessage) {
+                drawee.setImageURI(chatRoom.client.url.avatarUrl(chatRoom.name))
+            } else {
+                drawee.setImageURI(chatRoom.client.url.avatarUrl(chatRoom.name, true))
+            }
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
             textView.textContent = chatRoom.name
 
-            var drawable = when (chatRoom.type) {
+            val drawable = when (chatRoom.type) {
                 is RoomType.Channel -> {
                     DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
                 }

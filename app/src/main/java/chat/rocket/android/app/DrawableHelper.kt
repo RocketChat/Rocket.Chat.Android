@@ -106,19 +106,21 @@ object DrawableHelper {
      * @return The user status drawable.
      */
     fun getUserStatusDrawable(userStatus: UserStatus, context: Context): Drawable {
-        val userStatusDrawable = getDrawableFromId(R.drawable.ic_user_status_black, context).mutate()
-        wrapDrawable(userStatusDrawable)
-        when (userStatus) {
-            is UserStatus.Online -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOnline)
-            is UserStatus.Busy -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusBusy)
-            is UserStatus.Away -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusAway)
-            is UserStatus.Offline -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOffline)
-            else -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOffline)
+        return when (userStatus) {
+            is UserStatus.Online -> {
+                getDrawableFromId(R.drawable.ic_status_online_24dp, context)
+            }
+            is UserStatus.Away -> {
+                getDrawableFromId(R.drawable.ic_status_away_24dp, context)
+            }
+            is UserStatus.Busy -> {
+                getDrawableFromId(R.drawable.ic_status_busy_24dp, context)
+            }
+            else -> getDrawableFromId(R.drawable.ic_status_invisible_24dp, context)
         }
-        return userStatusDrawable
     }
 
-    // TODO Why we need to UserStatus?
+    // TODO Why we need two UserStatus?
 
     /**
      * Returns the user status drawable.
