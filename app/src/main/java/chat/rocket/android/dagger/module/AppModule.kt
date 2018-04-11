@@ -1,27 +1,37 @@
 package chat.rocket.android.dagger.module
 
 import android.app.Application
+import android.app.NotificationManager
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.systemService
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatDatabase
-import chat.rocket.android.app.utils.CustomImageFormatConfigurator
-import chat.rocket.android.authentication.infraestructure.MemoryTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
+import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.dagger.qualifier.ForFresco
 import chat.rocket.android.helper.FrescoAuthInterceptor
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
+import chat.rocket.android.push.GroupedPush
+import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.*
-import chat.rocket.android.server.infraestructure.*
+import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
+import chat.rocket.android.server.infraestructure.MemoryMessagesRepository
+import chat.rocket.android.server.infraestructure.MemoryRoomRepository
+import chat.rocket.android.server.infraestructure.MemoryUsersRepository
+import chat.rocket.android.server.infraestructure.ServerDao
+import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepository
+import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
+import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.TimberLogger
+import chat.rocket.common.internal.FallbackSealedClassJsonAdapter
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.TokenRepository
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
@@ -39,6 +49,7 @@ import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -101,14 +112,17 @@ class AppModule {
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder().apply {
             addInterceptor(logger)
+            connectTimeout(15, TimeUnit.SECONDS)
+            readTimeout(20, TimeUnit.SECONDS)
+            writeTimeout(15, TimeUnit.SECONDS)
         }.build()
     }
 
     @Provides
     @ForFresco
     @Singleton
-    fun provideFrescoAuthIntercepter(tokenRepository: TokenRepository): Interceptor {
-        return FrescoAuthInterceptor(tokenRepository)
+    fun provideFrescoAuthIntercepter(tokenRepository: TokenRepository, currentServerInteractor: GetCurrentServerInteractor): Interceptor {
+        return FrescoAuthInterceptor(tokenRepository, currentServerInteractor)
     }
 
     @Provides
@@ -127,7 +141,6 @@ class AppModule {
         listeners.add(RequestLoggingListener())
 
         return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
-                .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig())
                 .setRequestListeners(listeners)
                 .setDownsampleEnabled(true)
                 //.experiment().setBitmapPrepareToDraw(true).experiment()
@@ -137,17 +150,13 @@ class AppModule {
     @Provides
     @Singleton
     fun provideDraweeConfig(): DraweeConfig {
-        val draweeConfigBuilder = DraweeConfig.newBuilder()
-
-        CustomImageFormatConfigurator.addCustomDrawableFactories(draweeConfigBuilder)
-
-        return draweeConfigBuilder.build()
+        return DraweeConfig.newBuilder().build()
     }
 
     @Provides
     @Singleton
-    fun provideTokenRepository(): TokenRepository {
-        return MemoryTokenRepository()
+    fun provideTokenRepository(prefs: SharedPreferences, moshi: Moshi): TokenRepository {
+        return SharedPreferencesTokenRepository(prefs, moshi)
     }
 
     @Provides
@@ -181,14 +190,23 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideChatRoomsRepository(): ChatRoomsRepository {
+    fun provideRoomRepository(): RoomRepository {
+        return MemoryRoomRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRoomRepository(): ChatRoomsRepository {
         return MemoryChatRoomsRepository()
     }
 
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
-        return Moshi.Builder().add(AppJsonAdapterFactory.INSTANCE).build()
+        return Moshi.Builder()
+                .add(FallbackSealedClassJsonAdapter.ADAPTER_FACTORY)
+                .add(AppJsonAdapterFactory.INSTANCE)
+                .build()
     }
 
     @Provides
@@ -201,6 +219,12 @@ class AppModule {
     @Singleton
     fun provideMessageRepository(): MessagesRepository {
         return MemoryMessagesRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UsersRepository {
+        return MemoryUsersRepository()
     }
 
     @Provides
@@ -229,5 +253,29 @@ class AppModule {
     @Singleton
     fun providePermissionInteractor(settingsRepository: SettingsRepository, serverRepository: CurrentServerRepository): GetPermissionsInteractor {
         return GetPermissionsInteractor(settingsRepository, serverRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAccountsRepository(preferences: SharedPreferences, moshi: Moshi): AccountsRepository =
+            SharedPreferencesAccountsRepository(preferences, moshi)
+
+    @Provides
+    fun provideNotificationManager(context: Context): NotificationManager = context.systemService()
+
+    @Provides
+    @Singleton
+    fun provideGroupedPush() = GroupedPush()
+
+    @Provides
+    @Singleton
+    fun providePushManager(
+            context: Context,
+            groupedPushes: GroupedPush,
+            manager: NotificationManager,
+            moshi: Moshi,
+            getAccountInteractor: GetAccountInteractor,
+            getSettingsInteractor: GetSettingsInteractor): PushManager {
+        return PushManager(groupedPushes, manager, moshi, getAccountInteractor, getSettingsInteractor, context)
     }
 }

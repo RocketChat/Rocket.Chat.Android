@@ -5,6 +5,7 @@ import android.support.v4.graphics.drawable.DrawableCompat
 import android.widget.EditText
 import android.widget.TextView
 import chat.rocket.android.R
+import chat.rocket.common.model.UserStatus
 
 object DrawableHelper {
 
@@ -78,7 +79,7 @@ object DrawableHelper {
      * @param drawables The array of Drawable.
      * @see compoundDrawable
      */
-    fun compoundDrawables(textView: Array<EditText>, drawables: Array<Drawable>) {
+    fun compoundDrawables(textView: Array<TextView>, drawables: Array<Drawable>) {
         if (textView.size != drawables.size) {
             return
         } else {
@@ -104,16 +105,46 @@ object DrawableHelper {
      * @param context The context.
      * @return The user status drawable.
      */
-    fun getUserStatusDrawable(userStatus: String, context: Context): Drawable {
-        val userStatusDrawable = getDrawableFromId(R.drawable.ic_user_status_black, context).mutate()
-        wrapDrawable(userStatusDrawable)
-        when (userStatus) {
-            // TODO: create a enum or check if it will come from the SDK
-            "online" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOnline)
-            "busy" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusBusy)
-            "away" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusAway)
-            "offline" -> tintDrawable(userStatusDrawable, context, R.color.colorUserStatusOffline)
+    fun getUserStatusDrawable(userStatus: UserStatus, context: Context): Drawable {
+        return when (userStatus) {
+            is UserStatus.Online -> {
+                getDrawableFromId(R.drawable.ic_status_online_24dp, context)
+            }
+            is UserStatus.Away -> {
+                getDrawableFromId(R.drawable.ic_status_away_24dp, context)
+            }
+            is UserStatus.Busy -> {
+                getDrawableFromId(R.drawable.ic_status_busy_24dp, context)
+            }
+            else -> getDrawableFromId(R.drawable.ic_status_invisible_24dp, context)
         }
-        return userStatusDrawable
+    }
+
+    // TODO Why we need two UserStatus?
+
+    /**
+     * Returns the user status drawable.
+     *
+     * @param userStatus The user status.
+     * @param context The context.
+     * @sse [chat.rocket.core.internal.realtime.UserStatus]
+     * @return The user status drawable.
+     */
+    fun getUserStatusDrawable(
+        userStatus: chat.rocket.core.internal.realtime.UserStatus,
+        context: Context
+    ): Drawable {
+        return when (userStatus) {
+            is chat.rocket.core.internal.realtime.UserStatus.Online -> {
+                getDrawableFromId(R.drawable.ic_status_online_24dp, context)
+            }
+            is chat.rocket.core.internal.realtime.UserStatus.Away -> {
+                getDrawableFromId(R.drawable.ic_status_away_24dp, context)
+            }
+            is chat.rocket.core.internal.realtime.UserStatus.Busy -> {
+                getDrawableFromId(R.drawable.ic_status_busy_24dp, context)
+            }
+            else -> getDrawableFromId(R.drawable.ic_status_invisible_24dp, context)
+        }
     }
 }

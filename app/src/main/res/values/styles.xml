@@ -56,6 +56,25 @@
         <item name="android:background">@drawable/effect_ripple</item>
     </style>
 
+    <style name="EditText.Password" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="AuthenticationLabel" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginStart">@dimen/screen_edge_left_and_right_margins</item>
+        <item name="android:paddingStart">@dimen/edit_text_margin</item>
+    </style>
+
+    <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="ChatRoom.Name.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
@@ -73,12 +92,21 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
+    <style name="Message.Quote.TextView" parent="Message.TextView">
+        <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
     <style name="Timestamp.TextView" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textSize">10sp</item>
     </style>
 
     <style name="Profile.EditText" parent="Authentication.EditText">
         <item name="android:background">@drawable/style_edit_text_profile</item>
+    </style>
+
+    <style name="ActionModeStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
     </style>
 
 </resources>

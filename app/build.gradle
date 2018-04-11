@@ -3,6 +3,7 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -12,8 +13,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 1008
-        versionName "2.0.0-dev6"
+        versionCode 2008
+        versionName "2.0.0-beta6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -29,13 +30,16 @@ android {
 
     buildTypes {
         release {
+            buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
+            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            applicationIdSuffix ".dev"
         }
 
         debug {
+            buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
+            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
             applicationIdSuffix ".dev"
         }
     }
@@ -59,6 +63,10 @@ dependencies {
     implementation libraries.design
     implementation libraries.constraintLayout
     implementation libraries.cardView
+    implementation libraries.flexbox
+    implementation libraries.customTabs
+
+    implementation libraries.androidKtx
 
     implementation libraries.dagger
     implementation libraries.daggerSupport
@@ -92,20 +100,13 @@ dependencies {
     implementation libraries.kotshiApi
 
     implementation libraries.frescoImageViewer
-    implementation (libraries.androidSvg) {
-        exclude group: 'org.jetbrains', module: 'annotations-java5'
-    }
 
     implementation libraries.markwon
-    implementation (libraries.markwonImageLoader) {
-        exclude group: 'com.caverock', module: 'androidsvg'
-    }
+    implementation libraries.markwonImageLoader
 
     implementation libraries.sheetMenu
 
     implementation libraries.aVLoadingIndicatorView
-
-    implementation libraries.swipeBackLayout
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
