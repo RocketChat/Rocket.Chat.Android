@@ -6,6 +6,8 @@ import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.ROOMS
 import chat.rocket.android.chatroom.domain.UriInteractor
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
@@ -73,15 +75,20 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val oldMessages = messagesRepository.getByRoomId(chatRoomId)
-                view.showMessages(mapper.map(oldMessages))
-                val messages =
-                    retryIO(description = "messages chatRoom: $chatRoomId, type: $chatRoomType, offset: $offset") {
-                        client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
-                    }
-                messagesRepository.saveAll(messages)
-                val messagesViewModels = mapper.map(messages)
-                view.showMessages(messagesViewModels)
+                val localMessages = messagesRepository.getByRoomId(chatRoomId)
+                val oldMessages = mapper.map(localMessages)
+                view.showMessages(oldMessages)
+                if (oldMessages.isEmpty()) {
+                    val messages =
+                        retryIO(description = "messages chatRoom: $chatRoomId, type: $chatRoomType, offset: $offset") {
+                            client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
+                        }
+                    messagesRepository.saveAll(messages)
+                    val allMessages = mapper.map(messages)
+                    view.showMessages(allMessages)
+                } else {
+                    loadMissingMessages()
+                }
 
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
                 // but should mark only when the user see the first unread message.
