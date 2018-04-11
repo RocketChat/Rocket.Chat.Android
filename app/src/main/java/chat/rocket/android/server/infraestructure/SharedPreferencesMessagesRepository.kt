@@ -29,7 +29,7 @@ class SharedPreferencesMessagesRepository(
         val values = prefs.all.values as Collection<String>
         return@withContext values.mapNotNull { adapter.fromJson(it) }.filter {
             it.roomId == rid
-        }.toList()
+        }.toList().sortedWith(compareBy(Message::timestamp)).reversed()
     }
 
     override suspend fun getRecentMessages(rid: String, count: Long): List<Message> {
