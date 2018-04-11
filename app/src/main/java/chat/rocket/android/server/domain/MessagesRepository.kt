@@ -69,7 +69,7 @@ interface MessagesRepository {
      */
     suspend fun removeByRoomId(rid: String)
 
-    suspend fun getAllTemporary(): List<Message>
+    suspend fun getAllUnsent(): List<Message>
 
-    suspend fun getAllTemporaryByRoomId(roomId: String): List<Message>
+    suspend fun getUnsentByRoomId(roomId: String): List<Message>
 }

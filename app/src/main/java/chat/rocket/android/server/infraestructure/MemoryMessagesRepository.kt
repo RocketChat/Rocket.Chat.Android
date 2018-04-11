@@ -26,7 +26,7 @@ class MemoryMessagesRepository : MessagesRepository {
         return@withContext messages.values.toList()
     }
 
-    override suspend fun getAllTemporaryByRoomId(roomId: String): List<Message> = withContext(CommonPool) {
+    override suspend fun getUnsentByRoomId(roomId: String): List<Message> = withContext(CommonPool) {
         val allByRoomId = getByRoomId(roomId)
         if (allByRoomId.isEmpty()) {
             return@withContext emptyList<Message>()
@@ -34,7 +34,7 @@ class MemoryMessagesRepository : MessagesRepository {
         return@withContext allByRoomId.filter { it.isTemporary ?: false && it.roomId == roomId }
     }
 
-    override suspend fun getAllTemporary(): List<Message> = withContext(CommonPool) {
+    override suspend fun getAllUnsent(): List<Message> = withContext(CommonPool) {
         val all = getAll()
         if (all.isEmpty()) {
             return@withContext emptyList<Message>()

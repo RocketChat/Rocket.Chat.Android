@@ -49,7 +49,7 @@ class MessageService : JobService() {
     }
 
     private suspend fun retrySendingMessages(currentServer: String) {
-        val temporaryMessages = messageRepository.getAllTemporary()
+        val temporaryMessages = messageRepository.getAllUnsent()
         if (temporaryMessages.isNotEmpty()) {
             val connectionManager = factory.create(currentServer)
             val client = connectionManager.client

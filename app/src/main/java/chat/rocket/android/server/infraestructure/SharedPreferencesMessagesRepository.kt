@@ -46,7 +46,7 @@ class SharedPreferencesMessagesRepository(
         return@withContext values.mapNotNull { adapter.fromJson(it) }
     }
 
-    override suspend fun getAllTemporary(): List<Message> = withContext(CommonPool) {
+    override suspend fun getAllUnsent(): List<Message> = withContext(CommonPool) {
         if (prefs.all.values.isEmpty()) {
             return@withContext emptyList<Message>()
         }
@@ -56,7 +56,7 @@ class SharedPreferencesMessagesRepository(
                 .filter { it.isTemporary ?: false }
     }
 
-    override suspend fun getAllTemporaryByRoomId(roomId: String): List<Message> = withContext(CommonPool) {
+    override suspend fun getUnsentByRoomId(roomId: String): List<Message> = withContext(CommonPool) {
         val allByRoomId = getByRoomId(roomId)
         if (allByRoomId.isEmpty()) {
             return@withContext emptyList<Message>()

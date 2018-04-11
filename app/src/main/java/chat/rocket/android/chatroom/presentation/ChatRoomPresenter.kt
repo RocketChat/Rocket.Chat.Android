@@ -73,13 +73,21 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
+                val oldMessages = messagesRepository.getByRoomId(chatRoomId).sortedWith(compareBy(Message::timestamp)).reversed()
+                view.showMessages(mapper.map(oldMessages))
                 val messages =
                         retryIO(description = "messages chatRoom: $chatRoomId, type: $chatRoomType, offset: $offset") {
                             client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
                         }
                 messagesRepository.saveAll(messages)
 
-                val messagesViewModels = mapper.map(messages)
+                val unsentMessages = messagesRepository.getUnsentByRoomId(chatRoomId)
+                var mergedMessages = messages.toMutableList()
+                mergedMessages.addAll(unsentMessages)
+                val allMessages = mergedMessages.toList().filterNot { message ->
+                    unsentMessages.find { it.id == message.id  } != null
+                }
+                val messagesViewModels = mapper.map(allMessages)
                 view.showMessages(messagesViewModels)
 
                 // TODO: For now we are marking the room as read if we can get the messages (I mean, no exception occurs)
@@ -88,7 +96,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
 
                 subscribeMessages(chatRoomId)
             } catch (ex: Exception) {
-                ex.printStackTrace()
+                Timber.e(ex)
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
@@ -115,7 +123,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                             id = id,
                             roomId = chatRoomId,
                             message = text,
-                            timestamp = Instant.now().epochSecond,
+                            timestamp = Instant.now().toEpochMilli(),
                             sender = SimpleUser(null, username, username),
                             attachments = null,
                             avatar = currentServer.avatarUrl(username!!),
