@@ -31,7 +31,7 @@ class MessageViewHolder(
             text_content.text = data.content
             image_avatar.setImageURI(data.avatar)
             text_content.setTextColor(
-                    if (data.isTemporary) Color.GRAY else Color.BLACK
+                if (data.isTemporary) Color.GRAY else Color.BLACK
             )
         }
     }
