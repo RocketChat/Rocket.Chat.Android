@@ -41,7 +41,6 @@
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">Sem conexão à internet</string>
     <string name="msg_generic_error">Desculpe, ocorreu um erro, tente novamente</string>
     <string name="msg_no_data_to_display">Nenhum dado para exibir</string>
     <string name="msg_profile_update_successfully">Perfil atualizado com sucesso</string>
@@ -181,4 +180,9 @@
     <string name="header_direct_messages">Mensagens diretas</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Desconhecido</string>
+
+    <!--Notifications-->
+    <string name="notif_action_reply_hint">RESPONDER</string>
+    <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
+    <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
 </resources>

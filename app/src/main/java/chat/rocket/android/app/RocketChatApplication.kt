@@ -6,7 +6,7 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.content.edit
+import androidx.core.content.edit
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.app.migration.RealmMigration
 import chat.rocket.android.app.migration.RocketChatLibraryModule

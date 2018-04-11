@@ -105,10 +105,6 @@ class LoginFragment : Fragment(), LoginView {
         view_loading.setVisible(false)
     }
 
-    override fun showNoInternetConnection() {
-        showMessage(R.string.msg_no_internet_connection)
-    }
-
     override fun showMessage(resId: Int) {
         showToast(resId)
     }

@@ -4,14 +4,20 @@ import DateTimeHelper
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.support.v4.content.ContextCompat
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
+import androidx.core.text.scale
 import chat.rocket.android.R
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
@@ -39,6 +45,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     private val baseUrl = settings.baseUrl()
     private val token = tokenRepository.get(currentServer)
     private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
+    private val secundaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
 
     suspend fun map(message: Message): List<BaseViewModel<*>> {
         return translate(message)
@@ -68,8 +75,8 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
 
         mapMessage(message).let {
-            if (list.size > 0) {
-                it.preview = list[0].preview
+            if (list.isNotEmpty()) {
+                it.preview = list.first().preview
             }
             list.add(it)
         }
@@ -98,7 +105,36 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         return when (attachment) {
             is FileAttachment -> mapFileAttachment(message, attachment)
             is MessageAttachment -> mapMessageAttachment(message, attachment)
+            is AuthorAttachment -> mapAuthorAttachment(message, attachment)
             else -> null
+        }
+    }
+
+    private suspend fun mapAuthorAttachment(message: Message, attachment: AuthorAttachment): AuthorAttachmentViewModel {
+        return with(attachment) {
+            val content = stripMessageQuotes(message)
+
+            val fieldsText = fields?.let {
+                buildSpannedString {
+                    it.forEachIndexed { index, field ->
+                        bold { append(field.title) }
+                        append("\n")
+                        if (field.value.isNotEmpty()) {
+                            append(field.value)
+                        }
+
+                        if (index != it.size - 1) { // it is not the last one, append a new line
+                            append("\n\n")
+                        }
+                    }
+                }
+            }
+            val id = attachmentId(message, attachment)
+
+            AuthorAttachmentViewModel(attachmentUrl = url, id = id, name = authorName,
+                    icon = authorIcon, fields = fieldsText, message = message, rawData = attachment,
+                    messageId = message.id, reactions = getReactions(message),
+                    preview = message.copy(message = content.message))
         }
     }
 
@@ -136,7 +172,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         }
     }
 
-    private fun attachmentId(message: Message, attachment: FileAttachment): Long {
+    private fun attachmentId(message: Message, attachment: Attachment): Long {
         return "${message.id}_${attachment.url}".hashCode().toLong()
     }
 
@@ -213,16 +249,26 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     private suspend fun stripMessageQuotes(message: Message): Message {
         val baseUrl = settings.baseUrl()
         return message.copy(
-                message = message.message.replace("\\[\\s\\]\\($baseUrl.*\\)".toRegex(), "").trim()
+                message = message.message.replace("\\[[^\\]]+\\]\\($baseUrl[^)]+\\)".toRegex(), "").trim()
         )
     }
 
     private fun getSenderName(message: Message): CharSequence {
-        if (!message.senderAlias.isNullOrEmpty()) {
-            return message.senderAlias!!
+        val username = message.sender?.username
+        message.senderAlias.isNotNullNorEmpty { alias ->
+            return buildSpannedString {
+                append(alias)
+                username?.let {
+                    append(" ")
+                    scale(0.8f) {
+                        color(secundaryTextColor) {
+                            append("@$username")
+                        }
+                    }
+                }
+            }
         }
 
-        val username = message.sender?.username
         val realName = message.sender?.name
         val senderName = if (settings.useRealName()) realName else username
         return senderName ?: username.toString()

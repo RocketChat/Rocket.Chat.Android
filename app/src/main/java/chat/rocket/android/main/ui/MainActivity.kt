@@ -95,13 +95,19 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         }
     }
 
-    override fun setupNavHeader(model: NavHeaderViewModel, accounts: List<Account>) {
-        Timber.d("Setting up nav header: $model")
+    override fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>) {
+        Timber.d("Setting up nav header: $viewModel")
         with(headerLayout) {
-            text_user_name.text = model.username
-            text_server_url.text = model.server
-            image_avatar.setImageURI(model.avatar)
-            server_logo.setImageURI(model.serverLogo)
+            image_user_status.setImageDrawable(
+                DrawableHelper.getUserStatusDrawable(
+                    viewModel.userStatus!!,
+                    this.context
+                )
+            )
+            text_user_name.text = viewModel.userDisplayName
+            text_server_url.text = viewModel.serverUrl
+            image_avatar.setImageURI(viewModel.userAvatar)
+            server_logo.setImageURI(viewModel.serverLogo)
             setupAccountsList(headerLayout, accounts)
         }
     }
