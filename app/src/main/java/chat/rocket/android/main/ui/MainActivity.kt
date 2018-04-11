@@ -11,8 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.authentication.ui.AuthenticationActivity
-import chat.rocket.android.main.adapter.AccountSelector
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.presentation.MainPresenter

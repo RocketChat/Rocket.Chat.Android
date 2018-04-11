@@ -12,6 +12,7 @@ import chat.rocket.android.chatroom.di.PinnedMessagesFragmentProvider
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.PinnedMessagesActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
+import chat.rocket.android.createChannel.di.CreateNewChannelModule
 import chat.rocket.android.createChannel.di.CreateNewChannelProvider
 import chat.rocket.android.createChannel.ui.CreateNewChannelActivity
 import chat.rocket.android.dagger.scope.PerActivity
@@ -63,7 +64,7 @@ abstract class ActivityBuilder {
     abstract fun bindChangeServerActivity(): ChangeServerActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [CreateNewChannelProvider::class])
+    @ContributesAndroidInjector(modules = [CreateNewChannelModule::class])
     abstract fun bindCreateNewChannelActivity(): CreateNewChannelActivity
 
 }
