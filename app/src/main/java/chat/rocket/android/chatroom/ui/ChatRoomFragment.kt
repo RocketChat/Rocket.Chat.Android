@@ -300,9 +300,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         showMessage(getString(R.string.msg_invalid_file))
     }
 
+
     override fun showNewMessage(message: List<BaseViewModel<*>>) {
         adapter.prependData(message)
-        recycler_view.scrollToPosition(0)
+//        Commenting this line to fix Bug-#791
+//         recycler_view.scrollToPosition(0)
         verticalScrollOffset.set(0)
     }
 
