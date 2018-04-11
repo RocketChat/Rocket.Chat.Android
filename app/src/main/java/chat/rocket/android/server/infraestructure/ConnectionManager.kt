@@ -5,6 +5,7 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.realtime.*
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
@@ -19,14 +20,15 @@ class ConnectionManager(internal val client: RocketChatClient) {
 
     private val roomAndSubscriptionChannels = ArrayList<Channel<StreamMessage<BaseRoom>>>()
     private val roomMessagesChannels = LinkedHashMap<String, Channel<Message>>()
+    private val userDataChannels = ArrayList<Channel<Myself>>()
     private val subscriptionIdMap = HashMap<String, String>()
 
     private var subscriptionId: String? = null
     private var roomsId: String? = null
+    private var userId: String? = null
 
     fun connect() {
-        if (connectJob?.isActive == true
-            && (state !is State.Disconnected)) {
+        if (connectJob?.isActive == true && (state !is State.Disconnected)) {
             Timber.d("Already connected, just returning...")
             return
         }
@@ -50,6 +52,11 @@ class ConnectionManager(internal val client: RocketChatClient) {
                         client.subscribeRooms { _, id ->
                             Timber.d("Subscribed to rooms: $id")
                             roomsId = id
+                        }
+
+                        client.subscribeUserDataChanges { _, id ->
+                            Timber.d("Subscribed to the user: $id")
+                            userId = id
                         }
 
                         resubscribeRooms()
@@ -92,6 +99,15 @@ class ConnectionManager(internal val client: RocketChatClient) {
             }
         }
 
+        launch(parent = connectJob) {
+            for (myself in client.userDataChannel) {
+                Timber.d("Got userData")
+                for (channel in userDataChannels) {
+                    channel.send(myself)
+                }
+            }
+        }
+
         client.connect()
 
         // Broadcast initial state...
@@ -124,6 +140,10 @@ class ConnectionManager(internal val client: RocketChatClient) {
     fun addRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) = roomAndSubscriptionChannels.add(channel)
 
     fun removeRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) = roomAndSubscriptionChannels.remove(channel)
+
+    fun addUserDataChannel(channel: Channel<Myself>) = userDataChannels.add(channel)
+
+    fun removeUserDataChannel(channel: Channel<Myself>) = userDataChannels.remove(channel)
 
     fun subscribeRoomMessages(roomId: String, channel: Channel<Message>) {
         val oldSub = roomMessagesChannels.put(roomId, channel)

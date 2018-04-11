@@ -27,7 +27,7 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             view.showLoading()
             try {
                 val myself = retryIO("me") { client.me() }
-                myselfId = myself.id
+                myselfId = myself.id!!
                 val avatarUrl = serverUrl.avatarUrl(myself.username!!)
                 view.showProfile(
                         avatarUrl,
