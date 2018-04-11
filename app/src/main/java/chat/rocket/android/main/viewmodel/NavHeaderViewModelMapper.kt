@@ -23,10 +23,10 @@ class NavHeaderViewModelMapper @Inject constructor(
         return NavHeaderViewModel(displayName, status, avatar, currentServer, logo)
     }
 
-    private fun mapDisplayName(me: Myself): String {
+    private fun mapDisplayName(me: Myself): String? {
         val username = me.username
         val realName = me.name
         val senderName = if (settings.useRealName()) realName else username
-        return senderName ?: username.toString()
+        return senderName ?: username
     }
 }
