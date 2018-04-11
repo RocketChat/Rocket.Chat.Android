@@ -143,11 +143,6 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                 view.enableSendMessageButton()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error sending message...")
-                ex.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
-                    view.showGenericErrorMessage()
-                }
                 jobSchedulerInteractor.scheduleSendingMessages()
             } finally {
                 view.enableSendMessageButton()
