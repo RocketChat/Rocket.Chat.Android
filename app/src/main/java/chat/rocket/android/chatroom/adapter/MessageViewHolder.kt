@@ -9,9 +9,9 @@ import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class MessageViewHolder(
-        itemView: View,
-        listener: ActionsListener,
-        reactionListener: EmojiReactionListener? = null
+    itemView: View,
+    listener: ActionsListener,
+    reactionListener: EmojiReactionListener? = null
 ) : BaseViewHolder<MessageViewModel>(itemView, listener, reactionListener) {
 
     init {
