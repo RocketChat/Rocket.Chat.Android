@@ -47,21 +47,29 @@ class ServerFragment : Fragment(), ServerView {
     override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
 
     override fun showLoading() {
-        enableUserInput(false)
-        view_loading.setVisible(true)
+        ui {
+            enableUserInput(false)
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
-        enableUserInput(true)
+        ui {
+            view_loading.setVisible(false)
+            enableUserInput(true)
+        }
     }
 
     override fun showMessage(resId: Int){
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() {

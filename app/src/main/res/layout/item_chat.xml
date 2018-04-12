@@ -10,14 +10,14 @@
     android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
     android:paddingBottom="@dimen/chat_item_top_and_bottom_padding">
 
-    <include
-        android:id="@+id/layout_avatar"
-        layout="@layout/avatar"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        app:roundedCornerRadius="3dp"
         android:layout_marginTop="6dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/text_chat_name"
@@ -25,7 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintStart_toEndOf="@id/layout_avatar"
+        app:layout_constraintStart_toEndOf="@id/image_avatar"
         android:textDirection="locale"
         tools:text="General"/>
 
@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@id/text_chat_name"
         app:layout_constraintEnd_toStartOf="@id/layout_unread_messages_badge"
         android:textDirection="locale"
-        tools:text="You: Type something"/>
+        tools:text="You: Type something that is very big and need at least to lines, or maybe even more"/>
 
     <include
         android:id="@+id/layout_unread_messages_badge"
