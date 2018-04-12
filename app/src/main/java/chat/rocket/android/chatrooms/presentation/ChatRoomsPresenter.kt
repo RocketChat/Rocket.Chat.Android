@@ -30,7 +30,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.reflect.KProperty1
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
@@ -228,7 +227,12 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     private fun compareByLastMessage(): Comparator<ChatRoom> {
-        return Comparator { a, b -> (b.lastMessage!!.timestamp - a.lastMessage!!.timestamp).toInt() }
+        return Comparator { a, b ->
+            if (a.lastMessage == null || b.lastMessage == null) {
+                return@Comparator -1
+            }
+            (b.lastMessage!!.timestamp - a.lastMessage!!.timestamp).toInt()
+        }
     }
 
     private fun getTypeConstant(roomType: RoomType): Int {
