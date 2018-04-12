@@ -63,8 +63,10 @@ class TwoFAFragment : Fragment(), TwoFAView {
     }
 
     override fun alertBlankTwoFactorAuthenticationCode() {
-        vibrateSmartPhone()
-        text_two_factor_auth.shake()
+        ui {
+            vibrateSmartPhone()
+            text_two_factor_auth.shake()
+        }
     }
 
     override fun alertInvalidTwoFactorAuthenticationCode() {
@@ -72,30 +74,38 @@ class TwoFAFragment : Fragment(), TwoFAView {
     }
 
     override fun showLoading() {
-        enableUserInput(false)
-        view_loading.setVisible(true)
+        ui {
+            enableUserInput(false)
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
-        enableUserInput(true)
+        ui {
+            view_loading.setVisible(false)
+            enableUserInput(true)
+        }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     private fun tintEditTextDrawableStart() {
-        activity?.apply {
-            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_vpn_key_black_24dp, this)
+        ui {
+            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_vpn_key_black_24dp, it)
             DrawableHelper.wrapDrawable(lockDrawable)
-            DrawableHelper.tintDrawable(lockDrawable, this, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawable(lockDrawable, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_two_factor_auth, lockDrawable)
         }
     }

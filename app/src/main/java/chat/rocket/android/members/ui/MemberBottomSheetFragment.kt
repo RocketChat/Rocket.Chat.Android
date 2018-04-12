@@ -1,4 +1,4 @@
-package chat.rocket.android.member.ui
+package chat.rocket.android.members.ui
 
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment

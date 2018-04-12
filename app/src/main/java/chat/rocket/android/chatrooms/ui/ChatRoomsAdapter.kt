@@ -24,7 +24,6 @@ import chat.rocket.android.util.extensions.textContent
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
-import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
