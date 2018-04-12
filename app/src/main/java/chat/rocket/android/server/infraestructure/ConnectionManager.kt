@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class ConnectionManager(internal val client: RocketChatClient) {
     private val statusChannelList = CopyOnWriteArrayList<Channel<State>>()
-    private val statusChannel = Channel<State>()
+    private val statusChannel = Channel<State>(Channel.CONFLATED)
     private var connectJob: Job? = null
 
     private val roomAndSubscriptionChannels = ArrayList<Channel<StreamMessage<BaseRoom>>>()
@@ -73,7 +73,8 @@ class ConnectionManager(internal val client: RocketChatClient) {
                 }
 
                 for (channel in statusChannelList) {
-                    channel.send(status)
+                    Timber.d("Sending status: $status to $channel")
+                    channel.offer(status)
                 }
             }
         }

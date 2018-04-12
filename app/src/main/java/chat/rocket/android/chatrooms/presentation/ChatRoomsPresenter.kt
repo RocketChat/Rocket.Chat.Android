@@ -270,6 +270,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     // TODO - Temporary stuff, remove when adding DB support
     private suspend fun subscribeRoomUpdates() {
         manager.addStatusChannel(stateChannel)
+        view.showConnectionState(client.state)
         manager.addRoomsAndSubscriptionsChannel(subscriptionsChannel)
         launch(CommonPool + strategy.jobs) {
             for (message in subscriptionsChannel) {
