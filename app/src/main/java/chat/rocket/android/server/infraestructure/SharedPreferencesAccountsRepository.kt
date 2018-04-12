@@ -1,7 +1,7 @@
 package chat.rocket.android.server.infraestructure
 
 import android.content.SharedPreferences
-import androidx.content.edit
+import androidx.core.content.edit
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.model.Account
 import com.squareup.moshi.Moshi

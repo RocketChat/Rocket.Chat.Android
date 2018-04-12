@@ -1,25 +1,21 @@
 package chat.rocket.android.authentication.login.presentation
 
-import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.NetworkHelper
-import chat.rocket.android.helper.UrlHelper
+import chat.rocket.android.helper.OauthHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.encodeToBase64
-import chat.rocket.android.util.extensions.generateRandomString
-import chat.rocket.android.util.extensions.isEmail
-import chat.rocket.android.util.extensions.launchUI
-import chat.rocket.android.util.extensions.registerPushToken
+import chat.rocket.android.server.presentation.CheckServerPresenter
+import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
-import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.delay
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -42,7 +38,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                          settingsInteractor: GetSettingsInteractor,
                                          serverInteractor: GetCurrentServerInteractor,
                                          private val saveAccountInteractor: SaveAccountInteractor,
-                                         private val factory: RocketChatClientFactory) {
+                                         private val factory: RocketChatClientFactory)
+    : CheckServerPresenter(strategy, factory.create(serverInteractor.get()!!), view) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val currentServer = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(currentServer)
@@ -57,6 +54,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         setupUserRegistrationView()
         setupCasView()
         setupOauthServicesView()
+        checkServerInfo()
     }
 
     fun authenticateWithUserAndPassword(usernameOrEmail: String, password: String) {
@@ -101,7 +99,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     private fun setupCasView() {
         if (settings.isCasAuthenticationEnabled()) {
             val token = generateRandomString(17)
-            view.setupCasButtonListener(UrlHelper.getCasUrl(settings.casLoginUrl(), currentServer, token), token)
+            view.setupCasButtonListener(settings.casLoginUrl().casUrl(currentServer, token), token)
             view.showCasButton()
         }
     }
@@ -116,20 +114,22 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     private fun setupOauthServicesView() {
         launchUI(strategy) {
             try {
-                val services = client.settingsOauth().services
-                val state = "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
-
+                val services = retryIO("settingsOauth()") {
+                    client.settingsOauth().services
+                }
                 if (services.isNotEmpty()) {
+                    val state = "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
                     var totalSocialAccountsEnabled = 0
 
                     if (settings.isFacebookAuthenticationEnabled()) {
-                        view.enableLoginByFacebook()
-                        totalSocialAccountsEnabled++
+//                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByFacebook()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isGithubAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
                         if (clientId != null) {
-                            view.setupGithubButtonListener(UrlHelper.getGithubOauthUrl(clientId, state), state)
+                            view.setupGithubButtonListener(OauthHelper.getGithubOauthUrl(clientId, state), state)
                             view.enableLoginByGithub()
                             totalSocialAccountsEnabled++
                         }
@@ -137,7 +137,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (settings.isGoogleAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GOOGLE)
                         if (clientId != null) {
-                            view.setupGoogleButtonListener(UrlHelper.getGoogleOauthUrl(clientId, currentServer, state), state)
+                            view.setupGoogleButtonListener(OauthHelper.getGoogleOauthUrl(clientId, currentServer, state), state)
                             view.enableLoginByGoogle()
                             totalSocialAccountsEnabled++
                         }
@@ -145,53 +145,55 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (settings.isLinkedinAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_LINKEDIN)
                         if (clientId != null) {
-                            view.setupGoogleButtonListener(UrlHelper.getLinkedinOauthUrl(clientId, currentServer, state), state)
+                            view.setupLinkedinButtonListener(OauthHelper.getLinkedinOauthUrl(clientId, currentServer, state), state)
                             view.enableLoginByLinkedin()
                             totalSocialAccountsEnabled++
                         }
                     }
                     if (settings.isMeteorAuthenticationEnabled()) {
-                        view.enableLoginByMeteor()
-                        totalSocialAccountsEnabled++
+                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByMeteor()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isTwitterAuthenticationEnabled()) {
-                        view.enableLoginByTwitter()
-                        totalSocialAccountsEnabled++
+                        //TODO: Remove until we have this implemented
+//                        view.enableLoginByTwitter()
+//                        totalSocialAccountsEnabled++
                     }
                     if (settings.isGitlabAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
                         if (clientId != null) {
-                            view.setupGitlabButtonListener(UrlHelper.getGitlabOauthUrl(clientId, currentServer, state), state)
+                            view.setupGitlabButtonListener(OauthHelper.getGitlabOauthUrl(clientId, currentServer, state), state)
                             view.enableLoginByGitlab()
                             totalSocialAccountsEnabled++
                         }
                     }
 
                     if (totalSocialAccountsEnabled > 0) {
-                        view.showOauthView()
+                        view.enableOauthView()
                         if (totalSocialAccountsEnabled > 3) {
                             view.setupFabListener()
                         }
                     } else {
-                        view.hideOauthView()
+                        view.disableOauthView()
                     }
                 } else {
-                    view.hideOauthView()
+                    view.disableOauthView()
                 }
             } catch (exception: RocketChatException) {
                 Timber.e(exception)
-                view.hideOauthView()
+                view.disableOauthView()
             }
         }
     }
 
     private fun doAuthentication(loginType: Int) {
         launchUI(strategy) {
-            if (NetworkHelper.hasInternetAccess()) {
-                view.disableUserInput()
-                view.showLoading()
-                try {
-                    val token = when (loginType) {
+            view.disableUserInput()
+            view.showLoading()
+            try {
+                val token = retryIO("login") {
+                    when (loginType) {
                         TYPE_LOGIN_USER_EMAIL -> {
                             if (usernameOrEmail.isEmail()) {
                                 client.loginWithEmail(usernameOrEmail, password)
@@ -214,26 +216,52 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                             throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS or TYPE_LOGIN_OAUTH")
                         }
                     }
-                    val me = client.me()
-                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
-                    saveAccount(me)
+                }
+                val username = retryIO("me()") { client.me().username }
+                if (username != null) {
+                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
+                    saveAccount(username)
                     saveToken(token)
                     registerPushToken()
                     navigator.toChatList()
-                } catch (exception: RocketChatException) {
-                    exception.message?.let {
-                        view.showMessage(it)
-                    }.ifNull {
-                        view.showGenericErrorMessage()
-                    }
-                } finally {
-                    view.hideLoading()
-                    view.enableUserInput()
+                } else if (loginType == TYPE_LOGIN_OAUTH) {
+                    navigator.toRegisterUsername(token.userId, token.authToken)
                 }
-            } else {
-                view.showNoInternetConnection()
+            } catch (exception: RocketChatException) {
+                when (exception) {
+                    is RocketChatTwoFactorException -> {
+                        navigator.toTwoFA(usernameOrEmail, password)
+                    }
+                    else -> {
+                        exception.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
+                    }
+                }
+            } finally {
+                view.hideLoading()
+                view.enableUserInput()
             }
         }
+    }
+
+    private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
+        return listMap.find { map -> map.containsValue(serviceName) }
+                ?.get("appId")
+    }
+
+    private suspend fun saveAccount(username: String) {
+        val icon = settings.favicon()?.let {
+            currentServer.serverLogoUrl(it)
+        }
+        val logo = settings.wideTile()?.let {
+            currentServer.serverLogoUrl(it)
+        }
+        val thumb = currentServer.avatarUrl(username)
+        val account = Account(currentServer, icon, logo, username, thumb)
+        saveAccountInteractor.save(account)
     }
 
     private fun saveToken(token: Token) {
@@ -246,22 +274,5 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
         // TODO: When the push token is null, at some point we should receive it with
         // onTokenRefresh() on FirebaseTokenService, we need to confirm it.
-    }
-
-    private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
-        return listMap.find { map -> map.containsValue(serviceName) }
-                ?.get("appId")
-    }
-
-    private suspend fun saveAccount(me: Myself) {
-        val icon = settings.favicon()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
-        }
-        val logo = settings.wideTile()?.let {
-            UrlHelper.getServerLogoUrl(currentServer, it)
-        }
-        val thumb = UrlHelper.getAvatarUrl(currentServer, me.username!!)
-        val account = Account(currentServer, icon, logo, me.username!!, thumb)
-        saveAccountInteractor.save(account)
     }
 }

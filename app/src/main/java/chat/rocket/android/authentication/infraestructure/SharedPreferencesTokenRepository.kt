@@ -1,7 +1,7 @@
 package chat.rocket.android.authentication.infraestructure
 
 import android.content.SharedPreferences
-import androidx.content.edit
+import androidx.core.content.edit
 import chat.rocket.android.authentication.domain.model.TokenModel
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.common.model.Token

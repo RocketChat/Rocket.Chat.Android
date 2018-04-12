@@ -6,7 +6,7 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.content.edit
+import androidx.core.content.edit
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.app.migration.RealmMigration
 import chat.rocket.android.app.migration.RocketChatLibraryModule
@@ -18,10 +18,11 @@ import chat.rocket.android.app.migration.model.RealmUser
 import chat.rocket.android.authentication.domain.model.toToken
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.helper.CrashlyticsTree
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.common.model.Token
 import chat.rocket.core.model.Value
@@ -39,6 +40,7 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import timber.log.Timber
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -86,6 +88,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
         // TODO - remove this on the future, temporary migration stuff for pre-release versions.
         migrateInternalTokens()
+        context = WeakReference(applicationContext)
 
         AndroidThreeTen.init(this)
         EmojiRepository.load(this)
@@ -146,12 +149,12 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
     private fun migrateServerInfo(url: String, authToken: String, settings: PublicSettings, user: RealmUser) {
         val userId = user._id
-        val avatar = UrlHelper.getAvatarUrl(url, user.username!!)
+        val avatar = url.avatarUrl(user.username!!)
         val icon = settings.favicon()?.let {
-            UrlHelper.getServerLogoUrl(url, it)
+            url.serverLogoUrl(it)
         }
         val logo = settings.wideTile()?.let {
-            UrlHelper.getServerLogoUrl(url, it)
+            url.serverLogoUrl(it)
         }
         val account = Account(url, icon, logo, user.username!!, avatar)
         launch(CommonPool) {
@@ -258,6 +261,13 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
     override fun broadcastReceiverInjector(): AndroidInjector<BroadcastReceiver> {
         return broadcastReceiverInjector
+    }
+
+    companion object {
+        var context: WeakReference<Context>? = null
+        fun getAppContext(): Context? {
+            return context?.get()
+        }
     }
 }
 

@@ -4,6 +4,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in your server</string>
     <string name="title_log_in">Log in</string>
+    <string name="title_register_username">Register username</string>
     <string name="title_sign_up">Sign up</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
@@ -17,9 +18,11 @@
     <string name="title_description">Description</string>
     <string name="title_announcement">Announcement</string>
     <string name="title_topic">Topic</string>
+    <string name="title_about">About</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
+    <string name="action_use_this_username">Use this username</string>
     <string name="action_login_or_sign_up">Tap this button to log in or create an account</string>
     <string name="action_terms_of_service">Terms of Service</string>
     <string name="action_privacy_policy">Privacy Policy</string>
@@ -30,15 +33,19 @@
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
     <string name="action_join_chat">Join Chat</string>
-    <string name="action_add_account">Add Account</string>
+    <string name="action_add_account">Add account</string>
+    <string name="action_online">Online</string>
+    <string name="action_away">Away</string>
+    <string name="action_busy">Busy</string>
+    <string name="action_invisible">Invisible</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Change Password</item>
+        <item name="item_password">About</item>
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">No internet connection</string>
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_profile_update_successfully">Profile update successfully</string>
@@ -75,14 +82,19 @@
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_unread_messages">Unread messages</string>
-<<<<<<< HEAD
     <string name="msg_not_available">N/A</string>
-=======
     <string name="msg_preview_video">Video</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_no_messages_yet">No messages yet</string>
->>>>>>> 2176c0ce540317c58d9b09c6eb82625b81e8cea4
+    <string name="msg_version">Version</string>
+    <string name="msg_build">Build</string>
+    <string name="msg_ok">OK</string>
+    <string name="msg_ver_not_recommended">
+        Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
+    <string name="msg_ver_not_minimum">
+        Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
+    </string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -117,6 +129,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>
+    <string name="no_pinned_messages">No pinned messages</string>
+    <string name="no_pinned_description">All the pinned messages\nappear here.</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
@@ -158,4 +172,25 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji">No recent emoji</string>
+
+    <!-- Sorting and grouping-->
+    <string name="menu_chatroom_sort">Sort</string>
+    <string name="dialog_sort_title">Sort by</string>
+    <string name="dialog_sort_by_alphabet">Alphabetical</string>
+    <string name="dialog_sort_by_activity">Activity</string>
+    <string name="dialog_group_by_type">Group by type</string>
+    <string name="dialog_group_favourites">Group favourites</string>
+    <string name="chatroom_header">Header</string>
+
+    <!--ChatRooms Headers-->
+    <string name="header_channel">Channels</string>
+    <string name="header_private_groups">Private Groups</string>
+    <string name="header_direct_messages">Direct Messages</string>
+    <string name="header_live_chats">Live Chats</string>
+    <string name="header_unknown">Unknown</string>
+
+    <!--Notifications-->
+    <string name="notif_action_reply_hint">REPLY</string>
+    <string name="notif_error_sending">Reply has failed. Please try again.</string>
+    <string name="notif_success_sending">Message sent to %1$s!</string>
 </resources>

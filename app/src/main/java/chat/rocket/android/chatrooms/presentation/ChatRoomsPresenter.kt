@@ -2,6 +2,9 @@ package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.helper.ChatRoomsSortOrder
+import chat.rocket.android.helper.Constants
+import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManager
@@ -9,6 +12,7 @@ import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.chatRooms
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.RoomType
@@ -26,6 +30,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.reflect.KProperty1
 
 class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                                              private val strategy: CancelStrategy,
@@ -90,7 +95,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             try {
                 val roomList = getChatRoomsInteractor.getByName(currentServer, name)
                 if (roomList.isEmpty()) {
-                    val (users, rooms) = client.spotlight(name)
+                    val (users, rooms) = retryIO("spotlight($name)") {
+                        client.spotlight(name)
+                    }
                     val chatRoomsCombined = mutableListOf<ChatRoom>()
                     chatRoomsCombined.addAll(usersToChatRooms(users))
                     chatRoomsCombined.addAll(roomsToChatRooms(rooms))
@@ -166,16 +173,60 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     }
 
     private suspend fun loadRooms(): List<ChatRoom> {
-        val chatRooms = manager.chatRooms().update
+        val chatRooms = retryIO("chatRooms") { manager.chatRooms().update }
         val sortedRooms = sortRooms(chatRooms)
         Timber.d("Loaded rooms: ${sortedRooms.size}")
         saveChatRoomsInteractor.save(currentServer, sortedRooms)
         return getChatRoomsWithPreviews(sortedRooms)
     }
 
+    fun updateSortedChatRooms() {
+        val currentServer = serverInteractor.get()!!
+        launchUI(strategy) {
+            val roomList = getChatRoomsInteractor.get(currentServer)
+            view.updateChatRooms(sortRooms(roomList))
+        }
+    }
+
     private fun sortRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
+        val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
+        val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+
         val openChatRooms = getOpenChatRooms(chatRooms)
-        return sortChatRooms(openChatRooms)
+
+        return when (sortType) {
+            ChatRoomsSortOrder.ALPHABETICAL -> {
+                when (groupByType) {
+                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenBy { it.name })
+                    false -> openChatRooms.sortedWith(compareBy(ChatRoom::name))
+                }
+            }
+            ChatRoomsSortOrder.ACTIVITY -> {
+                when (groupByType) {
+                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenByDescending { it.lastMessage?.timestamp })
+                    false -> openChatRooms.sortedByDescending { chatRoom ->
+                        chatRoom.lastMessage?.timestamp
+                    }
+                }
+            }
+            else -> {
+                openChatRooms
+            }
+        }
+    }
+
+    private fun compareBy(selector: KProperty1<ChatRoom, RoomType>): Comparator<ChatRoom> {
+        return Comparator { a, b -> getTypeConstant(a.type) - getTypeConstant(b.type) }
+    }
+
+    private fun getTypeConstant(roomType: RoomType): Int {
+        return when (roomType) {
+            is RoomType.Channel -> Constants.CHATROOM_CHANNEL
+            is RoomType.PrivateGroup -> Constants.CHATROOM_PRIVATE_GROUP
+            is RoomType.DirectMessage -> Constants.CHATROOM_DM
+            is RoomType.Livechat -> Constants.CHATROOM_LIVE_CHAT
+            else -> 0
+        }
     }
 
     private fun updateRooms() {
@@ -228,6 +279,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
     // TODO - Temporary stuff, remove when adding DB support
     private suspend fun subscribeRoomUpdates() {
         manager.addStatusChannel(stateChannel)
+        view.showConnectionState(client.state)
         manager.addRoomsAndSubscriptionsChannel(subscriptionsChannel)
         launch(CommonPool + strategy.jobs) {
             for (message in subscriptionsChannel) {
@@ -300,26 +352,27 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         val chatRooms = getChatRoomsInteractor.get(currentServer).toMutableList()
         val chatRoom = chatRooms.find { chatRoom -> chatRoom.id == room.id }
         chatRoom?.apply {
-            val newRoom = ChatRoom(room.id,
-                    room.type,
-                    room.user ?: user,
-                    room.name ?: name,
-                    room.fullName ?: fullName,
-                    room.readonly,
-                    room.updatedAt ?: updatedAt,
-                    timestamp,
-                    lastSeen,
-                    room.topic,
-                    room.description,
-                    room.announcement,
-                    default,
-                    open,
-                    alert,
-                    unread,
-                    userMenstions,
-                    groupMentions,
-                    room.lastMessage,
-                    client)
+            val newRoom = ChatRoom(id = room.id,
+                    type = room.type,
+                    user = room.user ?: user,
+                    name = room.name ?: name,
+                    fullName = room.fullName ?: fullName,
+                    readonly = room.readonly,
+                    updatedAt = room.updatedAt ?: updatedAt,
+                    timestamp = timestamp,
+                    lastSeen = lastSeen,
+                    topic = room.topic,
+                    description = room.description,
+                    announcement = room.announcement,
+                    default = default,
+                    favorite = favorite,
+                    open = open,
+                    alert = alert,
+                    unread = unread,
+                    userMenstions = userMenstions,
+                    groupMentions = groupMentions,
+                    lastMessage = room.lastMessage,
+                    client = client)
             removeRoom(room.id, chatRooms)
             chatRooms.add(newRoom)
             saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
@@ -332,26 +385,27 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         val chatRooms = getChatRoomsInteractor.get(currentServer).toMutableList()
         val chatRoom = chatRooms.find { chatRoom -> chatRoom.id == subscription.roomId }
         chatRoom?.apply {
-            val newRoom = ChatRoom(subscription.roomId,
-                    subscription.type,
-                    subscription.user ?: user,
-                    subscription.name,
-                    subscription.fullName ?: fullName,
-                    subscription.readonly ?: readonly,
-                    subscription.updatedAt ?: updatedAt,
-                    subscription.timestamp ?: timestamp,
-                    subscription.lastSeen ?: lastSeen,
-                    topic,
-                    description,
-                    announcement,
-                    subscription.isDefault,
-                    subscription.open,
-                    subscription.alert,
-                    subscription.unread,
-                    subscription.userMentions,
-                    subscription.groupMentions,
-                    lastMessage,
-                    client)
+            val newRoom = ChatRoom(id = subscription.roomId,
+                    type = subscription.type,
+                    user = subscription.user ?: user,
+                    name = subscription.name,
+                    fullName = subscription.fullName ?: fullName,
+                    readonly = subscription.readonly ?: readonly,
+                    updatedAt = subscription.updatedAt ?: updatedAt,
+                    timestamp = subscription.timestamp ?: timestamp,
+                    lastSeen = subscription.lastSeen ?: lastSeen,
+                    topic = topic,
+                    description = description,
+                    announcement = announcement,
+                    default = subscription.isDefault,
+                    favorite = subscription.isFavorite,
+                    open = subscription.open,
+                    alert = subscription.alert,
+                    unread = subscription.unread,
+                    userMenstions = subscription.userMentions,
+                    groupMentions = subscription.groupMentions,
+                    lastMessage = lastMessage,
+                    client = client)
             removeRoom(subscription.roomId, chatRooms)
             chatRooms.add(newRoom)
             saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))

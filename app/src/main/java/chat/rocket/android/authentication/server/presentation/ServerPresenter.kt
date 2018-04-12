@@ -2,11 +2,10 @@ package chat.rocket.android.authentication.server.presentation
 
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.NetworkHelper
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.util.extensions.isValidUrl
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.util.ifNull
 import javax.inject.Inject
@@ -18,7 +17,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                           private val getAccountsInteractor: GetAccountsInteractor) {
     fun connect(server: String) {
-        if (!UrlHelper.isValidUrl(server)) {
+        if (!server.isValidUrl()) {
             view.showInvalidServerUrlMessage()
         } else {
             launchUI(strategy) {
@@ -29,23 +28,19 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                     return@launchUI
                 }
 
-                if (NetworkHelper.hasInternetAccess()) {
-                    view.showLoading()
-                    try {
-                        refreshSettingsInteractor.refresh(server)
-                        serverInteractor.save(server)
-                        navigator.toLogin()
-                    } catch (ex: Exception) {
-                        ex.message?.let {
-                            view.showMessage(it)
-                        }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
-                    } finally {
-                        view.hideLoading()
+                view.showLoading()
+                try {
+                    refreshSettingsInteractor.refresh(server)
+                    serverInteractor.save(server)
+                    navigator.toLogin()
+                } catch (ex: Exception) {
+                    ex.message?.let {
+                        view.showMessage(it)
+                    }.ifNull {
+                        view.showGenericErrorMessage()
                     }
-                } else {
-                    view.showNoInternetConnection()
+                } finally {
+                    view.hideLoading()
                 }
             }
         }

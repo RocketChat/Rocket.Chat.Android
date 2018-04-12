@@ -71,6 +71,10 @@
         <item name="android:paddingStart">@dimen/edit_text_margin</item>
     </style>
 
+    <style name="ChatRooms.Header" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="ChatRoom.Name.TextView" parent="TextAppearance.AppCompat.Title">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>

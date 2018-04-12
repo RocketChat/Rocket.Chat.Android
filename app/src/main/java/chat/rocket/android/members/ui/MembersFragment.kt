@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
@@ -18,6 +19,7 @@ import chat.rocket.android.members.viewmodel.MemberViewModel
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
@@ -69,7 +71,7 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     override fun showMembers(dataSet: List<MemberViewModel>, total: Long) {
-        activity?.apply {
+        ui {
             setupToolbar(total)
             if (adapter.itemCount == 0) {
                 adapter.prependData(dataSet)
@@ -83,36 +85,51 @@ class MembersFragment : Fragment(), MembersView {
             } else {
                 adapter.appendData(dataSet)
             }
+            if (it is ChatRoomActivity) {
+                it.showRoomTypeIcon(false)
+            }
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            (activity as ChatRoomActivity).showRoomTypeIcon(true)
+            return super.onOptionsItemSelected(item)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun showLoading() {
-        view_loading?.show()
+        ui { view_loading.setVisible(true) }
     }
 
     override fun hideLoading() {
-        view_loading?.hide()
+        ui { view_loading.setVisible(false) }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     private fun setupRecyclerView() {
-        activity?.apply {
+        ui {
             recycler_view.layoutManager = linearLayoutManager
-            recycler_view.addItemDecoration(DividerItemDecoration(this))
+            recycler_view.addItemDecoration(DividerItemDecoration(it))
             recycler_view.adapter = adapter
         }
     }
 
     private fun setupToolbar(totalMembers: Long) {
-        (activity as ChatRoomActivity).setupToolbarTitle(getString(R.string.title_members, totalMembers))
+        (activity as ChatRoomActivity?)?.setupToolbarTitle(getString(R.string.title_members, totalMembers))
     }
 }

@@ -1,10 +1,10 @@
 package chat.rocket.android.authentication.login.presentation
 
-import chat.rocket.android.core.behaviours.InternetView
+import chat.rocket.android.authentication.server.presentation.VersionCheckView
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
-interface LoginView : LoadingView, MessageView, InternetView {
+interface LoginView : LoadingView, MessageView, VersionCheckView {
 
     /**
      * Shows the form view (i.e the username/email and password fields) if it is enabled by the server settings.
@@ -72,18 +72,18 @@ interface LoginView : LoadingView, MessageView, InternetView {
     fun hideSignUpView()
 
     /**
-     * Shows the oauth view if the login via social accounts is enabled by the server settings.
+     * Enables and shows the oauth view if there is login via social accounts enabled by the server settings.
      *
      * REMARK: We must show at maximum *three* social accounts views ([enableLoginByFacebook], [enableLoginByGithub], [enableLoginByGoogle],
      * [enableLoginByLinkedin], [enableLoginByMeteor], [enableLoginByTwitter] or [enableLoginByGitlab]) for the oauth view.
      * If the possibility of login via social accounts exceeds 3 different ways we should set up the FAB ([setupFabListener]) to show the remaining view(s).
      */
-    fun showOauthView()
+    fun enableOauthView()
 
     /**
-     * Hides the oauth view.
+     * Disables and hides the Oauth view if there is not login via social accounts enabled by the server settings.
      */
-    fun hideOauthView()
+    fun disableOauthView()
 
     /**
      * Shows the login button.

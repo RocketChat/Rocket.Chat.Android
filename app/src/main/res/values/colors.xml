@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#15293F</color>
 
     <!-- Main colors -->
     <color name="colorPrimary">#FF303030</color> <!-- Material Grey 850 -->
@@ -16,6 +15,8 @@
     <color name="colorUserStatusBusy">#F33E5B</color>
     <color name="colorUserStatusAway">#FDD236</color>
     <color name="colorUserStatusOffline">#d9d9d9</color>
+
+    <color name="ic_launcher_background">#FFFFFF</color>
 
     <color name="colorDrawableTintGrey">#9FA2A8</color>
 
@@ -37,6 +38,8 @@
     <color name="translucent_white">#70F1F1F1</color>
 
     <color name="colorEmojiIcon">#FF767676</color>
+
+    <color name="quoteBar">#A0A0A0</color>
 
     <!-- Suggestions -->
     <color name="suggestion_background_color">@android:color/white</color>

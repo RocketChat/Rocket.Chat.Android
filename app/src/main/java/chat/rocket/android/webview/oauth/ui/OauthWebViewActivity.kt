@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.net.toUri
+import androidx.core.net.toUri
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.decodeUrl
 import chat.rocket.android.util.extensions.toJsonObject
@@ -78,8 +78,10 @@ class OauthWebViewActivity : AppCompatActivity() {
     private fun setupWebView() {
         with(web_view.settings) {
             javaScriptEnabled = true
-            // TODO This is required to make Google OAuth work, but we shoud use Custom Tabs instead. See https://github.com/RocketChat/Rocket.Chat.Android/issues/968
-            userAgentString = "Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19"
+            // TODO Remove this workaround that is required to make Google OAuth to work. We should use Custom Tabs instead. See https://github.com/RocketChat/Rocket.Chat.Android/issues/968
+            if (webPageUrl.contains("google")) {
+                userAgentString = "Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/43.0.2357.65 Mobile Safari/535.19"
+            }
         }
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {

@@ -9,9 +9,9 @@ ext {
         dokka             : '0.9.16',
 
         // Main dependencies
-        support                : '27.0.2',
+        support                : '27.1.0',
         constraintLayout       : '1.0.2',
-        androidKtx             : '0.2',
+        androidKtx             : '0.3',
         dagger                 : '2.14.1',
         exoPlayer              : '2.6.0',
         playServices           : '11.8.0',
@@ -20,7 +20,7 @@ ext {
         rxAndroid              : '2.0.2',
         moshi                  : '1.6.0-SNAPSHOT',
         okhttp                 : '3.10.0',
-        timber                 : '4.6.1',
+        timber                 : '4.7.0',
         threeTenABP            : '1.0.5',
         rxBinding              : '2.0.0',
         fresco                 : '1.8.1',
@@ -37,67 +37,68 @@ ext {
         expresso               : '3.0.1',
         mockito                : '2.10.0'
     ]
-
     libraries = [
-        kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",
-        coroutines             : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}",
-        coroutinesAndroid      : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutine}",
+            kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",
+            coroutines             : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}",
+            coroutinesAndroid      : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutine}",
 
-        appCompat              : "com.android.support:appcompat-v7:${versions.support}",
-        annotations            : "com.android.support:support-annotations:${versions.support}",
-        recyclerview           : "com.android.support:recyclerview-v7:${versions.support}",
-        design                 : "com.android.support:design:${versions.support}",
-        constraintLayout       : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
-        cardView               : "com.android.support:cardview-v7:${versions.support}",
-        flexbox                : "com.google.android:flexbox:${versions.flexbox}",
+            appCompat              : "com.android.support:appcompat-v7:${versions.support}",
+            annotations            : "com.android.support:support-annotations:${versions.support}",
+            recyclerview           : "com.android.support:recyclerview-v7:${versions.support}",
+            design                 : "com.android.support:design:${versions.support}",
+            constraintLayout       : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
+            cardView               : "com.android.support:cardview-v7:${versions.support}",
+            flexbox                : "com.google.android:flexbox:${versions.flexbox}",
+            customTabs             : "com.android.support:customtabs:${versions.support}",
 
-        androidKtx             : "androidx.core:core-ktx:${versions.androidKtx}",
+            androidKtx             : "androidx.core:core-ktx:${versions.androidKtx}",
 
-        dagger                 : "com.google.dagger:dagger:${versions.dagger}",
-        daggerSupport          : "com.google.dagger:dagger-android-support:${versions.dagger}",
-        daggerProcessor        : "com.google.dagger:dagger-compiler:${versions.dagger}",
-        daggerAndroidApt       : "com.google.dagger:dagger-android-processor:${versions.dagger}",
-        playServicesGcm        : "com.google.android.gms:play-services-gcm:${versions.playServices}",
-        exoPlayer              : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
+            dagger                 : "com.google.dagger:dagger:${versions.dagger}",
+            daggerSupport          : "com.google.dagger:dagger-android-support:${versions.dagger}",
+            daggerProcessor        : "com.google.dagger:dagger-compiler:${versions.dagger}",
+            daggerAndroidApt       : "com.google.dagger:dagger-android-processor:${versions.dagger}",
+            playServicesGcm        : "com.google.android.gms:play-services-gcm:${versions.playServices}",
+            exoPlayer              : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
 
-        room                   : "android.arch.persistence.room:runtime:${versions.room}",
-        roomProcessor          : "android.arch.persistence.room:compiler:${versions.room}",
-        roomRxjava             : "android.arch.persistence.room:rxjava2:${versions.room}",
+            room                   : "android.arch.persistence.room:runtime:${versions.room}",
+            roomProcessor          : "android.arch.persistence.room:compiler:${versions.room}",
+            roomRxjava             : "android.arch.persistence.room:rxjava2:${versions.room}",
 
-        rxKotlin               : "io.reactivex.rxjava2:rxkotlin:${versions.rxKotlin}",
-        rxAndroid              : "io.reactivex.rxjava2:rxandroid:${versions.rxAndroid}",
+            rxKotlin               : "io.reactivex.rxjava2:rxkotlin:${versions.rxKotlin}",
+            rxAndroid              : "io.reactivex.rxjava2:rxandroid:${versions.rxAndroid}",
 
-        moshi                  : "com.squareup.moshi:moshi:${versions.moshi}",
-        moshiKotlin            : "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
-        okhttp                 : "com.squareup.okhttp3:okhttp:${versions.okhttp}",
-        okhttpLogger           : "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}",
+            moshi                  : "com.squareup.moshi:moshi:${versions.moshi}",
+            moshiKotlin            : "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
+            okhttp                 : "com.squareup.okhttp3:okhttp:${versions.okhttp}",
+            okhttpLogger           : "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}",
 
-        timber                 : "com.jakewharton.timber:timber:${versions.timber}",
-        threeTenABP            : "com.jakewharton.threetenabp:threetenabp:${versions.threeTenABP}",
-        rxBinding              : "com.jakewharton.rxbinding2:rxbinding-kotlin:${versions.rxBinding}",
+            timber                 : "com.jakewharton.timber:timber:${versions.timber}",
+            threeTenABP            : "com.jakewharton.threetenabp:threetenabp:${versions.threeTenABP}",
+            rxBinding              : "com.jakewharton.rxbinding2:rxbinding-kotlin:${versions.rxBinding}",
 
-        fresco                 : "com.facebook.fresco:fresco:${versions.fresco}",
-        frescoOkHttp           : "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}",
-        frescoAnimatedGif      : "com.facebook.fresco:animated-gif:${versions.fresco}",
-        frescoWebP             : "com.facebook.fresco:webpsupport:${versions.fresco}",
-        frescoAnimatedWebP     : "com.facebook.fresco:animated-webp:${versions.fresco}",
+            fresco                 : "com.facebook.fresco:fresco:${versions.fresco}",
+            frescoOkHttp           : "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}",
+            frescoAnimatedGif      : "com.facebook.fresco:animated-gif:${versions.fresco}",
+            frescoWebP             : "com.facebook.fresco:webpsupport:${versions.fresco}",
+            frescoAnimatedWebP     : "com.facebook.fresco:animated-webp:${versions.fresco}",
 
-        kotshiApi              : "se.ansman.kotshi:api:${versions.kotshi}",
-        kotshiCompiler         : "se.ansman.kotshi:compiler:${versions.kotshi}",
+            kotshiApi              : "se.ansman.kotshi:api:${versions.kotshi}",
+            kotshiCompiler         : "se.ansman.kotshi:compiler:${versions.kotshi}",
 
-        frescoImageViewer      : "com.github.luciofm:FrescoImageViewer:${versions.frescoImageViewer}",
+            frescoImageViewer      : "com.github.luciofm:FrescoImageViewer:${versions.frescoImageViewer}",
 
-        markwon                : "ru.noties:markwon:${versions.markwon}",
-        markwonImageLoader     : "ru.noties:markwon-image-loader:${versions.markwon}",
+            markwon                : "ru.noties:markwon:${versions.markwon}",
+            markwonImageLoader     : "ru.noties:markwon-image-loader:${versions.markwon}",
 
-        sheetMenu              : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
+            sheetMenu              : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
 
-        aVLoadingIndicatorView : "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
+            aVLoadingIndicatorView : "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
 
-        // For testing
-        junit         : "junit:junit:$versions.junit",
-        expressoCore  : "com.android.support.test.espresso:espresso-core:${versions.expresso}",
-        roomTest      : "android.arch.persistence.room:testing:${versions.room}",
-        truth         : "com.google.truth:truth:$versions.truth",
+            // For testing
+            junit         : "junit:junit:$versions.junit",
+            expressoCore  : "com.android.support.test.espresso:espresso-core:${versions.expresso}",
+            roomTest      : "android.arch.persistence.room:testing:${versions.room}",
+            truth         : "com.google.truth:truth:$versions.truth",
     ]
+
 }

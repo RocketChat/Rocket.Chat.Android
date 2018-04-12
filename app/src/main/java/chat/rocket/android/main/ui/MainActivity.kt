@@ -1,6 +1,7 @@
 package chat.rocket.android.main.ui
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -8,8 +9,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.main.adapter.AccountSelector
+import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
@@ -19,6 +21,7 @@ import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.core.internal.realtime.UserStatus
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.google.android.gms.iid.InstanceID
 import dagger.android.AndroidInjection
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
+    private var expanded = false
+    private val headerLayout by lazy { view_navigation.getHeaderView(0) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -46,9 +51,13 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         setContentView(R.layout.activity_main)
 
         launch(CommonPool) {
-            val token = InstanceID.getInstance(this@MainActivity).getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
-            Timber.d("GCM token: $token")
-            presenter.refreshToken(token)
+            try {
+                val token = InstanceID.getInstance(this@MainActivity).getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
+                Timber.d("GCM token: $token")
+                presenter.refreshToken(token)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Missing play services...")
+            }
         }
 
         presenter.connect()
@@ -72,25 +81,69 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         }
     }
 
-    override fun setupNavHeader(model: NavHeaderViewModel, accounts: List<Account>) {
-        Timber.d("Setting up nav header: $model")
-        val headerLayout = view_navigation.getHeaderView(0)
-        headerLayout.text_name.text = model.username
-        headerLayout.text_server.text = model.server
-        headerLayout.image_avatar.setImageURI(model.avatar)
-        headerLayout.server_logo.setImageURI(model.serverLogo)
-        setupAccountsList(headerLayout, accounts)
+    override fun showUserStatus(userStatus: UserStatus) {
+        headerLayout.apply {
+            image_user_status.setImageDrawable(
+                DrawableHelper.getUserStatusDrawable(
+                    userStatus,
+                    this.context
+                )
+            )
+        }
+    }
+
+    override fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>) {
+        Timber.d("Setting up nav header: $viewModel")
+        with(headerLayout) {
+            with(viewModel) {
+                if (userStatus != null) {
+                    image_user_status.setImageDrawable(
+                        DrawableHelper.getUserStatusDrawable(userStatus, context)
+                    )
+                }
+                if (userDisplayName != null) {
+                    text_user_name.text = userDisplayName
+                }
+                if (userAvatar != null) {
+                    image_avatar.setImageURI(userAvatar)
+                }
+                if (serverLogo != null) {
+                    server_logo.setImageURI(serverLogo)
+                }
+                text_server_url.text = viewModel.serverUrl
+            }
+            setupAccountsList(headerLayout, accounts)
+        }
     }
 
     override fun closeServerSelection() {
         view_navigation.getHeaderView(0).account_container.performClick()
     }
 
-    private var expanded = false
+    override fun alertNotRecommendedVersion() {
+        AlertDialog.Builder(this)
+                .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
+    }
+
+    override fun blockAndAlertNotRequiredVersion() {
+        AlertDialog.Builder(this)
+                .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
+                .setOnDismissListener { presenter.logout() }
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
+    }
 
     private fun setupAccountsList(header: View, accounts: List<Account>) {
         accounts_list.layoutManager = LinearLayoutManager(this)
-        accounts_list.adapter = AccountsAdapter(accounts, object : AccountSelector {
+        accounts_list.adapter = AccountsAdapter(accounts, object : Selector {
+            override fun onStatusSelected(userStatus: UserStatus) {
+                presenter.changeStatus(userStatus)
+            }
+
             override fun onAccountSelected(serverUrl: String) {
                 presenter.changeServer(serverUrl)
             }
@@ -98,11 +151,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             override fun onAddedAccountSelected() {
                 presenter.addNewServer()
             }
-
         })
 
         header.account_container.setOnClickListener {
-            header.account_expand.rotateBy(180f)
+            header.image_account_expand.rotateBy(180f)
             if (expanded) {
                 accounts_list.fadeOut()
             } else {
@@ -110,6 +162,12 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             }
 
             expanded = !expanded
+        }
+
+        header.image_avatar.setOnClickListener {
+            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
+            presenter.toUserProfile()
+            drawer_layout.closeDrawer(Gravity.START)
         }
     }
 
