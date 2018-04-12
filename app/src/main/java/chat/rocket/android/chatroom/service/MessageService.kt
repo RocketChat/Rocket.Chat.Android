@@ -35,36 +35,38 @@ class MessageService : JobService() {
         launch(CommonPool) {
             val currentServer = currentServerRepository.get()
             if (currentServer != null) {
-                params?.let {
-                    try {
-                        retrySendingMessages(currentServer)
-                        jobFinished(params, false)
-                    } catch (ex: RocketChatException) {
-                        Timber.e(ex)
-                        jobFinished(params, true)
-                    }
-                }
+                retrySendingMessages(params, currentServer)
+                jobFinished(params, false)
             }
         }
         return true
     }
 
-    private suspend fun retrySendingMessages(currentServer: String) {
+    private suspend fun retrySendingMessages(params: JobParameters?, currentServer: String) {
         val temporaryMessages = messageRepository.getAllUnsent()
             .sortedWith(compareBy(Message::timestamp))
         if (temporaryMessages.isNotEmpty()) {
             val connectionManager = factory.create(currentServer)
             val client = connectionManager.client
             temporaryMessages.forEach { message ->
-                client.sendMessage(
-                    message = message.message,
-                    messageId = message.id,
-                    roomId = message.roomId,
-                    avatar = message.avatar,
-                    attachments = message.attachments,
-                    alias = message.senderAlias
-                )
-                messageRepository.save(message.copy(isTemporary = false))
+                try {
+                    client.sendMessage(
+                        message = message.message,
+                        messageId = message.id,
+                        roomId = message.roomId,
+                        avatar = message.avatar,
+                        attachments = message.attachments,
+                        alias = message.senderAlias
+                    )
+                    messageRepository.save(message.copy(isTemporary = false))
+                } catch (ex: RocketChatException) {
+                    Timber.e(ex)
+                    if (ex.message?.contains("E11000", true) == true) {
+                        // XXX: Temporary solution. We need proper error codes from the api.
+                        messageRepository.save(message.copy(isTemporary = false))
+                    }
+                    jobFinished(params, true)
+                }
             }
         }
     }
