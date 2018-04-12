@@ -8,8 +8,8 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 
 class SharedPreferencesMessagesRepository(
-        private val prefs: SharedPreferences,
-        private val moshi: Moshi)
+    private val prefs: SharedPreferences,
+    private val moshi: Moshi)
     : MessagesRepository {
 
     override suspend fun getById(id: String): Message? = withContext(CommonPool) {
@@ -34,7 +34,7 @@ class SharedPreferencesMessagesRepository(
 
     override suspend fun getRecentMessages(rid: String, count: Long): List<Message> {
         return getByRoomId(rid).sortedByDescending { it.timestamp }
-                .distinctBy { it.sender }.take(count.toInt())
+            .distinctBy { it.sender }.take(count.toInt())
     }
 
     override suspend fun getAll(): List<Message> = withContext(CommonPool) {
@@ -53,7 +53,7 @@ class SharedPreferencesMessagesRepository(
         val all = prefs.all.values as Collection<String>
         val adapter = moshi.adapter<Message>(Message::class.java)
         return@withContext all.mapNotNull { adapter.fromJson(it) }
-                .filter { it.isTemporary ?: false }
+            .filter { it.isTemporary ?: false }
     }
 
     override suspend fun getUnsentByRoomId(roomId: String): List<Message> = withContext(CommonPool) {

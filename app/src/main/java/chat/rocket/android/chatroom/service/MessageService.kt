@@ -7,6 +7,7 @@ import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.internal.rest.sendMessage
+import chat.rocket.core.model.Message
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
@@ -50,17 +51,18 @@ class MessageService : JobService() {
 
     private suspend fun retrySendingMessages(currentServer: String) {
         val temporaryMessages = messageRepository.getAllUnsent()
+            .sortedWith(compareBy(Message::timestamp))
         if (temporaryMessages.isNotEmpty()) {
             val connectionManager = factory.create(currentServer)
             val client = connectionManager.client
             temporaryMessages.forEach { message ->
                 client.sendMessage(
-                        message = message.message,
-                        messageId = message.id,
-                        roomId = message.roomId,
-                        avatar = message.avatar,
-                        attachments = message.attachments,
-                        alias = message.senderAlias
+                    message = message.message,
+                    messageId = message.id,
+                    roomId = message.roomId,
+                    avatar = message.avatar,
+                    attachments = message.attachments,
+                    alias = message.senderAlias
                 )
                 messageRepository.save(message.copy(isTemporary = false))
             }
