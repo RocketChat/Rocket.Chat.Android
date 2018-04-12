@@ -4,11 +4,11 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.createChannel.presentation.CreateNewChannelPresenter
 import chat.rocket.android.createChannel.presentation.CreateNewChannelView
 import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.roomTypeOf
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.AndroidInjection
@@ -30,16 +30,20 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         layout_container.isEnabled = true
     }
 
+    override fun showChannelCreatedSuccessfullyMessage() {
+        showToast(getString(R.string.msg_channel_created_successfully))
+    }
+
     override fun showMessage(resId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        showToast(getString(resId))
     }
 
     override fun showMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        showToast(message)
     }
 
     override fun showGenericErrorMessage() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        showMessage(getString(R.string.msg_generic_error))
     }
 
     @Inject
@@ -86,7 +90,7 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
             channelType = "c"
 
             channel_type.text = getString(R.string.public_channel_type)
-            channel_description.text = getString(R.string.private_channel_type_description)
+            channel_description.text = getString(R.string.public_channel_description)
 
             placeholder.setImageDrawable(getDrawable(R.drawable.ic_hashtag_black))
 
@@ -104,7 +108,7 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
             channelType = "p"
 
             channel_type.text = getString(R.string.private_channel_type)
-            channel_description.text = getString(R.string.public_channel_description)
+            channel_description.text = getString(R.string.private_channel_type_description)
 
             placeholder.setImageDrawable(getDrawable(R.drawable.ic_room_lock))
 
