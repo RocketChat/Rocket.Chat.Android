@@ -123,6 +123,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">पिन किए गए संदेश</string>
+    <string name="no_pinned_messages">कोई पिन संदेश नहीं</string>
+    <string name="no_pinned_description">सभी पिन किए गए संदेश यहां\nदिखाई देते हैं।</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">फ़ाइल का आकार %1$d बाइट्स ने %2$d बाइट्स के अधिकतम अपलोड आकार को पार कर लिया है</string>

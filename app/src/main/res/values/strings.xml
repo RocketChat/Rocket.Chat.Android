@@ -124,6 +124,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>
+    <string name="no_pinned_messages">No pinned messages</string>
+    <string name="no_pinned_description">All the pinned messages\nappear here.</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
