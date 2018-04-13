@@ -23,26 +23,24 @@ import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.unregisterPushToken
 import chat.rocket.core.model.Myself
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.channels.Channel
-import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
-        private val view: MainView,
-        private val strategy: CancelStrategy,
-        private val navigator: MainNavigator,
-        private val tokenRepository: TokenRepository,
-        private val serverInteractor: GetCurrentServerInteractor,
-        private val localRepository: LocalRepository,
-        private val navHeaderMapper: NavHeaderViewModelMapper,
-        private val saveAccountInteractor: SaveAccountInteractor,
-        private val getAccountsInteractor: GetAccountsInteractor,
-        private val removeAccountInterector: RemoveAccountInterector,
-        private val factory: RocketChatClientFactory,
-        getSettingsInteractor: GetSettingsInteractor,
-        managerFactory: ConnectionManagerFactory
+    private val view: MainView,
+    private val strategy: CancelStrategy,
+    private val navigator: MainNavigator,
+    private val tokenRepository: TokenRepository,
+    private val serverInteractor: GetCurrentServerInteractor,
+    private val localRepository: LocalRepository,
+    private val navHeaderMapper: NavHeaderViewModelMapper,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    private val removeAccountInteractor: RemoveAccountInteractor,
+    private val factory: RocketChatClientFactory,
+    getSettingsInteractor: GetSettingsInteractor,
+    managerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(strategy, client = factory.create(serverInteractor.get()!!), view = view) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
@@ -105,7 +103,7 @@ class MainPresenter @Inject constructor(
 
             try {
                 disconnect()
-                removeAccountInterector.remove(currentServer)
+                removeAccountInteractor.remove(currentServer)
                 tokenRepository.remove(currentServer)
                 navigator.toNewServer()
             } catch (ex: Exception) {

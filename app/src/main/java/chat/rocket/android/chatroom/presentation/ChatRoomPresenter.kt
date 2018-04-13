@@ -220,6 +220,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                     }
 
                     if (state is State.Connected) {
+                        jobSchedulerInteractor.scheduleSendingMessages()
                         loadMissingMessages()
                     }
                 }

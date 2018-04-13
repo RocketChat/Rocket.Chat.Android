@@ -59,6 +59,7 @@ class MessageService : JobService() {
                         alias = message.senderAlias
                     )
                     messageRepository.save(message.copy(isTemporary = false))
+                    Timber.d("Sent scheduled message given by id: ${message.id}")
                 } catch (ex: RocketChatException) {
                     Timber.e(ex)
                     if (ex.message?.contains("E11000", true) == true) {
@@ -72,7 +73,6 @@ class MessageService : JobService() {
     }
 
     companion object {
-        const val EXTRA_MESSAGE_ID = "extra_message_id"
         const val RETRY_SEND_MESSAGE_ID = 1
     }
 }
