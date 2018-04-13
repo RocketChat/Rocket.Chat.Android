@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
+import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -106,7 +107,20 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             is FileAttachment -> mapFileAttachment(message, attachment)
             is MessageAttachment -> mapMessageAttachment(message, attachment)
             is AuthorAttachment -> mapAuthorAttachment(message, attachment)
+            is ColorAttachment -> mapColorAttachment(message, attachment)
             else -> null
+        }
+    }
+
+    private suspend fun mapColorAttachment(message: Message, attachment: ColorAttachment): BaseViewModel<*>? {
+        return with(attachment) {
+            val content = stripMessageQuotes(message)
+            val id = attachmentId(message, attachment)
+
+            ColorAttachmentViewModel(attachmentUrl = url, id = id, color = color.color,
+                    text = text, message = message, rawData = attachment,
+                    messageId = message.id, reactions = getReactions(message),
+                    preview = message.copy(message = content.message))
         }
     }
 
