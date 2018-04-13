@@ -46,8 +46,4 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
             }
         }
     }
-
-    companion object {
-        const val MAX_RETRY_ATTEMPTS = 1
-    }
 }
