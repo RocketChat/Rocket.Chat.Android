@@ -33,6 +33,9 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisível</string>
+    <string name="action_skip">Pular</string>
+    <string name="action_next">Próximo</string>
+    <string name="action_done">feito</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -185,4 +188,12 @@
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
+
+    <!--OnBoarding-->
+    <string name="onBoarding_title1">Bem-vindo ao Rocket.Chat</string>
+    <string name="onBoarding_description1">Rocket.Chat é o principal aplicativo gratuito de chat\nde código aberto.</string>
+    <string name="onBoarding_title2">Canais</string>
+    <string name="onBoarding_description2">A maneira perfeita de conversar com seus colegas de equipe\nem projetos.</string>
+    <string name="onBoarding_title3">Bate-papos ilimitados</string>
+    <string name="onBoarding_description3">Desfrute de bate-papos ilimitados com sua equipe.</string>
 </resources>
