@@ -9,7 +9,6 @@ import chat.rocket.android.util.extensions.isValidUrl
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.util.ifNull
 import javax.inject.Inject
-import javax.net.ssl.SSLHandshakeException
 
 class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val strategy: CancelStrategy,
@@ -17,7 +16,6 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val serverInteractor: SaveCurrentServerInteractor,
                                           private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                           private val getAccountsInteractor: GetAccountsInteractor) {
-    private var retryCount = 0
 
     fun connect(server: String) {
         if (!server.isValidUrl()) {
@@ -37,15 +35,10 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                     serverInteractor.save(server)
                     navigator.toLogin()
                 } catch (ex: Exception) {
-                    if (ex.cause is SSLHandshakeException && retryCount < MAX_RETRY_ATTEMPTS) {
-                        retryCount++
-                        connect(server.replace("https", "http"))
-                    } else {
-                        ex.message?.let {
-                            view.showMessage(it)
-                        }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
+                    ex.message?.let {
+                        view.showMessage(it)
+                    }.ifNull {
+                        view.showGenericErrorMessage()
                     }
                 } finally {
                     view.hideLoading()
