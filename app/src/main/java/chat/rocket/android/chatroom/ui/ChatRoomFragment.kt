@@ -33,7 +33,7 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.emoji.*
-import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -42,7 +42,6 @@ import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
-import kotlin.math.absoluteValue
 
 fun newInstance(chatRoomId: String,
                 chatRoomName: String,
