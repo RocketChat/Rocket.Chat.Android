@@ -24,4 +24,5 @@ interface LocalRepository {
     }
 }
 
-fun LocalRepository.checkIfMyself(username: String) = get(LocalRepository.CURRENT_USERNAME_KEY) == username
+fun LocalRepository.checkIfMyself(username: String) = username() == username
+fun LocalRepository.username() = get(LocalRepository.CURRENT_USERNAME_KEY)

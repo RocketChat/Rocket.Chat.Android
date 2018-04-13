@@ -12,6 +12,7 @@ interface BaseViewModel<out T> {
     var reactions: List<ReactionViewModel>
     var nextDownStreamMessage: BaseViewModel<*>?
     var preview: Message?
+    var isTemporary: Boolean
 
     enum class ViewType(val viewType: Int) {
         MESSAGE(0),
