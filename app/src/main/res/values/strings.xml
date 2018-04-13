@@ -34,6 +34,9 @@
     <string name="action_away">Away</string>
     <string name="action_busy">Busy</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_next">Next</string>
+    <string name="action_done">Done</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -186,4 +189,14 @@
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>
+    
+    <!--OnBoarding-->
+    <string name="onBoarding_title1">Welcome to Rocket.Chat</string>
+    <string name="onBoarding_description1">Rocket.Chat is the leading free open source\nchat application.</string>
+    <string name="onBoarding_title2">Channels</string>
+    <string name="onBoarding_description2">The perfect way to talk with your teammates\non projects.</string>
+    <string name="onBoarding_title3">Unlimited chats</string>
+    <string name="onBoarding_description3">Enjoy unlimited chats with your team.</string>
+    <string name="channel_symbol" translatable="false">#</string>
+
 </resources>

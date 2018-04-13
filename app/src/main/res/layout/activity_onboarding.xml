@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="chat.rocket.android.onboarding.ui.OnboardingActivity"
+    android:background="@color/colorPrimary"
+    android:id="@+id/root_on_boarding_activity">
+
+    <ImageView
+        android:id="@+id/image_mobile"
+        android:layout_width="wrap_content"
+        android:layout_height="320dp"
+        android:src="@drawable/mobile"
+        android:adjustViewBounds="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="40dp"
+        android:elevation="2dp"
+        />
+
+    <View
+        android:id="@+id/view_circle"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/rounded_background_yellow"
+        android:elevation="6dp"
+        app:layout_constraintStart_toStartOf="@id/image_mobile"
+        app:layout_constraintEnd_toEndOf="@id/image_mobile"
+        app:layout_constraintTop_toTopOf="@id/image_mobile"
+        app:layout_constraintBottom_toBottomOf="@id/image_mobile"
+        android:visibility="visible"
+        android:alpha="0"
+        />
+
+    <TextView
+        android:id="@+id/text_channel_symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/channel_symbol"
+        android:textColor="@color/white"
+        android:textSize="56sp"
+        android:elevation="6dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/view_circle"
+        app:layout_constraintEnd_toEndOf="@id/view_circle"
+        app:layout_constraintTop_toTopOf="@id/view_circle"
+        app:layout_constraintBottom_toBottomOf="@id/view_circle"
+        android:alpha="0"/>
+
+    <ImageView
+        android:id="@+id/image_chat"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_chat_black_24dp"
+        app:layout_constraintStart_toStartOf="@id/view_circle"
+        app:layout_constraintEnd_toEndOf="@id/view_circle"
+        app:layout_constraintTop_toTopOf="@id/view_circle"
+        app:layout_constraintBottom_toBottomOf="@id/view_circle"
+        android:elevation="6dp"
+        android:tint="@color/white"
+        android:scaleY="0"
+        android:scaleX="0"/>
+
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0dp"
+        android:layout_height="240dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#fff"
+        android:elevation="4dp"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:elevation="4dp"
+        />
+
+    <View
+        android:id="@+id/view_bottom_div"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="56dp"
+        android:elevation="4dp"/>
+    <Button
+        android:id="@+id/button_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:text="@string/action_skip"
+        android:textColor="@color/colorPrimary"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="4dp"/>
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:text="@string/action_next"
+        android:textColor="@color/colorPrimary"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="4dp"/>
+    
+    <chat.rocket.android.widget.pageIndicator.PageIndicator
+        android:id="@+id/pageIndicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:indicatorRadius="4dp"
+        app:indicatorPadding="8dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="4dp"
+        app:indicatorActiveColor="@color/colorPrimary"
+        app:indicatorInActiveColor="@color/pageIndicatorInactive"/>
+
+</android.support.constraint.ConstraintLayout>

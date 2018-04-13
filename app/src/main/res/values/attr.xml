@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PageIndicator">
+        <attr name="android:gravity"/>
+        <attr name="indicatorRadius" format="dimension"/>
+        <attr name="indicatorPadding" format="dimension"/>
+        <attr name="indicatorInActiveColor" format="color"/>
+        <attr name="indicatorActiveColor" format="color"/>
+    </declare-styleable>
+</resources>

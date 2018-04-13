@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.authentication.server.ui.ServerFragment
+import chat.rocket.android.onboarding.ui.OnboardingActivity
 import chat.rocket.android.util.extensions.addFragment
-import chat.rocket.android.util.extensions.launchUI
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -18,6 +18,7 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
+
 
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -38,6 +39,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 }
             }
         }
+        startActivity(Intent(this,OnboardingActivity::class.java))
     }
 
     override fun onDestroy() {
