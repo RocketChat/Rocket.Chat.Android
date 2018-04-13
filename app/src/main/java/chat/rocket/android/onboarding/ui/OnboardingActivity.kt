@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import androidx.view.size
 import chat.rocket.android.R
+import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.onboarding.adapter.OnboardingPagerAdapter
 import chat.rocket.android.onboarding.presentation.PageTransformerPresenter
+import chat.rocket.android.onboarding.utils.Utils
 import chat.rocket.android.util.extensions.setVisible
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import timber.log.Timber
@@ -28,11 +30,13 @@ class OnboardingActivity : AppCompatActivity(){
                 view_pager.currentItem = view_pager.currentItem+1
             }else{
                 finish()
+                Utils().saveSharedSetting(this, AuthenticationActivity().PREF_FIRST_TIME_USER, "false")
             }
         }
 
         button_skip.setOnClickListener{
             finish()
+            Utils().saveSharedSetting(this, AuthenticationActivity().PREF_FIRST_TIME_USER, "false")
         }
 
         view_pager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
