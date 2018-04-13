@@ -225,9 +225,9 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMessageRepository(context: Application, moshi: Moshi): MessagesRepository {
+    fun provideMessageRepository(context: Application, moshi: Moshi, currentServerInteractor: GetCurrentServerInteractor): MessagesRepository {
         val preferences = context.getSharedPreferences("messages", Context.MODE_PRIVATE)
-        return SharedPreferencesMessagesRepository(preferences, moshi)
+        return SharedPreferencesMessagesRepository(preferences, moshi, currentServerInteractor)
     }
 
     @Provides
