@@ -2,7 +2,15 @@ package chat.rocket.android.server.infraestructure
 
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.realtime.*
+import chat.rocket.core.internal.realtime.unsubscribe
+import chat.rocket.core.internal.realtime.socket.connect
+import chat.rocket.core.internal.realtime.socket.disconnect
+import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.internal.realtime.socket.model.StreamMessage
+import chat.rocket.core.internal.realtime.subscribeRoomMessages
+import chat.rocket.core.internal.realtime.subscribeRooms
+import chat.rocket.core.internal.realtime.subscribeSubscriptions
+import chat.rocket.core.internal.realtime.subscribeUserDataChanges
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
@@ -11,7 +19,6 @@ import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import java.util.concurrent.CopyOnWriteArrayList
-
 
 class ConnectionManager(internal val client: RocketChatClient) {
     private val statusChannelList = CopyOnWriteArrayList<Channel<State>>()
@@ -53,7 +60,6 @@ class ConnectionManager(internal val client: RocketChatClient) {
                             Timber.d("Subscribed to rooms: $id")
                             roomsId = id
                         }
-
                         client.subscribeUserDataChanges { _, id ->
                             Timber.d("Subscribed to the user: $id")
                             userId = id
@@ -138,9 +144,11 @@ class ConnectionManager(internal val client: RocketChatClient) {
 
     fun removeStatusChannel(channel: Channel<State>) = statusChannelList.remove(channel)
 
-    fun addRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) = roomAndSubscriptionChannels.add(channel)
+    fun addRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) =
+        roomAndSubscriptionChannels.add(channel)
 
-    fun removeRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) = roomAndSubscriptionChannels.remove(channel)
+    fun removeRoomsAndSubscriptionsChannel(channel: Channel<StreamMessage<BaseRoom>>) =
+        roomAndSubscriptionChannels.remove(channel)
 
     fun addUserDataChannel(channel: Channel<Myself>) = userDataChannels.add(channel)
 
@@ -170,8 +178,8 @@ class ConnectionManager(internal val client: RocketChatClient) {
     }
 }
 
-suspend fun ConnectionManager.chatRooms(timestamp: Long = 0, filterCustom: Boolean = true)
-        = client.chatRooms(timestamp, filterCustom)
+suspend fun ConnectionManager.chatRooms(timestamp: Long = 0, filterCustom: Boolean = true) =
+    client.chatRooms(timestamp, filterCustom)
 
 val ConnectionManager.state: State
     get() = client.state

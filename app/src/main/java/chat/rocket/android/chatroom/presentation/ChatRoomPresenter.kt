@@ -25,7 +25,7 @@ import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
