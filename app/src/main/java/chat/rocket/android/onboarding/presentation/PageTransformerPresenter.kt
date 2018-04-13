@@ -3,9 +3,7 @@ package chat.rocket.android.onboarding.presentation
 import android.support.v4.view.ViewPager
 import android.view.View
 
-
 class PageTransformerPresenter : ViewPager.PageTransformer {
-
 
     override fun transformPage(page: View, position: Float) {
 
@@ -21,10 +19,6 @@ class PageTransformerPresenter : ViewPager.PageTransformer {
                 // Page is being scrolled
                 delegate.onPageScrolled(page, position)
             }
-
         }
-
-
     }
-
 }

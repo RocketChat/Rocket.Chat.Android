@@ -18,8 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="40dp"
-        android:elevation="2dp"
-        />
+        android:elevation="2dp" />
 
     <View
         android:id="@+id/view_circle"
@@ -32,8 +31,7 @@
         app:layout_constraintTop_toTopOf="@id/image_mobile"
         app:layout_constraintBottom_toBottomOf="@id/image_mobile"
         android:visibility="visible"
-        android:alpha="0"
-        />
+        android:alpha="0" />
 
     <TextView
         android:id="@+id/text_channel_symbol"
@@ -73,16 +71,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="#fff"
-        android:elevation="4dp"
-        />
+        android:elevation="4dp" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:elevation="4dp"
-        />
+        android:elevation="4dp" />
 
     <View
         android:id="@+id/view_bottom_div"
@@ -94,6 +90,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="56dp"
         android:elevation="4dp"/>
+
     <Button
         android:id="@+id/button_skip"
         android:layout_width="wrap_content"

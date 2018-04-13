@@ -20,7 +20,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
-
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: AuthenticationPresenter
@@ -50,7 +49,6 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 }
             }
         }
-
     }
 
     override fun onDestroy() {
