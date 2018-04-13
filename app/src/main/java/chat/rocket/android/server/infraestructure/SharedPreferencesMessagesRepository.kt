@@ -11,8 +11,8 @@ import kotlinx.coroutines.experimental.withContext
 class SharedPreferencesMessagesRepository(
     private val prefs: SharedPreferences,
     private val moshi: Moshi,
-    private val currentServerInteractor: GetCurrentServerInteractor)
-    : MessagesRepository {
+    private val currentServerInteractor: GetCurrentServerInteractor
+) : MessagesRepository {
 
     override suspend fun getById(id: String): Message? = withContext(CommonPool) {
         currentServerInteractor.get()?.also { server ->
