@@ -15,9 +15,9 @@ import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.model.UserStatus
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.realtime.UserStatus
 import chat.rocket.core.internal.realtime.setDefaultStatus
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
