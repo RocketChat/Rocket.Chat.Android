@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -70,8 +69,10 @@ private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
-    @Inject lateinit var presenter: ChatRoomPresenter
-    @Inject lateinit var parser: MessageParser
+    @Inject
+    lateinit var presenter: ChatRoomPresenter
+    @Inject
+    lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -207,7 +208,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
-                        reactionListener = this@ChatRoomFragment)
+                    reactionListener = this@ChatRoomFragment)
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
@@ -316,15 +317,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun enableSendMessageButton(sendFailed: Boolean) {
+    override fun enableSendMessageButton() {
         ui {
             button_send.isEnabled = true
             text_message.isEnabled = true
-            if (!sendFailed) {
-                clearMessageComposition()
-            }
+            clearMessageComposition()
         }
     }
+
 
     override fun clearMessageComposition() {
         ui {
@@ -408,7 +408,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun copyToClipboard(message: String) {
         ui {
-            val clipboard: ClipboardManager  = it.systemService()
+            val clipboard: ClipboardManager = it.systemService()
             clipboard.primaryClip = ClipData.newPlainText("", message)
         }
     }
@@ -469,10 +469,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showFileSelection(filter: Array<String>) {
         ui {
             if (ContextCompat.checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(it,
-                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                        1)
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1)
             } else {
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                 intent.type = "*/*"
@@ -536,7 +536,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         recycler_view.layoutManager = linearLayoutManager
         recycler_view.itemAnimator = DefaultItemAnimator()
         endlessRecyclerViewScrollListener = object :
-                EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
+            EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
                 presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }
@@ -589,6 +589,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 var textMessage = citation ?: ""
                 textMessage += text_message.textContent
                 sendMessage(textMessage)
+                clearMessageComposition()
             }
 
             button_show_attachment_options.setOnClickListener {
@@ -621,23 +622,23 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupSuggestionsView() {
         suggestions_view.anchorTo(text_message)
-                .setMaximumHeight(resources.getDimensionPixelSize(R.dimen.suggestions_box_max_height))
-                .addTokenAdapter(PeopleSuggestionsAdapter(context!!))
-                .addTokenAdapter(CommandSuggestionsAdapter())
-                .addTokenAdapter(RoomSuggestionsAdapter())
-                .addSuggestionProviderAction("@") { query ->
-                    if (query.isNotEmpty()) {
-                        presenter.spotlight(query, PEOPLE, true)
-                    }
+            .setMaximumHeight(resources.getDimensionPixelSize(R.dimen.suggestions_box_max_height))
+            .addTokenAdapter(PeopleSuggestionsAdapter(context!!))
+            .addTokenAdapter(CommandSuggestionsAdapter())
+            .addTokenAdapter(RoomSuggestionsAdapter())
+            .addSuggestionProviderAction("@") { query ->
+                if (query.isNotEmpty()) {
+                    presenter.spotlight(query, PEOPLE, true)
                 }
-                .addSuggestionProviderAction("#") { query ->
-                    if (query.isNotEmpty()) {
-                        presenter.loadChatRooms()
-                    }
+            }
+            .addSuggestionProviderAction("#") { query ->
+                if (query.isNotEmpty()) {
+                    presenter.loadChatRooms()
                 }
-                .addSuggestionProviderAction("/") { _ ->
-                    presenter.loadCommands()
-                }
+            }
+            .addSuggestionProviderAction("/") { _ ->
+                presenter.loadCommands()
+            }
 
         presenter.loadCommands()
     }
@@ -672,7 +673,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun subscribeTextMessage() {
         val disposable = text_message.asObservable(0)
-                .subscribe({ t -> setupComposeMessageButtons(t) })
+            .subscribe({ t -> setupComposeMessageButtons(t) })
 
         compositeDisposable.add(disposable)
     }

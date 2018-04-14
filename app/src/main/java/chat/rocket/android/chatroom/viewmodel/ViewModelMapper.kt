@@ -226,12 +226,13 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
+        val isTemp = message.isTemporary ?: false
 
         val content = getContent(stripMessageQuotes(message))
         MessageViewModel(message = stripMessageQuotes(message), rawData = message,
                 messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
                 content = content, isPinned = message.pinned, reactions = getReactions(message),
-                isFirstUnread = false, preview = preview)
+                isFirstUnread = false, preview = preview, isTemporary = isTemp)
     }
 
     private suspend fun mapMessagePreview(message: Message): Message {
