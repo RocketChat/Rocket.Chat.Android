@@ -14,7 +14,8 @@ data class ColorAttachmentViewModel(
     override val messageId: String,
     override var reactions: List<ReactionViewModel>,
     override var nextDownStreamMessage: BaseViewModel<*>? = null,
-    override var preview: Message? = null
+    override var preview: Message? = null,
+    override var isTemporary: Boolean = false
 ) : BaseAttachmentViewModel<ColorAttachment> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.COLOR_ATTACHMENT.viewType
