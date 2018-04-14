@@ -11,7 +11,10 @@ import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.textContent
 import android.support.v7.view.ActionMode
+import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_password.*
 import javax.inject.Inject
@@ -19,6 +22,7 @@ import javax.inject.Inject
 class PasswordFragment: Fragment(), PasswordView, android.support.v7.view.ActionMode.Callback {
     @Inject lateinit var presenter: PasswordPresenter
     private var actionMode: ActionMode? = null
+    private val disposables = CompositeDisposable()
 
     companion object {
         fun newInstance() = PasswordFragment()
@@ -34,13 +38,20 @@ class PasswordFragment: Fragment(), PasswordView, android.support.v7.view.Action
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listenToChanges()
+        disposables.add(listenToChanges())
+    }
+
+    override fun onDestroyView() {
+        disposables.clear()
+        super.onDestroyView()
     }
 
     override fun hideLoading() {
-        layout_new_password.visibility = View.VISIBLE
-        layout_confirm_password.visibility = View.VISIBLE
-        view_loading.visibility = View.GONE
+        ui {
+            layout_new_password.visibility = View.VISIBLE
+            layout_confirm_password.visibility = View.VISIBLE
+            view_loading.visibility = View.GONE
+        }
     }
 
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
@@ -69,9 +80,11 @@ class PasswordFragment: Fragment(), PasswordView, android.support.v7.view.Action
     }
 
     override fun showLoading() {
-        layout_new_password.visibility = View.GONE
-        layout_confirm_password.visibility = View.GONE
-        view_loading.visibility = View.VISIBLE
+        ui {
+            layout_new_password.visibility = View.GONE
+            layout_confirm_password.visibility = View.GONE
+            view_loading.visibility = View.VISIBLE
+        }
     }
 
     override fun showPasswordFailsUpdateMessage(error: String?) {
@@ -84,8 +97,9 @@ class PasswordFragment: Fragment(), PasswordView, android.support.v7.view.Action
 
     private fun finishActionMode() = actionMode?.finish()
 
-    private fun listenToChanges() {
-        Observables.combineLatest(text_new_password.asObservable(), text_confirm_password.asObservable()).subscribe {
+    private fun listenToChanges(): Disposable {
+        return Observables.combineLatest(text_new_password.asObservable(),
+                text_confirm_password.asObservable()).subscribe {
             val textPassword = text_new_password.textContent
             val textConfirmPassword = text_confirm_password.textContent
 
@@ -97,7 +111,9 @@ class PasswordFragment: Fragment(), PasswordView, android.support.v7.view.Action
     }
 
     private fun showToast(msg: String?) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+        ui {
+            Toast.makeText(it, msg, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun startActionMode() {

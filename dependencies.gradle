@@ -11,7 +11,7 @@ ext {
         // Main dependencies
         support                : '27.1.0',
         constraintLayout       : '1.0.2',
-        androidKtx             : '0.2',
+        androidKtx             : '0.3',
         dagger                 : '2.14.1',
         exoPlayer              : '2.6.0',
         playServices           : '11.8.0',

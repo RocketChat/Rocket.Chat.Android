@@ -59,26 +59,36 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     }
 
     override fun alertBlankUsername() {
-        vibrateSmartPhone()
-        text_username.shake()
+        ui {
+            vibrateSmartPhone()
+            text_username.shake()
+        }
     }
 
     override fun showLoading() {
-        disableUserInput()
-        view_loading.setVisible(true)
+        ui {
+            disableUserInput()
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
-        enableUserInput()
+        ui {
+            view_loading.setVisible(false)
+            enableUserInput()
+        }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() {
@@ -86,10 +96,10 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     }
 
     private fun tintEditTextDrawableStart() {
-        activity?.apply {
-            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
+        ui {
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, it)
             DrawableHelper.wrapDrawable(atDrawable)
-            DrawableHelper.tintDrawable(atDrawable, this, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawable(atDrawable, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_username, atDrawable)
         }
     }
