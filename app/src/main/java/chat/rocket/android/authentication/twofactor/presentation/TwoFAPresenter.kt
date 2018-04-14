@@ -2,7 +2,6 @@ package chat.rocket.android.authentication.twofactor.presentation
 
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
@@ -48,33 +47,29 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
             else -> {
                 launchUI(strategy) {
                     val client = factory.create(server)
-                    if (NetworkHelper.hasInternetAccess()) {
-                        view.showLoading()
-                        try {
-                            // The token is saved via the client TokenProvider
-                            val token = retryIO("login") {
-                                client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
-                            }
-                            val me = retryIO("me") { client.me() }
-                            saveAccount(me)
-                            tokenRepository.save(server, token)
-                            registerPushToken()
-                            navigator.toChatList()
-                        } catch (exception: RocketChatException) {
-                            if (exception is RocketChatAuthException) {
-                                view.alertInvalidTwoFactorAuthenticationCode()
-                            } else {
-                                exception.message?.let {
-                                    view.showMessage(it)
-                                }.ifNull {
-                                    view.showGenericErrorMessage()
-                                }
-                            }
-                        } finally {
-                            view.hideLoading()
+                    view.showLoading()
+                    try {
+                        // The token is saved via the client TokenProvider
+                        val token = retryIO("login") {
+                            client.login(usernameOrEmail, password, twoFactorAuthenticationCode)
                         }
-                    } else {
-                        view.showNoInternetConnection()
+                        val me = retryIO("me") { client.me() }
+                        saveAccount(me)
+                        tokenRepository.save(server, token)
+                        registerPushToken()
+                        navigator.toChatList()
+                    } catch (exception: RocketChatException) {
+                        if (exception is RocketChatAuthException) {
+                            view.alertInvalidTwoFactorAuthenticationCode()
+                        } else {
+                            exception.message?.let {
+                                view.showMessage(it)
+                            }.ifNull {
+                                view.showGenericErrorMessage()
+                            }
+                        }
+                    } finally {
+                        view.hideLoading()
                     }
                 }
             }

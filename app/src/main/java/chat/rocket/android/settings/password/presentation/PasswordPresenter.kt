@@ -25,7 +25,7 @@ class PasswordPresenter @Inject constructor (private val view: PasswordView,
 
                 val me = retryIO("me") { client.me() }
                 retryIO("updateProfile(${me.id})") {
-                    client.updateProfile(me.id, null, null, password, null)
+                    client.updateProfile(me.id!!, null, null, password, null)
                 }
 
                 view.showPasswordSuccessfullyUpdatedMessage()

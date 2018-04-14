@@ -9,10 +9,7 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 
 fun Uri.getFileName(context: Context): String? {
     val cursor = context.contentResolver.query(this, null, null, null, null, null)
@@ -27,16 +24,22 @@ fun Uri.getFileName(context: Context): String? {
 }
 
 fun Uri.getFileSize(context: Context): Int {
-    val cursor = context.contentResolver.query(this, null, null, null, null, null)
-
-    val fileSize = cursor?.use {
-        val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-        if (cursor.moveToFirst()) {
-            if (!cursor.isNull(sizeIndex)) {
-                return@use cursor.getString(sizeIndex)
-            }
+    var fileSize: String? = null
+    if (scheme == ContentResolver.SCHEME_CONTENT) {
+        try {
+            val fileInputStream = context.contentResolver.openInputStream(this)
+            fileSize = fileInputStream.available().toString()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        return@use null
+    } else if (scheme == ContentResolver.SCHEME_FILE) {
+        val path = this.path
+        try {
+            val f = File(path)
+            fileSize = f.length().toString()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
     return fileSize?.toIntOrNull() ?: -1
 }
@@ -46,7 +49,11 @@ fun Uri.getMimeType(context: Context): String {
         context.contentResolver.getType(this)
     } else {
         val fileExtension = MimeTypeMap.getFileExtensionFromUrl(toString())
-        MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase())
+        if (fileExtension != null) {
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase())
+        } else {
+            "application/octet-stream"
+        }
     }
 }
 

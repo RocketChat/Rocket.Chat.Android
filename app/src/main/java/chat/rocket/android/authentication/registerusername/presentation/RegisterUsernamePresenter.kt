@@ -2,7 +2,6 @@ package chat.rocket.android.authentication.registerusername.presentation
 
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
@@ -40,30 +39,26 @@ class RegisterUsernamePresenter @Inject constructor(
             view.alertBlankUsername()
         } else {
             launchUI(strategy) {
-                if (NetworkHelper.hasInternetAccess()) {
-                    view.showLoading()
-                    try {
-                        val me = retryIO("updateOwnBasicInformation(username = $username)") {
-                            client.updateOwnBasicInformation(username = username)
-                        }
-                        val registeredUsername = me.username
-                        if (registeredUsername != null) {
-                            saveAccount(registeredUsername)
-                            tokenRepository.save(currentServer, Token(userId, authToken))
-                            registerPushToken()
-                            navigator.toChatList()
-                        }
-                    } catch (exception: RocketChatException) {
-                        exception.message?.let {
-                            view.showMessage(it)
-                        }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
-                    } finally {
-                        view.hideLoading()
+                view.showLoading()
+                try {
+                    val me = retryIO("updateOwnBasicInformation(username = $username)") {
+                        client.updateOwnBasicInformation(username = username)
                     }
-                } else {
-                    view.showNoInternetConnection()
+                    val registeredUsername = me.username
+                    if (registeredUsername != null) {
+                        saveAccount(registeredUsername)
+                        tokenRepository.save(currentServer, Token(userId, authToken))
+                        registerPushToken()
+                        navigator.toChatList()
+                    }
+                } catch (exception: RocketChatException) {
+                    exception.message?.let {
+                        view.showMessage(it)
+                    }.ifNull {
+                        view.showGenericErrorMessage()
+                    }
+                } finally {
+                    view.hideLoading()
                 }
             }
         }

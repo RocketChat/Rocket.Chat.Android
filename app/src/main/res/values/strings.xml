@@ -45,7 +45,6 @@
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">No internet connection</string>
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_profile_update_successfully">Profile update successfully</string>
@@ -131,6 +130,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>
+    <string name="no_pinned_messages">No pinned messages</string>
+    <string name="no_pinned_description">All the pinned messages\nappear here.</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
@@ -188,4 +189,9 @@
     <string name="header_direct_messages">Direct Messages</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Unknown</string>
+
+    <!--Notifications-->
+    <string name="notif_action_reply_hint">REPLY</string>
+    <string name="notif_error_sending">Reply has failed. Please try again.</string>
+    <string name="notif_success_sending">Message sent to %1$s!</string>
 </resources>

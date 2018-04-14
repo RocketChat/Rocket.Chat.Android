@@ -2,7 +2,6 @@ package chat.rocket.android.authentication.server.presentation
 
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.NetworkHelper
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.SaveCurrentServerInteractor
@@ -17,6 +16,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val serverInteractor: SaveCurrentServerInteractor,
                                           private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                           private val getAccountsInteractor: GetAccountsInteractor) {
+
     fun connect(server: String) {
         if (!server.isValidUrl()) {
             view.showInvalidServerUrlMessage()
@@ -29,23 +29,19 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                     return@launchUI
                 }
 
-                if (NetworkHelper.hasInternetAccess()) {
-                    view.showLoading()
-                    try {
-                        refreshSettingsInteractor.refresh(server)
-                        serverInteractor.save(server)
-                        navigator.toLogin()
-                    } catch (ex: Exception) {
-                        ex.message?.let {
-                            view.showMessage(it)
-                        }.ifNull {
-                            view.showGenericErrorMessage()
-                        }
-                    } finally {
-                        view.hideLoading()
+                view.showLoading()
+                try {
+                    refreshSettingsInteractor.refresh(server)
+                    serverInteractor.save(server)
+                    navigator.toLogin()
+                } catch (ex: Exception) {
+                    ex.message?.let {
+                        view.showMessage(it)
+                    }.ifNull {
+                        view.showGenericErrorMessage()
                     }
-                } else {
-                    view.showNoInternetConnection()
+                } finally {
+                    view.hideLoading()
                 }
             }
         }
