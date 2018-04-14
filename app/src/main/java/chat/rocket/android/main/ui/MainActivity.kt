@@ -21,7 +21,7 @@ import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.core.internal.realtime.UserStatus
+import chat.rocket.common.model.UserStatus
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.google.android.gms.iid.InstanceID
 import dagger.android.AndroidInjection
@@ -95,16 +95,23 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     override fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>) {
         Timber.d("Setting up nav header: $viewModel")
         with(headerLayout) {
-            image_user_status.setImageDrawable(
-                DrawableHelper.getUserStatusDrawable(
-                    viewModel.userStatus!!,
-                    this.context
-                )
-            )
-            text_user_name.text = viewModel.userDisplayName
-            text_server_url.text = viewModel.serverUrl
-            image_avatar.setImageURI(viewModel.userAvatar)
-            server_logo.setImageURI(viewModel.serverLogo)
+            with(viewModel) {
+                if (userStatus != null) {
+                    image_user_status.setImageDrawable(
+                        DrawableHelper.getUserStatusDrawable(userStatus, context)
+                    )
+                }
+                if (userDisplayName != null) {
+                    text_user_name.text = userDisplayName
+                }
+                if (userAvatar != null) {
+                    image_avatar.setImageURI(userAvatar)
+                }
+                if (serverLogo != null) {
+                    server_logo.setImageURI(serverLogo)
+                }
+                text_server_url.text = viewModel.serverUrl
+            }
             setupAccountsList(headerLayout, accounts)
         }
     }

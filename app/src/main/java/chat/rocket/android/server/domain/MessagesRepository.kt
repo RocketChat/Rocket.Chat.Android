@@ -11,7 +11,7 @@ interface MessagesRepository {
      *
      * @return The Message object given by the id or null if message wasn't found.
      */
-    fun getById(id: String): Message?
+    suspend fun getById(id: String): Message?
 
     /**
      * Get all messages from the current room id.
@@ -19,7 +19,7 @@ interface MessagesRepository {
      * @param rid The room id.
      * @return A list of Message objects for the room with given room id or an empty list.
      */
-    fun getByRoomId(rid: String): List<Message>
+    suspend fun getByRoomId(rid: String): List<Message>
 
     /**
      * Get most recent messages up to count different users.
@@ -29,43 +29,47 @@ interface MessagesRepository {
      *
      * @return List of last count messages.
      */
-    fun getRecentMessages(rid: String, count: Long): List<Message>
+    suspend fun getRecentMessages(rid: String, count: Long): List<Message>
 
     /**
      * Get all messages. Use carefully!
      *
      * @return All messages or an empty list.
      */
-    fun getAll(): List<Message>
+    suspend fun getAll(): List<Message>
 
     /**
      * Save a single message object.
      *
      * @param The message object to saveAll.
      */
-    fun save(message: Message)
+    suspend fun save(message: Message)
 
     /**
      * Save a list of messages.
      */
-    fun saveAll(newMessages: List<Message>)
+    suspend fun saveAll(newMessages: List<Message>)
 
     /**
      * Removes all messages.
      */
-    fun clear()
+    suspend fun clear()
 
     /**
      * Remove message by id.
      *
      * @param id The id of the message to remove.
      */
-    fun removeById(id: String)
+    suspend fun removeById(id: String)
 
     /**
      * Remove all messages from a given room.
      *
      * @param rid The room id where messages are to be removed.
      */
-    fun removeByRoomId(rid: String)
+    suspend fun removeByRoomId(rid: String)
+
+    suspend fun getAllUnsent(): List<Message>
+
+    suspend fun getUnsentByRoomId(roomId: String): List<Message>
 }
