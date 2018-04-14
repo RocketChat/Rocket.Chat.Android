@@ -4,7 +4,6 @@ import android.content.res.Resources
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.ViewPager
-import androidx.view.size
 import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.onboarding.adapter.OnboardingPagerAdapter
@@ -12,8 +11,6 @@ import chat.rocket.android.onboarding.presentation.PageTransformerPresenter
 import chat.rocket.android.onboarding.utils.Utils
 import chat.rocket.android.util.extensions.setVisible
 import kotlinx.android.synthetic.main.activity_onboarding.*
-import timber.log.Timber
-import java.util.*
 
 class OnboardingActivity : AppCompatActivity(){
 
