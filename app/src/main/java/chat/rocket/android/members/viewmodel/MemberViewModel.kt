@@ -25,7 +25,7 @@ class MemberViewModel(private val member: User, private val settings: Map<String
     private fun getUserAvatar(): String? {
         val username = member.username ?: "?"
         return baseUrl?.let {
-            baseUrl.avatarUrl(username,"png")
+            baseUrl.avatarUrl(username, format = "png")
         }
     }
 

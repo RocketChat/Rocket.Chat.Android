@@ -40,6 +40,8 @@
 
     <color name="colorEmojiIcon">#FF767676</color>
 
+    <color name="quoteBar">#A0A0A0</color>
+
     <!-- Suggestions -->
     <color name="suggestion_background_color">@android:color/white</color>
 
