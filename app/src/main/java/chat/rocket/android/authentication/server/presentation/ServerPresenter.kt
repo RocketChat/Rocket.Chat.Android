@@ -16,6 +16,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val serverInteractor: SaveCurrentServerInteractor,
                                           private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                           private val getAccountsInteractor: GetAccountsInteractor) {
+
     fun connect(server: String) {
         if (!server.isValidUrl()) {
             view.showInvalidServerUrlMessage()

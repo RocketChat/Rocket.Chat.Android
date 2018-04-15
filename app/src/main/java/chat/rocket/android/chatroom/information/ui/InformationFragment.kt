@@ -77,11 +77,17 @@ class InformationFragment: Fragment(), InformationView {
         bindAvatar(room_avatar, room)
     }
 
-    override fun showGenericErrorMessage() = showToast(getString(R.string.msg_generic_error))
+    override fun showGenericErrorMessage() {
+        (getString(R.string.msg_generic_error))
+    }
 
-    override fun showMessage(resId: Int) = showToast(resId)
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
 
-    override fun showMessage(message: String) = showToast(message)
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
 
     private fun setupToolbar() {
         (activity as ChatRoomActivity).setupToolbarTitle(getString(R.string.title_chat_room_info))

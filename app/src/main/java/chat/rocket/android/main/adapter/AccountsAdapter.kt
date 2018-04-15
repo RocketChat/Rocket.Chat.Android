@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.core.internal.realtime.UserStatus
+import chat.rocket.common.model.UserStatus
 
 private const val VIEW_TYPE_CHANGE_STATUS = 0
 private const val VIEW_TYPE_ACCOUNT = 1

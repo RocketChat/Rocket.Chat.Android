@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import android.widget.ScrollView
+import androidx.core.view.postDelayed
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
@@ -377,19 +378,23 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun showRemainingSocialAccountsView() {
-        social_accounts_container.postDelayed({
-            (0..social_accounts_container.childCount)
-                .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
-                .filter { it.isClickable }
-                .forEach { ui { it.setVisible(true) }}
-        }, 1000)
+        social_accounts_container.postDelayed(300) {
+            ui {
+                (0..social_accounts_container.childCount)
+                        .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
+                        .filter { it.isClickable }
+                        .forEach { it.setVisible(true) }
+            }
+        }
     }
 
     // Scrolling to the bottom of the screen.
     private fun scrollToBottom() {
-        scroll_view.postDelayed({
-            ui { scroll_view.fullScroll(ScrollView.FOCUS_DOWN) }
-        }, 1250)
+        scroll_view.postDelayed(1250) {
+            ui {
+                scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
+            }
+        }
     }
 
 
