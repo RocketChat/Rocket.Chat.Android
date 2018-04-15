@@ -12,13 +12,20 @@
     <string name="title_profile">Profile</string>
     <string name="title_members">Members (%d)</string>
     <string name="title_settings">Settings</string>
-    <string name="title_password">Change Password</string>
+    <string name="title_change_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_chat_room_info">Room Info</string>
+    <string name="title_name">Name</string>
     <string name="title_description">Description</string>
     <string name="title_announcement">Announcement</string>
     <string name="title_topic">Topic</string>
     <string name="title_about">About</string>
+    <string name="title_public">Public</string>
+    <string name="title_private">Private</string>
+    <string name="title_collaborative">Collaborative</string>
+    <string name="title_read_only">Read Only</string>
+    <string name="title_archived">Archived</string>
+    <string name="title_password">Password</string>
 
     <!-- Actions -->
     <string name="action_connect">Connect</string>
@@ -38,6 +45,12 @@
     <string name="action_away">Away</string>
     <string name="action_busy">Busy</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_leave">Leave</string>
+    <string name="action_save">Save</string>
+    <string name="action_hide">Hide</string>
+    <string name="action_show">Show</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_reset">Reset</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -95,6 +108,10 @@
     <string name="msg_ver_not_minimum">
         Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
     </string>
+    <string name="msg_content_information_public">Everyone can access this channel</string>
+    <string name="msg_content_information_private">Just invited people can access this channel</string>
+    <string name="msg_content_information_collaborative">All users in the channel can write new messages</string>
+    <string name="msg_content_information_read_only">Only authorized users can write new messages</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

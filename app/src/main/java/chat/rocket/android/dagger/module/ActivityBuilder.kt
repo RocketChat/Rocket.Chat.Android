@@ -9,6 +9,7 @@ import chat.rocket.android.authentication.twofactor.di.TwoFAFragmentProvider
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
 import chat.rocket.android.chatroom.di.PinnedMessagesFragmentProvider
+import chat.rocket.android.chatroom.edit.di.EditInfoFragmentProvider
 import chat.rocket.android.chatroom.information.di.InformationFragmentProvider
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.PinnedMessagesActivity
@@ -49,7 +50,8 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = [
         ChatRoomFragmentProvider::class,
         MembersFragmentProvider::class,
-        InformationFragmentProvider::class
+        InformationFragmentProvider::class,
+        EditInfoFragmentProvider::class
     ])
     abstract fun bindChatRoomActivity(): ChatRoomActivity
 

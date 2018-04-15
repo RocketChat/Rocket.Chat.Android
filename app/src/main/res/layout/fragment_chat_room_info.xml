@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:indicatorColor="@color/black"
+        app:indicatorName="BallPulseIndicator" />
     <RelativeLayout
+        android:id="@+id/room_info_layout"
         android:layout_width="match_parent"
+        android:padding="10dp"
         android:layout_height="wrap_content">
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/room_avatar"
             app:roundedCornerRadius="3dp"
@@ -25,7 +29,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
             android:layout_below="@id/room_avatar"
-            style="@style/RoomInfo.Title.TextView"
+            style="@style/RoomInfo.TextView.Title"
             android:textSize="22sp" />
         <TextView
             android:id="@+id/room_read_only_status"
@@ -39,85 +43,98 @@
             android:textColor="#ab2a2a"
             android:textSize="16sp"
             android:textStyle="bold|italic" />
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_marginTop="5dp"
+        <TextView
+            android:id="@+id/room_description_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/RoomInfo.TextView.Title"
             android:layout_below="@id/room_read_only_status"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/title_description" />
+        <TextView
+            android:id="@+id/room_description_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/RoomInfo.TextView.Info"
+            android:layout_alignStart="@id/room_description_title"
+            android:layout_below="@id/room_description_title"
+            android:layout_marginBottom="5dp" />
+        <TextView
+            android:id="@+id/room_announcement_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/RoomInfo.TextView.Title"
+            android:layout_below="@id/room_description_text"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="25dp"
+            android:text="@string/title_announcement"/>
+        <TextView
+            android:id="@+id/room_announcement_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/RoomInfo.TextView.Info"
+            android:layout_alignStart="@id/room_announcement_title"
+            android:layout_below="@id/room_announcement_title"
+            android:layout_marginBottom="5dp"/>
+        <TextView
+            android:id="@+id/room_topic_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/RoomInfo.TextView.Title"
+            android:layout_below="@id/room_announcement_text"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="25dp"
+            android:text="@string/title_topic" />
+        <TextView
+            android:id="@+id/room_topic_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/RoomInfo.TextView.Info"
+            android:layout_alignStart="@id/room_topic_title"
+            android:layout_below="@id/room_topic_title"
+            android:layout_marginBottom="5dp" />
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/button_layout"
+            android:layout_below="@id/room_topic_text"
+            android:orientation="horizontal"
+            android:layout_marginTop="25dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <View
-                android:id="@+id/top_divider"
-                android:background="@android:color/darker_gray"
-                android:layout_width="match_parent"
-                android:layout_height="1dp" />
-            <TextView
-                android:id="@+id/room_description_title"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/edit_button"
+                android:layout_margin="5dp"
+                android:layout_width="0dp"
+                android:visibility="gone"
+                style="@style/RoomInfo.Button.Black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/hide_button"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/top_divider"
-                style="@style/RoomInfo.Title.TextView"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/title_description" />
-            <TextView
-                android:id="@+id/room_description_text"
-                android:layout_width="wrap_content"
+                android:text="@string/action_msg_edit"/>
+            <Button
+                android:id="@+id/hide_button"
+                android:layout_margin="5dp"
+                android:layout_width="0dp"
+                style="@style/RoomInfo.Button.Black"
+                app:layout_constraintStart_toEndOf="@id/edit_button"
+                app:layout_constraintEnd_toStartOf="@+id/leave_button"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
-                style="@style/RoomInfo.Info.TextView"
-                android:layout_alignStart="@id/room_description_title"
-                android:layout_below="@id/room_description_title"
-                android:layout_marginBottom="5dp" />
-            <View
-                android:id="@+id/room_description_divider"
-                android:background="@android:color/darker_gray"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/room_description_text"/>
-            <TextView
-                android:id="@+id/room_announcement_title"
-                android:layout_width="wrap_content"
+                android:text="@string/action_hide"/>
+            <Button
+                android:id="@+id/leave_button"
+                android:layout_margin="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/hide_button"
+                style="@style/RoomInfo.Button.Red"
+                android:visibility="gone"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/RoomInfo.Title.TextView"
-                android:layout_below="@id/room_description_divider"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/title_announcement"/>
-            <TextView
-                android:id="@+id/room_announcement_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/RoomInfo.Info.TextView"
-                android:layout_alignStart="@id/room_announcement_title"
-                android:layout_below="@id/room_announcement_title"
-                android:layout_marginBottom="5dp"/>
-            <View
-                android:id="@+id/room_announcement_divider"
-                android:background="@android:color/darker_gray"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/room_announcement_text"/>
-            <TextView
-                android:id="@+id/room_topic_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/RoomInfo.Title.TextView"
-                android:layout_below="@id/room_announcement_divider"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/title_topic" />
-            <TextView
-                android:id="@+id/room_topic_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/RoomInfo.Info.TextView"
-                android:layout_alignStart="@id/room_topic_title"
-                android:layout_below="@id/room_topic_title"
-                android:layout_marginBottom="5dp" />
-            <View
-                android:id="@+id/room_topic_divider"
-                android:background="@android:color/darker_gray"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/room_topic_text"/>
-        </RelativeLayout>
+                android:text="@string/action_leave"/>
+        </android.support.constraint.ConstraintLayout>
     </RelativeLayout>
-</ScrollView>
+</RelativeLayout>

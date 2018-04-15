@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
-import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import dagger.android.AndroidInjection
@@ -47,6 +46,6 @@ class PasswordActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        text_change_password.textContent = resources.getString(R.string.title_password)
+        text_change_password.textContent = resources.getString(R.string.title_change_password)
     }
 }

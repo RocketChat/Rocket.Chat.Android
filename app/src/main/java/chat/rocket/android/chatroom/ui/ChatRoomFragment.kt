@@ -32,12 +32,8 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.emoji.*
-<<<<<<< HEAD
 import chat.rocket.common.model.RoomType
-import chat.rocket.core.internal.realtime.State
-=======
 import chat.rocket.core.internal.realtime.socket.model.State
->>>>>>> 97045a68d061df1057167741713ac23d96a00af4
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
@@ -108,11 +104,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         val bundle = arguments
         if (bundle != null) {
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomName = bundle.getString(BUNDLE_CHAT_ROOM_NAME)
-            chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
-            isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
             isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
+
+            if (savedInstanceState == null) {
+                chatRoomName = bundle.getString(BUNDLE_CHAT_ROOM_NAME)
+                chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
+                isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
+            }
+            else {
+                chatRoomName = savedInstanceState.getString(BUNDLE_CHAT_ROOM_NAME)
+                chatRoomType = savedInstanceState.getString(BUNDLE_CHAT_ROOM_TYPE)
+                isChatRoomReadOnly = savedInstanceState.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
+            }
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -135,6 +139,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         activity?.apply {
             (this as? ChatRoomActivity)?.showRoomTypeIcon(true)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
+        outState.putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
+        outState.putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -183,7 +194,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.toMembersList(chatRoomId, chatRoomType)
             }
             R.id.action_chat_room_info -> {
-                presenter.toChatInfo(chatRoomId)
+                presenter.toChatInfo(chatRoomId, chatRoomType, isSubscribed)
             }
             R.id.action_pinned_messages -> {
                 val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
@@ -536,6 +547,33 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_join_chat.setVisible(false)
             isSubscribed = true
             setupMessageComposer()
+        }
+    }
+
+    fun onRoomUpdated(name: String, type: RoomType, isReadOnly: Boolean) {
+        chatRoomName = name
+
+        if (type.toString() != chatRoomType) {
+            chatRoomType = type.toString()
+
+            ui {
+                activity?.apply {
+                    (this as? ChatRoomActivity)?.showRoomTypeIcon(true)
+                }
+            }
+        }
+        if (isReadOnly != isChatRoomReadOnly) {
+            isChatRoomReadOnly = isReadOnly
+
+            ui {
+                if (isChatRoomReadOnly) {
+                    text_room_is_read_only.setVisible(true)
+                    input_container.setVisible(false)
+                } else {
+                    text_room_is_read_only.setVisible(false)
+                    input_container.setVisible(true)
+                }
+            }
         }
     }
 

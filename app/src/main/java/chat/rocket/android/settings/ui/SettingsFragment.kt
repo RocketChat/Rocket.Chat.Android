@@ -34,7 +34,7 @@ class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListene
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (parent?.getItemAtPosition(position).toString()) {
-            resources.getString(R.string.title_password) -> {
+            getString(R.string.title_change_password) -> {
                 startNewActivity(PasswordActivity::class)
             }resources.getString(R.string.title_about) -> {
                 startNewActivity(AboutActivity::class)

@@ -10,9 +10,7 @@ import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.edit.presentation.EditInfoPresenter
 import chat.rocket.android.chatroom.edit.presentation.EditInfoView
-import chat.rocket.android.util.extensions.asObservable
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.*
 import chat.rocket.core.model.ChatRoom
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import dagger.android.support.AndroidSupportInjection
@@ -68,30 +66,41 @@ class EditInfoFragment: Fragment(), EditInfoView {
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-       showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() {
-        showToast(R.string.msg_generic_error)
+        ui {
+            showToast(R.string.msg_generic_error)
+        }
     }
 
     override fun showLoading() {
-        progress?.show()
-        room_info_edit_layout.visibility = View.GONE
+        ui {
+            progress.setVisible(true)
+            room_info_edit_layout.visibility = View.GONE
+        }
     }
 
     override fun hideLoading() {
-        progress?.hide()
-        room_info_edit_layout.visibility = View.VISIBLE
+        ui {
+            progress.setVisible(false)
+            room_info_edit_layout.visibility = View.VISIBLE
+        }
     }
 
     override fun showRoomInfo(room: ChatRoom) {
-        if (room.name != null)
-            room_name_edit_text.text = SpannableStringBuilder(room.name)
+        chatRoom = room
+
+        room_name_edit_text.text = SpannableStringBuilder(room.name)
 
         if (room.topic != null)
             room_topic_edit_text.text = SpannableStringBuilder(room.topic)
@@ -107,12 +116,39 @@ class EditInfoFragment: Fragment(), EditInfoView {
         watchForChanges()
     }
 
+    override fun resetRoomInfo(room: ChatRoom) {
+        room_name_edit_text.text = SpannableStringBuilder(room.name)
+
+        if (room.topic != null)
+            room_topic_edit_text.text = SpannableStringBuilder(room.topic)
+        else
+            room_topic_edit_text.text = SpannableStringBuilder(null)
+
+        if (room.announcement != null)
+            room_announcement_edit_text.text = SpannableStringBuilder(room.announcement)
+        else
+            room_announcement_edit_text.text = SpannableStringBuilder(null)
+
+        if (room.description != null)
+            room_description_edit_text.text = SpannableStringBuilder(room.description)
+        else
+            room_description_edit_text.text = SpannableStringBuilder(null)
+
+        setupSwitches(room.type.toString(), room.readonly, room.archived)
+    }
+
+    override fun onSave() {
+        ui {
+            fragmentManager?.popBackStack()
+        }
+    }
+
     private fun setupButtons() {
         cancel_button.setOnClickListener {
             fragmentManager?.popBackStack()
         }
         reset_button.setOnClickListener {
-
+            resetRoomInfo(chatRoom)
         }
         save_button.setOnClickListener {
             presenter.saveChatInformation(
@@ -130,20 +166,10 @@ class EditInfoFragment: Fragment(), EditInfoView {
         }
     }
 
-    override fun onRoomUpdate(room: ChatRoom) {
-        this.chatRoomId = room.id
-        this.chatRoomType = room.type.toString()
-    }
-
     private fun setupSwitches(type: String, readOnly: Boolean?, archived: Boolean) {
-        if (type == PRIVATE)
-            room_type_switch.isChecked = true
-
-        if (readOnly != null && readOnly)
-            room_ro_or_collab_switch.isChecked = true
-
-        if (archived)
-            room_archived_switch.isChecked = true
+        room_type_switch.isChecked = type == PRIVATE
+        room_ro_or_collab_switch.isChecked = readOnly != null && readOnly
+        room_archived_switch.isChecked = archived
     }
 
     private fun setTypeTextColors(colorPublic: Int, colorPrivate: Int) {

@@ -80,10 +80,9 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             chatRoom.name
         }
 
-        navigator.toChatRoom(chatRoom.id, roomName,
-            chatRoom.type.toString(), chatRoom.readonly ?: false,
-            chatRoom.lastSeen ?: -1,
-            chatRoom.open)
+        navigator.toChatRoom(chatRoom.id, roomName, chatRoom.type.toString(),
+                chatRoom.readonly ?: false, chatRoom.lastSeen ?: -1,
+                chatRoom.updatedAt ?: -1L, chatRoom.open)
     }
 
     /**
@@ -117,8 +116,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             ChatRoom(it.id, RoomType.DIRECT_MESSAGE, SimpleUser(
                     username = it.username, name = it.name, id = null), it.name ?: "",
                     it.name, false, null, null, null,
-                    null, null, null, false, false, false,
-                    0L, null, 0L, null, client)
+                    null, null, null, false, false, false, false,
+                    0L, null, false, null, 0L, null, client)
             ChatRoom(id = it.id,
                 type = RoomType.DIRECT_MESSAGE,
                 user = SimpleUser(username = it.username, name = it.name, id = null),
@@ -132,10 +131,13 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 description = null,
                 announcement = null,
                 default = false,
+                favorite = false,
                 open = false,
                 alert = false,
                 unread = 0L,
-                userMenstions = null,
+                roles = null,
+                archived = false,
+                userMentions = null,
                 groupMentions = 0L,
                 lastMessage = null,
                 client = client
@@ -147,8 +149,8 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         return rooms.map {
             ChatRoom(it.id, it.type, it.user, it.name ?: "",
                     it.fullName, it.readonly, it.updatedAt, null, null,
-                    it.topic, it.description, it.announcement, false, false, false,
-                    0L, null, 0L, it.lastMessage, client)
+                    it.topic, it.description, it.announcement, false, false, false, false,
+                    0L, null, false, null, 0L, it.lastMessage, client)
             ChatRoom(id = it.id,
                 type = it.type,
                 user = it.user,
@@ -162,10 +164,13 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 description = it.description,
                 announcement = it.announcement,
                 default = false,
+                favorite = false,
                 open = false,
                 alert = false,
                 unread = 0L,
-                userMenstions = null,
+                roles = null,
+                archived = false,
+                userMentions = null,
                 groupMentions = 0L,
                 lastMessage = it.lastMessage,
                 client = client
@@ -371,10 +376,13 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 open = open,
                 alert = alert,
                 unread = unread,
-                userMenstions = userMenstions,
+                roles = roles,
+                archived = archived,
+                userMentions = userMentions,
                 groupMentions = groupMentions,
                 lastMessage = room.lastMessage,
-                client = client)
+                client = client
+            )
             removeRoom(room.id, chatRooms)
             chatRooms.add(newRoom)
             saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))
@@ -404,10 +412,13 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 open = subscription.open,
                 alert = subscription.alert,
                 unread = subscription.unread,
-                userMenstions = subscription.userMentions,
+                roles = subscription.roles,
+                archived = subscription.archived,
+                userMentions = subscription.userMentions,
                 groupMentions = subscription.groupMentions,
                 lastMessage = lastMessage,
-                client = client)
+                client = client
+            )
             removeRoom(subscription.roomId, chatRooms)
             chatRooms.add(newRoom)
             saveChatRoomsInteractor.save(currentServer, sortRooms(chatRooms))

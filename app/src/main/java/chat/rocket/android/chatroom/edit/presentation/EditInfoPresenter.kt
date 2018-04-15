@@ -10,8 +10,6 @@ import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.ChatRoom
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 class EditInfoPresenter @Inject constructor(private val view: EditInfoView,
@@ -40,13 +38,8 @@ class EditInfoPresenter @Inject constructor(private val view: EditInfoView,
         }
     }
 
-    fun ifRoomUpdated() {
-        launch(CommonPool + strategy.jobs) {
-        }
-    }
-
-    fun saveChatInformation(chatRoomId: String, chatRoomType: String, name: String?,
-                            topic: String?, announcement: String?, description: String?,
+    fun saveChatInformation(chatRoomId: String, chatRoomType: String, name: String,
+                            topic: String, announcement: String, description: String,
                             type: String, readOnly: Boolean, archived: Boolean,
                             currentRoomSettings: ChatRoom) {
         launchUI(strategy) {
@@ -60,7 +53,7 @@ class EditInfoPresenter @Inject constructor(private val view: EditInfoView,
                 if (topic != currentRoomSettings.topic)
                     client.setTopic(chatRoomId, roomType, topic)
                 if (announcement != currentRoomSettings.announcement)
-                   client.setAnnouncement(chatRoomId, roomType, announcement)
+                    client.setAnnouncement(chatRoomId, roomType, announcement)
                 if (description != currentRoomSettings.description)
                     client.setDescription(chatRoomId, roomType, description)
                 if (readOnly != currentRoomSettings.readonly)
@@ -69,6 +62,8 @@ class EditInfoPresenter @Inject constructor(private val view: EditInfoView,
                     client.archive(chatRoomId, roomType, archived)
                 if (type != currentRoomSettings.type.toString())
                     client.setType(chatRoomId, roomType, type)
+
+                view.onSave()
             } catch (ex: Exception) {
                 ex.message.let {
                     view.showMessage(it!!)

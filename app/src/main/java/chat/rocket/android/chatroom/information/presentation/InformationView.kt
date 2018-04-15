@@ -6,4 +6,8 @@ import chat.rocket.core.model.ChatRoom
 
 interface InformationView: LoadingView, MessageView {
     fun showRoomInfo(room: ChatRoom)
+    fun onLeave()
+    fun onHide()
+    fun allowRoomEditing()
+    fun allowHideAndLeave(isOpen: Boolean)
 }
