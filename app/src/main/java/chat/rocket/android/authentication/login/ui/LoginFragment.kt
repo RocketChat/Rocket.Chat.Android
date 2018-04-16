@@ -17,6 +17,7 @@ import android.widget.ScrollView
 import androidx.core.view.postDelayed
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.KeyboardHelper
@@ -27,6 +28,7 @@ import chat.rocket.android.webview.cas.ui.casWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
+import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
@@ -41,14 +43,22 @@ class LoginFragment : Fragment(), LoginView {
         areLoginOptionsNeeded()
     }
     private var isGlobalLayoutListenerSetUp = false
+    private var deepLinkInfo: LoginDeepLinkInfo? = null
 
     companion object {
-        fun newInstance() = LoginFragment()
+        private const val DEEP_LINK_INFO = "DeepLinkInfo"
+
+        fun newInstance(deepLinkInfo: LoginDeepLinkInfo? = null) = LoginFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -61,7 +71,11 @@ class LoginFragment : Fragment(), LoginView {
             tintEditTextDrawableStart()
         }
 
-        presenter.setupView()
+        deepLinkInfo?.let {
+            presenter.authenticadeWithDeepLink(it)
+        }.ifNull {
+            presenter.setupView()
+        }
     }
 
     override fun onDestroyView() {

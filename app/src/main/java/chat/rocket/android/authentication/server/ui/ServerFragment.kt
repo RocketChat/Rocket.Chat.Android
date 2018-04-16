@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.helper.KeyboardHelper
@@ -17,17 +18,26 @@ import javax.inject.Inject
 
 class ServerFragment : Fragment(), ServerView {
     @Inject lateinit var presenter: ServerPresenter
+    private var deepLinkInfo: LoginDeepLinkInfo? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)
     }
 
     companion object {
-        fun newInstance() = ServerFragment()
+        private const val DEEP_LINK_INFO = "DeepLinkInfo"
+
+        fun newInstance(deepLinkInfo: LoginDeepLinkInfo?) = ServerFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
+        deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -37,6 +47,10 @@ class ServerFragment : Fragment(), ServerView {
         super.onViewCreated(view, savedInstanceState)
         relative_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         setupOnClickListener()
+
+        deepLinkInfo?.let {
+            presenter.deepLink(it)
+        }
     }
 
     override fun onDestroyView() {

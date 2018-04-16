@@ -233,9 +233,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             // if y is positive the keyboard is up else it's down
             recycler_view.post {
                 if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
-                    recycler_view.scrollBy(0, y)
+                    ui { recycler_view.scrollBy(0, y) }
                 } else {
-                    recycler_view.scrollBy(0, verticalScrollOffset.get())
+                    ui { recycler_view.scrollBy(0, verticalScrollOffset.get()) }
                 }
             }
         }
