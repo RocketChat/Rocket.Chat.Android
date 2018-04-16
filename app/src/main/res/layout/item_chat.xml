@@ -10,76 +10,57 @@
     android:paddingTop="@dimen/chat_item_top_and_bottom_padding"
     android:paddingBottom="@dimen/chat_item_top_and_bottom_padding">
 
-    <include
-        android:id="@+id/layout_avatar"
-        layout="@layout/avatar"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        app:roundedCornerRadius="3dp"
         android:layout_marginTop="6dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/top_container"
+    <TextView
+        android:id="@+id/text_chat_name"
+        style="@style/ChatRoom.Name.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintStart_toEndOf="@id/image_avatar"
+        android:textDirection="locale"
+        tools:text="General"/>
 
-        <TextView
-            android:id="@+id/text_chat_name"
-            style="@style/ChatRoom.Name.TextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/text_view_drawable_padding"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/text_last_message_date_time"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="General" />
+    <TextView
+        android:id="@+id/text_last_message_date_time"
+        style="@style/Timestamp.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_chat_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="11:45 AM" />
 
-        <TextView
-            android:id="@+id/text_last_message_date_time"
-            style="@style/Timestamp.TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/text_chat_name"
-            app:layout_constraintLeft_toRightOf="@+id/text_chat_name"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:text="11:45 AM" />
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/bottom_container"
+    <TextView
+        android:id="@+id/text_last_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:layout_marginTop="2dp"
-        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_container">
+        app:layout_constraintStart_toStartOf="@id/text_chat_name"
+        app:layout_constraintTop_toBottomOf="@id/text_chat_name"
+        app:layout_constraintEnd_toStartOf="@id/layout_unread_messages_badge"
+        android:textDirection="locale"
+        tools:text="You: Type something that is very big and need at least to lines, or maybe even more"/>
 
-        <TextView
-            android:id="@+id/text_last_message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/layout_unread_messages_badge"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="You: Type something" />
-
-        <include
-            android:id="@+id/layout_unread_messages_badge"
-            layout="@layout/unread_messages_badge"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/text_last_message"
-            app:layout_constraintRight_toRightOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+    <include
+        android:id="@+id/layout_unread_messages_badge"
+        layout="@layout/unread_messages_badge"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintTop_toTopOf="@id/text_last_message"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

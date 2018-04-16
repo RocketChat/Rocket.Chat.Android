@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground" >
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="16dp"
+    android:background="?selectableItemBackground">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/server_logo"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:actualImageScaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:actualImageScaleType="centerInside" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_server_url"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="@id/server_logo"
-        app:layout_constraintStart_toEndOf="@id/server_logo"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/server_logo"
+        app:layout_constraintTop_toTopOf="@id/server_logo"
         tools:text="https://open.rocket.chat" />
 
     <TextView
@@ -36,10 +36,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@id/server_logo"
-        app:layout_constraintStart_toEndOf="@id/server_logo"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Lucio Maciel"/>
+        app:layout_constraintStart_toEndOf="@id/server_logo"
+        tools:text="Lucio Maciel" />
 
 </android.support.constraint.ConstraintLayout>
