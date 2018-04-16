@@ -1,5 +1,6 @@
 package chat.rocket.android.authentication.login.presentation
 
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationNavigator
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.OauthHelper
@@ -10,6 +11,7 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatAuthException
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.RocketChatTwoFactorException
 import chat.rocket.common.model.Token
@@ -24,6 +26,7 @@ import javax.inject.Inject
 private const val TYPE_LOGIN_USER_EMAIL = 0
 private const val TYPE_LOGIN_CAS = 1
 private const val TYPE_LOGIN_OAUTH = 2
+private const val TYPE_LOGIN_DEEP_LINK = 3
 private const val SERVICE_NAME_GITHUB = "github"
 private const val SERVICE_NAME_GOOGLE = "google"
 private const val SERVICE_NAME_LINKEDIN = "linkedin"
@@ -35,26 +38,31 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                                          private val tokenRepository: TokenRepository,
                                          private val localRepository: LocalRepository,
                                          private val getAccountsInteractor: GetAccountsInteractor,
-                                         settingsInteractor: GetSettingsInteractor,
+                                         private val settingsInteractor: GetSettingsInteractor,
                                          serverInteractor: GetCurrentServerInteractor,
                                          private val saveAccountInteractor: SaveAccountInteractor,
                                          private val factory: RocketChatClientFactory)
-    : CheckServerPresenter(strategy, factory.create(serverInteractor.get()!!), view) {
+    : CheckServerPresenter(strategy, factory, view) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val currentServer = serverInteractor.get()!!
-    private val client: RocketChatClient = factory.create(currentServer)
-    private val settings: PublicSettings = settingsInteractor.get(currentServer)
+    private lateinit var client: RocketChatClient
+    private lateinit var settings: PublicSettings
+    //private val client: RocketChatClient = factory.create(currentServer)
+    //private val settings: PublicSettings = settingsInteractor.get(currentServer)
     private lateinit var usernameOrEmail: String
     private lateinit var password: String
     private lateinit var credentialToken: String
     private lateinit var credentialSecret: String
+    private lateinit var deepLinkUserId: String
+    private lateinit var deepLinkToken: String
 
     fun setupView() {
+        setupConnectionInfo(currentServer)
         setupLoginView()
         setupUserRegistrationView()
         setupCasView()
         setupOauthServicesView()
-        checkServerInfo()
+        checkServerInfo(currentServer)
     }
 
     fun authenticateWithUserAndPassword(usernameOrEmail: String, password: String) {
@@ -82,6 +90,32 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         credentialToken = token
         credentialSecret = secret
         doAuthentication(TYPE_LOGIN_OAUTH)
+    }
+
+    fun authenticadeWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
+        val serverUrl = deepLinkInfo.url
+        setupConnectionInfo(serverUrl)
+        deepLinkUserId = deepLinkInfo.userId
+        deepLinkToken = deepLinkInfo.token
+        tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
+        launchUI(strategy) {
+            try {
+                val version = checkServerVersion(serverUrl).await()
+                when (version) {
+                    is Version.OutOfDateError -> {
+                        view.blockAndAlertNotRequiredVersion()
+                    }
+                    else -> doAuthentication(TYPE_LOGIN_DEEP_LINK)
+                }
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error performing deep link login")
+            }
+        }
+    }
+
+    private fun setupConnectionInfo(serverUrl: String) {
+        client = factory.create(serverUrl)
+        settings = settingsInteractor.get(serverUrl)
     }
 
     fun signup() = navigator.toSignUp()
@@ -212,8 +246,16 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                         TYPE_LOGIN_OAUTH -> {
                             client.loginWithOauth(credentialToken, credentialSecret)
                         }
+                        TYPE_LOGIN_DEEP_LINK -> {
+                            val myself = client.me() // Just checking if the credentials worked.
+                            if (myself.id == deepLinkUserId) {
+                                Token(deepLinkUserId, deepLinkToken)
+                            } else {
+                                throw RocketChatAuthException("Invalid Authentication Deep Link Credentials...")
+                            }
+                        }
                         else -> {
-                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS or TYPE_LOGIN_OAUTH")
+                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS, TYPE_LOGIN_OAUTH or TYPE_LOGIN_DEEP_LINK")
                         }
                     }
                 }
