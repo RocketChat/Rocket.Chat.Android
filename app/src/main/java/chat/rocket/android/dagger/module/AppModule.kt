@@ -16,6 +16,7 @@ import chat.rocket.android.authentication.infraestructure.SharedPreferencesMulti
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
 import chat.rocket.android.dagger.qualifier.ForFresco
+import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.FrescoAuthInterceptor
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
@@ -73,7 +74,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideRocketChatDatabase(context: Application): RocketChatDatabase {
-        return Room.databaseBuilder(context, RocketChatDatabase::class.java, "rocketchat-db").build()
+        return Room.databaseBuilder(context.applicationContext, RocketChatDatabase::class.java, "rocketchat-db").build()
     }
 
     @Provides
@@ -168,9 +169,14 @@ class AppModule {
     }
 
     @Provides
-    fun provideSharedPreferences(context: Application): SharedPreferences {
-        return context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
-    }
+    fun provideSharedPreferences(context: Application) =
+        context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
+
+
+    @Provides
+    @ForMessages
+    fun provideMessagesSharedPreferences(context: Application) =
+            context.getSharedPreferences("messages", Context.MODE_PRIVATE)
 
     @Provides
     @Singleton
@@ -225,8 +231,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMessageRepository(context: Application, moshi: Moshi, currentServerInteractor: GetCurrentServerInteractor): MessagesRepository {
-        val preferences = context.getSharedPreferences("messages", Context.MODE_PRIVATE)
+    fun provideMessageRepository(context: Application,
+                                 @ForMessages preferences: SharedPreferences,
+                                 moshi: Moshi,
+                                 currentServerInteractor: GetCurrentServerInteractor): MessagesRepository {
         return SharedPreferencesMessagesRepository(preferences, moshi, currentServerInteractor)
     }
 
