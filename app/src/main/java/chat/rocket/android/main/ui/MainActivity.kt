@@ -86,7 +86,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             image_user_status.setImageDrawable(
                 DrawableHelper.getUserStatusDrawable(
                     userStatus,
-                    this.context
+                    this.context,
+                    true
                 )
             )
         }

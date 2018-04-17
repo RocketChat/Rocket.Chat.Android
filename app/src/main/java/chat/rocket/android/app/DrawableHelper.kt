@@ -108,18 +108,46 @@ object DrawableHelper {
      * @see [UserStatus]
      * @return The user status drawable.
      */
-    fun getUserStatusDrawable(userStatus: UserStatus, context: Context): Drawable {
+    fun getUserStatusDrawable(userStatus: UserStatus, context: Context, getSmallDrawable: Boolean = false): Drawable {
         return when (userStatus) {
             is UserStatus.Online -> {
-                getDrawableFromId(R.drawable.ic_status_online_24dp, context)
+                getDrawableFromId(
+                    if (getSmallDrawable) {
+                        R.drawable.ic_status_online_12dp
+                    } else {
+                        R.drawable.ic_status_online_24dp
+                    },
+                    context
+                )
             }
             is UserStatus.Away -> {
-                getDrawableFromId(R.drawable.ic_status_away_24dp, context)
+                getDrawableFromId(
+                    if (getSmallDrawable) {
+                        R.drawable.ic_status_away_12dp
+                    } else {
+                        R.drawable.ic_status_away_24dp
+                    },
+                    context
+                )
             }
             is UserStatus.Busy -> {
-                getDrawableFromId(R.drawable.ic_status_busy_24dp, context)
+                getDrawableFromId(
+                    if (getSmallDrawable) {
+                        R.drawable.ic_status_busy_12dp
+                    } else {
+                        R.drawable.ic_status_busy_24dp
+                    },
+                    context
+                )
             }
-            else -> getDrawableFromId(R.drawable.ic_status_invisible_24dp, context)
+            else -> getDrawableFromId(
+                if (getSmallDrawable){
+                    R.drawable.ic_status_invisible_12dp
+                } else {
+                    R.drawable.ic_status_invisible_24dp
+                },
+                context
+            )
         }
     }
 }

@@ -94,9 +94,9 @@ class ChatRoomsAdapter(private val context: Context,
                 is RoomType.DirectMessage -> {
                     val status = chatRoom.status
                     if (status == null) {
-                        DrawableHelper.getUserStatusDrawable(UserStatus.Offline(), context)
+                        DrawableHelper.getUserStatusDrawable(UserStatus.Offline(), context, true)
                     } else {
-                        DrawableHelper.getUserStatusDrawable(status, context)
+                        DrawableHelper.getUserStatusDrawable(status, context, true)
                     }
                 }
                 else -> null
