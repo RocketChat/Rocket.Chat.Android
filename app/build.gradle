@@ -124,6 +124,10 @@ kotlin {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 // FIXME - build and install the sdk into the app/libs directory
 // We were having some issues with the kapt generated files from the sdk when importing as a module
 task compileSdk(type:Exec) {
