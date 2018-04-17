@@ -41,7 +41,7 @@ private const val INTENT_SERVER_URL = "INTENT_SERVER_URL"
 private const val INTENT_CHAT_ROOM_NAME = "INTENT_CHAT_ROOM_NAME"
 private const val INTENT_CHAT_ROOM_TYPE = "INTENT_CHAT_ROOM_TYPE"
 
-fun Context.changeServerIntent(serverUrl: String?): Intent {
+fun Context.changeServerIntent(serverUrl: String? = null): Intent {
     return Intent(this, ChangeServerActivity::class.java).apply {
         serverUrl?.let { url ->
             putExtra(INTENT_SERVER_URL, url)
