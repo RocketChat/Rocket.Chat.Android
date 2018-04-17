@@ -14,8 +14,10 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageButton
 import android.widget.ScrollView
+import androidx.core.view.postDelayed
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.KeyboardHelper
@@ -26,6 +28,7 @@ import chat.rocket.android.webview.cas.ui.casWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
+import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
@@ -40,14 +43,22 @@ class LoginFragment : Fragment(), LoginView {
         areLoginOptionsNeeded()
     }
     private var isGlobalLayoutListenerSetUp = false
+    private var deepLinkInfo: LoginDeepLinkInfo? = null
 
     companion object {
-        fun newInstance() = LoginFragment()
+        private const val DEEP_LINK_INFO = "DeepLinkInfo"
+
+        fun newInstance(deepLinkInfo: LoginDeepLinkInfo? = null) = LoginFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -60,7 +71,11 @@ class LoginFragment : Fragment(), LoginView {
             tintEditTextDrawableStart()
         }
 
-        presenter.setupView()
+        deepLinkInfo?.let {
+            presenter.authenticadeWithDeepLink(it)
+        }.ifNull {
+            presenter.setupView()
+        }
     }
 
     override fun onDestroyView() {
@@ -377,19 +392,23 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun showRemainingSocialAccountsView() {
-        social_accounts_container.postDelayed({
-            (0..social_accounts_container.childCount)
-                .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
-                .filter { it.isClickable }
-                .forEach { ui { it.setVisible(true) }}
-        }, 1000)
+        social_accounts_container.postDelayed(300) {
+            ui {
+                (0..social_accounts_container.childCount)
+                        .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
+                        .filter { it.isClickable }
+                        .forEach { it.setVisible(true) }
+            }
+        }
     }
 
     // Scrolling to the bottom of the screen.
     private fun scrollToBottom() {
-        scroll_view.postDelayed({
-            ui { scroll_view.fullScroll(ScrollView.FOCUS_DOWN) }
-        }, 1250)
+        scroll_view.postDelayed(1250) {
+            ui {
+                scroll_view.fullScroll(ScrollView.FOCUS_DOWN)
+            }
+        }
     }
 
 

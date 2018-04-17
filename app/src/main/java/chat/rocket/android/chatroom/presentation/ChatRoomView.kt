@@ -92,10 +92,8 @@ interface ChatRoomView : LoadingView, MessageView {
 
     /**
      * Enables the send message button.
-     *
-     * @param sendFailed Whether the sent message has failed.
      */
-    fun enableSendMessageButton(sendFailed: Boolean)
+    fun enableSendMessageButton()
 
     /**
      * Clears the message composition.

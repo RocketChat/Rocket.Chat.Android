@@ -14,7 +14,8 @@ data class MessageAttachmentViewModel(
         override var reactions: List<ReactionViewModel>,
         override var nextDownStreamMessage: BaseViewModel<*>? = null,
         var messageLink: String? = null,
-        override var preview: Message? = null
+        override var preview: Message? = null,
+        override var isTemporary: Boolean = false
 ) : BaseViewModel<Message> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.MESSAGE_ATTACHMENT.viewType
