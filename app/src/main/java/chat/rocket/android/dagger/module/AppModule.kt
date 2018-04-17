@@ -231,8 +231,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMessageRepository(context: Application,
-                                 @ForMessages preferences: SharedPreferences,
+    fun provideMessageRepository(@ForMessages preferences: SharedPreferences,
                                  moshi: Moshi,
                                  currentServerInteractor: GetCurrentServerInteractor): MessagesRepository {
         return SharedPreferencesMessagesRepository(preferences, moshi, currentServerInteractor)
@@ -278,7 +277,7 @@ class AppModule {
             SharedPreferencesAccountsRepository(preferences, moshi)
 
     @Provides
-    fun provideNotificationManager(context: Context): NotificationManager = context.systemService()
+    fun provideNotificationManager(context: Application): NotificationManager = context.systemService()
 
     @Provides
     @Singleton
@@ -287,7 +286,7 @@ class AppModule {
     @Provides
     @Singleton
     fun providePushManager(
-            context: Context,
+            context: Application,
             groupedPushes: GroupedPush,
             manager: NotificationManager,
             moshi: Moshi,
