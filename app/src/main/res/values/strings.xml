@@ -175,6 +175,7 @@
     <string name="dialog_sort_by_activity">Activity</string>
     <string name="dialog_group_by_type">Group by type</string>
     <string name="dialog_group_favourites">Group favourites</string>
+    <string name="dialog_unread_on_top">Unread on top</string>
     <string name="chatroom_header">Header</string>
 
     <!--ChatRooms Headers-->
@@ -191,5 +192,4 @@
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>
-    <string name="dialog_unread_on_top">Unread on top</string>
 </resources>

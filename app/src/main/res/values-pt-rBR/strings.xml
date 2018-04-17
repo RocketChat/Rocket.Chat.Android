@@ -174,9 +174,11 @@
     <string name="dialog_sort_by_activity">Atividade</string>
     <string name="dialog_group_by_type">Agrupar por tipo</string>
     <string name="dialog_group_favourites">Grupos favoritos</string>
+    <string name="dialog_unread_on_top">Não lido no topo</string>
     <string name="chatroom_header">Cabeçalho</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_unread">Não lida</string>
     <string name="header_favorites">Favoritos</string>
     <string name="header_conversations">Conversas</string>
     <string name="header_channel">Canais</string>

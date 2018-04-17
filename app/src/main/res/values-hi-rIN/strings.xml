@@ -174,9 +174,11 @@
     <string name="dialog_sort_by_activity">गतिविधि</string>
     <string name="dialog_group_by_type">प्रकार के आधार पर समूह</string>
     <string name="dialog_group_favourites">पसंदीदा समूह</string>
+    <string name="dialog_unread_on_top">अपठित शीर्ष पर</string>
     <string name="chatroom_header">हैडर</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_unread">अपठित</string>
     <string name="header_favorites">पसंदीदा</string>
     <string name="header_conversations">बातचीत</string>
     <string name="header_channel">चैनलों</string>
