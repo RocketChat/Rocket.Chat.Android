@@ -28,15 +28,21 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             view.showLoading()
             try {
                 val myself = retryIO("me") { client.me() }
-                myselfId = myself.id!!
-                val avatarUrl = serverUrl.avatarUrl(myself.username!!)
-                val email = myself.emails?.getOrNull(0)?.address
-                view.showProfile(
-                        avatarUrl,
-                        myself.name ?: "",
-                        myself.username ?: "",
-                        email
-                )
+                val id = myself.id
+                val username = myself.username
+                if (id == null || username == null) {
+                    view.showGenericErrorMessage()
+                } else {
+                    myselfId = id
+                    val avatarUrl = serverUrl.avatarUrl(username)
+                    val email = myself.emails?.getOrNull(0)?.address
+                    view.showProfile(
+                            avatarUrl,
+                            myself.name ?: "",
+                            myself.username ?: "",
+                            email
+                    )
+                }
             } catch (exception: RocketChatException) {
                 view.showMessage(exception)
             } finally {
