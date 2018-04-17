@@ -472,7 +472,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun loadChatRooms() {
         launchUI(strategy) {
             try {
-                val chatRooms = getChatRoomsInteractor.get(currentServer)
+                val chatRooms = getChatRoomsInteractor.getAll(currentServer)
                         .filterNot {
                             it.type is RoomType.DirectMessage || it.type is RoomType.Livechat
                         }

@@ -19,14 +19,7 @@ import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.*
-import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
-import chat.rocket.android.server.infraestructure.MemoryMessagesRepository
-import chat.rocket.android.server.infraestructure.MemoryRoomRepository
-import chat.rocket.android.server.infraestructure.MemoryUsersRepository
-import chat.rocket.android.server.infraestructure.ServerDao
-import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepository
-import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
-import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
+import chat.rocket.android.server.infraestructure.*
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.internal.FallbackSealedClassJsonAdapter
@@ -198,6 +191,12 @@ class AppModule {
     @Singleton
     fun provideChatRoomRepository(): ChatRoomsRepository {
         return MemoryChatRoomsRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideActiveUsersRepository(): ActiveUsersRepository {
+        return MemoryActiveUsersRepository()
     }
 
     @Provides
