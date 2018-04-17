@@ -8,6 +8,7 @@ import chat.rocket.android.authentication.signup.di.SignupFragmentProvider
 import chat.rocket.android.authentication.twofactor.di.TwoFAFragmentProvider
 import chat.rocket.android.authentication.ui.AuthenticationActivity
 import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
+import chat.rocket.android.chatroom.di.ChatRoomModule
 import chat.rocket.android.chatroom.di.PinnedMessagesFragmentProvider
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.PinnedMessagesActivity
@@ -45,7 +46,9 @@ abstract class ActivityBuilder {
     abstract fun bindMainActivity(): MainActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = [ChatRoomFragmentProvider::class, MembersFragmentProvider::class])
+    @ContributesAndroidInjector(modules = [ChatRoomModule::class,
+        ChatRoomFragmentProvider::class,
+        MembersFragmentProvider::class])
     abstract fun bindChatRoomActivity(): ChatRoomActivity
 
     @PerActivity
