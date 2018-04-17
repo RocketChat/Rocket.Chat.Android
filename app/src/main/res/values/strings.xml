@@ -178,6 +178,7 @@
     <string name="chatroom_header">Header</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_unread">Unread</string>
     <string name="header_favorites">Favorites</string>
     <string name="header_conversations">Conversations</string>
     <string name="header_channel">Channels</string>
@@ -190,4 +191,5 @@
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>
+    <string name="dialog_unread_on_top">Unread on top</string>
 </resources>

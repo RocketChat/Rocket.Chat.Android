@@ -32,8 +32,6 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.NonCancellable.isActive
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -108,10 +106,12 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
                 val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
                 val groupFavorites = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, false)
+                val unreadOnTop = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_UNREAD_ON_TOP_KEY, true)
 
                 val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radio_group_sort)
                 val groupByTypeCheckBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_by_type)
                 val groupFavouritesCheckBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox_group_favourites)
+                val unreadOnTopCheckBox = dialogLayout.findViewById<CheckBox>(R.id.checkbox_unread_on_top)
 
                 radioGroup.check(when (sortType) {
                     0 -> R.id.radio_sort_alphabetical
@@ -139,6 +139,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 groupFavouritesCheckBox.isChecked = groupFavorites
                 groupFavouritesCheckBox.setOnCheckedChangeListener({ _, isChecked ->
                     SharedPreferenceHelper.putBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, isChecked)
+                    presenter.updateSortedChatRooms()
+                    invalidateQueryOnSearch()
+                })
+
+                unreadOnTopCheckBox.isChecked = unreadOnTop
+                unreadOnTopCheckBox.setOnCheckedChangeListener({ _, isChecked ->
+                    SharedPreferenceHelper.putBoolean(Constants.CHATROOM_UNREAD_ON_TOP_KEY, isChecked)
                     presenter.updateSortedChatRooms()
                     invalidateQueryOnSearch()
                 })
@@ -263,9 +270,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private fun setSections() {
         val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
         val groupFavorites = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, false)
+        val unreadOnTop = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_UNREAD_ON_TOP_KEY, true)
 
         //Don't add section if not grouping by RoomType and Favorites
-        if (!groupByType && !groupFavorites) {
+        if (!groupByType && !groupFavorites && !unreadOnTop) {
             sectionedAdapter?.clearSections()
             return
         }
@@ -273,31 +281,92 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         val rooms = sectionedAdapter?.baseAdapter?.dataSet
         val sections = ArrayList<SimpleSectionedRecyclerViewAdapter.Section>()
 
-        if (groupFavorites) {
-            //set sections for favorite and room type
-            rooms?.let {
-                val favRoomsSize = rooms.filter { chatRoom -> chatRoom.favorite }.size
+        when (unreadOnTop) {
+            true -> {
+                rooms?.let {
 
-                if (favRoomsSize != 0) {
-                    sections.add(SimpleSectionedRecyclerViewAdapter.Section(0, resources.getString(R.string.header_favorites)))
-                }
+                    val unreadRoomsSize = rooms.filter { chatRoom -> chatRoom.unread > 0 || chatRoom.alert }.size
 
-                when (groupByType) {
-                    true -> sections.addAll(getSectionsForList(rooms, favRoomsSize, it.size))
-                    false -> when (favRoomsSize != 0) {
-                        true -> sections.add(SimpleSectionedRecyclerViewAdapter.Section(favRoomsSize, resources.getString(R.string.header_conversations)))
-                        false -> {
-                            //Do nothing
-                        }
+                    if (unreadRoomsSize != 0) {
+                        sections.add(SimpleSectionedRecyclerViewAdapter.Section(0, resources.getString(R.string.header_unread)))
                     }
 
+                    when (groupFavorites) {
+                        true -> {
+                            //set sections for favorite and room type
+                            val favRoomsSize = rooms.filter { chatRoom -> chatRoom.favorite }.size
+
+                            if (favRoomsSize != 0) {
+                                sections.add(SimpleSectionedRecyclerViewAdapter.Section(unreadRoomsSize, resources.getString(R.string.header_favorites)))
+                            }
+
+                            when (groupByType) {
+                                true -> {
+                                    sections.addAll(getSectionsForList(rooms, unreadRoomsSize + favRoomsSize, it.size))
+                                }
+                                false -> {
+                                    when (favRoomsSize != 0) {
+                                        true -> sections.add(SimpleSectionedRecyclerViewAdapter.Section(unreadRoomsSize + favRoomsSize, resources.getString(R.string.header_conversations)))
+                                        false -> {
+                                            //Do nothing
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        false -> {
+                            when (groupByType) {
+                                true -> {
+                                    sections.addAll(getSectionsForList(rooms, unreadRoomsSize, it.size))
+                                }
+                                false -> {
+                                    when (unreadRoomsSize != 0) {
+                                        true -> sections.add(SimpleSectionedRecyclerViewAdapter.Section(unreadRoomsSize, resources.getString(R.string.header_conversations)))
+                                        false -> {
+                                            //Do nothing
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        } else {
-            //set sections for only room type
-            rooms?.let {
-                if (rooms.size != 0) {
-                    sections.addAll(getSectionsForList(it, 0, it.size))
+            false -> {
+                rooms?.let {
+
+                    when (groupFavorites) {
+                        true -> {
+                            //set sections for favorite and room type
+                            val favRoomsSize = rooms.filter { chatRoom -> chatRoom.favorite }.size
+
+                            if (favRoomsSize != 0) {
+                                sections.add(SimpleSectionedRecyclerViewAdapter.Section(0, resources.getString(R.string.header_favorites)))
+                            }
+
+                            when (groupByType) {
+                                true -> {
+                                    sections.addAll(getSectionsForList(rooms, favRoomsSize, it.size))
+                                }
+                                false -> {
+                                    when (favRoomsSize != 0) {
+                                        true -> sections.add(SimpleSectionedRecyclerViewAdapter.Section(favRoomsSize, resources.getString(R.string.header_conversations)))
+                                        false -> {
+                                            //Do nothing
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        false -> {
+                            //set sections for only room type
+                            if (rooms.size != 0) {
+                                sections.addAll(getSectionsForList(it, 0, it.size))
+                            } else {
+                                //Do nothing
+                            }
+                        }
+                    }
                 }
             }
         }

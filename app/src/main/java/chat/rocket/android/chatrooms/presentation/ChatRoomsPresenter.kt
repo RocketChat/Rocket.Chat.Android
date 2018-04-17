@@ -183,11 +183,29 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
         val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
         val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
         val groupFavorites = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, false)
+        val unreadOnTop = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_UNREAD_ON_TOP_KEY, true)
 
         val openChatRooms = getOpenChatRooms(chatRooms)
 
-        val favChatRooms = openChatRooms.filter { chatRoom -> chatRoom.favorite }
-        val notFavChatRooms = openChatRooms.filter { chatRoom -> !chatRoom.favorite }
+        return when (unreadOnTop) {
+            true -> {
+                val unreadChatRooms = openChatRooms.filter { chatRoom -> chatRoom.unread > 0 || chatRoom.alert }
+                val readChatRooms = openChatRooms.filter { chatRoom -> chatRoom.unread <= 0 && !chatRoom.alert }
+
+                val sortedUnreadChatRooms = getSortedAndGroupedByTypeRooms(unreadChatRooms, sortType, false)
+                val sortedReadChatRooms = getSortedAndGroupedByFavoriteRooms(readChatRooms, groupFavorites, groupByType, sortType)
+
+                return sortedUnreadChatRooms.plus(sortedReadChatRooms)
+            }
+            false -> {
+                getSortedAndGroupedByFavoriteRooms(openChatRooms, groupFavorites, groupByType, sortType)
+            }
+        }
+    }
+
+    private fun getSortedAndGroupedByFavoriteRooms(rooms: List<ChatRoom>, groupFavorites: Boolean, groupByType: Boolean, sortType: Int): List<ChatRoom> {
+        val favChatRooms = rooms.filter { chatRoom -> chatRoom.favorite }
+        val notFavChatRooms = rooms.filter { chatRoom -> !chatRoom.favorite }
 
         return when (groupFavorites) {
             true -> {
@@ -197,7 +215,7 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
                 sortedFavChatRooms.plus(sortedNotFavChatRooms)
             }
             false -> {
-                getSortedAndGroupedByTypeRooms(openChatRooms, sortType, groupByType)
+                getSortedAndGroupedByTypeRooms(rooms, sortType, groupByType)
             }
         }
     }
