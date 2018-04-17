@@ -30,11 +30,12 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
                 val myself = retryIO("me") { client.me() }
                 myselfId = myself.id!!
                 val avatarUrl = serverUrl.avatarUrl(myself.username!!)
+                val email = myself.emails?.getOrNull(0)?.address
                 view.showProfile(
                         avatarUrl,
                         myself.name ?: "",
                         myself.username ?: "",
-                        myself.emails?.get(0)?.address!!
+                        email
                 )
             } catch (exception: RocketChatException) {
                 view.showMessage(exception)
