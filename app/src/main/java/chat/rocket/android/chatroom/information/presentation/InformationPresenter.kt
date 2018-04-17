@@ -105,11 +105,11 @@ class InformationPresenter @Inject constructor(private val view: InformationView
     private fun canEdit(roomRoles: List<String>?, permissions: List<Permission>): Boolean {
         val editRoom: Permission? = permissions.find { it.id == EDIT_ROOM }
 
-        if (editRoom != null)
-            if (roomRoles != null)
-                for (role in roomRoles)
-                    if (editRoom.roles.contains(role))
-                        return true
+        if (editRoom != null && roomRoles != null)
+            roomRoles.forEach {
+                if (editRoom.roles.contains(it))
+                    return true
+            }
 
         return false
     }

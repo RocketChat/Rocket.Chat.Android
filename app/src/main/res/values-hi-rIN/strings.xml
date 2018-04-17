@@ -11,9 +11,15 @@
     <string name="title_profile">प्रोफाइल</string>
     <string name="title_members">सदस्य (%d)</string>
     <string name="title_settings">सेटिंग्स</string>
-    <string name="title_password">पासवर्ड बदलें</string>
+    <string name="title_change_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
+    <string name="title_public">जनता</string>
+    <string name="title_private">निजी</string>
+    <string name="title_collaborative">सहयोगात्मक</string>
+    <string name="title_read_only">सिफ़ पढ़िये</string>
+    <string name="title_archived">संग्रहीत</string>
+    <string name="title_password">पारण शब्द</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -33,6 +39,12 @@
     <string name="action_away">दूर</string>
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
+    <string name="action_leave">छोड़ना</string>
+    <string name="action_save">बचाना</string>
+    <string name="action_hide">छिपाना</string>
+    <string name="action_show">प्रदर्शन</string>
+    <string name="action_cancel">रद्द करना</string>
+    <string name="action_reset">रीसेट</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -89,6 +101,10 @@
     </string>
     <string name="msg_version">वर्शन</string>
     <string name="msg_build">बिल्ड</string>
+    <string name="msg_content_information_public">प्रत्येक व्यक्ति इस चैनल को एक्सेस कर सकता है</string>
+    <string name="msg_content_information_private">बस आमंत्रित लोग इस चैनल को एक्सेस कर सकते हैं</string>
+    <string name="msg_content_information_collaborative">चैनल के सभी उपयोगकर्ता नए संदेश लिख सकते हैं</string>
+    <string name="msg_content_information_read_only">केवल अधिकृत उपयोगकर्ता नए संदेश लिख सकते हैं</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>

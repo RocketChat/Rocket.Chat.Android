@@ -19,6 +19,12 @@
     <string name="title_announcement">Comunicação</string>
     <string name="title_topic">Tópico</string>
     <string name="title_about">Sobre</string>
+    <string name="title_public">Público</string>
+    <string name="title_private">Privado</string>
+    <string name="title_collaborative">Colaborativo</string>
+    <string name="title_read_only">Somente leitura</string>
+    <string name="title_archived">Arquivado</string>
+    <string name="title_password">Senha</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -38,6 +44,12 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisível</string>
+    <string name="action_leave">Sair</string>
+    <string name="action_save">Salve</string>
+    <string name="action_hide">Ocultar</string>
+    <string name="action_show">Exposição</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_reset">Restabelecer</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -95,6 +107,10 @@
     <string name="msg_ver_not_minimum">
         Parece que a versão do seu servidor está abaixo da mínima requerida %1$s.\nPor favor, atualize seus servidores antes de continuar!
     </string>
+    <string name="msg_content_information_public">Todos podem acessar este canal</string>
+    <string name="msg_content_information_private">Apenas pessoas convidadas podem acessar este canal</string>
+    <string name="msg_content_information_collaborative">Todos os usuários no canal podem escrever novas mensagens</string>
+    <string name="msg_content_information_read_only">Somente usuários autorizados podem escrever novas mensagens</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
