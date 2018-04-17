@@ -41,7 +41,7 @@ class MainPresenter @Inject constructor(
     private val factory: RocketChatClientFactory,
     getSettingsInteractor: GetSettingsInteractor,
     managerFactory: ConnectionManagerFactory
-) : CheckServerPresenter(strategy, client = factory.create(serverInteractor.get()!!), view = view) {
+) : CheckServerPresenter(strategy, factory, view = view) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
     private val client: RocketChatClient = factory.create(currentServer)
@@ -56,7 +56,7 @@ class MainPresenter @Inject constructor(
     fun toSettings() = navigator.toSettings()
 
     fun loadCurrentInfo() {
-        checkServerInfo()
+        checkServerInfo(currentServer)
         launchUI(strategy) {
             try {
                 val me = retryIO("me") {
