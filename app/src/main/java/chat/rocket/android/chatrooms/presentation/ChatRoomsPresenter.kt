@@ -212,8 +212,10 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
             }
             ChatRoomsSortOrder.ACTIVITY -> {
                 when (groupByType) {
-                    true -> rooms.sortedWith(compareByRoomType().then(compareByLastMessage()))
-                    false -> rooms.sortedWith(compareByLastMessage())
+                    true -> rooms.sortedWith(compareByRoomType().thenByDescending { it.updatedAt })
+                    false -> rooms.sortedByDescending { chatRoom ->
+                        chatRoom.updatedAt
+                    }
                 }
             }
             else -> {
@@ -224,15 +226,6 @@ class ChatRoomsPresenter @Inject constructor(private val view: ChatRoomsView,
 
     private fun compareByRoomType(): Comparator<ChatRoom> {
         return Comparator { a, b -> getTypeConstant(a.type) - getTypeConstant(b.type) }
-    }
-
-    private fun compareByLastMessage(): Comparator<ChatRoom> {
-        return Comparator { a, b ->
-            if (a.lastMessage == null || b.lastMessage == null) {
-                return@Comparator -1
-            }
-            (b.lastMessage!!.timestamp - a.lastMessage!!.timestamp).toInt()
-        }
     }
 
     private fun getTypeConstant(roomType: RoomType): Int {
