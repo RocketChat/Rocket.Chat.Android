@@ -183,7 +183,7 @@ class ChatRoomAdapter(
                 when (item.itemId) {
                     R.id.action_menu_msg_pin_unpin -> {
                         with(item) {
-                            pinnedMessagesPresenter?.unpinMessage(id)
+                            pinnedMessagesPresenter?.unpinMessage(id,dataSet.size)
                             removeItem(id)
                             }
                         }

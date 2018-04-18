@@ -108,6 +108,10 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView{
         }
     }
 
+    override fun onUnpinMessage(size: Int) {
+        togglePinView(size - 1)
+    }
+
     private fun togglePinView(size: Int) {
         if (size == 0){
             iv_pin_icon.setVisible(true)

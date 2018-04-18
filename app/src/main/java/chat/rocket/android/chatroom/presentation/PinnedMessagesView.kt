@@ -12,4 +12,11 @@ interface PinnedMessagesView : MessageView, LoadingView {
      * @param pinnedMessages The list of pinned messages.
      */
     fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>)
+
+    /**
+     * Invoked when pinned message is unpinned.
+     *
+     * @param size Gives the size of pinned messages.
+     */
+    fun onUnpinMessage(size: Int)
 }

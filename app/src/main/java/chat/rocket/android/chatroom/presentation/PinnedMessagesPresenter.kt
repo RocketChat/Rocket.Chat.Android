@@ -51,7 +51,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
         }
     }
 
-    fun unpinMessage(messageId: String) {
+    fun unpinMessage(messageId: String, size: Int) {
         launchUI(strategy) {
             if (!permissions.allowedMessagePinning()) {
                 view.showMessage(R.string.permission_pinning_not_allowed)
@@ -60,6 +60,7 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
             try
             {
                 client.unpinMessage(messageId)
+                view.onUnpinMessage(size)
             }
             catch (e: RocketChatException) {
                 Timber.e(e)
