@@ -24,7 +24,6 @@
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="5dp"
         app:layout_constraintStart_toEndOf="@id/image_avatar"
         app:layout_constraintTop_toTopOf="@+id/image_avatar"
         tools:src="@drawable/ic_lock_12_dp" />
