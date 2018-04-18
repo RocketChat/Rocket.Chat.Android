@@ -12,5 +12,4 @@ interface PinnedMessagesView : MessageView, LoadingView {
      * @param pinnedMessages The list of pinned messages.
      */
     fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>)
-
 }

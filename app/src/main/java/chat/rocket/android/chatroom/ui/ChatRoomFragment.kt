@@ -716,5 +716,4 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun setupToolbar(toolbarTitle: String) {
         (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
     }
-
 }
