@@ -2,7 +2,7 @@ package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
 
 interface ChatRoomsView : LoadingView, MessageView {

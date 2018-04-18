@@ -19,18 +19,12 @@ Since both the versions use `kotlin` for some or all of their classes, following
 - After checking out to `develop` branch as mentioned above, simply import the project in Android Studio.
 
 #### v2+
-- This version requires the [Kotlin SDK](https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK) for Rocket.Chat. Clone the Kotlin SDK in the **same directory** as the android repository by running `git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git`. Make sure that the android repository and the kotlin sdk have the same immediate parent directory.
-- First, a build is required for the SDK. Change your directory to the SDK directory by running `cd Rocket.Chat.Kotlin.SDK/` in your terminal. Any of the following approaches can be followed to successfully build the SDK.
-    - **Command Line** - (Within the kotlin SDK directory) Run `./gradlew clean && ./gradlew assemble` to successfully build the project.
-    - **Android Studio** - Import the project in Android Studio. Go to `Build > Make Project` to build the SDK successfully.
-After following the above methods, follow the following steps in your terminal window:
+- This version requires the [Kotlin SDK](https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK) for Rocket.Chat. Clone the Kotlin SDK in by running `git clone https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK.git`.
+- First, a build is required for the SDK, so that required jar files are generated. Make sure that the android repository and the kotlin sdk have the same immediate parent directory. Change the current directory to `Rocket.Chat.Android/app` and run the `build-sdk.sh` which will result in creating of the required jar file `core*.jar` and `common*.jar` in `Rocket.Chat.Android/app/libs`,by the following steps in your terminal window:
 ```
-cd ..
-cd Rocket.Chat.Android/app/libs
-ls
+cd Rocket.Chat.Android/app
+./build-sdk.sh
 ```
-Two `jar` files will be found in this directory (the `common` and `core` jar files), this indicates that the SDK was built correctly.
-- After the SDK has been built successfully, import the project in Android Studio and build it by following `Build > Make Project`.
 
 ## How to run
 ### Command Line

@@ -1,6 +1,7 @@
 package chat.rocket.android.server.domain
 
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.retryIO
 import chat.rocket.core.internal.rest.settings
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
@@ -27,7 +28,9 @@ class RefreshSettingsInteractor @Inject constructor(private val factory: RocketC
     suspend fun refresh(server: String) {
         withContext(CommonPool) {
             factory.create(server).let { client ->
-                val settings = client.settings(*settingsFilter)
+                val settings = retryIO(description = "settings", times = 5) {
+                    client.settings(*settingsFilter)
+                }
                 repository.save(server, settings)
             }
         }

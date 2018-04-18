@@ -24,6 +24,7 @@ import chat.rocket.android.widget.emoji.Emoji
 import chat.rocket.android.widget.emoji.EmojiListenerAdapter
 import chat.rocket.android.widget.emoji.EmojiPickerPopup
 import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_pinned_messages.*
 import timber.log.Timber
@@ -71,16 +72,24 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView, EmojiReactionList
         presenter.loadPinnedMessages(chatRoomId)
     }
 
-    override fun showLoading() = view_loading.setVisible(true)
+    override fun showLoading() {
+        ui { view_loading.setVisible(true) }
+    }
 
-    override fun hideLoading() = view_loading.setVisible(false)
+    override fun hideLoading() {
+        ui { view_loading.setVisible(false) }
+    }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun copyToClipboard(message: String) {
@@ -140,7 +149,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView, EmojiReactionList
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>) {
-        activity?.apply {
+        ui {
             if (recycler_view_pinned.adapter == null) {
                 // TODO - add a better constructor for this case...
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, null, presenter, false)
@@ -155,9 +164,22 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView, EmojiReactionList
                         }
                     })
                 }
+                togglePinView(pinnedMessages.size)
             }
 
             adapter.appendData(pinnedMessages)
+        }
+    }
+
+    private fun togglePinView(size: Int) {
+        if (size == 0){
+            iv_pin_icon.setVisible(true)
+            tv_pin_title.setVisible(true)
+            tv_pin_description.setVisible(true)
+        }else{
+            iv_pin_icon.setVisible(false)
+            tv_pin_title.setVisible(false)
+            tv_pin_description.setVisible(false)
         }
     }
 }

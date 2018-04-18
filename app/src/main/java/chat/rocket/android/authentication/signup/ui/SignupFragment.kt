@@ -25,7 +25,7 @@ class SignupFragment : Fragment(), SignupView {
         } else {
             bottom_container.apply {
                 postDelayed({
-                    setVisible(true)
+                    ui { setVisible(true) }
                 }, 3)
             }
         }
@@ -64,65 +64,77 @@ class SignupFragment : Fragment(), SignupView {
     }
 
     override fun alertBlankName() {
-        vibrateSmartPhone()
-        text_name.shake()
-        text_name.requestFocus()
+        ui {
+            vibrateSmartPhone()
+            text_name.shake()
+            text_name.requestFocus()
+        }
     }
 
     override fun alertBlankUsername() {
-        vibrateSmartPhone()
-        text_username.shake()
-        text_username.requestFocus()
+        ui {
+            vibrateSmartPhone()
+            text_username.shake()
+            text_username.requestFocus()
+        }
     }
 
     override fun alertEmptyPassword() {
-        vibrateSmartPhone()
-        text_password.shake()
-        text_password.requestFocus()
+        ui {
+            vibrateSmartPhone()
+            text_password.shake()
+            text_password.requestFocus()
+        }
     }
 
     override fun alertBlankEmail() {
-        vibrateSmartPhone()
-        text_email.shake()
-        text_email.requestFocus()
+        ui {
+            vibrateSmartPhone()
+            text_email.shake()
+            text_email.requestFocus()
+        }
     }
 
     override fun showLoading() {
-        enableUserInput(false)
-        view_loading.setVisible(true)
+        ui {
+            enableUserInput(false)
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
-        enableUserInput(true)
+        ui {
+            view_loading.setVisible(false)
+            enableUserInput(true)
+        }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() {
         showMessage(getString(R.string.msg_generic_error))
     }
 
-    override fun showNoInternetConnection() {
-        Toast.makeText(activity, getString(R.string.msg_no_internet_connection), Toast.LENGTH_SHORT).show()
-    }
-
     private fun tintEditTextDrawableStart() {
-        activity?.apply {
-            val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
-            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
-            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, this)
-            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
+        ui {
+            val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, it)
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, it)
+            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_24dp, it)
+            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, it)
 
             val drawables = arrayOf(personDrawable, atDrawable, lockDrawable, emailDrawable)
             DrawableHelper.wrapDrawables(drawables)
-            DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawables(drawables, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_password, text_email), drawables)
         }
     }

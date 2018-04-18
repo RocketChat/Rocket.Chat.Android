@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.helper.KeyboardHelper
@@ -17,17 +18,26 @@ import javax.inject.Inject
 
 class ServerFragment : Fragment(), ServerView {
     @Inject lateinit var presenter: ServerPresenter
+    private var deepLinkInfo: LoginDeepLinkInfo? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)
     }
 
     companion object {
-        fun newInstance() = ServerFragment()
+        private const val DEEP_LINK_INFO = "DeepLinkInfo"
+
+        fun newInstance(deepLinkInfo: LoginDeepLinkInfo?) = ServerFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+
+        deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -37,6 +47,10 @@ class ServerFragment : Fragment(), ServerView {
         super.onViewCreated(view, savedInstanceState)
         relative_layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         setupOnClickListener()
+
+        deepLinkInfo?.let {
+            presenter.deepLink(it)
+        }
     }
 
     override fun onDestroyView() {
@@ -47,29 +61,33 @@ class ServerFragment : Fragment(), ServerView {
     override fun showInvalidServerUrlMessage() = showMessage(getString(R.string.msg_invalid_server_url))
 
     override fun showLoading() {
-        enableUserInput(false)
-        view_loading.setVisible(true)
+        ui {
+            enableUserInput(false)
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
-        enableUserInput(true)
+        ui {
+            view_loading.setVisible(false)
+            enableUserInput(true)
+        }
     }
 
     override fun showMessage(resId: Int){
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() {
         showMessage(getString(R.string.msg_generic_error))
-    }
-
-    override fun showNoInternetConnection() {
-        showMessage(getString(R.string.msg_no_internet_connection))
     }
 
     private fun enableUserInput(value: Boolean) {
