@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+        <item
+            android:id="@+id/action_menu_msg_pin_unpin"
+            android:icon="@drawable/ic_pin_black_24dp"
+            android:title="@string/action_msg_pin" />
+
+</menu>

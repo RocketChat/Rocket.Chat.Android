@@ -77,7 +77,12 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
 
     val longClickListener = { view: View ->
         if (data?.message?.isSystemMessage() == false) {
-            val menuItems = view.context.inflate(R.menu.message_actions).toList()
+            val menuItems = if (listener.isActionsEnabled()){
+                view.context.inflate(R.menu.message_actions).toList()
+            }
+            else{
+                view.context.inflate(R.menu.pinned_message_actions).toList()
+            }
             menuItems.find { it.itemId == R.id.action_menu_msg_pin_unpin }?.apply {
                 val isPinned = data?.message?.pinned ?: false
                 setTitle(if (isPinned) R.string.action_msg_unpin else R.string.action_msg_pin)

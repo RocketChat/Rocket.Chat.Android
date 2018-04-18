@@ -181,21 +181,12 @@ class ChatRoomAdapter(
         override fun onPinMessageSelected(item: MenuItem, message: Message) {
             message.apply {
                 when (item.itemId) {
-                    R.id.action_menu_msg_delete -> {
-                        pinnedMessagesPresenter?.deleteMessage(roomId, id)
-                        removeItem(id)
-                        }
-                    R.id.action_menu_msg_quote -> pinnedMessagesPresenter?.citeMessage(roomType, roomName, id, false)
-                    R.id.action_menu_msg_reply -> pinnedMessagesPresenter?.citeMessage(roomType, roomName, id, true)
-                    R.id.action_menu_msg_copy -> pinnedMessagesPresenter?.copyMessage(id)
-                    R.id.action_menu_msg_edit -> pinnedMessagesPresenter?.editMessage(roomId, id, message.message)
                     R.id.action_menu_msg_pin_unpin -> {
                         with(item) {
                             pinnedMessagesPresenter?.unpinMessage(id)
                             removeItem(id)
                             }
                         }
-                    R.id.action_menu_msg_react -> pinnedMessagesPresenter?.showReactions(id)
                     else -> TODO("Not implemented")
                     }
                 }
