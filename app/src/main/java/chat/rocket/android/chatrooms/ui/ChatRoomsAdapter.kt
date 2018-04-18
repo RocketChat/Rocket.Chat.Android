@@ -23,7 +23,6 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.common.model.RoomType
-import chat.rocket.common.model.UserStatus
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_chat.view.*
@@ -101,15 +100,15 @@ class ChatRoomsAdapter(private val context: Context,
                 else -> null
             }
             drawable?.let {
+                val mutateDrawable = DrawableHelper.wrapDrawable(it).mutate()
                 if (chatRoom.type !is RoomType.DirectMessage) {
-                    DrawableHelper.wrapDrawable(it)
                     val color = when (chatRoom.alert || chatRoom.unread > 0) {
                         true -> R.color.colorPrimaryText
                         false -> R.color.colorSecondaryText
                     }
-                    DrawableHelper.tintDrawable(it, context, color)
+                    DrawableHelper.tintDrawable(mutateDrawable, context, color)
                 }
-                imageView.setImageDrawable(drawable)
+                imageView.setImageDrawable(mutateDrawable)
             }
         }
 
