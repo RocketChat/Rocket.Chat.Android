@@ -108,7 +108,7 @@ object DrawableHelper {
      * @see [UserStatus]
      * @return The user status drawable.
      */
-    fun getUserStatusDrawable(userStatus: UserStatus, context: Context, getSmallDrawable: Boolean = false): Drawable {
+    fun getUserStatusDrawable(userStatus: UserStatus?, context: Context, getSmallDrawable: Boolean = false): Drawable {
         return when (userStatus) {
             is UserStatus.Online -> {
                 getDrawableFromId(
