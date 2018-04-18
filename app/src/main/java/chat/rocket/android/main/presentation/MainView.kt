@@ -4,7 +4,7 @@ import chat.rocket.android.authentication.server.presentation.VersionCheckView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.android.main.viewmodel.NavHeaderViewModel
 import chat.rocket.android.server.domain.model.Account
-import chat.rocket.core.internal.realtime.UserStatus
+import chat.rocket.common.model.UserStatus
 
 interface MainView : MessageView, VersionCheckView {
 
@@ -18,10 +18,10 @@ interface MainView : MessageView, VersionCheckView {
     /**
      * Setups the navigation header.
      *
-     * @param model The [NavHeaderViewModel].
+     * @param viewModel The [NavHeaderViewModel].
      * @param accounts The list of accounts.
      */
-    fun setupNavHeader(model: NavHeaderViewModel, accounts: List<Account>)
+    fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>)
 
     fun closeServerSelection()
 }

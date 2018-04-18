@@ -19,6 +19,7 @@ import chat.rocket.android.members.viewmodel.MemberViewModel
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
@@ -70,7 +71,7 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     override fun showMembers(dataSet: List<MemberViewModel>, total: Long) {
-        activity?.apply {
+        ui {
             setupToolbar(total)
             if (adapter.itemCount == 0) {
                 adapter.prependData(dataSet)
@@ -84,8 +85,8 @@ class MembersFragment : Fragment(), MembersView {
             } else {
                 adapter.appendData(dataSet)
             }
-            if (this is ChatRoomActivity) {
-                this.showRoomTypeIcon(false)
+            if (it is ChatRoomActivity) {
+                it.showRoomTypeIcon(false)
             }
         }
     }
@@ -98,29 +99,37 @@ class MembersFragment : Fragment(), MembersView {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun showLoading() = view_loading.setVisible(true)
+    override fun showLoading() {
+        ui { view_loading.setVisible(true) }
+    }
 
-    override fun hideLoading() = view_loading.setVisible(false)
+    override fun hideLoading() {
+        ui { view_loading.setVisible(false) }
+    }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     private fun setupRecyclerView() {
-        activity?.apply {
+        ui {
             recycler_view.layoutManager = linearLayoutManager
-            recycler_view.addItemDecoration(DividerItemDecoration(this))
+            recycler_view.addItemDecoration(DividerItemDecoration(it))
             recycler_view.adapter = adapter
         }
     }
 
     private fun setupToolbar(totalMembers: Long) {
-        (activity as ChatRoomActivity).setupToolbarTitle(getString(R.string.title_members, totalMembers))
+        (activity as ChatRoomActivity?)?.setupToolbarTitle(getString(R.string.title_members, totalMembers))
     }
 }

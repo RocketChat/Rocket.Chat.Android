@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -199,7 +198,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         activity?.apply {
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
-                        reactionListener = this@ChatRoomFragment,pinnedMessagesPresenter = null)
+                        reactionListener = this@ChatRoomFragment)
                 recycler_view.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
                 linearLayoutManager.stackFromEnd = true
@@ -645,31 +644,5 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupToolbar(toolbarTitle: String) {
         (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val prefs = activity!!.getSharedPreferences("pinFunction", MODE_PRIVATE)
-        val action = prefs.getString("action", null)
-        if (action == "edit") {
-            val roomId = prefs.getString("roomId", null)
-            val messageId = prefs.getString("messageId", null)
-            val text = prefs.getString("text", null)
-            showEditingAction(roomId,messageId, text)
-        }else if(action == "reply"){
-            val username = prefs.getString("username", null)
-            val replyMarkdown = prefs.getString("replyMarkdown", null)
-            val quotedMessage = prefs.getString("quotedMessage", null)
-            showReplyingAction(username, replyMarkdown, quotedMessage)
-        }
-
-    }
-
-    override fun onStop() {
-        super.onStop()
-        val editor = activity?.getSharedPreferences("pinFunction", MODE_PRIVATE)!!.edit()
-        editor.putString("action","null")
-        editor.apply()
     }
 }

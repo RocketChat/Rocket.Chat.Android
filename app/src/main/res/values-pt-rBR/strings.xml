@@ -13,6 +13,7 @@
     <string name="title_settings">Configurações</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
+    <string name="title_about">Sobre</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -36,10 +37,10 @@
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Alterar senha</item>
+        <item name="item_password">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">Sem conexão à internet</string>
     <string name="msg_generic_error">Desculpe, ocorreu um erro, tente novamente</string>
     <string name="msg_no_data_to_display">Nenhum dado para exibir</string>
     <string name="msg_profile_update_successfully">Perfil atualizado com sucesso</string>
@@ -79,6 +80,8 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
+    <string name="msg_version">Versão</string>
+    <string name="msg_build">Build</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.
@@ -120,6 +123,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Pinadas</string>
+    <string name="no_pinned_messages">Nenhuma mensagem pinada</string>
+    <string name="no_pinned_description">Todas as mensagens pinadas\naparecerão aqui</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
@@ -177,4 +182,9 @@
     <string name="header_direct_messages">Mensagens diretas</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Desconhecido</string>
+
+    <!--Notifications-->
+    <string name="notif_action_reply_hint">RESPONDER</string>
+    <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
+    <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
 </resources>

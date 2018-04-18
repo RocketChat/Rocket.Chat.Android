@@ -13,6 +13,7 @@
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
+    <string name="title_about">परिचय</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -36,10 +37,10 @@
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">पासवर्ड बदलें</item>
+        <item name="item_password">परिचय</item>
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">कोई इंटरनेट कनेक्शन नहीं है</string>
     <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
     <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
@@ -86,6 +87,8 @@
     <string name="msg_ver_not_minimum">
         ऐसा लगता है कि आपका सर्वर संस्करण न्यूनतम आवश्यक संस्करण %1$s से कम है।\nकृपया लॉगिन करने के लिए अपने सर्वर को अपग्रेड करें!
     </string>
+    <string name="msg_version">वर्शन</string>
+    <string name="msg_build">बिल्ड</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
@@ -120,6 +123,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">पिन किए गए संदेश</string>
+    <string name="no_pinned_messages">कोई पिन संदेश नहीं</string>
+    <string name="no_pinned_description">सभी पिन किए गए संदेश यहां\nदिखाई देते हैं।</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">फ़ाइल का आकार %1$d बाइट्स ने %2$d बाइट्स के अधिकतम अपलोड आकार को पार कर लिया है</string>
@@ -177,4 +182,9 @@
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">अज्ञात</string>
+
+    <!--Notifications-->
+    <string name="notif_action_reply_hint">जवाब</string>
+    <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
+    <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
 </resources>
