@@ -94,8 +94,7 @@ class ChatRoomsAdapter(private val context: Context,
                 )
                 is RoomType.DirectMessage -> DrawableHelper.getUserStatusDrawable(
                     chatRoom.status,
-                    context,
-                    true
+                    context
                 )
                 else -> null
             }
