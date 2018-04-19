@@ -34,7 +34,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val deepLinkInfo = intent.getLoginDeepLinkInfo()
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
-            // if we got authenticadeWithDeepLink information, pass true to newServer also
+            // if we got authenticateWithDeepLink information, pass true to newServer also
             presenter.loadCredentials(newServer || deepLinkInfo != null) { authenticated ->
                 if (!authenticated) {
                     showServerInput(savedInstanceState, deepLinkInfo)

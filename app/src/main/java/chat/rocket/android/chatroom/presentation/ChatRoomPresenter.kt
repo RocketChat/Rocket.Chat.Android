@@ -10,6 +10,7 @@ import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
+import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.username
@@ -172,7 +173,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val fileName = async { uriInteractor.getFileName(uri) }.await()
+                val fileName = async { uriInteractor.getFileName(uri) }.await() ?: uri.toString()
                 val mimeType = async { uriInteractor.getMimeType(uri) }.await()
                 val fileSize = async { uriInteractor.getFileSize(uri) }.await()
                 val maxFileSize = settings.uploadMaxFileSize()
@@ -189,12 +190,11 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                         }
                     }
                 }
-            } catch (ex: RocketChatException) {
-                Timber.d(ex)
-                ex.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
-                    view.showGenericErrorMessage()
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error uploading file")
+                when(ex) {
+                    is RocketChatException -> view.showMessage(ex)
+                    else -> view.showGenericErrorMessage()
                 }
             } finally {
                 view.hideLoading()

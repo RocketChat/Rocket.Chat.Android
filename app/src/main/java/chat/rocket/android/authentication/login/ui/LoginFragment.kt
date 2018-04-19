@@ -72,7 +72,7 @@ class LoginFragment : Fragment(), LoginView {
         }
 
         deepLinkInfo?.let {
-            presenter.authenticadeWithDeepLink(it)
+            presenter.authenticateWithDeepLink(it)
         }.ifNull {
             presenter.setupView()
         }
@@ -367,27 +367,6 @@ class LoginFragment : Fragment(), LoginView {
             vibrateSmartPhone()
             text_password.shake()
             text_password.requestFocus()
-        }
-    }
-
-    override fun alertNotRecommendedVersion() {
-        ui {
-            AlertDialog.Builder(it)
-                    .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
-                    .setPositiveButton(R.string.msg_ok, null)
-                    .create()
-                    .show()
-        }
-    }
-
-    override fun blockAndAlertNotRequiredVersion() {
-        ui {
-            AlertDialog.Builder(it)
-                    .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
-                    .setOnDismissListener { activity?.onBackPressed() }
-                    .setPositiveButton(R.string.msg_ok, null)
-                    .create()
-                    .show()
         }
     }
 
