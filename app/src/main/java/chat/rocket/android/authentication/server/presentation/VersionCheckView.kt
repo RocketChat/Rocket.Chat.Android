@@ -10,4 +10,9 @@ interface VersionCheckView {
      * Block user to proceed and alert him due to server having an unsupported server version.
      */
     fun blockAndAlertNotRequiredVersion()
+
+    /**
+     * Do some action if version is ok. This is optional.
+     */
+    fun versionOk() {}
 }

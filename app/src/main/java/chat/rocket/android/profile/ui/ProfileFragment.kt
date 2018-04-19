@@ -12,6 +12,7 @@ import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
@@ -25,6 +26,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private lateinit var currentEmail: String
     private lateinit var currentAvatar: String
     private var actionMode: ActionMode? = null
+    private val disposables = CompositeDisposable()
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -48,22 +50,29 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         presenter.loadUserProfile()
     }
 
-    override fun showProfile(avatarUrl: String, name: String, username: String, email: String) {
-        image_avatar.setImageURI(avatarUrl)
+    override fun onDestroyView() {
+        disposables.clear()
+        super.onDestroyView()
+    }
 
-        text_name.textContent = name
-        text_username.textContent = username
-        text_email.textContent = email
-        text_avatar_url.textContent = ""
+    override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
+        ui {
+            image_avatar.setImageURI(avatarUrl)
 
-        currentName = name
-        currentUsername = username
-        currentEmail = email
-        currentAvatar = avatarUrl
+            text_name.textContent = name
+            text_username.textContent = username
+            text_email.textContent = email ?: ""
+            text_avatar_url.textContent = ""
 
-        profile_container.setVisible(true)
+            currentName = name
+            currentUsername = username
+            currentEmail = email ?: ""
+            currentAvatar = avatarUrl
 
-        listenToChanges()
+            profile_container.setVisible(true)
+
+            listenToChanges()
+        }
     }
 
     override fun showProfileUpdateSuccessfullyMessage() {
@@ -72,22 +81,30 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun showLoading() {
         enableUserInput(false)
-        view_loading.setVisible(true)
+        ui {
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        if (view_loading != null) {
-            view_loading.setVisible(false)
+        ui {
+            if (view_loading != null) {
+                view_loading.setVisible(false)
+            }
         }
         enableUserInput(true)
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
@@ -136,7 +153,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun listenToChanges() {
-        Observables.combineLatest(text_name.asObservable(),
+        disposables.add(Observables.combineLatest(text_name.asObservable(),
                 text_username.asObservable(),
                 text_email.asObservable(),
                 text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
@@ -144,7 +161,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
                     text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail ||
                     (text_avatar_url.toString() != "" && text_avatar_url.toString() != currentAvatar))
-        }.subscribe({ isValid ->
+        }.subscribe { isValid ->
             if (isValid) {
                 startActionMode()
             } else {
@@ -162,9 +179,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun finishActionMode() = actionMode?.finish()
 
     private fun enableUserInput(value: Boolean) {
-        text_username.isEnabled = value
-        text_username.isEnabled = value
-        text_email.isEnabled = value
-        text_avatar_url.isEnabled = value
+        ui {
+            text_username.isEnabled = value
+            text_username.isEnabled = value
+            text_email.isEnabled = value
+            text_avatar_url.isEnabled = value
+        }
     }
 }
