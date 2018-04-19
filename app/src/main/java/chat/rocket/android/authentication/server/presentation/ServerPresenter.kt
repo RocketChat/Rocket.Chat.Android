@@ -37,7 +37,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
         }
     }
 
-    fun connectToServer(server: String, block: () -> Unit) {
+    private fun connectToServer(server: String, block: () -> Unit) {
         if (!server.isValidUrl()) {
             view.showInvalidServerUrlMessage()
         } else {
@@ -51,7 +51,6 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
 
                 view.showLoading()
                 try {
-                    checkServerInfo(server)
                     refreshSettingsInteractor.refresh(server)
                     serverInteractor.save(server)
                     block()
