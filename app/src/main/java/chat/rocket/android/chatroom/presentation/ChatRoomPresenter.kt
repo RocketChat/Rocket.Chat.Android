@@ -173,7 +173,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val fileName = async { uriInteractor.getFileName(uri) }.await()
+                val fileName = async { uriInteractor.getFileName(uri) }.await() ?: uri.toString()
                 val mimeType = async { uriInteractor.getMimeType(uri) }.await()
                 val fileSize = async { uriInteractor.getFileSize(uri) }.await()
                 val maxFileSize = settings.uploadMaxFileSize()
