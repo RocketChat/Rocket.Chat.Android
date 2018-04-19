@@ -127,10 +127,12 @@ class ChatRoomsPresenter @Inject constructor(
                 id = it.id,
                 type = RoomType.DIRECT_MESSAGE,
                 user = SimpleUser(username = it.username, name = it.name, id = null),
-                status = getActiveUsersInteractor.getActiveUserByUsername(
-                    currentServer,
-                    it.name!!
-                )?.status,
+                status = if (it.name != null) {
+                    getActiveUsersInteractor.getActiveUserByUsername(currentServer, it.name!!)
+                        ?.status
+                } else {
+                    null
+                },
                 name = it.name ?: "",
                 fullName = it.name,
                 readonly = false,
@@ -158,10 +160,12 @@ class ChatRoomsPresenter @Inject constructor(
                 id = it.id,
                 type = it.type,
                 user = it.user,
-                status = getActiveUsersInteractor.getActiveUserByUsername(
-                    currentServer,
-                    it.name!!
-                )?.status,
+                status = if (it.name != null) {
+                    getActiveUsersInteractor.getActiveUserByUsername(currentServer, it.name!!)
+                        ?.status
+                } else {
+                    null
+                },
                 name = it.name ?: "",
                 fullName = it.fullName,
                 readonly = it.readonly,
@@ -392,7 +396,7 @@ class ChatRoomsPresenter @Inject constructor(
                 user = room.user ?: user,
                 status = getActiveUsersInteractor.getActiveUserByUsername(
                     currentServer,
-                    room.name!!
+                    room.name ?: name
                 )?.status,
                 name = room.name ?: name,
                 fullName = room.fullName ?: fullName,
@@ -471,8 +475,10 @@ class ChatRoomsPresenter @Inject constructor(
 
     private suspend fun subscribeActiveUsers() {
         manager.addActiveUserChannel(activeUserChannel)
-        for (user in activeUserChannel) {
-            processActiveUser(user)
+        launch(CommonPool + strategy.jobs) {
+            for (user in activeUserChannel) {
+                processActiveUser(user)
+            }
         }
     }
 
