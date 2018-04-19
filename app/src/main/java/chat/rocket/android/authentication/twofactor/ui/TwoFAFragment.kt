@@ -28,7 +28,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         private const val PASSWORD = "password"
 
         fun newInstance(username: String, password: String) = TwoFAFragment().apply {
-            arguments = Bundle(1).apply {
+            arguments = Bundle(2).apply {
                 putString(USERNAME, username)
                 putString(PASSWORD, password)
             }
@@ -44,7 +44,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         password = arguments?.getString(PASSWORD) ?: ""
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_authentication_two_fa, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_two_fa)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,12 +58,15 @@ class TwoFAFragment : Fragment(), TwoFAView {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             tintEditTextDrawableStart()
         }
+
         setupOnClickListener()
     }
 
     override fun alertBlankTwoFactorAuthenticationCode() {
-        vibrateSmartPhone()
-        text_two_factor_auth.shake()
+        ui {
+            vibrateSmartPhone()
+            text_two_factor_auth.shake()
+        }
     }
 
     override fun alertInvalidTwoFactorAuthenticationCode() {
@@ -71,32 +74,38 @@ class TwoFAFragment : Fragment(), TwoFAView {
     }
 
     override fun showLoading() {
-        enableUserInput(false)
-        view_loading.setVisible(true)
+        ui {
+            enableUserInput(false)
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
-        enableUserInput(true)
+        ui {
+            view_loading.setVisible(false)
+            enableUserInput(true)
+        }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun showNoInternetConnection() = showMessage(getString(R.string.msg_no_internet_connection))
-
     private fun tintEditTextDrawableStart() {
-        activity?.apply {
-            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_vpn_key_black_24dp, this)
+        ui {
+            val lockDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_vpn_key_black_24dp, it)
             DrawableHelper.wrapDrawable(lockDrawable)
-            DrawableHelper.tintDrawable(lockDrawable, this, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawable(lockDrawable, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_two_factor_auth, lockDrawable)
         }
     }

@@ -53,6 +53,14 @@ class ChatRoomAdapter(
                 val view = parent.inflate(R.layout.item_message_attachment)
                 MessageAttachmentViewHolder(view, actionsListener, reactionListener)
             }
+            BaseViewModel.ViewType.AUTHOR_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_author_attachment)
+                AuthorAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
+            BaseViewModel.ViewType.COLOR_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_color_attachment)
+                ColorAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
             }
@@ -92,6 +100,8 @@ class ChatRoomAdapter(
             is VideoAttachmentViewHolder -> holder.bind(dataSet[position] as VideoAttachmentViewModel)
             is UrlPreviewViewHolder -> holder.bind(dataSet[position] as UrlPreviewViewModel)
             is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
+            is AuthorAttachmentViewHolder -> holder.bind(dataSet[position] as AuthorAttachmentViewModel)
+            is ColorAttachmentViewHolder -> holder.bind(dataSet[position] as ColorAttachmentViewModel)
         }
     }
 
@@ -100,6 +110,7 @@ class ChatRoomAdapter(
         return when (model) {
             is MessageViewModel -> model.messageId.hashCode().toLong()
             is BaseFileAttachmentViewModel -> model.id
+            is AuthorAttachmentViewModel -> model.id
             else -> return position.toLong()
         }
     }
@@ -111,12 +122,22 @@ class ChatRoomAdapter(
     }
 
     fun prependData(dataSet: List<BaseViewModel<*>>) {
-        val item = dataSet.firstOrNull { newItem ->
+        val item = dataSet.indexOfFirst { newItem ->
             this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType } > -1
         }
-        if (item == null) {
+        if (item == -1) {
             this.dataSet.addAll(0, dataSet)
             notifyItemRangeInserted(0, dataSet.size)
+        } else {
+            dataSet.forEach { item ->
+                val index = this.dataSet.indexOfFirst {
+                    item.messageId == it.messageId && item.viewType == it.viewType
+                }
+                if (index > -1) {
+                    this.dataSet[index] = item
+                    notifyItemChanged(index)
+                }
+            }
         }
     }
 

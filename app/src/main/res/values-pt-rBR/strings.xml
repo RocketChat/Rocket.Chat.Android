@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">Faça login no seu servidor</string>
     <string name="title_log_in">Entrar</string>
+    <string name="title_register_username">Registre o nome de usuário</string>
     <string name="title_sign_up">Inscreva-se</string>
     <string name="title_authentication">Autenticação</string>
     <string name="title_legal_terms">Termos Legais</string>
@@ -12,9 +13,11 @@
     <string name="title_settings">Configurações</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
+    <string name="title_about">Sobre</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
+    <string name="action_use_this_username">Usar este nome de usuário</string>
     <string name="action_login_or_sign_up">Toque este botão para fazer login ou criar uma conta</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
@@ -25,15 +28,19 @@
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
     <string name="action_join_chat">Entrar no Chat</string>
-    <string name="action_add_account">Adicionar Conta</string>
+    <string name="action_add_account">Adicionar conta</string>
+    <string name="action_online">Online</string>
+    <string name="action_away">Ausente</string>
+    <string name="action_busy">Ocupado</string>
+    <string name="action_invisible">Invisível</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">Alterar senha</item>
+        <item name="item_password">Sobre</item>
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">Sem conexão à internet</string>
     <string name="msg_generic_error">Desculpe, ocorreu um erro, tente novamente</string>
     <string name="msg_no_data_to_display">Nenhum dado para exibir</string>
     <string name="msg_profile_update_successfully">Perfil atualizado com sucesso</string>
@@ -48,7 +55,7 @@
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">ontem</string>
-    <string name="msg_message">Messagem</string>
+    <string name="msg_message">Mensagem</string>
     <string name="msg_this_room_is_read_only">Este chat é apenas de leitura</string>
     <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
     <string name="msg_invalid_file">Arquivo inválido</string>
@@ -73,7 +80,8 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
-    <string name="msg_requires_username">Nome de usuário requerido: Por favor, crie um nome de usuário através da versão web e volte para fazer login.</string>
+    <string name="msg_version">Versão</string>
+    <string name="msg_build">Build</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.
@@ -115,6 +123,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensagens Pinadas</string>
+    <string name="no_pinned_messages">Nenhuma mensagem pinada</string>
+    <string name="no_pinned_description">Todas as mensagens pinadas\naparecerão aqui</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
@@ -172,4 +182,9 @@
     <string name="header_direct_messages">Mensagens diretas</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">Desconhecido</string>
+
+    <!--Notifications-->
+    <string name="notif_action_reply_hint">RESPONDER</string>
+    <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
+    <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
 </resources>

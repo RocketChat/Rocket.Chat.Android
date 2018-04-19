@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content xmlns:tools="http://schemas.android.com/tools">
+    <include domain="sharedpref" path="."/>
+    <exclude domain="sharedpref" path="messages.xml"
+        tools:ignore="FullBackupContent" />
+    <exclude domain="file" path="instant-run"
+        tools:ignore="FullBackupContent" />
+</full-backup-content>

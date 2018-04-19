@@ -8,53 +8,61 @@
     android:focusableInTouchMode="true"
     tools:context=".profile.ui.ProfileFragment">
 
-    <LinearLayout
-        android:id="@+id/profile_container"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/layout_avatar_profile"
-            layout="@layout/avatar_profile"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/profile_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-        <EditText
-            android:id="@+id/text_name"
-            style="@style/Profile.EditText"
-            android:layout_marginTop="32dp"
-            android:drawableStart="@drawable/ic_person_black_24dp"
-            android:hint="@string/msg_name"
-            android:inputType="textCapWords" />
+            <include
+                android:id="@+id/layout_avatar_profile"
+                layout="@layout/avatar_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp" />
 
-        <EditText
-            android:id="@+id/text_username"
-            style="@style/Profile.EditText"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/ic_at_black_24dp"
-            android:hint="@string/msg_username"
-            android:inputType="text" />
+            <EditText
+                android:id="@+id/text_name"
+                style="@style/Profile.EditText"
+                android:layout_marginTop="32dp"
+                android:drawableStart="@drawable/ic_person_black_24dp"
+                android:hint="@string/msg_name"
+                android:inputType="textCapWords" />
 
-        <EditText
-            android:id="@+id/text_email"
-            style="@style/Profile.EditText"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/ic_email_black_24dp"
-            android:hint="@string/msg_email"
-            android:inputType="textEmailAddress" />
+            <EditText
+                android:id="@+id/text_username"
+                style="@style/Profile.EditText"
+                android:layout_marginTop="16dp"
+                android:drawableStart="@drawable/ic_at_black_24dp"
+                android:hint="@string/msg_username"
+                android:inputType="text" />
 
-        <EditText
-            android:id="@+id/text_avatar_url"
-            style="@style/Profile.EditText"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@drawable/ic_link_black_24dp"
-            android:hint="@string/msg_avatar_url"
-            android:inputType="text" />
-    </LinearLayout>
+            <EditText
+                android:id="@+id/text_email"
+                style="@style/Profile.EditText"
+                android:layout_marginTop="16dp"
+                android:drawableStart="@drawable/ic_email_black_24dp"
+                android:hint="@string/msg_email"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/text_avatar_url"
+                style="@style/Profile.EditText"
+                android:layout_marginTop="16dp"
+                android:drawableStart="@drawable/ic_link_black_24dp"
+                android:hint="@string/msg_avatar_url"
+                android:inputType="text"
+                android:layout_marginBottom="16dp"/>
+        </LinearLayout>
+
+    </ScrollView>
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"

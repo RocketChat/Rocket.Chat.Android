@@ -3,6 +3,7 @@
     <!-- Titles -->
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
     <string name="title_log_in">लॉग इन करें</string>
+    <string name="title_register_username">रजिस्टर उपयोगकर्ता नाम</string>
     <string name="title_sign_up">साइन अप करें</string>
     <string name="title_authentication">प्रमाणीकरण</string>
     <string name="title_legal_terms">कानूनी शर्तें</string>
@@ -12,9 +13,11 @@
     <string name="title_settings">सेटिंग्स</string>
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
+    <string name="title_about">परिचय</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
+    <string name="action_use_this_username">इस उपयोगकर्ता नाम का उपयोग करें</string>
     <string name="action_login_or_sign_up">लॉग इन करने या खाता बनाने के लिए इस बटन को टैप करें</string>
     <string name="action_terms_of_service">सेवा की शर्तें</string>
     <string name="action_privacy_policy">गोपनीयता नीति</string>
@@ -26,14 +29,18 @@
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
     <string name="action_join_chat">चैट में शामिल हों</string>
     <string name="action_add_account">खाता जोड़ो</string>
+    <string name="action_online">ऑनलाइन</string>
+    <string name="action_away">दूर</string>
+    <string name="action_busy">व्यस्त</string>
+    <string name="action_invisible">अदृश्य</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
         <item name="item_password">पासवर्ड बदलें</item>
+        <item name="item_password">परिचय</item>
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_no_internet_connection">कोई इंटरनेट कनेक्शन नहीं है</string>
     <string name="msg_generic_error">क्षमा करें, एक त्रुटि हुई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_no_data_to_display">डेटा प्रदर्शित करने के लिए उपलब्ध नहीं हैं</string>
     <string name="msg_profile_update_successfully">प्रोफ़ाइल सफलतापूर्वक अपडेट हो गया है</string>
@@ -73,7 +80,6 @@
     <string name="msg_preview_photo">तस्वीरें</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
-    <string name="msg_requires_username">उपयोगकर्ता नाम आवश्यक है: कृपया, वेब संस्करण के माध्यम से एक उपयोगकर्ता नाम बनाएं और लॉग इन करने के लिए वापस आएँ</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         ऐसा लगता है कि आपका सर्वर संस्करण अनुशंसित संस्करण %1$s के नीचे है।\nआप अभी भी लॉगिन कर सकते हैं लेकिन आप अप्रत्याशित व्यवहार का अनुभव कर सकते हैं
@@ -81,6 +87,8 @@
     <string name="msg_ver_not_minimum">
         ऐसा लगता है कि आपका सर्वर संस्करण न्यूनतम आवश्यक संस्करण %1$s से कम है।\nकृपया लॉगिन करने के लिए अपने सर्वर को अपग्रेड करें!
     </string>
+    <string name="msg_version">वर्शन</string>
+    <string name="msg_build">बिल्ड</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
@@ -115,6 +123,8 @@
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">पिन किए गए संदेश</string>
+    <string name="no_pinned_messages">कोई पिन संदेश नहीं</string>
+    <string name="no_pinned_description">सभी पिन किए गए संदेश यहां\nदिखाई देते हैं।</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">फ़ाइल का आकार %1$d बाइट्स ने %2$d बाइट्स के अधिकतम अपलोड आकार को पार कर लिया है</string>
@@ -172,4 +182,9 @@
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
     <string name="header_live_chats">Live Chats</string>
     <string name="header_unknown">अज्ञात</string>
+
+    <!--Notifications-->
+    <string name="notif_action_reply_hint">जवाब</string>
+    <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
+    <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
 </resources>
