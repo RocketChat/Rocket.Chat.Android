@@ -8,7 +8,6 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
@@ -31,6 +30,7 @@ private const val SERVICE_NAME_GITHUB = "github"
 private const val SERVICE_NAME_GOOGLE = "google"
 private const val SERVICE_NAME_LINKEDIN = "linkedin"
 private const val SERVICE_NAME_GILAB = "gitlab"
+private const val SERVICE_NAME_FACEBOOK = "facebook"
 
 class LoginPresenter @Inject constructor(
     private val view: LoginView,
@@ -143,9 +143,12 @@ class LoginPresenter @Inject constructor(
                     var totalSocialAccountsEnabled = 0
 
                     if (settings.isFacebookAuthenticationEnabled()) {
-//                        //TODO: Remove until we have this implemented
-//                        view.enableLoginByFacebook()
-//                        totalSocialAccountsEnabled++
+                        val clientId = getOauthClientId(services, SERVICE_NAME_FACEBOOK)
+                        if (clientId != null) {
+                            view.setupFacebookButtonListener(OauthHelper.getFacebookOauthUrl(clientId, currentServer, state), state)
+                            view.enableLoginByFacebook()
+                            totalSocialAccountsEnabled++
+                        }
                     }
                     if (settings.isGithubAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
