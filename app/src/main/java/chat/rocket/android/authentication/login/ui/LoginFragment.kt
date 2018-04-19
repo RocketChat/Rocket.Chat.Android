@@ -72,7 +72,7 @@ class LoginFragment : Fragment(), LoginView {
         }
 
         deepLinkInfo?.let {
-            presenter.authenticadeWithDeepLink(it)
+            presenter.authenticateWithDeepLink(it)
         }.ifNull {
             presenter.setupView()
         }

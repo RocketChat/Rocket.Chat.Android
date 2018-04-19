@@ -32,17 +32,18 @@ private const val SERVICE_NAME_GOOGLE = "google"
 private const val SERVICE_NAME_LINKEDIN = "linkedin"
 private const val SERVICE_NAME_GILAB = "gitlab"
 
-class LoginPresenter @Inject constructor(private val view: LoginView,
-                                         private val strategy: CancelStrategy,
-                                         private val navigator: AuthenticationNavigator,
-                                         private val tokenRepository: TokenRepository,
-                                         private val localRepository: LocalRepository,
-                                         private val getAccountsInteractor: GetAccountsInteractor,
-                                         private val settingsInteractor: GetSettingsInteractor,
-                                         serverInteractor: GetCurrentServerInteractor,
-                                         private val saveAccountInteractor: SaveAccountInteractor,
-                                         private val factory: RocketChatClientFactory)
-    : CheckServerPresenter(strategy, factory, view) {
+class LoginPresenter @Inject constructor(
+    private val view: LoginView,
+    private val strategy: CancelStrategy,
+    private val navigator: AuthenticationNavigator,
+    private val tokenRepository: TokenRepository,
+    private val localRepository: LocalRepository,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    private val settingsInteractor: GetSettingsInteractor,
+    serverInteractor: GetCurrentServerInteractor,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val factory: RocketChatClientFactory
+) : CheckServerPresenter(strategy, factory, view) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val currentServer = serverInteractor.get()!!
     private lateinit var client: RocketChatClient
@@ -62,7 +63,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         setupUserRegistrationView()
         setupCasView()
         setupOauthServicesView()
-        checkServerInfo(currentServer)
     }
 
     fun authenticateWithUserAndPassword(usernameOrEmail: String, password: String) {
@@ -92,7 +92,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
-    fun authenticadeWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
+    fun authenticateWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
         val serverUrl = deepLinkInfo.url
         setupConnectionInfo(serverUrl)
         deepLinkUserId = deepLinkInfo.userId
@@ -291,7 +291,7 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
 
     private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
         return listMap.find { map -> map.containsValue(serviceName) }
-                ?.get("appId")
+            ?.get("appId")
     }
 
     private suspend fun saveAccount(username: String) {

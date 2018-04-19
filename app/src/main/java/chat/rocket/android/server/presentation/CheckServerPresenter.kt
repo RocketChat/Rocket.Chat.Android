@@ -18,17 +18,18 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
                                                 private val factory: RocketChatClientFactory,
                                                 private val view: VersionCheckView) {
     private lateinit var currentServer: String
-    private val client: RocketChatClient by lazy {
-        factory.create(currentServer)
-    }
+    private lateinit var client: RocketChatClient
 
     internal fun checkServerInfo(serverUrl: String): Job {
         return launchUI(strategy) {
             try {
+                currentServer = serverUrl
+                client = factory.create(currentServer)
                 val version = checkServerVersion(serverUrl).await()
                 when (version) {
                     is Version.VersionOk -> {
                         Timber.i("Your version is nice! (Requires: 0.62.0, Yours: ${version.version})")
+                        view.versionOk()
                     }
                     is Version.RecommendedVersionWarning -> {
                         Timber.i("Your server ${version.version} is bellow recommended version ${BuildConfig.RECOMMENDED_SERVER_VERSION}")
