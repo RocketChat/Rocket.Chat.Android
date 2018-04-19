@@ -7,9 +7,10 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
 import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.isValidUrl
 import chat.rocket.android.util.extensions.launchUI
-import chat.rocket.common.util.ifNull
 import javax.inject.Inject
 
 class ServerPresenter @Inject constructor(private val view: ServerView,
@@ -17,7 +18,18 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val navigator: AuthenticationNavigator,
                                           private val serverInteractor: SaveCurrentServerInteractor,
                                           private val refreshSettingsInteractor: RefreshSettingsInteractor,
-                                          private val getAccountsInteractor: GetAccountsInteractor) {
+                                          private val getAccountsInteractor: GetAccountsInteractor,
+                                          factory: RocketChatClientFactory
+) : CheckServerPresenter(strategy, factory, view) {
+
+    fun checkServer(server: String) {
+        if (!server.isValidUrl()) {
+            view.showInvalidServerUrlMessage()
+        } else {
+            view.showLoading()
+            checkServerInfo(server)
+        }
+    }
 
     fun connect(server: String) {
         connectToServer(server) {
@@ -39,6 +51,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
 
                 view.showLoading()
                 try {
+                    checkServerInfo(server)
                     refreshSettingsInteractor.refresh(server)
                     serverInteractor.save(server)
                     block()

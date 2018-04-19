@@ -1,11 +1,13 @@
 package chat.rocket.android.authentication.server.ui
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.server.presentation.ServerPresenter
@@ -17,7 +19,8 @@ import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import javax.inject.Inject
 
 class ServerFragment : Fragment(), ServerView {
-    @Inject lateinit var presenter: ServerPresenter
+    @Inject
+    lateinit var presenter: ServerPresenter
     private var deepLinkInfo: LoginDeepLinkInfo? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         text_server_url.isCursorVisible = KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)
@@ -74,7 +77,7 @@ class ServerFragment : Fragment(), ServerView {
         }
     }
 
-    override fun showMessage(resId: Int){
+    override fun showMessage(resId: Int) {
         ui {
             showToast(resId)
         }
@@ -90,15 +93,49 @@ class ServerFragment : Fragment(), ServerView {
         showMessage(getString(R.string.msg_generic_error))
     }
 
+    override fun alertNotRecommendedVersion() {
+        ui {
+            hideLoading()
+            AlertDialog.Builder(it)
+                .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
+                .setPositiveButton(R.string.msg_ok, { _, _ ->
+                    val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
+                    presenter.connect(text_server_protocol.textContent + url)
+                })
+                .create()
+                .show()
+        }
+    }
+
+    override fun blockAndAlertNotRequiredVersion() {
+        ui {
+            hideLoading()
+            AlertDialog.Builder(it)
+                .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
+                .setPositiveButton(R.string.msg_ok, null)
+                .create()
+                .show()
+        }
+    }
+
+    override fun versionOk() {
+        ui {
+            val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
+            presenter.connect(text_server_protocol.textContent + url)
+        }
+    }
+
     private fun enableUserInput(value: Boolean) {
         button_connect.isEnabled = value
         text_server_url.isEnabled = value
     }
 
     private fun setupOnClickListener() {
-        button_connect.setOnClickListener {
-            val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-            presenter.connect(text_server_protocol.textContent + url)
+        ui {
+            button_connect.setOnClickListener {
+                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
+                presenter.checkServer(text_server_protocol.textContent + url)
+            }
         }
     }
 }
