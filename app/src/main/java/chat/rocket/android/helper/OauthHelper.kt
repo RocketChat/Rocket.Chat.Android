@@ -71,7 +71,7 @@ object OauthHelper {
     /**
      * Returns the Facebook Oauth URL.
      *
-     * @param clientId The Gitlab client ID.
+     * @param clientId The Facebook client ID.
      * @param serverUrl The server URL.
      * @param state An unguessable random string used to protect against forgery attacks.
      * @return The Facebook Oauth URL.
