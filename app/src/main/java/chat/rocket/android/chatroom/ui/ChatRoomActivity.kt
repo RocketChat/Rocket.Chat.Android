@@ -8,12 +8,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
+import chat.rocket.common.util.ifNull
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -51,6 +53,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     // TODO - workaround for now... We will move to a single activity
     @Inject lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject lateinit var navigator: ChatRoomNavigator
     @Inject lateinit var managerFactory: ConnectionManagerFactory
 
     private lateinit var chatRoomId: String
@@ -66,7 +69,13 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_chat_room)
 
         // Workaround for when we are coming to the app via the recents app and the app was killed.
-        managerFactory.create(serverInteractor.get()!!).connect()
+        val serverUrl = serverInteractor.get()
+        if (serverUrl != null) {
+            managerFactory.create(serverUrl).connect()
+        } else {
+            navigator.toNewServer()
+            return
+        }
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
