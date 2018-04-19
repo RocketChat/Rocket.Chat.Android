@@ -261,6 +261,15 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun setupFacebookButtonListener(facebookOauthUrl: String, state: String) {
+        ui { activity ->
+            button_facebook.setOnClickListener {
+                startActivityForResult(activity.oauthWebViewIntent(facebookOauthUrl, state), REQUEST_CODE_FOR_OAUTH)
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
+        }
+    }
+
     override fun enableLoginByGithub() {
         ui {
             button_github.isClickable = true
