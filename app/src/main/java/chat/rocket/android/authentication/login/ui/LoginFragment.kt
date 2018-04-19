@@ -370,27 +370,6 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
-    override fun alertNotRecommendedVersion() {
-        ui {
-            AlertDialog.Builder(it)
-                    .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
-                    .setPositiveButton(R.string.msg_ok, null)
-                    .create()
-                    .show()
-        }
-    }
-
-    override fun blockAndAlertNotRequiredVersion() {
-        ui {
-            AlertDialog.Builder(it)
-                    .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
-                    .setOnDismissListener { activity?.onBackPressed() }
-                    .setPositiveButton(R.string.msg_ok, null)
-                    .create()
-                    .show()
-        }
-    }
-
     private fun showRemainingSocialAccountsView() {
         social_accounts_container.postDelayed(300) {
             ui {

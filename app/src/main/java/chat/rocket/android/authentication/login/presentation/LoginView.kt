@@ -4,7 +4,7 @@ import chat.rocket.android.authentication.server.presentation.VersionCheckView
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 
-interface LoginView : LoadingView, MessageView, VersionCheckView {
+interface LoginView : LoadingView, MessageView {
 
     /**
      * Shows the form view (i.e the username/email and password fields) if it is enabled by the server settings.

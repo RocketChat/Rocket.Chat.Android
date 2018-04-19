@@ -1,6 +1,7 @@
 package chat.rocket.android.authentication.server.ui
 
 import android.app.AlertDialog
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import chat.rocket.android.authentication.server.presentation.ServerPresenter
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.util.extensions.*
+import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
 import javax.inject.Inject
@@ -52,6 +54,8 @@ class ServerFragment : Fragment(), ServerView {
         setupOnClickListener()
 
         deepLinkInfo?.let {
+            val uri = Uri.parse(it.url)
+            uri?.let { text_server_protocol.hintContent = it.host }
             presenter.deepLink(it)
         }
     }
@@ -99,8 +103,7 @@ class ServerFragment : Fragment(), ServerView {
             AlertDialog.Builder(it)
                 .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
                 .setPositiveButton(R.string.msg_ok, { _, _ ->
-                    val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                    presenter.connect(text_server_protocol.textContent + url)
+                    performConnect()
                 })
                 .create()
                 .show()
@@ -113,15 +116,27 @@ class ServerFragment : Fragment(), ServerView {
             AlertDialog.Builder(it)
                 .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
                 .setPositiveButton(R.string.msg_ok, null)
+                .setOnDismissListener {
+                    // reset the deeplink info, so the user can log to another server...
+                    deepLinkInfo = null
+                }
                 .create()
                 .show()
         }
     }
 
     override fun versionOk() {
+        performConnect()
+    }
+
+    private fun performConnect() {
         ui {
-            val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-            presenter.connect(text_server_protocol.textContent + url)
+            deepLinkInfo?.let {
+                presenter.deepLink(it)
+            }.ifNull {
+                val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
+                presenter.connect(text_server_protocol.textContent + url)
+            }
         }
     }
 
