@@ -43,13 +43,11 @@ class LoginPresenter @Inject constructor(
     serverInteractor: GetCurrentServerInteractor,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val factory: RocketChatClientFactory
-) : CheckServerPresenter(strategy, factory, view) {
+) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val currentServer = serverInteractor.get()!!
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings
-    //private val client: RocketChatClient = factory.create(currentServer)
-    //private val settings: PublicSettings = settingsInteractor.get(currentServer)
     private lateinit var usernameOrEmail: String
     private lateinit var password: String
     private lateinit var credentialToken: String
@@ -98,19 +96,8 @@ class LoginPresenter @Inject constructor(
         deepLinkUserId = deepLinkInfo.userId
         deepLinkToken = deepLinkInfo.token
         tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
-        launchUI(strategy) {
-            try {
-                val version = checkServerVersion(serverUrl).await()
-                when (version) {
-                    is Version.OutOfDateError -> {
-                        view.blockAndAlertNotRequiredVersion()
-                    }
-                    else -> doAuthentication(TYPE_LOGIN_DEEP_LINK)
-                }
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error performing deep link login")
-            }
-        }
+
+        doAuthentication(TYPE_LOGIN_DEEP_LINK)
     }
 
     private fun setupConnectionInfo(serverUrl: String) {
