@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.AuthenticationActivity
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.onboarding.adapter.OnboardingPagerAdapter
 import chat.rocket.android.onboarding.presentation.PageTransformerPresenter
 import chat.rocket.android.onboarding.utils.Utils
