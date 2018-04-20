@@ -16,7 +16,7 @@ class OnboardingFragment1 : Fragment(), PageTransformerView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val view =  inflater.inflate(R.layout.fragment_onboarding_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_onboarding_fragment, container, false)
         view.text_message.text = resources.getString(R.string.onBoarding_title1)
         view.text_description.text = resources.getString(R.string.onBoarding_description1)
         view.tag = this

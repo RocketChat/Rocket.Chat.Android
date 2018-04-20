@@ -6,9 +6,7 @@ import android.view.View
 class PageTransformerPresenter : ViewPager.PageTransformer {
 
     override fun transformPage(page: View, position: Float) {
-
         if (page.tag is PageTransformerView) {
-
             val delegate = page.tag as PageTransformerView
 
             if (position == 0.0f) {

@@ -38,13 +38,10 @@ class PageIndicator : View, ViewPager.OnPageChangeListener {
         get() = paddingTop + paddingBottom + circleRadius * 2
 
     private val desiredWidth: Int
-        get() =
-            paddingLeft + paddingRight + circleRadius * 2 * circleCount + (circleCount - 1) * circlePadding
-
+        get() = paddingLeft + paddingRight + circleRadius * 2 * circleCount + (circleCount - 1) * circlePadding
 
     val startedX: Int
         get() {
-
             when (mGravity) {
                 Gravity.LEFT, GravityCompat.START -> return paddingLeft
                 Gravity.RIGHT, GravityCompat.END -> return measuredWidth - paddingRight - allCircleWidth
@@ -55,7 +52,6 @@ class PageIndicator : View, ViewPager.OnPageChangeListener {
 
     val allCircleWidth: Int
         get() = circleRadius * 2 * circleCount + (circleCount - 1) * circlePadding
-
 
     constructor(context: Context) : super(context) {
         init(null)
@@ -75,14 +71,11 @@ class PageIndicator : View, ViewPager.OnPageChangeListener {
     }
 
     private fun init(attrs: AttributeSet?) {
-
         if (isInEditMode) {
             circleCount = 3
         }
-
         circleRadius = resources.getDimension(R.dimen.default_circle_radius).toInt()
         circlePadding = resources.getDimension(R.dimen.default_circle_padding).toInt()
-
         var inactiveColor = ContextCompat.getColor(context, R.color.pageIndicatorInactive)
         var activeColor = ContextCompat.getColor(context, R.color.colorPrimary)
         val gravity = Gravity.CENTER
@@ -98,10 +91,8 @@ class PageIndicator : View, ViewPager.OnPageChangeListener {
 
         activePaint = Paint()
         activePaint!!.color = activeColor
-
         inActivePaint = Paint()
         inActivePaint!!.color = inactiveColor
-
     }
 
     fun initViewPager(viewPager: ViewPager) {
@@ -116,52 +107,37 @@ class PageIndicator : View, ViewPager.OnPageChangeListener {
 
         mViewPager = viewPager
         mViewPager!!.addOnPageChangeListener(this)
-
         circleCount = viewPager.adapter!!.count
         mCurrentDragPage = viewPager.currentItem
         invalidate()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-
         val height = View.resolveSize(desiredHeight, heightMeasureSpec)
         val width = View.resolveSize(desiredWidth, widthMeasureSpec)
-
         setMeasuredDimension(width, height)
     }
 
     override fun onDraw(canvas: Canvas) {
-
         // draw behind circles
         for (i in 0 until circleCount) {
             val center = getCircleCenter(i)
             canvas.drawCircle(center, (paddingTop + circleRadius).toFloat(), circleRadius.toFloat(), inActivePaint!!)
         }
-
         drawRect(canvas)
-
     }
 
     private fun drawRect(canvas: Canvas) {
-
-        if (mViewPager == null)
-            return
-
-        if (mViewPager!!.adapter == null)
-            return
-
-        if (mViewPager!!.adapter!!.count == 0)
+        if (mViewPager == null || mViewPager!!.adapter == null || mViewPager!!.adapter!!.count == 0)
             return
 
         val top = paddingTop.toFloat()
         val bottom = top + circleRadius * 2
-
         val moveDistance = (circleRadius * 2 + circlePadding).toFloat()
         val isDragForward = mSelectedPage - mCurrentDragPage < 1
 
         val relativePageOffset = if (isDragForward) mPageOffSet else 1.0f - mPageOffSet
         currentRelativePageOffset = relativePageOffset
-
 
         val shiftedOffset = relativePageOffset * OFFSET_MULTIPLIER_NORMAL
 
@@ -185,7 +161,6 @@ class PageIndicator : View, ViewPager.OnPageChangeListener {
     }
 
     private fun getCircleCenter(position: Int): Float {
-
         return startedX.toFloat() + circleRadius.toFloat() + getCirclePadding(position)
     }
 
@@ -197,20 +172,15 @@ class PageIndicator : View, ViewPager.OnPageChangeListener {
         return b1 + (value - a1) * (b2 - b1) / (a2 - a1)
     }
 
-
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
         mCurrentDragPage = position
         mPageOffSet = positionOffset
         postInvalidate()
     }
 
-    override fun onPageSelected(position: Int) {
-
-    }
+    override fun onPageSelected(position: Int) {}
 
     override fun onPageScrollStateChanged(state: Int) {
-
         mState = state
         if (state == ViewPager.SCROLL_STATE_IDLE || state == ViewPager.SCROLL_STATE_DRAGGING) {
             mSelectedPage = mViewPager!!.currentItem
@@ -230,10 +200,8 @@ class PageIndicator : View, ViewPager.OnPageChangeListener {
     }
 
     companion object {
-
-        //setted as final
-        private val OFFSET_MULTIPLIER_DRAG = 1.2f
-        private val OFFSET_MULTIPLIER_SETTLING = 1.4f
-        private val OFFSET_MULTIPLIER_NORMAL = 0.30f
+        private const val OFFSET_MULTIPLIER_DRAG = 1.2f
+        private const val OFFSET_MULTIPLIER_SETTLING = 1.4f
+        private const val OFFSET_MULTIPLIER_NORMAL = 0.30f
     }
 }
