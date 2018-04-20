@@ -2,7 +2,11 @@ package chat.rocket.android.server.infraestructure
 
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.core.RocketChatClient
-import chat.rocket.core.internal.realtime.*
+import chat.rocket.core.internal.realtime.subscribeSubscriptions
+import chat.rocket.core.internal.realtime.subscribeRooms
+import chat.rocket.core.internal.realtime.subscribeUserData
+import chat.rocket.core.internal.realtime.subscribeRoomMessages
+import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.realtime.socket.connect
 import chat.rocket.core.internal.realtime.socket.disconnect
 import chat.rocket.core.internal.realtime.socket.model.State
