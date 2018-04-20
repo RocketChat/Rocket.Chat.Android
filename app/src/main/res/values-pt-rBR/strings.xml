@@ -130,12 +130,12 @@
     <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
 
     <!-- Socket status -->
-    <string name="status_connected">conectado</string>
-    <string name="status_disconnected">desconetado</string>
-    <string name="status_connecting">conectando</string>
-    <string name="status_authenticating">autenticando</string>
-    <string name="status_disconnecting">desconectando</string>
-    <string name="status_waiting">conectando em %d segundos</string>
+    <string name="status_connected">Conectado</string>
+    <string name="status_disconnected">Desconetado</string>
+    <string name="status_connecting">Conectando</string>
+    <string name="status_authenticating">Autenticando</string>
+    <string name="status_disconnecting">Desconectando</string>
+    <string name="status_waiting">Conectando em %d segundos</string>
 
     <!--Suggestions-->
     <string name="suggest_all_description">Notifica todos nesta sala</string>
