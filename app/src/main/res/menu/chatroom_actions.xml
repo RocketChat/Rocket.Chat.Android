@@ -6,7 +6,10 @@
         android:id="@+id/action_members_list"
         android:title="@string/title_members_list"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/action_chat_room_info"
+        android:title="@string/title_chat_room_info"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_pinned_messages"
         android:title="@string/title_pinned_messages"

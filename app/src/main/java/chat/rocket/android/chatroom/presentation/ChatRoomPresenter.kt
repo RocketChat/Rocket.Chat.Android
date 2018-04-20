@@ -505,6 +505,8 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         }
     }
 
+    fun toChatInfo(chatRoomId: String, chatRoomType: String, isSubscribed: Boolean) = navigator.toChatInfo(chatRoomId, chatRoomType, isSubscribed)
+
     fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
 
     fun loadChatRooms() {
