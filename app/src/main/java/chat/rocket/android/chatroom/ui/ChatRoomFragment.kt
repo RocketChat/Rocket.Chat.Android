@@ -467,6 +467,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "*/*"
             intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
             startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
         }
     }
