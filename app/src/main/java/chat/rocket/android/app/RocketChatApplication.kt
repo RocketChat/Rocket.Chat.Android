@@ -3,6 +3,7 @@ package chat.rocket.android.app
 import android.app.Activity
 import android.app.Application
 import android.app.Service
+import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
@@ -43,9 +44,11 @@ import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-
 class RocketChatApplication : Application(), HasActivityInjector, HasServiceInjector,
-        HasBroadcastReceiverInjector {
+    HasBroadcastReceiverInjector {
+
+    @Inject
+    lateinit var appLifecycleObserver: AppLifecycleObserver
 
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
@@ -84,7 +87,14 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     override fun onCreate() {
         super.onCreate()
 
-        DaggerAppComponent.builder().application(this).build().inject(this)
+        DaggerAppComponent.builder()
+            .application(this)
+            .build()
+            .inject(this)
+
+        ProcessLifecycleOwner.get()
+            .lifecycle
+            .addObserver(appLifecycleObserver)
 
         // TODO - remove this on the future, temporary migration stuff for pre-release versions.
         migrateInternalTokens()

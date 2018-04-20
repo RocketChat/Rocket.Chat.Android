@@ -135,7 +135,7 @@ class MainPresenter @Inject constructor(
         navigator.toServerScreen()
     }
 
-    fun changeStatus(userStatus: UserStatus) {
+    fun changeDefaultStatus(userStatus: UserStatus) {
         launchUI(strategy) {
             try {
                 client.setDefaultStatus(userStatus)

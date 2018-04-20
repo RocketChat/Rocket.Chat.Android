@@ -87,8 +87,8 @@
     <string name="msg_ver_not_minimum">
         ऐसा लगता है कि आपका सर्वर संस्करण न्यूनतम आवश्यक संस्करण %1$s से कम है।\nकृपया लॉगिन करने के लिए अपने सर्वर को अपग्रेड करें!
     </string>
-    <string name="msg_version">वर्शन</string>
-    <string name="msg_build">बिल्ड</string>
+    <string name="msg_version">वर्शन %1$s</string>
+    <string name="msg_build">बिल्ड %1$d</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>

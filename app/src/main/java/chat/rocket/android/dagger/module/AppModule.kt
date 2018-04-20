@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.persistence.room.Room
 import android.content.ComponentName
 import android.content.Context
@@ -14,6 +15,7 @@ import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
+import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.qualifier.ForFresco
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.FrescoAuthInterceptor
