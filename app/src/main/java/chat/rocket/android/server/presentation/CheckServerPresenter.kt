@@ -7,6 +7,7 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.VersionInfo
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatInvalidProtocolException
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.experimental.Deferred
@@ -42,6 +43,14 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
                 }
             } catch (ex: Exception) {
                 Timber.d(ex, "Error getting server info")
+                when(ex) {
+                    is RocketChatInvalidProtocolException -> {
+                        view.errorInvalidProtocol()
+                    }
+                    else -> {
+                        view.errorCheckingServerVersion()
+                    }
+                }
             }
         }
     }
