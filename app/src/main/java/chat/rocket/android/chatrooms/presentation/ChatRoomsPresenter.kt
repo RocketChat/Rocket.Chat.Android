@@ -134,6 +134,7 @@ class ChatRoomsPresenter @Inject constructor(
                     null
                 },
                 name = it.name ?: "",
+                status = null,
                 fullName = it.name,
                 readonly = false,
                 updatedAt = null,
@@ -167,6 +168,7 @@ class ChatRoomsPresenter @Inject constructor(
                     null
                 },
                 name = it.name ?: "",
+                status = null,
                 fullName = it.fullName,
                 readonly = it.readonly,
                 updatedAt = it.updatedAt,
@@ -399,6 +401,7 @@ class ChatRoomsPresenter @Inject constructor(
                     room.name ?: name
                 )?.status,
                 name = room.name ?: name,
+                status = null,
                 fullName = room.fullName ?: fullName,
                 readonly = room.readonly,
                 updatedAt = room.updatedAt ?: updatedAt,
@@ -438,6 +441,7 @@ class ChatRoomsPresenter @Inject constructor(
                     subscription.name
                 )?.status,
                 name = subscription.name,
+                status = null,
                 fullName = subscription.fullName ?: fullName,
                 readonly = subscription.readonly ?: readonly,
                 updatedAt = subscription.updatedAt ?: updatedAt,
