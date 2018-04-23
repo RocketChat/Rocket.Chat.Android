@@ -280,9 +280,9 @@ class LoginPresenter @Inject constructor(
     }
 
     private fun getOauthClientId(listMap: List<Map<String, Any>>, serviceName: String): String? {
-        return listMap.find { map -> map.containsValue(serviceName) }
-            ?.get("clientId")
-            .toString()
+        return listMap.find { map -> map.containsValue(serviceName) }?.let {
+            it["clientId"] ?: it["appId"]
+        }.toString()
     }
 
     private suspend fun saveAccount(username: String) {
