@@ -89,6 +89,8 @@
     <string name="msg_ver_not_minimum">
         Parece que a versão do seu servidor está abaixo da mínima requerida %1$s.\nPor favor, atualize seus servidores antes de continuar!
     </string>
+    <string name="msg_no_chat_title">Nenhuma mensagem de chat</string>
+    <string name="msg_no_chat_description">Comece a conversar para ver suas\nmensagens aqui.</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>

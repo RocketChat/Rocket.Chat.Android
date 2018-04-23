@@ -90,6 +90,8 @@
     <string name="msg_ver_not_minimum">
         Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
     </string>
+    <string name="msg_no_chat_title">No chat messages</string>
+    <string name="msg_no_chat_description">Start conversing to see your\nmessages here.</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
