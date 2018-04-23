@@ -1,4 +1,6 @@
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>

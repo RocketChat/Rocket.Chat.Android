@@ -8,7 +8,6 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
@@ -27,28 +26,28 @@ private const val TYPE_LOGIN_USER_EMAIL = 0
 private const val TYPE_LOGIN_CAS = 1
 private const val TYPE_LOGIN_OAUTH = 2
 private const val TYPE_LOGIN_DEEP_LINK = 3
+private const val SERVICE_NAME_FACEBOOK = "facebook"
 private const val SERVICE_NAME_GITHUB = "github"
 private const val SERVICE_NAME_GOOGLE = "google"
 private const val SERVICE_NAME_LINKEDIN = "linkedin"
 private const val SERVICE_NAME_GILAB = "gitlab"
 
-class LoginPresenter @Inject constructor(private val view: LoginView,
-                                         private val strategy: CancelStrategy,
-                                         private val navigator: AuthenticationNavigator,
-                                         private val tokenRepository: TokenRepository,
-                                         private val localRepository: LocalRepository,
-                                         private val getAccountsInteractor: GetAccountsInteractor,
-                                         private val settingsInteractor: GetSettingsInteractor,
-                                         serverInteractor: GetCurrentServerInteractor,
-                                         private val saveAccountInteractor: SaveAccountInteractor,
-                                         private val factory: RocketChatClientFactory)
-    : CheckServerPresenter(strategy, factory, view) {
+class LoginPresenter @Inject constructor(
+    private val view: LoginView,
+    private val strategy: CancelStrategy,
+    private val navigator: AuthenticationNavigator,
+    private val tokenRepository: TokenRepository,
+    private val localRepository: LocalRepository,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    private val settingsInteractor: GetSettingsInteractor,
+    serverInteractor: GetCurrentServerInteractor,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val factory: RocketChatClientFactory
+) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val currentServer = serverInteractor.get()!!
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings
-    //private val client: RocketChatClient = factory.create(currentServer)
-    //private val settings: PublicSettings = settingsInteractor.get(currentServer)
     private lateinit var usernameOrEmail: String
     private lateinit var password: String
     private lateinit var credentialToken: String
@@ -62,7 +61,6 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         setupUserRegistrationView()
         setupCasView()
         setupOauthServicesView()
-        checkServerInfo(currentServer)
     }
 
     fun authenticateWithUserAndPassword(usernameOrEmail: String, password: String) {
@@ -92,25 +90,14 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
-    fun authenticadeWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
+    fun authenticateWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
         val serverUrl = deepLinkInfo.url
         setupConnectionInfo(serverUrl)
         deepLinkUserId = deepLinkInfo.userId
         deepLinkToken = deepLinkInfo.token
         tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
-        launchUI(strategy) {
-            try {
-                val version = checkServerVersion(serverUrl).await()
-                when (version) {
-                    is Version.OutOfDateError -> {
-                        view.blockAndAlertNotRequiredVersion()
-                    }
-                    else -> doAuthentication(TYPE_LOGIN_DEEP_LINK)
-                }
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error performing deep link login")
-            }
-        }
+
+        doAuthentication(TYPE_LOGIN_DEEP_LINK)
     }
 
     private fun setupConnectionInfo(serverUrl: String) {
@@ -156,9 +143,12 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     var totalSocialAccountsEnabled = 0
 
                     if (settings.isFacebookAuthenticationEnabled()) {
-//                        //TODO: Remove until we have this implemented
-//                        view.enableLoginByFacebook()
-//                        totalSocialAccountsEnabled++
+                        val clientId = getOauthClientId(services, SERVICE_NAME_FACEBOOK)
+                        if (clientId != null) {
+                            view.setupFacebookButtonListener(OauthHelper.getFacebookOauthUrl(clientId, currentServer, state), state)
+                            view.enableLoginByFacebook()
+                            totalSocialAccountsEnabled++
+                        }
                     }
                     if (settings.isGithubAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
@@ -289,9 +279,10 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
     }
 
-    private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
+    private fun getOauthClientId(listMap: List<Map<String, Any>>, serviceName: String): String? {
         return listMap.find { map -> map.containsValue(serviceName) }
-                ?.get("appId")
+            ?.get("clientId")
+            .toString()
     }
 
     private suspend fun saveAccount(username: String) {
