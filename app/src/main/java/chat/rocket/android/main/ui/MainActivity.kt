@@ -84,10 +84,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                DrawableHelper.getUserStatusDrawable(
-                    userStatus,
-                    this.context
-                )
+                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }

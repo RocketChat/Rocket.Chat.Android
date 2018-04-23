@@ -1,10 +1,12 @@
 package chat.rocket.android.server.infraestructure
 
 import chat.rocket.common.model.BaseRoom
+import chat.rocket.common.model.User
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.realtime.subscribeSubscriptions
 import chat.rocket.core.internal.realtime.subscribeRooms
 import chat.rocket.core.internal.realtime.subscribeUserData
+import chat.rocket.core.internal.realtime.subscribeActiveUsers
 import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.realtime.socket.connect
@@ -28,11 +30,13 @@ class ConnectionManager(internal val client: RocketChatClient) {
     private val roomAndSubscriptionChannels = ArrayList<Channel<StreamMessage<BaseRoom>>>()
     private val roomMessagesChannels = LinkedHashMap<String, Channel<Message>>()
     private val userDataChannels = ArrayList<Channel<Myself>>()
+    private val activeUsersChannels = ArrayList<Channel<User>>()
     private val subscriptionIdMap = HashMap<String, String>()
 
     private var subscriptionId: String? = null
     private var roomsId: String? = null
-    private var userId: String? = null
+    private var userDataId: String? = null
+    private var activeUserId: String? = null
 
     fun connect() {
         if (connectJob?.isActive == true && (state !is State.Disconnected)) {
@@ -61,8 +65,12 @@ class ConnectionManager(internal val client: RocketChatClient) {
                             roomsId = id
                         }
                         client.subscribeUserData { _, id ->
-                            Timber.d("Subscribed to the user: $id")
-                            userId = id
+                            Timber.d("Subscribed to the userData id: $id")
+                            userDataId = id
+                        }
+                        client.subscribeActiveUsers { _, id ->
+                            Timber.d("Subscribed to the activeUser id: $id")
+                            activeUserId = id
                         }
 
                         resubscribeRooms()
@@ -115,6 +123,14 @@ class ConnectionManager(internal val client: RocketChatClient) {
             }
         }
 
+        launch(parent = connectJob) {
+            for (user in client.activeUsersChannel) {
+                Timber.d("Got activeUsers")
+                for (channel in activeUsersChannels) {
+                    channel.send(user)
+                }
+            }
+        }
         client.connect()
 
         // Broadcast initial state...
@@ -153,6 +169,10 @@ class ConnectionManager(internal val client: RocketChatClient) {
     fun addUserDataChannel(channel: Channel<Myself>) = userDataChannels.add(channel)
 
     fun removeUserDataChannel(channel: Channel<Myself>) = userDataChannels.remove(channel)
+
+    fun addActiveUserChannel(channel: Channel<User>) = activeUsersChannels.add(channel)
+
+    fun removeActiveUserChannel(channel: Channel<User>) = activeUsersChannels.remove(channel)
 
     fun subscribeRoomMessages(roomId: String, channel: Channel<Message>) {
         val oldSub = roomMessagesChannels.put(roomId, channel)
