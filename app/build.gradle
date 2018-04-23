@@ -120,6 +120,8 @@ dependencies {
     androidTestImplementation(libraries.expressoCore, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    implementation libraries.customTabs
 }
 
 kotlin {

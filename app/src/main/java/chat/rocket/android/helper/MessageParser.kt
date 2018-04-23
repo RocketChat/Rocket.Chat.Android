@@ -17,6 +17,8 @@ import android.text.style.ReplacementSpan
 import android.util.Patterns
 import android.view.View
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.util.convertSchemeToLower
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
@@ -131,7 +133,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                                 val tabsbuilder = CustomTabsIntent.Builder()
                                 tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
                                 val customTabsIntent = tabsbuilder.build()
-                                customTabsIntent.launchUrl(context, getUri(link))
+                                customTabsIntent.launchUrl(context, getUri(convertSchemeToLower(link)))
                             }
                         }
                     }, matcher.start(0), matcher.end(0))

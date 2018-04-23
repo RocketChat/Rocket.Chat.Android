@@ -1,13 +1,16 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.content.Intent
 import android.net.Uri
+import android.support.customtabs.CustomTabsIntent
 import android.view.View
 import chat.rocket.android.chatroom.viewmodel.UrlPreviewViewModel
+import chat.rocket.android.util.convertSchemeToLower
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.message_url_preview.view.*
+import okhttp3.HttpUrl
+
 
 class UrlPreviewViewHolder(itemView: View,
                            listener: ActionsListener,
@@ -32,8 +35,11 @@ class UrlPreviewViewHolder(itemView: View,
             text_title.content = data.title
             text_description.content = data.description ?: ""
 
+            val tabsbuilder = CustomTabsIntent.Builder()
+            val customTabsIntent = tabsbuilder.build()
+
             url_preview_layout.setOnClickListener { view ->
-                view.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(data.rawData.url)))
+                customTabsIntent.launchUrl(context, Uri.parse(convertSchemeToLower(data.rawData.url)))
             }
         }
     }
