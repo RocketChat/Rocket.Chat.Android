@@ -111,14 +111,31 @@ class ChatRoomsPresenter @Inject constructor(
                     val chatRoomsCombined = mutableListOf<ChatRoom>()
                     chatRoomsCombined.addAll(usersToChatRooms(users))
                     chatRoomsCombined.addAll(roomsToChatRooms(rooms))
-                    view.updateChatRooms(getChatRoomsWithPreviews(chatRoomsCombined.toList()))
+                    val chatRoomsWithPreview = getChatRoomsWithPreviews(chatRoomsCombined)
+                    val chatRoomsWithStatus = getChatRoomWithStatus(chatRoomsWithPreview)
+                    view.updateChatRooms(chatRoomsWithStatus)
                 } else {
-                    view.updateChatRooms(getChatRoomsWithPreviews(roomList))
+                    val chatRoomsWithPreview = getChatRoomsWithPreviews(roomList)
+                    val chatRoomsWithStatus = getChatRoomWithStatus(chatRoomsWithPreview)
+                    view.updateChatRooms(chatRoomsWithStatus)
                 }
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }
         }
+    }
+
+    // In the first time it will not come with the users status, but after called by the
+    // [reloadRooms] function may be with.
+    private suspend fun getUserChatRooms(): List<ChatRoom> {
+        val chatRooms = retryIO("chatRooms") { manager.chatRooms().update }
+        val chatRoomsWithPreview = getChatRoomsWithPreviews(chatRooms)
+        val chatRoomsWithUserStatus = getChatRoomWithStatus(chatRoomsWithPreview)
+        val sortedRooms = sortRooms(chatRoomsWithUserStatus)
+
+        Timber.d("Loaded rooms: ${sortedRooms.size}")
+        saveChatRoomsInteractor.save(currentServer, sortedRooms)
+        return sortedRooms
     }
 
     private fun usersToChatRooms(users: List<User>): List<ChatRoom> {
@@ -187,17 +204,7 @@ class ChatRoomsPresenter @Inject constructor(
         }
     }
 
-    private suspend fun getUserChatRooms(): List<ChatRoom> {
-        val chatRooms = retryIO("chatRooms") { manager.chatRooms().update }
-        val sortedRooms = sortRooms(chatRooms)
-        Timber.d("Loaded rooms: ${sortedRooms.size}")
-        saveChatRoomsInteractor.save(currentServer, sortedRooms)
-        val chatRoomsWithPreview = getChatRoomsWithPreviews(sortedRooms)
-        return getChatRoomWithStatus(chatRoomsWithPreview)
-    }
-
     fun updateSortedChatRooms() {
-        val currentServer = serverInteractor.get()!!
         launchUI(strategy) {
             val roomList = getChatRoomsInteractor.getAll(currentServer)
             view.updateChatRooms(sortRooms(roomList))
@@ -501,6 +508,7 @@ class ChatRoomsPresenter @Inject constructor(
     }
 
     private fun updateChatRoomWithUserStatus(user_: User) {
+        Timber.d("active User: $user_")
         val username = user_.username
         val status = user_.status
         if (username != null && status != null) {
@@ -542,10 +550,11 @@ class ChatRoomsPresenter @Inject constructor(
     private fun updateChatRooms() {
         Timber.i("Updating ChatRooms")
         launch(strategy.jobs) {
-            val chatRooms = getChatRoomsWithPreviews(
+            val chatRoomsWithPreview = getChatRoomsWithPreviews(
                 getChatRoomsInteractor.getAll(currentServer)
             )
-            view.updateChatRooms(chatRooms)
+            val chatRoomsWithStatus = getChatRoomWithStatus(chatRoomsWithPreview)
+            view.updateChatRooms(chatRoomsWithStatus)
         }
     }
 
