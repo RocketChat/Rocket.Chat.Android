@@ -26,11 +26,11 @@ private const val TYPE_LOGIN_USER_EMAIL = 0
 private const val TYPE_LOGIN_CAS = 1
 private const val TYPE_LOGIN_OAUTH = 2
 private const val TYPE_LOGIN_DEEP_LINK = 3
+private const val SERVICE_NAME_FACEBOOK = "facebook"
 private const val SERVICE_NAME_GITHUB = "github"
 private const val SERVICE_NAME_GOOGLE = "google"
 private const val SERVICE_NAME_LINKEDIN = "linkedin"
 private const val SERVICE_NAME_GILAB = "gitlab"
-private const val SERVICE_NAME_FACEBOOK = "facebook"
 
 class LoginPresenter @Inject constructor(
     private val view: LoginView,
@@ -279,9 +279,10 @@ class LoginPresenter @Inject constructor(
         }
     }
 
-    private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
+    private fun getOauthClientId(listMap: List<Map<String, Any>>, serviceName: String): String? {
         return listMap.find { map -> map.containsValue(serviceName) }
-            ?.get("appId")
+            ?.get("clientId")
+            .toString()
     }
 
     private suspend fun saveAccount(username: String) {
