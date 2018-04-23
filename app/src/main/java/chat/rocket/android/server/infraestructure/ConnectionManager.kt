@@ -2,15 +2,15 @@ package chat.rocket.android.server.infraestructure
 
 import chat.rocket.common.model.BaseRoom
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.realtime.subscribeSubscriptions
+import chat.rocket.core.internal.realtime.subscribeRooms
+import chat.rocket.core.internal.realtime.subscribeUserData
+import chat.rocket.core.internal.realtime.subscribeRoomMessages
 import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.realtime.socket.connect
 import chat.rocket.core.internal.realtime.socket.disconnect
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
-import chat.rocket.core.internal.realtime.subscribeRoomMessages
-import chat.rocket.core.internal.realtime.subscribeRooms
-import chat.rocket.core.internal.realtime.subscribeSubscriptions
-import chat.rocket.core.internal.realtime.subscribeUserDataChanges
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
@@ -60,7 +60,7 @@ class ConnectionManager(internal val client: RocketChatClient) {
                             Timber.d("Subscribed to rooms: $id")
                             roomsId = id
                         }
-                        client.subscribeUserDataChanges { _, id ->
+                        client.subscribeUserData { _, id ->
                             Timber.d("Subscribed to the user: $id")
                             userId = id
                         }
