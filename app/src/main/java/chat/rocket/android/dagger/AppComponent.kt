@@ -1,6 +1,7 @@
 package chat.rocket.android.dagger
 
 import android.app.Application
+import chat.rocket.android.app.AppLifecycleObserver
 import chat.rocket.android.app.RocketChatApplication
 import chat.rocket.android.chatroom.service.MessageService
 import chat.rocket.android.dagger.module.ActivityBuilder
