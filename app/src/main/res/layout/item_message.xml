@@ -74,6 +74,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             tools:text="11:45 PM" />
+
+        <ImageView
+            android:id="@+id/image_edit_indicator"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_edit_black_24px"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"
+            tools:visibility="visible"/>
     </LinearLayout>
 
     <TextView

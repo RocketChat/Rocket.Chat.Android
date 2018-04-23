@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.view.View
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
@@ -33,6 +34,9 @@ class MessageViewHolder(
             text_content.setTextColor(
                 if (data.isTemporary) Color.GRAY else Color.BLACK
             )
+            if (data.message.editedBy != null){
+                image_edit_indicator.setVisible(true)
+            }
         }
     }
 }
