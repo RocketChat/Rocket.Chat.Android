@@ -1,6 +1,5 @@
 package chat.rocket.android.server.domain
 
-import chat.rocket.android.util.extensions.mapToTypedArray
 import chat.rocket.core.model.Value
 
 typealias PublicSettings = Map<String, Value<Any>>
@@ -84,13 +83,16 @@ fun PublicSettings.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING
 fun PublicSettings.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
 fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
 
-fun PublicSettings.uploadMimeTypeFilter(): Array<String> {
-    val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value
-    values?.let { it as String }?.split(",")?.let {
-        return it.mapToTypedArray { it.trim() }
+fun PublicSettings.uploadMimeTypeFilter(): Array<String>? {
+    val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value as String?
+    if (!values.isNullOrBlank()){
+        // It's far more efficient to split the string to an array using the Java type rather than the Kotlin type
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+        val filter = (values as java.lang.String).split(",")
+        filter.forEachIndexed { i, mimeType -> filter[i] = mimeType.trim() }
+        return filter
     }
-
-    return arrayOf("*/*")
+    return null
 }
 
 fun PublicSettings.uploadMaxFileSize(): Int {
