@@ -89,7 +89,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_chat_black_24dp"
-        android:tint="#AFADAF"
+        android:tint="@color/icon_grey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -110,7 +110,7 @@
         android:textSize="20sp"
         android:layout_marginTop="24dp"
         android:textStyle="bold"
-        android:textColor="#8B8B8B"
+        android:textColor="@color/colorSecondaryText"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -126,7 +126,7 @@
         android:layout_marginTop="16dp"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:textColor="#c1c1c1"
+        android:textColor="@color/colorSecondaryTextLight"
         android:visibility="gone"
         tools:visibility="visible"/>
 
