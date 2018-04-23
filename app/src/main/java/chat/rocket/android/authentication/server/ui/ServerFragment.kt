@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
@@ -38,6 +40,8 @@ class ServerFragment : Fragment(), ServerView {
         }
     }
 
+    private var protocol = "https://"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
@@ -55,8 +59,39 @@ class ServerFragment : Fragment(), ServerView {
 
         deepLinkInfo?.let {
             val uri = Uri.parse(it.url)
-            uri?.let { text_server_protocol.hintContent = it.host }
+            uri?.let { text_server_url.hintContent = it.host }
             presenter.deepLink(it)
+        }
+
+        text_server_protocol.adapter = ArrayAdapter<String>(activity,
+                android.R.layout.simple_dropdown_item_1line, arrayOf("https://", "http://"))
+        text_server_protocol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when(position) {
+                    0 -> {
+                        protocol = "https://"
+                    }
+                    1 -> {
+                        ui{
+                            AlertDialog.Builder(it)
+                                    .setTitle(R.string.msg_warning)
+                                    .setMessage(R.string.msg_http_insecure)
+                                    .setPositiveButton(R.string.msg_proceed) { _, _ ->
+                                        protocol = "http://"
+                                    }
+                                    .setNegativeButton(R.string.msg_cancel) { _, _ ->
+                                        text_server_protocol.setSelection(0)
+                                    }
+                                    .setCancelable(false)
+                                    .create()
+                                    .show()
+                        }
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
         }
     }
 
@@ -129,13 +164,23 @@ class ServerFragment : Fragment(), ServerView {
         performConnect()
     }
 
+    override fun errorCheckingServerVersion() {
+        hideLoading()
+        showMessage(R.string.msg_error_checking_server_version)
+    }
+
+    override fun errorInvalidProtocol() {
+        hideLoading()
+        showMessage(R.string.msg_invalid_server_protocol)
+    }
+
     private fun performConnect() {
         ui {
             deepLinkInfo?.let {
                 presenter.deepLink(it)
             }.ifNull {
                 val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.connect(text_server_protocol.textContent + url)
+                presenter.connect("${protocol}${url.sanitize()}")
             }
         }
     }
@@ -149,7 +194,7 @@ class ServerFragment : Fragment(), ServerView {
         ui {
             button_connect.setOnClickListener {
                 val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.checkServer(text_server_protocol.textContent + url)
+                presenter.checkServer("${protocol}${url.sanitize()}")
             }
         }
     }

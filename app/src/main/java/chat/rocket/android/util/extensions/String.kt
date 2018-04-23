@@ -4,10 +4,15 @@ import android.util.Patterns
 
 fun String.removeTrailingSlash(): String {
     return if (isNotEmpty() && this[length - 1] == '/') {
-        this.replace("/+$", "")
+        this.substring(0, length - 1)
     } else {
         this
     }
+}
+
+fun String.sanitize(): String {
+    val tmp = this.trim()
+    return tmp.removeTrailingSlash()
 }
 
 fun String.avatarUrl(avatar: String, isGroupOrChannel: Boolean = false, format: String = "jpeg"): String {
