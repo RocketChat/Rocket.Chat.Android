@@ -163,7 +163,7 @@ class ChatRoomsPresenter @Inject constructor(
                 open = false,
                 alert = false,
                 unread = 0L,
-                userMenstions = null,
+                userMentions = null,
                 groupMentions = 0L,
                 lastMessage = null,
                 client = client
@@ -196,7 +196,7 @@ class ChatRoomsPresenter @Inject constructor(
                 open = false,
                 alert = false,
                 unread = 0L,
-                userMenstions = null,
+                userMentions = null,
                 groupMentions = 0L,
                 lastMessage = it.lastMessage,
                 client = client
@@ -277,7 +277,7 @@ class ChatRoomsPresenter @Inject constructor(
                 open = it.open,
                 alert = it.alert,
                 unread = it.unread,
-                userMenstions = it.userMenstions,
+                userMentions = it.userMentions,
                 groupMentions = it.groupMentions,
                 lastMessage = it.lastMessage,
                 client = client
@@ -419,7 +419,7 @@ class ChatRoomsPresenter @Inject constructor(
                 open = open,
                 alert = alert,
                 unread = unread,
-                userMenstions = userMenstions,
+                userMentions = userMentions,
                 groupMentions = groupMentions,
                 lastMessage = room.lastMessage,
                 client = client
@@ -458,7 +458,7 @@ class ChatRoomsPresenter @Inject constructor(
                 open = subscription.open,
                 alert = subscription.alert,
                 unread = subscription.unread,
-                userMenstions = subscription.userMentions,
+                userMentions = subscription.userMentions,
                 groupMentions = subscription.groupMentions,
                 lastMessage = lastMessage,
                 client = client
@@ -532,7 +532,7 @@ class ChatRoomsPresenter @Inject constructor(
                     open = it.open,
                     alert = it.alert,
                     unread = it.unread,
-                    userMenstions = it.userMenstions,
+                    userMentions = it.userMentions,
                     groupMentions = it.groupMentions,
                     lastMessage = it.lastMessage,
                     client = client
