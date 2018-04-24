@@ -126,7 +126,7 @@ class LoginPresenter @Inject constructor(
     }
 
     private fun setupUserRegistrationView() {
-        if (settings.isRegistrationEnabledForNewUsers()) {
+        if (settings.isRegistrationEnabledForNewUsers() && settings.isLoginFormEnabled()) {
             view.showSignUpView()
             view.setupSignUpView()
         }
