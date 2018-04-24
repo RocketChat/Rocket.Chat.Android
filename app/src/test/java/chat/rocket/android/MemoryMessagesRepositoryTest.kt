@@ -3,6 +3,7 @@ package chat.rocket.android
 import chat.rocket.android.server.infraestructure.MemoryMessagesRepository
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
+import kotlinx.coroutines.experimental.runBlocking
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -30,7 +31,9 @@ class MemoryMessagesRepositoryTest {
             senderAlias = null,
             type = MessageType.MessageRemoved(),
             updatedAt = 1511443964815,
-            urls = null
+            urls = null,
+            pinned = false,
+            reactions = null
     )
 
     val msg2 = Message(
@@ -50,86 +53,98 @@ class MemoryMessagesRepositoryTest {
             senderAlias = null,
             type = MessageType.MessageRemoved(),
             updatedAt = 1511443964818,
-            urls = null
+            urls = null,
+            pinned = false,
+            reactions = null
     )
 
     @Before
     fun setup() {
-        repository.clear()
+        runBlocking {
+            repository.clear()
+        }
     }
 
     @Test
     fun `save() should save a single message`() {
-        assertThat(repository.getAll().size, isEqualTo(0))
-        repository.save(msg)
-        val allMessages = repository.getAll()
-        assertThat(allMessages.size, isEqualTo(1))
-        allMessages[0].apply {
-            assertThat(id, isEqualTo("messageId"))
-            assertThat(message, isEqualTo("Beam me up, Scotty."))
-            assertThat(roomId, isEqualTo("GENERAL"))
+        runBlocking {
+            assertThat(repository.getAll().size, isEqualTo(0))
+            repository.save(msg)
+            val allMessages = repository.getAll()
+            assertThat(allMessages.size, isEqualTo(1))
+            allMessages[0].apply {
+                assertThat(id, isEqualTo("messageId"))
+                assertThat(message, isEqualTo("Beam me up, Scotty."))
+                assertThat(roomId, isEqualTo("GENERAL"))
+            }
         }
     }
 
     @Test
     fun `saveAll() should all saved messages`() {
-        assertThat(repository.getAll().size, isEqualTo(0))
-        repository.saveAll(listOf(msg, msg2))
-        val allMessages = repository.getAll()
-        assertThat(allMessages.size, isEqualTo(2))
-        allMessages[0].apply {
-            assertThat(id, isEqualTo("messageId"))
-            assertThat(message, isEqualTo("Beam me up, Scotty."))
-            assertThat(roomId, isEqualTo("GENERAL"))
-        }
+        runBlocking {
+            assertThat(repository.getAll().size, isEqualTo(0))
+            repository.saveAll(listOf(msg, msg2))
+            val allMessages = repository.getAll()
+            assertThat(allMessages.size, isEqualTo(2))
+            allMessages[0].apply {
+                assertThat(id, isEqualTo("messageId"))
+                assertThat(message, isEqualTo("Beam me up, Scotty."))
+                assertThat(roomId, isEqualTo("GENERAL"))
+            }
 
-        allMessages[1].apply {
-            assertThat(id, isEqualTo("messageId2"))
-            assertThat(message, isEqualTo("Highly Illogical"))
-            assertThat(roomId, isEqualTo("sandbox"))
+            allMessages[1].apply {
+                assertThat(id, isEqualTo("messageId2"))
+                assertThat(message, isEqualTo("Highly Illogical"))
+                assertThat(roomId, isEqualTo("sandbox"))
+            }
         }
     }
 
     @Test
     fun `getById() should return a single message`() {
-        repository.saveAll(listOf(msg, msg2))
-        var singleMsg = repository.getById("messageId")
-        assertThat(singleMsg, notNullValue())
-        singleMsg!!.apply {
-            assertThat(id, isEqualTo("messageId"))
-            assertThat(message, isEqualTo("Beam me up, Scotty."))
-            assertThat(roomId, isEqualTo("GENERAL"))
-        }
+        runBlocking {
+            repository.saveAll(listOf(msg, msg2))
+            var singleMsg = repository.getById("messageId")
+            assertThat(singleMsg, notNullValue())
+            singleMsg!!.apply {
+                assertThat(id, isEqualTo("messageId"))
+                assertThat(message, isEqualTo("Beam me up, Scotty."))
+                assertThat(roomId, isEqualTo("GENERAL"))
+            }
 
-        singleMsg = repository.getById("messageId2")
-        assertThat(singleMsg, notNullValue())
-        singleMsg!!.apply {
-            assertThat(id, isEqualTo("messageId2"))
-            assertThat(message, isEqualTo("Highly Illogical"))
-            assertThat(roomId, isEqualTo("sandbox"))
+            singleMsg = repository.getById("messageId2")
+            assertThat(singleMsg, notNullValue())
+            singleMsg!!.apply {
+                assertThat(id, isEqualTo("messageId2"))
+                assertThat(message, isEqualTo("Highly Illogical"))
+                assertThat(roomId, isEqualTo("sandbox"))
+            }
         }
     }
 
     @Test
     fun `getByRoomId() should return all messages for room id or an empty list`() {
-        repository.saveAll(listOf(msg, msg2))
-        var roomMessages = repository.getByRoomId("faAad32fkasods2")
-        assertThat(roomMessages.isEmpty(), isEqualTo(true))
+        runBlocking {
+            repository.saveAll(listOf(msg, msg2))
+            var roomMessages = repository.getByRoomId("faAad32fkasods2")
+            assertThat(roomMessages.isEmpty(), isEqualTo(true))
 
-        roomMessages = repository.getByRoomId("sandbox")
-        assertThat(roomMessages.size, isEqualTo(1))
-        roomMessages[0].apply {
-            assertThat(id, isEqualTo("messageId2"))
-            assertThat(message, isEqualTo("Highly Illogical"))
-            assertThat(roomId, isEqualTo("sandbox"))
-        }
+            roomMessages = repository.getByRoomId("sandbox")
+            assertThat(roomMessages.size, isEqualTo(1))
+            roomMessages[0].apply {
+                assertThat(id, isEqualTo("messageId2"))
+                assertThat(message, isEqualTo("Highly Illogical"))
+                assertThat(roomId, isEqualTo("sandbox"))
+            }
 
-        roomMessages = repository.getByRoomId("GENERAL")
-        assertThat(roomMessages.size, isEqualTo(1))
-        roomMessages[0].apply {
-            assertThat(id, isEqualTo("messageId"))
-            assertThat(message, isEqualTo("Beam me up, Scotty."))
-            assertThat(roomId, isEqualTo("GENERAL"))
+            roomMessages = repository.getByRoomId("GENERAL")
+            assertThat(roomMessages.size, isEqualTo(1))
+            roomMessages[0].apply {
+                assertThat(id, isEqualTo("messageId"))
+                assertThat(message, isEqualTo("Beam me up, Scotty."))
+                assertThat(roomId, isEqualTo("GENERAL"))
+            }
         }
     }
 }
