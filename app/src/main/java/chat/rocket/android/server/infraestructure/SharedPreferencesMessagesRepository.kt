@@ -7,6 +7,7 @@ import chat.rocket.core.model.Message
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
+import org.json.JSONObject
 
 class SharedPreferencesMessagesRepository(
     private val prefs: SharedPreferences,
@@ -86,6 +87,7 @@ class SharedPreferencesMessagesRepository(
         withContext(CommonPool) {
             currentServerInteractor.get()?.also {
                 val adapter = moshi.adapter<Message>(Message::class.java)
+                println("Reactions -> ${JSONObject(adapter.toJson(message)).get("reactions")}")
                 prefs.edit().putString("${it}_${message.id}", adapter.toJson(message)).apply()
             }
         }
