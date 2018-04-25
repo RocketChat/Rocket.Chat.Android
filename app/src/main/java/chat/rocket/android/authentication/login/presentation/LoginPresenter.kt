@@ -187,7 +187,21 @@ class LoginPresenter @Inject constructor(
                     if (settings.isGitlabAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
                         if (clientId != null) {
-                            view.setupGitlabButtonListener(OauthHelper.getGitlabOauthUrl(clientId, currentServer, state), state)
+                            val gitlabOauthUrl = if (settings.gitlabUrl() != null) {
+                                OauthHelper.getGitlabOauthUrl(
+                                    host = settings.gitlabUrl(),
+                                    clientId = clientId,
+                                    serverUrl = currentServer,
+                                    state = state
+                                )
+                            } else {
+                                OauthHelper.getGitlabOauthUrl(
+                                    clientId = clientId,
+                                    serverUrl = currentServer,
+                                    state = state
+                                )
+                            }
+                            view.setupGitlabButtonListener(gitlabOauthUrl, state)
                             view.enableLoginByGitlab()
                             totalSocialAccountsEnabled++
                         }
