@@ -2,8 +2,9 @@ package chat.rocket.android.authentication.login.ui
 
 import DrawableHelper
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,10 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.ImageButton
-import android.widget.ScrollView
+import android.widget.*
 import androidx.core.view.postDelayed
-import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
@@ -343,6 +342,27 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun addCustomOauthServiceButton(
+        customOauthUrl: String,
+        state: String,
+        serviceName: String,
+        serviceNameColor: Int,
+        buttonColor: Int
+    ) {
+        ui { activity ->
+            val button = getCustomOauthButton(serviceName, serviceNameColor, buttonColor)
+            social_accounts_container.addView(button)
+
+            button.setOnClickListener {
+                startActivityForResult(
+                    activity.oauthWebViewIntent(customOauthUrl, state),
+                    REQUEST_CODE_FOR_OAUTH
+                )
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
+        }
+    }
+
     override fun setupFabListener() {
         ui {
             button_fab.setVisible(true)
@@ -436,5 +456,30 @@ class LoginFragment : Fragment(), LoginView {
             social_accounts_container.setVisible(false)
             button_fab.setVisible(false)
         }
+    }
+
+    /**
+     * Gets a stylized custom OAuth button.
+     */
+    private fun getCustomOauthButton(
+        buttonText: String,
+        buttonTextColor: Int,
+        buttonBgColor: Int
+    ): Button {
+        val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        val margin = resources.getDimensionPixelSize(R.dimen.screen_edge_left_and_right_margins)
+        params.setMargins(margin, margin, margin, 0)
+
+        val button = Button(context)
+        button.layoutParams = params
+        button.text = buttonText
+        button.setTextColor(buttonTextColor)
+        button.background.setColorFilter(buttonBgColor, PorterDuff.Mode.MULTIPLY)
+
+        return button
     }
 }
