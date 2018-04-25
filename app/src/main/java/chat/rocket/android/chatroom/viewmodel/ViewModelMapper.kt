@@ -159,6 +159,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             is ImageAttachment -> context.getString(R.string.msg_preview_photo)
             is VideoAttachment -> context.getString(R.string.msg_preview_video)
             is AudioAttachment -> context.getString(R.string.msg_preview_audio)
+            is GenericFileAttachment -> context.getString(R.string.msg_preview_file)
             else -> attachment.text ?: ""
         }
         val content = stripMessageQuotes(message)
@@ -182,6 +183,9 @@ class ViewModelMapper @Inject constructor(private val context: Context,
             is AudioAttachment -> AudioAttachmentViewModel(message, attachment, message.id,
                     attachmentUrl, attachmentTitle, id, getReactions(message),
                     preview = message.copy(message = context.getString(R.string.msg_preview_audio)))
+            is GenericFileAttachment -> GenericFileAttachmentViewModel(message, attachment,
+                    message.id, attachmentUrl, attachmentTitle, id, getReactions(message),
+                    preview = message.copy(message = context.getString(R.string.msg_preview_file)))
             else -> null
         }
     }

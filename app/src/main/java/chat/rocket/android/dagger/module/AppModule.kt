@@ -169,6 +169,7 @@ class AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
 

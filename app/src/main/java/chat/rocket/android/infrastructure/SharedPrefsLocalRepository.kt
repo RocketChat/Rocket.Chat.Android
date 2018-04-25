@@ -1,29 +1,30 @@
 package chat.rocket.android.infrastructure
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 class SharedPrefsLocalRepository(private val preferences: SharedPreferences) : LocalRepository {
-    override fun getBoolean(key: String) = preferences.getBoolean(key, false)
+    override fun getBoolean(key: String, defValue: Boolean) = preferences.getBoolean(key, defValue)
 
-    override fun getFloat(key: String) = preferences.getFloat(key, -1f)
+    override fun getFloat(key: String, defValue: Float) = preferences.getFloat(key, defValue)
 
-    override fun getInt(key: String) = preferences.getInt(key, -1)
+    override fun getInt(key: String, defValue: Int) = preferences.getInt(key, defValue)
 
-    override fun getLong(key: String) = preferences.getLong(key, -1L)
+    override fun getLong(key: String, defValue: Long) = preferences.getLong(key, defValue)
 
-    override fun save(key: String, value: Int) = preferences.edit().putInt(key, value).apply()
+    override fun save(key: String, value: Int) = preferences.edit { putInt(key, value) }
 
-    override fun save(key: String, value: Float) = preferences.edit().putFloat(key, value).apply()
+    override fun save(key: String, value: Float) = preferences.edit { putFloat(key, value) }
 
-    override fun save(key: String, value: Long) = preferences.edit().putLong(key, value).apply()
+    override fun save(key: String, value: Long) = preferences.edit { putLong(key, value) }
 
-    override fun save(key: String, value: Boolean) = preferences.edit().putBoolean(key, value).apply()
+    override fun save(key: String, value: Boolean) = preferences.edit { putBoolean(key, value) }
 
-    override fun save(key: String, value: String?) = preferences.edit().putString(key, value).apply()
+    override fun save(key: String, value: String?) = preferences.edit { putString(key, value) }
 
-    override fun get(key: String): String? = preferences.getString(key, null)
+    override fun get(key: String, defValue: String?): String? = preferences.getString(key, defValue)
 
-    override fun clear(key: String) = preferences.edit().remove(key).apply()
+    override fun clear(key: String) = preferences.edit { remove(key) }
 
     override fun clearAllFromServer(server: String) {
         clear(LocalRepository.KEY_PUSH_TOKEN)
