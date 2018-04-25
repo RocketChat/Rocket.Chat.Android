@@ -162,8 +162,8 @@
     <string name="Leave_the_current_channel">Sair do canal atual</string>
     <string name="Displays_action_text">Exibir texto de ação</string>
     <string name="Direct_message_someone">Enviar DM para alguém</string>
-    <string name="Mute_someone_in_room">Mutar alguém</string>
-    <string name="Unmute_someone_in_room">Desmutar alguém na sala</string>
+    <string name="Mute_someone_in_room">Silenciar alguém</string>
+    <string name="Unmute_someone_in_room">De-silenciar alguém na sala</string>
     <string name="Invite_user_to_join_channel">Convidar algum usuário para entrar neste canal</string>
     <string name="Unarchive">Desarquivar</string>
     <string name="Join_the_given_channel">Entrar no canal especificado</string>
