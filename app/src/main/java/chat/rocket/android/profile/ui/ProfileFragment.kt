@@ -55,18 +55,18 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onDestroyView()
     }
 
-    override fun showProfile(avatarUrl: String, name: String, username: String, email: String) {
+    override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
         ui {
             image_avatar.setImageURI(avatarUrl)
 
             text_name.textContent = name
             text_username.textContent = username
-            text_email.textContent = email
+            text_email.textContent = email ?: ""
             text_avatar_url.textContent = ""
 
             currentName = name
             currentUsername = username
-            currentEmail = email
+            currentEmail = email ?: ""
             currentAvatar = avatarUrl
 
             profile_container.setVisible(true)

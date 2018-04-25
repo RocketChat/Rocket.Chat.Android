@@ -1,7 +1,7 @@
 package chat.rocket.android.settings.about.ui
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.textContent
@@ -19,15 +19,13 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        val versionName = resources.getString(R.string.msg_version) +" "+BuildConfig.VERSION_NAME
-        val versionCode = resources.getString(R.string.msg_build)+" #"+ BuildConfig.VERSION_CODE
-        text_version_name.text = versionName
-        text_build_number.text = versionCode
+        text_version_name.text = getString(R.string.msg_version, BuildConfig.VERSION_NAME)
+        text_build_number.text = getString(R.string.msg_build, BuildConfig.VERSION_CODE)
     }
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        text_change_password.textContent = resources.getString(R.string.title_about)
+        text_change_password.textContent = getString(R.string.title_about)
     }
 
     override fun onBackPressed() {

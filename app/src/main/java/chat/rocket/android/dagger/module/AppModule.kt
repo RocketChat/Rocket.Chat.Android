@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.persistence.room.Room
 import android.content.ComponentName
 import android.content.Context
@@ -14,6 +15,7 @@ import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
+import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.qualifier.ForFresco
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.FrescoAuthInterceptor
@@ -22,6 +24,8 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
+import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.infraestructure.*
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.ChatRoomsRepository
 import chat.rocket.android.server.domain.CurrentServerRepository
@@ -230,17 +234,32 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(logger: PlatformLogger,
-                     currentServerInteractor: GetCurrentServerInteractor):
-            Moshi {
+    fun provideActiveUsersRepository(): ActiveUsersRepository {
+        return MemoryActiveUsersRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMoshi(
+        logger: PlatformLogger,
+        currentServerInteractor: GetCurrentServerInteractor
+    ): Moshi {
         val url = currentServerInteractor.get() ?: ""
         return Moshi.Builder()
-                .add(FallbackSealedClassJsonAdapter.ADAPTER_FACTORY)
-                .add(AppJsonAdapterFactory.INSTANCE)
-                .add(AttachmentAdapterFactory(Logger(logger, url)))
-                .add(java.lang.Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()))
-                .add(Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()))
-                .build()
+            .add(FallbackSealedClassJsonAdapter.ADAPTER_FACTORY)
+            .add(AppJsonAdapterFactory.INSTANCE)
+            .add(AttachmentAdapterFactory(Logger(logger, url)))
+            .add(
+                java.lang.Long::class.java,
+                ISO8601Date::class.java,
+                TimestampAdapter(CalendarISO8601Converter())
+            )
+            .add(
+                Long::class.java,
+                ISO8601Date::class.java,
+                TimestampAdapter(CalendarISO8601Converter())
+            )
+            .build()
     }
 
     @Provides

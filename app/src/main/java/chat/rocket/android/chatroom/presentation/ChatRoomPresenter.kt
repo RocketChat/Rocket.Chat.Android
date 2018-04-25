@@ -10,6 +10,7 @@ import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
+import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.username
@@ -41,21 +42,23 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
-                                            private val navigator: ChatRoomNavigator,
-                                            private val strategy: CancelStrategy,
-                                            getSettingsInteractor: GetSettingsInteractor,
-                                            serverInteractor: GetCurrentServerInteractor,
-                                            private val getChatRoomsInteractor: GetChatRoomsInteractor,
-                                            private val permissions: GetPermissionsInteractor,
-                                            private val uriInteractor: UriInteractor,
-                                            private val messagesRepository: MessagesRepository,
-                                            private val usersRepository: UsersRepository,
-                                            private val roomsRepository: RoomRepository,
-                                            private val localRepository: LocalRepository,
-                                            factory: ConnectionManagerFactory,
-                                            private val mapper: ViewModelMapper,
-                                            private val jobSchedulerInteractor: JobSchedulerInteractor) {
+class ChatRoomPresenter @Inject constructor(
+    private val view: ChatRoomView,
+    private val navigator: ChatRoomNavigator,
+    private val strategy: CancelStrategy,
+    getSettingsInteractor: GetSettingsInteractor,
+    serverInteractor: GetCurrentServerInteractor,
+    private val getChatRoomsInteractor: GetChatRoomsInteractor,
+    private val permissions: GetPermissionsInteractor,
+    private val uriInteractor: UriInteractor,
+    private val messagesRepository: MessagesRepository,
+    private val usersRepository: UsersRepository,
+    private val roomsRepository: RoomRepository,
+    private val localRepository: LocalRepository,
+    factory: ConnectionManagerFactory,
+    private val mapper: ViewModelMapper,
+    private val jobSchedulerInteractor: JobSchedulerInteractor
+) {
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
@@ -172,7 +175,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val fileName = async { uriInteractor.getFileName(uri) }.await()
+                val fileName = async { uriInteractor.getFileName(uri) }.await() ?: uri.toString()
                 val mimeType = async { uriInteractor.getMimeType(uri) }.await()
                 val fileSize = async { uriInteractor.getFileSize(uri) }.await()
                 val maxFileSize = settings.uploadMaxFileSize()
@@ -189,12 +192,11 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
                         }
                     }
                 }
-            } catch (ex: RocketChatException) {
-                Timber.d(ex)
-                ex.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
-                    view.showGenericErrorMessage()
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error uploading file")
+                when(ex) {
+                    is RocketChatException -> view.showMessage(ex)
+                    else -> view.showGenericErrorMessage()
                 }
             } finally {
                 view.hideLoading()
@@ -510,7 +512,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun loadChatRooms() {
         launchUI(strategy) {
             try {
-                val chatRooms = getChatRoomsInteractor.get(currentServer)
+                val chatRooms = getChatRoomsInteractor.getAll(currentServer)
                     .filterNot {
                         it.type is RoomType.DirectMessage || it.type is RoomType.Livechat
                     }
