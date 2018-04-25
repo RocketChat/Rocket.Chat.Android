@@ -78,6 +78,7 @@
     <string name="msg_preview_video">वीडियो</string>
     <string name="msg_preview_audio">ऑडियो</string>
     <string name="msg_preview_photo">तस्वीरें</string>
+    <string name="msg_preview_file">File</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
     <string name="msg_version">वर्शन %1$s</string>
