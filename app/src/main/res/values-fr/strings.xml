@@ -1,9 +1,9 @@
 <resources>
     <!-- Titles -->
     <string name="title_sign_in_your_server">Connectez-vous sur votre serveur</string>
-    <string name="title_log_in">S'identifier</string>
-    <string name="title_register_username">Enregistrer le nom d'utilisateur</string>
-    <string name="title_sign_up">S'inscrire</string>
+    <string name="title_log_in">S\'identifier</string>
+    <string name="title_register_username">Enregistrer le nom d\'utilisateur</string>
+    <string name="title_sign_up">S\'inscrire</string>
     <string name="title_authentication">Authentification</string>
     <string name="title_legal_terms">Termes légaux</string>
     <string name="title_chats">Chats</string>
@@ -16,9 +16,9 @@
 
     <!-- Actions -->
     <string name="action_connect">Se connecter</string>
-    <string name="action_use_this_username">Utilisez ce nom d'utilisateur</string>
+    <string name="action_use_this_username">Utilisez ce nom d\'utilisateur</string>
     <string name="action_login_or_sign_up">Touchez ce bouton pour vous connecter ou créer un compte</string>
-    <string name="action_terms_of_service">Conditions d'utilisation</string>
+    <string name="action_terms_of_service">Conditions d\'utilisation</string>
     <string name="action_privacy_policy">Politique de confidentialité</string>
     <string name="action_search">Chercher</string>
     <string name="action_update">Mettre à jour</string>
@@ -40,15 +40,15 @@
     </string-array>
 
     <!-- Regular information messages -->
-    <string name="msg_generic_error">Désolé, une erreur s'est produite. Veuillez réessayer.</string>
+    <string name="msg_generic_error">Désolé, une erreur s\'est produite. Veuillez réessayer.</string>
     <string name="msg_no_data_to_display">Aucune donnée à afficher</string>
     <string name="msg_profile_update_successfully">Mise à jour du profil avec succès</string>
-    <string name="msg_username">nom d'utilisateur</string>
-    <string name="msg_username_or_email">nom d'utilisateur ou email</string>
+    <string name="msg_username">nom d\'utilisateur</string>
+    <string name="msg_username_or_email">nom d\'utilisateur ou email</string>
     <string name="msg_password">mot de passe</string>
     <string name="msg_name">prénom</string>
     <string name="msg_email">email</string>
-    <string name="msg_avatar_url">URL de l'avatar</string>
+    <string name="msg_avatar_url">URL de l\'avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continuer à utiliser les comptes sociaux</string>
     <string name="msg_new_user">Nouvel utilisateur? %1$s</string>
     <string name="msg_new_user_agreement">En procédant, vous acceptez notre\n%1$s et %2$s</string>
@@ -119,9 +119,9 @@
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
 
     <!-- Permission messages -->
-    <string name="permission_editing_not_allowed">L'édition n'est pas autorisée</string>
-    <string name="permission_deleting_not_allowed">La suppression n'est pas autorisée</string>
-    <string name="permission_pinning_not_allowed">L'épinglage n'est pas autorisé</string>
+    <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>
+    <string name="permission_deleting_not_allowed">La suppression n\'est pas autorisée</string>
+    <string name="permission_pinning_not_allowed">L\'épinglage n\'est pas autorisé</string>
 
     <!-- Members List -->
     <string name="title_members_list">Liste des membres</string>
@@ -157,10 +157,10 @@
     <string name="Invite_user_to_join_channel_all_from">Inviter tous les utilisateurs de [#salle] à rejoindre cette salle</string>
     <string name="Invite_user_to_join_channel_all_to">Inviter tous les utilisateurs de cette salle à rejoindre [#salle]</string>
     <string name="Archive">Archiver</string>
-    <string name="Remove_someone_from_room">Retirer quelqu'un de la salle</string>
+    <string name="Remove_someone_from_room">Retirer quelqu\'un de la salle</string>
     <string name="Leave_the_current_channel">Quitter de la salle actuelle</string>
-    <string name="Displays_action_text">Affiche le texte d'action</string>
-    <string name="Direct_message_someone">Message direct quelqu'un</string>
+    <string name="Displays_action_text">Affiche le texte d\'action</string>
+    <string name="Direct_message_someone">Message direct quelqu\'un</string>
     <string name="Mute_someone_in_room">Mettre en sourdine une personne dans la salle</string>
     <string name="Unmute_someone_in_room">Retirer la sourdine d'une personne dans la salle</string>
     <string name="Invite_user_to_join_channel">Inviter un utilisateur à rejoindre cette salle</string>
