@@ -1,23 +1,20 @@
 package chat.rocket.android.chatroom.ui
 
-import android.Manifest
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.DrawableRes
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import androidx.core.content.systemService
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -42,12 +39,14 @@ import kotlinx.android.synthetic.main.message_list.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String,
-                chatRoomName: String,
-                chatRoomType: String,
-                isChatRoomReadOnly: Boolean,
-                chatRoomLastSeen: Long,
-                isSubscribed: Boolean = true): Fragment {
+fun newInstance(
+    chatRoomId: String,
+    chatRoomName: String,
+    chatRoomType: String,
+    isChatRoomReadOnly: Boolean,
+    chatRoomLastSeen: Long,
+    isSubscribed: Boolean = true
+): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -114,7 +113,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_chat_room)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return container?.inflate(R.layout.fragment_chat_room)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -208,7 +213,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
-                    reactionListener = this@ChatRoomFragment, pinnedMessagesPresenter = null)
+<<<<<<<<< Temporary merge branch 1
+                        reactionListener = this@ChatRoomFragment,pinnedMessagesPresenter = null)
+=========
+                    reactionListener = this@ChatRoomFragment)
+>>>>>>>>> Temporary merge branch 2
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
@@ -408,7 +417,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun copyToClipboard(message: String) {
         ui {
-            val clipboard: ClipboardManager = it.systemService()
+            val clipboard = it.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.primaryClip = ClipData.newPlainText("", message)
         }
     }
@@ -468,29 +477,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun showFileSelection(filter: Array<String>) {
         ui {
-            if (ContextCompat.checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(it,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    1)
-            } else {
-                val intent = Intent(Intent.ACTION_GET_CONTENT)
-                intent.type = "*/*"
-                intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
-                startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            1 -> {
-                if (!(grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED)) {
-                    handler.postDelayed({
-                        ui { hideAttachmentOptions() }
-                    }, 400)
-                }
-            }
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "*/*"
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
         }
     }
 
@@ -714,5 +705,31 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupToolbar(toolbarTitle: String) {
         (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val prefs = activity!!.getSharedPreferences("pinFunction", MODE_PRIVATE)
+        val action = prefs.getString("action", null)
+        if (action == "edit") {
+            val roomId = prefs.getString("roomId", null)
+            val messageId = prefs.getString("messageId", null)
+            val text = prefs.getString("text", null)
+            showEditingAction(roomId,messageId, text)
+        }else if(action == "reply"){
+            val username = prefs.getString("username", null)
+            val replyMarkdown = prefs.getString("replyMarkdown", null)
+            val quotedMessage = prefs.getString("quotedMessage", null)
+            showReplyingAction(username, replyMarkdown, quotedMessage)
+        }
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val editor = activity?.getSharedPreferences("pinFunction", MODE_PRIVATE)!!.edit()
+        editor.putString("action","null")
+        editor.apply()
     }
 }
