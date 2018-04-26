@@ -3,13 +3,22 @@ package chat.rocket.android.chatroom.adapter
 import android.Manifest
 import android.app.Activity
 import android.graphics.Color
+import android.graphics.Typeface
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
+import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.Toolbar
+import android.text.TextUtils
+import android.util.TypedValue
 import android.view.ContextThemeWrapper
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.setPadding
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
 import chat.rocket.android.helper.AndroidPermissionsHelper
@@ -24,6 +33,7 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.message_attachment.view.*
+import ru.whalemare.sheetmenu.extension.marginBottom
 import timber.log.Timber
 import java.io.File
 
@@ -53,15 +63,17 @@ class ImageAttachmentViewHolder(itemView: View,
             file_name.text = data.attachmentTitle
             image_attachment.setOnClickListener { view ->
                 // TODO - implement a proper image viewer with a proper Transition
-
-
+                var imageViewer: ImageViewer? = null
                 val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(data.attachmentUrl))
                     .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
                     .build()
                 cacheKey = DefaultCacheKeyFactory.getInstance()
                     .getEncodedCacheKey(request, null)
-
-                val toolbar = Toolbar(itemView.context).also {
+                val pad = context.resources
+                    .getDimensionPixelSize(R.dimen.viewer_toolbar_padding)
+                val lparams = AppBarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT)
+                val toolbar = Toolbar(itemView.context, null, R.style.Theme_AppCompat_Light_NoActionBar).also {
                     it.inflateMenu(R.menu.image_actions)
                     it.overflowIcon?.setTint(Color.WHITE)
                     it.setOnMenuItemClickListener {
@@ -70,13 +82,49 @@ class ImageAttachmentViewHolder(itemView: View,
                             else -> super.onMenuItemClick(it)
                         }
                     }
+
+                    val titleSize = context.resources
+                        .getDimensionPixelSize(R.dimen.viewer_toolbar_title)
+
+                    val titleTextView = TextView(context).also {
+                        it.text = data.attachmentTitle
+                        it.setTextColor(Color.WHITE)
+                        it.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize.toFloat())
+                        it.ellipsize = TextUtils.TruncateAt.END
+                        it.typeface = Typeface.DEFAULT_BOLD
+                        it.setPadding(pad)
+                    }
+
+                    val backArrowView = ImageView(context).also {
+                        it.setImageResource(R.drawable.ic_arrow_back_white_24dp)
+                        it.setOnClickListener { imageViewer?.onDismiss() }
+                        it.setPadding(pad)
+                    }
+
+                    val layoutParams = AppBarLayout.LayoutParams(
+                        AppBarLayout.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    layoutParams.gravity = Gravity.TOP
+
+                    it.addView(backArrowView, layoutParams)
+                    it.addView(titleTextView, layoutParams)
+                }
+
+                val appBarLayout = AppBarLayout(context).also {
+                    it.layoutParams = lparams
+                    it.setBackgroundColor(Color.BLACK)
+                    it.addView(toolbar, AppBarLayout.LayoutParams(
+                        AppBarLayout.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    ))
                 }
 
                 val builder = ImageViewer.createPipelineDraweeControllerBuilder()
                     .setImageRequest(request)
                     .setAutoPlayAnimations(true)
-                ImageViewer.Builder(view.context, listOf(data.attachmentUrl))
-                    .setOverlayView(toolbar)
+                imageViewer = ImageViewer.Builder(view.context, listOf(data.attachmentUrl))
+                    .setOverlayView(appBarLayout)
                     .setStartPosition(0)
                     .hideStatusBar(false)
                     .setCustomDraweeControllerBuilder(builder)
