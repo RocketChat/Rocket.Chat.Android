@@ -484,7 +484,9 @@ class LoginFragment : Fragment(), LoginView {
     private fun showOauthView() {
         if (isOauthViewEnable) {
             social_accounts_container.isVisible = true
-            button_fab.isVisible = true
+            if (enabledSocialAccounts() > 3) {
+                button_fab.isVisible = true
+            }
         }
     }
 
@@ -493,6 +495,23 @@ class LoginFragment : Fragment(), LoginView {
             social_accounts_container.isVisible = false
             button_fab.isVisible = false
         }
+    }
+
+    private fun enabledSocialAccounts(): Int {
+        return enabledOauthAccountsImageButtons() + enabledServicesAccountsButtons()
+    }
+
+    private fun enabledOauthAccountsImageButtons(): Int {
+        return (0..social_accounts_container.childCount)
+            .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
+            .filter { it.isClickable }
+            .size
+    }
+
+    private fun enabledServicesAccountsButtons(): Int {
+        return (0..social_accounts_container.childCount)
+            .mapNotNull { social_accounts_container.getChildAt(it) as? Button }
+            .size
     }
 
     /**
