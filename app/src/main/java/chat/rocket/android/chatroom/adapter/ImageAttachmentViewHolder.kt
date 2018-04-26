@@ -1,14 +1,18 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.Manifest
+import android.app.Activity
 import android.graphics.Color
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import android.support.v7.widget.Toolbar
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
+import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import com.facebook.binaryresource.FileBinaryResource
 import com.facebook.cache.common.CacheKey
@@ -82,6 +86,10 @@ class ImageAttachmentViewHolder(itemView: View,
     }
 
     private fun saveImage(): Boolean {
+        if (!canWriteToExternalStorage()) {
+            checkWritingPermission()
+            return false
+        }
         if (ImagePipelineFactory.getInstance().mainFileCache.hasKey(cacheKey)) {
             val context = itemView.context
             val resource = ImagePipelineFactory.getInstance().mainFileCache.getResource(cacheKey)
@@ -108,5 +116,19 @@ class ImageAttachmentViewHolder(itemView: View,
             }
         }
         return true
+    }
+
+    private fun canWriteToExternalStorage(): Boolean {
+        return AndroidPermissionsHelper.checkPermission(itemView.context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+
+    private fun checkWritingPermission() {
+        val context = itemView.context
+        if (context is ContextThemeWrapper && context.baseContext is Activity) {
+            val activity = context.baseContext as Activity
+            AndroidPermissionsHelper.requestPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE)
+        }
     }
 }
