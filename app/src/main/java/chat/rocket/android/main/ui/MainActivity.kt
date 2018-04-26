@@ -84,10 +84,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                DrawableHelper.getUserStatusDrawable(
-                    userStatus,
-                    this.context
-                )
+                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }
@@ -141,7 +138,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         accounts_list.layoutManager = LinearLayoutManager(this)
         accounts_list.adapter = AccountsAdapter(accounts, object : Selector {
             override fun onStatusSelected(userStatus: UserStatus) {
-                presenter.changeStatus(userStatus)
+                presenter.changeDefaultStatus(userStatus)
             }
 
             override fun onAccountSelected(serverUrl: String) {
