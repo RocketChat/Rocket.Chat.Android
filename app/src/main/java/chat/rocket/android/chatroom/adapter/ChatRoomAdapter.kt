@@ -175,7 +175,7 @@ class ChatRoomAdapter(
         }
     }
 
-    val actionsListener = object : BaseViewHolder.ActionsListener {
+    private val actionsListener = object : BaseViewHolder.ActionsListener {
         override fun isActionsEnabled(): Boolean = enableActions
 
         override fun onActionSelected(item: MenuItem, message: Message) {

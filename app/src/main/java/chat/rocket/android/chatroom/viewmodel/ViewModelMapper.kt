@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
-import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -46,7 +45,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
     private val baseUrl = settings.baseUrl()
     private val token = tokenRepository.get(currentServer)
     private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
-    private val secundaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
+    private val secondaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
 
     suspend fun map(message: Message): List<BaseViewModel<*>> {
         return translate(message)
@@ -261,7 +260,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
         return reactions ?: emptyList()
     }
 
-    private suspend fun stripMessageQuotes(message: Message): Message {
+    private fun stripMessageQuotes(message: Message): Message {
         val baseUrl = settings.baseUrl()
         return message.copy(
                 message = message.message.replace("\\[[^\\]]+\\]\\($baseUrl[^)]+\\)".toRegex(), "").trim()
@@ -276,7 +275,7 @@ class ViewModelMapper @Inject constructor(private val context: Context,
                 username?.let {
                     append(" ")
                     scale(0.8f) {
-                        color(secundaryTextColor) {
+                        color(secondaryTextColor) {
                             append("@$username")
                         }
                     }
