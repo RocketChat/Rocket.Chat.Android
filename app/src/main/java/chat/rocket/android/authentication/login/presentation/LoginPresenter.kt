@@ -126,7 +126,7 @@ class LoginPresenter @Inject constructor(
     }
 
     private fun setupUserRegistrationView() {
-        if (settings.isRegistrationEnabledForNewUsers()) {
+        if (settings.isRegistrationEnabledForNewUsers() && settings.isLoginFormEnabled()) {
             view.showSignUpView()
             view.setupSignUpView()
         }
@@ -187,7 +187,21 @@ class LoginPresenter @Inject constructor(
                     if (settings.isGitlabAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
                         if (clientId != null) {
-                            view.setupGitlabButtonListener(OauthHelper.getGitlabOauthUrl(clientId, currentServer, state), state)
+                            val gitlabOauthUrl = if (settings.gitlabUrl() != null) {
+                                OauthHelper.getGitlabOauthUrl(
+                                    host = settings.gitlabUrl(),
+                                    clientId = clientId,
+                                    serverUrl = currentServer,
+                                    state = state
+                                )
+                            } else {
+                                OauthHelper.getGitlabOauthUrl(
+                                    clientId = clientId,
+                                    serverUrl = currentServer,
+                                    state = state
+                                )
+                            }
+                            view.setupGitlabButtonListener(gitlabOauthUrl, state)
                             view.enableLoginByGitlab()
                             totalSocialAccountsEnabled++
                         }
@@ -280,9 +294,9 @@ class LoginPresenter @Inject constructor(
     }
 
     private fun getOauthClientId(listMap: List<Map<String, Any>>, serviceName: String): String? {
-        return listMap.find { map -> map.containsValue(serviceName) }
-            ?.get("clientId")
-            .toString()
+        return listMap.find { map -> map.containsValue(serviceName) }?.let {
+            it["clientId"] ?: it["appId"]
+        }.toString()
     }
 
     private suspend fun saveAccount(username: String) {

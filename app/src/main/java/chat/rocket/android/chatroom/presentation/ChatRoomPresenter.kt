@@ -42,21 +42,23 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
-                                            private val navigator: ChatRoomNavigator,
-                                            private val strategy: CancelStrategy,
-                                            getSettingsInteractor: GetSettingsInteractor,
-                                            serverInteractor: GetCurrentServerInteractor,
-                                            private val getChatRoomsInteractor: GetChatRoomsInteractor,
-                                            private val permissions: GetPermissionsInteractor,
-                                            private val uriInteractor: UriInteractor,
-                                            private val messagesRepository: MessagesRepository,
-                                            private val usersRepository: UsersRepository,
-                                            private val roomsRepository: RoomRepository,
-                                            private val localRepository: LocalRepository,
-                                            factory: ConnectionManagerFactory,
-                                            private val mapper: ViewModelMapper,
-                                            private val jobSchedulerInteractor: JobSchedulerInteractor) {
+class ChatRoomPresenter @Inject constructor(
+    private val view: ChatRoomView,
+    private val navigator: ChatRoomNavigator,
+    private val strategy: CancelStrategy,
+    getSettingsInteractor: GetSettingsInteractor,
+    serverInteractor: GetCurrentServerInteractor,
+    private val getChatRoomsInteractor: GetChatRoomsInteractor,
+    private val permissions: GetPermissionsInteractor,
+    private val uriInteractor: UriInteractor,
+    private val messagesRepository: MessagesRepository,
+    private val usersRepository: UsersRepository,
+    private val roomsRepository: RoomRepository,
+    private val localRepository: LocalRepository,
+    factory: ConnectionManagerFactory,
+    private val mapper: ViewModelMapper,
+    private val jobSchedulerInteractor: JobSchedulerInteractor
+) {
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
@@ -510,7 +512,7 @@ class ChatRoomPresenter @Inject constructor(private val view: ChatRoomView,
     fun loadChatRooms() {
         launchUI(strategy) {
             try {
-                val chatRooms = getChatRoomsInteractor.get(currentServer)
+                val chatRooms = getChatRoomsInteractor.getAll(currentServer)
                     .filterNot {
                         it.type is RoomType.DirectMessage || it.type is RoomType.Livechat
                     }
