@@ -1,9 +1,5 @@
 package chat.rocket.android.chatroom.ui
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -20,17 +16,9 @@ import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
-<<<<<<<<< Temporary merge branch 1
-import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiListenerAdapter
-import chat.rocket.android.widget.emoji.EmojiPickerPopup
-import chat.rocket.android.widget.emoji.EmojiReactionListener
-=========
 import chat.rocket.android.util.extensions.ui
->>>>>>>>> Temporary merge branch 2
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_pinned_messages.*
-import timber.log.Timber
 import javax.inject.Inject
 
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
@@ -47,7 +35,7 @@ fun newPinnedMessagesFragment(chatRoomId: String, chatRoomType: String, chatRoom
     }
 }
 
-class PinnedMessagesFragment : Fragment(), PinnedMessagesView, EmojiReactionListener {
+class PinnedMessagesFragment : Fragment(), PinnedMessagesView{
 
     @Inject lateinit var presenter: PinnedMessagesPresenter
     private lateinit var chatRoomId: String
@@ -95,60 +83,6 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView, EmojiReactionList
         }
     }
 
-    override fun copyToClipboard(message: String) {
-        activity?.apply {
-            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.primaryClip = ClipData.newPlainText("", message)
-        }
-    }
-
-    override fun dispatchDeleteMessage(msgId: String) {
-        adapter.removeItem(msgId)
-    }
-
-    override fun showReactionsPopup(messageId: String) {
-        context?.let {
-            val emojiPickerPopup = EmojiPickerPopup(it)
-            emojiPickerPopup.listener = object : EmojiListenerAdapter() {
-                override fun onEmojiAdded(emoji: Emoji) {
-                    onReactionAdded(messageId, emoji)
-                    Timber.e("onEmojiAdded")
-                }
-            }
-            emojiPickerPopup.show()
-        }
-    }
-
-    override fun onReactionTouched(messageId: String, emojiShortname: String) {
-        presenter.react(messageId, emojiShortname)
-    }
-
-    override fun onReactionAdded(messageId: String, emoji: Emoji) {
-        presenter.react(messageId, emoji.shortname)
-    }
-
-    override fun showEditingAction(roomId: String, messageId: String, text: String) {
-        val editor = activity?.getSharedPreferences("pinFunction", MODE_PRIVATE)!!.edit()
-        editor.putString("action","edit")
-        editor.putString("roomId", roomId)
-        editor.putString("messageId", messageId)
-        editor.putString("text", text)
-        editor.apply()
-        (activity as PinnedMessagesActivity).finishActivity()
-    }
-
-    override fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String) {
-        val editor = activity?.getSharedPreferences("pinFunction", MODE_PRIVATE)!!.edit()
-        editor.putString("action","reply")
-        editor.putString("username", username)
-        editor.putString("replyMarkdown", replyMarkdown)
-        editor.putString("quotedMessage", quotedMessage)
-        editor.apply()
-        (activity as PinnedMessagesActivity).finishActivity()
-    }
-
-
-
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>) {
@@ -172,6 +106,9 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView, EmojiReactionList
 
             adapter.appendData(pinnedMessages)
         }
+    }
+    override fun onUnpinMessage(size: Int) {
+        togglePinView(size - 1)
     }
 
     private fun togglePinView(size: Int) {
