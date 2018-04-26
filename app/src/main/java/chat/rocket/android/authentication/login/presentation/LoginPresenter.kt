@@ -225,8 +225,19 @@ class LoginPresenter @Inject constructor(
                                 customOauthUrl,
                                 state,
                                 serviceName,
-                                getCustomOauthServiceNameColor(service),
-                                getCustomOauthButtonColor(service)
+                                getServiceNameColor(service),
+                                getServiceButtonColor(service)
+                            )
+                            totalSocialAccountsEnabled++
+                        }
+                    }
+
+                    getSamlServices(services).let {
+                        for (service in it) {
+                            view.addSamlServiceButton(
+                                getSamlServiceName(service),
+                                getServiceNameColor(service),
+                                getServiceButtonColor(service)
                             )
                             totalSocialAccountsEnabled++
                         }
@@ -324,6 +335,14 @@ class LoginPresenter @Inject constructor(
         }.toString()
     }
 
+    private fun getSamlServices(listMap: List<Map<String, Any>>): List<Map<String, Any>>  {
+        return listMap.filter { map -> map["name"] == "saml" }
+    }
+
+    private fun getSamlServiceName(service: Map<String, Any>): String {
+        return service["buttonLabelText"].toString()
+    }
+
     private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>>  {
         return listMap.filter { map -> map["custom"] == true }
     }
@@ -348,11 +367,11 @@ class LoginPresenter @Inject constructor(
         return service["scope"].toString()
     }
 
-    private fun getCustomOauthButtonColor(service: Map<String, Any>): Int {
+    private fun getServiceButtonColor(service: Map<String, Any>): Int {
         return service["buttonColor"].toString().parseColor()
     }
 
-    private fun getCustomOauthServiceNameColor(service: Map<String, Any>): Int {
+    private fun getServiceNameColor(service: Map<String, Any>): Int {
         return service["buttonLabelColor"].toString().parseColor()
     }
 

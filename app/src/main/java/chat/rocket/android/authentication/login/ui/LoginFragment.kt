@@ -385,7 +385,7 @@ class LoginFragment : Fragment(), LoginView {
         buttonColor: Int
     ) {
         ui { activity ->
-            val button = getCustomOauthButton(serviceName, serviceNameColor, buttonColor)
+            val button = getCustomServiceButton(serviceName, serviceNameColor, buttonColor)
             social_accounts_container.addView(button)
 
             button.setOnClickListener {
@@ -393,6 +393,26 @@ class LoginFragment : Fragment(), LoginView {
                     activity.oauthWebViewIntent(customOauthUrl, state),
                     REQUEST_CODE_FOR_OAUTH
                 )
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
+        }
+    }
+
+    override fun addSamlServiceButton(
+        serviceName: String,
+        serviceNameColor: Int,
+        buttonColor: Int
+    ) {
+        ui { activity ->
+            val button = getCustomServiceButton(serviceName, serviceNameColor, buttonColor)
+            social_accounts_container.addView(button)
+
+            // TODO: Add the button listener with the SAML URL.
+            button.setOnClickListener {
+//                startActivityForResult(
+//                    activity.oauthWebViewIntent(customOauthUrl, state),
+//                    REQUEST_CODE_FOR_OAUTH
+//                )
                 activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
             }
         }
@@ -496,9 +516,9 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     /**
-     * Gets a stylized custom OAuth button.
+     * Gets a stylized custom service button.
      */
-    private fun getCustomOauthButton(
+    private fun getCustomServiceButton(
         buttonText: String,
         buttonTextColor: Int,
         buttonBgColor: Int

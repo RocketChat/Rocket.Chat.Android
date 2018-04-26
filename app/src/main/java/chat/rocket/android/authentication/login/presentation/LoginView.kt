@@ -74,7 +74,7 @@ interface LoginView : LoadingView, MessageView {
      * Enables and shows the oauth view if there is login via social accounts enabled by the server settings.
      *
      * REMARK: We must show at maximum *three* social accounts views ([enableLoginByFacebook], [enableLoginByGithub], [enableLoginByGoogle],
-     * [enableLoginByLinkedin], [enableLoginByMeteor], [enableLoginByTwitter], [enableLoginByGitlab] or [addCustomOauthServiceButton]) for the oauth view.
+     * [enableLoginByLinkedin], [enableLoginByMeteor], [enableLoginByTwitter], [enableLoginByGitlab], [addCustomOauthServiceButton] or [addSamlServiceButton]) for the oauth view.
      * If the possibility of login via social accounts exceeds 3 different ways we should set up the FAB ([setupFabListener]) to show the remaining view(s).
      */
     fun enableOauthView()
@@ -194,6 +194,16 @@ interface LoginView : LoadingView, MessageView {
         serviceNameColor: Int,
         buttonColor: Int
     )
+
+    /**
+     *  Adds a SAML button in the oauth view.
+     *
+     * @serviceName The custom OAuth service name.
+     * @serviceNameColor The custom OAuth service name color (just stylizing).
+     * @buttonColor The color of the custom OAuth button (just stylizing).
+     * @see [enableOauthView]
+     */
+    fun addSamlServiceButton(serviceName: String, serviceNameColor: Int, buttonColor: Int)
 
     /**
      * Setups the FloatingActionButton to show more social accounts views (expanding the oauth view interface to show the remaining view(s)).
