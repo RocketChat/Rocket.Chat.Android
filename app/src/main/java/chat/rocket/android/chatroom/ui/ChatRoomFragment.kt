@@ -35,6 +35,7 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
@@ -228,7 +229,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 verticalScrollOffset.set(0)
             }
             presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
-            toggleNoChatView(dataSet.size)
+            toggleNoChatView(adapter.itemCount)
         }
     }
 
@@ -325,7 +326,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             adapter.prependData(message)
             recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
-            toggleNoChatView(message.size)
+            toggleNoChatView(adapter.itemCount)
         }
     }
 
