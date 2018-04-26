@@ -80,7 +80,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
         activity?.apply {
             if (recycler_view_pinned.adapter == null) {
                 // TODO - add a better constructor for this case...
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, null, false)
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, null, presenter,false)
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view_pinned.layoutManager = linearLayoutManager
@@ -92,9 +92,26 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
                         }
                     })
                 }
+                togglePinView(pinnedMessages.size)
             }
 
             adapter.appendData(pinnedMessages)
+        }
+    }
+
+    override fun onUnpinMessage(size: Int) {
+        togglePinView(size - 1)
+    }
+
+    private fun togglePinView(size: Int) {
+        if (size == 0){
+            iv_pin_icon.setVisible(true)
+            tv_pin_title.setVisible(true)
+            tv_pin_description.setVisible(true)
+        }else{
+            iv_pin_icon.setVisible(false)
+            tv_pin_title.setVisible(false)
+            tv_pin_description.setVisible(false)
         }
     }
 }

@@ -208,7 +208,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
-                    reactionListener = this@ChatRoomFragment)
+                    reactionListener = this@ChatRoomFragment, pinnedMessagesPresenter = null)
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)

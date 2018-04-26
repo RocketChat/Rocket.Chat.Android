@@ -14,29 +14,9 @@ interface PinnedMessagesView : MessageView, LoadingView {
     fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>)
 
     /**
-     * Copy message to clipboard.
+     * Invoked when pinned message is unpinned.
      *
-     * @param message The message to copy.
+     * @param size Gives the size of pinned messages.
      */
-    fun copyToClipboard(message: String)
-    /**
-     * Dispatch to the recycler views adapter that we should remove a message.
-     *
-     * @param msgId The id of the message to be removed.
-     */
-    fun dispatchDeleteMessage(msgId: String)
-    fun showReactionsPopup(messageId: String)
-
-    /**
-     * Show edit status above the message composer.
-     */
-    fun showEditingAction(roomId: String, messageId: String, text: String)
-    /**
-     * Show reply status above the message composer.
-     *
-     * @param username The username or name of the user to reply/quote to.
-     * @param replyMarkdown The markdown of the message reply.
-     * @param quotedMessage The message to quote.
-     */
-    fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String)
+    fun onUnpinMessage(size: Int)
 }

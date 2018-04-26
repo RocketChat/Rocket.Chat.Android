@@ -1,15 +1,19 @@
 package chat.rocket.android.chatroom.presentation
 
+import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetPermissionsInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.getRoomPinnedMessages
+import chat.rocket.core.internal.rest.unpinMessage
 import chat.rocket.core.model.Value
 import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
@@ -21,10 +25,9 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                                                   private val roomsInteractor: GetChatRoomsInteractor,
                                                   private val mapper: ViewModelMapper,
                                                   factory: RocketChatClientFactory,
-                                                  getSettingsInteractor: GetSettingsInteractor) {
+                                                  private val permissions: GetPermissionsInteractor) {
 
     private val client = factory.create(serverInteractor.get()!!)
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
     private var pinnedMessagesListOffset: Int = 0
 
     /**
@@ -48,6 +51,21 @@ class PinnedMessagesPresenter @Inject constructor(private val view: PinnedMessag
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    fun unpinMessage(messageId: String,size : Int) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessagePinning()) {
+                view.showMessage(R.string.permission_pinning_not_allowed)
+                return@launchUI
+            }
+            try {
+                retryIO("unpinMessage($messageId)") { client.unpinMessage(messageId) }
+                view.onUnpinMessage(size)
             } catch (e: RocketChatException) {
                 Timber.e(e)
             }
