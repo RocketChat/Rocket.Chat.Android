@@ -8,7 +8,6 @@ import android.arch.persistence.room.Room
 import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.content.systemService
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.app.RocketChatDatabase
@@ -35,6 +34,7 @@ import chat.rocket.common.util.Logger
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.AttachmentAdapterFactory
+import chat.rocket.core.internal.ReactionsAdapter
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
@@ -144,10 +144,10 @@ class AppModule {
         listeners.add(RequestLoggingListener())
 
         return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
-                .setRequestListeners(listeners)
-                .setDownsampleEnabled(true)
-                //.experiment().setBitmapPrepareToDraw(true).experiment()
-                .experiment().setPartialImageCachingEnabled(true).build()
+            .setRequestListeners(listeners)
+            .setDownsampleEnabled(true)
+            //.experiment().setBitmapPrepareToDraw(true).experiment()
+            .experiment().setPartialImageCachingEnabled(true).build()
     }
 
     @Provides
@@ -176,7 +176,7 @@ class AppModule {
     @Provides
     @ForMessages
     fun provideMessagesSharedPreferences(context: Application) =
-            context.getSharedPreferences("messages", Context.MODE_PRIVATE)
+        context.getSharedPreferences("messages", Context.MODE_PRIVATE)
 
     @Provides
     @Singleton
@@ -210,17 +210,33 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(logger: PlatformLogger,
-                     currentServerInteractor: GetCurrentServerInteractor):
-            Moshi {
+    fun provideActiveUsersRepository(): ActiveUsersRepository {
+        return MemoryActiveUsersRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMoshi(
+        logger: PlatformLogger,
+        currentServerInteractor: GetCurrentServerInteractor
+    ): Moshi {
         val url = currentServerInteractor.get() ?: ""
         return Moshi.Builder()
-                .add(FallbackSealedClassJsonAdapter.ADAPTER_FACTORY)
-                .add(AppJsonAdapterFactory.INSTANCE)
-                .add(AttachmentAdapterFactory(Logger(logger, url)))
-                .add(java.lang.Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()))
-                .add(Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()))
-                .build()
+            .add(FallbackSealedClassJsonAdapter.ADAPTER_FACTORY)
+            .add(AppJsonAdapterFactory.INSTANCE)
+            .add(AttachmentAdapterFactory(Logger(logger, url)))
+            .add(
+                java.lang.Long::class.java,
+                ISO8601Date::class.java,
+                TimestampAdapter(CalendarISO8601Converter())
+            )
+            .add(
+                Long::class.java,
+                ISO8601Date::class.java,
+                TimestampAdapter(CalendarISO8601Converter())
+            )
+            .add(ReactionsAdapter())
+            .build()
     }
 
     @Provides
@@ -231,8 +247,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMessageRepository(context: Application,
-                                 @ForMessages preferences: SharedPreferences,
+    fun provideMessageRepository(@ForMessages preferences: SharedPreferences,
                                  moshi: Moshi,
                                  currentServerInteractor: GetCurrentServerInteractor): MessagesRepository {
         return SharedPreferencesMessagesRepository(preferences, moshi, currentServerInteractor)
@@ -249,15 +264,15 @@ class AppModule {
     fun provideConfiguration(context: Application, client: OkHttpClient): SpannableConfiguration {
         val res = context.resources
         return SpannableConfiguration.builder(context)
-                .asyncDrawableLoader(AsyncDrawableLoader.builder()
-                        .client(client)
-                        .executorService(Executors.newCachedThreadPool())
-                        .resources(res)
-                        .build())
-                .theme(SpannableTheme.builder()
-                        .linkColor(res.getColor(R.color.colorAccent))
-                        .build())
-                .build()
+            .asyncDrawableLoader(AsyncDrawableLoader.builder()
+                .client(client)
+                .executorService(Executors.newCachedThreadPool())
+                .resources(res)
+                .build())
+            .theme(SpannableTheme.builder()
+                .linkColor(res.getColor(R.color.colorAccent))
+                .build())
+            .build()
     }
 
     @Provides
@@ -275,10 +290,11 @@ class AppModule {
     @Provides
     @Singleton
     fun provideAccountsRepository(preferences: SharedPreferences, moshi: Moshi): AccountsRepository =
-            SharedPreferencesAccountsRepository(preferences, moshi)
+        SharedPreferencesAccountsRepository(preferences, moshi)
 
     @Provides
-    fun provideNotificationManager(context: Context): NotificationManager = context.systemService()
+    fun provideNotificationManager(context: Application) =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     @Provides
     @Singleton
@@ -287,12 +303,12 @@ class AppModule {
     @Provides
     @Singleton
     fun providePushManager(
-            context: Context,
-            groupedPushes: GroupedPush,
-            manager: NotificationManager,
-            moshi: Moshi,
-            getAccountInteractor: GetAccountInteractor,
-            getSettingsInteractor: GetSettingsInteractor): PushManager {
+        context: Application,
+        groupedPushes: GroupedPush,
+        manager: NotificationManager,
+        moshi: Moshi,
+        getAccountInteractor: GetAccountInteractor,
+        getSettingsInteractor: GetSettingsInteractor): PushManager {
         return PushManager(groupedPushes, manager, moshi, getAccountInteractor, getSettingsInteractor, context)
     }
 
@@ -304,9 +320,9 @@ class AppModule {
     @Provides
     fun provideSendMessageJob(context: Application): JobInfo {
         return JobInfo.Builder(MessageService.RETRY_SEND_MESSAGE_ID,
-                ComponentName(context, MessageService::class.java))
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .build()
+            ComponentName(context, MessageService::class.java))
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            .build()
     }
 
     @Provides

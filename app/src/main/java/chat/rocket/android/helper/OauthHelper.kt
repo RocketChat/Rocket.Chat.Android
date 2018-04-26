@@ -54,17 +54,41 @@ object OauthHelper {
     /**
      * Returns the Gitlab Oauth URL.
      *
+     * @param host The Gitlab host.
      * @param clientId The Gitlab client ID.
      * @param serverUrl The server URL.
      * @param state An unguessable random string used to protect against forgery attacks.
      * @return The Gitlab Oauth URL.
      */
-    fun getGitlabOauthUrl(clientId: String, serverUrl: String, state: String): String {
-        return  "https://gitlab.com/oauth/authorize" +
+    fun getGitlabOauthUrl(
+        host: String? = "https://gitlab.com",
+        clientId: String,
+        serverUrl: String,
+        state: String
+    ): String {
+        return host +
+                "/oauth/authorize" +
                 "?client_id=$clientId" +
                 "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/gitlab?close" +
                 "&state=$state" +
                 "&response_type=code" +
                 "&scope=read_user"
+    }
+
+    /**
+     * Returns the Facebook Oauth URL.
+     *
+     * @param clientId The Facebook client ID.
+     * @param serverUrl The server URL.
+     * @param state An unguessable random string used to protect against forgery attacks.
+     * @return The Facebook Oauth URL.
+     */
+    fun getFacebookOauthUrl(clientId: String, serverUrl: String, state: String): String {
+        return  "https://facebook.com/v2.9/dialog/oauth" +
+                "?client_id=$clientId" +
+                "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/facebook?close" +
+                "&state=$state" +
+                "&response_type=code" +
+                "&scope=email"
     }
 }

@@ -8,15 +8,17 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.withContext
 import javax.inject.Inject
 
-class RefreshSettingsInteractor @Inject constructor(private val factory: RocketChatClientFactory,
-                                                    private val repository: SettingsRepository) {
+class RefreshSettingsInteractor @Inject constructor(
+    private val factory: RocketChatClientFactory,
+    private val repository: SettingsRepository
+) {
 
     private var settingsFilter = arrayOf(
         LDAP_ENABLE, CAS_ENABLE, CAS_LOGIN_URL,
 
         ACCOUNT_REGISTRATION, ACCOUNT_LOGIN_FORM, ACCOUNT_PASSWORD_RESET, ACCOUNT_CUSTOM_FIELDS,
         ACCOUNT_GOOGLE, ACCOUNT_FACEBOOK, ACCOUNT_GITHUB, ACCOUNT_LINKEDIN, ACCOUNT_METEOR,
-        ACCOUNT_TWITTER, ACCOUNT_WORDPRESS, ACCOUNT_GITLAB,
+        ACCOUNT_TWITTER, ACCOUNT_WORDPRESS, ACCOUNT_GITLAB, ACCOUNT_GITLAB_URL,
 
         SITE_URL, SITE_NAME, FAVICON_512, FAVICON_196, USE_REALNAME, ALLOW_ROOM_NAME_SPECIAL_CHARS,
         FAVORITE_ROOMS, UPLOAD_STORAGE_TYPE, UPLOAD_MAX_FILE_SIZE, UPLOAD_WHITELIST_MIMETYPES,
