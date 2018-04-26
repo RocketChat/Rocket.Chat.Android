@@ -3,6 +3,7 @@ package chat.rocket.android.authentication.login.ui
 import DrawableHelper
 import android.app.Activity
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,7 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
@@ -374,6 +377,27 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun addCustomOauthServiceButton(
+        customOauthUrl: String,
+        state: String,
+        serviceName: String,
+        serviceNameColor: Int,
+        buttonColor: Int
+    ) {
+        ui { activity ->
+            val button = getCustomOauthButton(serviceName, serviceNameColor, buttonColor)
+            social_accounts_container.addView(button)
+
+            button.setOnClickListener {
+                startActivityForResult(
+                    activity.oauthWebViewIntent(customOauthUrl, state),
+                    REQUEST_CODE_FOR_OAUTH
+                )
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
+        }
+    }
+
     override fun setupFabListener() {
         ui {
             button_fab.isVisible = true
@@ -460,7 +484,9 @@ class LoginFragment : Fragment(), LoginView {
     private fun showOauthView() {
         if (isOauthViewEnable) {
             social_accounts_container.isVisible = true
-            button_fab.isVisible = true
+            if (enabledSocialAccounts() > 3) {
+                button_fab.isVisible = true
+            }
         }
     }
 
@@ -469,5 +495,47 @@ class LoginFragment : Fragment(), LoginView {
             social_accounts_container.isVisible = false
             button_fab.isVisible = false
         }
+    }
+
+    private fun enabledSocialAccounts(): Int {
+        return enabledOauthAccountsImageButtons() + enabledServicesAccountsButtons()
+    }
+
+    private fun enabledOauthAccountsImageButtons(): Int {
+        return (0..social_accounts_container.childCount)
+            .mapNotNull { social_accounts_container.getChildAt(it) as? ImageButton }
+            .filter { it.isClickable }
+            .size
+    }
+
+    private fun enabledServicesAccountsButtons(): Int {
+        return (0..social_accounts_container.childCount)
+            .mapNotNull { social_accounts_container.getChildAt(it) as? Button }
+            .size
+    }
+
+    /**
+     * Gets a stylized custom OAuth button.
+     */
+    private fun getCustomOauthButton(
+        buttonText: String,
+        buttonTextColor: Int,
+        buttonBgColor: Int
+    ): Button {
+        val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        val margin = resources.getDimensionPixelSize(R.dimen.screen_edge_left_and_right_margins)
+        params.setMargins(margin, margin, margin, 0)
+
+        val button = Button(context)
+        button.layoutParams = params
+        button.text = buttonText
+        button.setTextColor(buttonTextColor)
+        button.background.setColorFilter(buttonBgColor, PorterDuff.Mode.MULTIPLY)
+
+        return button
     }
 }
