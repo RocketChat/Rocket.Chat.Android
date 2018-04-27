@@ -167,6 +167,7 @@ class AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
 
@@ -269,9 +270,9 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
-    fun provideMessageParser(context: Application, configuration: SpannableConfiguration): MessageParser {
-        return MessageParser(context, configuration)
+    fun provideMessageParser(context: Application, configuration: SpannableConfiguration, serverInteractor: GetCurrentServerInteractor, settingsInteractor: GetSettingsInteractor): MessageParser {
+        val url = serverInteractor.get()!!
+        return MessageParser(context, configuration, settingsInteractor.get(url))
     }
 
     @Provides

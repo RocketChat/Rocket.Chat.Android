@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.fragment_authentication_register_username.
 import javax.inject.Inject
 
 class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
-    @Inject lateinit var presenter: RegisterUsernamePresenter
+    @Inject
+    lateinit var presenter: RegisterUsernamePresenter
     private lateinit var userId: String
     private lateinit var authToken: String
 
@@ -41,7 +42,11 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         authToken = arguments?.getString(AUTH_TOKEN) ?: ""
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_register_username)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_authentication_register_username)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

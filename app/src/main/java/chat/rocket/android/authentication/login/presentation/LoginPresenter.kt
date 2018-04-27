@@ -59,6 +59,7 @@ class LoginPresenter @Inject constructor(
         setupConnectionInfo(currentServer)
         setupLoginView()
         setupUserRegistrationView()
+        setupForgotPasswordView()
         setupCasView()
         setupOauthServicesView()
     }
@@ -107,6 +108,8 @@ class LoginPresenter @Inject constructor(
 
     fun signup() = navigator.toSignUp()
 
+    fun forgotPassword() = navigator.toForgotPassword()
+
     private fun setupLoginView() {
         if (settings.isLoginFormEnabled()) {
             view.showFormView()
@@ -127,8 +130,15 @@ class LoginPresenter @Inject constructor(
 
     private fun setupUserRegistrationView() {
         if (settings.isRegistrationEnabledForNewUsers() && settings.isLoginFormEnabled()) {
-            view.showSignUpView()
             view.setupSignUpView()
+            view.showSignUpView()
+        }
+    }
+
+    private fun setupForgotPasswordView() {
+        if (settings.isPasswordResetEnabled()) {
+            view.setupForgotPasswordView()
+            view.showForgotPasswordView()
         }
     }
 
@@ -203,6 +213,31 @@ class LoginPresenter @Inject constructor(
                             }
                             view.setupGitlabButtonListener(gitlabOauthUrl, state)
                             view.enableLoginByGitlab()
+                            totalSocialAccountsEnabled++
+                        }
+                    }
+
+                    getCustomOauthServices(services).let {
+                        for (service in it) {
+                            val serviceName = getCustomOauthServiceName(service)
+
+                            val customOauthUrl = OauthHelper.getCustomOauthUrl(
+                                getCustomOauthHost(service),
+                                getCustomOauthAuthorizePath(service),
+                                getCustomOauthClientId(service),
+                                currentServer,
+                                serviceName,
+                                state,
+                                getCustomOauthScope(service)
+                            )
+
+                            view.addCustomOauthServiceButton(
+                                customOauthUrl,
+                                state,
+                                serviceName,
+                                getCustomOauthServiceNameColor(service),
+                                getCustomOauthButtonColor(service)
+                            )
                             totalSocialAccountsEnabled++
                         }
                     }
@@ -297,6 +332,38 @@ class LoginPresenter @Inject constructor(
         return listMap.find { map -> map.containsValue(serviceName) }?.let {
             it["clientId"] ?: it["appId"]
         }.toString()
+    }
+
+    private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>>  {
+        return listMap.filter { map -> map["custom"] == true }
+    }
+
+    private fun getCustomOauthHost(service: Map<String, Any>): String {
+        return service["serverURL"].toString()
+    }
+
+    private fun getCustomOauthAuthorizePath(service: Map<String, Any>): String {
+        return service["authorizePath"].toString()
+    }
+
+    private fun getCustomOauthClientId(service: Map<String, Any>): String {
+        return service["clientId"].toString()
+    }
+
+    private fun getCustomOauthServiceName(service: Map<String, Any>): String {
+        return service["service"].toString()
+    }
+
+    private fun getCustomOauthScope(service: Map<String, Any>): String {
+        return service["scope"].toString()
+    }
+
+    private fun getCustomOauthButtonColor(service: Map<String, Any>): Int {
+        return service["buttonColor"].toString().parseColor()
+    }
+
+    private fun getCustomOauthServiceNameColor(service: Map<String, Any>): Int {
+        return service["buttonLabelColor"].toString().parseColor()
     }
 
     private suspend fun saveAccount(username: String) {
