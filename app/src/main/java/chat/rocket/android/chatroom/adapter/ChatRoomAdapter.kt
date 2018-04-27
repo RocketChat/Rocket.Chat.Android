@@ -61,6 +61,10 @@ class ChatRoomAdapter(
                 val view = parent.inflate(R.layout.item_color_attachment)
                 ColorAttachmentViewHolder(view, actionsListener, reactionListener)
             }
+            BaseViewModel.ViewType.GENERIC_FILE_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_file_attachment)
+                GenericFileAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
             }
@@ -102,6 +106,7 @@ class ChatRoomAdapter(
             is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
             is AuthorAttachmentViewHolder -> holder.bind(dataSet[position] as AuthorAttachmentViewModel)
             is ColorAttachmentViewHolder -> holder.bind(dataSet[position] as ColorAttachmentViewModel)
+            is GenericFileAttachmentViewHolder -> holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
         }
     }
 

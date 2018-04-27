@@ -88,6 +88,7 @@
     <string name="msg_preview_video">वीडियो</string>
     <string name="msg_preview_audio">ऑडियो</string>
     <string name="msg_preview_photo">तस्वीरें</string>
+    <string name="msg_preview_file">File</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
     <string name="msg_version">वर्शन %1$s</string>
@@ -105,6 +106,8 @@
     <string name="msg_http_insecure">HTTP का उपयोग करते समय, आप एक असुरक्षित सर्वर से कनेक्ट हो रहे हैं। हम आपको ऐसा करने की सलाह नहीं देते हैं।</string>
     <string name="msg_error_checking_server_version">आपके सर्वर संस्करण की जांच करते समय एक त्रुटि आई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_invalid_server_protocol">चयनित प्रोटोकॉल इस सर्वर द्वारा स्वीकार नहीं किया गया है, HTTPS का उपयोग करने का प्रयास करें</string>
+    <string name="msg_no_chat_title">कोई चैट संदेश नहीं</string>
+    <string name="msg_no_chat_description">यहां अपने संदेश देखने के लिए\nबातचीत शुरू करें।</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
