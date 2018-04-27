@@ -4,6 +4,7 @@
     <string name="title_sign_in_your_server">Faça login no seu servidor</string>
     <string name="title_log_in">Entrar</string>
     <string name="title_register_username">Registre o nome de usuário</string>
+    <string name="title_reset_password">Redefinir senha</string>
     <string name="title_sign_up">Inscreva-se</string>
     <string name="title_authentication">Autenticação</string>
     <string name="title_legal_terms">Termos Legais</string>
@@ -52,6 +53,10 @@
     <string name="msg_avatar_url">URL do avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue através de contas sociais</string>
     <string name="msg_new_user">Novo usuário? %1$s</string>
+    <string name="msg_forgot_password">Esqueceu a senha? %1$s</string>
+    <string name="msg_reset">Redefinir</string>
+    <string name="msg_check_your_email_to_reset_your_password">Email enviado! Verifique sua caixa de entrada para redefinir sua senha.</string>
+    <string name="msg_invalid_email">Por favor informe um e-mail válido</string>
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">ontem</string>
@@ -84,6 +89,7 @@
     <string name="msg_version">Versão %1$s</string>
     <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
+    <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desatualizada. Por favor, entre em contato com o administrador do sistema para continuar.</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.
     </string>
