@@ -48,10 +48,8 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.noties.markwon.SpannableConfiguration
-import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -265,11 +263,6 @@ class AppModule {
     fun provideConfiguration(context: Application, client: OkHttpClient): SpannableConfiguration {
         val res = context.resources
         return SpannableConfiguration.builder(context)
-            .asyncDrawableLoader(AsyncDrawableLoader.builder()
-                .client(client)
-                .executorService(Executors.newCachedThreadPool())
-                .resources(res)
-                .build())
             .theme(SpannableTheme.builder()
                 .linkColor(res.getColor(R.color.colorAccent))
                 .build())
@@ -278,8 +271,9 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMessageParser(context: Application, configuration: SpannableConfiguration): MessageParser {
-        return MessageParser(context, configuration)
+    fun provideMessageParser(context: Application, configuration: SpannableConfiguration, serverInteractor: GetCurrentServerInteractor, settingsInteractor: GetSettingsInteractor): MessageParser {
+        val url = serverInteractor.get()!!
+        return MessageParser(context, configuration, settingsInteractor.get(url))
     }
 
     @Provides

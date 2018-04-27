@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import chat.rocket.android.R
 
+// TODO: Remove. Use KTX instead.
 fun View.setVisible(visible: Boolean) {
     visibility = if (visible) {
         View.VISIBLE

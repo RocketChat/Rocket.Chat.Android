@@ -1,15 +1,12 @@
 package chat.rocket.android.helper
 
 import android.app.Application
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.net.Uri
 import android.support.customtabs.CustomTabsIntent
-import android.provider.Browser
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Spanned
 import android.text.style.ClickableSpan
@@ -17,6 +14,8 @@ import android.text.style.ReplacementSpan
 import android.util.Patterns
 import android.view.View
 import chat.rocket.android.R
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
@@ -29,10 +28,13 @@ import ru.noties.markwon.Markwon
 import ru.noties.markwon.SpannableBuilder
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.renderer.SpannableMarkdownVisitor
-import timber.log.Timber
 import javax.inject.Inject
 
-class MessageParser @Inject constructor(val context: Application, private val configuration: SpannableConfiguration) {
+class MessageParser @Inject constructor(
+    private val context: Application,
+    private val configuration: SpannableConfiguration,
+    private val settings: PublicSettings
+) {
 
     private val parser = Markwon.createParser()
 
@@ -53,7 +55,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
         parentNode.accept(LinkVisitor(builder))
         parentNode.accept(EmojiVisitor(configuration, builder))
         message.mentions?.let {
-            parentNode.accept(MentionVisitor(context, builder, it, selfUsername))
+            parentNode.accept(MentionVisitor(context, builder, it, selfUsername, settings))
         }
 
         return builder.text()
@@ -62,23 +64,31 @@ class MessageParser @Inject constructor(val context: Application, private val co
     // Convert to a lenient markdown consistent with Rocket.Chat web markdown instead of the official specs.
     private fun toLenientMarkdown(text: String): String {
         return text.trim().replace("\\*(.+)\\*".toRegex()) { "**${it.groupValues[1].trim()}**" }
-                .replace("\\~(.+)\\~".toRegex()) { "~~${it.groupValues[1].trim()}~~" }
-                .replace("\\_(.+)\\_".toRegex()) { "_${it.groupValues[1].trim()}_" }
+            .replace("\\~(.+)\\~".toRegex()) { "~~${it.groupValues[1].trim()}~~" }
+            .replace("\\_(.+)\\_".toRegex()) { "_${it.groupValues[1].trim()}_" }
     }
 
-    class MentionVisitor(context: Context,
-                         private val builder: SpannableBuilder,
-                         private val mentions: List<SimpleUser>,
-                         private val currentUser: String?) : AbstractVisitor() {
+    class MentionVisitor(
+        context: Context,
+        private val builder: SpannableBuilder,
+        private val mentions: List<SimpleUser>,
+        private val currentUser: String?,
+        private val settings: PublicSettings
+    ) : AbstractVisitor() {
+
         private val othersTextColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
         private val othersBackgroundColor = ResourcesCompat.getColor(context.resources, android.R.color.transparent, context.theme)
         private val myselfTextColor = ResourcesCompat.getColor(context.resources, R.color.white, context.theme)
         private val myselfBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
         private val mentionPadding = context.resources.getDimensionPixelSize(R.dimen.padding_mention).toFloat()
         private val mentionRadius = context.resources.getDimensionPixelSize(R.dimen.radius_mention).toFloat()
+
         override fun visit(t: Text) {
             val text = t.literal
-            val mentionsList = mentions.map { it.username }.toMutableList()
+            val mentionsList = mentions.map {
+                if (settings.useRealName()) it.name else it.username ?: ""
+            }.toMutableList()
+
             mentionsList.add("all")
             mentionsList.add("here")
 
@@ -90,7 +100,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                         val textColor = if (mentionMe) myselfTextColor else othersTextColor
                         val backgroundColor = if (mentionMe) myselfBackgroundColor else othersBackgroundColor
                         val usernameSpan = MentionSpan(backgroundColor, textColor, mentionRadius, mentionPadding,
-                                mentionMe)
+                            mentionMe)
                         // Add 1 to end offset to include the @.
                         val end = offset + it.length + 1
                         builder.setSpan(usernameSpan, offset, end, 0)
@@ -101,8 +111,11 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class EmojiVisitor(configuration: SpannableConfiguration, private val builder: SpannableBuilder)
-        : SpannableMarkdownVisitor(configuration, builder) {
+    class EmojiVisitor(
+        configuration: SpannableConfiguration,
+        private val builder: SpannableBuilder
+    ) : SpannableMarkdownVisitor(configuration, builder) {
+
         override fun visit(document: Document) {
             val spannable = EmojiParser.parse(builder.text())
             if (spannable is Spanned) {
@@ -127,7 +140,7 @@ class MessageParser @Inject constructor(val context: Application, private val co
                 if (!link.startsWith("@") && link !in consumed) {
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
-                            with (view) {
+                            with(view) {
                                 val tabsbuilder = CustomTabsIntent.Builder()
                                 tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
                                 val customTabsIntent = tabsbuilder.build()
@@ -150,11 +163,14 @@ class MessageParser @Inject constructor(val context: Application, private val co
         }
     }
 
-    class MentionSpan(private val backgroundColor: Int,
-                      private val textColor: Int,
-                      private val radius: Float,
-                      padding: Float,
-                      referSelf: Boolean) : ReplacementSpan() {
+    class MentionSpan(
+        private val backgroundColor: Int,
+        private val textColor: Int,
+        private val radius: Float,
+        padding: Float,
+        referSelf: Boolean
+    ) : ReplacementSpan() {
+
         private val padding: Float = if (referSelf) padding else 0F
 
         override fun getSize(paint: Paint,
