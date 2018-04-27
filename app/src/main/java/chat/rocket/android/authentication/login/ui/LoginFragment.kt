@@ -17,6 +17,7 @@ import android.widget.ScrollView
 import androidx.core.view.postDelayed
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.KeyboardHelper
@@ -27,6 +28,7 @@ import chat.rocket.android.webview.cas.ui.casWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
+import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
@@ -41,14 +43,22 @@ class LoginFragment : Fragment(), LoginView {
         areLoginOptionsNeeded()
     }
     private var isGlobalLayoutListenerSetUp = false
+    private var deepLinkInfo: LoginDeepLinkInfo? = null
 
     companion object {
-        fun newInstance() = LoginFragment()
+        private const val DEEP_LINK_INFO = "DeepLinkInfo"
+
+        fun newInstance(deepLinkInfo: LoginDeepLinkInfo? = null) = LoginFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(DEEP_LINK_INFO, deepLinkInfo)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -61,7 +71,11 @@ class LoginFragment : Fragment(), LoginView {
             tintEditTextDrawableStart()
         }
 
-        presenter.setupView()
+        deepLinkInfo?.let {
+            presenter.authenticateWithDeepLink(it)
+        }.ifNull {
+            presenter.setupView()
+        }
     }
 
     override fun onDestroyView() {
@@ -247,6 +261,15 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun setupFacebookButtonListener(facebookOauthUrl: String, state: String) {
+        ui { activity ->
+            button_facebook.setOnClickListener {
+                startActivityForResult(activity.oauthWebViewIntent(facebookOauthUrl, state), REQUEST_CODE_FOR_OAUTH)
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
+        }
+    }
+
     override fun enableLoginByGithub() {
         ui {
             button_github.isClickable = true
@@ -353,27 +376,6 @@ class LoginFragment : Fragment(), LoginView {
             vibrateSmartPhone()
             text_password.shake()
             text_password.requestFocus()
-        }
-    }
-
-    override fun alertNotRecommendedVersion() {
-        ui {
-            AlertDialog.Builder(it)
-                    .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
-                    .setPositiveButton(R.string.msg_ok, null)
-                    .create()
-                    .show()
-        }
-    }
-
-    override fun blockAndAlertNotRequiredVersion() {
-        ui {
-            AlertDialog.Builder(it)
-                    .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
-                    .setOnDismissListener { activity?.onBackPressed() }
-                    .setPositiveButton(R.string.msg_ok, null)
-                    .create()
-                    .show()
         }
     }
 

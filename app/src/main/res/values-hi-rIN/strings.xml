@@ -33,9 +33,6 @@
     <string name="action_away">दूर</string>
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
-    <string name="action_skip">अभी नहींं</string>
-    <string name="action_next">आगे</string>
-    <string name="action_done">हो गया</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -190,12 +187,4 @@
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
     <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
-
-    <!--OnBoarding-->
-    <string name="onBoarding_title1">Rocket.Chat में आपका स्वागत है</string>
-    <string name="onBoarding_description1">Rocket.Chat अग्रणी मुफ्त ओपन सोर्स\nचैट एप्लीकेशन है।</string>
-    <string name="onBoarding_title2">चैनल्स</string>
-    <string name="onBoarding_description2">प्रोजेक्ट्स पर अपने साथियों के साथ बात करने\nका सही तरीका।</string>
-    <string name="onBoarding_title3">असीमित चैट</string>
-    <string name="onBoarding_description3">अपनी टीम के साथ असीमित चैट का आनंद लें।</string>
 </resources>

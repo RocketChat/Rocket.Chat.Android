@@ -28,7 +28,7 @@ class TwoFAFragment : Fragment(), TwoFAView {
         private const val PASSWORD = "password"
 
         fun newInstance(username: String, password: String) = TwoFAFragment().apply {
-            arguments = Bundle(1).apply {
+            arguments = Bundle(2).apply {
                 putString(USERNAME, username)
                 putString(PASSWORD, password)
             }

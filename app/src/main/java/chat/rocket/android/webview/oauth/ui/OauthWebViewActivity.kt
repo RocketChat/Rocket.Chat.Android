@@ -30,7 +30,7 @@ private const val JSON_CREDENTIAL_SECRET = "credentialSecret"
 const val INTENT_OAUTH_CREDENTIAL_TOKEN = "credential_token"
 const val INTENT_OAUTH_CREDENTIAL_SECRET = "credential_secret"
 
-// Shows a WebView to the user authenticate with your Gitlab credentials.
+// Shows a WebView to the user authenticate with its OAuth credential.
 class OauthWebViewActivity : AppCompatActivity() {
     private lateinit var webPageUrl: String
     private lateinit var state: String

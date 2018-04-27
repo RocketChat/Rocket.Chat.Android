@@ -8,9 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.authentication.server.ui.ServerFragment
-import chat.rocket.android.onboarding.ui.OnboardingActivity
-import chat.rocket.android.onboarding.utils.Utils
 import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.util.extensions.launchUI
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -24,7 +23,6 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: AuthenticationPresenter
     val job = Job()
-    val PREF_FIRST_TIME_USER = "first_time_user"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -32,20 +30,11 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
 
-        var isFirstTimeUser = Utils().readSharedSetting(this,PREF_FIRST_TIME_USER, "true")!!.toBoolean()
-
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
             presenter.loadCredentials(newServer) { authenticated ->
                 if (!authenticated) {
                     showServerInput(savedInstanceState)
-                    if (isFirstTimeUser)
-                    {
-                        startActivity(Intent(this@AuthenticationActivity,OnboardingActivity::class.java))
-                    }
-                }
-                else{
-                    isFirstTimeUser = false
                 }
             }
         }

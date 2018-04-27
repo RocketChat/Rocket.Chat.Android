@@ -3,43 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="2dp"
     android:background="@color/suggestion_background_color">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/image_avatar_container"
-        android:layout_toRightOf="@id/image_avatar_container"
-        android:background="@color/suggestion_background_color">
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="@tools:sample/full_names" />
 
-        <TextView
-            android:id="@+id/text_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            tools:text="@tools:sample/full_names" />
-
-        <TextView
-            android:id="@+id/text_fullname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/text_name"
-            android:layout_toRightOf="@+id/text_name"
-            android:maxLines="1"
-            android:paddingLeft="8dp"
-            android:paddingStart="8dp"
-            android:textColor="@color/gray_material"
-            android:textSize="16sp"
-            tools:text="@tools:sample/full_names" />
-
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/text_fullname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/text_name"
+        android:maxLines="1"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/gray_material"
+        android:textSize="16sp"
+        tools:text="@tools:sample/full_names" />
 
 </RelativeLayout>

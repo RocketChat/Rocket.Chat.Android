@@ -85,14 +85,20 @@
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
     <string name="msg_no_messages_yet">No messages yet</string>
-    <string name="msg_version">Version</string>
-    <string name="msg_build">Build</string>
+    <string name="msg_version">Version %1$s</string>
+    <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
     <string name="msg_ver_not_recommended">
         Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
     <string name="msg_ver_not_minimum">
         Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
     </string>
+    <string name="msg_proceed">PROCEED</string>
+    <string name="msg_cancel">CANCEL</string>
+    <string name="msg_warning">WARNING</string>
+    <string name="msg_http_insecure">When using HTTP, you\'re connecting to an insecure server. We don\'t recommend you doing that.</string>
+    <string name="msg_error_checking_server_version">An error has occurred while checking your server version, please try again</string>
+    <string name="msg_invalid_server_protocol">The selected protocol is not accepted by this server, try using HTTPS</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -134,12 +140,12 @@
     <string name="max_file_size_exceeded">File size %1$d bytes exceeded max upload size of %2$d bytes</string>
 
     <!-- Socket status -->
-    <string name="status_connected">connected</string>
-    <string name="status_disconnected">disconnected</string>
-    <string name="status_connecting">connecting</string>
-    <string name="status_authenticating">authenticating</string>
-    <string name="status_disconnecting">disconnecting</string>
-    <string name="status_waiting">connecting in %d seconds</string>
+    <string name="status_connected">Connected</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_connecting">Connecting</string>
+    <string name="status_authenticating">Authenticating</string>
+    <string name="status_disconnecting">Disconnecting</string>
+    <string name="status_waiting">Connecting in %d seconds</string>
 
     <!--Suggestions-->
     <string name="suggest_all_description">Notify all in this room</string>

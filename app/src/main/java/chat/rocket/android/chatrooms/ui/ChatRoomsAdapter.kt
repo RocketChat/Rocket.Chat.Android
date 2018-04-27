@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.infrastructure.LocalRepository
@@ -49,6 +50,7 @@ class ChatRoomsAdapter(private val context: Context,
         fun bind(chatRoom: ChatRoom) = with(itemView) {
             bindAvatar(chatRoom, image_avatar)
             bindName(chatRoom, text_chat_name)
+            bindIcon(chatRoom, image_chat_icon)
             bindLastMessageDateTime(chatRoom, text_last_message_date_time)
             bindLastMessage(chatRoom, text_last_message)
             bindUnreadMessages(chatRoom, text_total_unread_messages)
@@ -80,32 +82,37 @@ class ChatRoomsAdapter(private val context: Context,
             }
         }
 
-        private fun bindName(chatRoom: ChatRoom, textView: TextView) {
-            textView.textContent = chatRoom.name
-
+        private fun bindIcon(chatRoom: ChatRoom, imageView: ImageView) {
             val drawable = when (chatRoom.type) {
-                is RoomType.Channel -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
-                }
-                is RoomType.PrivateGroup -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
-                }
-                is RoomType.DirectMessage -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
-                }
+                is RoomType.Channel -> DrawableHelper.getDrawableFromId(
+                    R.drawable.ic_hashtag_12dp,
+                    context
+                )
+                is RoomType.PrivateGroup -> DrawableHelper.getDrawableFromId(
+                    R.drawable.ic_lock_12_dp,
+                    context
+                )
+                is RoomType.DirectMessage -> DrawableHelper.getUserStatusDrawable(
+                    chatRoom.status,
+                    context
+                )
                 else -> null
             }
-
             drawable?.let {
-                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
-                val mutableDrawable = wrappedDrawable.mutate()
-                val color = when (chatRoom.alert || chatRoom.unread > 0) {
-                    true -> R.color.colorPrimaryText
-                    false -> R.color.colorSecondaryText
+                val mutateDrawable = DrawableHelper.wrapDrawable(it).mutate()
+                if (chatRoom.type !is RoomType.DirectMessage) {
+                    val color = when (chatRoom.alert || chatRoom.unread > 0) {
+                        true -> R.color.colorPrimaryText
+                        false -> R.color.colorSecondaryText
+                    }
+                    DrawableHelper.tintDrawable(mutateDrawable, context, color)
                 }
-                DrawableHelper.tintDrawable(mutableDrawable, context, color)
-                DrawableHelper.compoundDrawable(textView, mutableDrawable)
+                imageView.setImageDrawable(mutateDrawable)
             }
+        }
+
+        private fun bindName(chatRoom: ChatRoom, textView: TextView) {
+            textView.textContent = chatRoom.name
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {

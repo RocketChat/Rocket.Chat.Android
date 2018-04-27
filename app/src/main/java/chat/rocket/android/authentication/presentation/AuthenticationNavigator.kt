@@ -2,6 +2,7 @@ package chat.rocket.android.authentication.presentation
 
 import android.content.Intent
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.ui.LoginFragment
 import chat.rocket.android.authentication.registerusername.ui.RegisterUsernameFragment
 import chat.rocket.android.authentication.signup.ui.SignupFragment
@@ -18,6 +19,12 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     fun toLogin() {
         activity.addFragmentBackStack("LoginFragment", R.id.fragment_container) {
             LoginFragment.newInstance()
+        }
+    }
+
+    fun toLogin(deepLinkInfo: LoginDeepLinkInfo) {
+        activity.addFragmentBackStack("LoginFragment", R.id.fragment_container) {
+            LoginFragment.newInstance(deepLinkInfo)
         }
     }
 
