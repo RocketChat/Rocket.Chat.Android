@@ -108,6 +108,8 @@
     <string name="msg_http_insecure">HTTP का उपयोग करते समय, आप एक असुरक्षित सर्वर से कनेक्ट हो रहे हैं। हम आपको ऐसा करने की सलाह नहीं देते हैं।</string>
     <string name="msg_error_checking_server_version">आपके सर्वर संस्करण की जांच करते समय एक त्रुटि आई है, कृपया पुनः प्रयास करें</string>
     <string name="msg_invalid_server_protocol">चयनित प्रोटोकॉल इस सर्वर द्वारा स्वीकार नहीं किया गया है, HTTPS का उपयोग करने का प्रयास करें</string>
+    <string name="msg_image_saved_successfully">छवि गैलरी में सहेजा गया है</string>
+    <string name="msg_image_saved_failed">छवि को सहेजने में विफल</string>
     <string name="msg_no_chat_title">कोई चैट संदेश नहीं</string>
     <string name="msg_no_chat_description">यहां अपने संदेश देखने के लिए\nबातचीत शुरू करें।</string>
 

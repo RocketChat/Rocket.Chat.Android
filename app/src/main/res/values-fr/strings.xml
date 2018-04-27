@@ -106,6 +106,8 @@
     <string name="msg_http_insecure">Lorsque vous utilisez HTTP, vous vous connectez à un serveur non sécurisé. Nous ne vous recommandons pas de le faire.</string>
     <string name="msg_error_checking_server_version">Une erreur est survenue lors de la vérification de la version de votre serveur, veuillez réessayer</string>
     <string name="msg_invalid_server_protocol">Le protocole sélectionné n\'est pas accepté par ce serveur, essayez d\'utiliser HTTPS</string>
+    <string name="msg_image_saved_successfully">L\'image a été enregistrée dans la galerie</string>
+    <string name="msg_image_saved_failed">Échec de l\'enregistrement de l\'image</string>
     <string name="msg_no_chat_title">Aucun message de discussion</string>
     <string name="msg_no_chat_description">Commencez à converser pour voir\nvos messages ici.</string>
 

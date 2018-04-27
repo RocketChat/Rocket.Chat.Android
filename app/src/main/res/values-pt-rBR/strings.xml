@@ -104,7 +104,9 @@
     <string name="msg_http_insecure">Usando HTTP, você estará conectando a um servidor não seguro, não recomendamos sua utilização.</string>
     <string name="msg_error_checking_server_version">Ocorreu um erro verificando a versão do servidor, por favor tente novamente</string>
     <string name="msg_invalid_server_protocol">O protocolo selecionado não é suportado pelo servidor, por favor utilize HTTPS e tente novamente</string>
-
+    <string name="msg_image_saved_successfully">Imagem salva na galeria</string>
+    <string name="msg_image_saved_failed">Falha ao salvar a imagem</string>
+    
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
     <string name="message_user_added_by">Usuário %1$s adicionado por %2$s</string>
