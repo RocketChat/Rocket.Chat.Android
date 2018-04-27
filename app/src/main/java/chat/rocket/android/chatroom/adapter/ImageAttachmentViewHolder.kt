@@ -33,7 +33,6 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.message_attachment.view.*
-import ru.whalemare.sheetmenu.extension.marginBottom
 import timber.log.Timber
 import java.io.File
 
@@ -63,17 +62,19 @@ class ImageAttachmentViewHolder(itemView: View,
             file_name.text = data.attachmentTitle
             image_attachment.setOnClickListener { view ->
                 // TODO - implement a proper image viewer with a proper Transition
+                // TODO - We should definitely write our own ImageViewer
                 var imageViewer: ImageViewer? = null
                 val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(data.attachmentUrl))
                     .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
                     .build()
+
                 cacheKey = DefaultCacheKeyFactory.getInstance()
                     .getEncodedCacheKey(request, null)
                 val pad = context.resources
                     .getDimensionPixelSize(R.dimen.viewer_toolbar_padding)
                 val lparams = AppBarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT)
-                val toolbar = Toolbar(itemView.context, null, R.style.Theme_AppCompat_Light_NoActionBar).also {
+                val toolbar = Toolbar(context).also {
                     it.inflateMenu(R.menu.image_actions)
                     it.overflowIcon?.setTint(Color.WHITE)
                     it.setOnMenuItemClickListener {
@@ -85,12 +86,12 @@ class ImageAttachmentViewHolder(itemView: View,
 
                     val titleSize = context.resources
                         .getDimensionPixelSize(R.dimen.viewer_toolbar_title)
-
                     val titleTextView = TextView(context).also {
                         it.text = data.attachmentTitle
                         it.setTextColor(Color.WHITE)
                         it.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize.toFloat())
                         it.ellipsize = TextUtils.TruncateAt.END
+                        it.setSingleLine()
                         it.typeface = Typeface.DEFAULT_BOLD
                         it.setPadding(pad)
                     }
@@ -98,14 +99,13 @@ class ImageAttachmentViewHolder(itemView: View,
                     val backArrowView = ImageView(context).also {
                         it.setImageResource(R.drawable.ic_arrow_back_white_24dp)
                         it.setOnClickListener { imageViewer?.onDismiss() }
-                        it.setPadding(pad)
+                        it.setPadding(0, pad ,pad, pad)
                     }
 
                     val layoutParams = AppBarLayout.LayoutParams(
                         AppBarLayout.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                        AppBarLayout.LayoutParams.WRAP_CONTENT
                     )
-                    layoutParams.gravity = Gravity.TOP
 
                     it.addView(backArrowView, layoutParams)
                     it.addView(titleTextView, layoutParams)
