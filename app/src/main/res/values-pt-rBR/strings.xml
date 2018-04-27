@@ -79,6 +79,7 @@
     <string name="msg_preview_video">Vídeo</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
+    <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
     <string name="msg_version">Versão %1$s</string>
     <string name="msg_build">Build %1$d</string>
@@ -89,6 +90,8 @@
     <string name="msg_ver_not_minimum">
         Parece que a versão do seu servidor está abaixo da mínima requerida %1$s.\nPor favor, atualize seus servidores antes de continuar!
     </string>
+    <string name="msg_no_chat_title">Nenhuma mensagem de chat</string>
+    <string name="msg_no_chat_description">Comece a conversar para ver suas\nmensagens aqui.</string>
     <string name="msg_proceed">CONTINUAR</string>
     <string name="msg_cancel">CANCELAR</string>
     <string name="msg_warning">AVISO</string>

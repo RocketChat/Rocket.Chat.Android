@@ -78,6 +78,7 @@
     <string name="msg_preview_video">Vidéo</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
+    <string name="msg_preview_file">File</string>
     <string name="msg_no_messages_yet">Aucun message pour le moment</string>
     <string name="msg_version">Version %1$s</string>
     <string name="msg_build">Build %1$d</string>
@@ -93,6 +94,8 @@
     <string name="msg_http_insecure">Lorsque vous utilisez HTTP, vous vous connectez à un serveur non sécurisé. Nous ne vous recommandons pas de le faire.</string>
     <string name="msg_error_checking_server_version">Une erreur est survenue lors de la vérification de la version de votre serveur, veuillez réessayer</string>
     <string name="msg_invalid_server_protocol">Le protocole sélectionné n\'est pas accepté par ce serveur, essayez d\'utiliser HTTPS</string>
+    <string name="msg_no_chat_title">Aucun message de discussion</string>
+    <string name="msg_no_chat_description">Commencez à converser pour voir\nvos messages ici.</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>

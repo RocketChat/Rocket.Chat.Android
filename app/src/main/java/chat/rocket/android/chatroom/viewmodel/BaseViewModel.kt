@@ -23,7 +23,8 @@ interface BaseViewModel<out T> {
         AUDIO_ATTACHMENT(5),
         MESSAGE_ATTACHMENT(6),
         AUTHOR_ATTACHMENT(7),
-        COLOR_ATTACHMENT(8)
+        COLOR_ATTACHMENT(8),
+        GENERIC_FILE_ATTACHMENT(9)
     }
 }
 

@@ -31,7 +31,6 @@ import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
-import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -59,10 +58,11 @@ class ChatRoomPresenter @Inject constructor(
     private val mapper: ViewModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor
 ) {
+
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
+    private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
@@ -194,7 +194,7 @@ class ChatRoomPresenter @Inject constructor(
                 }
             } catch (ex: Exception) {
                 Timber.d(ex, "Error uploading file")
-                when(ex) {
+                when (ex) {
                     is RocketChatException -> view.showMessage(ex)
                     else -> view.showGenericErrorMessage()
                 }
@@ -279,7 +279,6 @@ class ChatRoomPresenter @Inject constructor(
                             // TODO - we need to better treat connection problems here, but no let gaps
                             // on the messages list
                             Timber.d(ex, "Error fetching channel history")
-                            ex.printStackTrace()
                         }
                     }
             }
@@ -326,41 +325,35 @@ class ChatRoomPresenter @Inject constructor(
      * Quote or reply a message.
      *
      * @param roomType The current room type.
-     * @param roomName The name of the current room.
      * @param messageId The id of the message to make citation for.
      * @param mentionAuthor true means the citation is a reply otherwise it's a quote.
      */
-    fun citeMessage(roomType: String, roomName: String, messageId: String, mentionAuthor: Boolean) {
+    fun citeMessage(roomType: String, messageId: String, mentionAuthor: Boolean) {
         launchUI(strategy) {
             val message = messagesRepository.getById(messageId)
             val me: Myself? = try {
                 retryIO("me()") { client.me() } //TODO: Cache this and use an interactor
             } catch (ex: Exception) {
-                Timber.d(ex, "Error getting myself info.")
-                ex.printStackTrace()
+                Timber.e(ex)
                 null
             }
-            message?.let { m ->
-                val id = m.id
-                val username = m.sender?.username
-                val user = "@" + if (settings.useRealName()) m.sender?.name
-                    ?: m.sender?.username else m.sender?.username
-                val mention = if (mentionAuthor && me?.username != username) user else ""
-                val type = roomTypeOf(roomType)
-                val room = when (type) {
-                    is RoomType.Channel -> "channel"
-                    is RoomType.DirectMessage -> "direct"
-                    is RoomType.PrivateGroup -> "group"
-                    is RoomType.Livechat -> "livechat"
-                    is RoomType.Custom -> "custom" //TODO: put appropriate callback string here.
-                }
+            message?.let { msg ->
+                val id = msg.id
+                val username = msg.sender?.username ?: ""
+                val mention = if (mentionAuthor && me?.username != username) "@$username" else ""
+                val room = if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomType
                 view.showReplyingAction(
-                    username = user,
-                    replyMarkdown = "[ ]($currentServer/$room/$roomName?msg=$id) $mention ",
+                    username = getDisplayName(msg.sender),
+                    replyMarkdown = "[ ]($currentServer/$roomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(message).last().preview?.message ?: ""
                 )
             }
         }
+    }
+
+    private fun getDisplayName(user: SimpleUser?): String {
+        val username = user?.username ?: ""
+        return if (settings.useRealName()) user?.name ?: "@$username" else "@$username"
     }
 
     /**
