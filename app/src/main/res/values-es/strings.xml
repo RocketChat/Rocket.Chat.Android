@@ -78,6 +78,7 @@
     <string name="msg_preview_video">Vídeo</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
+    <string name="msg_preview_file">Fichero</string>
     <string name="msg_no_messages_yet">Aún no hay mensajes</string>
     <string name="msg_version">Versión %1$s</string>
     <string name="msg_build">Build %1$d</string>
