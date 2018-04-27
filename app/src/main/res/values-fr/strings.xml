@@ -93,6 +93,8 @@
     <string name="msg_version">Version %1$s</string>
     <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
+    // TODO: Add proper translation.
+    <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
     <string name="msg_ver_not_recommended">
         On dirait que la version de votre serveur est en dessous de la version recommandée %1$s.\nVous pouvez toujours vous connecter mais vous pouvez rencontrer des comportements inattendus.</string>
     <string name="msg_ver_not_minimum">

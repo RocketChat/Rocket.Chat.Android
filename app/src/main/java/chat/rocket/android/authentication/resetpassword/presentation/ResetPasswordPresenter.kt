@@ -8,6 +8,7 @@ import chat.rocket.android.util.extensions.isEmail
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
+import chat.rocket.common.RocketChatInvalidResponseException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.forgotPassword
@@ -36,10 +37,14 @@ class ResetPasswordPresenter @Inject constructor(
                     navigator.toPreviousView()
                     view.emailSent()
                 } catch (exception: RocketChatException) {
-                    exception.message?.let {
-                        view.showMessage(it)
-                    }.ifNull {
-                        view.showGenericErrorMessage()
+                    if (exception is RocketChatInvalidResponseException) {
+                        view.updateYourServerVersion()
+                    } else {
+                        exception.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
                     }
                 } finally {
                     view.hideLoading()

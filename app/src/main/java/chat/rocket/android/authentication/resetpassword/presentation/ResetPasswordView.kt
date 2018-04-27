@@ -19,4 +19,9 @@ interface ResetPasswordView : LoadingView, MessageView {
      * Shows a successful email sent message.
      */
     fun emailSent()
+
+    /**
+     * Shows a message to update the server version in order to use an app feature.
+     */
+    fun updateYourServerVersion()
 }

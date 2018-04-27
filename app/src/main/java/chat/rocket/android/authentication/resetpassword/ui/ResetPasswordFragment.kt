@@ -67,6 +67,10 @@ class ResetPasswordFragment : Fragment(), ResetPasswordView {
         showToast(R.string.msg_check_your_email_to_reset_your_password, Toast.LENGTH_LONG)
     }
 
+    override fun updateYourServerVersion() {
+        showMessage(R.string.msg_update_app_version_in_order_to_continue)
+    }
+
     override fun showLoading() {
         ui {
             disableUserInput()
