@@ -304,7 +304,7 @@ class ViewModelMapper @Inject constructor(
     private fun getContent(message: Message): CharSequence {
         return when (message.isSystemMessage()) {
             true -> getSystemMessage(message)
-            false -> parser.renderMarkdown(message, currentUsername)
+            false -> parser.render(message, currentUsername)
         }
     }
 
