@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
+import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
 import chat.rocket.android.authentication.presentation.AuthenticationPresenter
 import chat.rocket.android.authentication.server.ui.ServerFragment
+import chat.rocket.android.onboarding.ui.OnboardingActivity
 import chat.rocket.android.util.extensions.addFragment
-import chat.rocket.android.util.extensions.launchUI
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -23,6 +25,7 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: AuthenticationPresenter
     val job = Job()
+    val PREF_FIRST_TIME_USER = "first_time_user"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -30,11 +33,14 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
 
+        startActivity(Intent(this,OnboardingActivity::class.java))
+        val deepLinkInfo = intent.getLoginDeepLinkInfo()
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
-            presenter.loadCredentials(newServer) { authenticated ->
+            // if we got authenticateWithDeepLink information, pass true to newServer also
+            presenter.loadCredentials(newServer || deepLinkInfo != null) { authenticated ->
                 if (!authenticated) {
-                    showServerInput(savedInstanceState)
+                    showServerInput(savedInstanceState, deepLinkInfo)
                 }
             }
         }
@@ -49,9 +55,9 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return fragmentDispatchingAndroidInjector
     }
 
-    fun showServerInput(savedInstanceState: Bundle?) {
+    fun showServerInput(savedInstanceState: Bundle?, deepLinkInfo: LoginDeepLinkInfo?) {
         addFragment("ServerFragment", R.id.fragment_container) {
-            ServerFragment.newInstance()
+            ServerFragment.newInstance(deepLinkInfo)
         }
     }
 }
