@@ -5,6 +5,7 @@
     <string name="title_sign_in_your_server">Sign in your server</string>
     <string name="title_log_in">Log in</string>
     <string name="title_register_username">Register username</string>
+    <string name="title_reset_password">Reset password</string>
     <string name="title_sign_up">Sign up</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
@@ -53,6 +54,10 @@
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
+    <string name="msg_forgot_password">Forgot password? %1$s</string>
+    <string name="msg_reset">Reset</string>
+    <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
+    <string name="msg_invalid_email">Please type a valid e-mail</string>
     <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
     <string name="msg_2fa_code">2FA Code</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>

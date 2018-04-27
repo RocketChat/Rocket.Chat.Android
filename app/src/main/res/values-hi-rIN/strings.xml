@@ -4,6 +4,8 @@
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
     <string name="title_log_in">लॉग इन करें</string>
     <string name="title_register_username">रजिस्टर उपयोगकर्ता नाम</string>
+    // TODO: Add proper translation.
+    <string name="title_reset_password">Reset password</string>
     <string name="title_sign_up">साइन अप करें</string>
     <string name="title_authentication">प्रमाणीकरण</string>
     <string name="title_legal_terms">कानूनी शर्तें</string>
@@ -52,6 +54,14 @@
     <string name="msg_avatar_url">अवतार यूआरएल</string>
     <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
     <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
+    // TODO: Add proper translation.
+    <string name="msg_forgot_password">Forgot password? %1$s</string>
+    // TODO: Add proper translation.
+    <string name="msg_reset">Reset</string>
+    // TODO: Add proper translation.
+    <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
+    // TODO: Add proper translation.
+    <string name="msg_invalid_email">Please type a valid e-mail</string>
     <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
     <string name="msg_2fa_code">कोड 2FA</string>
     <string name="msg_yesterday">कल</string>

@@ -59,6 +59,7 @@ class LoginPresenter @Inject constructor(
         setupConnectionInfo(currentServer)
         setupLoginView()
         setupUserRegistrationView()
+        setupForgotPasswordView()
         setupCasView()
         setupOauthServicesView()
     }
@@ -107,6 +108,8 @@ class LoginPresenter @Inject constructor(
 
     fun signup() = navigator.toSignUp()
 
+    fun forgotPassword() = navigator.toForgotPassword()
+
     private fun setupLoginView() {
         if (settings.isLoginFormEnabled()) {
             view.showFormView()
@@ -127,8 +130,15 @@ class LoginPresenter @Inject constructor(
 
     private fun setupUserRegistrationView() {
         if (settings.isRegistrationEnabledForNewUsers() && settings.isLoginFormEnabled()) {
-            view.showSignUpView()
             view.setupSignUpView()
+            view.showSignUpView()
+        }
+    }
+
+    private fun setupForgotPasswordView() {
+        if (settings.isPasswordResetEnabled()) {
+            view.setupForgotPasswordView()
+            view.showForgotPasswordView()
         }
     }
 
