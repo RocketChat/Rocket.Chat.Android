@@ -326,11 +326,10 @@ class ChatRoomPresenter @Inject constructor(
      * Quote or reply a message.
      *
      * @param roomType The current room type.
-     * @param roomName The name of the current room.
      * @param messageId The id of the message to make citation for.
      * @param mentionAuthor true means the citation is a reply otherwise it's a quote.
      */
-    fun citeMessage(roomType: String, roomName: String, messageId: String, mentionAuthor: Boolean) {
+    fun citeMessage(roomType: String, messageId: String, mentionAuthor: Boolean) {
         launchUI(strategy) {
             val message = messagesRepository.getById(messageId)
             val me: Myself? = try {
@@ -355,7 +354,7 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun getDisplayName(user: SimpleUser?): String {
         val username = user?.username ?: ""
-        return if (settings.useRealName()) user?.name ?: username else username
+        return if (settings.useRealName()) user?.name ?: "@$username" else "@$username"
     }
 
     /**
