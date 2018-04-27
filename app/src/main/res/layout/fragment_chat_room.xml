@@ -38,52 +38,6 @@
 
     </FrameLayout>
 
-    <chat.rocket.android.widget.autocompletion.ui.SuggestionsView
-        android:id="@+id/suggestions_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
-        android:background="@color/suggestion_background_color" />
-
-    <include
-        android:id="@+id/layout_message_composer"
-        layout="@layout/message_composer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <View
-        android:id="@+id/view_dim"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
-        android:background="@color/colorDim"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/layout_message_attachment_options"
-        layout="@layout/message_attachment_options"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
-        android:layout_margin="5dp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/connection_status_text"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:alpha="0"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        tools:alpha="1"
-        tools:text="connected"
-        tools:visibility="visible" />
-
     <ImageView
         android:id="@+id/image_chat_icon"
         android:layout_width="100dp"
@@ -122,12 +76,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_chat_title"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
         android:layout_marginTop="16dp"
         android:textAlignment="center"
         android:textSize="16sp"
         android:textColor="@color/colorSecondaryTextLight"
         android:visibility="gone"
         tools:visibility="visible"/>
+
+    <chat.rocket.android.widget.autocompletion.ui.SuggestionsView
+        android:id="@+id/suggestions_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
+        android:background="@color/suggestion_background_color" />
+
+    <include
+        android:id="@+id/layout_message_composer"
+        layout="@layout/message_composer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <View
+        android:id="@+id/view_dim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
+        android:background="@color/colorDim"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/layout_message_attachment_options"
+        layout="@layout/message_attachment_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
+        android:layout_margin="5dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/connection_status_text"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:alpha="0"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        tools:alpha="1"
+        tools:text="connected"
+        tools:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>

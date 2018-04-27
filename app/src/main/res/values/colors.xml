@@ -46,4 +46,7 @@
     <color name="suggestion_background_color">@android:color/white</color>
 
     <color name="icon_grey">#AFADAF</color>
+
+    <!-- Default Background Color -->
+    <color name="default_background">#FAFAFA</color>
 </resources>
