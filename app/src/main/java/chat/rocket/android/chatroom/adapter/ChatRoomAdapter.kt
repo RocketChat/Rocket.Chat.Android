@@ -21,6 +21,11 @@ class ChatRoomAdapter(
         private val pinnedMessagesPresenter: PinnedMessagesPresenter?,
         private val enableActions: Boolean = true,
         private val reactionListener: EmojiReactionListener? = null
+        private val roomType: String,
+        private val roomName: String,
+        private val presenter: ChatRoomPresenter?,
+        private val enableActions: Boolean = true,
+        private val reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private val dataSet = ArrayList<BaseViewModel<*>>()
@@ -192,14 +197,15 @@ class ChatRoomAdapter(
                 }
             }
 
+    private val actionsListener = object : BaseViewHolder.ActionsListener {
         override fun isActionsEnabled(): Boolean = enableActions
 
         override fun onActionSelected(item: MenuItem, message: Message) {
             message.apply {
                 when (item.itemId) {
                     R.id.action_menu_msg_delete -> presenter?.deleteMessage(roomId, id)
-                    R.id.action_menu_msg_quote -> presenter?.citeMessage(roomType, roomName, id, false)
-                    R.id.action_menu_msg_reply -> presenter?.citeMessage(roomType, roomName, id, true)
+                    R.id.action_menu_msg_quote -> presenter?.citeMessage(roomType, id, false)
+                    R.id.action_menu_msg_reply -> presenter?.citeMessage(roomType, id, true)
                     R.id.action_menu_msg_copy -> presenter?.copyMessage(id)
                     R.id.action_menu_msg_edit -> presenter?.editMessage(roomId, id, message.message)
                     R.id.action_menu_msg_pin_unpin -> {
