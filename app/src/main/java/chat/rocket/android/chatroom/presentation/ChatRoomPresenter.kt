@@ -31,7 +31,6 @@ import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
-import chat.rocket.core.model.Value
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -59,10 +58,11 @@ class ChatRoomPresenter @Inject constructor(
     private val mapper: ViewModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor
 ) {
+
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
-    private var settings: Map<String, Value<Any>> = getSettingsInteractor.get(serverInteractor.get()!!)
+    private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
@@ -279,7 +279,6 @@ class ChatRoomPresenter @Inject constructor(
                             // TODO - we need to better treat connection problems here, but no let gaps
                             // on the messages list
                             Timber.d(ex, "Error fetching channel history")
-                            ex.printStackTrace()
                         }
                     }
             }
@@ -341,7 +340,7 @@ class ChatRoomPresenter @Inject constructor(
             message?.let { msg ->
                 val id = msg.id
                 val username = msg.sender?.username ?: ""
-                val mention = if (mentionAuthor && me?.username != username) username else ""
+                val mention = if (mentionAuthor && me?.username != username) "@$username" else ""
                 val room = if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomType
                 view.showReplyingAction(
                     username = getDisplayName(msg.sender),

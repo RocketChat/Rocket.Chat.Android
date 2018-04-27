@@ -91,7 +91,6 @@ ext {
             frescoImageViewer     : "com.github.luciofm:FrescoImageViewer:${versions.frescoImageViewer}",
 
             markwon               : "ru.noties:markwon:${versions.markwon}",
-            markwonImageLoader    : "ru.noties:markwon-image-loader:${versions.markwon}",
 
             sheetMenu             : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
 
