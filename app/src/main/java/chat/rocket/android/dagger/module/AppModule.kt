@@ -14,9 +14,7 @@ import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
-import chat.rocket.android.dagger.qualifier.ForFresco
 import chat.rocket.android.dagger.qualifier.ForMessages
-import chat.rocket.android.helper.FrescoAuthInterceptor
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
@@ -43,7 +41,6 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.experimental.Job
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.noties.markwon.SpannableConfiguration
@@ -119,24 +116,8 @@ class AppModule {
     }
 
     @Provides
-    @ForFresco
     @Singleton
-    fun provideFrescoAuthInterceptor(tokenRepository: TokenRepository, currentServerInteractor: GetCurrentServerInteractor): Interceptor {
-        return FrescoAuthInterceptor(tokenRepository, currentServerInteractor)
-    }
-
-    @Provides
-    @ForFresco
-    @Singleton
-    fun provideFrescoOkHttpClient(okHttpClient: OkHttpClient, @ForFresco authInterceptor: Interceptor): OkHttpClient {
-        return okHttpClient.newBuilder().apply {
-            //addInterceptor(authInterceptor)
-        }.build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideImagePipelineConfig(context: Context, @ForFresco okHttpClient: OkHttpClient): ImagePipelineConfig {
+    fun provideImagePipelineConfig(context: Context, okHttpClient: OkHttpClient): ImagePipelineConfig {
         val listeners = setOf(RequestLoggingListener())
 
         return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
