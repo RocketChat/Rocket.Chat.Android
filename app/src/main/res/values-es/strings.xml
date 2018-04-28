@@ -101,6 +101,7 @@
         Parece que la versión del servidor está por debajo de la versión mínima requerida %1$s.\nActualice su servidor para iniciar sesión!
     </string>
 
+
     <string name="msg_proceed">PROCEDER</string>
     <string name="msg_cancel">CANCELAR</string>
     <string name="msg_warning">ADVERTENCIA</string>
