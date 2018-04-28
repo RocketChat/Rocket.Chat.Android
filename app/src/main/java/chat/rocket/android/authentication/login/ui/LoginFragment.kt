@@ -240,6 +240,27 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun showForgotPasswordView() {
+        ui {
+            text_forgot_your_password.isVisible = true
+        }
+    }
+
+    override fun setupForgotPasswordView() {
+        ui {
+            val reset = getString(R.string.msg_reset)
+            val forgotPassword = String.format(getString(R.string.msg_forgot_password), reset)
+
+            text_forgot_your_password.text = forgotPassword
+
+            val resetListener = object : ClickableSpan() {
+                override fun onClick(view: View) = presenter.forgotPassword()
+            }
+
+            TextHelper.addLink(text_forgot_your_password, arrayOf(reset), arrayOf(resetListener))
+        }
+    }
+
     override fun hideSignUpView() {
         ui {
             text_new_to_rocket_chat.isVisible = false

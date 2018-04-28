@@ -66,6 +66,18 @@ interface LoginView : LoadingView, MessageView {
     fun setupSignUpView()
 
     /**
+     * Shows the forgot password view if enabled by the server settings.
+     *
+     * REMARK: We must set up the forgot password view listener [setupForgotPasswordView].
+     */
+    fun showForgotPasswordView()
+
+    /**
+     * Setups the forgot password view when tapped.
+     */
+    fun setupForgotPasswordView()
+
+    /**
      * Hides the sign up view.
      */
     fun hideSignUpView()

@@ -39,15 +39,23 @@ class MessageParser @Inject constructor(
     private val parser = Markwon.createParser()
 
     /**
-     * Render a markdown text message to Spannable.
+     * Render markdown and other rules on message to rich text with spans.
      *
      * @param message The [Message] object we're interested on rendering.
      * @param selfUsername This user username.
      *
      * @return A Spannable with the parsed markdown.
      */
-    fun renderMarkdown(message: Message, selfUsername: String? = null): CharSequence {
-        val text = message.message
+    fun render(message: Message, selfUsername: String? = null): CharSequence {
+        var text: String = message.message
+        val mentions = mutableListOf<String>()
+        message.mentions?.forEach {
+            val mention = getMention(it)
+            mentions.add(mention)
+            if (it.username != null) {
+                text = text.replace("@${it.username}", mention)
+            }
+        }
         val builder = SpannableBuilder()
         val content = EmojiRepository.shortnameToUnicode(text, true)
         val parentNode = parser.parse(toLenientMarkdown(content))
@@ -55,7 +63,7 @@ class MessageParser @Inject constructor(
         parentNode.accept(LinkVisitor(builder))
         parentNode.accept(EmojiVisitor(configuration, builder))
         message.mentions?.let {
-            parentNode.accept(MentionVisitor(context, builder, it, selfUsername, settings))
+            parentNode.accept(MentionVisitor(context, builder, mentions, selfUsername))
         }
 
         return builder.text()
@@ -68,12 +76,19 @@ class MessageParser @Inject constructor(
             .replace("\\_(.+)\\_".toRegex()) { "_${it.groupValues[1].trim()}_" }
     }
 
+    private fun getMention(user: SimpleUser): String {
+        return if (settings.useRealName()) {
+            user.name ?: "@${user.username}"
+        } else {
+            "@${user.username}"
+        }
+    }
+
     class MentionVisitor(
         context: Context,
         private val builder: SpannableBuilder,
-        private val mentions: List<SimpleUser>,
-        private val currentUser: String?,
-        private val settings: PublicSettings
+        private val mentions: List<String>,
+        private val currentUser: String?
     ) : AbstractVisitor() {
 
         private val othersTextColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
@@ -85,27 +100,23 @@ class MessageParser @Inject constructor(
 
         override fun visit(t: Text) {
             val text = t.literal
-            val mentionsList = mentions.map {
-                if (settings.useRealName()) it.name else it.username ?: ""
-            }.toMutableList()
+            val mentionsList = mentions.toMutableList().also {
+                it.add("@all")
+                it.add("@here")
+            }.toList()
 
-            mentionsList.add("all")
-            mentionsList.add("here")
-
-            mentionsList.toList().forEach {
-                if (it != null) {
-                    val mentionMe = it == currentUser || it == "all" || it == "here"
-                    var offset = text.indexOf("@$it", 0, true)
-                    while (offset > -1) {
-                        val textColor = if (mentionMe) myselfTextColor else othersTextColor
-                        val backgroundColor = if (mentionMe) myselfBackgroundColor else othersBackgroundColor
-                        val usernameSpan = MentionSpan(backgroundColor, textColor, mentionRadius, mentionPadding,
-                            mentionMe)
-                        // Add 1 to end offset to include the @.
-                        val end = offset + it.length + 1
-                        builder.setSpan(usernameSpan, offset, end, 0)
-                        offset = text.indexOf("@$it", end, true)
-                    }
+            mentionsList.forEach {
+                val mentionMe = it == currentUser || it == "@all" || it == "@here"
+                var offset = text.indexOf(it, 0, true)
+                while (offset > -1) {
+                    val textColor = if (mentionMe) myselfTextColor else othersTextColor
+                    val backgroundColor = if (mentionMe) myselfBackgroundColor else othersBackgroundColor
+                    val usernameSpan = MentionSpan(backgroundColor, textColor, mentionRadius, mentionPadding,
+                        mentionMe)
+                    // Add 1 to end offset to include the @.
+                    val end = offset + it.length + 1
+                    builder.setSpan(usernameSpan, offset, end, 0)
+                    offset = text.indexOf("@$it", end, true)
                 }
             }
         }
