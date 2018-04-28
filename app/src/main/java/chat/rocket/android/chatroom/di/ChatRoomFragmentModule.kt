@@ -16,9 +16,6 @@ import kotlinx.coroutines.experimental.Job
 class ChatRoomFragmentModule {
 
     @Provides
-    fun provideChatRoomNavigator(activity: ChatRoomActivity) = ChatRoomNavigator(activity)
-
-    @Provides
     fun chatRoomView(frag: ChatRoomFragment): ChatRoomView {
         return frag
     }

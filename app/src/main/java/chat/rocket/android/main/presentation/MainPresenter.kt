@@ -135,7 +135,7 @@ class MainPresenter @Inject constructor(
         navigator.toServerScreen()
     }
 
-    fun changeStatus(userStatus: UserStatus) {
+    fun changeDefaultStatus(userStatus: UserStatus) {
         launchUI(strategy) {
             try {
                 client.setDefaultStatus(userStatus)
@@ -186,9 +186,9 @@ class MainPresenter @Inject constructor(
 
     private suspend fun subscribeMyselfUpdates() {
         manager.addUserDataChannel(userDataChannel)
-            for (myself in userDataChannel) {
-                updateMyself(myself)
-            }
+        for (myself in userDataChannel) {
+            updateMyself(myself)
+        }
     }
 
     private suspend fun updateMyself(myself: Myself) {

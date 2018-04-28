@@ -4,6 +4,7 @@
     <string name="title_sign_in_your_server">Faça login no seu servidor</string>
     <string name="title_log_in">Entrar</string>
     <string name="title_register_username">Registre o nome de usuário</string>
+    <string name="title_reset_password">Redefinir senha</string>
     <string name="title_sign_up">Inscreva-se</string>
     <string name="title_authentication">Autenticação</string>
     <string name="title_legal_terms">Termos Legais</string>
@@ -18,7 +19,7 @@
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usar este nome de usuário</string>
-    <string name="action_login_or_sign_up">Toque este botão para fazer login ou criar uma conta</string>
+    <string name="action_login_or_sign_up">Toque neste botão para fazer login ou criar uma conta</string>
     <string name="action_terms_of_service">Termos de Serviço</string>
     <string name="action_privacy_policy">Política de Privacidade</string>
     <string name="action_search">Pesquisar</string>
@@ -52,6 +53,10 @@
     <string name="msg_avatar_url">URL do avatar</string>
     <string name="msg_or_continue_using_social_accounts">Ou continue através de contas sociais</string>
     <string name="msg_new_user">Novo usuário? %1$s</string>
+    <string name="msg_forgot_password">Esqueceu a senha? %1$s</string>
+    <string name="msg_reset">Redefinir</string>
+    <string name="msg_check_your_email_to_reset_your_password">Email enviado! Verifique sua caixa de entrada para redefinir sua senha.</string>
+    <string name="msg_invalid_email">Por favor informe um e-mail válido</string>
     <string name="msg_new_user_agreement">Ao proceder você concorda com nossos %1$s e %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">ontem</string>
@@ -59,7 +64,7 @@
     <string name="msg_this_room_is_read_only">Este chat é apenas de leitura</string>
     <string name="msg_invalid_2fa_code">Código 2FA inválido</string>
     <string name="msg_invalid_file">Arquivo inválido</string>
-    <string name="msg_invalid_server_url">URL de servidor inválida</string>
+    <string name="msg_invalid_server_url">URL de servidor inválido</string>
     <string name="msg_content_description_log_in_using_facebook">Fazer login através do Facebook</string>
     <string name="msg_content_description_log_in_using_github">Fazer login através do Github</string>
     <string name="msg_content_description_log_in_using_google">Fazer login através do Google</string>
@@ -79,23 +84,35 @@
     <string name="msg_preview_video">Vídeo</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
+    <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
-    <string name="msg_version">Versão</string>
-    <string name="msg_build">Build</string>
+    <string name="msg_version">Versão %1$s</string>
+    <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
+    <string name="msg_update_app_version_in_order_to_continue">Versão do servidor desatualizada. Por favor, entre em contato com o administrador do sistema para continuar.</string>
     <string name="msg_ver_not_recommended">
         Parece que a versão do seu servidor está abaixo da recomendada %1$s.\nVocê ainda assim pode logar e continuar mas podem ocorrer alguns problemas inesperados.
     </string>
     <string name="msg_ver_not_minimum">
         Parece que a versão do seu servidor está abaixo da mínima requerida %1$s.\nPor favor, atualize seus servidores antes de continuar!
     </string>
-
+    <string name="msg_no_chat_title">Nenhuma mensagem de chat</string>
+    <string name="msg_no_chat_description">Comece a conversar para ver suas\nmensagens aqui.</string>
+    <string name="msg_proceed">CONTINUAR</string>
+    <string name="msg_cancel">CANCELAR</string>
+    <string name="msg_warning">AVISO</string>
+    <string name="msg_http_insecure">Usando HTTP, você estará conectando a um servidor não seguro, não recomendamos sua utilização.</string>
+    <string name="msg_error_checking_server_version">Ocorreu um erro verificando a versão do servidor, por favor tente novamente</string>
+    <string name="msg_invalid_server_protocol">O protocolo selecionado não é suportado pelo servidor, por favor utilize HTTPS e tente novamente</string>
+    <string name="msg_image_saved_successfully">Imagem salva na galeria</string>
+    <string name="msg_image_saved_failed">Falha ao salvar a imagem</string>
+    
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
     <string name="message_user_added_by">Usuário %1$s adicionado por %2$s</string>
     <string name="message_user_removed_by">Usuário %1$s removido por %2$s</string>
     <string name="message_user_left">Saiu da sala.</string>
-    <string name="message_user_joined_channel">Entrou no sala.</string>
+    <string name="message_user_joined_channel">Entrou na sala.</string>
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
     <string name="message_pinned">Pinou uma mensagem:</string>
@@ -116,7 +133,7 @@
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
-    <string name="permission_pinning_not_allowed">Fixar não permitido</string>
+    <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
 
     <!-- Members List -->
     <string name="title_members_list">Lista de Membros</string>
@@ -130,12 +147,12 @@
     <string name="max_file_size_exceeded">Tamanho de arquivo (%1$d bytes) excedeu tamanho máximo de upload (%2$d bytes)</string>
 
     <!-- Socket status -->
-    <string name="status_connected">conectado</string>
-    <string name="status_disconnected">desconetado</string>
-    <string name="status_connecting">conectando</string>
-    <string name="status_authenticating">autenticando</string>
-    <string name="status_disconnecting">desconectando</string>
-    <string name="status_waiting">conectando em %d segundos</string>
+    <string name="status_connected">Conectado</string>
+    <string name="status_disconnected">Desconetado</string>
+    <string name="status_connecting">Conectando</string>
+    <string name="status_authenticating">Autenticando</string>
+    <string name="status_disconnecting">Desconectando</string>
+    <string name="status_waiting">Conectando em %d segundos</string>
 
     <!--Suggestions-->
     <string name="suggest_all_description">Notifica todos nesta sala</string>
@@ -156,8 +173,8 @@
     <string name="Leave_the_current_channel">Sair do canal atual</string>
     <string name="Displays_action_text">Exibir texto de ação</string>
     <string name="Direct_message_someone">Enviar DM para alguém</string>
-    <string name="Mute_someone_in_room">Mutar alguém</string>
-    <string name="Unmute_someone_in_room">Desmutar alguém na sala</string>
+    <string name="Mute_someone_in_room">Silenciar alguém</string>
+    <string name="Unmute_someone_in_room">De-silenciar alguém na sala</string>
     <string name="Invite_user_to_join_channel">Convidar algum usuário para entrar neste canal</string>
     <string name="Unarchive">Desarquivar</string>
     <string name="Join_the_given_channel">Entrar no canal especificado</string>
