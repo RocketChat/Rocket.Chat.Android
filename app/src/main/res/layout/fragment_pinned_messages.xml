@@ -78,7 +78,6 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="tv_pin_description,iv_pin_icon,tv_pin_title"
         android:visibility="gone"
-        tools:visibility="visible"
-        />
+        tools:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>
