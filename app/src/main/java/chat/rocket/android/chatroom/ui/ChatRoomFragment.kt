@@ -35,7 +35,6 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
@@ -177,12 +176,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.toMembersList(chatRoomId, chatRoomType)
             }
             R.id.action_pinned_messages -> {
-                val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
-                    putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-                    putExtra(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
-                    putExtra(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
-                }
-                startActivity(intent)
+                presenter.toPinnedMessageList(chatRoomId,chatRoomType)
             }
         }
         return true

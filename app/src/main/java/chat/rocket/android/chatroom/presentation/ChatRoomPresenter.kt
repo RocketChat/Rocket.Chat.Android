@@ -502,6 +502,8 @@ class ChatRoomPresenter @Inject constructor(
 
     fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
 
+    fun toPinnedMessageList(chatRoomId: String, chatRoomType: String) = navigator.toPinnedMessageList(chatRoomId,chatRoomType)
+
     fun loadChatRooms() {
         launchUI(strategy) {
             try {

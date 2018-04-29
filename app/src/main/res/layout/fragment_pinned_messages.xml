@@ -37,14 +37,12 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_pin_black_24dp"
-        android:tint="#AFADAF"
+        android:tint="@color/icon_grey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tv_pin_title"
-        app:layout_constraintVertical_chainStyle="packed"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tv_pin_title"
@@ -58,9 +56,7 @@
         android:textSize="20sp"
         android:layout_marginTop="24dp"
         android:textStyle="bold"
-        android:textColor="#8B8B8B"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        android:textColor="@color/colorSecondaryText"/>
 
     <TextView
         android:id="@+id/tv_pin_description"
@@ -74,8 +70,15 @@
         android:layout_marginTop="16dp"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:textColor="#c1c1c1"
+        android:textColor="@color/colorSecondaryTextLight"/>
+
+    <android.support.constraint.Group
+        android:id="@+id/pin_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_pin_description,iv_pin_icon,tv_pin_title"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible"
+        />
 
 </android.support.constraint.ConstraintLayout>

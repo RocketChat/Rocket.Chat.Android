@@ -1,4 +1,4 @@
-package chat.rocket.android.chatroom.presentation
+package chat.rocket.android.pinnedmessages.presentation
 
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
