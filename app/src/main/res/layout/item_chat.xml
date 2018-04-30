@@ -72,6 +72,11 @@
         android:gravity="center"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/layout_unread_messages_badge"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textDirection="locale"
+        tools:visibility="visible"
         app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
         app:layout_constraintTop_toTopOf="@+id/text_chat_name"
         tools:text="11:45 AM" />
