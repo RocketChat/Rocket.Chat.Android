@@ -84,13 +84,12 @@ fun PublicSettings.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING
 fun PublicSettings.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
 fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
 
-fun PublicSettings.uploadMimeTypeFilter(): Array<String> {
-    val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value
-    values?.let { it as String }?.split(",")?.let {
-        return it.mapToTypedArray { it.trim() }
+fun PublicSettings.uploadMimeTypeFilter(): Array<String>? {
+    val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value as String?
+    if (!values.isNullOrBlank()) {
+        return values!!.split(",").mapToTypedArray { it.trim() }
     }
-
-    return arrayOf("*/*")
+    return null
 }
 
 fun PublicSettings.uploadMaxFileSize(): Int {
