@@ -111,12 +111,12 @@ class AppModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
-        return OkHttpClient.Builder().apply {
-            addInterceptor(logger)
-            connectTimeout(15, TimeUnit.SECONDS)
-            readTimeout(20, TimeUnit.SECONDS)
-            writeTimeout(15, TimeUnit.SECONDS)
-        }.build()
+        return OkHttpClient.Builder()
+                .addInterceptor(logger)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build()
     }
 
     @Provides
