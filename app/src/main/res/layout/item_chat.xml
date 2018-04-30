@@ -24,7 +24,7 @@
         android:layout_width="12dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/text_last_message"
+        app:layout_constraintBottom_toBottomOf="@+id/text_chat_name"
         app:layout_constraintStart_toEndOf="@+id/image_avatar"
         app:layout_constraintTop_toTopOf="@+id/image_avatar"
         tools:src="@drawable/ic_hashtag_12dp" />
@@ -44,6 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
         app:layout_constraintTop_toBottomOf="@+id/text_chat_name"
+        app:layout_constraintStart_toStartOf="@+id/text_chat_name"
         tools:text="Filipe de Lima Brito: Type something that is very big and need at least to lines, or maybe even more" />
 
 
