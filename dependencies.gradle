@@ -9,7 +9,7 @@ ext {
             dokka                 : '0.9.16',
 
             // Main dependencies
-            support               : '27.1.0',
+            support               : '27.1.1',
             constraintLayout      : '1.1.0',
             androidKtx            : '0.3',
             dagger                : '2.14.1',
@@ -35,7 +35,7 @@ ext {
             // For testing
             junit                 : '4.12',
             truth                 : '0.36',
-            expresso              : '3.0.1',
+            espresso              : '3.0.2',
             mockito               : '2.10.0'
     ]
     libraries = [
@@ -98,7 +98,8 @@ ext {
 
             // For testing
             junit                 : "junit:junit:$versions.junit",
-            expressoCore          : "com.android.support.test.espresso:espresso-core:${versions.expresso}",
+            espressoCore          : "com.android.support.test.espresso:espresso-core:${versions.espresso}",
+            espressoIntents       : "com.android.support.test.espresso:espresso-intents:${versions.espresso}",
             roomTest              : "android.arch.persistence.room:testing:${versions.room}",
             truth                 : "com.google.truth:truth:$versions.truth",
     ]

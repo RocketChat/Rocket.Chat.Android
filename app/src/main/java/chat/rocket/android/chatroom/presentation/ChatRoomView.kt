@@ -28,7 +28,7 @@ interface ChatRoomView : LoadingView, MessageView {
     /**
      * Perform file selection with the mime type [filter]
      */
-    fun showFileSelection(filter: Array<String>)
+    fun showFileSelection(filter: Array<String>?)
 
     /**
      * Uploads a file to a chat room.
