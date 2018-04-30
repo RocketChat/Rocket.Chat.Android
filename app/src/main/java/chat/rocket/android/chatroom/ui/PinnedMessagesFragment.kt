@@ -35,7 +35,7 @@ fun newPinnedMessagesFragment(chatRoomId: String, chatRoomType: String, chatRoom
     }
 }
 
-class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
+class PinnedMessagesFragment : Fragment(), PinnedMessagesView{
 
     @Inject lateinit var presenter: PinnedMessagesPresenter
     private lateinit var chatRoomId: String
@@ -89,7 +89,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
         ui {
             if (recycler_view_pinned.adapter == null) {
                 // TODO - add a better constructor for this case...
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, null, false)
+                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, null, presenter, false)
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view_pinned.layoutManager = linearLayoutManager
@@ -106,6 +106,9 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
             adapter.appendData(pinnedMessages)
         }
+    }
+    override fun onUnpinMessage(size: Int) {
+        togglePinView(size - 1)
     }
 
     private fun togglePinView(size: Int) {

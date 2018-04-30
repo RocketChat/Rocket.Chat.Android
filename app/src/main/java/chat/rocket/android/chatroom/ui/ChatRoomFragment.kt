@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -213,7 +214,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
-                    reactionListener = this@ChatRoomFragment)
+                        reactionListener = this@ChatRoomFragment,pinnedMessagesPresenter = null)
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
@@ -716,4 +717,5 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun setupToolbar(toolbarTitle: String) {
         (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
     }
+
 }
