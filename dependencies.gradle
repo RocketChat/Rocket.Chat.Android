@@ -4,13 +4,13 @@ ext {
             compileSdk            : 27,
             targetSdk             : 27,
             buildTools            : '27.0.3',
-            kotlin                : '1.2.31',
+            kotlin                : '1.2.40',
             coroutine             : '0.22.5',
             dokka                 : '0.9.16',
 
             // Main dependencies
             support               : '27.1.0',
-            constraintLayout      : '1.0.2',
+            constraintLayout      : '1.1.0',
             androidKtx            : '0.3',
             dagger                : '2.14.1',
             exoPlayer             : '2.6.0',
@@ -91,7 +91,6 @@ ext {
             frescoImageViewer     : "com.github.luciofm:FrescoImageViewer:${versions.frescoImageViewer}",
 
             markwon               : "ru.noties:markwon:${versions.markwon}",
-            markwonImageLoader    : "ru.noties:markwon-image-loader:${versions.markwon}",
 
             sheetMenu             : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
 

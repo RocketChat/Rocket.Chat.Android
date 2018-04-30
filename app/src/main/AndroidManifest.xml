@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
@@ -76,12 +77,6 @@
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
-
-        <!-- TODO: Change to fragment-->
-        <activity
-            android:name=".chatroom.ui.PinnedMessagesActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 

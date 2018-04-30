@@ -176,12 +176,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.toMembersList(chatRoomId, chatRoomType)
             }
             R.id.action_pinned_messages -> {
-                val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
-                    putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-                    putExtra(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
-                    putExtra(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
-                }
-                startActivity(intent)
+                presenter.toPinnedMessageList(chatRoomId,chatRoomType)
             }
         }
         return true
@@ -228,6 +223,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 verticalScrollOffset.set(0)
             }
             presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
+            toggleNoChatView(adapter.itemCount)
+        }
+    }
+
+    private fun toggleNoChatView(size: Int) {
+        if (size == 0){
+            image_chat_icon.setVisible(true)
+            text_chat_title.setVisible(true)
+            text_chat_description.setVisible(true)
+        }else{
+            image_chat_icon.setVisible(false)
+            text_chat_title.setVisible(false)
+            text_chat_description.setVisible(false)
         }
     }
 
@@ -312,6 +320,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             adapter.prependData(message)
             recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
+            toggleNoChatView(adapter.itemCount)
         }
     }
 

@@ -38,7 +38,6 @@ import chat.rocket.core.internal.ReactionsAdapter
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
-import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.listener.RequestLoggingListener
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -48,10 +47,8 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.noties.markwon.SpannableConfiguration
-import ru.noties.markwon.il.AsyncDrawableLoader
 import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -113,12 +110,12 @@ class AppModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
-        return OkHttpClient.Builder().apply {
-            addInterceptor(logger)
-            connectTimeout(15, TimeUnit.SECONDS)
-            readTimeout(20, TimeUnit.SECONDS)
-            writeTimeout(15, TimeUnit.SECONDS)
-        }.build()
+        return OkHttpClient.Builder()
+                .addInterceptor(logger)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build()
     }
 
     @Provides
@@ -140,8 +137,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideImagePipelineConfig(context: Context, @ForFresco okHttpClient: OkHttpClient): ImagePipelineConfig {
-        val listeners = HashSet<RequestListener>()
-        listeners.add(RequestLoggingListener())
+        val listeners = setOf(RequestLoggingListener())
 
         return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
             .setRequestListeners(listeners)
@@ -169,6 +165,7 @@ class AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
 
@@ -264,11 +261,6 @@ class AppModule {
     fun provideConfiguration(context: Application, client: OkHttpClient): SpannableConfiguration {
         val res = context.resources
         return SpannableConfiguration.builder(context)
-            .asyncDrawableLoader(AsyncDrawableLoader.builder()
-                .client(client)
-                .executorService(Executors.newCachedThreadPool())
-                .resources(res)
-                .build())
             .theme(SpannableTheme.builder()
                 .linkColor(res.getColor(R.color.colorAccent))
                 .build())
@@ -276,9 +268,9 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
-    fun provideMessageParser(context: Application, configuration: SpannableConfiguration): MessageParser {
-        return MessageParser(context, configuration)
+    fun provideMessageParser(context: Application, configuration: SpannableConfiguration, serverInteractor: GetCurrentServerInteractor, settingsInteractor: GetSettingsInteractor): MessageParser {
+        val url = serverInteractor.get()!!
+        return MessageParser(context, configuration, settingsInteractor.get(url))
     }
 
     @Provides

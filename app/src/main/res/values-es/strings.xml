@@ -3,6 +3,8 @@
     <string name="title_sign_in_your_server">Inicia sesión en tu servidor</string>
     <string name="title_log_in">Iniciar sesión</string>
     <string name="title_register_username">Registrar nombre de usuario</string>
+    // TODO: Add proper translation.
+    <string name="title_reset_password">Reset Password</string>
     <string name="title_sign_up">Regístrate</string>
     <string name="title_authentication">Autenticación</string>
     <string name="title_legal_terms">Términos legales</string>
@@ -51,6 +53,14 @@
     <string name="msg_avatar_url">URL del avatar</string>
     <string name="msg_or_continue_using_social_accounts">O continuar usando cuentas sociales</string>
     <string name="msg_new_user">Nuevo usuario? %1$s</string>
+    // TODO: Add proper translation.
+    <string name="msg_forgot_password">Forgot password? %1$s</string>
+    // TODO: Add proper translation.
+    <string name="msg_reset">Reset</string>
+    // TODO: Add proper translation.
+    <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
+    // TODO: Add proper translation.
+    <string name="msg_invalid_email">Please type a valid e-mail</string>
     <string name="msg_new_user_agreement">Al continuar estás aceptando nuestra\n%1$s y %2$s</string>
     <string name="msg_2fa_code">Código 2FA</string>
     <string name="msg_yesterday">Ayer</string>
@@ -78,21 +88,29 @@
     <string name="msg_preview_video">Vídeo</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Foto</string>
+    <string name="msg_preview_file">Fichero</string>
     <string name="msg_no_messages_yet">Aún no hay mensajes</string>
     <string name="msg_version">Versión %1$s</string>
     <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
+    // TODO: Add proper translation.
+    <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
     <string name="msg_ver_not_recommended">
         Parece que la versión de tu servidor está por debajo de la versión recomendada %1$s.\nAún puede iniciar sesión, pero puede experimentar comportamientos inesperados.</string>
     <string name="msg_ver_not_minimum">
         Parece que la versión del servidor está por debajo de la versión mínima requerida %1$s.\nActualice su servidor para iniciar sesión!
     </string>
+
     <string name="msg_proceed">PROCEDER</string>
     <string name="msg_cancel">CANCELAR</string>
     <string name="msg_warning">ADVERTENCIA</string>
     <string name="msg_http_insecure">Al usar HTTP, te estás conectando a un servidor inseguro. No te recomendamos que hagas eso.</string>
     <string name="msg_error_checking_server_version">Se ha producido un error al verificar la versión de su servidor, intente de nuevo</string>
     <string name="msg_invalid_server_protocol">El protocolo seleccionado no es aceptado por este servidor, intente usar HTTPS</string>
+    <string name="msg_image_saved_successfully">La imagen se ha guardado en la galería</string>
+    <string name="msg_image_saved_failed">Error al guardar la imagen</string>
+    <string name="msg_no_chat_title">Sin mensajes de chat</string>
+    <string name="msg_no_chat_description">Comience a conversar para ver\nsus mensajes aquí.</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>

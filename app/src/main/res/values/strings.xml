@@ -2,9 +2,10 @@
     <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
-    <string name="title_sign_in_your_server">Sign in your server</string>
+    <string name="title_sign_in_your_server">Sign in to your server</string>
     <string name="title_log_in">Log in</string>
     <string name="title_register_username">Register username</string>
+    <string name="title_reset_password">Reset password</string>
     <string name="title_sign_up">Sign up</string>
     <string name="title_authentication">Authentication</string>
     <string name="title_legal_terms">Legal Terms</string>
@@ -56,6 +57,10 @@
     <string name="msg_avatar_url">avatar URL</string>
     <string name="msg_or_continue_using_social_accounts">Or continue using social accounts</string>
     <string name="msg_new_user">New user? %1$s</string>
+    <string name="msg_forgot_password">Forgot password? %1$s</string>
+    <string name="msg_reset">Reset</string>
+    <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
+    <string name="msg_invalid_email">Please type a valid e-mail</string>
     <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
     <string name="msg_2fa_code">2FA Code</string>
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
@@ -84,21 +89,27 @@
     <string name="msg_preview_video">Video</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
+    <string name="msg_preview_file">File</string>
     <string name="msg_no_messages_yet">No messages yet</string>
     <string name="msg_version">Version %1$s</string>
     <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
+    <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
     <string name="msg_ver_not_recommended">
         Looks like your server version is below the recommended version %1$s.\nYou can still login but you may experience unexpected behaviors.</string>
     <string name="msg_ver_not_minimum">
         Looks like your server version is below the minimum required version %1$s.\nPlease upgrade your server to login!
     </string>
+    <string name="msg_no_chat_title">No chat messages</string>
+    <string name="msg_no_chat_description">Start conversing to see your\nmessages here.</string>
     <string name="msg_proceed">PROCEED</string>
     <string name="msg_cancel">CANCEL</string>
     <string name="msg_warning">WARNING</string>
     <string name="msg_http_insecure">When using HTTP, you\'re connecting to an insecure server. We don\'t recommend you doing that.</string>
     <string name="msg_error_checking_server_version">An error has occurred while checking your server version, please try again</string>
     <string name="msg_invalid_server_protocol">The selected protocol is not accepted by this server, try using HTTPS</string>
+    <string name="msg_image_saved_successfully">Image has been saved to gallery</string>
+    <string name="msg_image_saved_failed">Failed to save image</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

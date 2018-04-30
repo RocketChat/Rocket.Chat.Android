@@ -45,4 +45,7 @@
     <dimen name="default_circle_radius">4dp</dimen>
     <dimen name="default_circle_padding">12dp</dimen>
 
+    <dimen name="viewer_toolbar_padding">16dp</dimen>
+    <dimen name="viewer_toolbar_title">16sp</dimen>
+
 </resources>

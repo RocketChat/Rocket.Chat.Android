@@ -10,6 +10,7 @@
     <color name="colorPrimaryText">#DE000000</color>
     <color name="colorSecondaryText">#787878</color>
     <color name="colorOnBoardingDescription">#47525E</color>
+    <color name="colorSecondaryTextLight">#c1c1c1</color>
 
     <!-- User status colors -->
     <color name="colorUserStatusOnline">#2FE1A8</color>
@@ -46,5 +47,8 @@
     <color name="suggestion_background_color">@android:color/white</color>
 
     <color name="pageIndicatorInactive">#E0E0E0</color>
+    <color name="icon_grey">#AFADAF</color>
 
+    <!-- Default Background Color -->
+    <color name="default_background">#FAFAFA</color>
 </resources>
