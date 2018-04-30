@@ -49,6 +49,7 @@ const val ALLOW_MESSAGE_EDITING = "Message_AllowEditing"
 const val SHOW_DELETED_STATUS = "Message_ShowDeletedStatus"
 const val SHOW_EDITED_STATUS = "Message_ShowEditedStatus"
 const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
+const val STORE_LAST_MESSAGE = "Store_Last_Message"
 
 /*
  * Extension functions for Public Settings.
@@ -57,6 +58,7 @@ const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
  * ServerPresenter.kt and a extension function to access it
  */
 fun PublicSettings.isLdapAuthenticationEnabled(): Boolean = this[LDAP_ENABLE]?.value == true
+
 fun PublicSettings.isCasAuthenticationEnabled(): Boolean = this[CAS_ENABLE]?.value == true
 fun PublicSettings.casLoginUrl(): String = this[CAS_LOGIN_URL]?.value.toString()
 fun PublicSettings.isRegistrationEnabledForNewUsers(): Boolean = this[ACCOUNT_REGISTRATION]?.value == "Public"
@@ -83,6 +85,7 @@ fun PublicSettings.showEditedStatus(): Boolean = this[SHOW_EDITED_STATUS]?.value
 fun PublicSettings.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING]?.value == true
 fun PublicSettings.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
 fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
+fun PublicSettings.showLastMessage(): Boolean = this[STORE_LAST_MESSAGE]?.value == true
 
 fun PublicSettings.uploadMimeTypeFilter(): Array<String> {
     val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value
