@@ -20,7 +20,6 @@ class ColorAttachmentViewHolder(itemView: View,
 
     init {
         with(itemView) {
-            setupActionMenu(attachment_text)
             setupActionMenu(color_attachment_container)
             attachment_text.movementMethod = LinkMovementMethod()
         }
