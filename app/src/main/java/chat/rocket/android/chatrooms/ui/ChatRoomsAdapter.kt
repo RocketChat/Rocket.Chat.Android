@@ -112,7 +112,15 @@ class ChatRoomsAdapter(private val context: Context,
         }
 
         private fun bindName(chatRoom: ChatRoom, textView: TextView) {
-            textView.textContent = chatRoom.name
+            textView.textContent = chatRoomName(chatRoom)
+        }
+
+        private fun chatRoomName(chatRoom: ChatRoom): String {
+            return if (settings.useRealName()) {
+                chatRoom.fullName ?: chatRoom.name
+            } else {
+                chatRoom.name
+            }
         }
 
         private fun bindLastMessageDateTime(chatRoom: ChatRoom, textView: TextView) {

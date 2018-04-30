@@ -289,8 +289,9 @@ class ChatRoomsPresenter @Inject constructor(
 
     private suspend fun getChatRoomsWithPreviews(chatRooms: List<ChatRoom>): List<ChatRoom> {
         return chatRooms.map {
-            if (it.lastMessage != null) {
-                it.copy(lastMessage = viewModelMapper.map(it.lastMessage!!).last().preview)
+            val lastMessage = it.lastMessage
+            if (lastMessage != null) {
+                it.copy(lastMessage = viewModelMapper.map(lastMessage).last().preview)
             } else {
                 it
             }
