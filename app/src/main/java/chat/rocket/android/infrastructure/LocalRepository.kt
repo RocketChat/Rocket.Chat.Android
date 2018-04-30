@@ -7,11 +7,11 @@ interface LocalRepository {
     fun save(key: String, value: Int)
     fun save(key: String, value: Long)
     fun save(key: String, value: Float)
-    fun get(key: String): String?
-    fun getBoolean(key: String): Boolean
-    fun getFloat(key: String): Float
-    fun getInt(key: String): Int
-    fun getLong(key: String): Long
+    fun get(key: String, defValue: String? = null): String?
+    fun getBoolean(key: String, defValue: Boolean = false): Boolean
+    fun getFloat(key: String, defValue: Float = -1f): Float
+    fun getInt(key: String, defValue: Int = -1): Int
+    fun getLong(key: String, defValue: Long = -1L): Long
     fun clear(key: String)
     fun clearAllFromServer(server: String)
 

@@ -38,12 +38,14 @@ import kotlinx.android.synthetic.main.message_list.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String,
-                chatRoomName: String,
-                chatRoomType: String,
-                isChatRoomReadOnly: Boolean,
-                chatRoomLastSeen: Long,
-                isSubscribed: Boolean = true): Fragment {
+fun newInstance(
+    chatRoomId: String,
+    chatRoomName: String,
+    chatRoomType: String,
+    isChatRoomReadOnly: Boolean,
+    chatRoomLastSeen: Long,
+    isSubscribed: Boolean = true
+): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
@@ -110,7 +112,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_chat_room)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return container?.inflate(R.layout.fragment_chat_room)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -168,12 +176,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.toMembersList(chatRoomId, chatRoomType)
             }
             R.id.action_pinned_messages -> {
-                val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
-                    putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-                    putExtra(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
-                    putExtra(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
-                }
-                startActivity(intent)
+                presenter.toPinnedMessageList(chatRoomId,chatRoomType)
             }
         }
         return true
@@ -220,6 +223,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 verticalScrollOffset.set(0)
             }
             presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
+            toggleNoChatView(adapter.itemCount)
+        }
+    }
+
+    private fun toggleNoChatView(size: Int) {
+        if (size == 0){
+            image_chat_icon.setVisible(true)
+            text_chat_title.setVisible(true)
+            text_chat_description.setVisible(true)
+        }else{
+            image_chat_icon.setVisible(false)
+            text_chat_title.setVisible(false)
+            text_chat_description.setVisible(false)
         }
     }
 
@@ -304,6 +320,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             adapter.prependData(message)
             recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
+            toggleNoChatView(adapter.itemCount)
         }
     }
 

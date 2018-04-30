@@ -43,8 +43,8 @@
 
         <ImageView
             android:id="@+id/image_user_status"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView

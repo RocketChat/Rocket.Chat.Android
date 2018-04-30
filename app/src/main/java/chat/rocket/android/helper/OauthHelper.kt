@@ -54,13 +54,20 @@ object OauthHelper {
     /**
      * Returns the Gitlab Oauth URL.
      *
+     * @param host The Gitlab host.
      * @param clientId The Gitlab client ID.
      * @param serverUrl The server URL.
      * @param state An unguessable random string used to protect against forgery attacks.
      * @return The Gitlab Oauth URL.
      */
-    fun getGitlabOauthUrl(clientId: String, serverUrl: String, state: String): String {
-        return  "https://gitlab.com/oauth/authorize" +
+    fun getGitlabOauthUrl(
+        host: String? = "https://gitlab.com",
+        clientId: String,
+        serverUrl: String,
+        state: String
+    ): String {
+        return host +
+                "/oauth/authorize" +
                 "?client_id=$clientId" +
                 "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/gitlab?close" +
                 "&state=$state" +
@@ -83,5 +90,35 @@ object OauthHelper {
                 "&state=$state" +
                 "&response_type=code" +
                 "&scope=email"
+    }
+
+    /**
+     * Returns the Custom Oauth URL.
+     *
+     * @param host The custom OAuth host.
+     * @param authorizePath The OAuth authorization path.
+     * @param clientId The custom OAuth client ID.
+     * @param serverUrl The server URL.
+     * @param serviceName The service name.
+     * @param state An unguessable random string used to protect against forgery attacks.
+     * @param scope The custom OAuth scope.
+     * @return The Custom Oauth URL.
+     */
+    fun getCustomOauthUrl(
+        host: String,
+        authorizePath: String,
+        clientId: String,
+        serverUrl: String,
+        serviceName: String,
+        state: String,
+        scope: String
+    ): String {
+        return host +
+                authorizePath +
+                "?client_id=$clientId" +
+                "&redirect_uri=${serverUrl.removeTrailingSlash()}/_oauth/$serviceName" +
+                "&state=$state" +
+                "&scope=$scope" +
+                "&response_type=code"
     }
 }
