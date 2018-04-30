@@ -74,7 +74,7 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
         fun onActionSelected(item: MenuItem, message: Message)
     }
 
-    val longClickListener = { view: View ->
+    val onClickListener = { view: View ->
         if (data?.message?.isSystemMessage() == false) {
             val menuItems = view.context.inflate(R.menu.message_actions).toList()
             menuItems.find { it.itemId == R.id.action_menu_msg_pin_unpin }?.apply {
@@ -85,12 +85,11 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
             val adapter = ActionListAdapter(menuItems, this@BaseViewHolder)
             BottomSheetMenu(adapter).show(view.context)
         }
-        true
     }
 
     internal fun setupActionMenu(view: View) {
         if (listener.isActionsEnabled()) {
-            view.setOnLongClickListener(longClickListener)
+            view.setOnClickListener(onClickListener)
         }
     }
 
