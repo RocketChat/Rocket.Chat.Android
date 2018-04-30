@@ -1,5 +1,8 @@
+def taskRequests = getGradle().getStartParameter().getTaskRequests().toString()
+def isPlay = !(taskRequests.contains("Foss") || taskRequests.contains("foss"))
+
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+if (isPlay) { apply plugin: 'io.fabric' }
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -57,6 +60,20 @@ android {
         }
     }
 
+    flavorDimensions "type"
+
+    productFlavors {
+        // includes proprietary libs
+        play {
+            dimension "type"
+        }
+
+        // only foss
+        foss {
+            dimension "type"
+        }
+    }
+
     packagingOptions {
         exclude 'META-INF/core.kotlin_module'
         exclude 'META-INF/main.kotlin_module'
@@ -91,8 +108,8 @@ dependencies {
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
 
-    implementation libraries.fcm
-    implementation libraries.playServicesAuth
+    playImplementation libraries.fcm
+    playImplementation libraries.playServicesAuth
 
     implementation libraries.room
     kapt libraries.roomProcessor
@@ -126,7 +143,7 @@ dependencies {
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
+    playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
 
@@ -156,5 +173,6 @@ task compileSdk(type:Exec) {
     }
 }
 preBuild.dependsOn compileSdk
-
-apply plugin: 'com.google.gms.google-services'
+if (isPlay) {
+    apply plugin: 'com.google.gms.google-services'
+}
