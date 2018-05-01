@@ -23,6 +23,7 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.showLastMessage
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
@@ -240,6 +241,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
 
+            println(serverInteractor.get() + " -> ${settingsRepository.get(serverInteractor.get()!!).showLastMessage()}")
             val baseAdapter = ChatRoomsAdapter(it,
                     settingsRepository.get(serverInteractor.get()!!), localRepository) {
                 chatRoom -> presenter.loadChatRoom(chatRoom)
