@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/color_attachment_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="@dimen/message_item_top_and_bottom_padding">
+
+    <View
+        android:id="@+id/quote_bar"
+        android:layout_width="4dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="56dp"
+        android:background="@drawable/quote_vertical_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/recycler_view_reactions"/>
+
+    <TextView
+        android:id="@+id/attachment_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:autoLink="web"
+        app:layout_constraintStart_toEndOf="@id/quote_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="#5571 - User profile from SSO must not have password change option" />
+
+    <include
+        layout="@layout/layout_reactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/quote_bar"
+        app:layout_constraintTop_toBottomOf="@id/attachment_text" />
+
+</android.support.constraint.ConstraintLayout>

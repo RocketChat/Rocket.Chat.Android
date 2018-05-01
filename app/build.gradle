@@ -13,8 +13,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 2008
-        versionName "2.0.0-beta6"
+        versionCode 2015
+        versionName "2.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -78,6 +78,8 @@ dependencies {
     implementation libraries.room
     kapt libraries.roomProcessor
     implementation libraries.roomRxjava
+    implementation libraries.lifecycleExtensions
+    kapt libraries.lifecycleCompiler
 
     implementation libraries.rxKotlin
     implementation libraries.rxAndroid
@@ -102,7 +104,6 @@ dependencies {
     implementation libraries.frescoImageViewer
 
     implementation libraries.markwon
-    implementation libraries.markwonImageLoader
 
     implementation libraries.sheetMenu
 
@@ -122,6 +123,10 @@ kotlin {
     experimental {
         coroutines "enable"
     }
+}
+
+androidExtensions {
+    experimental = true
 }
 
 // FIXME - build and install the sdk into the app/libs directory

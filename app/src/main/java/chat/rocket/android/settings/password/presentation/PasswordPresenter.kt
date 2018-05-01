@@ -11,10 +11,12 @@ import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.updateProfile
 import javax.inject.Inject
 
-class PasswordPresenter @Inject constructor (private val view: PasswordView,
-                                             private val strategy: CancelStrategy,
-                                             serverInteractor: GetCurrentServerInteractor,
-                                             factory: RocketChatClientFactory){
+class PasswordPresenter @Inject constructor(
+    private val view: PasswordView,
+    private val strategy: CancelStrategy,
+    serverInteractor: GetCurrentServerInteractor,
+    factory: RocketChatClientFactory
+) {
     private val serverUrl = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(serverUrl)
 
@@ -25,7 +27,7 @@ class PasswordPresenter @Inject constructor (private val view: PasswordView,
 
                 val me = retryIO("me") { client.me() }
                 retryIO("updateProfile(${me.id})") {
-                    client.updateProfile(me.id, null, null, password, null)
+                    client.updateProfile(me.id!!, null, null, password, null)
                 }
 
                 view.showPasswordSuccessfullyUpdatedMessage()

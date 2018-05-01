@@ -10,4 +10,20 @@ interface VersionCheckView {
      * Block user to proceed and alert him due to server having an unsupported server version.
      */
     fun blockAndAlertNotRequiredVersion()
+
+    /**
+     * Alerts the user that an error has occurred while checking the server version
+     * This is optional.
+     */
+    fun errorCheckingServerVersion() {}
+
+    /**
+     * Do some action if version is ok. This is optional.
+     */
+    fun versionOk() {}
+
+    /**
+     * Alters the user this protocol is invalid. This is optional.
+     */
+    fun errorInvalidProtocol() {}
 }
