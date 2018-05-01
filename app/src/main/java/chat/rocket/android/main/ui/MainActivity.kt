@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
-    private var CURRENT_STATE: String = "CURRENT_STATE"
+    private const val CURRENT_STATE: String = "CURRENT_STATE"
     private var expanded = false
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
 
