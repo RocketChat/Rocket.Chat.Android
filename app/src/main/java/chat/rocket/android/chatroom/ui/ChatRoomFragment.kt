@@ -618,6 +618,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_add_reaction.setOnClickListener { view ->
                 openEmojiKeyboardPopup()
             }
+
+            button_drawing.setOnClickListener{
+                handler.postDelayed({
+                    hideAttachmentOptions()
+                }, 400)
+            }
         }
     }
 
