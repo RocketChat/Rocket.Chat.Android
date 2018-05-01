@@ -165,11 +165,13 @@ androidExtensions {
 
 // FIXME - build and install the sdk into the app/libs directory
 // We were having some issues with the kapt generated files from the sdk when importing as a module
+
+def sdk_location=project.properties['sdk_location'] ?: ""
 task compileSdk(type:Exec) {
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', 'build-sdk.sh'
+        commandLine 'cmd', '/c', 'build-sdk.sh', sdk_location
     } else {
-        commandLine './build-sdk.sh'
+        commandLine './build-sdk.sh', sdk_location
     }
 }
 preBuild.dependsOn compileSdk
