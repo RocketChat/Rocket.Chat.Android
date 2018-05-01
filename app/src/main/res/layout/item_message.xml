@@ -79,12 +79,11 @@
             android:id="@+id/text_edit_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="(edited)"
+            android:text="@string/msg_edited"
             android:layout_marginStart="8dp"
             android:textStyle="italic"
-            android:textColor="@color/colorSecondaryTextLight"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
     </LinearLayout>
 
     <TextView
