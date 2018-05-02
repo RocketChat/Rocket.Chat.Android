@@ -18,8 +18,8 @@ class MessageViewHolder(
 
     init {
         with(itemView) {
+            setupActionMenu(message_container)
             text_content.movementMethod = LinkMovementMethod()
-            setupActionMenu(text_content)
         }
     }
 
