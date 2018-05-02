@@ -64,6 +64,10 @@ class ChatRoomsPresenter @Inject constructor(
             view.showLoading()
             subscribeStatusChange()
             try {
+                // If we still don't have 'Store_Last_Message' setting, refresh the settings
+                if (!settings.hasShowLastMessage()) {
+                    refreshSettingsInteractor.refresh(currentServer)
+                }
                 view.updateChatRooms(getUserChatRooms())
             } catch (ex: RocketChatException) {
                 ex.message?.let {
@@ -226,15 +230,25 @@ class ChatRoomsPresenter @Inject constructor(
             }
             ChatRoomsSortOrder.ACTIVITY -> {
                 when (groupByType) {
-                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenByDescending { it.lastMessage?.timestamp })
+                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenByDescending { chatroom ->
+                        chatRoomTimestamp(chatroom)
+                    })
                     false -> openChatRooms.sortedByDescending { chatRoom ->
-                        chatRoom.lastMessage?.timestamp
+                        chatRoomTimestamp(chatRoom)
                     }
                 }
             }
             else -> {
                 openChatRooms
             }
+        }
+    }
+
+    private fun chatRoomTimestamp(chatRoom: ChatRoom): Long? {
+        return if (settings.hasShowLastMessage() && settings.showLastMessage()) {
+            chatRoom.lastMessage?.timestamp ?: chatRoom.updatedAt
+        } else {
+            chatRoom.updatedAt
         }
     }
 
