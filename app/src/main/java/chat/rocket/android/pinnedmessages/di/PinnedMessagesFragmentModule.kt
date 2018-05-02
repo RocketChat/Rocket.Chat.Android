@@ -1,10 +1,10 @@
 package chat.rocket.android.chatroom.di
 
 import android.arch.lifecycle.LifecycleOwner
-import chat.rocket.android.chatroom.presentation.PinnedMessagesView
-import chat.rocket.android.chatroom.ui.PinnedMessagesFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
+import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesView
+import chat.rocket.android.pinnedmessages.ui.PinnedMessagesFragment
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.experimental.Job

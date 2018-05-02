@@ -23,6 +23,7 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.showLastMessage
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
@@ -32,11 +33,8 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.NonCancellable.isActive
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
-
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject lateinit var presenter: ChatRoomsPresenter
@@ -67,7 +65,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onDestroy()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_chat_rooms)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_chat_rooms)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -99,7 +101,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             }
         })
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -240,6 +241,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
 
+            println(serverInteractor.get() + " -> ${settingsRepository.get(serverInteractor.get()!!).showLastMessage()}")
             val baseAdapter = ChatRoomsAdapter(it,
                     settingsRepository.get(serverInteractor.get()!!), localRepository) {
                 chatRoom -> presenter.loadChatRoom(chatRoom)
