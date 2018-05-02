@@ -74,6 +74,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             tools:text="11:45 PM" />
+
+        <TextView
+            android:id="@+id/text_edit_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/msg_edited"
+            android:layout_marginStart="8dp"
+            android:textStyle="italic"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <TextView
