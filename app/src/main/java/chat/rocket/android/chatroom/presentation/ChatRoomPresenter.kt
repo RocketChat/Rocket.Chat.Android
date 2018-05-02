@@ -26,6 +26,7 @@ import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
+import chat.rocket.core.internal.realtime.setTypingStatus
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Command
@@ -45,8 +46,6 @@ class ChatRoomPresenter @Inject constructor(
     private val view: ChatRoomView,
     private val navigator: ChatRoomNavigator,
     private val strategy: CancelStrategy,
-    getSettingsInteractor: GetSettingsInteractor,
-    serverInteractor: GetCurrentServerInteractor,
     private val getChatRoomsInteractor: GetChatRoomsInteractor,
     private val permissions: GetPermissionsInteractor,
     private val uriInteractor: UriInteractor,
@@ -54,15 +53,17 @@ class ChatRoomPresenter @Inject constructor(
     private val usersRepository: UsersRepository,
     private val roomsRepository: RoomRepository,
     private val localRepository: LocalRepository,
-    factory: ConnectionManagerFactory,
     private val mapper: ViewModelMapper,
-    private val jobSchedulerInteractor: JobSchedulerInteractor
+    private val jobSchedulerInteractor: JobSchedulerInteractor,
+    getSettingsInteractor: GetSettingsInteractor,
+    serverInteractor: GetCurrentServerInteractor,
+    factory: ConnectionManagerFactory
 ) {
-
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
+    private val currentLoggedUsername = localRepository.username()
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
@@ -200,6 +201,22 @@ class ChatRoomPresenter @Inject constructor(
                 }
             } finally {
                 view.hideLoading()
+            }
+        }
+    }
+
+    fun sendTyping() {
+        launch(CommonPool + strategy.jobs) {
+            if (chatRoomId != null && currentLoggedUsername != null) {
+                client.setTypingStatus(chatRoomId.toString(), currentLoggedUsername, true)
+            }
+        }
+    }
+
+    fun sendNotTyping() {
+        launch(CommonPool + strategy.jobs) {
+            if (chatRoomId != null && currentLoggedUsername != null) {
+                client.setTypingStatus(chatRoomId.toString(), currentLoggedUsername, false)
             }
         }
     }

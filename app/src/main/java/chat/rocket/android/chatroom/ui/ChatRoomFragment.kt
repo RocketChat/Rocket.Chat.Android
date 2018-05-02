@@ -674,7 +674,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun subscribeTextMessage() {
         val disposable = text_message.asObservable(0)
-            .subscribe({ t -> setupComposeMessageButtons(t) })
+            .subscribe { t ->
+                setupComposeMessageButtons(t)
+                sendTypingStatus(t)
+            }
 
         compositeDisposable.add(disposable)
     }
@@ -694,6 +697,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_send.fadeOut(1F, 0F, 120)
             button_show_attachment_options.fadeIn(0F, 1F, 120)
             playComposeMessageButtonsAnimation = true
+        }
+    }
+
+    private fun sendTypingStatus(charSequence: CharSequence) {
+        if (charSequence.isNotEmpty()) {
+            presenter.sendTyping()
+        } else {
+            presenter.sendNotTyping()
         }
     }
 
