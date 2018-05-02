@@ -48,7 +48,7 @@ class ChatRoomPresenter @Inject constructor(
     getSettingsInteractor: GetSettingsInteractor,
     serverInteractor: GetCurrentServerInteractor,
     private val getChatRoomsInteractor: GetChatRoomsInteractor,
-    private val permissions: GetPermissionsInteractor,
+    private val permissions: PermissionsInteractor,
     private val uriInteractor: UriInteractor,
     private val messagesRepository: MessagesRepository,
     private val usersRepository: UsersRepository,
@@ -73,6 +73,7 @@ class ChatRoomPresenter @Inject constructor(
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
         this.chatRoomId = chatRoomId
         this.chatRoomType = chatRoomType
+        println(permissions.canPostToReadOnlyChannels())
         launchUI(strategy) {
             view.showLoading()
             try {

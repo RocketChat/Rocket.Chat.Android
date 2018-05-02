@@ -1,6 +1,7 @@
 package chat.rocket.android.server.domain
 
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.core.model.Permission
 import javax.inject.Inject
 
 // Creating rooms
@@ -15,7 +16,7 @@ const val EDIT_MESSAGE = "edit-message"
 const val PIN_MESSAGE = "pin-message"
 const val POST_READONLY = "post-readonly"
 
-class GetPermissionsInteractor @Inject constructor(
+class PermissionsInteractor @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val permissionsRepository: PermissionsRepository,
     private val localRepository: LocalRepository,
@@ -23,6 +24,11 @@ class GetPermissionsInteractor @Inject constructor(
 ) {
 
     private fun publicSettings(): PublicSettings? = settingsRepository.get(getCurrentServerUrl()!!)
+
+    fun saveAll(permissions: List<Permission>) {
+        val url = getCurrentServerUrl()!!
+        permissions.forEach { permissionsRepository.save(url, it) }
+    }
 
     /**
      * Check whether user is allowed to delete a message.

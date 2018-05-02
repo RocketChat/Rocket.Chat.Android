@@ -23,6 +23,7 @@ import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.internal.realtime.socket.model.Type
+import chat.rocket.core.internal.rest.permissions
 import chat.rocket.core.internal.rest.spotlight
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
@@ -45,6 +46,7 @@ class ChatRoomsPresenter @Inject constructor(
     private val refreshSettingsInteractor: RefreshSettingsInteractor,
     private val viewModelMapper: ViewModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor,
+    private val permissionsInteractor: PermissionsInteractor,
     settingsRepository: SettingsRepository,
     factory: ConnectionManagerFactory
 ) {
@@ -64,6 +66,7 @@ class ChatRoomsPresenter @Inject constructor(
             view.showLoading()
             subscribeStatusChange()
             try {
+                permissionsInteractor.saveAll(client.permissions())
                 // If we still don't have 'Store_Last_Message' setting, refresh the settings
                 if (!settings.hasShowLastMessage()) {
                     refreshSettingsInteractor.refresh(currentServer)

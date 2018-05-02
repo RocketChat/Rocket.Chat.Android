@@ -18,7 +18,7 @@ interface PermissionsRepository {
      * @param url The server url from where we're interested on getting the permissions.
      * @param permissionId the id of the permission to get.
      *
-     * @return The interested permission or null if not found.
+     * @return The interested [Permission] or null if not found.
      */
     fun get(url: String, permissionId: String): Permission?
 }
