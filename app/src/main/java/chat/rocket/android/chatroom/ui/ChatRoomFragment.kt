@@ -1,19 +1,24 @@
 package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.widget.ImageView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -27,6 +32,7 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
+import chat.rocket.android.widget.CustomDrawView
 import chat.rocket.android.widget.emoji.*
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
@@ -35,7 +41,7 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import timber.log.Timber
+import java.io.ByteArrayOutputStream
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
@@ -620,11 +626,37 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             button_drawing.setOnClickListener{
+                showDrawingView()
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)
             }
         }
+    }
+
+    private fun showDrawingView() {
+        val drawDialog = Dialog(activity,R.style.DrawingDialogStyle)
+        drawDialog.setContentView(R.layout.drawing_view)
+        val customDrawView: CustomDrawView = drawDialog.findViewById(R.id.custom_draw_view)
+        val closeDraw: ImageView = drawDialog.findViewById(R.id.image_close_drawing)
+        val sendDraw: ImageView = drawDialog.findViewById(R.id.image_send_drawing)
+        closeDraw.setOnClickListener {
+            drawDialog.dismiss()
+        }
+        sendDraw.setOnClickListener {
+            val bitmap: Bitmap = customDrawView.getBitmap()
+            uploadFile(bitmapToUri(bitmap))
+            dummy_image.setImageBitmap(bitmap)
+            drawDialog.dismiss()
+        }
+        drawDialog.show()
+    }
+
+    fun bitmapToUri(bitmap: Bitmap): Uri {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,bytes)
+        val path = MediaStore.Images.Media.insertImage(activity?.contentResolver, bitmap, "title",null)
+        return Uri.parse(path)
     }
 
     private fun setupSuggestionsView() {
