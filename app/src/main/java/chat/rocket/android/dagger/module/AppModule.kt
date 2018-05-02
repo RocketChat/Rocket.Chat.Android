@@ -19,7 +19,7 @@ import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.FrescoAuthInterceptor
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.infrastructure.SharedPrefsLocalRepository
+import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.domain.*
@@ -111,11 +111,11 @@ class AppModule {
     @Singleton
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-                .addInterceptor(logger)
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .build()
+            .addInterceptor(logger)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .build()
     }
 
     @Provides
@@ -177,8 +177,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideLocalRepository(prefs: SharedPreferences): LocalRepository {
-        return SharedPrefsLocalRepository(prefs)
+    fun provideLocalRepository(prefs: SharedPreferences, moshi: Moshi): LocalRepository {
+        return SharedPreferencesLocalRepository(prefs, moshi)
     }
 
     @Provides
@@ -191,6 +191,12 @@ class AppModule {
     @Singleton
     fun provideSettingsRepository(localRepository: LocalRepository): SettingsRepository {
         return SharedPreferencesSettingsRepository(localRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providePermissionsRepository(localRepository: LocalRepository, moshi: Moshi): PermissionsRepository {
+        return SharedPreferencesPermissionsRepository(localRepository, moshi)
     }
 
     @Provides
@@ -258,7 +264,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideConfiguration(context: Application, client: OkHttpClient): SpannableConfiguration {
+    fun provideConfiguration(context: Application): SpannableConfiguration {
         val res = context.resources
         return SpannableConfiguration.builder(context)
             .theme(SpannableTheme.builder()
@@ -271,12 +277,6 @@ class AppModule {
     fun provideMessageParser(context: Application, configuration: SpannableConfiguration, serverInteractor: GetCurrentServerInteractor, settingsInteractor: GetSettingsInteractor): MessageParser {
         val url = serverInteractor.get()!!
         return MessageParser(context, configuration, settingsInteractor.get(url))
-    }
-
-    @Provides
-    @Singleton
-    fun providePermissionInteractor(settingsRepository: SettingsRepository, serverRepository: CurrentServerRepository): GetPermissionsInteractor {
-        return GetPermissionsInteractor(settingsRepository, serverRepository)
     }
 
     @Provides
