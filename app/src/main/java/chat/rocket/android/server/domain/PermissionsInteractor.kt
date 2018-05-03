@@ -1,7 +1,7 @@
 package chat.rocket.android.server.domain
 
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.common.model.User
 import chat.rocket.core.model.Permission
 import javax.inject.Inject
 
@@ -20,14 +20,14 @@ const val POST_READONLY = "post-readonly"
 class PermissionsInteractor @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val permissionsRepository: PermissionsRepository,
-    private val localRepository: LocalRepository,
-    private val getCurrentServerInteractor: GetCurrentServerInteractor
+    private val getCurrentServerInteractor: GetCurrentServerInteractor,
+    private val userHelper: UserHelper
 ) {
 
-    private fun publicSettings(): PublicSettings? = settingsRepository.get(getCurrentServerUrl()!!)
+    private fun publicSettings(): PublicSettings? = settingsRepository.get(currentServerUrl()!!)
 
     fun saveAll(permissions: List<Permission>) {
-        val url = getCurrentServerUrl()!!
+        val url = currentServerUrl()!!
         permissions.forEach { permissionsRepository.save(url, it) }
     }
 
@@ -57,25 +57,16 @@ class PermissionsInteractor @Inject constructor(
     fun showEditedStatus() = publicSettings()?.showEditedStatus() ?: false
 
     fun canPostToReadOnlyChannels(): Boolean {
-        val url = getCurrentServerUrl()!!
-        val currentUserRoles = currentUser()?.roles
+        val url = getCurrentServerInteractor.get()!!
+        val currentUserRoles = userHelper.user()?.roles
         return permissionsRepository.get(url, POST_READONLY)?.let { permission ->
             currentUserRoles?.isNotEmpty() == true && permission.roles.any {
                 currentUserRoles.contains(it)
             }
-        } == true || isAdmin()
+        } == true || userHelper.isAdmin()
     }
 
-    private fun currentUser(): User? {
-        val url = getCurrentServerUrl()!!
-        return localRepository.getCurrentUser(url)
-    }
-
-    private fun isAdmin(): Boolean {
-        return currentUser()?.roles?.find { it.equals("admin", ignoreCase = true) } != null
-    }
-
-    private fun getCurrentServerUrl(): String? {
+    private fun currentServerUrl(): String? {
         return getCurrentServerInteractor.get()
     }
 }
