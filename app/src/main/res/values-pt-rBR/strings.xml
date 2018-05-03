@@ -149,7 +149,7 @@
 
     <!-- Socket status -->
     <string name="status_connected">Conectado</string>
-    <string name="status_disconnected">Desconetado</string>
+    <string name="status_disconnected">Desconectado</string>
     <string name="status_connecting">Conectando</string>
     <string name="status_authenticating">Autenticando</string>
     <string name="status_disconnecting">Desconectando</string>
