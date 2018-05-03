@@ -66,12 +66,13 @@ class ChatRoomsPresenter @Inject constructor(
             view.showLoading()
             subscribeStatusChange()
             try {
-                permissionsInteractor.saveAll(client.permissions())
                 // If we still don't have 'Store_Last_Message' setting, refresh the settings
                 if (!settings.hasShowLastMessage()) {
                     refreshSettingsInteractor.refresh(currentServer)
                 }
                 view.updateChatRooms(getUserChatRooms())
+                val permissions = retryIO { client.permissions() }
+                permissionsInteractor.saveAll(permissions)
             } catch (ex: RocketChatException) {
                 ex.message?.let {
                     view.showMessage(it)
@@ -96,6 +97,7 @@ class ChatRoomsPresenter @Inject constructor(
             chatRoom.name
         }
 
+        println("Owner -> ${chatRoom.user}")
         navigator.toChatRoom(chatRoom.id, roomName,
             chatRoom.type.toString(), chatRoom.readonly ?: false,
             chatRoom.lastSeen ?: -1,

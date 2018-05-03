@@ -124,11 +124,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onViewCreated(view, savedInstanceState)
         setupToolbar(chatRoomName)
 
+        presenter.setupChatRoom()
         presenter.loadMessages(chatRoomId, chatRoomType)
         presenter.loadChatRooms()
         setupRecyclerView()
         setupFab()
-        setupMessageComposer()
         setupSuggestionsView()
         setupActionSnackbar()
         activity?.apply {
@@ -225,6 +225,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
             toggleNoChatView(adapter.itemCount)
         }
+    }
+
+    override fun onRoomChanged(canPost: Boolean) {
+        setupMessageComposer()
     }
 
     private fun toggleNoChatView(size: Int) {

@@ -70,10 +70,16 @@ class ChatRoomPresenter @Inject constructor(
     private val stateChannel = Channel<State>()
     private var lastState = manager.state
 
+    fun setupChatRoom() {
+        launchUI(strategy) {
+            val canPost = permissions.canPostToReadOnlyChannels()
+            view.onRoomChanged(canPost)
+        }
+    }
+
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
         this.chatRoomId = chatRoomId
         this.chatRoomType = chatRoomType
-        println(permissions.canPostToReadOnlyChannels())
         launchUI(strategy) {
             view.showLoading()
             try {

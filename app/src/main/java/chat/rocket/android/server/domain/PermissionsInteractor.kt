@@ -1,6 +1,7 @@
 package chat.rocket.android.server.domain
 
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.common.model.User
 import chat.rocket.core.model.Permission
 import javax.inject.Inject
 
@@ -57,12 +58,21 @@ class PermissionsInteractor @Inject constructor(
 
     fun canPostToReadOnlyChannels(): Boolean {
         val url = getCurrentServerUrl()!!
-        val currentUserRoles = localRepository.getCurrentUser(url)?.roles
+        val currentUserRoles = currentUser()?.roles
         return permissionsRepository.get(url, POST_READONLY)?.let { permission ->
             currentUserRoles?.isNotEmpty() == true && permission.roles.any {
                 currentUserRoles.contains(it)
             }
-        } == true
+        } == true || isAdmin()
+    }
+
+    private fun currentUser(): User? {
+        val url = getCurrentServerUrl()!!
+        return localRepository.getCurrentUser(url)
+    }
+
+    private fun isAdmin(): Boolean {
+        return currentUser()?.roles?.find { it.equals("admin", ignoreCase = true) } != null
     }
 
     private fun getCurrentServerUrl(): String? {
