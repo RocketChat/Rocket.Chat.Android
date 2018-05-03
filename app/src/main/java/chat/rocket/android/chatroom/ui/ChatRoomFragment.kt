@@ -31,6 +31,7 @@ import chat.rocket.android.widget.emoji.*
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
@@ -673,13 +674,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun subscribeTextMessage() {
-        val disposable = text_message.asObservable(0)
-            .subscribe { t ->
-                setupComposeMessageButtons(t)
-                sendTypingStatus(t)
-            }
+        val composeButtonsDisposable = text_message.asObservable(0)
+            .subscribe { t -> setupComposeMessageButtons(t) }
 
-        compositeDisposable.add(disposable)
+        val typingStatusDisposable = text_message.asObservable(300)
+            .subscribe { t -> sendTypingStatus(t) }
+
+        compositeDisposable.addAll(composeButtonsDisposable, typingStatusDisposable)
     }
 
     private fun unsubscribeTextMessage() {
