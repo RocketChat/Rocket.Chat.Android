@@ -108,7 +108,6 @@ class ChatRoomsPresenter @Inject constructor(
                 view.showMessage(R.string.msg_generic_error)
             } else {
                 val isChatRoomOwner = chatRoom.user?.username == myself.username || isDirectMessage
-                println("${myself.username} == ${chatRoom.user?.username}")
                 navigator.toChatRoom(chatRoom.id, roomName,
                     chatRoom.type.toString(), chatRoom.readonly ?: false,
                     chatRoom.lastSeen ?: -1,
