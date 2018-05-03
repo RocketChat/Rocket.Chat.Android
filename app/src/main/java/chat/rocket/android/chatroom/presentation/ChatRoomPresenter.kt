@@ -539,7 +539,8 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 retryIO("joinChat($chatRoomId)") { client.joinChat(chatRoomId) }
-                view.onJoined()
+                val canPost = permissions.canPostToReadOnlyChannels()
+                view.onJoined(canPost)
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }

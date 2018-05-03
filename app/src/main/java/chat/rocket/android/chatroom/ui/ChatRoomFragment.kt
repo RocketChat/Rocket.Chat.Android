@@ -44,7 +44,8 @@ fun newInstance(
     chatRoomType: String,
     isChatRoomReadOnly: Boolean,
     chatRoomLastSeen: Long,
-    isSubscribed: Boolean = true
+    isSubscribed: Boolean = true,
+    isChatRoomOwner: Boolean = false
 ): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
@@ -54,6 +55,7 @@ fun newInstance(
             putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
             putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
             putBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED, isSubscribed)
+            putBoolean(BUNDLE_CHAT_ROOM_IS_OWNER, isChatRoomOwner)
         }
     }
 }
@@ -65,6 +67,7 @@ private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
+private const val BUNDLE_CHAT_ROOM_IS_OWNER = "chat_room_is_owner"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
     @Inject
@@ -77,6 +80,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var chatRoomType: String
     private var isSubscribed: Boolean = true
     private var isChatRoomReadOnly: Boolean = false
+    private var isChatRoomOwner: Boolean = false
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var chatRoomLastSeen: Long = -1
     private lateinit var actionSnackbar: ActionSnackbar
@@ -106,6 +110,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
             isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
+            isChatRoomOwner = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_OWNER)
+
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -228,7 +234,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onRoomChanged(canPost: Boolean) {
-        setupMessageComposer()
+        setupMessageComposer(isChatRoomOwner || canPost)
     }
 
     private fun toggleNoChatView(size: Int) {
@@ -521,12 +527,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onJoined() {
+    override fun onJoined(canPost: Boolean) {
         ui {
             input_container.setVisible(true)
             button_join_chat.setVisible(false)
             isSubscribed = true
-            setupMessageComposer()
+            setupMessageComposer(isChatRoomOwner)
         }
     }
 
@@ -557,8 +563,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    private fun setupMessageComposer() {
-        if (isChatRoomReadOnly) {
+    private fun setupMessageComposer(canPost: Boolean) {
+        if (!canPost && isChatRoomReadOnly) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else if (!isSubscribed) {
