@@ -6,6 +6,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.*
@@ -51,6 +52,7 @@ class ChatRoomsPresenter @Inject constructor(
     private val jobSchedulerInteractor: JobSchedulerInteractor,
     private val permissionsInteractor: PermissionsInteractor,
     private val localRepository: LocalRepository,
+    private val userHelper: UserHelper,
     settingsRepository: SettingsRepository,
     factory: ConnectionManagerFactory
 ) {
@@ -117,7 +119,7 @@ class ChatRoomsPresenter @Inject constructor(
     }
 
     private suspend fun getCurrentUser(): User? {
-        localRepository.getCurrentUser(currentServer)?.let {
+        userHelper.user()?.let {
             return it
         }
         try {
