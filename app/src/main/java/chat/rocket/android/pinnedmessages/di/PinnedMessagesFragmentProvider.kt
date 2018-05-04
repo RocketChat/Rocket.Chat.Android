@@ -1,6 +1,6 @@
 package chat.rocket.android.chatroom.di
 
-import chat.rocket.android.chatroom.ui.PinnedMessagesFragment
+import chat.rocket.android.pinnedmessages.ui.PinnedMessagesFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
