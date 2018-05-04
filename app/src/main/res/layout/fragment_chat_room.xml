@@ -130,14 +130,4 @@
         tools:text="connected"
         tools:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/dummy_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:minHeight="100dp"
-        android:minWidth="100dp"
-        android:background="@color/white"/>
-
 </android.support.constraint.ConstraintLayout>
