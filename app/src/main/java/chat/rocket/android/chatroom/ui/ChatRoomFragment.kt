@@ -37,7 +37,6 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -715,10 +714,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun sendTypingStatus(charSequence: CharSequence) {
         if (charSequence.isNotBlank()) {
-            Timber.i("SENDING  $charSequence")
             presenter.sendTyping()
         } else {
-            Timber.i("SENDING FOR NOT $charSequence")
             presenter.sendNotTyping()
         }
     }
