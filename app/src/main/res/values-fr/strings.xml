@@ -34,6 +34,7 @@
     <string name="action_away">Loin</string>
     <string name="action_busy">Occupé</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_drawing">Dessin</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
