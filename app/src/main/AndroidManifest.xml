@@ -90,6 +90,11 @@
             android:name=".settings.about.ui.AboutActivity"
             android:theme="@style/AppTheme" />
 
+        <activity android:name=".onboarding.ui.OnboardingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
