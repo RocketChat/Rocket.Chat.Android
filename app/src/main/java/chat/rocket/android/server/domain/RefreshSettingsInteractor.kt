@@ -25,7 +25,7 @@ class RefreshSettingsInteractor @Inject constructor(
         HIDE_USER_JOIN, HIDE_USER_LEAVE,
         HIDE_TYPE_AU, HIDE_MUTE_UNMUTE, HIDE_TYPE_RU, ALLOW_MESSAGE_DELETING,
         ALLOW_MESSAGE_EDITING, ALLOW_MESSAGE_PINNING, SHOW_DELETED_STATUS, SHOW_EDITED_STATUS,
-        WIDE_TILE_310)
+        WIDE_TILE_310, STORE_LAST_MESSAGE)
 
     suspend fun refresh(server: String) {
         withContext(CommonPool) {

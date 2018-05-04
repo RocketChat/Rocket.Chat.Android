@@ -38,7 +38,6 @@ import chat.rocket.core.internal.ReactionsAdapter
 import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
-import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.listener.RequestLoggingListener
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -111,12 +110,12 @@ class AppModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
-        return OkHttpClient.Builder().apply {
-            addInterceptor(logger)
-            connectTimeout(15, TimeUnit.SECONDS)
-            readTimeout(20, TimeUnit.SECONDS)
-            writeTimeout(15, TimeUnit.SECONDS)
-        }.build()
+        return OkHttpClient.Builder()
+                .addInterceptor(logger)
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build()
     }
 
     @Provides
@@ -138,8 +137,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideImagePipelineConfig(context: Context, @ForFresco okHttpClient: OkHttpClient): ImagePipelineConfig {
-        val listeners = HashSet<RequestListener>()
-        listeners.add(RequestLoggingListener())
+        val listeners = setOf(RequestLoggingListener())
 
         return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
             .setRequestListeners(listeners)

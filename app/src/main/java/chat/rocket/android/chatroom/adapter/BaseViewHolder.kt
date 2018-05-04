@@ -3,6 +3,8 @@ package chat.rocket.android.chatroom.adapter
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.children
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
@@ -74,7 +76,7 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
         fun onActionSelected(item: MenuItem, message: Message)
     }
 
-    val longClickListener = { view: View ->
+    private val longClickListener = { view: View ->
         if (data?.message?.isSystemMessage() == false) {
             val menuItems = view.context.inflate(R.menu.message_actions).toList()
             menuItems.find { it.itemId == R.id.action_menu_msg_pin_unpin }?.apply {
@@ -90,6 +92,13 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
 
     internal fun setupActionMenu(view: View) {
         if (listener.isActionsEnabled()) {
+            if (view is ViewGroup) {
+                for (child in view.children) {
+                    if (child !is RecyclerView && child.id != R.id.recycler_view_reactions) {
+                        setupActionMenu(child)
+                    }
+                }
+            }
             view.setOnLongClickListener(longClickListener)
         }
     }
