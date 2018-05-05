@@ -9,8 +9,6 @@ import java.util.*
 import android.support.v4.graphics.ColorUtils
 import android.support.annotation.ColorInt
 
-
-
 class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var mPaths = LinkedHashMap<MyPath, PaintOptions>()
 
