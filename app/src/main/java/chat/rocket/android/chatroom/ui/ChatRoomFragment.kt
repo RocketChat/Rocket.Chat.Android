@@ -46,7 +46,6 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
