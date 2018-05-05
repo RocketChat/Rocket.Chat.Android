@@ -662,14 +662,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             image_send_drawing.setOnClickListener {
                 if (!canWriteToExternalStorage()) {
                     checkWritingPermission()
-                    return@setOnClickListener
+                }else{
+                    val bitmap = custom_draw_view.getBitmap()
+                    val uri = saveImage(bitmap)
+                    if (uri != null) {
+                        uploadFile(uri)
+                    }
+                    drawDialog.dismiss()
                 }
-                val bitmap = custom_draw_view.getBitmap()
-                val uri = saveImage(bitmap)
-                if (uri != null) {
-                    uploadFile(uri)
-                }
-                drawDialog.dismiss()
             }
             image_close_drawing.setOnClickListener {
                 drawDialog.dismiss()
@@ -836,14 +836,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun canWriteToExternalStorage(): Boolean {
-        return AndroidPermissionsHelper.checkPermission(activity!!.applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        return context?.let { AndroidPermissionsHelper.checkPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE) }!!
     }
 
     private fun checkWritingPermission() {
-            AndroidPermissionsHelper.requestPermission(this.activity!!,
+        activity?.let {
+            AndroidPermissionsHelper.requestPermission(it,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE)
-            Timber.e("checkWritingPermission")
+        }
     }
 
     private fun setupSuggestionsView() {

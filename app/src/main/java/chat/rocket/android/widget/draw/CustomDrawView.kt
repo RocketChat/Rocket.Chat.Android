@@ -65,8 +65,6 @@ class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attr
         val lastKey = mUndonePaths.keys.last()
         addPath(lastKey, mUndonePaths.values.last())
         mUndonePaths.remove(lastKey)
-        if (mUndonePaths.isEmpty()) {
-        }
         invalidate()
     }
 

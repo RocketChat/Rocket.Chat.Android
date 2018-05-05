@@ -4,15 +4,7 @@ import android.graphics.Path
 import java.io.Writer
 import java.security.InvalidParameterException
 
-class Move : Action {
-
-    val x: Float
-    val y: Float
-
-    constructor(x: Float, y: Float) {
-        this.x = x
-        this.y = y
-    }
+class Move(val x: Float, val y: Float) : Action {
 
     override fun perform(path: Path) {
         path.moveTo(x, y)
