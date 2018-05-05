@@ -679,24 +679,30 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 toggleDrawTools(draw_tools,false)
             }
             image_draw_width.setOnClickListener {
-                if(seekBar_width.visibility == View.VISIBLE){
-                    toggleDrawTools(draw_tools)
+                if (draw_tools.translationY == (56).toPx){
+                    toggleDrawTools(draw_tools,true)
+                }else if (draw_tools.translationY == (0).toPx && seekBar_width.isVisible()){
+                    toggleDrawTools(draw_tools,false)
                 }
                 seekBar_width.setVisible(true)
                 seekBar_opacity.setVisible(false)
                 draw_color_palette.setVisible(false)
             }
             image_draw_opacity.setOnClickListener {
-                if(seekBar_opacity.visibility == View.VISIBLE){
-                    toggleDrawTools(draw_tools)
+                if (draw_tools.translationY == (56).toPx){
+                    toggleDrawTools(draw_tools,true)
+                }else if (draw_tools.translationY == (0).toPx && seekBar_opacity.isVisible()){
+                    toggleDrawTools(draw_tools,false)
                 }
                 seekBar_width.setVisible(false)
                 seekBar_opacity.setVisible(true)
                 draw_color_palette.setVisible(false)
             }
             image_draw_color.setOnClickListener {
-                if(draw_color_palette.visibility == View.VISIBLE){
-                    toggleDrawTools(draw_tools)
+                if (draw_tools.translationY == (56).toPx){
+                    toggleDrawTools(draw_tools,true)
+                }else if (draw_tools.translationY == (0).toPx && draw_color_palette.isVisible()){
+                    toggleDrawTools(draw_tools,false)
                 }
                 seekBar_width.setVisible(false)
                 seekBar_opacity.setVisible(false)
@@ -805,13 +811,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
        }
     }
 
-    private fun toggleDrawTools(view: View, toggleView: Boolean = true) {
-        if (toggleView){
-            if (view.translationY == (56).toPx){
-                view.animate().translationY((0).toPx)
-            }else{
-                view.animate().translationY((56).toPx)
-            }
+    private fun toggleDrawTools(view: View, showView: Boolean = true) {
+        if (showView){
+            view.animate().translationY((0).toPx)
         }else{
             view.animate().translationY((56).toPx)
         }
