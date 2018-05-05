@@ -14,10 +14,9 @@ class VideoAttachmentViewHolder(itemView: View,
 
     init {
         with(itemView) {
+            setupActionMenu(attachment_container)
             image_attachment.setVisible(false)
             audio_video_attachment.setVisible(true)
-            setupActionMenu(attachment_container)
-            setupActionMenu(audio_video_attachment)
         }
     }
 

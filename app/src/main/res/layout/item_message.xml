@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/message_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
@@ -74,6 +75,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             tools:text="11:45 PM" />
+
+        <TextView
+            android:id="@+id/text_edit_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/msg_edited"
+            android:layout_marginStart="8dp"
+            android:textStyle="italic"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <TextView

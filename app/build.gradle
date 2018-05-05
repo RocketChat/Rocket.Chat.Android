@@ -13,7 +13,7 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 2015
+        versionCode 2019
         versionName "2.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -114,9 +114,9 @@ dependencies {
     }
 
     testImplementation libraries.junit
-    androidTestImplementation(libraries.expressoCore, {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    testImplementation libraries.truth
+    androidTestImplementation libraries.espressoCore
+    androidTestImplementation libraries.espressoIntents
 }
 
 kotlin {

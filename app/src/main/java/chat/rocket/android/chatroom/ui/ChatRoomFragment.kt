@@ -35,7 +35,6 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
@@ -177,12 +176,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.toMembersList(chatRoomId, chatRoomType)
             }
             R.id.action_pinned_messages -> {
-                val intent = Intent(activity, PinnedMessagesActivity::class.java).apply {
-                    putExtra(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-                    putExtra(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
-                    putExtra(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
-                }
-                startActivity(intent)
+                presenter.toPinnedMessageList(chatRoomId,chatRoomType)
             }
         }
         return true
@@ -485,12 +479,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         button_add_reaction.tag = drawableId
     }
 
-    override fun showFileSelection(filter: Array<String>) {
+    override fun showFileSelection(filter: Array<String>?) {
         ui {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
+
+            // Must set a type otherwise the intent won't resolve
             intent.type = "*/*"
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
             intent.addCategory(Intent.CATEGORY_OPENABLE)
+
+            // Filter selectable files to those that match the whitelist for this particular server
+            if (filter != null) {
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, filter)
+            }
             startActivityForResult(intent, REQUEST_CODE_FOR_PERFORM_SAF)
         }
     }

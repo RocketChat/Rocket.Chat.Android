@@ -93,8 +93,8 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         isChatRoomSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
 
-        if (supportFragmentManager.findFragmentByTag("ChatRoomFragment") == null) {
-            addFragment("ChatRoomFragment", R.id.fragment_container) {
+        if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
+            addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
                 newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
                         isChatRoomSubscribed)
             }
@@ -155,5 +155,9 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private fun finishActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
+    }
+
+    companion object {
+        const val TAG_CHAT_ROOM_FRAGMENT = "ChatRoomFragment"
     }
 }
