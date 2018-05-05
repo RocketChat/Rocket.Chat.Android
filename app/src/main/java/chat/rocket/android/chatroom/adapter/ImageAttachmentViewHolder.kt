@@ -47,7 +47,6 @@ class ImageAttachmentViewHolder(itemView: View,
     init {
         with(itemView) {
             setupActionMenu(attachment_container)
-            setupActionMenu(image_attachment)
         }
     }
 
