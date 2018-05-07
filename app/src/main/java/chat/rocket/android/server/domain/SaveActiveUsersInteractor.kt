@@ -30,7 +30,7 @@ class SaveActiveUsersInteractor @Inject constructor(
                 status = user.status ?: it.status,
                 emails = user.emails ?: it.emails,
                 utcOffset = user.utcOffset ?: it.utcOffset,
-                roles = user.roles
+                roles = user.roles ?: it.roles
             )
 
             val activeUserList: MutableList<User> =

@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.net.Uri
-import android.support.customtabs.CustomTabsIntent
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Spanned
 import android.text.style.ClickableSpan
@@ -16,6 +15,7 @@ import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.util.extensions.openTabbedUrl
 import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
@@ -151,12 +151,7 @@ class MessageParser @Inject constructor(
                 if (!link.startsWith("@") && link !in consumed) {
                     builder.setSpan(object : ClickableSpan() {
                         override fun onClick(view: View) {
-                            with(view) {
-                                val tabsbuilder = CustomTabsIntent.Builder()
-                                tabsbuilder.setToolbarColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, context.theme))
-                                val customTabsIntent = tabsbuilder.build()
-                                customTabsIntent.launchUrl(context, getUri(link))
-                            }
+                            view.openTabbedUrl(getUri(link))
                         }
                     }, matcher.start(0), matcher.end(0))
                     consumed.add(link)
