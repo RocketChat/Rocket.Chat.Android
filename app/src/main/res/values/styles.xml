@@ -58,7 +58,7 @@
 
     <style name="EditText.Password" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/colorPrimaryDark</item>
+        <item name="android:textColorHint">@color/colorSecondaryText</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="colorControlNormal">@color/colorPrimaryDark</item>
         <item name="colorControlActivated">@color/colorPrimaryDark</item>

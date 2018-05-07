@@ -35,6 +35,7 @@
     <string name="action_away">Away</string>
     <string name="action_busy">Busy</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_save_changes">Save Changes</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -108,6 +109,10 @@
     <string name="msg_image_saved_successfully">Image has been saved to gallery</string>
     <string name="msg_image_saved_failed">Failed to save image</string>
     <string name="msg_edited">(edited)</string>
+    <string name="msg_password_dont_match">Password don\'t match</string>
+    <string name="msg_password_empty">Password is empty</string>
+    <string name="msg_password_update_successful">Password successfully updated!</string>
+    <string name="msg_password_update_failed">Password fails to update: %1$s</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

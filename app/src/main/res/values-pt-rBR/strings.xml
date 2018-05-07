@@ -34,6 +34,7 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisível</string>
+    <string name="action_save_changes">Salvar alterações</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -107,6 +108,10 @@
     <string name="msg_image_saved_successfully">Imagem salva na galeria</string>
     <string name="msg_image_saved_failed">Falha ao salvar a imagem</string>
     <string name="msg_edited">(editado)</string>
+    <string name="msg_password_dont_match">Senha não corresponde</string>
+    <string name="msg_password_empty">A senha está vazia</string>
+    <string name="msg_password_update_successful">Senha atualizada com sucesso!</string>
+    <string name="msg_password_update_failed">A senha não é atualizada: %1$s</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
