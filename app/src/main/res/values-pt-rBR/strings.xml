@@ -117,6 +117,8 @@
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
     <string name="message_pinned">Pinou uma mensagem:</string>
+    <string name="message_muted">Usuário %1$s silenciado por %2$s</string>
+    <string name="message_unmuted">Usuário %1$s de-silenciado por %2$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>

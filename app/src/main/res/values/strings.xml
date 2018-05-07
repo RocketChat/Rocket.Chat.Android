@@ -118,6 +118,8 @@
     <string name="message_welcome">Welcome %s</string>
     <string name="message_removed">Message removed</string>
     <string name="message_pinned">Pinned a message:</string>
+    <string name="message_muted">User %1$s muted by %2$s</string>
+    <string name="message_unmuted">User %1$s unmuted by %2$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
