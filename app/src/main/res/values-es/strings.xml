@@ -119,6 +119,7 @@
     <string name="msg_are_typing">\u0020are typing…</string>
     // TODO: Add proper translation.
     <string name="msg_several_users_are_typing">Several users are typing…</string>
+    <string name="msg_no_search_found">No se han encontrado resultados</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>

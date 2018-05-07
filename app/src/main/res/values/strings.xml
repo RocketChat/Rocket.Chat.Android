@@ -112,6 +112,7 @@
     <string name="msg_is_typing">\u0020is typing…</string>
     <string name="msg_are_typing">\u0020are typing…</string>
     <string name="msg_several_users_are_typing">Several users are typing…</string>
+    <string name="msg_no_search_found">No result found</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

@@ -163,7 +163,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             /*val diff = async(CommonPool) {
                 DiffUtil.calculateDiff(RoomsDiffCallback(adapter.baseAdapter.dataSet, newDataSet))
             }.await()*/
-
+            if (newDataSet.isEmpty()) {
+                text_no_search.visibility = View.VISIBLE
+            }else{
+                text_no_search.visibility = View.GONE
+            }
             if (isActive) {
                 adapter.baseAdapter.updateRooms(newDataSet)
                 // TODO - fix crash to re-enable diff.dispatchUpdatesTo(adapter)

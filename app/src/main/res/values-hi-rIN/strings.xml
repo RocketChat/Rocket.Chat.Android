@@ -121,6 +121,7 @@
     <string name="msg_are_typing">\u0020are typing…</string>
     // TODO: Add proper translation.
     <string name="msg_several_users_are_typing">Several users are typing…</string>
+    <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
