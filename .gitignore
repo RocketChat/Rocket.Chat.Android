@@ -1,7 +1,9 @@
-app/rocket-chat.json
+
 app/src/release/google-services.json
-app/src/release/res/values/api_key_strings.xml
-app/libs/
+
+base/rocket-chat.json
+base/src/release/res/values/api_key_strings.xml
+base/libs/
 
 # Auth files
 *.jks
@@ -55,7 +57,7 @@ hs_err_pid*
 # Built application files
 *.apk
 *.ap_
-app/libs
+base/libs
 
 # Files for the ART/Dalvik VM
 *.dex

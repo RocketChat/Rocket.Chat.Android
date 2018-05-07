@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="chat.rocket.android">
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+    package="chat.rocket.android.app">
 
     <application
-        android:name=".app.RocketChatApplication"
+        android:name="chat.rocket.android.app.RocketChatApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_config"
         android:icon="@mipmap/ic_launcher"
@@ -25,7 +13,7 @@
         android:supportsRtl="true">
 
         <activity
-            android:name=".authentication.ui.AuthenticationActivity"
+            android:name="chat.rocket.android.authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AuthenticationTheme"
@@ -52,42 +40,42 @@
         </activity>
 
         <activity
-            android:name=".server.ui.ChangeServerActivity"
+            android:name="chat.rocket.android.server.ui.ChangeServerActivity"
             android:theme="@style/AuthenticationTheme" />
 
         <activity
-            android:name=".main.ui.MainActivity"
+            android:name="chat.rocket.android.main.ui.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".webview.ui.WebViewActivity"
+            android:name="chat.rocket.android.webview.ui.WebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".webview.cas.ui.CasWebViewActivity"
+            android:name="chat.rocket.android.webview.cas.ui.CasWebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".webview.oauth.ui.OauthWebViewActivity"
+            android:name="chat.rocket.android.webview.oauth.ui.OauthWebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".chatroom.ui.ChatRoomActivity"
+            android:name="chat.rocket.android.chatroom.ui.ChatRoomActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <!-- TODO: Change to fragment-->
         <activity
-            android:name=".settings.password.ui.PasswordActivity"
+            android:name="chat.rocket.android.settings.password.ui.PasswordActivity"
             android:theme="@style/AppTheme" />
 
         <!-- TODO: Change to fragment-->
         <activity
-            android:name=".settings.about.ui.AboutActivity"
+            android:name="chat.rocket.android.settings.about.ui.AboutActivity"
             android:theme="@style/AppTheme" />
 
         <receiver
@@ -103,7 +91,7 @@
         </receiver>
 
         <receiver
-            android:name=".push.DirectReplyReceiver"
+            android:name="chat.rocket.android.push.DirectReplyReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -112,21 +100,21 @@
         </receiver>
 
         <service
-            android:name=".push.FirebaseTokenService"
+            android:name="chat.rocket.android.push.FirebaseTokenService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".push.GcmListenerService"
+            android:name="chat.rocket.android.push.GcmListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".chatroom.service.MessageService"
+            android:name="chat.rocket.android.chatroom.service.MessageService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
