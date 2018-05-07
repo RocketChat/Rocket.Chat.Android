@@ -336,7 +336,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                             SpannableStringBuilder()
                                 .bold { append(usernameList[0]) }
                                 .append(getString(R.string.msg_and))
-                                .bold { append(usernameList[0]) }
+                                .bold { append(usernameList[1]) }
                                 .append(getString(R.string.msg_are_typing))
                 }
                 else -> {
