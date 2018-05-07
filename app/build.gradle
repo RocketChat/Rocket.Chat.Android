@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "chat.rocket.android"
-        minSdkVersion 21
+        minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdk
         versionCode 2019
         versionName "2.1.0"
@@ -30,84 +30,32 @@ android {
 
     buildTypes {
         release {
-            buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
-            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
-            buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
-            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
             applicationIdSuffix ".dev"
         }
-    }
-
-    packagingOptions {
-        exclude 'META-INF/core.kotlin_module'
     }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
+    implementation project(':base')
     implementation project(':player')
 
-    implementation libraries.kotlin
-    implementation libraries.coroutines
-    implementation libraries.coroutinesAndroid
-
     implementation libraries.appCompat
-    implementation libraries.recyclerview
-    implementation libraries.design
-    implementation libraries.constraintLayout
-    implementation libraries.cardView
-    implementation libraries.flexbox
-    implementation libraries.customTabs
+    implementation libraries.support
 
-    implementation libraries.androidKtx
+    implementation libraries.lifecycleExtensions
 
-    implementation libraries.dagger
-    implementation libraries.daggerSupport
-    kapt libraries.daggerProcessor
-    kapt libraries.daggerAndroidApt
+    implementation libraries.firebaseIid
 
     implementation libraries.playServicesGcm
 
-    implementation libraries.room
-    kapt libraries.roomProcessor
-    implementation libraries.roomRxjava
-    implementation libraries.lifecycleExtensions
-    kapt libraries.lifecycleCompiler
-
-    implementation libraries.rxKotlin
-    implementation libraries.rxAndroid
-
-    implementation libraries.moshi
-    implementation libraries.okhttp
-    implementation libraries.okhttpLogger
-
-    implementation libraries.timber
-    implementation libraries.threeTenABP
-    implementation libraries.rxBinding
-
-    implementation libraries.fresco
-    api libraries.frescoOkHttp
-    implementation libraries.frescoAnimatedGif
-    implementation libraries.frescoWebP
-    implementation libraries.frescoAnimatedWebP
-
-    kapt libraries.kotshiCompiler
-    implementation libraries.kotshiApi
-
-    implementation libraries.frescoImageViewer
-
-    implementation libraries.markwon
-
-    implementation libraries.sheetMenu
-
-    implementation libraries.aVLoadingIndicatorView
+    implementation libraries.dagger
+    implementation libraries.daggerSupport
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
@@ -128,16 +76,5 @@ kotlin {
 androidExtensions {
     experimental = true
 }
-
-// FIXME - build and install the sdk into the app/libs directory
-// We were having some issues with the kapt generated files from the sdk when importing as a module
-task compileSdk(type:Exec) {
-    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', 'build-sdk.sh'
-    } else {
-        commandLine './build-sdk.sh'
-    }
-}
-preBuild.dependsOn compileSdk
 
 apply plugin: 'com.google.gms.google-services'
