@@ -313,6 +313,7 @@ class ViewModelMapper @Inject constructor(
     }
 
     private fun getSystemMessage(message: Message): CharSequence {
+        println(message)
         val content = when (message.type) {
         //TODO: Add implementation for Welcome type.
             is MessageType.MessageRemoved -> context.getString(R.string.message_removed)
@@ -322,6 +323,8 @@ class ViewModelMapper @Inject constructor(
             is MessageType.RoomNameChanged -> context.getString(R.string.message_room_name_changed, message.message, message.sender?.username)
             is MessageType.UserRemoved -> context.getString(R.string.message_user_removed_by, message.message, message.sender?.username)
             is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
+            is MessageType.UserMuted -> context.getString(R.string.message_muted, message.message, message.sender?.username)
+            is MessageType.UserUnMuted -> context.getString(R.string.message_unmuted, message.message, message.sender?.username)
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }
