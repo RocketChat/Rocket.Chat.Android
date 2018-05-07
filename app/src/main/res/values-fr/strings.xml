@@ -111,6 +111,7 @@
     <string name="msg_no_chat_title">Aucun message de discussion</string>
     <string name="msg_no_chat_description">Commencez à converser pour voir\nvos messages ici.</string>
     <string name="msg_edited">(édité)</string>
+    <string name="msg_no_search_found">Aucun résultat trouvé</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>
