@@ -111,6 +111,7 @@
     <string name="msg_no_chat_title">Sin mensajes de chat</string>
     <string name="msg_no_chat_description">Comience a conversar para ver\nsus mensajes aquí.</string>
     <string name="msg_edited">(editado)</string>
+    <string name="msg_no_search_found">No se han encontrado resultados</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>

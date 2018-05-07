@@ -107,6 +107,7 @@
     <string name="msg_image_saved_successfully">Imagem salva na galeria</string>
     <string name="msg_image_saved_failed">Falha ao salvar a imagem</string>
     <string name="msg_edited">(editado)</string>
+    <string name="msg_no_search_found">nenhum resultado encontrado</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>

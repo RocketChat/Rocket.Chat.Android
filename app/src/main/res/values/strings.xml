@@ -108,6 +108,7 @@
     <string name="msg_image_saved_successfully">Image has been saved to gallery</string>
     <string name="msg_image_saved_failed">Failed to save image</string>
     <string name="msg_edited">(edited)</string>
+    <string name="msg_no_search_found">No result found</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
