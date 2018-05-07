@@ -124,6 +124,8 @@
     <string name="message_pinned">Fijado una mensaje:</string>
     <string name="message_muted">Usuario %1$s silenciado por %2$s</string>
     <string name="message_unmuted">Usuario %1$s no silenciado por %2$s</string>
+    <string name="message_role_add">%1$s fue establecido %2$s por %3$s</string>
+    <string name="message_role_removed">%1$s ya no es %2$s por %3$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Respuesta</string>

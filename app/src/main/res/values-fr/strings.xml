@@ -124,6 +124,8 @@
     <string name="message_pinned">Épinglé un message:</string>
     <string name="message_muted">Utilisateur %1$s mis en sourdine par %2$s</string>
     <string name="message_unmuted">Utilisateur %1$s non muté par %2$s</string>
+    <string name="message_role_add">%1$s a été défini %2$s par %3$s</string>
+    <string name="message_role_removed">%1$s is no longer %2$s par %3$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
