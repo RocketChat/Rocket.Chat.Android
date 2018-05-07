@@ -99,7 +99,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:maxLines="2"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
         app:layout_constraintEnd_toStartOf="parent" />
 
