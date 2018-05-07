@@ -111,6 +111,14 @@
     <string name="msg_no_chat_title">Aucun message de discussion</string>
     <string name="msg_no_chat_description">Commencez à converser pour voir\nvos messages ici.</string>
     <string name="msg_edited">(édité)</string>
+    // TODO: Add proper translation.
+    <string name="msg_and">\u0020and\u0020</string>
+    // TODO: Add proper translation.
+    <string name="msg_is_typing">\u0020is typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_are_typing">\u0020are typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_several_users_are_typing">Several users are typing…</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>

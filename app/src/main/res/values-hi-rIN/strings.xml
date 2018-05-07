@@ -113,6 +113,14 @@
     <string name="msg_no_chat_title">कोई चैट संदेश नहीं</string>
     <string name="msg_no_chat_description">यहां अपने संदेश देखने के लिए\nबातचीत शुरू करें।</string>
     <string name="msg_edited">(संपादित)</string>
+    // TODO: Add proper translation.
+    <string name="msg_and">\u0020and\u0020</string>
+    // TODO: Add proper translation.
+    <string name="msg_is_typing">\u0020is typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_are_typing">\u0020are typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_several_users_are_typing">Several users are typing…</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>

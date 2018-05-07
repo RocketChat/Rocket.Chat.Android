@@ -26,6 +26,18 @@ interface ChatRoomView : LoadingView, MessageView {
     fun sendMessage(text: String)
 
     /**
+     * Shows the username(s) of the user(s) who is/are typing in the chat room.
+     *
+     * @param usernameList The list of username to show.
+     */
+    fun showTypingStatus(usernameList: ArrayList<String>)
+
+    /**
+     * Hides the typing status view.
+     */
+    fun hideTypingStatusView()
+
+    /**
      * Perform file selection with the mime type [filter]
      */
     fun showFileSelection(filter: Array<String>?)

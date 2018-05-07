@@ -107,6 +107,10 @@
     <string name="msg_image_saved_successfully">Imagem salva na galeria</string>
     <string name="msg_image_saved_failed">Falha ao salvar a imagem</string>
     <string name="msg_edited">(editado)</string>
+    <string name="msg_and">\u0020e\u0020</string>
+    <string name="msg_is_typing">\u0020está digitando…</string>
+    <string name="msg_are_typing">\u0020estão digitando…</string>
+    <string name="msg_several_users_are_typing">Vários usuários estão digitando…</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
