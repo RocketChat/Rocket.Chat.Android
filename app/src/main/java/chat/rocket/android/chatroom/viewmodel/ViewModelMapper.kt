@@ -325,6 +325,8 @@ class ViewModelMapper @Inject constructor(
             is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
             is MessageType.UserMuted -> context.getString(R.string.message_muted, message.message, message.sender?.username)
             is MessageType.UserUnMuted -> context.getString(R.string.message_unmuted, message.message, message.sender?.username)
+            is MessageType.SubscriptionRoleAdded -> context.getString(R.string.message_role_add, message.message, message.sender?.username, message.role)
+            is MessageType.SubscriptionRoleRemoved -> context.getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }
