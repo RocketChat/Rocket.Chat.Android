@@ -1,4 +1,4 @@
-package chat.rocket.android.chatroom.presentation
+package chat.rocket.android.pinnedmessages.presentation
 
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
 import chat.rocket.android.core.behaviours.LoadingView

@@ -15,7 +15,7 @@
         android:paddingStart="16dp"
         android:paddingTop="8dp"
         android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_status_online_24dp"
+        android:drawableStart="@drawable/ic_status_online_12dp"
         android:text="@string/action_online"
         android:background="?selectableItemBackground"/>
 
@@ -28,7 +28,7 @@
         android:paddingStart="16dp"
         android:paddingTop="8dp"
         android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_status_away_24dp"
+        android:drawableStart="@drawable/ic_status_away_12dp"
         android:text="@string/action_away"
         android:background="?selectableItemBackground"/>
 
@@ -41,7 +41,7 @@
         android:paddingStart="16dp"
         android:paddingTop="8dp"
         android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_status_busy_24dp"
+        android:drawableStart="@drawable/ic_status_busy_12dp"
         android:text="@string/action_busy"
         android:background="?selectableItemBackground"/>
 
@@ -54,7 +54,7 @@
         android:paddingStart="16dp"
         android:paddingTop="8dp"
         android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_status_invisible_24dp"
+        android:drawableStart="@drawable/ic_status_invisible_12dp"
         android:text="@string/action_invisible"
         android:background="?selectableItemBackground"/>
 

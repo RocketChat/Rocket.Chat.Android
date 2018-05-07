@@ -26,7 +26,7 @@ import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.getPath
-import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -64,6 +64,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     private lateinit var alertDialogBuilder: AlertDialog.Builder
     private lateinit var alertDialog: AlertDialog
+    private val disposables = CompositeDisposable()
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -89,34 +90,41 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         presenter.loadUserProfile()
     }
 
-    override fun showProfile(avatarUrl: String, name: String, username: String, email: String) {
-        image_avatar.setImageURI(avatarUrl)
+    override fun onDestroyView() {
+        disposables.clear()
+        super.onDestroyView()
+    }
 
-        //click on image_avatar to change avatar
-        image_avatar.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                val permissionCheck = ContextCompat.checkSelfPermission(context!!,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                if (permissionCheck != PERMISSION_GRANTED) {
-                    requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), CHOOSE_PICKER_MODE)
-                } else {
-                    openImagePickerChooserDialog()
+    override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
+        ui {
+            image_avatar.setImageURI(avatarUrl)
+
+            //click on image_avatar to change avatar
+            image_avatar.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(view: View) {
+                    val permissionCheck = ContextCompat.checkSelfPermission(context!!,
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                    if (permissionCheck != PERMISSION_GRANTED) {
+                        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), CHOOSE_PICKER_MODE)
+                    } else {
+                        openImagePickerChooserDialog()
+                    }
                 }
-            }
-        })
-        text_name.textContent = name
-        text_username.textContent = username
-        text_email.textContent = email
-        text_avatar_url.textContent = ""
+            })
+            text_name.textContent = name
+            text_username.textContent = username
+            text_email.textContent = email ?: ""
+            text_avatar_url.textContent = ""
 
-        currentName = name
-        currentUsername = username
-        currentEmail = email
-        currentAvatar = avatarUrl
+            currentName = name
+            currentUsername = username
+            currentEmail = email ?: ""
+            currentAvatar = avatarUrl
 
-        profile_container.setVisible(true)
+            profile_container.setVisible(true)
 
-        listenToChanges()
+            listenToChanges()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -232,12 +240,16 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showLoading() {
         updateProfileRequest = false
         enableUserInput(false)
-        view_loading.setVisible(true)
+        ui {
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        if (view_loading != null) {
-            view_loading.setVisible(false)
+        ui {
+            if (view_loading != null) {
+                view_loading.setVisible(false)
+            }
         }
         enableUserInput(true)
     }
@@ -245,19 +257,23 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     override fun showMessage(resId: Int) {
         image_avatar.setImageURI(currentAvatar)
         isAvatarChanged = false
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        if(!message.equals(getString(R.string.msg_profile_update_successfully))){
+        if (!message.equals(getString(R.string.msg_profile_update_successfully))) {
             image_avatar.setImageURI(currentAvatar)
         }
         isAvatarChanged = false
         imageObservable.onNext(isAvatarChanged)
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
-    override fun showGenericErrorMessage(){
+    override fun showGenericErrorMessage() {
         image_avatar.setImageURI(currentAvatar)
         isAvatarChanged = false
         showMessage(getString(R.string.msg_generic_error))
@@ -290,7 +306,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        if (isContentChanged && !updateProfileRequest){
+        if (isContentChanged && !updateProfileRequest) {
             image_avatar.setImageURI(currentAvatar)
             text_name.textContent = currentName
             text_username.textContent = currentUsername
@@ -344,7 +360,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             }
         })
 
-        Observables.combineLatest(text_name.asObservable(),
+        disposables.add(Observables.combineLatest(text_name.asObservable(),
                 text_username.asObservable(),
                 text_email.asObservable(),
                 text_avatar_url.asObservable()
@@ -360,7 +376,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             } else {
                 finishActionMode()
             }
-        })
+        }))
     }
 
     private fun startActionMode() {
@@ -372,16 +388,17 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private fun finishActionMode() = actionMode?.finish()
 
     private fun enableUserInput(value: Boolean) {
-        text_name.isEnabled = value
-        text_username.isEnabled = value
-        text_email.isEnabled = value
-        image_avatar.isEnabled = value
-        if (value) {
-            image_avatar.alpha = 1.0f
-        } else {
-            image_avatar.alpha = 0.5f
+        ui {
+            text_name.isEnabled = value
+            text_username.isEnabled = value
+            text_email.isEnabled = value
+            image_avatar.isEnabled = value
+            if (value) {
+                image_avatar.alpha = 1.0f
+            } else {
+                image_avatar.alpha = 0.5f
+            }
+            text_avatar_url.isEnabled = value
         }
-        text_avatar_url.isEnabled = value
-
     }
 }

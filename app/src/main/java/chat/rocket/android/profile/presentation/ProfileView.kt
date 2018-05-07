@@ -13,7 +13,7 @@ interface ProfileView : LoadingView, MessageView {
      * @param username The user username.
      * @param email The user email.
      */
-    fun showProfile(avatarUrl: String, name: String, username: String, email: String)
+    fun showProfile(avatarUrl: String, name: String, username: String, email: String?)
 
     /**
      * Shows a profile update successfully message

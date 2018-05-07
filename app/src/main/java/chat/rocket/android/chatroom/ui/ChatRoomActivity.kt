@@ -3,11 +3,11 @@ package chat.rocket.android.chatroom.ui
 import DrawableHelper
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
@@ -20,15 +20,15 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import javax.inject.Inject
-import timber.log.Timber
 
-
-fun Context.chatRoomIntent(chatRoomId: String,
-                           chatRoomName: String,
-                           chatRoomType: String,
-                           isChatRoomReadOnly: Boolean,
-                           chatRoomLastSeen: Long,
-                           isChatRoomSubscribed: Boolean = true): Intent {
+fun Context.chatRoomIntent(
+    chatRoomId: String,
+    chatRoomName: String,
+    chatRoomType: String,
+    isChatRoomReadOnly: Boolean,
+    chatRoomLastSeen: Long,
+    isChatRoomSubscribed: Boolean = true
+): Intent {
     return Intent(this, ChatRoomActivity::class.java).apply {
         putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
         putExtra(INTENT_CHAT_ROOM_NAME, chatRoomName)
@@ -51,6 +51,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     // TODO - workaround for now... We will move to a single activity
     @Inject lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject lateinit var navigator: ChatRoomNavigator
     @Inject lateinit var managerFactory: ConnectionManagerFactory
 
     private lateinit var chatRoomId: String
@@ -66,7 +67,13 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_chat_room)
 
         // Workaround for when we are coming to the app via the recents app and the app was killed.
-        managerFactory.create(serverInteractor.get()!!).connect()
+        val serverUrl = serverInteractor.get()
+        if (serverUrl != null) {
+            managerFactory.create(serverUrl).connect()
+        } else {
+            navigator.toNewServer()
+            return
+        }
 
         chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
@@ -86,8 +93,8 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         isChatRoomSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
 
-        if (supportFragmentManager.findFragmentByTag("ChatRoomFragment") == null) {
-            addFragment("ChatRoomFragment", R.id.fragment_container) {
+        if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
+            addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
                 newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
                         isChatRoomSubscribed)
             }
@@ -148,5 +155,9 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private fun finishActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.close_enter, R.anim.close_exit)
+    }
+
+    companion object {
+        const val TAG_CHAT_ROOM_FRAGMENT = "ChatRoomFragment"
     }
 }

@@ -19,11 +19,8 @@ class AuthorAttachmentViewHolder(itemView: View,
     init {
         with(itemView) {
             setupActionMenu(author_attachment_container)
-            setupActionMenu(text_fields)
-            setupActionMenu(text_author_name)
         }
     }
-
 
     override fun bindViews(data: AuthorAttachmentViewModel) {
         with(itemView) {
