@@ -2,8 +2,26 @@ package chat.rocket.android.infrastructure
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import chat.rocket.common.model.User
+import com.squareup.moshi.Moshi
 
-class SharedPrefsLocalRepository(private val preferences: SharedPreferences) : LocalRepository {
+class SharedPreferencesLocalRepository(
+    private val preferences: SharedPreferences,
+    moshi: Moshi
+) : LocalRepository {
+
+    private val userAdapter = moshi.adapter(User::class.java)
+
+    override fun getCurrentUser(url: String): User? {
+        return get("${url}_${LocalRepository.USER_KEY}", null)?.let {
+            userAdapter.fromJson(it)
+        }
+    }
+
+    override fun saveCurrentUser(url: String, user: User) {
+        save("${url}_${LocalRepository.USER_KEY}", userAdapter.toJson(user))
+    }
+
     override fun getBoolean(key: String, defValue: Boolean) = preferences.getBoolean(key, defValue)
 
     override fun getFloat(key: String, defValue: Float) = preferences.getFloat(key, defValue)

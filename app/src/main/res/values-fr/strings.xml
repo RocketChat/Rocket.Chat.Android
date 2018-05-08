@@ -111,6 +111,7 @@
     <string name="msg_no_chat_title">Aucun message de discussion</string>
     <string name="msg_no_chat_description">Commencez à converser pour voir\nvos messages ici.</string>
     <string name="msg_edited">(édité)</string>
+    <string name="msg_no_search_found">Aucun résultat trouvé</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>
@@ -121,6 +122,8 @@
     <string name="message_welcome">Bienvenue %s</string>
     <string name="message_removed">Message supprimé</string>
     <string name="message_pinned">Épinglé un message:</string>
+    <string name="message_muted">Utilisateur %1$s mis en sourdine par %2$s</string>
+    <string name="message_unmuted">Utilisateur %1$s non muté par %2$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
