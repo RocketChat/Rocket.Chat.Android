@@ -109,8 +109,10 @@ interface ChatRoomView : LoadingView, MessageView {
     fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>)
     /**
      * This user has joined the chat callback.
+     *
+     * @param canPost Whether the user can post a message or not.
      */
-    fun onJoined()
+    fun onJoined(canPost: Boolean)
 
     fun showReactionsPopup(messageId: String)
 
@@ -120,4 +122,6 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param commands The list of available commands.
      */
     fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>)
+
+    fun onRoomChanged(canPost: Boolean)
 }

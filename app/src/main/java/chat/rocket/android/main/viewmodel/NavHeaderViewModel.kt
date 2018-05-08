@@ -2,7 +2,6 @@ package chat.rocket.android.main.viewmodel
 
 import chat.rocket.common.model.UserStatus
 
-
 data class NavHeaderViewModel(
     val userDisplayName: String?,
     val userStatus: UserStatus?,

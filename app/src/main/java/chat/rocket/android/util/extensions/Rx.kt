@@ -6,9 +6,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 
-fun EditText.asObservable(debounceTimeout: Long = 100): Observable<CharSequence> {
+fun EditText.asObservable(): Observable<CharSequence> {
     return RxTextView.textChanges(this)
-        .debounce(debounceTimeout, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(AndroidSchedulers.mainThread())
 }
