@@ -30,11 +30,14 @@ import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.emoji.*
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
@@ -154,7 +157,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
         presenter.unsubscribeMessages(chatRoomId)
         handler.removeCallbacksAndMessages(null)
-        unsubscribeTextMessage()
+        unsubscribeComposeTextMessage()
 
         // Hides the keyboard (if it's opened) before going to any view.
         activity?.apply {
@@ -577,7 +580,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.setVisible(true)
 
-            subscribeTextMessage()
+            subscribeComposeTextMessage()
             emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
@@ -682,18 +685,30 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         })
     }
 
-    private fun subscribeTextMessage() {
-        val disposable = text_message.asObservable(0)
-            .subscribe({ t -> setupComposeMessageButtons(t) })
+    private fun subscribeComposeTextMessage() {
+        val editTextObservable = text_message.asObservable()
 
-        compositeDisposable.add(disposable)
+        compositeDisposable.addAll(
+            subscribeComposeButtons(editTextObservable),
+            subscribeComposeTypingStatus(editTextObservable)
+        )
     }
 
-    private fun unsubscribeTextMessage() {
+    private fun unsubscribeComposeTextMessage() {
         compositeDisposable.clear()
     }
 
-    private fun setupComposeMessageButtons(charSequence: CharSequence) {
+    private fun subscribeComposeButtons(observable: Observable<CharSequence>): Disposable {
+        return observable.subscribe { t -> setupComposeButtons(t) }
+    }
+
+    private fun subscribeComposeTypingStatus(observable: Observable<CharSequence>): Disposable {
+        return observable.debounce(300, TimeUnit.MILLISECONDS)
+            .skip(1)
+            .subscribe { t -> sendTypingStatus(t) }
+    }
+
+    private fun setupComposeButtons(charSequence: CharSequence) {
         if (charSequence.isNotEmpty() && playComposeMessageButtonsAnimation) {
             button_show_attachment_options.fadeOut(1F, 0F, 120)
             button_send.fadeIn(0F, 1F, 120)
@@ -704,6 +719,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_send.fadeOut(1F, 0F, 120)
             button_show_attachment_options.fadeIn(0F, 1F, 120)
             playComposeMessageButtonsAnimation = true
+        }
+    }
+
+    private fun sendTypingStatus(charSequence: CharSequence) {
+        if (charSequence.isNotBlank()) {
+            presenter.sendTyping()
+        } else {
+            presenter.sendNotTyping()
         }
     }
 
