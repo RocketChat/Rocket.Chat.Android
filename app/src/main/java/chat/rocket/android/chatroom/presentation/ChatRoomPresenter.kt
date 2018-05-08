@@ -150,9 +150,24 @@ class ChatRoomPresenter @Inject constructor(
                         urls = null,
                         isTemporary = true
                     )
-                    messagesRepository.save(newMessage)
-                    view.showNewMessage(mapper.map(newMessage))
-                    client.sendMessage(id, chatRoomId, text)
+                    try {
+                        val message = client.sendMessage(id, chatRoomId, text)
+                        messagesRepository.save(newMessage)
+                        view.showNewMessage(mapper.map(newMessage))
+                        message
+                    } catch (ex: Exception) {
+                        // Ok, not very beautiful, but the backend sends us a not valid response
+                        // When someone sends a message on a read-only channel, so we just ignore it
+                        // and show a generic error message
+                        // TODO - remove the generic message when we implement :userId:/message subscription
+                        if (ex is IllegalStateException) {
+                            Timber.d(ex, "Probably a read-only problem...")
+                            view.showGenericErrorMessage()
+                        } else {
+                            // some other error, just rethrow it...
+                            throw ex
+                        }
+                    }
                 } else {
                     client.updateMessage(chatRoomId, messageId, text)
                 }
