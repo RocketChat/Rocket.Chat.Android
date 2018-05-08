@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">Rocket.Chat</string>
+
+    // TODO: Add proper translation for all entries in this file.
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">Sign in to your server</string>
@@ -60,7 +61,6 @@
     <string name="msg_invalid_email">Please type a valid e-mail</string>
     <string name="msg_new_user_agreement">By proceeding you are agreeing to our\n%1$s and %2$s</string>
     <string name="msg_2fa_code">2FA Code</string>
-    <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_yesterday">Yesterday</string>
     <string name="msg_message">Message</string>
     <string name="msg_this_room_is_read_only">This room is read only</string>

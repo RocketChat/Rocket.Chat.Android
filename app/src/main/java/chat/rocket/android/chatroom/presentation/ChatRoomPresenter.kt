@@ -12,6 +12,7 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewMo
 import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.username
 import chat.rocket.android.server.domain.*
@@ -26,6 +27,7 @@ import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
+import chat.rocket.core.internal.realtime.setTypingStatus
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Command
@@ -45,30 +47,38 @@ class ChatRoomPresenter @Inject constructor(
     private val view: ChatRoomView,
     private val navigator: ChatRoomNavigator,
     private val strategy: CancelStrategy,
-    getSettingsInteractor: GetSettingsInteractor,
-    serverInteractor: GetCurrentServerInteractor,
     private val getChatRoomsInteractor: GetChatRoomsInteractor,
-    private val permissions: GetPermissionsInteractor,
+    private val permissions: PermissionsInteractor,
     private val uriInteractor: UriInteractor,
     private val messagesRepository: MessagesRepository,
     private val usersRepository: UsersRepository,
     private val roomsRepository: RoomRepository,
     private val localRepository: LocalRepository,
-    factory: ConnectionManagerFactory,
+    private val userHelper: UserHelper,
     private val mapper: ViewModelMapper,
-    private val jobSchedulerInteractor: JobSchedulerInteractor
+    private val jobSchedulerInteractor: JobSchedulerInteractor,
+    getSettingsInteractor: GetSettingsInteractor,
+    serverInteractor: GetCurrentServerInteractor,
+    factory: ConnectionManagerFactory
 ) {
-
     private val currentServer = serverInteractor.get()!!
     private val manager = factory.create(currentServer)
     private val client = manager.client
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
+    private val currentLoggedUsername = localRepository.username()
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
     private var chatRoomType: String? = null
     private val stateChannel = Channel<State>()
     private var lastState = manager.state
+
+    fun setupChatRoom() {
+        launchUI(strategy) {
+            val canPost = permissions.canPostToReadOnlyChannels()
+            view.onRoomChanged(canPost)
+        }
+    }
 
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
         this.chatRoomId = chatRoomId
@@ -127,7 +137,7 @@ class ChatRoomPresenter @Inject constructor(
                 // ignore message for now, will receive it on the stream
                 val id = UUID.randomUUID().toString()
                 val message = if (messageId == null) {
-                    val username = localRepository.username()
+                    val username = userHelper.username()
                     val newMessage = Message(
                         id = id,
                         roomId = chatRoomId,
@@ -200,6 +210,22 @@ class ChatRoomPresenter @Inject constructor(
                 }
             } finally {
                 view.hideLoading()
+            }
+        }
+    }
+
+    fun sendTyping() {
+        launch(CommonPool + strategy.jobs) {
+            if (chatRoomId != null && currentLoggedUsername != null) {
+                client.setTypingStatus(chatRoomId.toString(), currentLoggedUsername, true)
+            }
+        }
+    }
+
+    fun sendNotTyping() {
+        launch(CommonPool + strategy.jobs) {
+            if (chatRoomId != null && currentLoggedUsername != null) {
+                client.setTypingStatus(chatRoomId.toString(), currentLoggedUsername, false)
             }
         }
     }
@@ -532,7 +558,8 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 retryIO("joinChat($chatRoomId)") { client.joinChat(chatRoomId) }
-                view.onJoined()
+                val canPost = permissions.canPostToReadOnlyChannels()
+                view.onJoined(canPost)
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
             }
@@ -545,7 +572,7 @@ class ChatRoomPresenter @Inject constructor(
     fun react(messageId: String, emoji: String) {
         launchUI(strategy) {
             try {
-                retryIO("toogleEmoji($messageId, $emoji)") {
+                retryIO("toggleEmoji($messageId, $emoji)") {
                     client.toggleReaction(messageId, emoji.removeSurrounding(":"))
                 }
             } catch (ex: RocketChatException) {
