@@ -10,27 +10,28 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.checkIfMyself
 import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.showLastMessage
 import chat.rocket.android.server.domain.useRealName
-import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.extensions.content
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.*
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
-class ChatRoomsAdapter(private val context: Context,
-                       private val settings: PublicSettings,
-                       private val localRepository: LocalRepository,
-                       private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
+class ChatRoomsAdapter(
+    private val context: Context,
+    private val settings: PublicSettings,
+    private val localRepository: LocalRepository,
+    private val listener: (ChatRoom) -> Unit
+) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
+
     var dataSet: MutableList<ChatRoom> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.item_chat))
@@ -49,24 +50,32 @@ class ChatRoomsAdapter(private val context: Context,
         fun bind(chatRoom: ChatRoom) = with(itemView) {
             bindAvatar(chatRoom, image_avatar)
             bindName(chatRoom, text_chat_name)
-            bindLastMessageDateTime(chatRoom, text_last_message_date_time)
-            bindLastMessage(chatRoom, text_last_message)
+            bindIcon(chatRoom, image_chat_icon)
+            if (settings.showLastMessage()) {
+                text_last_message.setVisible(true)
+                text_last_message_date_time.setVisible(true)
+                bindLastMessageDateTime(chatRoom, text_last_message_date_time)
+                bindLastMessage(chatRoom, text_last_message)
+            } else {
+                text_last_message.setVisible(false)
+                text_last_message_date_time.setVisible(false)
+            }
             bindUnreadMessages(chatRoom, text_total_unread_messages)
 
             if (chatRoom.alert || chatRoom.unread > 0) {
                 text_chat_name.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorPrimaryText))
+                    R.color.colorPrimaryText))
                 text_last_message_date_time.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorAccent))
+                    R.color.colorAccent))
                 text_last_message.setTextColor(ContextCompat.getColor(context,
-                        android.R.color.primary_text_light))
+                    android.R.color.primary_text_light))
             } else {
                 text_chat_name.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorSecondaryText))
+                    R.color.colorSecondaryText))
                 text_last_message_date_time.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorSecondaryText))
+                    R.color.colorSecondaryText))
                 text_last_message.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorSecondaryText))
+                    R.color.colorSecondaryText))
             }
 
             setOnClickListener { listener(chatRoom) }
@@ -80,31 +89,44 @@ class ChatRoomsAdapter(private val context: Context,
             }
         }
 
-        private fun bindName(chatRoom: ChatRoom, textView: TextView) {
-            textView.textContent = chatRoom.name
-
+        private fun bindIcon(chatRoom: ChatRoom, imageView: ImageView) {
             val drawable = when (chatRoom.type) {
-                is RoomType.Channel -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, context)
-                }
-                is RoomType.PrivateGroup -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, context)
-                }
-                is RoomType.DirectMessage -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, context)
-                }
+                is RoomType.Channel -> DrawableHelper.getDrawableFromId(
+                    R.drawable.ic_hashtag_12dp,
+                    context
+                )
+                is RoomType.PrivateGroup -> DrawableHelper.getDrawableFromId(
+                    R.drawable.ic_lock_12_dp,
+                    context
+                )
+                is RoomType.DirectMessage -> DrawableHelper.getUserStatusDrawable(
+                    chatRoom.status,
+                    context
+                )
                 else -> null
             }
-
             drawable?.let {
-                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
-                val mutableDrawable = wrappedDrawable.mutate()
-                val color = when (chatRoom.alert || chatRoom.unread > 0) {
-                    true -> R.color.colorPrimaryText
-                    false -> R.color.colorSecondaryText
+                val mutateDrawable = DrawableHelper.wrapDrawable(it).mutate()
+                if (chatRoom.type !is RoomType.DirectMessage) {
+                    val color = when (chatRoom.alert || chatRoom.unread > 0) {
+                        true -> R.color.colorPrimaryText
+                        false -> R.color.colorSecondaryText
+                    }
+                    DrawableHelper.tintDrawable(mutateDrawable, context, color)
                 }
-                DrawableHelper.tintDrawable(mutableDrawable, context, color)
-                DrawableHelper.compoundDrawable(textView, mutableDrawable)
+                imageView.setImageDrawable(mutateDrawable)
+            }
+        }
+
+        private fun bindName(chatRoom: ChatRoom, textView: TextView) {
+            textView.textContent = chatRoomName(chatRoom)
+        }
+
+        private fun chatRoomName(chatRoom: ChatRoom): String {
+            return if (settings.useRealName()) {
+                chatRoom.fullName ?: chatRoom.name
+            } else {
+                chatRoom.name
             }
         }
 

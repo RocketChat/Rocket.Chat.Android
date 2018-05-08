@@ -18,24 +18,30 @@
         android:id="@+id/text_server_url"
         style="@style/Authentication.EditText"
         android:layout_below="@id/text_headline"
-        android:layout_marginStart="-4dp"
+        android:layout_marginStart="-6dp"
         android:layout_marginTop="32dp"
-        android:layout_toEndOf="@id/text_server_protocol"
+        android:layout_toEndOf="@id/protocol_container"
         android:cursorVisible="false"
         android:hint="@string/default_server"
         android:imeOptions="actionDone"
-        android:digits="0123456789abcdefghijklmnopqrstuvwxyz.-/:"
-        android:inputType="textUri"
-        android:paddingEnd="0dp"
-        android:paddingStart="4dp" />
+        android:inputType="text|textUri"
+        android:paddingEnd="0dp" />
 
-    <TextView
-        android:id="@+id/text_server_protocol"
-        style="@style/Authentication.TextView"
+    <FrameLayout
+        android:id="@+id/protocol_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/style_edit_text_authentication"
+        android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
         android:layout_below="@id/text_headline"
-        android:layout_marginTop="32dp"
-        android:gravity="center_vertical"
-        android:text="@string/default_protocol" />
+        android:layout_marginTop="32dp">
+        <Spinner
+            android:id="@+id/text_server_protocol"
+            android:spinnerMode="dropdown"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/actionMenuColor" />
+    </FrameLayout>
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"

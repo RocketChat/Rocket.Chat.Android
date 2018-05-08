@@ -30,7 +30,7 @@ private const val JSON_CREDENTIAL_SECRET = "credentialSecret"
 const val INTENT_OAUTH_CREDENTIAL_TOKEN = "credential_token"
 const val INTENT_OAUTH_CREDENTIAL_SECRET = "credential_secret"
 
-// Shows a WebView to the user authenticate with your Gitlab credentials.
+// Shows a WebView to the user authenticate with its OAuth credential.
 class OauthWebViewActivity : AppCompatActivity() {
     private lateinit var webPageUrl: String
     private lateinit var state: String
@@ -78,6 +78,7 @@ class OauthWebViewActivity : AppCompatActivity() {
     private fun setupWebView() {
         with(web_view.settings) {
             javaScriptEnabled = true
+            domStorageEnabled = true
             // TODO Remove this workaround that is required to make Google OAuth to work. We should use Custom Tabs instead. See https://github.com/RocketChat/Rocket.Chat.Android/issues/968
             if (webPageUrl.contains("google")) {
                 userAgentString = "Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/43.0.2357.65 Mobile Safari/535.19"

@@ -35,12 +35,15 @@ import kotlinx.coroutines.experimental.NonCancellable.isActive
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
-    @Inject lateinit var presenter: ChatRoomsPresenter
-    @Inject lateinit var serverInteractor: GetCurrentServerInteractor
-    @Inject lateinit var settingsRepository: SettingsRepository
-    @Inject lateinit var localRepository: LocalRepository
+    @Inject
+    lateinit var presenter: ChatRoomsPresenter
+    @Inject
+    lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
+    @Inject
+    lateinit var localRepository: LocalRepository
     private lateinit var preferences: SharedPreferences
     private var searchView: SearchView? = null
     private val handler = Handler()
@@ -65,7 +68,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onDestroy()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_chat_rooms)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_chat_rooms)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,7 +104,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             }
         })
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -151,9 +157,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 })
 
                 val dialogSort = AlertDialog.Builder(context)
-                        .setTitle(R.string.dialog_sort_title)
-                        .setView(dialogLayout)
-                        .setPositiveButton("Done", { dialog, _ -> dialog.dismiss() })
+                    .setTitle(R.string.dialog_sort_title)
+                    .setView(dialogLayout)
+                    .setPositiveButton("Done", { dialog, _ -> dialog.dismiss() })
 
                 dialogSort.show()
             }
@@ -178,7 +184,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             /*val diff = async(CommonPool) {
                 DiffUtil.calculateDiff(RoomsDiffCallback(adapter.baseAdapter.dataSet, newDataSet))
             }.await()*/
-
+            if (newDataSet.isEmpty()) {
+                text_no_search.visibility = View.VISIBLE
+            }else{
+                text_no_search.visibility = View.GONE
+            }
             if (isActive) {
                 adapter.baseAdapter.updateRooms(newDataSet)
                 // TODO - fix crash to re-enable diff.dispatchUpdatesTo(adapter)
@@ -194,7 +204,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui { text_no_data_to_display.setVisible(true) }
     }
 
-    override fun showLoading(){
+    override fun showLoading() {
         ui { view_loading.setVisible(true) }
     }
 
@@ -251,18 +261,18 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui {
             recycler_view.layoutManager = LinearLayoutManager(it, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(it,
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
 
             val baseAdapter = ChatRoomsAdapter(it,
-                    settingsRepository.get(serverInteractor.get()!!), localRepository) {
-                chatRoom -> presenter.loadChatRoom(chatRoom)
+                settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom ->
+                presenter.loadChatRoom(chatRoom)
             }
 
             sectionedAdapter = SimpleSectionedRecyclerViewAdapter(it,
-                    R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter)
+                R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter)
             recycler_view.adapter = sectionedAdapter
         }
     }

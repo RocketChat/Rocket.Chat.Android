@@ -1,11 +1,13 @@
 package chat.rocket.android.authentication.domain.model
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
 
+@SuppressLint("ParcelCreator")
 @Parcelize
 data class LoginDeepLinkInfo(
     val url: String,
