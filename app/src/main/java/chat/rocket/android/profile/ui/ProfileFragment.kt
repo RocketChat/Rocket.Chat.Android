@@ -1,11 +1,9 @@
 package chat.rocket.android.profile.ui
 
 import DrawableHelper
-import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -13,9 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
-import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
 import android.support.v7.view.ActionMode
 import android.util.Log
 import android.view.*
@@ -26,6 +22,7 @@ import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.getPath
+import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.PublishSubject
@@ -56,7 +53,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     private var updateProfileRequest = false
     private var isContentChanged = false
     //request codes
-    private var CHOOSE_PICKER_MODE = 193
     private val CAMERA_REQUEST_CODE = 108
     private val READ_STORAGE_REQUEST_CODE = 109
 
@@ -102,13 +98,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             //click on image_avatar to change avatar
             image_avatar.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View) {
-                    val permissionCheck = ContextCompat.checkSelfPermission(context!!,
-                            Manifest.permission.READ_EXTERNAL_STORAGE)
-                    if (permissionCheck != PERMISSION_GRANTED) {
-                        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), CHOOSE_PICKER_MODE)
-                    } else {
-                        openImagePickerChooserDialog()
-                    }
+                    openImagePickerChooserDialog()
                 }
             })
             text_name.textContent = name
@@ -124,18 +114,6 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             profile_container.setVisible(true)
 
             listenToChanges()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            CHOOSE_PICKER_MODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openImagePickerChooserDialog()
-                } else {
-                    Toast.makeText(context, getString(R.string.permission_image_picking_not_allowed), Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 
