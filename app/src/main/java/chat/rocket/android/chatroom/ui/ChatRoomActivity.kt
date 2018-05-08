@@ -27,22 +27,25 @@ fun Context.chatRoomIntent(
     chatRoomType: String,
     isChatRoomReadOnly: Boolean,
     chatRoomLastSeen: Long,
-    isChatRoomSubscribed: Boolean = true
+    isChatRoomSubscribed: Boolean = true,
+    isChatRoomOwner: Boolean = false
 ): Intent {
     return Intent(this, ChatRoomActivity::class.java).apply {
         putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
         putExtra(INTENT_CHAT_ROOM_NAME, chatRoomName)
         putExtra(INTENT_CHAT_ROOM_TYPE, chatRoomType)
-        putExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
+        putExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, isChatRoomReadOnly)
         putExtra(INTENT_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
         putExtra(INTENT_CHAT_IS_SUBSCRIBED, isChatRoomSubscribed)
+        putExtra(INTENT_CHAT_ROOM_IS_OWNER, isChatRoomOwner)
     }
 }
 
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 private const val INTENT_CHAT_ROOM_NAME = "chat_room_name"
 private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
-private const val INTENT_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
+private const val INTENT_CHAT_ROOM_IS_READ_ONLY = "chat_room_is_read_only"
+private const val INTENT_CHAT_ROOM_IS_OWNER = "chat_room_is_owner"
 private const val INTENT_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val INTENT_CHAT_IS_SUBSCRIBED = "is_chat_room_subscribed"
 
@@ -59,6 +62,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private lateinit var chatRoomType: String
     private var isChatRoomReadOnly: Boolean = false
     private var isChatRoomSubscribed: Boolean = true
+    private var isChatRoomOwner: Boolean = false
     private var chatRoomLastSeen: Long = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,8 +88,11 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
         requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
 
-        isChatRoomReadOnly = intent.getBooleanExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, true)
-        requireNotNull(chatRoomType) { "no is_chat_room_read_only provided in Intent extras" }
+        isChatRoomReadOnly = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, true)
+        requireNotNull(isChatRoomReadOnly) { "no chat_room_is_read_only provided in Intent extras" }
+
+        isChatRoomOwner = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_OWNER, false)
+        requireNotNull(isChatRoomOwner) { "no chat_room_is_owner provided in Intent extras" }
 
         setupToolbar()
 
@@ -96,7 +103,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
             addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
                 newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
-                        isChatRoomSubscribed)
+                        isChatRoomSubscribed, isChatRoomOwner)
             }
         }
     }

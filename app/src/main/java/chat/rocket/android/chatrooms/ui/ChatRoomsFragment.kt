@@ -24,7 +24,6 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.server.domain.showLastMessage
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
@@ -38,10 +37,14 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
-    @Inject lateinit var presenter: ChatRoomsPresenter
-    @Inject lateinit var serverInteractor: GetCurrentServerInteractor
-    @Inject lateinit var settingsRepository: SettingsRepository
-    @Inject lateinit var localRepository: LocalRepository
+    @Inject
+    lateinit var presenter: ChatRoomsPresenter
+    @Inject
+    lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
+    @Inject
+    lateinit var localRepository: LocalRepository
     private lateinit var preferences: SharedPreferences
     private var searchView: SearchView? = null
     private val handler = Handler()
@@ -137,9 +140,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 })
 
                 val dialogSort = AlertDialog.Builder(context)
-                        .setTitle(R.string.dialog_sort_title)
-                        .setView(dialogLayout)
-                        .setPositiveButton("Done", { dialog, _ -> dialog.dismiss() })
+                    .setTitle(R.string.dialog_sort_title)
+                    .setView(dialogLayout)
+                    .setPositiveButton("Done", { dialog, _ -> dialog.dismiss() })
 
                 dialogSort.show()
             }
@@ -147,9 +150,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun invalidateQueryOnSearch(){
+    private fun invalidateQueryOnSearch() {
         searchView?.let {
-            if (!searchView!!.isIconified){
+            if (!searchView!!.isIconified) {
                 queryChatRoomsByName(searchView!!.query.toString())
             }
         }
@@ -180,7 +183,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui { text_no_data_to_display.setVisible(true) }
     }
 
-    override fun showLoading(){
+    override fun showLoading() {
         ui { view_loading.setVisible(true) }
     }
 
@@ -237,19 +240,18 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         ui {
             recycler_view.layoutManager = LinearLayoutManager(it, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(it,
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
 
-            println(serverInteractor.get() + " -> ${settingsRepository.get(serverInteractor.get()!!).showLastMessage()}")
             val baseAdapter = ChatRoomsAdapter(it,
-                    settingsRepository.get(serverInteractor.get()!!), localRepository) {
-                chatRoom -> presenter.loadChatRoom(chatRoom)
+                settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom ->
+                presenter.loadChatRoom(chatRoom)
             }
 
             sectionedAdapter = SimpleSectionedRecyclerViewAdapter(it,
-                    R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter)
+                R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter)
             recycler_view.adapter = sectionedAdapter
         }
     }
