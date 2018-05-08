@@ -8,7 +8,6 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatAuthException
@@ -27,28 +26,28 @@ private const val TYPE_LOGIN_USER_EMAIL = 0
 private const val TYPE_LOGIN_CAS = 1
 private const val TYPE_LOGIN_OAUTH = 2
 private const val TYPE_LOGIN_DEEP_LINK = 3
+private const val SERVICE_NAME_FACEBOOK = "facebook"
 private const val SERVICE_NAME_GITHUB = "github"
 private const val SERVICE_NAME_GOOGLE = "google"
 private const val SERVICE_NAME_LINKEDIN = "linkedin"
 private const val SERVICE_NAME_GILAB = "gitlab"
 
-class LoginPresenter @Inject constructor(private val view: LoginView,
-                                         private val strategy: CancelStrategy,
-                                         private val navigator: AuthenticationNavigator,
-                                         private val tokenRepository: TokenRepository,
-                                         private val localRepository: LocalRepository,
-                                         private val getAccountsInteractor: GetAccountsInteractor,
-                                         private val settingsInteractor: GetSettingsInteractor,
-                                         serverInteractor: GetCurrentServerInteractor,
-                                         private val saveAccountInteractor: SaveAccountInteractor,
-                                         private val factory: RocketChatClientFactory)
-    : CheckServerPresenter(strategy, factory, view) {
+class LoginPresenter @Inject constructor(
+    private val view: LoginView,
+    private val strategy: CancelStrategy,
+    private val navigator: AuthenticationNavigator,
+    private val tokenRepository: TokenRepository,
+    private val localRepository: LocalRepository,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    private val settingsInteractor: GetSettingsInteractor,
+    serverInteractor: GetCurrentServerInteractor,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val factory: RocketChatClientFactory
+) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
     private val currentServer = serverInteractor.get()!!
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings
-    //private val client: RocketChatClient = factory.create(currentServer)
-    //private val settings: PublicSettings = settingsInteractor.get(currentServer)
     private lateinit var usernameOrEmail: String
     private lateinit var password: String
     private lateinit var credentialToken: String
@@ -60,9 +59,9 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         setupConnectionInfo(currentServer)
         setupLoginView()
         setupUserRegistrationView()
+        setupForgotPasswordView()
         setupCasView()
         setupOauthServicesView()
-        checkServerInfo(currentServer)
     }
 
     fun authenticateWithUserAndPassword(usernameOrEmail: String, password: String) {
@@ -92,25 +91,14 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         doAuthentication(TYPE_LOGIN_OAUTH)
     }
 
-    fun authenticadeWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
+    fun authenticateWithDeepLink(deepLinkInfo: LoginDeepLinkInfo) {
         val serverUrl = deepLinkInfo.url
         setupConnectionInfo(serverUrl)
         deepLinkUserId = deepLinkInfo.userId
         deepLinkToken = deepLinkInfo.token
         tokenRepository.save(serverUrl, Token(deepLinkUserId, deepLinkToken))
-        launchUI(strategy) {
-            try {
-                val version = checkServerVersion(serverUrl).await()
-                when (version) {
-                    is Version.OutOfDateError -> {
-                        view.blockAndAlertNotRequiredVersion()
-                    }
-                    else -> doAuthentication(TYPE_LOGIN_DEEP_LINK)
-                }
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error performing deep link login")
-            }
-        }
+
+        doAuthentication(TYPE_LOGIN_DEEP_LINK)
     }
 
     private fun setupConnectionInfo(serverUrl: String) {
@@ -119,6 +107,8 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     }
 
     fun signup() = navigator.toSignUp()
+
+    fun forgotPassword() = navigator.toForgotPassword()
 
     private fun setupLoginView() {
         if (settings.isLoginFormEnabled()) {
@@ -139,9 +129,16 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
     }
 
     private fun setupUserRegistrationView() {
-        if (settings.isRegistrationEnabledForNewUsers()) {
-            view.showSignUpView()
+        if (settings.isRegistrationEnabledForNewUsers() && settings.isLoginFormEnabled()) {
             view.setupSignUpView()
+            view.showSignUpView()
+        }
+    }
+
+    private fun setupForgotPasswordView() {
+        if (settings.isPasswordResetEnabled()) {
+            view.setupForgotPasswordView()
+            view.showForgotPasswordView()
         }
     }
 
@@ -156,9 +153,12 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     var totalSocialAccountsEnabled = 0
 
                     if (settings.isFacebookAuthenticationEnabled()) {
-//                        //TODO: Remove until we have this implemented
-//                        view.enableLoginByFacebook()
-//                        totalSocialAccountsEnabled++
+                        val clientId = getOauthClientId(services, SERVICE_NAME_FACEBOOK)
+                        if (clientId != null) {
+                            view.setupFacebookButtonListener(OauthHelper.getFacebookOauthUrl(clientId, currentServer, state), state)
+                            view.enableLoginByFacebook()
+                            totalSocialAccountsEnabled++
+                        }
                     }
                     if (settings.isGithubAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
@@ -197,8 +197,47 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                     if (settings.isGitlabAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GILAB)
                         if (clientId != null) {
-                            view.setupGitlabButtonListener(OauthHelper.getGitlabOauthUrl(clientId, currentServer, state), state)
+                            val gitlabOauthUrl = if (settings.gitlabUrl() != null) {
+                                OauthHelper.getGitlabOauthUrl(
+                                    host = settings.gitlabUrl(),
+                                    clientId = clientId,
+                                    serverUrl = currentServer,
+                                    state = state
+                                )
+                            } else {
+                                OauthHelper.getGitlabOauthUrl(
+                                    clientId = clientId,
+                                    serverUrl = currentServer,
+                                    state = state
+                                )
+                            }
+                            view.setupGitlabButtonListener(gitlabOauthUrl, state)
                             view.enableLoginByGitlab()
+                            totalSocialAccountsEnabled++
+                        }
+                    }
+
+                    getCustomOauthServices(services).let {
+                        for (service in it) {
+                            val serviceName = getCustomOauthServiceName(service)
+
+                            val customOauthUrl = OauthHelper.getCustomOauthUrl(
+                                getCustomOauthHost(service),
+                                getCustomOauthAuthorizePath(service),
+                                getCustomOauthClientId(service),
+                                currentServer,
+                                serviceName,
+                                state,
+                                getCustomOauthScope(service)
+                            )
+
+                            view.addCustomOauthServiceButton(
+                                customOauthUrl,
+                                state,
+                                serviceName,
+                                getCustomOauthServiceNameColor(service),
+                                getCustomOauthButtonColor(service)
+                            )
                             totalSocialAccountsEnabled++
                         }
                     }
@@ -229,14 +268,13 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
                 val token = retryIO("login") {
                     when (loginType) {
                         TYPE_LOGIN_USER_EMAIL -> {
-                            if (usernameOrEmail.isEmail()) {
-                                client.loginWithEmail(usernameOrEmail, password)
-                            } else {
-                                if (settings.isLdapAuthenticationEnabled()) {
+                            when {
+                                settings.isLdapAuthenticationEnabled() ->
                                     client.loginWithLdap(usernameOrEmail, password)
-                                } else {
+                                usernameOrEmail.isEmail() ->
+                                    client.loginWithEmail(usernameOrEmail, password)
+                                else ->
                                     client.login(usernameOrEmail, password)
-                                }
                             }
                         }
                         TYPE_LOGIN_CAS -> {
@@ -289,9 +327,42 @@ class LoginPresenter @Inject constructor(private val view: LoginView,
         }
     }
 
-    private fun getOauthClientId(listMap: List<Map<String, String>>, serviceName: String): String? {
-        return listMap.find { map -> map.containsValue(serviceName) }
-                ?.get("appId")
+    private fun getOauthClientId(listMap: List<Map<String, Any>>, serviceName: String): String? {
+        return listMap.find { map -> map.containsValue(serviceName) }?.let {
+            it["clientId"] ?: it["appId"]
+        }.toString()
+    }
+
+    private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>>  {
+        return listMap.filter { map -> map["custom"] == true }
+    }
+
+    private fun getCustomOauthHost(service: Map<String, Any>): String {
+        return service["serverURL"].toString()
+    }
+
+    private fun getCustomOauthAuthorizePath(service: Map<String, Any>): String {
+        return service["authorizePath"].toString()
+    }
+
+    private fun getCustomOauthClientId(service: Map<String, Any>): String {
+        return service["clientId"].toString()
+    }
+
+    private fun getCustomOauthServiceName(service: Map<String, Any>): String {
+        return service["service"].toString()
+    }
+
+    private fun getCustomOauthScope(service: Map<String, Any>): String {
+        return service["scope"].toString()
+    }
+
+    private fun getCustomOauthButtonColor(service: Map<String, Any>): Int {
+        return service["buttonColor"].toString().parseColor()
+    }
+
+    private fun getCustomOauthServiceNameColor(service: Map<String, Any>): Int {
+        return service["buttonLabelColor"].toString().parseColor()
     }
 
     private suspend fun saveAccount(username: String) {

@@ -14,11 +14,11 @@ import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
-        private val roomType: String,
-        private val roomName: String,
-        private val presenter: ChatRoomPresenter?,
-        private val enableActions: Boolean = true,
-        private val reactionListener: EmojiReactionListener? = null
+    private val roomType: String,
+    private val roomName: String,
+    private val presenter: ChatRoomPresenter?,
+    private val enableActions: Boolean = true,
+    private val reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private val dataSet = ArrayList<BaseViewModel<*>>()
@@ -61,6 +61,10 @@ class ChatRoomAdapter(
                 val view = parent.inflate(R.layout.item_color_attachment)
                 ColorAttachmentViewHolder(view, actionsListener, reactionListener)
             }
+            BaseViewModel.ViewType.GENERIC_FILE_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_file_attachment)
+                GenericFileAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
             }
@@ -102,6 +106,7 @@ class ChatRoomAdapter(
             is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
             is AuthorAttachmentViewHolder -> holder.bind(dataSet[position] as AuthorAttachmentViewModel)
             is ColorAttachmentViewHolder -> holder.bind(dataSet[position] as ColorAttachmentViewModel)
+            is GenericFileAttachmentViewHolder -> holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
         }
     }
 
@@ -175,15 +180,15 @@ class ChatRoomAdapter(
         }
     }
 
-    val actionsListener = object : BaseViewHolder.ActionsListener {
+    private val actionsListener = object : BaseViewHolder.ActionsListener {
         override fun isActionsEnabled(): Boolean = enableActions
 
         override fun onActionSelected(item: MenuItem, message: Message) {
             message.apply {
                 when (item.itemId) {
                     R.id.action_menu_msg_delete -> presenter?.deleteMessage(roomId, id)
-                    R.id.action_menu_msg_quote -> presenter?.citeMessage(roomType, roomName, id, false)
-                    R.id.action_menu_msg_reply -> presenter?.citeMessage(roomType, roomName, id, true)
+                    R.id.action_menu_msg_quote -> presenter?.citeMessage(roomType, id, false)
+                    R.id.action_menu_msg_reply -> presenter?.citeMessage(roomType, id, true)
                     R.id.action_menu_msg_copy -> presenter?.copyMessage(id)
                     R.id.action_menu_msg_edit -> presenter?.editMessage(roomId, id, message.message)
                     R.id.action_menu_msg_pin_unpin -> {

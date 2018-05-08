@@ -72,6 +72,21 @@
             app:layout_constraintTop_toBottomOf="@+id/button_cas"
             tools:visibility="visible" />
 
+        <TextView
+            android:id="@+id/text_forgot_your_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginStart="@dimen/screen_edge_left_and_right_margins"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:textColorLink="@color/colorAccent"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_new_to_rocket_chat"
+            tools:visibility="visible" />
+
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/view_loading"
             android:layout_width="wrap_content"
@@ -99,7 +114,7 @@
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_new_to_rocket_chat"
+            app:layout_constraintTop_toBottomOf="@+id/text_forgot_your_password"
             tools:visibility="visible">
 
             <TextView

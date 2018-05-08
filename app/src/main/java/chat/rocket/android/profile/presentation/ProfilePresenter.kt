@@ -1,5 +1,6 @@
 package chat.rocket.android.profile.presentation
 
+import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -27,20 +28,23 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             view.showLoading()
             try {
                 val myself = retryIO("me") { client.me() }
-                myselfId = myself.id!!
-                val avatarUrl = serverUrl.avatarUrl(myself.username!!)
-                view.showProfile(
-                        avatarUrl,
-                        myself.name ?: "",
-                        myself.username ?: "",
-                        myself.emails?.get(0)?.address!!
-                )
-            } catch (exception: RocketChatException) {
-                exception.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
+                val id = myself.id
+                val username = myself.username
+                if (id == null || username == null) {
                     view.showGenericErrorMessage()
+                } else {
+                    myselfId = id
+                    val avatarUrl = serverUrl.avatarUrl(username)
+                    val email = myself.emails?.getOrNull(0)?.address
+                    view.showProfile(
+                            avatarUrl,
+                            myself.name ?: "",
+                            myself.username ?: "",
+                            email
+                    )
                 }
+            } catch (exception: RocketChatException) {
+                view.showMessage(exception)
             } finally {
                 view.hideLoading()
             }

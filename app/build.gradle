@@ -13,8 +13,8 @@ android {
         applicationId "chat.rocket.android"
         minSdkVersion 21
         targetSdkVersion versions.targetSdk
-        versionCode 2010
-        versionName "2.0.0"
+        versionCode 2019
+        versionName "2.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -78,6 +78,8 @@ dependencies {
     implementation libraries.room
     kapt libraries.roomProcessor
     implementation libraries.roomRxjava
+    implementation libraries.lifecycleExtensions
+    kapt libraries.lifecycleCompiler
 
     implementation libraries.rxKotlin
     implementation libraries.rxAndroid
@@ -102,7 +104,6 @@ dependencies {
     implementation libraries.frescoImageViewer
 
     implementation libraries.markwon
-    implementation libraries.markwonImageLoader
 
     implementation libraries.sheetMenu
 
@@ -113,9 +114,9 @@ dependencies {
     }
 
     testImplementation libraries.junit
-    androidTestImplementation(libraries.expressoCore, {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    testImplementation libraries.truth
+    androidTestImplementation libraries.espressoCore
+    androidTestImplementation libraries.espressoIntents
 }
 
 kotlin {

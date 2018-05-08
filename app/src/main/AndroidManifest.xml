@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
@@ -50,35 +50,44 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".server.ui.ChangeServerActivity"
             android:theme="@style/AuthenticationTheme" />
+
         <activity
             android:name=".main.ui.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <activity
             android:name=".webview.ui.WebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <activity
             android:name=".webview.cas.ui.CasWebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <activity
             android:name=".webview.oauth.ui.OauthWebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
-        <activity
-            android:name=".chatroom.ui.PinnedMessagesActivity"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <!-- TODO: Change to fragment-->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
+            android:theme="@style/AppTheme" />
+
+        <!-- TODO: Change to fragment-->
+        <activity
+            android:name=".settings.about.ui.AboutActivity"
             android:theme="@style/AppTheme" />
 
         <receiver
@@ -124,10 +133,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="12ac6e94f850aaffcdff52001af77ca415d06a43" />
-
-        <activity
-            android:name=".settings.about.ui.AboutActivity"
-            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
