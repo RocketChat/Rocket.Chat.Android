@@ -114,6 +114,7 @@
     <string name="msg_no_chat_title">कोई चैट संदेश नहीं</string>
     <string name="msg_no_chat_description">यहां अपने संदेश देखने के लिए\nबातचीत शुरू करें।</string>
     <string name="msg_edited">(संपादित)</string>
+    <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
@@ -124,6 +125,8 @@
     <string name="message_welcome">%s का स्वागत करते हैं</string>
     <string name="message_removed">संदेश हटाया गया</string>
     <string name="message_pinned">एक संदेश पिन किया:</string>
+    <string name="message_muted">उपयोगकर्ता %1$s %2$s द्वारा म्यूट किया गया</string>
+    <string name="message_unmuted">उपयोगकर्ता %1$s %2$s द्वारा अनम्यूट किया गया</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
