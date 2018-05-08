@@ -112,16 +112,19 @@
     <string name="msg_password_empty">A senha está vazia</string>
     <string name="msg_password_update_successful">Senha atualizada com sucesso!</string>
     <string name="msg_password_update_failed">A senha não é atualizada: %1$s</string>
+    <string name="msg_no_search_found">nenhum resultado encontrado</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
     <string name="message_user_added_by">Usuário %1$s adicionado por %2$s</string>
     <string name="message_user_removed_by">Usuário %1$s removido por %2$s</string>
-    <string name="message_user_left">Saiu da sala.</string>
-    <string name="message_user_joined_channel">Entrou na sala.</string>
+    <string name="message_user_left">Saiu da sala</string>
+    <string name="message_user_joined_channel">Entrou na sala</string>
     <string name="message_welcome">Bem-vindo, %s</string>
     <string name="message_removed">Mensagem removida</string>
     <string name="message_pinned">Pinou uma mensagem:</string>
+    <string name="message_muted">Usuário %1$s entrou no modo mudo por %2$s</string>
+    <string name="message_unmuted">Usuário %1$s saiu do modo mudo por %2$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
@@ -129,11 +132,11 @@
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
     <string name="action_msg_delete">Remover</string>
-    <string name="action_msg_pin">Fixar Mensagem</string>
-    <string name="action_msg_unpin">Desafixar Mensagem</string>
-    <string name="action_msg_star">Favoritar Mensagem</string>
+    <string name="action_msg_pin">Pinar mensagem</string>
+    <string name="action_msg_unpin">Despinar mensagem</string>
+    <string name="action_msg_star">Favoritar mensagem</string>
     <string name="action_msg_share">Compartilhar</string>
-    <string name="action_title_editing">Editando Mensagem</string>
+    <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
 
     <!-- Permission messages -->
@@ -154,7 +157,7 @@
 
     <!-- Socket status -->
     <string name="status_connected">Conectado</string>
-    <string name="status_disconnected">Desconetado</string>
+    <string name="status_disconnected">Desconectado</string>
     <string name="status_connecting">Conectando</string>
     <string name="status_authenticating">Autenticando</string>
     <string name="status_disconnecting">Desconectando</string>
@@ -171,7 +174,7 @@
     <string name="Slash_Tableflip_Description">Exibir (╯°□°）╯︵ ┻━┻</string>
     <string name="Slash_TableUnflip_Description">Exibir ┬─┬ ノ( ゜-゜ノ)</string>
     <string name="Create_A_New_Channel">Criar um novo canal</string>
-    <string name="Show_the_keyboard_shortcut_list">Show the keyboard shortcut list</string>
+    <string name="Show_the_keyboard_shortcut_list">Exibir a lista de atalhos do teclado</string>
     <string name="Invite_user_to_join_channel_all_from"> do [#canal] para entrar neste</string>
     <string name="Invite_user_to_join_channel_all_to">Convidar todos os usuários deste canal para entrar no [#canal]</string>
     <string name="Archive">Arquivar</string>
@@ -179,8 +182,8 @@
     <string name="Leave_the_current_channel">Sair do canal atual</string>
     <string name="Displays_action_text">Exibir texto de ação</string>
     <string name="Direct_message_someone">Enviar DM para alguém</string>
-    <string name="Mute_someone_in_room">Silenciar alguém</string>
-    <string name="Unmute_someone_in_room">De-silenciar alguém na sala</string>
+    <string name="Mute_someone_in_room">Ativar o modo mudo em alguém</string>
+    <string name="Unmute_someone_in_room">Desativar o modo mudo em alguém na sala</string>
     <string name="Invite_user_to_join_channel">Convidar algum usuário para entrar neste canal</string>
     <string name="Unarchive">Desarquivar</string>
     <string name="Join_the_given_channel">Entrar no canal especificado</string>

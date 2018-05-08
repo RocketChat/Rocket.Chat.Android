@@ -113,6 +113,7 @@
     <string name="msg_password_empty">Password is empty</string>
     <string name="msg_password_update_successful">Password successfully updated!</string>
     <string name="msg_password_update_failed">Password fails to update: %1$s</string>
+    <string name="msg_no_search_found">No result found</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>
@@ -123,6 +124,8 @@
     <string name="message_welcome">Welcome %s</string>
     <string name="message_removed">Message removed</string>
     <string name="message_pinned">Pinned a message:</string>
+    <string name="message_muted">User %1$s muted by %2$s</string>
+    <string name="message_unmuted">User %1$s unmuted by %2$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>

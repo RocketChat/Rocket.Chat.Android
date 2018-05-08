@@ -25,10 +25,13 @@ import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
-class ChatRoomsAdapter(private val context: Context,
-                       private val settings: PublicSettings,
-                       private val localRepository: LocalRepository,
-                       private val listener: (ChatRoom) -> Unit) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
+class ChatRoomsAdapter(
+    private val context: Context,
+    private val settings: PublicSettings,
+    private val localRepository: LocalRepository,
+    private val listener: (ChatRoom) -> Unit
+) : RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
+
     var dataSet: MutableList<ChatRoom> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.item_chat))
