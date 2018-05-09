@@ -35,6 +35,7 @@
     <string name="action_away">दूर</string>
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
+    <string name="action_save_changes">सुरक्षित करें</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -113,6 +114,10 @@
     <string name="msg_no_chat_title">कोई चैट संदेश नहीं</string>
     <string name="msg_no_chat_description">यहां अपने संदेश देखने के लिए\nबातचीत शुरू करें।</string>
     <string name="msg_edited">(संपादित)</string>
+    <string name="msg_password_dont_match">पासवर्ड मेल नहीं खाता</string>
+    <string name="msg_password_empty">पासवर्ड खाली है</string>
+    <string name="msg_password_update_successful">पासवर्ड सफलतापूर्वक अपडेट किया गया!</string>
+    <string name="msg_password_update_failed">पासवर्ड अपडेट करने में विफल रहता है: %1$s</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
 
     <!-- System messages -->

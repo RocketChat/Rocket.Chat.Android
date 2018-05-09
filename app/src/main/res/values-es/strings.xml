@@ -34,6 +34,7 @@
     <string name="action_away">Ausente</string>
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_save_changes">Guardar cambios</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -111,6 +112,10 @@
     <string name="msg_no_chat_title">Sin mensajes de chat</string>
     <string name="msg_no_chat_description">Comience a conversar para ver\nsus mensajes aquí.</string>
     <string name="msg_edited">(editado)</string>
+    <string name="msg_password_dont_match">La contraseña no coincide</string>
+    <string name="msg_password_empty">La contraseña está vacía</string>
+    <string name="msg_password_update_successful">Contraseña actualizada con éxito!</string>
+    <string name="msg_password_update_failed">La contraseña no se actualiza: %1$s</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
 
     <!-- System messages -->
