@@ -14,6 +14,7 @@
     <string name="title_settings">Configurações</string>
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
+    <string name="title_alert_dialog">Alerta</string>
     <string name="title_about">Sobre</string>
 
     <!-- Actions -->
@@ -28,6 +29,8 @@
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
+    <string name="action_choose_image_from_gallery">Escolher foto da galeria</string>
+    <string name="action_open_camera">Tirar foto</string>
     <string name="action_join_chat">Entrar no Chat</string>
     <string name="action_add_account">Adicionar conta</string>
     <string name="action_online">Online</string>
@@ -86,6 +89,7 @@
     <string name="msg_preview_photo">Foto</string>
     <string name="msg_preview_file">Arquivo</string>
     <string name="msg_no_messages_yet">Nenhuma mensagem ainda</string>
+    <string name="msg_alert_dialog">Você escolheu a imagem do avatar e o URL do avatar. A URL será definida como sua imagem de perfil por padrão. Limpe o campo URL do avatar se quiser definir a imagem selecionada como seu perfil. Pressione OK para continuar com sua escolha.</string>
     <string name="msg_version">Versão %1$s</string>
     <string name="msg_build">Build %1$d</string>
     <string name="msg_ok">OK</string>
@@ -133,10 +137,12 @@
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
+    <string name="action_cancel_alert_dialog">Cancelar</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Edição não permitida</string>
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
+    <string name="permission_image_picking_not_allowed">A imagem não pode ser acessada sem a permissão para ler o armazenamento.</string>
     <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
 
     <!-- Members List -->

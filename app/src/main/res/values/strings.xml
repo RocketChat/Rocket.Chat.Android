@@ -15,6 +15,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
+    <string name="title_alert_dialog">Alert</string>
     <string name="title_about">About</string>
 
     <!-- Actions -->
@@ -29,6 +30,8 @@
     <string name="action_logout">Logout</string>
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
+    <string name="action_choose_image_from_gallery">Choose photo from gallery</string>
+    <string name="action_open_camera">Take photo</string>
     <string name="action_join_chat">Join Chat</string>
     <string name="action_add_account">Add account</string>
     <string name="action_online">Online</string>
@@ -83,6 +86,7 @@
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_unread_messages">Unread messages</string>
+    <string name="msg_alert_dialog">You have chosen both the avatar image and avatar url. The url will be set as your profile image by default. Clear the avatar url field if you wish to set the selected image as your profile. Press OK to continue with your choice.</string>
     <string name="msg_preview_video">Video</string>
     <string name="msg_preview_audio">Audio</string>
     <string name="msg_preview_photo">Photo</string>
@@ -134,11 +138,13 @@
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
+    <string name="action_cancel_alert_dialog">Cancel</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
     <string name="permission_deleting_not_allowed">Deleting is not allowed</string>
     <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
+    <string name="permission_image_picking_not_allowed">Image cannot be accessed without read storage permissions</string>
 
     <!-- Members List -->
     <string name="title_members_list">Members List</string>

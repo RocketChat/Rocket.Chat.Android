@@ -1,5 +1,7 @@
 package chat.rocket.android.profile.presentation
 
+import android.net.Uri
+import chat.rocket.android.chatroom.domain.UriInteractor
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -13,10 +15,12 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.setAvatar
 import chat.rocket.core.internal.rest.updateProfile
+import java.io.File
 import javax.inject.Inject
 
 class ProfilePresenter @Inject constructor(private val view: ProfileView,
                                            private val strategy: CancelStrategy,
+                                           private  val uriInteractor: UriInteractor,
                                            serverInteractor: GetCurrentServerInteractor,
                                            factory: RocketChatClientFactory) {
     private val serverUrl = serverInteractor.get()!!
@@ -51,12 +55,16 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
         }
     }
 
-    fun updateUserProfile(email: String, name: String, username: String, avatarUrl: String = "") {
+    fun updateUserProfile(email: String, name: String, username: String, avatarUrl: String = "", avatarImage: File?, avatarImageUri: Uri?) {
         launchUI(strategy) {
             view.showLoading()
             try {
-                if(avatarUrl!="") {
+                if (avatarUrl.isNotEmpty()) {
                     retryIO { client.setAvatar(avatarUrl) }
+                }
+                if (avatarImage != null){
+                    val mimeType = uriInteractor.getMimeType(avatarImageUri!!)
+                    client.setAvatar(avatarImage,mimeType)
                 }
                 val user = retryIO { client.updateProfile(myselfId, email, name, username) }
                 view.showProfileUpdateSuccessfullyMessage()
