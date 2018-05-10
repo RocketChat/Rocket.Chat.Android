@@ -111,6 +111,14 @@
     <string name="msg_no_chat_title">Sin mensajes de chat</string>
     <string name="msg_no_chat_description">Comience a conversar para ver\nsus mensajes aquí.</string>
     <string name="msg_edited">(editado)</string>
+    // TODO: Add proper translation.
+    <string name="msg_and">\u0020and\u0020</string>
+    // TODO: Add proper translation.
+    <string name="msg_is_typing">\u0020is typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_are_typing">\u0020are typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
 
     <!-- System messages -->
