@@ -60,13 +60,21 @@ class MessageService : JobService() {
                     )
                     messageRepository.save(message.copy(isTemporary = false))
                     Timber.d("Sent scheduled message given by id: ${message.id}")
-                } catch (ex: RocketChatException) {
+                } catch (ex: Exception) {
                     Timber.e(ex)
-                    if (ex.message?.contains("E11000", true) == true) {
-                        // XXX: Temporary solution. We need proper error codes from the api.
-                        messageRepository.save(message.copy(isTemporary = false))
+                    // TODO - remove the generic message when we implement :userId:/message subscription
+                    if (ex is IllegalStateException) {
+                        Timber.d(ex, "Probably a read-only problem...")
+                        // TODO: For now we are only going to reschedule when api is fixed.
+                        jobFinished(params, false)
+                    } else {
+                        // some other error
+                        if (ex.message?.contains("E11000", true) == true) {
+                            // XXX: Temporary solution. We need proper error codes from the api.
+                            messageRepository.save(message.copy(isTemporary = false))
+                        }
+                        jobFinished(params, true)
                     }
-                    jobFinished(params, true)
                 }
             }
         }
