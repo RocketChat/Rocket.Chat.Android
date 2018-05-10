@@ -123,5 +123,8 @@ interface ChatRoomView : LoadingView, MessageView {
      */
     fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>)
 
-    fun onRoomChanged(canPost: Boolean)
+    /**
+     * Communicate whether it's a broadcast channel and if current user can post to it.
+     */
+    fun onRoomUpdated(canPost: Boolean, broadcastChannel: Boolean)
 }

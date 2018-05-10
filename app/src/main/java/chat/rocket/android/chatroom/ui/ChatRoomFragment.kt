@@ -113,6 +113,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private var isSubscribed: Boolean = true
     private var isChatRoomReadOnly: Boolean = false
     private var isChatRoomOwner: Boolean = false
+    private var isBroadcastChannel: Boolean = false
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var chatRoomLastSeen: Long = -1
     private lateinit var actionSnackbar: ActionSnackbar
@@ -162,7 +163,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onViewCreated(view, savedInstanceState)
         setupToolbar(chatRoomName)
 
-        presenter.setupChatRoom()
+        presenter.setupChatRoom(chatRoomId)
         presenter.loadMessages(chatRoomId, chatRoomType)
         presenter.loadChatRooms()
         setupRecyclerView()
@@ -206,6 +207,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.chatroom_actions, menu)
+        menu.findItem(R.id.action_members_list)?.isVisible = !isBroadcastChannel
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -265,8 +267,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onRoomChanged(canPost: Boolean) {
+    override fun onRoomUpdated(canPost: Boolean, broadcastChannel: Boolean) {
         setupMessageComposer(isChatRoomOwner || canPost)
+        isBroadcastChannel = broadcastChannel
+        if (isBroadcastChannel) activity?.invalidateOptionsMenu()
     }
 
     private fun toggleNoChatView(size: Int) {

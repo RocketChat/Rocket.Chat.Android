@@ -15,7 +15,18 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.username
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetChatRoomsInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.JobSchedulerInteractor
+import chat.rocket.android.server.domain.MessagesRepository
+import chat.rocket.android.server.domain.PermissionsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.RoomRepository
+import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.domain.uploadMaxFileSize
+import chat.rocket.android.server.domain.uploadMimeTypeFilter
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.avatarUrl
@@ -29,7 +40,22 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.setTypingStatus
 import chat.rocket.core.internal.realtime.socket.model.State
-import chat.rocket.core.internal.rest.*
+import chat.rocket.core.internal.rest.commands
+import chat.rocket.core.internal.rest.deleteMessage
+import chat.rocket.core.internal.rest.getMembers
+import chat.rocket.core.internal.rest.history
+import chat.rocket.core.internal.rest.joinChat
+import chat.rocket.core.internal.rest.markAsRead
+import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.messages
+import chat.rocket.core.internal.rest.pinMessage
+import chat.rocket.core.internal.rest.runCommand
+import chat.rocket.core.internal.rest.sendMessage
+import chat.rocket.core.internal.rest.spotlight
+import chat.rocket.core.internal.rest.toggleReaction
+import chat.rocket.core.internal.rest.unpinMessage
+import chat.rocket.core.internal.rest.updateMessage
+import chat.rocket.core.internal.rest.uploadFile
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
@@ -73,10 +99,13 @@ class ChatRoomPresenter @Inject constructor(
     private val stateChannel = Channel<State>()
     private var lastState = manager.state
 
-    fun setupChatRoom() {
+    fun setupChatRoom(roomId: String) {
         launchUI(strategy) {
             val canPost = permissions.canPostToReadOnlyChannels()
-            view.onRoomChanged(canPost)
+            val broadcastChannel = getChatRoomsInteractor.getById(currentServer, roomId)?.run {
+                broadcast
+            } ?: false
+            view.onRoomUpdated(canPost, broadcastChannel)
         }
     }
 
@@ -543,7 +572,7 @@ class ChatRoomPresenter @Inject constructor(
 
     fun toMembersList(chatRoomId: String, chatRoomType: String) = navigator.toMembersList(chatRoomId, chatRoomType)
 
-    fun toPinnedMessageList(chatRoomId: String, chatRoomType: String) = navigator.toPinnedMessageList(chatRoomId,chatRoomType)
+    fun toPinnedMessageList(chatRoomId: String, chatRoomType: String) = navigator.toPinnedMessageList(chatRoomId, chatRoomType)
 
     fun loadChatRooms() {
         launchUI(strategy) {
