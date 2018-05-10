@@ -13,9 +13,19 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.*
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.adapter.*
+import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
+import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.PEOPLE
+import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
@@ -26,8 +36,27 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewMod
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.util.extensions.*
-import chat.rocket.android.widget.emoji.*
+import chat.rocket.android.util.extensions.asObservable
+import chat.rocket.android.util.extensions.circularRevealOrUnreveal
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.hideKeyboard
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.isAtBottom
+import chat.rocket.android.util.extensions.isVisible
+import chat.rocket.android.util.extensions.rotateBy
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.widget.emoji.ComposerEditText
+import chat.rocket.android.widget.emoji.Emoji
+import chat.rocket.android.widget.emoji.EmojiKeyboardListener
+import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
+import chat.rocket.android.widget.emoji.EmojiListenerAdapter
+import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.android.widget.emoji.EmojiPickerPopup
+import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
@@ -185,7 +214,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.toMembersList(chatRoomId, chatRoomType)
             }
             R.id.action_pinned_messages -> {
-                presenter.toPinnedMessageList(chatRoomId,chatRoomType)
+                presenter.toPinnedMessageList(chatRoomId, chatRoomType)
             }
         }
         return true
@@ -241,11 +270,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun toggleNoChatView(size: Int) {
-        if (size == 0){
+        if (size == 0) {
             image_chat_icon.setVisible(true)
             text_chat_title.setVisible(true)
             text_chat_description.setVisible(true)
-        }else{
+        } else {
             image_chat_icon.setVisible(false)
             text_chat_title.setVisible(false)
             text_chat_description.setVisible(false)
