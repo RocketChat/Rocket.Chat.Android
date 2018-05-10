@@ -66,6 +66,7 @@ class MessageService : JobService() {
                     if (ex is IllegalStateException) {
                         Timber.d(ex, "Probably a read-only problem...")
                         // TODO: For now we are only going to reschedule when api is fixed.
+                        messageRepository.removeById(message.id)
                         jobFinished(params, false)
                     } else {
                         // some other error
