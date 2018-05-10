@@ -181,25 +181,39 @@ class ChatRoomAdapter(
     }
 
     private val actionsListener = object : BaseViewHolder.ActionsListener {
+
         override fun isActionsEnabled(): Boolean = enableActions
 
         override fun onActionSelected(item: MenuItem, message: Message) {
             message.apply {
                 when (item.itemId) {
-                    R.id.action_menu_msg_delete -> presenter?.deleteMessage(roomId, id)
-                    R.id.action_menu_msg_quote -> presenter?.citeMessage(roomType, id, false)
-                    R.id.action_menu_msg_reply -> presenter?.citeMessage(roomType, id, true)
-                    R.id.action_menu_msg_copy -> presenter?.copyMessage(id)
-                    R.id.action_menu_msg_edit -> presenter?.editMessage(roomId, id, message.message)
-                    R.id.action_menu_msg_pin_unpin -> {
-                        with(item) {
-                            if (!isChecked) {
-                                presenter?.pinMessage(id)
-                            } else {
-                                presenter?.unpinMessage(id)
-                            }
+                    R.id.action_message_reply -> {
+                        presenter?.citeMessage(roomType, id, true)
+                    }
+                    R.id.action_message_quote -> {
+                        presenter?.citeMessage(roomType, id, false)
+                    }
+                    R.id.action_message_copy -> {
+                        presenter?.copyMessage(id)
+                    }
+                    R.id.action_message_edit -> {
+                        presenter?.editMessage(roomId, id, message.message)
+                    }
+                    R.id.action_message_star -> {
+                        if (!item.isChecked) {
+                            presenter?.starMessage(id)
+                        } else {
+                            presenter?.unstarMessage(id)
                         }
                     }
+                    R.id.action_message_unpin -> {
+                        if (!item.isChecked) {
+                            presenter?.pinMessage(id)
+                        } else {
+                            presenter?.unpinMessage(id)
+                        }
+                    }
+                    R.id.action_message_delete -> presenter?.deleteMessage(roomId, id)
                     R.id.action_menu_msg_react -> presenter?.showReactions(id)
                     else -> TODO("Not implemented")
                 }

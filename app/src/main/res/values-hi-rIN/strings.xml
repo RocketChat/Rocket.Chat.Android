@@ -146,6 +146,8 @@
     <string name="action_msg_pin">संदेश को पिन करें</string>
     <string name="action_msg_unpin">संदेश को पिन से हटाएँ</string>
     <string name="action_msg_star">संदेश को स्टार करें</string>
+    // TODO: Add proper translation.
+    <string name="action_msg_unstar">Unstar Message</string>
     <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
@@ -154,6 +156,8 @@
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
     <string name="permission_deleting_not_allowed">हटाने की अनुमति नहीं है</string>
     <string name="permission_pinning_not_allowed">पिनि करने की अनुमति नहीं है</string>
+    // TODO: Add proper translation.
+    <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Members List -->
     <string name="title_members_list">सदस्यों की सूची</string>

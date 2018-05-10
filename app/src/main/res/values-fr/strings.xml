@@ -143,7 +143,10 @@
     <string name="action_msg_delete">Effacer</string>
     <string name="action_msg_pin">Épingle message</string>
     <string name="action_msg_unpin">Enlever message</string>
+    // TODO: Add proper translation.
     <string name="action_msg_star">Star message</string>
+    // TODO: Add proper translation.
+    <string name="action_msg_unstar">Unstar Message</string>
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
@@ -152,6 +155,8 @@
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>
     <string name="permission_deleting_not_allowed">La suppression n\'est pas autorisée</string>
     <string name="permission_pinning_not_allowed">L\'épinglage n\'est pas autorisé</string>
+    // TODO: Add proper translation.
+    <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Members List -->
     <string name="title_members_list">Liste des membres</string>

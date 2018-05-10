@@ -158,6 +158,7 @@ class ChatRoomPresenter @Inject constructor(
                         groupable = false,
                         parseUrls = false,
                         pinned = false,
+                        starred = emptyList(),
                         mentions = emptyList(),
                         reactions = null,
                         senderAlias = null,
@@ -426,6 +427,34 @@ class ChatRoomPresenter @Inject constructor(
                 return@launchUI
             }
             view.showEditingAction(roomId, messageId, text)
+        }
+    }
+
+    fun starMessage(messageId: String) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessageStarring()) {
+                view.showMessage(R.string.permission_starring_not_allowed)
+                return@launchUI
+            }
+            try {
+                retryIO("starMessage($messageId)") { client.starMessage(messageId) }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    fun unstarMessage(messageId: String) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessageStarring()) {
+                view.showMessage(R.string.permission_starring_not_allowed)
+                return@launchUI
+            }
+            try {
+                retryIO("unstarMessage($messageId)") { client.unstarMessage(messageId) }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
         }
     }
 
