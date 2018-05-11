@@ -96,16 +96,17 @@ class ChatRoomPresenter @Inject constructor(
 
     private var chatRoomId: String? = null
     private var chatRoomType: String? = null
+    private var chatIsBroadcast: Boolean = false
     private val stateChannel = Channel<State>()
     private var lastState = manager.state
 
     fun setupChatRoom(roomId: String) {
         launchUI(strategy) {
             val canPost = permissions.canPostToReadOnlyChannels()
-            val broadcastChannel = getChatRoomsInteractor.getById(currentServer, roomId)?.run {
+            chatIsBroadcast = getChatRoomsInteractor.getById(currentServer, roomId)?.run {
                 broadcast
             } ?: false
-            view.onRoomUpdated(canPost, broadcastChannel)
+            view.onRoomUpdated(canPost, chatIsBroadcast)
         }
     }
 
@@ -117,7 +118,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 if (offset == 0L) {
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
-                    val oldMessages = mapper.map(localMessages)
+                    val oldMessages = mapper.map(localMessages, chatIsBroadcast)
                     if (oldMessages.isNotEmpty()) {
                         view.showMessages(oldMessages)
                         loadMissingMessages()
@@ -156,7 +157,7 @@ class ChatRoomPresenter @Inject constructor(
                 client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
         messagesRepository.saveAll(messages)
-        val allMessages = mapper.map(messages)
+        val allMessages = mapper.map(messages, chatIsBroadcast)
         view.showMessages(allMessages)
     }
 
@@ -192,7 +193,7 @@ class ChatRoomPresenter @Inject constructor(
                     try {
                         val message = client.sendMessage(id, chatRoomId, text)
                         messagesRepository.save(newMessage)
-                        view.showNewMessage(mapper.map(newMessage))
+                        view.showNewMessage(mapper.map(newMessage, chatIsBroadcast))
                         message
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
@@ -333,7 +334,7 @@ class ChatRoomPresenter @Inject constructor(
                             Timber.d("History: $messages")
 
                             if (messages.result.isNotEmpty()) {
-                                val models = mapper.map(messages.result)
+                                val models = mapper.map(messages.result, chatIsBroadcast)
                                 messagesRepository.saveAll(messages.result)
 
                                 launchUI(strategy) {
@@ -415,7 +416,7 @@ class ChatRoomPresenter @Inject constructor(
                 view.showReplyingAction(
                     username = getDisplayName(msg.sender),
                     replyMarkdown = "[ ]($currentServer/$roomType/$room?msg=$id) $mention ",
-                    quotedMessage = mapper.map(message).last().preview?.message ?: ""
+                    quotedMessage = mapper.map(message, chatIsBroadcast).last().preview?.message ?: ""
                 )
             }
         }
@@ -682,7 +683,7 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
-            val viewModelStreamedMessage = mapper.map(streamedMessage)
+            val viewModelStreamedMessage = mapper.map(streamedMessage, chatIsBroadcast)
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {

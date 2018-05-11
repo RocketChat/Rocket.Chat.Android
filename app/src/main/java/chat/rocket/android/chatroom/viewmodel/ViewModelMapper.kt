@@ -13,6 +13,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.domain.MessageReply
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
@@ -47,21 +48,21 @@ class ViewModelMapper @Inject constructor(
     private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
     private val secondaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
 
-    suspend fun map(message: Message): List<BaseViewModel<*>> {
-        return translate(message)
+    suspend fun map(message: Message, onBroadcastChannel: Boolean = false): List<BaseViewModel<*>> {
+        return translate(message, onBroadcastChannel)
     }
 
-    suspend fun map(messages: List<Message>): List<BaseViewModel<*>> = withContext(CommonPool) {
+    suspend fun map(messages: List<Message>, onBroadcastChannel: Boolean = false): List<BaseViewModel<*>> = withContext(CommonPool) {
         val list = ArrayList<BaseViewModel<*>>(messages.size)
 
         messages.forEach {
-            list.addAll(translate(it))
+            list.addAll(translate(it, onBroadcastChannel))
         }
 
         return@withContext list
     }
 
-    private suspend fun translate(message: Message): List<BaseViewModel<*>> = withContext(CommonPool) {
+    private suspend fun translate(message: Message, onBroadcastChannel: Boolean): List<BaseViewModel<*>> = withContext(CommonPool) {
         val list = ArrayList<BaseViewModel<*>>()
 
         message.urls?.forEach {
@@ -86,7 +87,30 @@ class ViewModelMapper @Inject constructor(
             list[i].nextDownStreamMessage = next
         }
 
+        if (onBroadcastChannel) {
+            val replyViewModel = mapMessageReply(message)
+            list.first().nextDownStreamMessage = replyViewModel
+            list.add(0, replyViewModel)
+        }
+
         return@withContext list
+    }
+
+    private fun mapMessageReply(message: Message): MessageReplyViewModel {
+        val messageReply = MessageReply(permalink = makePermalink(message))
+        return MessageReplyViewModel(
+            messageId = message.id,
+            isTemporary = false,
+            reactions = emptyList(),
+            message = message,
+            preview = mapMessagePreview(message),
+            rawData = messageReply,
+            nextDownStreamMessage = null
+        )
+    }
+
+    private fun makePermalink(message: Message): String {
+        return "[ ]($currentServer/direct/${message.sender?.username}?msg=${message.id}) "
     }
 
     private fun mapUrl(message: Message, url: Url): BaseViewModel<*>? {
