@@ -1,5 +1,7 @@
 package chat.rocket.android.favoritemessages.presentation
 
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
@@ -9,7 +11,6 @@ import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.getFavoriteMessages
-import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,7 +23,7 @@ class FavoriteMessagesPresenter @Inject constructor(
     factory: RocketChatClientFactory
 ) {
     private val client = factory.create(serverInteractor.get()!!)
-    private var favoriteMessagesListOffset: Int = 0
+    private var offset: Int = 0
 
     /**
      * Loads all favorite messages for room. the given room id.
@@ -37,10 +38,10 @@ class FavoriteMessagesPresenter @Inject constructor(
                 chatRoom?.let { room ->
                     view.showLoading()
                     val favoriteMessages =
-                        client.getFavoriteMessages(roomId, room.type, favoriteMessagesListOffset)
-                    favoriteMessagesListOffset = favoriteMessages.offset.toInt()
+                        client.getFavoriteMessages(roomId, room.type, offset)
+                    offset = favoriteMessages.offset.toInt()
                     val messageList =
-                        mapper.map(favoriteMessages.result.filterNot { it.isSystemMessage() })
+                        mapper.map(favoriteMessages.result)
                     view.showFavoriteMessages(messageList)
                     view.hideLoading()
                 }.ifNull {
