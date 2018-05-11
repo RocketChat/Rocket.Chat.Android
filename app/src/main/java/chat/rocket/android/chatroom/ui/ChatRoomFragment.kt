@@ -79,7 +79,8 @@ fun newInstance(
     isChatRoomReadOnly: Boolean,
     chatRoomLastSeen: Long,
     isSubscribed: Boolean = true,
-    isChatRoomOwner: Boolean = false
+    isChatRoomOwner: Boolean = false,
+    chatRoomMessage: String? = null
 ): Fragment {
     return ChatRoomFragment().apply {
         arguments = Bundle(1).apply {
@@ -90,6 +91,7 @@ fun newInstance(
             putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
             putBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED, isSubscribed)
             putBoolean(BUNDLE_CHAT_ROOM_IS_OWNER, isChatRoomOwner)
+            putString(BUNDLE_CHAT_ROOM_MESSAGE, chatRoomMessage)
         }
     }
 }
@@ -102,6 +104,7 @@ private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 private const val BUNDLE_CHAT_ROOM_IS_OWNER = "chat_room_is_owner"
+private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
 
@@ -113,6 +116,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
+    private var chatRoomMessage: String? = null
     private var isSubscribed: Boolean = true
     private var isChatRoomReadOnly: Boolean = false
     private var isChatRoomOwner: Boolean = false
@@ -147,7 +151,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
             isChatRoomOwner = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_OWNER)
-
+            chatRoomMessage = bundle.getString(BUNDLE_CHAT_ROOM_MESSAGE)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -615,6 +619,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_join_chat.setVisible(true)
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
+            text_message.textContent = chatRoomMessage ?: ""
             button_send.alpha = 0f
             button_send.setVisible(false)
             button_show_attachment_options.alpha = 1f

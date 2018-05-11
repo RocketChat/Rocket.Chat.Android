@@ -624,7 +624,8 @@ class ChatRoomPresenter @Inject constructor(
                             chatRoomName = roomName,
                             isChatRoomOwner = false,
                             isChatRoomReadOnly = false,
-                            isChatRoomSubscribed = it.open
+                            isChatRoomSubscribed = it.open,
+                            chatRoomMessage = permalink
                         )
                     } else {
                         throw IllegalStateException("Not a direct-message")
