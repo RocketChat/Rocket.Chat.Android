@@ -16,8 +16,8 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     }
 
     fun toPinnedMessageList(chatRoomId: String, chatRoomType: String) {
-        activity.addFragmentBackStack("PinnedMessages", R.id.fragment_container){
-            chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId,chatRoomType)
+        activity.addFragmentBackStack("PinnedMessages", R.id.fragment_container) {
+            chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId, chatRoomType)
         }
     }
 
@@ -27,14 +27,15 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     }
 
     fun toDirectMessage(chatRoomId: String,
-                   chatRoomName: String,
-                   chatRoomType: String,
-                   isChatRoomReadOnly: Boolean,
-                   chatRoomLastSeen: Long,
-                   isChatRoomSubscribed: Boolean,
-                   isChatRoomOwner: Boolean) {
+                        chatRoomName: String,
+                        chatRoomType: String,
+                        isChatRoomReadOnly: Boolean,
+                        chatRoomLastSeen: Long,
+                        isChatRoomSubscribed: Boolean,
+                        isChatRoomOwner: Boolean,
+                        chatRoomMessage: String) {
         activity.startActivity(activity.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType,
-            isChatRoomReadOnly, chatRoomLastSeen, isChatRoomSubscribed, isChatRoomOwner))
+            isChatRoomReadOnly, chatRoomLastSeen, isChatRoomSubscribed, isChatRoomOwner, chatRoomMessage))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 }

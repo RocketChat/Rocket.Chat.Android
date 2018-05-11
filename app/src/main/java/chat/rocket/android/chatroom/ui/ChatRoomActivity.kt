@@ -28,7 +28,8 @@ fun Context.chatRoomIntent(
     isChatRoomReadOnly: Boolean,
     chatRoomLastSeen: Long,
     isChatRoomSubscribed: Boolean = true,
-    isChatRoomOwner: Boolean = false
+    isChatRoomOwner: Boolean = false,
+    chatRoomMessage: String? = null
 ): Intent {
     return Intent(this, ChatRoomActivity::class.java).apply {
         putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
@@ -38,6 +39,7 @@ fun Context.chatRoomIntent(
         putExtra(INTENT_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
         putExtra(INTENT_CHAT_IS_SUBSCRIBED, isChatRoomSubscribed)
         putExtra(INTENT_CHAT_ROOM_IS_OWNER, isChatRoomOwner)
+        putExtra(INTENT_CHAT_ROOM_MESSAGE, chatRoomMessage)
     }
 }
 
@@ -48,6 +50,7 @@ private const val INTENT_CHAT_ROOM_IS_READ_ONLY = "chat_room_is_read_only"
 private const val INTENT_CHAT_ROOM_IS_OWNER = "chat_room_is_owner"
 private const val INTENT_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val INTENT_CHAT_IS_SUBSCRIBED = "is_chat_room_subscribed"
+private const val INTENT_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -94,6 +97,8 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         isChatRoomOwner = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_OWNER, false)
         requireNotNull(isChatRoomOwner) { "no chat_room_is_owner provided in Intent extras" }
 
+        val chatRoomMessage = intent.getStringExtra(INTENT_CHAT_ROOM_MESSAGE)
+
         setupToolbar()
 
         chatRoomLastSeen = intent.getLongExtra(INTENT_CHAT_ROOM_LAST_SEEN, -1)
@@ -103,7 +108,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
             addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
                 newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
-                        isChatRoomSubscribed, isChatRoomOwner)
+                        isChatRoomSubscribed, isChatRoomOwner, chatRoomMessage)
             }
         }
     }
