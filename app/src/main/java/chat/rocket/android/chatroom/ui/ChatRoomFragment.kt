@@ -198,7 +198,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 presenter.toMembersList(chatRoomId, chatRoomType)
             }
             R.id.action_pinned_messages -> {
-                presenter.toPinnedMessageList(chatRoomId,chatRoomType)
+                presenter.toPinnedMessageList(chatRoomId, chatRoomType)
+            }
+            R.id.action_favorite_messages -> {
+                presenter.toFavoriteMessageList(chatRoomId, chatRoomType)
             }
         }
         return true
