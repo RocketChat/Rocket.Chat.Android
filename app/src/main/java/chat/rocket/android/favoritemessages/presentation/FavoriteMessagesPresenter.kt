@@ -1,7 +1,5 @@
 package chat.rocket.android.favoritemessages.presentation
 
-import chat.rocket.android.chatroom.viewmodel.BaseViewModel
-import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetChatRoomsInteractor
@@ -40,8 +38,7 @@ class FavoriteMessagesPresenter @Inject constructor(
                     val favoriteMessages =
                         client.getFavoriteMessages(roomId, room.type, offset)
                     offset = favoriteMessages.offset.toInt()
-                    val messageList =
-                        mapper.map(favoriteMessages.result)
+                    val messageList = mapper.map(favoriteMessages.result)
                     view.showFavoriteMessages(messageList)
                     view.hideLoading()
                 }.ifNull {
