@@ -15,7 +15,6 @@ import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
     private val roomType: String,
-    private val roomName: String,
     private val presenter: ChatRoomPresenter?,
     private val enableActions: Boolean = true,
     private val reactionListener: EmojiReactionListener? = null
@@ -98,15 +97,24 @@ class ChatRoomAdapter(
         }
 
         when (holder) {
-            is MessageViewHolder -> holder.bind(dataSet[position] as MessageViewModel)
-            is ImageAttachmentViewHolder -> holder.bind(dataSet[position] as ImageAttachmentViewModel)
-            is AudioAttachmentViewHolder -> holder.bind(dataSet[position] as AudioAttachmentViewModel)
-            is VideoAttachmentViewHolder -> holder.bind(dataSet[position] as VideoAttachmentViewModel)
-            is UrlPreviewViewHolder -> holder.bind(dataSet[position] as UrlPreviewViewModel)
-            is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
-            is AuthorAttachmentViewHolder -> holder.bind(dataSet[position] as AuthorAttachmentViewModel)
-            is ColorAttachmentViewHolder -> holder.bind(dataSet[position] as ColorAttachmentViewModel)
-            is GenericFileAttachmentViewHolder -> holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
+            is MessageViewHolder ->
+                holder.bind(dataSet[position] as MessageViewModel)
+            is ImageAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ImageAttachmentViewModel)
+            is AudioAttachmentViewHolder ->
+                holder.bind(dataSet[position] as AudioAttachmentViewModel)
+            is VideoAttachmentViewHolder ->
+                holder.bind(dataSet[position] as VideoAttachmentViewModel)
+            is UrlPreviewViewHolder ->
+                holder.bind(dataSet[position] as UrlPreviewViewModel)
+            is MessageAttachmentViewHolder ->
+                holder.bind(dataSet[position] as MessageAttachmentViewModel)
+            is AuthorAttachmentViewHolder ->
+                holder.bind(dataSet[position] as AuthorAttachmentViewModel)
+            is ColorAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ColorAttachmentViewModel)
+            is GenericFileAttachmentViewHolder ->
+                holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
         }
     }
 

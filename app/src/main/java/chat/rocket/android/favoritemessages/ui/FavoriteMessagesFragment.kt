@@ -70,7 +70,7 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     override fun showFavoriteMessages(favoriteMessages: List<BaseViewModel<*>>) {
         ui {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, "", null, false)
+                adapter = ChatRoomAdapter(chatRoomType, null, false)
                 recycler_view.adapter = adapter
                 val linearLayoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

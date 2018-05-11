@@ -2,7 +2,6 @@ package chat.rocket.android.pinnedmessages.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -18,7 +17,6 @@ import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesPresenter
 import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesView
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
@@ -75,7 +73,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
     override fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>) {
         ui {
             if (recycler_view_pinned.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, "", null, false)
+                adapter = ChatRoomAdapter(chatRoomType, null, false)
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
