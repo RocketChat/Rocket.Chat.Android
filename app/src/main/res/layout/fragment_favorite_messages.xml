@@ -30,10 +30,12 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_action_message_star_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:tint="@color/icon_grey"
+        app:layout_constraintBottom_toTopOf="@+id/text_no_favorite_messages"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/text_no_favorite_messages"
@@ -44,6 +46,7 @@
         android:textColor="@color/colorSecondaryText"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/text_no_favorite_messages_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_star" />
@@ -57,6 +60,7 @@
         android:textAlignment="center"
         android:textColor="@color/colorSecondaryTextLight"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_no_favorite_messages" />
