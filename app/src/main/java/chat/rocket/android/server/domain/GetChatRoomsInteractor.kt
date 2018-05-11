@@ -55,7 +55,11 @@ class GetChatRoomsInteractor @Inject constructor(private val repository: ChatRoo
      * @return The [ChatRoom] object or null if we couldn't find any.
      */
     fun getByName(serverUrl: String, name: String): ChatRoom? {
-        return getAll(serverUrl).toMutableList().find { chatRoom -> chatRoom.name == name }
+        return getAll(serverUrl).let {
+            val found = it.find { chatRoom -> chatRoom.name == name }
+                ?: return@let it.find { chatRoom -> chatRoom.fullName == name }
+            found
+        }
     }
 
     /**

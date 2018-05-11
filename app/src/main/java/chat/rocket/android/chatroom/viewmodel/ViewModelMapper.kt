@@ -15,6 +15,7 @@ import androidx.core.text.scale
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.domain.MessageReply
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.util.extensions.avatarUrl
@@ -35,6 +36,7 @@ import javax.inject.Inject
 class ViewModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,
+    private val userHelper: UserHelper,
     tokenRepository: TokenRepository,
     serverInteractor: GetCurrentServerInteractor,
     getSettingsInteractor: GetSettingsInteractor,
@@ -97,14 +99,15 @@ class ViewModelMapper @Inject constructor(
     }
 
     private fun mapMessageReply(message: Message): MessageReplyViewModel {
-        val messageReply = MessageReply(permalink = makePermalink(message))
+        val name = message.sender?.name
+        val roomName = if (settings.useRealName() && name != null) name else message.sender?.username ?: ""
         return MessageReplyViewModel(
             messageId = message.id,
             isTemporary = false,
             reactions = emptyList(),
             message = message,
             preview = mapMessagePreview(message),
-            rawData = messageReply,
+            rawData = MessageReply(roomName = roomName, permalink = makePermalink(message)),
             nextDownStreamMessage = null
         )
     }

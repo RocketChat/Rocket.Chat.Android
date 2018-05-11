@@ -611,6 +611,32 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun openDirectMessage(roomName: String, permalink: String) {
+        launchUI(strategy) {
+            try {
+                getChatRoomsInteractor.getByName(currentServer, roomName)?.let {
+                    val isDirectMessage = it.type is RoomType.DirectMessage
+                    if (isDirectMessage) {
+                        navigator.toDirectMessage(
+                            chatRoomId = it.id,
+                            chatRoomType = it.type.toString(),
+                            chatRoomLastSeen = it.lastSeen ?: -1,
+                            chatRoomName = roomName,
+                            isChatRoomOwner = false,
+                            isChatRoomReadOnly = false,
+                            isChatRoomSubscribed = it.open
+                        )
+                    } else {
+                        throw IllegalStateException("Not a direct-message")
+                    }
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
+                view.showMessage(ex.message!!)
+            }
+        }
+    }
+
     /**
      * Send an emoji reaction to a message.
      */

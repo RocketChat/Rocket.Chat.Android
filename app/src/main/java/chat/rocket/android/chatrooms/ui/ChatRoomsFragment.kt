@@ -44,7 +44,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var settingsRepository: SettingsRepository
     @Inject
     lateinit var localRepository: LocalRepository
-    private lateinit var preferences: SharedPreferences
     private var searchView: SearchView? = null
     private val handler = Handler()
 
@@ -59,7 +58,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
-        preferences = context?.getSharedPreferences("temp", Context.MODE_PRIVATE)!!
     }
 
     override fun onDestroy() {

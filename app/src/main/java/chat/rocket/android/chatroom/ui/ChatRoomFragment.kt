@@ -36,6 +36,7 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewMod
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.fadeIn
@@ -58,6 +59,7 @@ import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.android.widget.emoji.EmojiPickerPopup
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -102,6 +104,7 @@ private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 private const val BUNDLE_CHAT_ROOM_IS_OWNER = "chat_room_is_owner"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
+
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
@@ -271,6 +274,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setupMessageComposer(isChatRoomOwner || canPost)
         isBroadcastChannel = broadcastChannel
         if (isBroadcastChannel) activity?.invalidateOptionsMenu()
+    }
+
+    override fun openDirectMessage(chatRoom: ChatRoom, permalink: String) {
+
     }
 
     private fun toggleNoChatView(size: Int) {

@@ -8,6 +8,7 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewMod
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.model.ChatRoom
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -127,4 +128,10 @@ interface ChatRoomView : LoadingView, MessageView {
      * Communicate whether it's a broadcast channel and if current user can post to it.
      */
     fun onRoomUpdated(canPost: Boolean, broadcastChannel: Boolean)
+
+    /**
+     * Open a DM with the user in the given [chatRoom] and pass the [permalink] for the message
+     * to reply.
+     */
+    fun openDirectMessage(chatRoom: ChatRoom, permalink: String)
 }

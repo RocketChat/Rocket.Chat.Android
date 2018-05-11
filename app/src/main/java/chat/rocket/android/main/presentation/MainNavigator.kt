@@ -1,6 +1,5 @@
 package chat.rocket.android.main.presentation
 
-import android.content.Context
 import chat.rocket.android.R
 import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.chatroom.ui.chatRoomIntent
