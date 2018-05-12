@@ -36,7 +36,7 @@
         android:id="@+id/iv_pin_icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/ic_pin_black_24dp"
+        android:src="@drawable/ic_action_message_pin_24dp"
         android:tint="@color/icon_grey"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

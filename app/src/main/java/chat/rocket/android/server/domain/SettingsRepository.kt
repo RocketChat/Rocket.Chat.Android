@@ -49,6 +49,7 @@ const val ALLOW_MESSAGE_EDITING = "Message_AllowEditing"
 const val SHOW_DELETED_STATUS = "Message_ShowDeletedStatus"
 const val SHOW_EDITED_STATUS = "Message_ShowEditedStatus"
 const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
+const val ALLOW_MESSAGE_STARRING = "Message_AllowStarring"
 const val STORE_LAST_MESSAGE = "Store_Last_Message"
 
 /*
@@ -83,6 +84,7 @@ fun PublicSettings.wideTile(): String? = this[WIDE_TILE_310]?.value as String?
 fun PublicSettings.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true
 fun PublicSettings.showEditedStatus(): Boolean = this[SHOW_EDITED_STATUS]?.value == true
 fun PublicSettings.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING]?.value == true
+fun PublicSettings.allowedMessageStarring(): Boolean = this[ALLOW_MESSAGE_STARRING]?.value == true
 fun PublicSettings.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
 fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
 

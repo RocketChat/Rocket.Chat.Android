@@ -20,6 +20,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.text.SpannableStringBuilder
+import android.view.*
+import androidx.core.text.bold
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
@@ -131,8 +135,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private var playComposeMessageButtonsAnimation = true
 
     // For reveal and unreveal anim.
-    private val hypotenuse by lazy { Math.hypot(root_layout.width.toDouble(), root_layout.height.toDouble()).toFloat() }
-    private val max by lazy { Math.max(layout_message_attachment_options.width.toDouble(), layout_message_attachment_options.height.toDouble()).toFloat() }
+    private val hypotenuse by lazy {
+        Math.hypot(
+            root_layout.width.toDouble(),
+            root_layout.height.toDouble()
+        ).toFloat()
+    }
+    private val max by lazy {
+        Math.max(
+            layout_message_attachment_options.width.toDouble(),
+            layout_message_attachment_options.height.toDouble()
+        ).toFloat()
+    }
     private val centerX by lazy { recycler_view.right }
     private val centerY by lazy { recycler_view.bottom }
     private val handler = Handler()
@@ -192,7 +206,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         recycler_view.removeOnScrollListener(onScrollListener)
         recycler_view.removeOnLayoutChangeListener(layoutChangeListener)
 
-        presenter.unsubscribeMessages(chatRoomId)
+        presenter.disconnect()
         handler.removeCallbacksAndMessages(null)
         unsubscribeComposeTextMessage()
 
@@ -360,6 +374,37 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     presenter.runCommand(text, chatRoomId)
                 }
             }
+        }
+    }
+
+    override fun showTypingStatus(usernameList: ArrayList<String>) {
+        ui {
+            when (usernameList.size) {
+                1 -> {
+                    text_typing_status.text =
+                            SpannableStringBuilder()
+                                .bold { append(usernameList[0]) }
+                                .append(getString(R.string.msg_is_typing))
+                }
+                2 -> {
+                    text_typing_status.text =
+                            SpannableStringBuilder()
+                                .bold { append(usernameList[0]) }
+                                .append(getString(R.string.msg_and))
+                                .bold { append(usernameList[1]) }
+                                .append(getString(R.string.msg_are_typing))
+                }
+                else -> {
+                    text_typing_status.text = getString(R.string.msg_several_users_are_typing)
+                }
+            }
+            text_typing_status.isVisible = true
+        }
+    }
+
+    override fun hideTypingStatusView() {
+        ui {
+            text_typing_status.isVisible = false
         }
     }
 

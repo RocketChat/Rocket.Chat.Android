@@ -111,6 +111,14 @@
     <string name="msg_no_chat_title">Sin mensajes de chat</string>
     <string name="msg_no_chat_description">Comience a conversar para ver\nsus mensajes aquí.</string>
     <string name="msg_edited">(editado)</string>
+    // TODO: Add proper translation.
+    <string name="msg_and">\u0020and\u0020</string>
+    // TODO: Add proper translation.
+    <string name="msg_is_typing">\u0020is typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_are_typing">\u0020are typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
 
     <!-- System messages -->
@@ -136,6 +144,8 @@
     <string name="action_msg_pin">Fijar mensaje</string>
     <string name="action_msg_unpin">Soltar mensaje</string>
     <string name="action_msg_star">Star mensaje</string>
+    // TODO: Add proper translation.
+    <string name="action_msg_unstar">Unstar Message</string>
     <string name="action_msg_share">Compartir</string>
     <string name="action_title_editing">Edición de mensaje</string>
     <string name="action_msg_add_reaction">Añadir una reacción</string>
@@ -144,6 +154,8 @@
     <string name="permission_editing_not_allowed">La edición no és permitida</string>
     <string name="permission_deleting_not_allowed">Eliminar no és permitido</string>
     <string name="permission_pinning_not_allowed">Fijar no és permitido</string>
+    // TODO: Add proper translation.
+    <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Members List -->
     <string name="title_members_list">Lista de miembros</string>

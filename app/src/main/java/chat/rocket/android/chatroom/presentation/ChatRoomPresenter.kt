@@ -56,6 +56,9 @@ import chat.rocket.core.internal.rest.toggleReaction
 import chat.rocket.core.internal.rest.unpinMessage
 import chat.rocket.core.internal.rest.updateMessage
 import chat.rocket.core.internal.rest.uploadFile
+import chat.rocket.core.internal.realtime.subscribeTypingStatus
+import chat.rocket.core.internal.realtime.unsubscribe
+import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
@@ -98,7 +101,9 @@ class ChatRoomPresenter @Inject constructor(
     private var chatRoomType: String? = null
     private var chatIsBroadcast: Boolean = false
     private val stateChannel = Channel<State>()
+    private var typingStatusSubscriptionId: String? = null
     private var lastState = manager.state
+    private var typingStatusList = arrayListOf<String>()
 
     fun setupChatRoom(roomId: String) {
         launchUI(strategy) {
@@ -145,6 +150,7 @@ class ChatRoomPresenter @Inject constructor(
                 view.hideLoading()
             }
 
+            subscribeTypingStatus()
             if (offset == 0L) {
                 subscribeState()
             }
@@ -182,6 +188,7 @@ class ChatRoomPresenter @Inject constructor(
                         groupable = false,
                         parseUrls = false,
                         pinned = false,
+                        starred = emptyList(),
                         mentions = emptyList(),
                         reactions = null,
                         senderAlias = null,
@@ -356,14 +363,6 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun unsubscribeMessages(chatRoomId: String) {
-        manager.removeStatusChannel(stateChannel)
-        manager.unsubscribeRoomMessages(chatRoomId)
-        // All messages during the subscribed period are assumed to be read,
-        // and lastSeen is updated as the time when the user leaves the room
-        markRoomAsRead(chatRoomId)
-    }
-
     /**
      * Delete the message with the given id.
      *
@@ -458,6 +457,34 @@ class ChatRoomPresenter @Inject constructor(
                 return@launchUI
             }
             view.showEditingAction(roomId, messageId, text)
+        }
+    }
+
+    fun starMessage(messageId: String) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessageStarring()) {
+                view.showMessage(R.string.permission_starring_not_allowed)
+                return@launchUI
+            }
+            try {
+                retryIO("starMessage($messageId)") { client.starMessage(messageId) }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
+        }
+    }
+
+    fun unstarMessage(messageId: String) {
+        launchUI(strategy) {
+            if (!permissions.allowedMessageStarring()) {
+                view.showMessage(R.string.permission_starring_not_allowed)
+                return@launchUI
+            }
+            try {
+                retryIO("unstarMessage($messageId)") { client.unstarMessage(messageId) }
+            } catch (e: RocketChatException) {
+                Timber.e(e)
+            }
         }
     }
 
@@ -706,6 +733,57 @@ class ChatRoomPresenter @Inject constructor(
                 view.enableSendMessageButton()
             }
         }
+    }
+
+    fun disconnect() {
+        unsubscribeTypingStatus()
+        if (chatRoomId != null) {
+            unsubscribeMessages(chatRoomId.toString())
+        }
+    }
+
+    private suspend fun subscribeTypingStatus() {
+        client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
+            typingStatusSubscriptionId = id
+        }
+
+        for (typingStatus in client.typingStatusChannel) {
+            processTypingStatus(typingStatus)
+        }
+    }
+
+    private fun processTypingStatus(typingStatus: Pair<String, Boolean>) {
+        if (!typingStatusList.any { username -> username == typingStatus.first }) {
+            if (typingStatus.second) {
+                typingStatusList.add(typingStatus.first)
+            }
+        } else {
+            typingStatusList.find { username -> username == typingStatus.first }?.let {
+                typingStatusList.remove(it)
+                if (typingStatus.second) {
+                    typingStatusList.add(typingStatus.first)
+                }
+            }
+        }
+        if (typingStatusList.isNotEmpty()) {
+            view.showTypingStatus(typingStatusList)
+        } else {
+            view.hideTypingStatusView()
+        }
+    }
+
+    private fun unsubscribeTypingStatus() {
+        typingStatusSubscriptionId?.let {
+            client.unsubscribe(it)
+        }
+    }
+
+    private fun unsubscribeMessages(chatRoomId: String) {
+        manager.removeStatusChannel(stateChannel)
+        manager.unsubscribeRoomMessages(chatRoomId)
+        // All messages during the subscribed period are assumed to be read,
+        // and lastSeen is updated as the time when the user leaves the room
+        markRoomAsRead(chatRoomId)
     }
 
     private fun updateMessage(streamedMessage: Message) {
