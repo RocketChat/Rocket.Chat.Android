@@ -108,6 +108,10 @@
     <string name="msg_image_saved_successfully">Image has been saved to gallery</string>
     <string name="msg_image_saved_failed">Failed to save image</string>
     <string name="msg_edited">(edited)</string>
+    <string name="msg_and">\u0020and\u0020</string>
+    <string name="msg_is_typing">\u0020is typing…</string>
+    <string name="msg_are_typing">\u0020are typing…</string>
+    <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No result found</string>
 
     <!-- System messages -->
@@ -121,6 +125,8 @@
     <string name="message_pinned">Pinned a message:</string>
     <string name="message_muted">User %1$s muted by %2$s</string>
     <string name="message_unmuted">User %1$s unmuted by %2$s</string>
+    <string name="message_role_add">%1$s was set %2$s by %3$s</string>
+    <string name="message_role_removed">%1$s is no longer %2$s by %3$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
