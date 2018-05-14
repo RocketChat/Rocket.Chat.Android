@@ -6,7 +6,9 @@ import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.core.internal.SettingsAdapter
 
-class SharedPreferencesSettingsRepository(private val localRepository: LocalRepository) : SettingsRepository {
+class SharedPreferencesSettingsRepository(
+    private val localRepository: LocalRepository
+) : SettingsRepository {
 
     private val adapter = SettingsAdapter().lenient()
 

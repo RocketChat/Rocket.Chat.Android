@@ -21,7 +21,7 @@ import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.core.internal.realtime.UserStatus
+import chat.rocket.common.model.UserStatus
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.google.android.gms.iid.InstanceID
 import dagger.android.AndroidInjection
@@ -84,21 +84,31 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                DrawableHelper.getUserStatusDrawable(
-                    userStatus,
-                    this.context
-                )
+                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }
 
-    override fun setupNavHeader(model: NavHeaderViewModel, accounts: List<Account>) {
-        Timber.d("Setting up nav header: $model")
+    override fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>) {
+        Timber.d("Setting up nav header: $viewModel")
         with(headerLayout) {
-            text_user_name.text = model.username
-            text_server_url.text = model.server
-            image_avatar.setImageURI(model.avatar)
-            server_logo.setImageURI(model.serverLogo)
+            with(viewModel) {
+                if (userStatus != null) {
+                    image_user_status.setImageDrawable(
+                        DrawableHelper.getUserStatusDrawable(userStatus, context)
+                    )
+                }
+                if (userDisplayName != null) {
+                    text_user_name.text = userDisplayName
+                }
+                if (userAvatar != null) {
+                    image_avatar.setImageURI(userAvatar)
+                }
+                if (serverLogo != null) {
+                    server_logo.setImageURI(serverLogo)
+                }
+                text_server_url.text = viewModel.serverUrl
+            }
             setupAccountsList(headerLayout, accounts)
         }
     }
@@ -128,7 +138,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         accounts_list.layoutManager = LinearLayoutManager(this)
         accounts_list.adapter = AccountsAdapter(accounts, object : Selector {
             override fun onStatusSelected(userStatus: UserStatus) {
-                presenter.changeStatus(userStatus)
+                presenter.changeDefaultStatus(userStatus)
             }
 
             override fun onAccountSelected(serverUrl: String) {

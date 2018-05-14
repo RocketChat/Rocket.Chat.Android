@@ -1,9 +1,13 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.view.View
+import androidx.core.view.isVisible
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.core.model.isSystemMessage
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
 
@@ -15,8 +19,8 @@ class MessageViewHolder(
 
     init {
         with(itemView) {
+            setupActionMenu(message_container)
             text_content.movementMethod = LinkMovementMethod()
-            setupActionMenu(text_content)
         }
     }
 
@@ -29,6 +33,13 @@ class MessageViewHolder(
             text_sender.text = data.senderName
             text_content.text = data.content
             image_avatar.setImageURI(data.avatar)
+            text_content.setTextColor(
+                if (data.isTemporary) Color.GRAY else Color.BLACK
+            )
+            data.message.let {
+                text_edit_indicator.isVisible = it.isSystemMessage() && it.editedBy != null
+                image_star_indicator.isVisible = it.starred?.isNotEmpty() ?: false
+            }
         }
     }
 }

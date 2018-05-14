@@ -15,7 +15,8 @@ data class MessageViewModel(
         override var reactions: List<ReactionViewModel>,
         override var nextDownStreamMessage: BaseViewModel<*>? = null,
         override var preview: Message? = null,
-        var isFirstUnread: Boolean
+        var isFirstUnread: Boolean,
+        override var isTemporary: Boolean = false
 ) : BaseMessageViewModel<Message> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.MESSAGE.viewType

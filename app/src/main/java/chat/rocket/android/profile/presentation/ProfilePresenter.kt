@@ -1,10 +1,12 @@
 package chat.rocket.android.profile.presentation
 
+import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
+import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
@@ -25,21 +27,24 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
         launchUI(strategy) {
             view.showLoading()
             try {
-                val myself = client.me()
-                myselfId = myself.id
-                val avatarUrl = UrlHelper.getAvatarUrl(serverUrl, myself.username!!)
-                view.showProfile(
-                        avatarUrl,
-                        myself.name ?: "",
-                        myself.username ?: "",
-                        myself.emails?.get(0)?.address!!
-                )
-            } catch (exception: RocketChatException) {
-                exception.message?.let {
-                    view.showMessage(it)
-                }.ifNull {
+                val myself = retryIO("me") { client.me() }
+                val id = myself.id
+                val username = myself.username
+                if (id == null || username == null) {
                     view.showGenericErrorMessage()
+                } else {
+                    myselfId = id
+                    val avatarUrl = serverUrl.avatarUrl(username)
+                    val email = myself.emails?.getOrNull(0)?.address
+                    view.showProfile(
+                            avatarUrl,
+                            myself.name ?: "",
+                            myself.username ?: "",
+                            email
+                    )
                 }
+            } catch (exception: RocketChatException) {
+                view.showMessage(exception)
             } finally {
                 view.hideLoading()
             }
@@ -51,9 +56,9 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
             view.showLoading()
             try {
                 if(avatarUrl!="") {
-                    client.setAvatar(avatarUrl)
+                    retryIO { client.setAvatar(avatarUrl) }
                 }
-                val user = client.updateProfile(myselfId, email, name, username)
+                val user = retryIO { client.updateProfile(myselfId, email, name, username) }
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
             } catch (exception: RocketChatException) {

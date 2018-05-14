@@ -14,11 +14,11 @@ import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
-        private val roomType: String,
-        private val roomName: String,
-        private val presenter: ChatRoomPresenter?,
-        private val enableActions: Boolean = true,
-        private val reactionListener: EmojiReactionListener? = null
+    private val roomType: String,
+    private val roomName: String,
+    private val presenter: ChatRoomPresenter?,
+    private val enableActions: Boolean = true,
+    private val reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private val dataSet = ArrayList<BaseViewModel<*>>()
@@ -52,6 +52,18 @@ class ChatRoomAdapter(
             BaseViewModel.ViewType.MESSAGE_ATTACHMENT -> {
                 val view = parent.inflate(R.layout.item_message_attachment)
                 MessageAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
+            BaseViewModel.ViewType.AUTHOR_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_author_attachment)
+                AuthorAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
+            BaseViewModel.ViewType.COLOR_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_color_attachment)
+                ColorAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
+            BaseViewModel.ViewType.GENERIC_FILE_ATTACHMENT -> {
+                val view = parent.inflate(R.layout.item_file_attachment)
+                GenericFileAttachmentViewHolder(view, actionsListener, reactionListener)
             }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
@@ -92,6 +104,9 @@ class ChatRoomAdapter(
             is VideoAttachmentViewHolder -> holder.bind(dataSet[position] as VideoAttachmentViewModel)
             is UrlPreviewViewHolder -> holder.bind(dataSet[position] as UrlPreviewViewModel)
             is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
+            is AuthorAttachmentViewHolder -> holder.bind(dataSet[position] as AuthorAttachmentViewModel)
+            is ColorAttachmentViewHolder -> holder.bind(dataSet[position] as ColorAttachmentViewModel)
+            is GenericFileAttachmentViewHolder -> holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
         }
     }
 
@@ -100,6 +115,7 @@ class ChatRoomAdapter(
         return when (model) {
             is MessageViewModel -> model.messageId.hashCode().toLong()
             is BaseFileAttachmentViewModel -> model.id
+            is AuthorAttachmentViewModel -> model.id
             else -> return position.toLong()
         }
     }
@@ -111,12 +127,22 @@ class ChatRoomAdapter(
     }
 
     fun prependData(dataSet: List<BaseViewModel<*>>) {
-        val item = dataSet.firstOrNull { newItem ->
+        val item = dataSet.indexOfFirst { newItem ->
             this.dataSet.indexOfFirst { it.messageId == newItem.messageId && it.viewType == newItem.viewType } > -1
         }
-        if (item == null) {
+        if (item == -1) {
             this.dataSet.addAll(0, dataSet)
             notifyItemRangeInserted(0, dataSet.size)
+        } else {
+            dataSet.forEach { item ->
+                val index = this.dataSet.indexOfFirst {
+                    item.messageId == it.messageId && item.viewType == it.viewType
+                }
+                if (index > -1) {
+                    this.dataSet[index] = item
+                    notifyItemChanged(index)
+                }
+            }
         }
     }
 
@@ -154,26 +180,40 @@ class ChatRoomAdapter(
         }
     }
 
-    val actionsListener = object : BaseViewHolder.ActionsListener {
+    private val actionsListener = object : BaseViewHolder.ActionsListener {
+
         override fun isActionsEnabled(): Boolean = enableActions
 
         override fun onActionSelected(item: MenuItem, message: Message) {
             message.apply {
                 when (item.itemId) {
-                    R.id.action_menu_msg_delete -> presenter?.deleteMessage(roomId, id)
-                    R.id.action_menu_msg_quote -> presenter?.citeMessage(roomType, roomName, id, false)
-                    R.id.action_menu_msg_reply -> presenter?.citeMessage(roomType, roomName, id, true)
-                    R.id.action_menu_msg_copy -> presenter?.copyMessage(id)
-                    R.id.action_menu_msg_edit -> presenter?.editMessage(roomId, id, message.message)
-                    R.id.action_menu_msg_pin_unpin -> {
-                        with(item) {
-                            if (!isChecked) {
-                                presenter?.pinMessage(id)
-                            } else {
-                                presenter?.unpinMessage(id)
-                            }
+                    R.id.action_message_reply -> {
+                        presenter?.citeMessage(roomType, id, true)
+                    }
+                    R.id.action_message_quote -> {
+                        presenter?.citeMessage(roomType, id, false)
+                    }
+                    R.id.action_message_copy -> {
+                        presenter?.copyMessage(id)
+                    }
+                    R.id.action_message_edit -> {
+                        presenter?.editMessage(roomId, id, message.message)
+                    }
+                    R.id.action_message_star -> {
+                        if (!item.isChecked) {
+                            presenter?.starMessage(id)
+                        } else {
+                            presenter?.unstarMessage(id)
                         }
                     }
+                    R.id.action_message_unpin -> {
+                        if (!item.isChecked) {
+                            presenter?.pinMessage(id)
+                        } else {
+                            presenter?.unpinMessage(id)
+                        }
+                    }
+                    R.id.action_message_delete -> presenter?.deleteMessage(roomId, id)
                     R.id.action_menu_msg_react -> presenter?.showReactions(id)
                     else -> TODO("Not implemented")
                 }

@@ -3,10 +3,11 @@ package chat.rocket.android.app
 import android.app.Activity
 import android.app.Application
 import android.app.Service
+import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.content.edit
+import androidx.core.content.edit
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.app.migration.RealmMigration
 import chat.rocket.android.app.migration.RocketChatLibraryModule
@@ -17,11 +18,13 @@ import chat.rocket.android.app.migration.model.RealmSession
 import chat.rocket.android.app.migration.model.RealmUser
 import chat.rocket.android.authentication.domain.model.toToken
 import chat.rocket.android.dagger.DaggerAppComponent
+import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.CrashlyticsTree
-import chat.rocket.android.helper.UrlHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.util.extensions.avatarUrl
+import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.widget.emoji.EmojiRepository
 import chat.rocket.common.model.Token
 import chat.rocket.core.model.Value
@@ -42,9 +45,11 @@ import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-
 class RocketChatApplication : Application(), HasActivityInjector, HasServiceInjector,
-        HasBroadcastReceiverInjector {
+    HasBroadcastReceiverInjector {
+
+    @Inject
+    lateinit var appLifecycleObserver: AppLifecycleObserver
 
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
@@ -80,10 +85,21 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     @Inject
     lateinit var localRepository: LocalRepository
 
+    @Inject
+    @field:ForMessages
+    lateinit var messagesPrefs: SharedPreferences
+
     override fun onCreate() {
         super.onCreate()
 
-        DaggerAppComponent.builder().application(this).build().inject(this)
+        DaggerAppComponent.builder()
+            .application(this)
+            .build()
+            .inject(this)
+
+        ProcessLifecycleOwner.get()
+            .lifecycle
+            .addObserver(appLifecycleObserver)
 
         // TODO - remove this on the future, temporary migration stuff for pre-release versions.
         migrateInternalTokens()
@@ -95,6 +111,13 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         setupCrashlytics()
         setupFresco()
         setupTimber()
+
+        if (localRepository.needOldMessagesCleanUp()) {
+            messagesPrefs.edit {
+                clear()
+            }
+            localRepository.setOldMessagesCleanedUp()
+        }
 
         // TODO - remove this and all realm stuff when we got to 80% in 2.0
         try {
@@ -148,12 +171,12 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
 
     private fun migrateServerInfo(url: String, authToken: String, settings: PublicSettings, user: RealmUser) {
         val userId = user._id
-        val avatar = UrlHelper.getAvatarUrl(url, user.username!!)
+        val avatar = url.avatarUrl(user.username!!)
         val icon = settings.favicon()?.let {
-            UrlHelper.getServerLogoUrl(url, it)
+            url.serverLogoUrl(it)
         }
         val logo = settings.wideTile()?.let {
-            UrlHelper.getServerLogoUrl(url, it)
+            url.serverLogoUrl(it)
         }
         val account = Account(url, icon, logo, user.username!!, avatar)
         launch(CommonPool) {
@@ -275,5 +298,9 @@ private fun LocalRepository.setMigrated(migrated: Boolean) {
 }
 
 private fun LocalRepository.hasMigrated() = getBoolean(LocalRepository.MIGRATION_FINISHED_KEY)
+private fun LocalRepository.needOldMessagesCleanUp() = getBoolean(CLEANUP_OLD_MESSAGES_NEEDED, true)
+private fun LocalRepository.setOldMessagesCleanedUp() = save(CLEANUP_OLD_MESSAGES_NEEDED, false)
 
 private const val INTERNAL_TOKEN_MIGRATION_NEEDED = "INTERNAL_TOKEN_MIGRATION_NEEDED"
+
+private const val CLEANUP_OLD_MESSAGES_NEEDED = "CLEANUP_OLD_MESSAGES_NEEDED"

@@ -1,8 +1,8 @@
 package chat.rocket.android.members.presentation
 
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
-import chat.rocket.android.member.ui.newInstance
 import chat.rocket.common.model.UserStatus
+import chat.rocket.android.members.ui.newInstance
 
 class MembersNavigator(internal val activity: ChatRoomActivity) {
 

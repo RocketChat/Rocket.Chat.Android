@@ -14,35 +14,37 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.CheckBox
 import android.widget.RadioGroup
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
-import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
-import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.NonCancellable.isActive
+import timber.log.Timber
 import javax.inject.Inject
 
-
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
-    @Inject lateinit var presenter: ChatRoomsPresenter
-    @Inject lateinit var serverInteractor: GetCurrentServerInteractor
-    @Inject lateinit var settingsRepository: SettingsRepository
-    @Inject lateinit var localRepository: LocalRepository
+    @Inject
+    lateinit var presenter: ChatRoomsPresenter
+    @Inject
+    lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
+    @Inject
+    lateinit var localRepository: LocalRepository
     private lateinit var preferences: SharedPreferences
     private var searchView: SearchView? = null
     private val handler = Handler()
@@ -67,7 +69,11 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onDestroy()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_chat_rooms)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_chat_rooms)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,9 +106,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         })
     }
 
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_sort -> {
                 val dialogLayout = layoutInflater.inflate(R.layout.chatroom_sort_dialog, null)
                 val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
@@ -135,9 +140,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 })
 
                 val dialogSort = AlertDialog.Builder(context)
-                        .setTitle(R.string.dialog_sort_title)
-                        .setView(dialogLayout)
-                        .setPositiveButton("Done", { dialog, _ -> dialog.dismiss() })
+                    .setTitle(R.string.dialog_sort_title)
+                    .setView(dialogLayout)
+                    .setPositiveButton("Done", { dialog, _ -> dialog.dismiss() })
 
                 dialogSort.show()
             }
@@ -145,58 +150,66 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun invalidateQueryOnSearch(){
+    private fun invalidateQueryOnSearch() {
         searchView?.let {
-            if (!searchView!!.isIconified){
+            if (!searchView!!.isIconified) {
                 queryChatRoomsByName(searchView!!.query.toString())
             }
         }
     }
 
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {
-        activity?.apply {
-            listJob?.cancel()
-            listJob = launch(UI) {
-                val adapter = recycler_view.adapter as SimpleSectionedRecyclerViewAdapter
-                // FIXME https://fabric.io/rocketchat3/android/apps/chat.rocket.android.dev/issues/5a90d4718cb3c2fa63b3f557?time=last-seven-days
-                // TODO - fix this bug to reenable DiffUtil
-                val diff = async(CommonPool) {
-                    DiffUtil.calculateDiff(RoomsDiffCallback(adapter.baseAdapter.dataSet, newDataSet))
-                }.await()
+        listJob?.cancel()
+        listJob = ui {
+            val adapter = recycler_view.adapter as SimpleSectionedRecyclerViewAdapter
+            // FIXME https://fabric.io/rocketchat3/android/apps/chat.rocket.android/issues/5ac2916c36c7b235275ccccf
+            // TODO - fix this bug to re-enable DiffUtil
+            /*val diff = async(CommonPool) {
+                DiffUtil.calculateDiff(RoomsDiffCallback(adapter.baseAdapter.dataSet, newDataSet))
+            }.await()*/
+            text_no_search.isVisible = newDataSet.isEmpty()
+            if (isActive) {
+                adapter.baseAdapter.updateRooms(newDataSet)
+                // TODO - fix crash to re-enable diff.dispatchUpdatesTo(adapter)
+                adapter.notifyDataSetChanged()
 
-                if (isActive) {
-                    adapter.baseAdapter.updateRooms(newDataSet)
-                    diff.dispatchUpdatesTo(adapter)
-
-                    //Set sections always after data set is updated
-                    setSections()
-                }
+                //Set sections always after data set is updated
+                setSections()
             }
         }
     }
 
-    override fun showNoChatRoomsToDisplay() = text_no_data_to_display.setVisible(true)
+    override fun showNoChatRoomsToDisplay() {
+        ui { text_no_data_to_display.setVisible(true) }
+    }
 
-    override fun showLoading() = view_loading.setVisible(true)
+    override fun showLoading() {
+        ui { view_loading.setVisible(true) }
+    }
 
     override fun hideLoading() {
-        if (view_loading != null) {
+        ui {
             view_loading.setVisible(false)
         }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun showConnectionState(state: State) {
-        activity?.apply {
+        Timber.d("Got new state: $state")
+        ui {
             connection_status_text.fadeIn()
             handler.removeCallbacks(dismissStatus)
             when (state) {
@@ -220,22 +233,25 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_chats)
+        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_chats)
     }
 
     private fun setupRecyclerView() {
-        activity?.apply {
-            recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            recycler_view.addItemDecoration(DividerItemDecoration(this,
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
-                    resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
+        ui {
+            recycler_view.layoutManager = LinearLayoutManager(it, LinearLayoutManager.VERTICAL, false)
+            recycler_view.addItemDecoration(DividerItemDecoration(it,
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
+                resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
             recycler_view.itemAnimator = DefaultItemAnimator()
             // TODO - use a ViewModel Mapper instead of using settings on the adapter
 
-            val baseAdapter = ChatRoomsAdapter(this,
-                    settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom -> presenter.loadChatRoom(chatRoom) }
+            val baseAdapter = ChatRoomsAdapter(it,
+                settingsRepository.get(serverInteractor.get()!!), localRepository) { chatRoom ->
+                presenter.loadChatRoom(chatRoom)
+            }
 
-            sectionedAdapter = SimpleSectionedRecyclerViewAdapter(this, R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter!!)
+            sectionedAdapter = SimpleSectionedRecyclerViewAdapter(it,
+                R.layout.item_chatroom_header, R.id.text_chatroom_header, baseAdapter)
             recycler_view.adapter = sectionedAdapter
         }
     }

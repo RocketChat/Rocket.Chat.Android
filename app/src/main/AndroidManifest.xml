@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
@@ -16,9 +17,11 @@
     <application
         android:name=".app.RocketChatApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_config"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true">
 
         <activity
@@ -32,6 +35,19 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="auth"
+                    android:scheme="rocketchat" />
+                <data
+                    android:host="go.rocket.chat"
+                    android:path="/auth"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -41,36 +57,37 @@
 
         <activity
             android:name=".main.ui.MainActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".webview.ui.WebViewActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".webview.cas.ui.CasWebViewActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".webview.oauth.ui.OauthWebViewActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
-        <activity
-            android:name=".chatroom.ui.PinnedMessagesActivity"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-            android:theme="@style/AppTheme" />
-
+        <!-- TODO: Change to fragment-->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
+            android:theme="@style/AppTheme" />
+
+        <!-- TODO: Change to fragment-->
+        <activity
+            android:name=".settings.about.ui.AboutActivity"
             android:theme="@style/AppTheme" />
 
         <receiver
@@ -85,6 +102,15 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".push.DirectReplyReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="chat.rocket.android.ACTION_REPLY" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".push.FirebaseTokenService"
             android:exported="false">
@@ -92,7 +118,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".push.GcmListenerService"
             android:exported="false">
@@ -100,6 +125,10 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+        <service
+            android:name=".chatroom.service.MessageService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
