@@ -211,8 +211,8 @@ class ChatRoomPresenter @Inject constructor(
                         isTemporary = true
                     )
                     try {
-                        val message = client.sendMessage(id, chatRoomId, text)
                         messagesRepository.save(newMessage)
+                        val message = client.sendMessage(id, chatRoomId, text)
                         view.showNewMessage(mapper.map(newMessage, RoomViewModel(
                             roles = chatRoles, isBroadcast = chatIsBroadcast)))
                         message
@@ -413,7 +413,7 @@ class ChatRoomPresenter @Inject constructor(
      * @param messageId The id of the message to make citation for.
      * @param mentionAuthor true means the citation is a reply otherwise it's a quote.
      */
-    fun citeMessage(roomType: String, messageId: String, mentionAuthor: Boolean) {
+    fun citeMessage(roomName: String, roomType: String, messageId: String, mentionAuthor: Boolean) {
         launchUI(strategy) {
             val message = messagesRepository.getById(messageId)
             val me: Myself? = try {
@@ -426,10 +426,17 @@ class ChatRoomPresenter @Inject constructor(
                 val id = msg.id
                 val username = msg.sender?.username ?: ""
                 val mention = if (mentionAuthor && me?.username != username) "@$username" else ""
-                val room = if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomType
+                val room = if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomName
+                val chatRoomType = when(roomTypeOf(roomType)) {
+                    is RoomType.DirectMessage -> "direct"
+                    is RoomType.PrivateGroup -> "group"
+                    is RoomType.Channel -> "channel"
+                    is RoomType.Livechat -> "livechat"
+                    else -> "custom"
+                }
                 view.showReplyingAction(
                     username = getDisplayName(msg.sender),
-                    replyMarkdown = "[ ]($currentServer/$roomType/$room?msg=$id) $mention ",
+                    replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
                     quotedMessage = mapper.map(message, RoomViewModel(roles = chatRoles,
                         isBroadcast = chatIsBroadcast)).last().preview?.message ?: ""
                 )

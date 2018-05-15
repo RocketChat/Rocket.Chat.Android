@@ -50,6 +50,7 @@ class MessageService : JobService() {
             val client = connectionManager.client
             temporaryMessages.forEach { message ->
                 try {
+                    messageRepository.save(message.copy(isTemporary = false))
                     client.sendMessage(
                         message = message.message,
                         messageId = message.id,
@@ -58,7 +59,6 @@ class MessageService : JobService() {
                         attachments = message.attachments,
                         alias = message.senderAlias
                     )
-                    messageRepository.save(message.copy(isTemporary = false))
                     Timber.d("Sent scheduled message given by id: ${message.id}")
                 } catch (ex: RocketChatException) {
                     Timber.e(ex)

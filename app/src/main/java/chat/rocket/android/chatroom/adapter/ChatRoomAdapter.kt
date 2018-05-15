@@ -209,10 +209,10 @@ class ChatRoomAdapter(
             message.apply {
                 when (item.itemId) {
                     R.id.action_message_reply -> {
-                        presenter?.citeMessage(roomType, id, true)
+                        presenter?.citeMessage(roomName, roomType, id, true)
                     }
                     R.id.action_message_quote -> {
-                        presenter?.citeMessage(roomType, id, false)
+                        presenter?.citeMessage(roomName, roomType, id, false)
                     }
                     R.id.action_message_copy -> {
                         presenter?.copyMessage(id)
