@@ -30,8 +30,17 @@ class MessageHelper @Inject constructor(
 
     fun messageIdFromPermalink(permalink: String): String? {
         PERMALINK_REGEX.find(permalink.trim())?.let {
-            if (it.groupValues.size == 4) {
-                return it.groupValues[3]
+            if (it.groupValues.size == 5) {
+                return it.groupValues[MESSAGE_ID]
+            }
+        }
+        return null
+    }
+
+    fun roomNameFromPermalink(permalink: String): String? {
+        PERMALINK_REGEX.find(permalink.trim())?.let {
+            if (it.groupValues.size == 5) {
+                return it.groupValues[ROOM_NAME]
             }
         }
         return null
@@ -39,8 +48,8 @@ class MessageHelper @Inject constructor(
 
     fun roomTypeFromPermalink(permalink: String): String? {
         PERMALINK_REGEX.find(permalink.trim())?.let {
-            if (it.groupValues.size == 4) {
-                val type = it.groupValues[2]
+            if (it.groupValues.size == 5) {
+                val type = it.groupValues[ROOM_TYPE]
                 return when(type) {
                     "group" -> "p"
                     "channel" -> "c"
@@ -54,6 +63,9 @@ class MessageHelper @Inject constructor(
     }
 
     companion object {
-        val PERMALINK_REGEX = "(?:__|[*#])|\\[(.+?)\\]\\(.+?//.+?/(.+)/.+\\?.*=(.*)\\)".toRegex()
+        private const val ROOM_TYPE = 2
+        private const val ROOM_NAME = 3
+        private const val MESSAGE_ID = 4
+        val PERMALINK_REGEX = "(?:__|[*#])|\\[(.+?)\\]\\(.+?//.+?/(.+)/(.+)\\?.*=(.*)\\)".toRegex()
     }
 }

@@ -123,7 +123,8 @@ class ChatRoomPresenter @Inject constructor(
             view.onRoomUpdated(canPost, chatIsBroadcast)
             loadMessages(roomId, roomType)
             chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }?.let { messageId ->
-                citeMessage(roomName, messageHelper.roomTypeFromPermalink(chatRoomMessage)!!, messageId, true)
+                val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
+                citeMessage(name!!, messageHelper.roomTypeFromPermalink(chatRoomMessage)!!, messageId, true)
             }
         }
     }
