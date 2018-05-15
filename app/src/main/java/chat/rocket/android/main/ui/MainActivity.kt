@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +23,8 @@ import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserStatus
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.google.android.gms.iid.InstanceID
 import dagger.android.AndroidInjection
@@ -37,18 +40,29 @@ import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector {
-    @Inject lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
-    @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-    @Inject lateinit var presenter: MainPresenter
+class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector, GoogleApiClient.ConnectionCallbacks {
+    override fun onConnected(p0: Bundle?) {
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+    }
+
+    @Inject
+    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
     private var expanded = false
+    private var googleApiClient: GoogleApiClient? = null
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        buildGoogleApiClient()
 
         launch(CommonPool) {
             try {
@@ -64,6 +78,31 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         presenter.loadCurrentInfo()
         setupToolbar()
         setupNavigationView()
+    }
+
+    private fun buildGoogleApiClient() {
+        googleApiClient = GoogleApiClient.Builder(this)
+                .enableAutoManage(this, {
+                    Log.d("STATUS", "ERROR: connection to client failed")
+                })
+                .addConnectionCallbacks(this)
+                .addApi(Auth.CREDENTIALS_API)
+                .build()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (googleApiClient!!.isConnected) {
+            Log.d("STATUS", "google api client connected successfully")
+        }
+    }
+
+    override fun disableAutoSignIn() {
+        if (googleApiClient!!.isConnected) {
+            Auth.CredentialsApi.disableAutoSignIn(googleApiClient)
+        } else {
+            Log.e("STATUS", "Failed to disable auto sign in")
+        }
     }
 
     override fun onResume() {
@@ -84,7 +123,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
+                    DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }
@@ -95,7 +134,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             with(viewModel) {
                 if (userStatus != null) {
                     image_user_status.setImageDrawable(
-                        DrawableHelper.getUserStatusDrawable(userStatus, context)
+                            DrawableHelper.getUserStatusDrawable(userStatus, context)
                     )
                 }
                 if (userDisplayName != null) {

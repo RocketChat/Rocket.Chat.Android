@@ -15,10 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.*
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import chat.rocket.android.R
@@ -38,6 +35,7 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.*
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ResolvingResultCallbacks
 import com.google.android.gms.common.api.Status
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
@@ -48,6 +46,9 @@ internal const val REQUEST_CODE_FOR_CAS = 1
 internal const val REQUEST_CODE_FOR_OAUTH = 2
 internal const val MULTIPLE_CREDENTIALS_READ = 3
 internal const val NO_CREDENTIALS_EXIST = 4
+internal const val SAVE_CREDENTIALS = 5
+
+var googleApiClient: GoogleApiClient? = null
 
 class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks {
     @Inject
@@ -58,7 +59,6 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
     }
     private var isGlobalLayoutListenerSetUp = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
-    private var googleApiClient: GoogleApiClient? = null
     private var credentialsToBeSaved: Credential? = null
 
     companion object {
@@ -72,7 +72,7 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
     }
 
     override fun onConnected(p0: Bundle?) {
-        //add call to the save credentials function here just like in sign up fragment
+        saveSmartLockCredentials(credentialsToBeSaved)
     }
 
     override fun onConnectionSuspended(p0: Int) {
@@ -132,30 +132,35 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
                 var loginCredentials: Credential = data!!.getParcelableExtra(Credential.EXTRA_KEY)
                 handleCredential(loginCredentials)
             } else if (requestCode == NO_CREDENTIALS_EXIST) {
-                //use the hints to autofill some info in the sign up or sign in forms
+                //use the hints to autofill sign in forms to reduce the info to be filled
                 var loginCredentials: Credential = data!!.getParcelableExtra(Credential.EXTRA_KEY)
-                //pass these info to sign up view to autofill forms
-                var name = loginCredentials.name
                 var email = loginCredentials.id
                 var password = loginCredentials.password
 
                 text_username_or_email.setText(email)
                 text_password.setText(password)
+            } else if (requestCode == SAVE_CREDENTIALS) {
+                Toast.makeText(context, "Credentials saved successfully", Toast.LENGTH_SHORT).show()
             }
+        } else if (requestCode == SAVE_CREDENTIALS) {
+            Log.e("STATUS", "ERROR: Cancelled by user")
+        } else if (requestCode == MULTIPLE_CREDENTIALS_READ) {
+            Log.d("STATUS", "failed ")
         }
-        //cancelled
-        else if (resultCode == Activity.RESULT_CANCELED) {
 
+        //cancel button pressed by the user in case of reading from smart lock
+        else if (resultCode == Activity.RESULT_CANCELED) {
+            //add shared preference so that the dialog is not shown always
         }
+
         //create new account to use it as login account (deal with this case carefully, many edge cases)
         else if (resultCode == CredentialsApi.ACTIVITY_RESULT_ADD_ACCOUNT) {
-            //save credentials in this case after user signs up as well as in that case when user signs in
-            // with a new account other than those saved by smart lock. Also delete and disableAutoSignIn
-            // need to be implemented. Refer docs.
         }
+
         //no hints for user id's exist
         else if (resultCode == CredentialsApi.ACTIVITY_RESULT_NO_HINTS_AVAILABLE) {
-
+        } else {
+            Log.d("Status", "nothing happening")
         }
     }
 
@@ -188,16 +193,14 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
                 .build()
 
         Auth.CredentialsApi.request(googleApiClient, request).setResultCallback { credentialRequestResult ->
-            //hideProgress()
             val status = credentialRequestResult.status
             if (status.isSuccess) {
                 // Auto sign-in success
                 handleCredential(credentialRequestResult.credential)
             } else if (status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
-                // Getting credential needs to show some UI, start resolution
                 resolveResult(status, MULTIPLE_CREDENTIALS_READ)
             } else if (status.statusCode == CommonStatusCodes.SIGN_IN_REQUIRED) {
-                //resolveResult(status, NO_CREDENTIALS_EXIST)
+
                 //build a dialog for possible account hints
                 var hintRequest: HintRequest = HintRequest.Builder()
                         .setHintPickerConfig(CredentialPickerConfig.Builder()
@@ -233,8 +236,31 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
     }
 
     private fun resolveResult(status: Status, requestCode: Int) {
-        //TODO surround with a try/catch block
-        status.startResolutionForResult(activity, requestCode)
+        try {
+            status.startResolutionForResult(activity, requestCode)
+        } catch (e: IntentSender.SendIntentException) {
+            Log.e("STATUS", "Failed to send Credentials intent.", e)
+        }
+    }
+
+    override fun saveSmartLockCredentials(loginCredential: Credential?) {
+        credentialsToBeSaved = loginCredential
+        if (credentialsToBeSaved == null) {
+            return
+        }
+
+        Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
+                object : ResolvingResultCallbacks<Status>(activity!!, SAVE_CREDENTIALS) {
+                    override fun onSuccess(status: Status) {
+                        Log.d("STATUS", "save:SUCCESS:$status")
+                        credentialsToBeSaved = null
+                    }
+
+                    override fun onUnresolvableFailure(status: Status) {
+                        Log.w("STATUS", "save:FAILURE:$status")
+                        credentialsToBeSaved = null
+                    }
+                })
     }
 
     private fun tintEditTextDrawableStart() {

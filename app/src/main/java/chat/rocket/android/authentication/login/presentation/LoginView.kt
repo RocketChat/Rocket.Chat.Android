@@ -228,5 +228,5 @@ interface LoginView : LoadingView, MessageView {
     /**
      * Save credentials via google smart lock
      */
-    fun saveSmartLockCredentials(loginCredential: Credential)
+    fun saveSmartLockCredentials(loginCredential: Credential?)
 }

@@ -8,9 +8,13 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.Toast
 import chat.rocket.android.R
+import chat.rocket.android.authentication.login.ui.googleApiClient
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.KeyboardHelper
@@ -18,7 +22,6 @@ import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.extensions.*
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResolvingResultCallbacks
 import com.google.android.gms.common.api.Status
 import dagger.android.support.AndroidSupportInjection
@@ -27,18 +30,10 @@ import javax.inject.Inject
 
 internal const val SAVE_CREDENTIALS = 1
 
-class SignupFragment : Fragment(), SignupView, GoogleApiClient.ConnectionCallbacks {
-    override fun onConnected(p0: Bundle?) {
-        saveCredentials()
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class SignupFragment : Fragment(), SignupView {
 
     @Inject
     lateinit var presenter: SignupPresenter
-    private var googleApiClient: GoogleApiClient? = null
     private var credentialsToBeSaved: Credential? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)) {
@@ -79,12 +74,6 @@ class SignupFragment : Fragment(), SignupView, GoogleApiClient.ConnectionCallbac
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        googleApiClient!!.stopAutoManage(activity!!)
-        googleApiClient!!.disconnect()
-    }
-
     override fun onDestroyView() {
         relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
         super.onDestroyView()
@@ -122,20 +111,11 @@ class SignupFragment : Fragment(), SignupView, GoogleApiClient.ConnectionCallbac
         }
     }
 
-    override fun saveSmartLockCredentials(loginCredential: Credential) {
+    override fun saveSmartLockCredentials(loginCredential: Credential?) {
         credentialsToBeSaved = loginCredential
-        googleApiClient = GoogleApiClient.Builder(context!!)
-                .enableAutoManage(activity!!, {
-                    Log.d("STATUS", "ERROR: connection to client failed")
-                })
-                .addConnectionCallbacks(this)
-                .addApi(Auth.CREDENTIALS_API)
-                .build()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        saveCredentials()
+        if (googleApiClient!!.isConnected) {
+            saveCredentials()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

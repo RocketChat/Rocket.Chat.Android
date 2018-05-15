@@ -24,4 +24,9 @@ interface MainView : MessageView, VersionCheckView {
     fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>)
 
     fun closeServerSelection()
+
+    /**
+     * callback to disable auto sign in for google smart lock when the user logs out
+     */
+    fun disableAutoSignIn()
 }
