@@ -1,10 +1,13 @@
 package chat.rocket.android.authentication.signup.ui
 
 import DrawableHelper
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
@@ -13,12 +16,30 @@ import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.extensions.*
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.Credential
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ResolvingResultCallbacks
+import com.google.android.gms.common.api.Status
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
 import javax.inject.Inject
 
-class SignupFragment : Fragment(), SignupView {
-    @Inject lateinit var presenter: SignupPresenter
+internal const val SAVE_CREDENTIALS = 1
+
+class SignupFragment : Fragment(), SignupView, GoogleApiClient.ConnectionCallbacks {
+    override fun onConnected(p0: Bundle?) {
+        saveCredentials()
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    @Inject
+    lateinit var presenter: SignupPresenter
+    private var googleApiClient: GoogleApiClient? = null
+    private var credentialsToBeSaved: Credential? = null
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)) {
             bottom_container.setVisible(false)
@@ -58,6 +79,12 @@ class SignupFragment : Fragment(), SignupView {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        googleApiClient!!.stopAutoManage(activity!!)
+        googleApiClient!!.disconnect()
+    }
+
     override fun onDestroyView() {
         relative_layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
         super.onDestroyView()
@@ -93,6 +120,50 @@ class SignupFragment : Fragment(), SignupView {
             text_email.shake()
             text_email.requestFocus()
         }
+    }
+
+    override fun saveSmartLockCredentials(loginCredential: Credential) {
+        credentialsToBeSaved = loginCredential
+        googleApiClient = GoogleApiClient.Builder(context!!)
+                .enableAutoManage(activity!!, {
+                    Log.d("STATUS", "ERROR: connection to client failed")
+                })
+                .addConnectionCallbacks(this)
+                .addApi(Auth.CREDENTIALS_API)
+                .build()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        saveCredentials()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == SAVE_CREDENTIALS) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(context, "Credentials saved successfully", Toast.LENGTH_SHORT).show()
+            } else {
+                Log.e("STATUS", "ERROR: Cancelled by user")
+            }
+        }
+    }
+
+    private fun saveCredentials() {
+        if (credentialsToBeSaved == null) {
+            return
+        }
+        Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
+                object : ResolvingResultCallbacks<Status>(activity!!, SAVE_CREDENTIALS) {
+                    override fun onSuccess(status: Status) {
+                        Log.d("STATUS", "save:SUCCESS:$status")
+                        credentialsToBeSaved = null
+                    }
+
+                    override fun onUnresolvableFailure(status: Status) {
+                        Log.w("STATUS", "save:FAILURE:$status")
+                        credentialsToBeSaved = null
+                    }
+                })
     }
 
     override fun showLoading() {

@@ -20,6 +20,7 @@ import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.me
 import chat.rocket.core.internal.rest.signup
 import chat.rocket.core.model.Myself
+import com.google.android.gms.auth.api.credentials.Credential
 import javax.inject.Inject
 
 class SignupPresenter @Inject constructor(private val view: SignupView,
@@ -66,6 +67,10 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         saveAccount(me)
                         registerPushToken()
+                        var loginCredentials: Credential = Credential.Builder(email)
+                                .setPassword(password)
+                                .build()
+                        view.saveSmartLockCredentials(loginCredentials)
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
                         exception.message?.let {

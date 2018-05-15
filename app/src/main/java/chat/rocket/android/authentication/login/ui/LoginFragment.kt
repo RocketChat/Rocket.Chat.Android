@@ -2,12 +2,15 @@ package chat.rocket.android.authentication.login.ui
 
 import DrawableHelper
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentSender
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,9 +35,7 @@ import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
 import chat.rocket.common.util.ifNull
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.auth.api.credentials.CredentialRequest
-import com.google.android.gms.auth.api.credentials.IdentityProviders
+import com.google.android.gms.auth.api.credentials.*
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
@@ -46,16 +47,9 @@ import javax.inject.Inject
 internal const val REQUEST_CODE_FOR_CAS = 1
 internal const val REQUEST_CODE_FOR_OAUTH = 2
 internal const val MULTIPLE_CREDENTIALS_READ = 3
+internal const val NO_CREDENTIALS_EXIST = 4
 
 class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks {
-    override fun onConnected(p0: Bundle?) {
-        requestCredentials()
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     @Inject
     lateinit var presenter: LoginPresenter
     private var isOauthViewEnable = false
@@ -65,6 +59,7 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
     private var isGlobalLayoutListenerSetUp = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
     private var googleApiClient: GoogleApiClient? = null
+    private var credentialsToBeSaved: Credential? = null
 
     companion object {
         private const val DEEP_LINK_INFO = "DeepLinkInfo"
@@ -74,6 +69,14 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
                 putParcelable(DEEP_LINK_INFO, deepLinkInfo)
             }
         }
+    }
+
+    override fun onConnected(p0: Bundle?) {
+        //add call to the save credentials function here just like in sign up fragment
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,15 +131,53 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
             } else if (requestCode == MULTIPLE_CREDENTIALS_READ) {
                 var loginCredentials: Credential = data!!.getParcelableExtra(Credential.EXTRA_KEY)
                 handleCredential(loginCredentials)
+            } else if (requestCode == NO_CREDENTIALS_EXIST) {
+                //use the hints to autofill some info in the sign up or sign in forms
+                var loginCredentials: Credential = data!!.getParcelableExtra(Credential.EXTRA_KEY)
+                //pass these info to sign up view to autofill forms
+                var name = loginCredentials.name
+                var email = loginCredentials.id
+                var password = loginCredentials.password
+
+                text_username_or_email.setText(email)
+                text_password.setText(password)
             }
         }
+        //cancelled
+        else if (resultCode == Activity.RESULT_CANCELED) {
+
+        }
+        //create new account to use it as login account (deal with this case carefully, many edge cases)
+        else if (resultCode == CredentialsApi.ACTIVITY_RESULT_ADD_ACCOUNT) {
+            //save credentials in this case after user signs up as well as in that case when user signs in
+            // with a new account other than those saved by smart lock. Also delete and disableAutoSignIn
+            // need to be implemented. Refer docs.
+        }
+        //no hints for user id's exist
+        else if (resultCode == CredentialsApi.ACTIVITY_RESULT_NO_HINTS_AVAILABLE) {
+
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        googleApiClient!!.stopAutoManage(activity!!)
+        googleApiClient!!.disconnect()
     }
 
     private fun buildGoogleApiClient() {
         googleApiClient = GoogleApiClient.Builder(context!!)
+                .enableAutoManage(activity!!, {
+                    Log.d("STATUS", "ERROR: connection to client failed")
+                })
                 .addConnectionCallbacks(this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        requestCredentials()
     }
 
     private fun requestCredentials() {
@@ -148,19 +189,39 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
 
         Auth.CredentialsApi.request(googleApiClient, request).setResultCallback { credentialRequestResult ->
             //hideProgress()
-            val status = credentialRequestResult.getStatus()
+            val status = credentialRequestResult.status
             if (status.isSuccess) {
                 // Auto sign-in success
-                handleCredential(credentialRequestResult.getCredential())
+                handleCredential(credentialRequestResult.credential)
             } else if (status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
                 // Getting credential needs to show some UI, start resolution
                 resolveResult(status, MULTIPLE_CREDENTIALS_READ)
+            } else if (status.statusCode == CommonStatusCodes.SIGN_IN_REQUIRED) {
+                //resolveResult(status, NO_CREDENTIALS_EXIST)
+                //build a dialog for possible account hints
+                var hintRequest: HintRequest = HintRequest.Builder()
+                        .setHintPickerConfig(CredentialPickerConfig.Builder()
+                                .setShowCancelButton(true)
+                                .build())
+                        .setEmailAddressIdentifierSupported(true)
+                        .setAccountTypes(IdentityProviders.GOOGLE)
+                        .build()
+                var intent: PendingIntent = Auth.CredentialsApi.getHintPickerIntent(googleApiClient, hintRequest)
+                try {
+                    startIntentSenderForResult(intent.intentSender, NO_CREDENTIALS_EXIST, null, 0, 0, 0, null)
+                } catch (e: IntentSender.SendIntentException) {
+                    Log.e("STATUS", "ERROR: Could not start hint picker Intent", e);
+                }
+            } else {
+                Log.d("STATUS", "ERROR: nothing happening")
             }
         }
     }
 
     private fun handleCredential(loginCredentials: Credential) {
-        if (loginCredentials.accountType == IdentityProviders.GOOGLE) {
+        if (loginCredentials.accountType == null) {
+            presenter.authenticateWithUserAndPassword(loginCredentials.id, loginCredentials.password!!)
+        } else if (loginCredentials.accountType == IdentityProviders.GOOGLE) {
             //TODO add SL code for google as custom login method
         } else if (loginCredentials.accountType == IdentityProviders.FACEBOOK) {
             //TODO add SL code for facebook as custom login method
@@ -168,8 +229,6 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
             //TODO add SL code for twitter as custom login method
         } else if (loginCredentials.accountType == IdentityProviders.LINKEDIN) {
             //TODO add SL code for linkedin as custom login method
-        } else {
-            presenter.authenticateWithUserAndPassword(loginCredentials.id, loginCredentials.password!!)
         }
     }
 
