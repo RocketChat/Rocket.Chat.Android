@@ -16,15 +16,30 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.domain.MessageReply
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.ChatRoomsInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.baseUrl
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
+import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.Value
-import chat.rocket.core.model.attachment.*
+import chat.rocket.core.model.attachment.Attachment
+import chat.rocket.core.model.attachment.AudioAttachment
+import chat.rocket.core.model.attachment.AuthorAttachment
+import chat.rocket.core.model.attachment.ColorAttachment
+import chat.rocket.core.model.attachment.FileAttachment
+import chat.rocket.core.model.attachment.GenericFileAttachment
+import chat.rocket.core.model.attachment.ImageAttachment
+import chat.rocket.core.model.attachment.MessageAttachment
+import chat.rocket.core.model.attachment.VideoAttachment
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
@@ -36,7 +51,7 @@ import javax.inject.Inject
 class ViewModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,
-    private val roomsInteractor: GetChatRoomsInteractor,
+    private val roomsInteractor: ChatRoomsInteractor,
     tokenRepository: TokenRepository,
     serverInteractor: GetCurrentServerInteractor,
     getSettingsInteractor: GetSettingsInteractor,
@@ -50,21 +65,24 @@ class ViewModelMapper @Inject constructor(
     private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
     private val secondaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
 
-    suspend fun map(message: Message, onBroadcastChannel: Boolean = false): List<BaseViewModel<*>> {
-        return translate(message, onBroadcastChannel)
+    suspend fun map(message: Message, roomViewModel: RoomViewModel = RoomViewModel(
+        roles = emptyList(), isBroadcast = true)): List<BaseViewModel<*>> {
+        return translate(message, roomViewModel)
     }
 
-    suspend fun map(messages: List<Message>, onBroadcastChannel: Boolean = false): List<BaseViewModel<*>> = withContext(CommonPool) {
+    suspend fun map(messages: List<Message>, roomViewModel: RoomViewModel = RoomViewModel(
+        roles = emptyList(), isBroadcast = true)): List<BaseViewModel<*>> = withContext(CommonPool) {
         val list = ArrayList<BaseViewModel<*>>(messages.size)
 
         messages.forEach {
-            list.addAll(translate(it, onBroadcastChannel))
+            list.addAll(translate(it, roomViewModel))
         }
 
         return@withContext list
     }
 
-    private suspend fun translate(message: Message, onBroadcastChannel: Boolean): List<BaseViewModel<*>> = withContext(CommonPool) {
+    private suspend fun translate(message: Message, roomViewModel: RoomViewModel)
+        : List<BaseViewModel<*>> = withContext(CommonPool) {
         val list = ArrayList<BaseViewModel<*>>()
 
         message.urls?.forEach {
@@ -89,7 +107,7 @@ class ViewModelMapper @Inject constructor(
             list[i].nextDownStreamMessage = next
         }
 
-        if (onBroadcastChannel && isBroadcastReplyAvailable(message)) {
+        if (isBroadcastReplyAvailable(roomViewModel, message)) {
             roomsInteractor.getById(currentServer, message.roomId)?.let { chatRoom ->
                 val replyViewModel = mapMessageReply(message, chatRoom)
                 list.first().nextDownStreamMessage = replyViewModel
@@ -100,13 +118,20 @@ class ViewModelMapper @Inject constructor(
         return@withContext list
     }
 
-    private fun isBroadcastReplyAvailable(message: Message): Boolean {
-        return !message.isSystemMessage() && message.sender?.username != currentUsername
+    private fun isBroadcastReplyAvailable(roomViewModel: RoomViewModel, message: Message): Boolean {
+        val senderUsername = message.sender?.username
+        val senderRoles = roomViewModel.roles.find { it.user.username == senderUsername }?.roles
+            ?: emptyList()
+        return roomViewModel.isBroadcast &&
+            !message.isSystemMessage() &&
+            senderUsername != currentUsername &&
+            senderRoles.any { it == "moderator" || it == "owner" || it != "bot" }
     }
 
     private fun mapMessageReply(message: Message, chatRoom: ChatRoom): MessageReplyViewModel {
         val name = message.sender?.name
-        val roomName = if (settings.useRealName() && name != null) name else message.sender?.username ?: ""
+        val roomName = if (settings.useRealName() && name != null) name else message.sender?.username
+            ?: ""
         return MessageReplyViewModel(
             messageId = message.id,
             isTemporary = false,
@@ -119,7 +144,13 @@ class ViewModelMapper @Inject constructor(
     }
 
     private fun makePermalink(message: Message, chatRoom: ChatRoom): String {
-        val type = chatRoom.type.toString()
+        val type = when (chatRoom.type) {
+            is RoomType.PrivateGroup -> "group"
+            is RoomType.Channel -> "channel"
+            is RoomType.DirectMessage -> "direct"
+            is RoomType.Livechat -> "livechat"
+            else -> "custom"
+        }
         val name = if (settings.useRealName()) chatRoom.fullName ?: chatRoom.name else chatRoom.name
         return "[ ]($currentServer/$type/$name?msg=${message.id}) "
     }

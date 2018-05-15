@@ -21,7 +21,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.text.SpannableStringBuilder
-import android.view.*
 import androidx.core.text.bold
 import androidx.core.view.isVisible
 import chat.rocket.android.R
@@ -40,7 +39,6 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewMod
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.fadeIn
@@ -48,7 +46,6 @@ import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.hideKeyboard
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.isAtBottom
-import chat.rocket.android.util.extensions.isVisible
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
@@ -184,8 +181,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onViewCreated(view, savedInstanceState)
         setupToolbar(chatRoomName)
 
-        presenter.setupChatRoom(chatRoomId)
-        presenter.loadMessages(chatRoomId, chatRoomType)
+        presenter.setupChatRoom(chatRoomId, chatRoomName, chatRoomType)
         presenter.loadChatRooms()
         setupRecyclerView()
         setupFab()
@@ -358,7 +354,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             if (!recyclerView.canScrollVertically(1)) {
                 button_fab.hide()
             } else {
-                if (dy < 0 && !button_fab.isVisible()) {
+                if (dy < 0 && !button_fab.isVisible) {
                     button_fab.show()
                 }
             }
@@ -664,7 +660,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_join_chat.setVisible(true)
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
-            text_message.textContent = chatRoomMessage ?: ""
+            if (chatRoomMessage.orEmpty().isNotEmpty()) {
+                text_message.textContent = chatRoomMessage!!
+                text_message.setSelection(chatRoomMessage!!.length)
+            }
             button_send.alpha = 0f
             button_send.setVisible(false)
             button_show_attachment_options.alpha = 1f

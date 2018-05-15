@@ -6,6 +6,7 @@ import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
 import chat.rocket.android.chatroom.adapter.ROOMS
 import chat.rocket.android.chatroom.domain.UriInteractor
+import chat.rocket.android.chatroom.viewmodel.RoomViewModel
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
@@ -14,8 +15,7 @@ import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.infrastructure.username
-import chat.rocket.android.server.domain.GetChatRoomsInteractor
+import chat.rocket.android.server.domain.ChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.JobSchedulerInteractor
@@ -59,6 +59,7 @@ import chat.rocket.core.internal.rest.uploadFile
 import chat.rocket.core.internal.realtime.subscribeTypingStatus
 import chat.rocket.core.internal.realtime.unsubscribe
 import chat.rocket.core.internal.rest.*
+import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
@@ -76,7 +77,7 @@ class ChatRoomPresenter @Inject constructor(
     private val view: ChatRoomView,
     private val navigator: ChatRoomNavigator,
     private val strategy: CancelStrategy,
-    private val getChatRoomsInteractor: GetChatRoomsInteractor,
+    private val chatRoomsInteractor: ChatRoomsInteractor,
     private val permissions: PermissionsInteractor,
     private val uriInteractor: UriInteractor,
     private val messagesRepository: MessagesRepository,
@@ -94,25 +95,36 @@ class ChatRoomPresenter @Inject constructor(
     private val manager = factory.create(currentServer)
     private val client = manager.client
     private var settings: PublicSettings = getSettingsInteractor.get(serverInteractor.get()!!)
-    private val currentLoggedUsername = localRepository.username()
+    private val currentLoggedUsername = userHelper.username()
     private val messagesChannel = Channel<Message>()
 
     private var chatRoomId: String? = null
     private var chatRoomType: String? = null
     private var chatIsBroadcast: Boolean = false
+    private var chatRoles = emptyList<ChatRoomRole>()
     private val stateChannel = Channel<State>()
     private var typingStatusSubscriptionId: String? = null
     private var lastState = manager.state
     private var typingStatusList = arrayListOf<String>()
 
-    fun setupChatRoom(roomId: String) {
+    fun setupChatRoom(roomId: String, roomName: String, roomType: String) {
         launchUI(strategy) {
-            val canPost = permissions.canPostToReadOnlyChannels()
-            chatIsBroadcast = getChatRoomsInteractor.getById(currentServer, roomId)?.run {
+            chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
+                client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
+            } else emptyList()
+            val canPost = isOwnerOrMod() || permissions.canPostToReadOnlyChannels()
+            chatIsBroadcast = chatRoomsInteractor.getById(currentServer, roomId)?.run {
                 broadcast
             } ?: false
             view.onRoomUpdated(canPost, chatIsBroadcast)
+            loadMessages(roomId, roomType)
         }
+    }
+
+    private fun isOwnerOrMod(): Boolean {
+        return chatRoles.firstOrNull { it.user.username == currentLoggedUsername }?.roles?.firstOrNull {
+            it == "owner" || it == "moderator"
+        } ?: false == true
     }
 
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
@@ -123,7 +135,8 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 if (offset == 0L) {
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
-                    val oldMessages = mapper.map(localMessages, chatIsBroadcast)
+                    val oldMessages = mapper.map(localMessages, RoomViewModel(roles = chatRoles,
+                        isBroadcast = chatIsBroadcast))
                     if (oldMessages.isNotEmpty()) {
                         view.showMessages(oldMessages)
                         loadMissingMessages()
@@ -163,8 +176,8 @@ class ChatRoomPresenter @Inject constructor(
                 client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
         messagesRepository.saveAll(messages)
-        val allMessages = mapper.map(messages, chatIsBroadcast)
-        view.showMessages(allMessages)
+        view.showMessages(mapper.map(messages, RoomViewModel(roles = chatRoles,
+            isBroadcast = chatIsBroadcast)))
     }
 
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
@@ -200,7 +213,8 @@ class ChatRoomPresenter @Inject constructor(
                     try {
                         val message = client.sendMessage(id, chatRoomId, text)
                         messagesRepository.save(newMessage)
-                        view.showNewMessage(mapper.map(newMessage, chatIsBroadcast))
+                        view.showNewMessage(mapper.map(newMessage, RoomViewModel(
+                            roles = chatRoles, isBroadcast = chatIsBroadcast)))
                         message
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
@@ -341,7 +355,8 @@ class ChatRoomPresenter @Inject constructor(
                             Timber.d("History: $messages")
 
                             if (messages.result.isNotEmpty()) {
-                                val models = mapper.map(messages.result, chatIsBroadcast)
+                                val models = mapper.map(messages.result, RoomViewModel(
+                                    roles = chatRoles, isBroadcast = chatIsBroadcast))
                                 messagesRepository.saveAll(messages.result)
 
                                 launchUI(strategy) {
@@ -415,7 +430,8 @@ class ChatRoomPresenter @Inject constructor(
                 view.showReplyingAction(
                     username = getDisplayName(msg.sender),
                     replyMarkdown = "[ ]($currentServer/$roomType/$room?msg=$id) $mention ",
-                    quotedMessage = mapper.map(message, chatIsBroadcast).last().preview?.message ?: ""
+                    quotedMessage = mapper.map(message, RoomViewModel(roles = chatRoles,
+                        isBroadcast = chatIsBroadcast)).last().preview?.message ?: ""
                 )
             }
         }
@@ -605,7 +621,7 @@ class ChatRoomPresenter @Inject constructor(
     fun loadChatRooms() {
         launchUI(strategy) {
             try {
-                val chatRooms = getChatRoomsInteractor.getAll(currentServer)
+                val chatRooms = chatRoomsInteractor.getAll(currentServer)
                     .filterNot {
                         it.type is RoomType.DirectMessage || it.type is RoomType.Livechat
                     }
@@ -641,7 +657,7 @@ class ChatRoomPresenter @Inject constructor(
     fun openDirectMessage(roomName: String, permalink: String) {
         launchUI(strategy) {
             try {
-                getChatRoomsInteractor.getByName(currentServer, roomName)?.let {
+                chatRoomsInteractor.getByName(currentServer, roomName)?.let {
                     val isDirectMessage = it.type is RoomType.DirectMessage
                     if (isDirectMessage) {
                         navigator.toDirectMessage(
@@ -788,7 +804,8 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
-            val viewModelStreamedMessage = mapper.map(streamedMessage, chatIsBroadcast)
+            val viewModelStreamedMessage = mapper.map(streamedMessage, RoomViewModel(
+                roles = chatRoles, isBroadcast = chatIsBroadcast))
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {

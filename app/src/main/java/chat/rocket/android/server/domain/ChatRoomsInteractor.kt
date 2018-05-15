@@ -5,7 +5,7 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 import javax.inject.Inject
 
-class GetChatRoomsInteractor @Inject constructor(private val repository: ChatRoomsRepository) {
+class ChatRoomsInteractor @Inject constructor(private val repository: ChatRoomsRepository) {
 
     /**
      * Get all [ChatRoom].
@@ -41,8 +41,7 @@ class GetChatRoomsInteractor @Inject constructor(private val repository: ChatRoo
      * @return The [ChatRoom] object or null if we couldn't find any.
      */
     suspend fun getById(serverUrl: String, roomId: String): ChatRoom? = withContext(CommonPool) {
-        val allChatRooms = repository.get(serverUrl)
-        return@withContext allChatRooms.first {
+        return@withContext repository.get(serverUrl).find {
             it.id == roomId
         }
     }
