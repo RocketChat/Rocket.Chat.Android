@@ -181,7 +181,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onViewCreated(view, savedInstanceState)
         setupToolbar(chatRoomName)
 
-        presenter.setupChatRoom(chatRoomId, chatRoomName, chatRoomType)
+        presenter.setupChatRoom(chatRoomId, chatRoomName, chatRoomType, chatRoomMessage)
         presenter.loadChatRooms()
         setupRecyclerView()
         setupFab()
@@ -660,10 +660,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_join_chat.setVisible(true)
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
-            if (chatRoomMessage.orEmpty().isNotEmpty()) {
-                text_message.textContent = chatRoomMessage!!
-                text_message.setSelection(chatRoomMessage!!.length)
-            }
+//            if (chatRoomMessage.orEmpty().isNotEmpty()) {
+//                text_message.textContent = chatRoomMessage!!
+//                text_message.setSelection(chatRoomMessage!!.length)
+//            }
             button_send.alpha = 0f
             button_send.setVisible(false)
             button_show_attachment_options.alpha = 1f
@@ -760,7 +760,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
             setReactionButtonIcon(R.drawable.ic_keyboard_black_24dp)
         } else {
-            // If popup is showing, simply dismiss it to show the undelying text keyboard
+            // If popup is showing, simply dismiss it to show the underlying text keyboard
             emojiKeyboardPopup.dismiss()
             setReactionButtonIcon(R.drawable.ic_reaction_24dp)
         }

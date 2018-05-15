@@ -14,6 +14,7 @@ import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.domain.MessageReply
+import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.ChatRoomsInteractor
@@ -25,9 +26,7 @@ import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
-import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.Value
@@ -52,6 +51,7 @@ class ViewModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,
     private val roomsInteractor: ChatRoomsInteractor,
+    private val messageHelper: MessageHelper,
     tokenRepository: TokenRepository,
     serverInteractor: GetCurrentServerInteractor,
     getSettingsInteractor: GetSettingsInteractor,
@@ -132,27 +132,16 @@ class ViewModelMapper @Inject constructor(
         val name = message.sender?.name
         val roomName = if (settings.useRealName() && name != null) name else message.sender?.username
             ?: ""
+        val permalink = messageHelper.createPermalink(message, chatRoom)
         return MessageReplyViewModel(
             messageId = message.id,
             isTemporary = false,
             reactions = emptyList(),
             message = message,
             preview = mapMessagePreview(message),
-            rawData = MessageReply(roomName = roomName, permalink = makePermalink(message, chatRoom)),
+            rawData = MessageReply(roomName = roomName, permalink = permalink),
             nextDownStreamMessage = null
         )
-    }
-
-    private fun makePermalink(message: Message, chatRoom: ChatRoom): String {
-        val type = when (chatRoom.type) {
-            is RoomType.PrivateGroup -> "group"
-            is RoomType.Channel -> "channel"
-            is RoomType.DirectMessage -> "direct"
-            is RoomType.Livechat -> "livechat"
-            else -> "custom"
-        }
-        val name = if (settings.useRealName()) chatRoom.fullName ?: chatRoom.name else chatRoom.name
-        return "[ ]($currentServer/$type/$name?msg=${message.id}) "
     }
 
     private fun mapUrl(message: Message, url: Url): BaseViewModel<*>? {

@@ -13,6 +13,7 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewMo
 import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
+import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.ChatRoomsInteractor
@@ -40,6 +41,9 @@ import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.realtime.setTypingStatus
 import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.internal.realtime.subscribeTypingStatus
+import chat.rocket.core.internal.realtime.unsubscribe
+import chat.rocket.core.internal.rest.chatRoomRoles
 import chat.rocket.core.internal.rest.commands
 import chat.rocket.core.internal.rest.deleteMessage
 import chat.rocket.core.internal.rest.getMembers
@@ -52,13 +56,12 @@ import chat.rocket.core.internal.rest.pinMessage
 import chat.rocket.core.internal.rest.runCommand
 import chat.rocket.core.internal.rest.sendMessage
 import chat.rocket.core.internal.rest.spotlight
+import chat.rocket.core.internal.rest.starMessage
 import chat.rocket.core.internal.rest.toggleReaction
 import chat.rocket.core.internal.rest.unpinMessage
+import chat.rocket.core.internal.rest.unstarMessage
 import chat.rocket.core.internal.rest.updateMessage
 import chat.rocket.core.internal.rest.uploadFile
-import chat.rocket.core.internal.realtime.subscribeTypingStatus
-import chat.rocket.core.internal.realtime.unsubscribe
-import chat.rocket.core.internal.rest.*
 import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
@@ -87,6 +90,7 @@ class ChatRoomPresenter @Inject constructor(
     private val userHelper: UserHelper,
     private val mapper: ViewModelMapper,
     private val jobSchedulerInteractor: JobSchedulerInteractor,
+    private val messageHelper: MessageHelper,
     getSettingsInteractor: GetSettingsInteractor,
     serverInteractor: GetCurrentServerInteractor,
     factory: ConnectionManagerFactory
@@ -107,7 +111,7 @@ class ChatRoomPresenter @Inject constructor(
     private var lastState = manager.state
     private var typingStatusList = arrayListOf<String>()
 
-    fun setupChatRoom(roomId: String, roomName: String, roomType: String) {
+    fun setupChatRoom(roomId: String, roomName: String, roomType: String, chatRoomMessage: String? = null) {
         launchUI(strategy) {
             chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                 client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
@@ -118,6 +122,9 @@ class ChatRoomPresenter @Inject constructor(
             } ?: false
             view.onRoomUpdated(canPost, chatIsBroadcast)
             loadMessages(roomId, roomType)
+            chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }?.let { messageId ->
+                citeMessage(roomName, messageHelper.roomTypeFromPermalink(chatRoomMessage)!!, messageId, true)
+            }
         }
     }
 
@@ -427,7 +434,7 @@ class ChatRoomPresenter @Inject constructor(
                 val username = msg.sender?.username ?: ""
                 val mention = if (mentionAuthor && me?.username != username) "@$username" else ""
                 val room = if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomName
-                val chatRoomType = when(roomTypeOf(roomType)) {
+                val chatRoomType = when (roomTypeOf(roomType)) {
                     is RoomType.DirectMessage -> "direct"
                     is RoomType.PrivateGroup -> "group"
                     is RoomType.Channel -> "channel"
@@ -661,12 +668,11 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun openDirectMessage(roomName: String, permalink: String) {
+    fun openDirectMessage(roomName: String, message: String) {
         launchUI(strategy) {
             try {
                 chatRoomsInteractor.getByName(currentServer, roomName)?.let {
-                    val isDirectMessage = it.type is RoomType.DirectMessage
-                    if (isDirectMessage) {
+                    if (it.type is RoomType.DirectMessage) {
                         navigator.toDirectMessage(
                             chatRoomId = it.id,
                             chatRoomType = it.type.toString(),
@@ -675,7 +681,7 @@ class ChatRoomPresenter @Inject constructor(
                             isChatRoomOwner = false,
                             isChatRoomReadOnly = false,
                             isChatRoomSubscribed = it.open,
-                            chatRoomMessage = permalink
+                            chatRoomMessage = message
                         )
                     } else {
                         throw IllegalStateException("Not a direct-message")
