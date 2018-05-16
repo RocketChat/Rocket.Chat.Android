@@ -23,6 +23,6 @@
         android:drawablePadding="20dp"
         android:drawableStart="@drawable/ic_gesture_black_24dp"
         android:gravity="start|center"
-        android:text="Drawing" />
+        android:text="@string/action_drawing" />
 
 </LinearLayout>
