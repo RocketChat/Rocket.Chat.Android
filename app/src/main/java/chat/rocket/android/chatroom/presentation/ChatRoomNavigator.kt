@@ -15,8 +15,14 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     }
 
     fun toPinnedMessageList(chatRoomId: String, chatRoomType: String) {
-        activity.addFragmentBackStack("PinnedMessages", R.id.fragment_container){
-            chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId,chatRoomType)
+        activity.addFragmentBackStack("PinnedMessages", R.id.fragment_container) {
+            chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId, chatRoomType)
+        }
+    }
+
+    fun toFavoriteMessageList(chatRoomId: String, chatRoomType: String) {
+        activity.addFragmentBackStack("FavoriteMessages", R.id.fragment_container) {
+            chat.rocket.android.favoritemessages.ui.newInstance(chatRoomId, chatRoomType)
         }
     }
 
