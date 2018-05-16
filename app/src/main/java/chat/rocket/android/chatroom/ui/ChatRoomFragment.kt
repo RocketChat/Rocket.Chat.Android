@@ -1,27 +1,19 @@
 package chat.rocket.android.chatroom.ui
 
-import android.Manifest
 import android.app.Activity
-import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.ImageView
-import android.widget.SeekBar
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
@@ -31,7 +23,6 @@ import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
-import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -41,16 +32,11 @@ import chat.rocket.core.internal.realtime.socket.model.State
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.color_palette_view.*
-import kotlinx.android.synthetic.main.drawing_view.*
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import java.io.File
-import java.io.FileOutputStream
-import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -645,218 +631,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_add_reaction.setOnClickListener { view ->
                 openEmojiKeyboardPopup()
             }
-
-            button_drawing.setOnClickListener{
-                showDrawingView()
-                handler.postDelayed({
-                    hideAttachmentOptions()
-                }, 400)
-            }
-        }
-    }
-
-    private fun showDrawingView() {
-        val drawDialog = Dialog(activity,R.style.DrawingDialogStyle)
-        drawDialog.setContentView(R.layout.drawing_view)
-        drawDialog.apply {
-            colorSelector(drawDialog)
-
-            setClickListner(drawDialog)
-
-            setPaintWidth(drawDialog)
-
-            setPaintAlpha(drawDialog)
-        }
-        drawDialog.show()
-    }
-
-    private fun setClickListner(drawDialog: Dialog) {
-        drawDialog.apply {
-            image_send_drawing.setOnClickListener {
-                if (!canWriteToExternalStorage()) {
-                    checkWritingPermission()
-                }else{
-                    val bitmap = custom_draw_view.getBitmap()
-                    val uri = saveImage(bitmap)
-                    if (uri != null) {
-                        uploadFile(uri)
-                    }
-                    drawDialog.dismiss()
-                }
-            }
-            image_close_drawing.setOnClickListener {
-                drawDialog.dismiss()
-            }
-            image_draw_eraser.setOnClickListener {
-                custom_draw_view.clearCanvas()
-                toggleDrawTools(draw_tools,false)
-            }
-            image_draw_width.setOnClickListener {
-                if (draw_tools.translationY == (56).toPx){
-                    toggleDrawTools(draw_tools,true)
-                }else if (draw_tools.translationY == (0).toPx && seekBar_width.isVisible()){
-                    toggleDrawTools(draw_tools,false)
-                }
-                seekBar_width.setVisible(true)
-                seekBar_opacity.setVisible(false)
-                draw_color_palette.setVisible(false)
-            }
-            image_draw_opacity.setOnClickListener {
-                if (draw_tools.translationY == (56).toPx){
-                    toggleDrawTools(draw_tools,true)
-                }else if (draw_tools.translationY == (0).toPx && seekBar_opacity.isVisible()){
-                    toggleDrawTools(draw_tools,false)
-                }
-                seekBar_width.setVisible(false)
-                seekBar_opacity.setVisible(true)
-                draw_color_palette.setVisible(false)
-            }
-            image_draw_color.setOnClickListener {
-                if (draw_tools.translationY == (56).toPx){
-                    toggleDrawTools(draw_tools,true)
-                }else if (draw_tools.translationY == (0).toPx && draw_color_palette.isVisible()){
-                    toggleDrawTools(draw_tools,false)
-                }
-                seekBar_width.setVisible(false)
-                seekBar_opacity.setVisible(false)
-                draw_color_palette.setVisible(true)
-            }
-            image_draw_undo.setOnClickListener {
-                custom_draw_view.undo()
-                toggleDrawTools(draw_tools,false)
-            }
-            image_draw_redo.setOnClickListener {
-                custom_draw_view.redo()
-                toggleDrawTools(draw_tools,false)
-            }
-
-        }
-    }
-
-    private fun setPaintWidth(drawDialog: Dialog) {
-        drawDialog.apply {
-            seekBar_width.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    custom_draw_view.setStrokeWidth(progress.toFloat())
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
-        }
-    }
-
-    private fun setPaintAlpha(drawDialog: Dialog) {
-        drawDialog.apply {
-            seekBar_opacity.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    custom_draw_view.setAlpha(progress)
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
-        }
-    }
-
-    private fun colorSelector(drawDialog: Dialog) {
-        drawDialog.apply {
-            image_color_black.setOnClickListener {
-                custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.black,null))
-                scaleColorView(drawDialog,image_color_black)
-            }
-            image_color_red.setOnClickListener {
-                custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_red,null))
-                scaleColorView(drawDialog,image_color_red)
-            }
-            image_color_yellow.setOnClickListener {
-                custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_yellow,null))
-                scaleColorView(drawDialog,image_color_yellow)
-            }
-            image_color_green.setOnClickListener {
-                custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_green,null))
-                scaleColorView(drawDialog,image_color_green)
-            }
-            image_color_blue.setOnClickListener {
-                custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_blue,null))
-                scaleColorView(drawDialog,image_color_blue)
-            }
-            image_color_pink.setOnClickListener {
-                custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_pink,null))
-                scaleColorView(drawDialog,image_color_pink)
-            }
-            image_color_brown.setOnClickListener {
-                custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_brown,null))
-                scaleColorView(drawDialog,image_color_brown)
-            }
-        }
-    }
-
-    private fun scaleColorView(drawDialog: Dialog, view: ImageView) {
-       drawDialog.apply {
-           //reset scale of all views
-           image_color_black.scaleX = 1f
-           image_color_black.scaleY = 1f
-
-           image_color_red.scaleX = 1f
-           image_color_red.scaleY = 1f
-
-           image_color_yellow.scaleX = 1f
-           image_color_yellow.scaleY = 1f
-
-           image_color_green.scaleX = 1f
-           image_color_green.scaleY = 1f
-
-           image_color_blue.scaleX = 1f
-           image_color_blue.scaleY = 1f
-
-           image_color_pink.scaleX = 1f
-           image_color_pink.scaleY = 1f
-
-           image_color_brown.scaleX = 1f
-           image_color_brown.scaleY = 1f
-
-           //set scale of selected view
-           view.scaleX = 1.5f
-           view.scaleY = 1.5f
-       }
-    }
-
-    private fun toggleDrawTools(view: View, showView: Boolean = true) {
-        if (showView){
-            view.animate().translationY((0).toPx)
-        }else{
-            view.animate().translationY((56).toPx)
-        }
-    }
-
-    val Int.toPx: Float
-        get() = (this * Resources.getSystem().displayMetrics.density)
-
-    private fun saveImage(bitmap: Bitmap): Uri? {
-        val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
-        val path = Environment.getExternalStoragePublicDirectory(imageDir)
-        val file = File(path, UUID.randomUUID().toString()+".png")
-        path.mkdirs()
-        file.createNewFile()
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream)
-        outputStream.flush()
-        outputStream.close()
-        return Uri.fromFile(file)
-    }
-
-    private fun canWriteToExternalStorage(): Boolean {
-        return context?.let { AndroidPermissionsHelper.checkPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE) }!!
-    }
-
-    private fun checkWritingPermission() {
-        activity?.let {
-            AndroidPermissionsHelper.requestPermission(it,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE)
         }
     }
 
