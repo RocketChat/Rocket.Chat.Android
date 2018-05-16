@@ -291,7 +291,7 @@ class PushManager @Inject constructor(
                 .setLabel(replyTextHint)
                 .build()
         val pendingIntent = getReplyPendingIntent(pushMessage)
-        val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_reply_black_24px, replyTextHint, pendingIntent)
+        val replyAction = NotificationCompat.Action.Builder(R.drawable.ic_action_message_reply_24dp, replyTextHint, pendingIntent)
                 .addRemoteInput(replyRemoteInput)
                 .setAllowGeneratedReplies(true)
                 .build()

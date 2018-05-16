@@ -211,7 +211,8 @@ class ChatRoomsPresenter @Inject constructor(
                 userMentions = null,
                 groupMentions = 0L,
                 lastMessage = null,
-                client = client
+                client = client,
+                broadcast = false
             )
         }
     }
@@ -244,7 +245,8 @@ class ChatRoomsPresenter @Inject constructor(
                 userMentions = null,
                 groupMentions = 0L,
                 lastMessage = it.lastMessage,
-                client = client
+                client = client,
+                broadcast = it.broadcast
             )
         }
     }
@@ -335,7 +337,8 @@ class ChatRoomsPresenter @Inject constructor(
                 userMentions = it.userMentions,
                 groupMentions = it.groupMentions,
                 lastMessage = it.lastMessage,
-                client = client
+                client = client,
+                broadcast = it.broadcast
             )
             chatRoomsList.add(newRoom)
         }
@@ -478,7 +481,8 @@ class ChatRoomsPresenter @Inject constructor(
                 userMentions = userMentions,
                 groupMentions = groupMentions,
                 lastMessage = room.lastMessage,
-                client = client
+                client = client,
+                broadcast = broadcast
             )
             removeRoom(room.id, chatRooms)
             chatRooms.add(newRoom)
@@ -517,7 +521,8 @@ class ChatRoomsPresenter @Inject constructor(
                 userMentions = subscription.userMentions,
                 groupMentions = subscription.groupMentions,
                 lastMessage = lastMessage,
-                client = client
+                client = client,
+                broadcast = broadcast
             )
             removeRoom(subscription.roomId, chatRooms)
             chatRooms.add(newRoom)
@@ -591,7 +596,8 @@ class ChatRoomsPresenter @Inject constructor(
                     userMentions = it.userMentions,
                     groupMentions = it.groupMentions,
                     lastMessage = it.lastMessage,
-                    client = client
+                    client = client,
+                    broadcast = it.broadcast
                 )
 
                 getChatRoomsInteractor.remove(currentServer, it)

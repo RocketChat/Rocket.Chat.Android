@@ -107,6 +107,10 @@
     <string name="msg_image_saved_successfully">Imagem salva na galeria</string>
     <string name="msg_image_saved_failed">Falha ao salvar a imagem</string>
     <string name="msg_edited">(editado)</string>
+    <string name="msg_and">\u0020e\u0020</string>
+    <string name="msg_is_typing">\u0020está digitando…</string>
+    <string name="msg_are_typing">\u0020estão digitando…</string>
+    <string name="msg_several_users_are_typing">Vários usuários estão digitando…</string>
     <string name="msg_no_search_found">nenhum resultado encontrado</string>
 
     <!-- System messages -->
@@ -120,6 +124,8 @@
     <string name="message_pinned">Pinou uma mensagem:</string>
     <string name="message_muted">Usuário %1$s entrou no modo mudo por %2$s</string>
     <string name="message_unmuted">Usuário %1$s saiu do modo mudo por %2$s</string>
+    <string name="message_role_add">%1$s foi definido %2$s por %3$s</string>
+    <string name="message_role_removed">%1$s não é mais %2$s por %3$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Responder</string>
@@ -130,6 +136,7 @@
     <string name="action_msg_pin">Pinar mensagem</string>
     <string name="action_msg_unpin">Despinar mensagem</string>
     <string name="action_msg_star">Favoritar mensagem</string>
+    <string name="action_msg_unstar">Desfavoritar messagem</string>
     <string name="action_msg_share">Compartilhar</string>
     <string name="action_title_editing">Editando mensagem</string>
     <string name="action_msg_add_reaction">Adicionar reação</string>
@@ -138,6 +145,7 @@
     <string name="permission_editing_not_allowed">Edição não permitida</string>
     <string name="permission_deleting_not_allowed">Remoção não permitida</string>
     <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
+    <string name="permission_starring_not_allowed">Favoritar não permitido</string>
 
     <!-- Members List -->
     <string name="title_members_list">Lista de Membros</string>

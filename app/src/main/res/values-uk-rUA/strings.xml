@@ -131,6 +131,7 @@
     <string name="action_msg_pin">Pin Message</string>
     <string name="action_msg_unpin">Unpin Message</string>
     <string name="action_msg_star">Star Message</string>
+    <string name="action_msg_unstar">Unstar Message</string>
     <string name="action_msg_share">Share</string>
     <string name="action_title_editing">Editing Message</string>
     <string name="action_msg_add_reaction">Add reaction</string>
@@ -139,6 +140,8 @@
     <string name="permission_editing_not_allowed">Editing is not allowed</string>
     <string name="permission_deleting_not_allowed">Deleting is not allowed</string>
     <string name="permission_pinning_not_allowed">Pinning is not allowed</string>
+    // TODO: Add proper translation.
+    <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Members List -->
     <string name="title_members_list">Members List</string>
