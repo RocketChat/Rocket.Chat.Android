@@ -116,11 +116,12 @@ class ChatRoomPresenter @Inject constructor(
             chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                 client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
             } else emptyList()
-            val canPost = isOwnerOrMod() || permissions.canPostToReadOnlyChannels()
+            val userCanMod = isOwnerOrMod()
+            val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels()
             chatIsBroadcast = chatRoomsInteractor.getById(currentServer, roomId)?.run {
                 broadcast
             } ?: false
-            view.onRoomUpdated(canPost, chatIsBroadcast)
+            view.onRoomUpdated(userCanPost, chatIsBroadcast, userCanMod)
             loadMessages(roomId, roomType)
             chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }?.let { messageId ->
                 val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
@@ -130,9 +131,9 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private fun isOwnerOrMod(): Boolean {
-        return chatRoles.firstOrNull { it.user.username == currentLoggedUsername }?.roles?.firstOrNull {
+        return chatRoles.firstOrNull { it.user.username == currentLoggedUsername }?.roles?.any {
             it == "owner" || it == "moderator"
-        } ?: false == true
+        } ?: false
     }
 
     fun loadMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {

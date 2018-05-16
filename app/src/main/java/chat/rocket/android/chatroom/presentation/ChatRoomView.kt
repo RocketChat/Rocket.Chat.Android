@@ -139,7 +139,7 @@ interface ChatRoomView : LoadingView, MessageView {
     /**
      * Communicate whether it's a broadcast channel and if current user can post to it.
      */
-    fun onRoomUpdated(canPost: Boolean, broadcastChannel: Boolean)
+    fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userIsModerator: Boolean)
 
     /**
      * Open a DM with the user in the given [chatRoom] and pass the [permalink] for the message

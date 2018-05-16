@@ -284,10 +284,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onRoomUpdated(canPost: Boolean, broadcastChannel: Boolean) {
-        setupMessageComposer(isChatRoomOwner || canPost)
-        isBroadcastChannel = broadcastChannel
-        if (isBroadcastChannel) activity?.invalidateOptionsMenu()
+    override fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean) {
+        setupMessageComposer(isChatRoomOwner || userCanPost)
+        isBroadcastChannel = channelIsBroadcast
+        if (isBroadcastChannel && !userCanMod) activity?.invalidateOptionsMenu()
     }
 
     override fun openDirectMessage(chatRoom: ChatRoom, permalink: String) {
@@ -660,10 +660,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_join_chat.setVisible(true)
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
-//            if (chatRoomMessage.orEmpty().isNotEmpty()) {
-//                text_message.textContent = chatRoomMessage!!
-//                text_message.setSelection(chatRoomMessage!!.length)
-//            }
             button_send.alpha = 0f
             button_send.setVisible(false)
             button_show_attachment_options.alpha = 1f
