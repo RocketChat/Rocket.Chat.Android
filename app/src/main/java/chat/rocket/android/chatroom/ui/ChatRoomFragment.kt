@@ -80,7 +80,7 @@ fun newInstance(
     isChatRoomReadOnly: Boolean,
     chatRoomLastSeen: Long,
     isSubscribed: Boolean = true,
-    isChatRoomOwner: Boolean = false,
+    isChatRoomCreator: Boolean = false,
     chatRoomMessage: String? = null
 ): Fragment {
     return ChatRoomFragment().apply {
@@ -91,7 +91,7 @@ fun newInstance(
             putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
             putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
             putBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED, isSubscribed)
-            putBoolean(BUNDLE_CHAT_ROOM_IS_OWNER, isChatRoomOwner)
+            putBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR, isChatRoomCreator)
             putString(BUNDLE_CHAT_ROOM_MESSAGE, chatRoomMessage)
         }
     }
@@ -104,7 +104,7 @@ private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
-private const val BUNDLE_CHAT_ROOM_IS_OWNER = "chat_room_is_owner"
+private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
 private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
@@ -120,7 +120,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private var chatRoomMessage: String? = null
     private var isSubscribed: Boolean = true
     private var isChatRoomReadOnly: Boolean = false
-    private var isChatRoomOwner: Boolean = false
+    private var isChatRoomCreator: Boolean = false
     private var isBroadcastChannel: Boolean = false
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var chatRoomLastSeen: Long = -1
@@ -161,7 +161,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
             isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
-            isChatRoomOwner = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_OWNER)
+            isChatRoomCreator = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR)
             chatRoomMessage = bundle.getString(BUNDLE_CHAT_ROOM_MESSAGE)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
@@ -285,7 +285,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean) {
-        setupMessageComposer(isChatRoomOwner || userCanPost)
+        // TODO: We should rely solely on the user being able to post, but we cannot guarantee
+        // that the "(channels|groups).roles" endpoint is supported by the server in use.
+        setupMessageComposer(userCanPost || isChatRoomCreator)
         isBroadcastChannel = channelIsBroadcast
         if (isBroadcastChannel && !userCanMod) activity?.invalidateOptionsMenu()
     }
@@ -615,12 +617,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onJoined(canPost: Boolean) {
+    override fun onJoined(userCanPost: Boolean) {
         ui {
             input_container.setVisible(true)
             button_join_chat.setVisible(false)
             isSubscribed = true
-            setupMessageComposer(isChatRoomOwner)
+            setupMessageComposer(userCanPost || isChatRoomCreator)
         }
     }
 
@@ -652,7 +654,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupMessageComposer(canPost: Boolean) {
-        if (!canPost && isChatRoomReadOnly) {
+        val showComposer = if (!canPost) canPost else isChatRoomCreator
+        if (!showComposer && isChatRoomReadOnly) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else if (!isSubscribed) {

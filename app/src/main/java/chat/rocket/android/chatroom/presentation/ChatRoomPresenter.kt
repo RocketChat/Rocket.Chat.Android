@@ -116,7 +116,9 @@ class ChatRoomPresenter @Inject constructor(
             chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
                 client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
             } else emptyList()
+            // User has at least an 'owner' or 'moderator' role.
             val userCanMod = isOwnerOrMod()
+            // Can post anyway if has the 'post-readonly' permission on server.
             val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels()
             chatIsBroadcast = chatRoomsInteractor.getById(currentServer, roomId)?.run {
                 broadcast
@@ -680,7 +682,7 @@ class ChatRoomPresenter @Inject constructor(
                             chatRoomType = it.type.toString(),
                             chatRoomLastSeen = it.lastSeen ?: -1,
                             chatRoomName = roomName,
-                            isChatRoomOwner = false,
+                            isChatRoomCreator = false,
                             isChatRoomReadOnly = false,
                             isChatRoomSubscribed = it.open,
                             chatRoomMessage = message

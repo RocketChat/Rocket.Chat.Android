@@ -36,9 +36,9 @@ class MainNavigator(internal val activity: MainActivity) {
                    isChatRoomReadOnly: Boolean,
                    chatRoomLastSeen: Long,
                    isChatRoomSubscribed: Boolean,
-                   isChatRoomOwner: Boolean) {
+                   isChatRoomCreator: Boolean) {
         activity.startActivity(activity.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType,
-                isChatRoomReadOnly, chatRoomLastSeen, isChatRoomSubscribed, isChatRoomOwner))
+                isChatRoomReadOnly, chatRoomLastSeen, isChatRoomSubscribed, isChatRoomCreator))
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 
