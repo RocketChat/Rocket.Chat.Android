@@ -246,7 +246,7 @@ class ChatRoomsPresenter @Inject constructor(
                 groupMentions = 0L,
                 lastMessage = it.lastMessage,
                 client = client,
-                broadcast = false
+                broadcast = it.broadcast
             )
         }
     }
@@ -338,7 +338,7 @@ class ChatRoomsPresenter @Inject constructor(
                 groupMentions = it.groupMentions,
                 lastMessage = it.lastMessage,
                 client = client,
-                broadcast = false
+                broadcast = it.broadcast
             )
             chatRoomsList.add(newRoom)
         }
@@ -482,7 +482,7 @@ class ChatRoomsPresenter @Inject constructor(
                 groupMentions = groupMentions,
                 lastMessage = room.lastMessage,
                 client = client,
-                broadcast = false
+                broadcast = broadcast
             )
             removeRoom(room.id, chatRooms)
             chatRooms.add(newRoom)
@@ -522,7 +522,7 @@ class ChatRoomsPresenter @Inject constructor(
                 groupMentions = subscription.groupMentions,
                 lastMessage = lastMessage,
                 client = client,
-                broadcast = false
+                broadcast = broadcast
             )
             removeRoom(subscription.roomId, chatRooms)
             chatRooms.add(newRoom)
@@ -597,7 +597,7 @@ class ChatRoomsPresenter @Inject constructor(
                     groupMentions = it.groupMentions,
                     lastMessage = it.lastMessage,
                     client = client,
-                    broadcast = false
+                    broadcast = it.broadcast
                 )
 
                 getChatRoomsInteractor.remove(currentServer, it)
