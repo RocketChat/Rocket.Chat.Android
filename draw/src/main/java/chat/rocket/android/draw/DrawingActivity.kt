@@ -14,7 +14,6 @@ import android.graphics.Bitmap
 import android.app.Activity
 import java.io.ByteArrayOutputStream
 
-
 class DrawingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

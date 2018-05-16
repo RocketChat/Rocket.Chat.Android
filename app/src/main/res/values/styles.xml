@@ -109,9 +109,4 @@
         <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
     </style>
 
-    <style name="DrawingDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@color/white</item>
-    </style>
-
 </resources>
