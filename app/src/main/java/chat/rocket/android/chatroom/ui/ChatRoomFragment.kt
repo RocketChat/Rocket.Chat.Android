@@ -289,7 +289,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean) {
         // TODO: We should rely solely on the user being able to post, but we cannot guarantee
         // that the "(channels|groups).roles" endpoint is supported by the server in use.
-        setupMessageComposer(userCanPost || isChatRoomCreator)
+        setupMessageComposer(userCanPost)
         isBroadcastChannel = channelIsBroadcast
         if (isBroadcastChannel && !userCanMod) activity?.invalidateOptionsMenu()
     }
@@ -628,7 +628,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             input_container.setVisible(true)
             button_join_chat.setVisible(false)
             isSubscribed = true
-            setupMessageComposer(userCanPost || isChatRoomCreator)
+            setupMessageComposer(userCanPost)
         }
     }
 
@@ -660,8 +660,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupMessageComposer(canPost: Boolean) {
-        val showComposer = if (!canPost) canPost else isChatRoomCreator
-        if (!showComposer && isChatRoomReadOnly) {
+        if (isChatRoomReadOnly && !canPost) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
         } else if (!isSubscribed) {

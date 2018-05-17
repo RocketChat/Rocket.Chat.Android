@@ -123,9 +123,9 @@ interface ChatRoomView : LoadingView, MessageView {
     /**
      * This user has joined the chat callback.
      *
-     * @param canPost Whether the user can post a message or not.
+     * @param userCanPost Whether the user can post a message or not.
      */
-    fun onJoined(canPost: Boolean)
+    fun onJoined(userCanPost: Boolean)
 
     fun showReactionsPopup(messageId: String)
 
