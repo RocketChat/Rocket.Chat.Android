@@ -187,6 +187,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setupFab()
         setupSuggestionsView()
         setupActionSnackbar()
+        activity?.apply {
+            (this as? ChatRoomActivity)?.showRoomTypeIcon(true)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -383,17 +386,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             when (usernameList.size) {
                 1 -> {
                     text_typing_status.text =
-                            SpannableStringBuilder()
-                                .bold { append(usernameList[0]) }
-                                .append(getString(R.string.msg_is_typing))
+                        SpannableStringBuilder()
+                            .bold { append(usernameList[0]) }
+                            .append(getString(R.string.msg_is_typing))
                 }
                 2 -> {
                     text_typing_status.text =
-                            SpannableStringBuilder()
-                                .bold { append(usernameList[0]) }
-                                .append(getString(R.string.msg_and))
-                                .bold { append(usernameList[1]) }
-                                .append(getString(R.string.msg_are_typing))
+                        SpannableStringBuilder()
+                            .bold { append(usernameList[0]) }
+                            .append(getString(R.string.msg_and))
+                            .bold { append(usernameList[1]) }
+                            .append(getString(R.string.msg_are_typing))
                 }
                 else -> {
                     text_typing_status.text = getString(R.string.msg_several_users_are_typing)
@@ -610,15 +613,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     handler.postDelayed(dismissStatus, 2000)
                 }
                 is State.Disconnected -> connection_status_text.text =
-                        getString(R.string.status_disconnected)
+                    getString(R.string.status_disconnected)
                 is State.Connecting -> connection_status_text.text =
-                        getString(R.string.status_connecting)
+                    getString(R.string.status_connecting)
                 is State.Authenticating -> connection_status_text.text =
-                        getString(R.string.status_authenticating)
+                    getString(R.string.status_authenticating)
                 is State.Disconnecting -> connection_status_text.text =
-                        getString(R.string.status_disconnecting)
+                    getString(R.string.status_disconnecting)
                 is State.Waiting -> connection_status_text.text =
-                        getString(R.string.status_waiting, state.seconds)
+                    getString(R.string.status_waiting, state.seconds)
             }
         }
     }
@@ -675,7 +678,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             subscribeComposeTextMessage()
             emojiKeyboardPopup =
-                    EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+                EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {

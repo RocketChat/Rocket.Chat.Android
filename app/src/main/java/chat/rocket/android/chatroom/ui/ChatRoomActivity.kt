@@ -10,11 +10,14 @@ import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.roomTypeOf
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.android.synthetic.main.app_bar_chat_room.*
 import javax.inject.Inject
 
 fun Context.chatRoomIntent(
@@ -123,13 +126,45 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolbar.title = chatRoomName
+        text_room_name.textContent = chatRoomName
+
+        showRoomTypeIcon(true)
+
         toolbar.setNavigationOnClickListener { finishActivity() }
     }
 
+    fun showRoomTypeIcon(showRoomTypeIcon: Boolean) {
+        if (showRoomTypeIcon) {
+            val roomType = roomTypeOf(chatRoomType)
+            val drawable = when (roomType) {
+                is RoomType.Channel -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
+                }
+                is RoomType.PrivateGroup -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
+                }
+                is RoomType.DirectMessage -> {
+                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
+                }
+                else -> null
+            }
+
+            drawable?.let {
+                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+                val mutableDrawable = wrappedDrawable.mutate()
+                DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
+                DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
+            }
+        } else {
+            text_room_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+        }
+    }
+
+
     fun setupToolbarTitle(toolbarTitle: String) {
-        supportActionBar?.title = toolbarTitle
+        text_room_name.textContent = toolbarTitle
     }
 
     private fun finishActivity() {
