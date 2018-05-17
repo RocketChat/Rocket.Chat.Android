@@ -164,7 +164,13 @@
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Messages épinglés</string>
     <string name="no_pinned_messages">Aucun message épinglé</string>
-    <string name="no_pinned_description">Tous les messages épinglés\napparaissent ici.</string>
+    <string name="no_pinned_description">Tous les messages épinglés\napparaissent ici</string>
+
+    <!-- Favorite Messages -->
+    <!-- TODO Add proper translation-->
+    <string name="title_favorite_messages">Favorite Messages</string>
+    <string name="no_favorite_messages">No favorite messages</string>
+    <string name="no_favorite_description">All the favorite messages\nappear here</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Taille du fichier (%1$d bytes) dépassé la taille de téléchargement maximale de %2$d bytes</string>
