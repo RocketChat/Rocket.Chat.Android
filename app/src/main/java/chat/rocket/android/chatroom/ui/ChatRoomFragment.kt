@@ -152,6 +152,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        setHasOptionsMenu(true)
 
         val bundle = arguments
         if (bundle != null) {
@@ -166,7 +167,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -187,9 +187,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setupFab()
         setupSuggestionsView()
         setupActionSnackbar()
-        activity?.apply {
-            (this as? ChatRoomActivity)?.showRoomTypeIcon(true)
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -235,6 +232,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             R.id.action_pinned_messages -> {
                 presenter.toPinnedMessageList(chatRoomId, chatRoomType)
             }
+            R.id.action_favorite_messages -> {
+                presenter.toFavoriteMessageList(chatRoomId, chatRoomType)
+            }
         }
         return true
     }
@@ -263,8 +263,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, chatRoomName, presenter,
-                    reactionListener = this@ChatRoomFragment)
+                adapter = ChatRoomAdapter(
+                    chatRoomType, chatRoomName, presenter,
+                    reactionListener = this@ChatRoomFragment
+                )
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
                     recycler_view.addOnScrollListener(endlessRecyclerViewScrollListener)
@@ -308,19 +310,20 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    private val layoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-        val y = oldBottom - bottom
-        if (Math.abs(y) > 0 && isAdded) {
-            // if y is positive the keyboard is up else it's down
-            recycler_view.post {
-                if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
-                    ui { recycler_view.scrollBy(0, y) }
-                } else {
-                    ui { recycler_view.scrollBy(0, verticalScrollOffset.get()) }
+    private val layoutChangeListener =
+        View.OnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            val y = oldBottom - bottom
+            if (Math.abs(y) > 0 && isAdded) {
+                // if y is positive the keyboard is up else it's down
+                recycler_view.post {
+                    if (y > 0 || Math.abs(verticalScrollOffset.get()) >= Math.abs(y)) {
+                        ui { recycler_view.scrollBy(0, y) }
+                    } else {
+                        ui { recycler_view.scrollBy(0, verticalScrollOffset.get()) }
+                    }
                 }
             }
         }
-    }
 
     private lateinit var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener
 
@@ -463,7 +466,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun showReplyingAction(username: String, replyMarkdown: String, quotedMessage: String) {
+    override fun showReplyingAction(
+        username: String,
+        replyMarkdown: String,
+        quotedMessage: String
+    ) {
         ui {
             citation = replyMarkdown
             actionSnackbar.title = username
@@ -602,11 +609,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     connection_status_text.text = getString(R.string.status_connected)
                     handler.postDelayed(dismissStatus, 2000)
                 }
-                is State.Disconnected -> connection_status_text.text = getString(R.string.status_disconnected)
-                is State.Connecting -> connection_status_text.text = getString(R.string.status_connecting)
-                is State.Authenticating -> connection_status_text.text = getString(R.string.status_authenticating)
-                is State.Disconnecting -> connection_status_text.text = getString(R.string.status_disconnecting)
-                is State.Waiting -> connection_status_text.text = getString(R.string.status_waiting, state.seconds)
+                is State.Disconnected -> connection_status_text.text =
+                        getString(R.string.status_disconnected)
+                is State.Connecting -> connection_status_text.text =
+                        getString(R.string.status_connecting)
+                is State.Authenticating -> connection_status_text.text =
+                        getString(R.string.status_authenticating)
+                is State.Disconnecting -> connection_status_text.text =
+                        getString(R.string.status_disconnecting)
+                is State.Waiting -> connection_status_text.text =
+                        getString(R.string.status_waiting, state.seconds)
             }
         }
     }
@@ -663,7 +675,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_show_attachment_options.setVisible(true)
 
             subscribeComposeTextMessage()
-            emojiKeyboardPopup = EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+            emojiKeyboardPopup =
+                    EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {

@@ -21,6 +21,12 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         }
     }
 
+    fun toFavoriteMessageList(chatRoomId: String, chatRoomType: String) {
+        activity.addFragmentBackStack("FavoriteMessages", R.id.fragment_container) {
+            chat.rocket.android.favoritemessages.ui.newInstance(chatRoomId, chatRoomType)
+        }
+    }
+
     fun toNewServer() {
         activity.startActivity(activity.changeServerIntent())
         activity.finish()

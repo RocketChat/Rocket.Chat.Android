@@ -118,16 +118,26 @@ class ChatRoomAdapter(
         }
 
         when (holder) {
-            is MessageViewHolder -> holder.bind(dataSet[position] as MessageViewModel)
-            is ImageAttachmentViewHolder -> holder.bind(dataSet[position] as ImageAttachmentViewModel)
-            is AudioAttachmentViewHolder -> holder.bind(dataSet[position] as AudioAttachmentViewModel)
-            is VideoAttachmentViewHolder -> holder.bind(dataSet[position] as VideoAttachmentViewModel)
-            is UrlPreviewViewHolder -> holder.bind(dataSet[position] as UrlPreviewViewModel)
-            is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
-            is AuthorAttachmentViewHolder -> holder.bind(dataSet[position] as AuthorAttachmentViewModel)
-            is ColorAttachmentViewHolder -> holder.bind(dataSet[position] as ColorAttachmentViewModel)
-            is GenericFileAttachmentViewHolder -> holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
-            is MessageReplyViewHolder -> holder.bind(dataSet[position] as MessageReplyViewModel)
+            is MessageViewHolder ->
+                holder.bind(dataSet[position] as MessageViewModel)
+            is ImageAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ImageAttachmentViewModel)
+            is AudioAttachmentViewHolder ->
+                holder.bind(dataSet[position] as AudioAttachmentViewModel)
+            is VideoAttachmentViewHolder ->
+                holder.bind(dataSet[position] as VideoAttachmentViewModel)
+            is UrlPreviewViewHolder ->
+                holder.bind(dataSet[position] as UrlPreviewViewModel)
+            is MessageAttachmentViewHolder ->
+                holder.bind(dataSet[position] as MessageAttachmentViewModel)
+            is AuthorAttachmentViewHolder ->
+                holder.bind(dataSet[position] as AuthorAttachmentViewModel)
+            is ColorAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ColorAttachmentViewModel)
+            is GenericFileAttachmentViewHolder ->
+                holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
+            is MessageReplyViewHolder ->
+                holder.bind(dataSet[position] as MessageReplyViewModel)
         }
     }
 

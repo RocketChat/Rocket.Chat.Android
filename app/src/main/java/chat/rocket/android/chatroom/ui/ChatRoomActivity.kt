@@ -1,6 +1,5 @@
 package chat.rocket.android.chatroom.ui
 
-import DrawableHelper
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,14 +10,11 @@ import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.addFragment
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.common.model.RoomType
-import chat.rocket.common.model.roomTypeOf
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.app_bar_chat_room.*
+import kotlinx.android.synthetic.main.app_bar.*
 import javax.inject.Inject
 
 fun Context.chatRoomIntent(
@@ -53,12 +49,16 @@ private const val INTENT_CHAT_IS_SUBSCRIBED = "is_chat_room_subscribed"
 private const val INTENT_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
-    @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     // TODO - workaround for now... We will move to a single activity
-    @Inject lateinit var serverInteractor: GetCurrentServerInteractor
-    @Inject lateinit var navigator: ChatRoomNavigator
-    @Inject lateinit var managerFactory: ConnectionManagerFactory
+    @Inject
+    lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject
+    lateinit var navigator: ChatRoomNavigator
+    @Inject
+    lateinit var managerFactory: ConnectionManagerFactory
 
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
@@ -121,47 +121,15 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return fragmentDispatchingAndroidInjector
     }
 
-    fun showRoomTypeIcon(showRoomTypeIcon: Boolean) {
-        if (showRoomTypeIcon) {
-            val roomType = roomTypeOf(chatRoomType)
-            val drawable = when (roomType) {
-                is RoomType.Channel -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
-                }
-                is RoomType.PrivateGroup -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
-                }
-                is RoomType.DirectMessage -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
-                }
-                else -> null
-            }
-
-            drawable?.let {
-                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
-                val mutableDrawable = wrappedDrawable.mutate()
-                DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
-                DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
-            }
-        } else {
-            text_room_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-        }
-    }
-
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        text_room_name.textContent = chatRoomName
-
-        showRoomTypeIcon(true)
-
-        toolbar.setNavigationOnClickListener {
-            finishActivity()
-        }
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.title = chatRoomName
+        toolbar.setNavigationOnClickListener { finishActivity() }
     }
 
     fun setupToolbarTitle(toolbarTitle: String) {
-        text_room_name.textContent = toolbarTitle
+        supportActionBar?.title = toolbarTitle
     }
 
     private fun finishActivity() {
