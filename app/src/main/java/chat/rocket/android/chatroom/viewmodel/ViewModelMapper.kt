@@ -120,12 +120,9 @@ class ViewModelMapper @Inject constructor(
 
     private fun isBroadcastReplyAvailable(roomViewModel: RoomViewModel, message: Message): Boolean {
         val senderUsername = message.sender?.username
-        val senderRoles = roomViewModel.roles.find { it.user.username == senderUsername }?.roles
-            ?: emptyList()
         return roomViewModel.isBroadcast &&
             !message.isSystemMessage() &&
-            senderUsername != currentUsername &&
-            senderRoles.any { it == "moderator" || it == "owner" || it != "bot" }
+            senderUsername != currentUsername
     }
 
     private fun mapMessageReply(message: Message, chatRoom: ChatRoom): MessageReplyViewModel {
