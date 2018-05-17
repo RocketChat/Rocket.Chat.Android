@@ -113,21 +113,27 @@ class ChatRoomPresenter @Inject constructor(
 
     fun setupChatRoom(roomId: String, roomName: String, roomType: String, chatRoomMessage: String? = null) {
         launchUI(strategy) {
-            chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
-                client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
-            } else emptyList()
-            // User has at least an 'owner' or 'moderator' role.
-            val userCanMod = isOwnerOrMod()
-            // Can post anyway if has the 'post-readonly' permission on server.
-            val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels()
-            chatIsBroadcast = chatRoomsInteractor.getById(currentServer, roomId)?.run {
-                broadcast
-            } ?: false
-            view.onRoomUpdated(userCanPost, chatIsBroadcast, userCanMod)
-            loadMessages(roomId, roomType)
-            chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }?.let { messageId ->
-                val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
-                citeMessage(name!!, messageHelper.roomTypeFromPermalink(chatRoomMessage)!!, messageId, true)
+            try {
+                chatRoles = if (roomTypeOf(roomType) !is RoomType.DirectMessage) {
+                    client.chatRoomRoles(roomType = roomTypeOf(roomType), roomName = roomName)
+                } else emptyList()
+            } catch (ex: RocketChatException) {
+                Timber.e(ex)
+                chatRoles = emptyList()
+            } finally {
+                // User has at least an 'owner' or 'moderator' role.
+                val userCanMod = isOwnerOrMod()
+                // Can post anyway if has the 'post-readonly' permission on server.
+                val userCanPost = userCanMod || permissions.canPostToReadOnlyChannels()
+                chatIsBroadcast = chatRoomsInteractor.getById(currentServer, roomId)?.run {
+                    broadcast
+                } ?: false
+                view.onRoomUpdated(userCanPost, chatIsBroadcast, userCanMod)
+                loadMessages(roomId, roomType)
+                chatRoomMessage?.let { messageHelper.messageIdFromPermalink(it) }?.let { messageId ->
+                    val name = messageHelper.roomNameFromPermalink(chatRoomMessage)
+                    citeMessage(name!!, messageHelper.roomTypeFromPermalink(chatRoomMessage)!!, messageId, true)
+                }
             }
         }
     }
