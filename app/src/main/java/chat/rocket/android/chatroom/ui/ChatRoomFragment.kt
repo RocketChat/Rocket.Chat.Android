@@ -470,12 +470,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             actionSnackbar.text = quotedMessage
             actionSnackbar.show()
             KeyboardHelper.showSoftKeyboard(text_message)
-            if (!recycler_view.isAtBottom()) {
-                if (adapter.itemCount > 0) {
-                    recycler_view.scrollToPosition(0)
-                    verticalScrollOffset.set(0)
-                }
-            }
         }
     }
 
