@@ -153,7 +153,7 @@ class ChatRoomPresenter @Inject constructor(
                 if (offset == 0L) {
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
                     val oldMessages = mapper.map(localMessages, RoomViewModel(roles = chatRoles,
-                        isBroadcast = chatIsBroadcast))
+                        isBroadcast = chatIsBroadcast, isRoom = true))
                     if (oldMessages.isNotEmpty()) {
                         view.showMessages(oldMessages)
                         loadMissingMessages()
@@ -194,7 +194,7 @@ class ChatRoomPresenter @Inject constructor(
             }
         messagesRepository.saveAll(messages)
         view.showMessages(mapper.map(messages, RoomViewModel(roles = chatRoles,
-            isBroadcast = chatIsBroadcast)))
+            isBroadcast = chatIsBroadcast, isRoom = true)))
     }
 
     fun sendMessage(chatRoomId: String, text: String, messageId: String?) {
@@ -373,7 +373,7 @@ class ChatRoomPresenter @Inject constructor(
 
                             if (messages.result.isNotEmpty()) {
                                 val models = mapper.map(messages.result, RoomViewModel(
-                                    roles = chatRoles, isBroadcast = chatIsBroadcast))
+                                    roles = chatRoles, isBroadcast = chatIsBroadcast, isRoom = true))
                                 messagesRepository.saveAll(messages.result)
 
                                 launchUI(strategy) {
