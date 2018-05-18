@@ -1,4 +1,4 @@
-package chat.rocket.android.pinnedmessages.presentation
+package chat.rocket.android.favoritemessages.presentation
 
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
@@ -8,13 +8,12 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
-import chat.rocket.core.internal.rest.getPinnedMessages
-import chat.rocket.core.model.isSystemMessage
+import chat.rocket.core.internal.rest.getFavoriteMessages
 import timber.log.Timber
 import javax.inject.Inject
 
-class PinnedMessagesPresenter @Inject constructor(
-    private val view: PinnedMessagesView,
+class FavoriteMessagesPresenter @Inject constructor(
+    private val view: FavoriteMessagesView,
     private val strategy: CancelStrategy,
     private val serverInteractor: GetCurrentServerInteractor,
     private val roomsInteractor: ChatRoomsInteractor,
@@ -22,25 +21,25 @@ class PinnedMessagesPresenter @Inject constructor(
     factory: RocketChatClientFactory
 ) {
     private val client = factory.create(serverInteractor.get()!!)
-    private var pinnedMessagesListOffset: Int = 0
+    private var offset: Int = 0
 
     /**
-     * Load all pinned messages for the given room id.
+     * Loads all favorite messages for room. the given room id.
      *
-     * @param roomId The id of the room to get pinned messages from.
+     * @param roomId The id of the room to get its favorite messages.
      */
-    fun loadPinnedMessages(roomId: String) {
+    fun loadFavoriteMessages(roomId: String) {
         launchUI(strategy) {
             try {
                 val serverUrl = serverInteractor.get()!!
                 val chatRoom = roomsInteractor.getById(serverUrl, roomId)
                 chatRoom?.let { room ->
                     view.showLoading()
-                    val pinnedMessages =
-                        client.getPinnedMessages(roomId, room.type, pinnedMessagesListOffset)
-                    pinnedMessagesListOffset = pinnedMessages.offset.toInt()
-                    val messageList = mapper.map(pinnedMessages.result.filterNot { it.isSystemMessage() })
-                    view.showPinnedMessages(messageList)
+                    val favoriteMessages =
+                        client.getFavoriteMessages(roomId, room.type, offset)
+                    offset = favoriteMessages.offset.toInt()
+                    val messageList = mapper.map(favoriteMessages.result)
+                    view.showFavoriteMessages(messageList)
                     view.hideLoading()
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")

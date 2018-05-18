@@ -14,6 +14,7 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.CheckBox
 import android.widget.RadioGroup
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
@@ -44,7 +45,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var settingsRepository: SettingsRepository
     @Inject
     lateinit var localRepository: LocalRepository
-    private lateinit var preferences: SharedPreferences
     private var searchView: SearchView? = null
     private val handler = Handler()
 
@@ -59,7 +59,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
-        preferences = context?.getSharedPreferences("temp", Context.MODE_PRIVATE)!!
     }
 
     override fun onDestroy() {
@@ -166,11 +165,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             /*val diff = async(CommonPool) {
                 DiffUtil.calculateDiff(RoomsDiffCallback(adapter.baseAdapter.dataSet, newDataSet))
             }.await()*/
-            if (newDataSet.isEmpty()) {
-                text_no_search.visibility = View.VISIBLE
-            }else{
-                text_no_search.visibility = View.GONE
-            }
+            text_no_search.isVisible = newDataSet.isEmpty()
             if (isActive) {
                 adapter.baseAdapter.updateRooms(newDataSet)
                 // TODO - fix crash to re-enable diff.dispatchUpdatesTo(adapter)

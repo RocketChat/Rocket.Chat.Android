@@ -24,7 +24,8 @@ interface BaseViewModel<out T> {
         MESSAGE_ATTACHMENT(6),
         AUTHOR_ATTACHMENT(7),
         COLOR_ATTACHMENT(8),
-        GENERIC_FILE_ATTACHMENT(9)
+        GENERIC_FILE_ATTACHMENT(9),
+        MESSAGE_REPLY(10)
     }
 }
 
