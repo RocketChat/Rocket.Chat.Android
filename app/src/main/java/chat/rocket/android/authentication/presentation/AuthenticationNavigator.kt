@@ -2,8 +2,10 @@ package chat.rocket.android.authentication.presentation
 
 import android.content.Intent
 import chat.rocket.android.R
+import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.ui.LoginFragment
 import chat.rocket.android.authentication.registerusername.ui.RegisterUsernameFragment
+import chat.rocket.android.authentication.resetpassword.ui.ResetPasswordFragment
 import chat.rocket.android.authentication.signup.ui.SignupFragment
 import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
 import chat.rocket.android.authentication.ui.AuthenticationActivity
@@ -11,6 +13,7 @@ import chat.rocket.android.authentication.ui.newServerIntent
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.util.extensions.addFragmentBackStack
+import chat.rocket.android.util.extensions.toPreviousView
 import chat.rocket.android.webview.ui.webViewIntent
 
 class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
@@ -19,6 +22,16 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
         activity.addFragmentBackStack("LoginFragment", R.id.fragment_container) {
             LoginFragment.newInstance()
         }
+    }
+
+    fun toLogin(deepLinkInfo: LoginDeepLinkInfo) {
+        activity.addFragmentBackStack("LoginFragment", R.id.fragment_container) {
+            LoginFragment.newInstance(deepLinkInfo)
+        }
+    }
+
+    fun toPreviousView() {
+        activity.toPreviousView()
     }
 
     fun toTwoFA(username: String, password: String) {
@@ -30,6 +43,12 @@ class AuthenticationNavigator(internal val activity: AuthenticationActivity) {
     fun toSignUp() {
         activity.addFragmentBackStack("SignupFragment", R.id.fragment_container) {
             SignupFragment.newInstance()
+        }
+    }
+
+    fun toForgotPassword() {
+        activity.addFragmentBackStack("ResetPasswordFragment", R.id.fragment_container) {
+            ResetPasswordFragment.newInstance()
         }
     }
 

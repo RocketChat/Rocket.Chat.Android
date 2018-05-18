@@ -4,7 +4,7 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import chat.rocket.android.chatroom.viewmodel.MessageAttachmentViewModel
 import chat.rocket.android.widget.emoji.EmojiReactionListener
-import kotlinx.android.synthetic.main.item_message.view.*
+import kotlinx.android.synthetic.main.item_message_attachment.view.*
 
 class MessageAttachmentViewHolder(
         itemView: View,
@@ -14,8 +14,8 @@ class MessageAttachmentViewHolder(
 
     init {
         with(itemView) {
+            setupActionMenu(attachment_container)
             text_content.movementMethod = LinkMovementMethod()
-            setupActionMenu(text_content)
         }
     }
 

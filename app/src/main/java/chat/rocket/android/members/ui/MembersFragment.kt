@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
@@ -19,11 +18,11 @@ import chat.rocket.android.members.viewmodel.MemberViewModel
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
-
 
 fun newInstance(chatRoomId: String, chatRoomType: String): Fragment {
     return MembersFragment().apply {
@@ -38,9 +37,12 @@ private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 
 class MembersFragment : Fragment(), MembersView {
-    @Inject lateinit var presenter: MembersPresenter
-    private val adapter: MembersAdapter = MembersAdapter { memberViewModel -> presenter.toMemberDetails(memberViewModel) }
-    private val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    @Inject
+    lateinit var presenter: MembersPresenter
+    private val adapter: MembersAdapter =
+        MembersAdapter { memberViewModel -> presenter.toMemberDetails(memberViewModel) }
+    private val linearLayoutManager =
+        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
     private lateinit var chatRoomId: String
     private lateinit var chatRoomType: String
@@ -58,25 +60,32 @@ class MembersFragment : Fragment(), MembersView {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_members)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_members)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        (activity as AppCompatActivity).supportActionBar?.title = ""
 
         setupRecyclerView()
         presenter.loadChatRoomsMembers(chatRoomId, chatRoomType)
     }
 
     override fun showMembers(dataSet: List<MemberViewModel>, total: Long) {
-        activity?.apply {
+        ui {
             setupToolbar(total)
             if (adapter.itemCount == 0) {
                 adapter.prependData(dataSet)
                 if (dataSet.size >= 59) { // TODO Check why the API retorns the specified count -1
-                    recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                        override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
+                    recycler_view.addOnScrollListener(object :
+                        EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                        override fun onLoadMore(
+                            page: Int,
+                            totalItemsCount: Int,
+                            recyclerView: RecyclerView?
+                        ) {
                             presenter.loadChatRoomsMembers(chatRoomId, chatRoomType, page * 60L)
                         }
                     })
@@ -84,43 +93,42 @@ class MembersFragment : Fragment(), MembersView {
             } else {
                 adapter.appendData(dataSet)
             }
-            if (this is ChatRoomActivity) {
-                this.showRoomTypeIcon(false)
-            }
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            (activity as ChatRoomActivity).showRoomTypeIcon(true)
-            return super.onOptionsItemSelected(item)
-        }
-        return super.onOptionsItemSelected(item)
+    override fun showLoading() {
+        ui { view_loading.setVisible(true) }
     }
 
-    override fun showLoading() = view_loading.setVisible(true)
-
-    override fun hideLoading() = view_loading.setVisible(false)
+    override fun hideLoading() {
+        ui { view_loading.setVisible(false) }
+    }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     private fun setupRecyclerView() {
-        activity?.apply {
+        ui {
             recycler_view.layoutManager = linearLayoutManager
-            recycler_view.addItemDecoration(DividerItemDecoration(this))
+            recycler_view.addItemDecoration(DividerItemDecoration(it))
             recycler_view.adapter = adapter
         }
     }
 
     private fun setupToolbar(totalMembers: Long) {
-        (activity as ChatRoomActivity).setupToolbarTitle(getString(R.string.title_members, totalMembers))
+        (activity as ChatRoomActivity?)?.setupToolbarTitle(
+            getString(R.string.title_members, totalMembers)
+        )
     }
 }

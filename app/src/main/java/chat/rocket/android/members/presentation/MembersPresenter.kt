@@ -14,12 +14,14 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.getMembers
 import javax.inject.Inject
 
-class MembersPresenter @Inject constructor(private val view: MembersView,
-                                           private val navigator: MembersNavigator,
-                                           private val strategy: CancelStrategy,
-                                           private val serverInteractor: GetCurrentServerInteractor,
-                                           factory: RocketChatClientFactory,
-                                           private val mapper: MemberViewModelMapper) {
+class MembersPresenter @Inject constructor(
+    private val view: MembersView,
+    private val navigator: MembersNavigator,
+    private val strategy: CancelStrategy,
+    serverInteractor: GetCurrentServerInteractor,
+    factory: RocketChatClientFactory,
+    private val mapper: MemberViewModelMapper
+) {
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
 
     fun loadChatRoomsMembers(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
@@ -49,7 +51,7 @@ class MembersPresenter @Inject constructor(private val view: MembersView,
         val realName = memberViewModel.realName.toString()
         val username = "@${memberViewModel.username}"
         val email = memberViewModel.email ?: ""
-        val utcOffset =  memberViewModel.utcOffset.toString()
+        val utcOffset = memberViewModel.utcOffset.toString()
 
         navigator.toMemberDetails(avatarUri, realName, username, email, utcOffset)
     }

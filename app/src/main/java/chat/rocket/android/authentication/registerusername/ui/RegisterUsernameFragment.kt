@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.fragment_authentication_register_username.
 import javax.inject.Inject
 
 class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
-    @Inject lateinit var presenter: RegisterUsernamePresenter
+    @Inject
+    lateinit var presenter: RegisterUsernamePresenter
     private lateinit var userId: String
     private lateinit var authToken: String
 
@@ -41,7 +42,11 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
         authToken = arguments?.getString(AUTH_TOKEN) ?: ""
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_authentication_register_username)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_authentication_register_username)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,26 +64,36 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     }
 
     override fun alertBlankUsername() {
-        vibrateSmartPhone()
-        text_username.shake()
+        ui {
+            vibrateSmartPhone()
+            text_username.shake()
+        }
     }
 
     override fun showLoading() {
-        disableUserInput()
-        view_loading.setVisible(true)
+        ui {
+            disableUserInput()
+            view_loading.setVisible(true)
+        }
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
-        enableUserInput()
+        ui {
+            view_loading.setVisible(false)
+            enableUserInput()
+        }
     }
 
     override fun showMessage(resId: Int) {
-        showToast(resId)
+        ui {
+            showToast(resId)
+        }
     }
 
     override fun showMessage(message: String) {
-        showToast(message)
+        ui {
+            showToast(message)
+        }
     }
 
     override fun showGenericErrorMessage() {
@@ -86,10 +101,10 @@ class RegisterUsernameFragment : Fragment(), RegisterUsernameView {
     }
 
     private fun tintEditTextDrawableStart() {
-        activity?.apply {
-            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
+        ui {
+            val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, it)
             DrawableHelper.wrapDrawable(atDrawable)
-            DrawableHelper.tintDrawable(atDrawable, this, R.color.colorDrawableTintGrey)
+            DrawableHelper.tintDrawable(atDrawable, it, R.color.colorDrawableTintGrey)
             DrawableHelper.compoundDrawable(text_username, atDrawable)
         }
     }

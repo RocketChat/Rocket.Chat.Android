@@ -21,7 +21,7 @@ import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.core.internal.realtime.UserStatus
+import chat.rocket.common.model.UserStatus
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.google.android.gms.iid.InstanceID
 import dagger.android.AndroidInjection
@@ -82,10 +82,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                DrawableHelper.getUserStatusDrawable(
-                    userStatus,
-                    this.context
-                )
+                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }
@@ -139,7 +136,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         accounts_list.layoutManager = LinearLayoutManager(this)
         accounts_list.adapter = AccountsAdapter(accounts, object : Selector {
             override fun onStatusSelected(userStatus: UserStatus) {
-                presenter.changeStatus(userStatus)
+                presenter.changeDefaultStatus(userStatus)
             }
 
             override fun onAccountSelected(serverUrl: String) {

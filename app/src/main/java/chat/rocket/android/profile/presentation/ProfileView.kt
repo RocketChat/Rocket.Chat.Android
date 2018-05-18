@@ -2,7 +2,6 @@ package chat.rocket.android.profile.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.core.model.Myself
 
 interface ProfileView : LoadingView, MessageView {
 
@@ -14,7 +13,7 @@ interface ProfileView : LoadingView, MessageView {
      * @param username The user username.
      * @param email The user email.
      */
-    fun showProfile(avatarUrl: String, name: String, username: String, email: String)
+    fun showProfile(avatarUrl: String, name: String, username: String, email: String?)
 
     /**
      * Shows a profile update successfully message

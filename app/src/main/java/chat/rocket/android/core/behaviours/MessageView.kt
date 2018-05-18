@@ -1,6 +1,7 @@
 package chat.rocket.android.core.behaviours
 
 import android.support.annotation.StringRes
+import chat.rocket.common.util.ifNull
 
 interface MessageView {
 
@@ -14,4 +15,12 @@ interface MessageView {
     fun showMessage(message: String)
 
     fun showGenericErrorMessage()
+}
+
+fun MessageView.showMessage(ex: Exception) {
+    ex.message?.let {
+        showMessage(it)
+    }.ifNull {
+        showGenericErrorMessage()
+    }
 }

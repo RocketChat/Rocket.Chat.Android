@@ -7,7 +7,8 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewMo
 import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.core.internal.realtime.State
+import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.model.ChatRoom
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -26,9 +27,21 @@ interface ChatRoomView : LoadingView, MessageView {
     fun sendMessage(text: String)
 
     /**
+     * Shows the username(s) of the user(s) who is/are typing in the chat room.
+     *
+     * @param usernameList The list of username to show.
+     */
+    fun showTypingStatus(usernameList: ArrayList<String>)
+
+    /**
+     * Hides the typing status view.
+     */
+    fun hideTypingStatusView()
+
+    /**
      * Perform file selection with the mime type [filter]
      */
-    fun showFileSelection(filter: Array<String>)
+    fun showFileSelection(filter: Array<String>?)
 
     /**
      * Uploads a file to a chat room.
@@ -92,10 +105,8 @@ interface ChatRoomView : LoadingView, MessageView {
 
     /**
      * Enables the send message button.
-     *
-     * @param sendFailed Whether the sent message has failed.
      */
-    fun enableSendMessageButton(sendFailed: Boolean)
+    fun enableSendMessageButton()
 
     /**
      * Clears the message composition.
@@ -105,12 +116,16 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 
     fun showConnectionState(state: State)
+
     fun populatePeopleSuggestions(members: List<PeopleSuggestionViewModel>)
+
     fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>)
     /**
      * This user has joined the chat callback.
+     *
+     * @param userCanPost Whether the user can post a message or not.
      */
-    fun onJoined()
+    fun onJoined(userCanPost: Boolean)
 
     fun showReactionsPopup(messageId: String)
 
@@ -120,4 +135,15 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param commands The list of available commands.
      */
     fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>)
+
+    /**
+     * Communicate whether it's a broadcast channel and if current user can post to it.
+     */
+    fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean)
+
+    /**
+     * Open a DM with the user in the given [chatRoom] and pass the [permalink] for the message
+     * to reply.
+     */
+    fun openDirectMessage(chatRoom: ChatRoom, permalink: String)
 }
