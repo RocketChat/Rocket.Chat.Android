@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.login.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.authentication.login.ui.LoginFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy

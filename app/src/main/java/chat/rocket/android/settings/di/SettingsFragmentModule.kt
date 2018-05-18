@@ -1,6 +1,6 @@
 package chat.rocket.android.settings.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.settings.presentation.SettingsView

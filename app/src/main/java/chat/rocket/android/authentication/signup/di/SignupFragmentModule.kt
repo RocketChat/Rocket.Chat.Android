@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.signup.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.authentication.signup.ui.SignupFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy

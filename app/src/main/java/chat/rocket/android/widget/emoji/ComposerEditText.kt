@@ -1,7 +1,7 @@
 package chat.rocket.android.widget.emoji
 
 import android.content.Context
-import android.support.v7.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatEditText
 import android.util.AttributeSet
 import android.view.KeyEvent
 
@@ -16,7 +16,7 @@ class ComposerEditText : AppCompatEditText {
         isLongClickable = true
     }
 
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, android.support.v7.appcompat.R.attr.editTextStyle)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, androidx.appcompat.R.attr.editTextStyle)
 
     constructor(context: Context) : this(context, null)
 

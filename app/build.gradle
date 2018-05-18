@@ -15,7 +15,7 @@ android {
         targetSdkVersion versions.targetSdk
         versionCode 2020
         versionName "2.2.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
 
@@ -60,11 +60,11 @@ dependencies {
 
     implementation libraries.appCompat
     implementation libraries.recyclerview
-    implementation libraries.design
-    implementation libraries.constraintLayout
-    implementation libraries.cardView
+    implementation libraries.material
+    implementation libraries.constraintlayout
+    implementation libraries.cardview
     implementation libraries.flexbox
-    implementation libraries.customTabs
+    implementation libraries.browser
 
     implementation libraries.androidKtx
 
@@ -77,7 +77,6 @@ dependencies {
 
     implementation libraries.room
     kapt libraries.roomProcessor
-    implementation libraries.roomRxjava
     implementation libraries.lifecycleExtensions
     kapt libraries.lifecycleCompiler
 
@@ -109,7 +108,7 @@ dependencies {
 
     implementation libraries.aVLoadingIndicatorView
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
         transitive = true
     }
 

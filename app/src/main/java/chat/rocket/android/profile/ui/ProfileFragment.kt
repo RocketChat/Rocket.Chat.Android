@@ -3,8 +3,8 @@ package chat.rocket.android.profile.ui
 import DrawableHelper
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.view.ActionMode
+import androidx.fragment.app.Fragment
+import androidx.appcompat.view.ActionMode
 import android.view.*
 import chat.rocket.android.R
 import chat.rocket.android.main.ui.MainActivity

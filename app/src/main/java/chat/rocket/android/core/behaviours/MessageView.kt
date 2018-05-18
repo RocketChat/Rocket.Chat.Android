@@ -1,6 +1,6 @@
 package chat.rocket.android.core.behaviours
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import chat.rocket.common.util.ifNull
 
 interface MessageView {

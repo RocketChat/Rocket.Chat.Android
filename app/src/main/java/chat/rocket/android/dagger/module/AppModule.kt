@@ -4,13 +4,11 @@ import android.app.Application
 import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.arch.persistence.room.Room
 import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
@@ -66,12 +64,6 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
-    fun provideRocketChatDatabase(context: Application): RocketChatDatabase {
-        return Room.databaseBuilder(context.applicationContext, RocketChatDatabase::class.java, "rocketchat-db").build()
-    }
-
-    @Provides
     fun provideJob(): Job {
         return Job()
     }
@@ -80,12 +72,6 @@ class AppModule {
     @Singleton
     fun provideContext(application: Application): Context {
         return application
-    }
-
-    @Provides
-    @Singleton
-    fun provideServerDao(database: RocketChatDatabase): ServerDao {
-        return database.serverDao()
     }
 
     @Provides

@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.registerusername.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.authentication.registerusername.presentation.RegisterUsernameView
 import chat.rocket.android.authentication.registerusername.ui.RegisterUsernameFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy

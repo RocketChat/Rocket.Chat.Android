@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.server.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.authentication.server.presentation.ServerView
 import chat.rocket.android.authentication.server.ui.ServerFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy

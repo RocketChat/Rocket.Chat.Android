@@ -1,6 +1,6 @@
 package chat.rocket.android.profile.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.profile.ui.ProfileFragment

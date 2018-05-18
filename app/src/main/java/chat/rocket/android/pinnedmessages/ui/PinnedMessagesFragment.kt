@@ -1,11 +1,10 @@
 package chat.rocket.android.pinnedmessages.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,12 +71,12 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
             if (recycler_view_pinned.adapter == null){
                 adapter = ChatRoomAdapter(chatRoomType,"",null,false)
                 recycler_view_pinned.adapter = adapter
-                val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+                val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view_pinned.layoutManager = linearLayoutManager
                 recycler_view_pinned.itemAnimator = DefaultItemAnimator()
                 if (pinnedMessages.size > 10){
                     recycler_view_pinned.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager){
-                        override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
+                        override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
                             presenter.loadPinnedMessages(chatRoomId)
                         }
 

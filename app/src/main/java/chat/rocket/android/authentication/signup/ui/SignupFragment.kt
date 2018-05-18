@@ -3,10 +3,9 @@ package chat.rocket.android.authentication.signup.ui
 import DrawableHelper
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.text.style.ClickableSpan
 import android.view.*
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView

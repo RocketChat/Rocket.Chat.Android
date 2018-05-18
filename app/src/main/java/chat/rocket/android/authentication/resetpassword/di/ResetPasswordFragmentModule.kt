@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.resetpassword.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.authentication.resetpassword.presentation.ResetPasswordView
 import chat.rocket.android.authentication.resetpassword.ui.ResetPasswordFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy

@@ -1,6 +1,6 @@
 package chat.rocket.android.authentication.twofactor.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.authentication.twofactor.presentation.TwoFAView
 import chat.rocket.android.authentication.twofactor.ui.TwoFAFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy
