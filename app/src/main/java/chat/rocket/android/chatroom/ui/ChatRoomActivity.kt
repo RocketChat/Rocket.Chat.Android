@@ -1,6 +1,5 @@
 package chat.rocket.android.chatroom.ui
 
-import DrawableHelper
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -27,38 +26,49 @@ fun Context.chatRoomIntent(
     chatRoomType: String,
     isChatRoomReadOnly: Boolean,
     chatRoomLastSeen: Long,
-    isChatRoomSubscribed: Boolean = true
+    isChatRoomSubscribed: Boolean = true,
+    isChatRoomCreator: Boolean = false,
+    chatRoomMessage: String? = null
 ): Intent {
     return Intent(this, ChatRoomActivity::class.java).apply {
         putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
         putExtra(INTENT_CHAT_ROOM_NAME, chatRoomName)
         putExtra(INTENT_CHAT_ROOM_TYPE, chatRoomType)
-        putExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
+        putExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, isChatRoomReadOnly)
         putExtra(INTENT_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
         putExtra(INTENT_CHAT_IS_SUBSCRIBED, isChatRoomSubscribed)
+        putExtra(INTENT_CHAT_ROOM_IS_CREATOR, isChatRoomCreator)
+        putExtra(INTENT_CHAT_ROOM_MESSAGE, chatRoomMessage)
     }
 }
 
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
 private const val INTENT_CHAT_ROOM_NAME = "chat_room_name"
 private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
-private const val INTENT_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
+private const val INTENT_CHAT_ROOM_IS_READ_ONLY = "chat_room_is_read_only"
+private const val INTENT_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
 private const val INTENT_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val INTENT_CHAT_IS_SUBSCRIBED = "is_chat_room_subscribed"
+private const val INTENT_CHAT_ROOM_MESSAGE = "chat_room_message"
 
 class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
-    @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     // TODO - workaround for now... We will move to a single activity
-    @Inject lateinit var serverInteractor: GetCurrentServerInteractor
-    @Inject lateinit var navigator: ChatRoomNavigator
-    @Inject lateinit var managerFactory: ConnectionManagerFactory
+    @Inject
+    lateinit var serverInteractor: GetCurrentServerInteractor
+    @Inject
+    lateinit var navigator: ChatRoomNavigator
+    @Inject
+    lateinit var managerFactory: ConnectionManagerFactory
 
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
     private var isChatRoomReadOnly: Boolean = false
     private var isChatRoomSubscribed: Boolean = true
+    private var isChatRoomCreator: Boolean = false
     private var chatRoomLastSeen: Long = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,8 +94,13 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
         requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
 
-        isChatRoomReadOnly = intent.getBooleanExtra(INTENT_IS_CHAT_ROOM_READ_ONLY, true)
-        requireNotNull(chatRoomType) { "no is_chat_room_read_only provided in Intent extras" }
+        isChatRoomReadOnly = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, true)
+        requireNotNull(isChatRoomReadOnly) { "no chat_room_is_read_only provided in Intent extras" }
+
+        isChatRoomCreator = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_CREATOR, false)
+        requireNotNull(isChatRoomCreator) { "no chat_room_is_creator provided in Intent extras" }
+
+        val chatRoomMessage = intent.getStringExtra(INTENT_CHAT_ROOM_MESSAGE)
 
         setupToolbar()
 
@@ -96,7 +111,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
             addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
                 newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
-                        isChatRoomSubscribed)
+                        isChatRoomSubscribed, isChatRoomCreator, chatRoomMessage)
             }
         }
     }
@@ -107,6 +122,17 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        text_room_name.textContent = chatRoomName
+
+        showRoomTypeIcon(true)
+
+        toolbar.setNavigationOnClickListener { finishActivity() }
     }
 
     fun showRoomTypeIcon(showRoomTypeIcon: Boolean) {
@@ -136,17 +162,6 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-    private fun setupToolbar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        text_room_name.textContent = chatRoomName
-
-        showRoomTypeIcon(true)
-
-        toolbar.setNavigationOnClickListener {
-            finishActivity()
-        }
-    }
 
     fun setupToolbarTitle(toolbarTitle: String) {
         text_room_name.textContent = toolbarTitle

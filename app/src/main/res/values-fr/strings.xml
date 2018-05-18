@@ -110,6 +110,16 @@
     <string name="msg_image_saved_failed">Échec de l\'enregistrement de l\'image</string>
     <string name="msg_no_chat_title">Aucun message de discussion</string>
     <string name="msg_no_chat_description">Commencez à converser pour voir\nvos messages ici.</string>
+    <string name="msg_edited">(édité)</string>
+    // TODO: Add proper translation.
+    <string name="msg_and">\u0020and\u0020</string>
+    // TODO: Add proper translation.
+    <string name="msg_is_typing">\u0020is typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_are_typing">\u0020are typing…</string>
+    // TODO: Add proper translation.
+    <string name="msg_several_users_are_typing">Several users are typing…</string>
+    <string name="msg_no_search_found">Aucun résultat trouvé</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>
@@ -120,6 +130,10 @@
     <string name="message_welcome">Bienvenue %s</string>
     <string name="message_removed">Message supprimé</string>
     <string name="message_pinned">Épinglé un message:</string>
+    <string name="message_muted">Utilisateur %1$s mis en sourdine par %2$s</string>
+    <string name="message_unmuted">Utilisateur %1$s non muté par %2$s</string>
+    <string name="message_role_add">%1$s a été défini %2$s par %3$s</string>
+    <string name="message_role_removed">%1$s is no longer %2$s par %3$s</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
@@ -129,7 +143,10 @@
     <string name="action_msg_delete">Effacer</string>
     <string name="action_msg_pin">Épingle message</string>
     <string name="action_msg_unpin">Enlever message</string>
+    // TODO: Add proper translation.
     <string name="action_msg_star">Star message</string>
+    // TODO: Add proper translation.
+    <string name="action_msg_unstar">Unstar Message</string>
     <string name="action_msg_share">Partager</string>
     <string name="action_title_editing">Modification du message</string>
     <string name="action_msg_add_reaction">Ajouter une réaction</string>
@@ -138,6 +155,8 @@
     <string name="permission_editing_not_allowed">L\'édition n\'est pas autorisée</string>
     <string name="permission_deleting_not_allowed">La suppression n\'est pas autorisée</string>
     <string name="permission_pinning_not_allowed">L\'épinglage n\'est pas autorisé</string>
+    // TODO: Add proper translation.
+    <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Members List -->
     <string name="title_members_list">Liste des membres</string>
@@ -145,7 +164,13 @@
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Messages épinglés</string>
     <string name="no_pinned_messages">Aucun message épinglé</string>
-    <string name="no_pinned_description">Tous les messages épinglés\napparaissent ici.</string>
+    <string name="no_pinned_description">Tous les messages épinglés\napparaissent ici</string>
+
+    <!-- Favorite Messages -->
+    <!-- TODO Add proper translation-->
+    <string name="title_favorite_messages">Favorite Messages</string>
+    <string name="no_favorite_messages">No favorite messages</string>
+    <string name="no_favorite_description">All the favorite messages\nappear here</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Taille du fichier (%1$d bytes) dépassé la taille de téléchargement maximale de %2$d bytes</string>

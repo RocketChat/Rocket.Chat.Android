@@ -8,6 +8,7 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewMod
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.model.ChatRoom
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -24,6 +25,18 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param text The text to send.
      */
     fun sendMessage(text: String)
+
+    /**
+     * Shows the username(s) of the user(s) who is/are typing in the chat room.
+     *
+     * @param usernameList The list of username to show.
+     */
+    fun showTypingStatus(usernameList: ArrayList<String>)
+
+    /**
+     * Hides the typing status view.
+     */
+    fun hideTypingStatusView()
 
     /**
      * Perform file selection with the mime type [filter]
@@ -109,8 +122,10 @@ interface ChatRoomView : LoadingView, MessageView {
     fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>)
     /**
      * This user has joined the chat callback.
+     *
+     * @param userCanPost Whether the user can post a message or not.
      */
-    fun onJoined()
+    fun onJoined(userCanPost: Boolean)
 
     fun showReactionsPopup(messageId: String)
 
@@ -120,4 +135,15 @@ interface ChatRoomView : LoadingView, MessageView {
      * @param commands The list of available commands.
      */
     fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>)
+
+    /**
+     * Communicate whether it's a broadcast channel and if current user can post to it.
+     */
+    fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean)
+
+    /**
+     * Open a DM with the user in the given [chatRoom] and pass the [permalink] for the message
+     * to reply.
+     */
+    fun openDirectMessage(chatRoom: ChatRoom, permalink: String)
 }
