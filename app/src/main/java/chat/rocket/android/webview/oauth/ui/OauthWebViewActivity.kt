@@ -40,7 +40,6 @@ class OauthWebViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
-
         webPageUrl = intent.getStringExtra(INTENT_WEB_PAGE_URL)
         requireNotNull(webPageUrl) { "no web_page_url provided in Intent extras" }
 

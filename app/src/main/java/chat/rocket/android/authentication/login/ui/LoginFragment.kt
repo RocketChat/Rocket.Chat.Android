@@ -57,6 +57,7 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         areLoginOptionsNeeded()
     }
+    private var isOauthSuccessful = false
     private var isGlobalLayoutListenerSetUp = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
     private var credentialsToBeSaved: Credential? = null
@@ -122,6 +123,7 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
                     presenter.authenticateWithCas(getStringExtra(INTENT_CAS_TOKEN))
                 }
             } else if (requestCode == REQUEST_CODE_FOR_OAUTH) {
+                isOauthSuccessful = true
                 data?.apply {
                     presenter.authenticateWithOauth(
                             getStringExtra(INTENT_OAUTH_CREDENTIAL_TOKEN),
@@ -147,20 +149,12 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
         } else if (requestCode == MULTIPLE_CREDENTIALS_READ) {
             Log.d("STATUS", "failed ")
         }
-
         //cancel button pressed by the user in case of reading from smart lock
-        else if (resultCode == Activity.RESULT_CANCELED) {
-            //add shared preference so that the dialog is not shown always
+        else if (resultCode == Activity.RESULT_CANCELED && requestCode == REQUEST_CODE_FOR_OAUTH) {
+            Log.d("returned", "from oauth")
         }
-
-        //create new account to use it as login account (deal with this case carefully, many edge cases)
-        else if (resultCode == CredentialsApi.ACTIVITY_RESULT_ADD_ACCOUNT) {
-        }
-
         //no hints for user id's exist
         else if (resultCode == CredentialsApi.ACTIVITY_RESULT_NO_HINTS_AVAILABLE) {
-        } else {
-            Log.d("Status", "nothing happening")
         }
     }
 
@@ -182,14 +176,14 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
 
     override fun onStart() {
         super.onStart()
-        requestCredentials()
+        if (!isOauthSuccessful) {
+            requestCredentials()
+        }
     }
 
     private fun requestCredentials() {
         var request: CredentialRequest = CredentialRequest.Builder()
                 .setPasswordLoginSupported(true)
-                //add account types for custom login methods
-                /*.setAccountTypes(IdentityProviders.GOOGLE,IdentityProviders.FACEBOOK)*/
                 .build()
 
         Auth.CredentialsApi.request(googleApiClient, request).setResultCallback { credentialRequestResult ->
@@ -224,14 +218,6 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
     private fun handleCredential(loginCredentials: Credential) {
         if (loginCredentials.accountType == null) {
             presenter.authenticateWithUserAndPassword(loginCredentials.id, loginCredentials.password!!)
-        } else if (loginCredentials.accountType == IdentityProviders.GOOGLE) {
-            //TODO add SL code for google as custom login method
-        } else if (loginCredentials.accountType == IdentityProviders.FACEBOOK) {
-            //TODO add SL code for facebook as custom login method
-        } else if (loginCredentials.accountType == IdentityProviders.TWITTER) {
-            //TODO add SL code for twitter as custom login method
-        } else if (loginCredentials.accountType == IdentityProviders.LINKEDIN) {
-            //TODO add SL code for linkedin as custom login method
         }
     }
 
