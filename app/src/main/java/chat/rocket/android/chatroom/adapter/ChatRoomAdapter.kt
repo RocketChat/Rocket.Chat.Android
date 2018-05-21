@@ -5,7 +5,21 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
-import chat.rocket.android.chatroom.viewmodel.*
+import chat.rocket.android.chatroom.ui.chatRoomIntent
+import chat.rocket.android.chatroom.viewmodel.AudioAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.AuthorAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseFileAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.ColorAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.GenericFileAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageReplyViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.UrlPreviewViewModel
+import chat.rocket.android.chatroom.viewmodel.VideoAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.toViewType
+import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
@@ -65,6 +79,12 @@ class ChatRoomAdapter(
                 val view = parent.inflate(R.layout.item_file_attachment)
                 GenericFileAttachmentViewHolder(view, actionsListener, reactionListener)
             }
+            BaseViewModel.ViewType.MESSAGE_REPLY -> {
+                val view = parent.inflate(R.layout.item_message_reply)
+                MessageReplyViewHolder(view, actionsListener, reactionListener) { roomName, permalink ->
+                    presenter?.openDirectMessage(roomName, permalink)
+                }
+            }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
             }
@@ -98,15 +118,26 @@ class ChatRoomAdapter(
         }
 
         when (holder) {
-            is MessageViewHolder -> holder.bind(dataSet[position] as MessageViewModel)
-            is ImageAttachmentViewHolder -> holder.bind(dataSet[position] as ImageAttachmentViewModel)
-            is AudioAttachmentViewHolder -> holder.bind(dataSet[position] as AudioAttachmentViewModel)
-            is VideoAttachmentViewHolder -> holder.bind(dataSet[position] as VideoAttachmentViewModel)
-            is UrlPreviewViewHolder -> holder.bind(dataSet[position] as UrlPreviewViewModel)
-            is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
-            is AuthorAttachmentViewHolder -> holder.bind(dataSet[position] as AuthorAttachmentViewModel)
-            is ColorAttachmentViewHolder -> holder.bind(dataSet[position] as ColorAttachmentViewModel)
-            is GenericFileAttachmentViewHolder -> holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
+            is MessageViewHolder ->
+                holder.bind(dataSet[position] as MessageViewModel)
+            is ImageAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ImageAttachmentViewModel)
+            is AudioAttachmentViewHolder ->
+                holder.bind(dataSet[position] as AudioAttachmentViewModel)
+            is VideoAttachmentViewHolder ->
+                holder.bind(dataSet[position] as VideoAttachmentViewModel)
+            is UrlPreviewViewHolder ->
+                holder.bind(dataSet[position] as UrlPreviewViewModel)
+            is MessageAttachmentViewHolder ->
+                holder.bind(dataSet[position] as MessageAttachmentViewModel)
+            is AuthorAttachmentViewHolder ->
+                holder.bind(dataSet[position] as AuthorAttachmentViewModel)
+            is ColorAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ColorAttachmentViewModel)
+            is GenericFileAttachmentViewHolder ->
+                holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
+            is MessageReplyViewHolder ->
+                holder.bind(dataSet[position] as MessageReplyViewModel)
         }
     }
 
@@ -188,10 +219,10 @@ class ChatRoomAdapter(
             message.apply {
                 when (item.itemId) {
                     R.id.action_message_reply -> {
-                        presenter?.citeMessage(roomType, id, true)
+                        presenter?.citeMessage(roomName, roomType, id, true)
                     }
                     R.id.action_message_quote -> {
-                        presenter?.citeMessage(roomType, id, false)
+                        presenter?.citeMessage(roomName, roomType, id, false)
                     }
                     R.id.action_message_copy -> {
                         presenter?.copyMessage(id)

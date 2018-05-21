@@ -8,6 +8,7 @@ import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewMod
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
 import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.model.ChatRoom
 
 interface ChatRoomView : LoadingView, MessageView {
 
@@ -122,9 +123,9 @@ interface ChatRoomView : LoadingView, MessageView {
     /**
      * This user has joined the chat callback.
      *
-     * @param canPost Whether the user can post a message or not.
+     * @param userCanPost Whether the user can post a message or not.
      */
-    fun onJoined(canPost: Boolean)
+    fun onJoined(userCanPost: Boolean)
 
     fun showReactionsPopup(messageId: String)
 
@@ -135,5 +136,14 @@ interface ChatRoomView : LoadingView, MessageView {
      */
     fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>)
 
-    fun onRoomChanged(canPost: Boolean)
+    /**
+     * Communicate whether it's a broadcast channel and if current user can post to it.
+     */
+    fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean)
+
+    /**
+     * Open a DM with the user in the given [chatRoom] and pass the [permalink] for the message
+     * to reply.
+     */
+    fun openDirectMessage(chatRoom: ChatRoom, permalink: String)
 }
