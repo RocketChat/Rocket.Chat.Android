@@ -1,5 +1,6 @@
 package chat.rocket.android.main.ui
 
+import DrawableHelper
 import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
@@ -11,8 +12,8 @@ import android.view.MenuItem
 import android.view.View
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.adapter.AccountsAdapter
+import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.viewmodel.NavHeaderViewModel

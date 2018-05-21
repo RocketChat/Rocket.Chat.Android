@@ -6,12 +6,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.extensions.launchUI
-import chat.rocket.android.util.extensions.privacyPolicyUrl
-import chat.rocket.android.util.extensions.registerPushToken
-import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.extensions.termsOfServiceUrl
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull

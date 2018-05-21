@@ -122,15 +122,21 @@ class SignupFragment : Fragment(), SignupView {
 
     override fun saveSmartLockCredentials(loginCredential: Credential) {
         credentialsToBeSaved = loginCredential
-        if (googleApiClient!!.isConnected) {
-            saveCredentials()
+        googleApiClient.let {
+            if (it.isConnected) {
+                saveCredentials()
+            }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == SAVE_CREDENTIALS) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(context, "Credentials saved successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    getString(R.string.message_credentials_saved_successfully),
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 Timber.e("ERROR: Cancelled by user")
             }
@@ -145,7 +151,7 @@ class SignupFragment : Fragment(), SignupView {
                 }
 
                 override fun onUnresolvableFailure(status: Status) {
-                    Timber.w("save:FAILURE:$status")
+                    Timber.e("save:FAILURE:$status")
                 }
             })
     }

@@ -48,7 +48,7 @@ internal const val MULTIPLE_CREDENTIALS_READ = 3
 internal const val NO_CREDENTIALS_EXIST = 4
 internal const val SAVE_CREDENTIALS = 5
 
-var googleApiClient: GoogleApiClient? = null
+lateinit var googleApiClient: GoogleApiClient
 
 class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks {
     @Inject
@@ -131,19 +131,25 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
                     }
                 }
                 MULTIPLE_CREDENTIALS_READ -> {
-                    val loginCredentials: Credential = data!!.getParcelableExtra(Credential.EXTRA_KEY)
+                    val loginCredentials: Credential =
+                        data!!.getParcelableExtra(Credential.EXTRA_KEY)
                     handleCredential(loginCredentials)
                 }
                 NO_CREDENTIALS_EXIST -> {
                     //use the hints to autofill sign in forms to reduce the info to be filled
-                    val loginCredentials: Credential = data!!.getParcelableExtra(Credential.EXTRA_KEY)
+                    val loginCredentials: Credential =
+                        data!!.getParcelableExtra(Credential.EXTRA_KEY)
                     val email = loginCredentials.id
                     val password = loginCredentials.password
 
                     text_username_or_email.setText(email)
                     text_password.setText(password)
                 }
-                SAVE_CREDENTIALS -> Toast.makeText(context, "Credentials saved successfully", Toast.LENGTH_SHORT).show()
+                SAVE_CREDENTIALS -> Toast.makeText(
+                    context,
+                    getString(R.string.message_credentials_saved_successfully),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         } else if (requestCode == SAVE_CREDENTIALS) {
             Timber.e("ERROR: Cancelled by user")
@@ -161,8 +167,10 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
 
     override fun onDestroy() {
         super.onDestroy()
-        googleApiClient!!.stopAutoManage(activity!!)
-        googleApiClient!!.disconnect()
+        googleApiClient.let {
+            it.stopAutoManage(activity!!)
+            it.disconnect()
+        }
     }
 
     private fun buildGoogleApiClient() {

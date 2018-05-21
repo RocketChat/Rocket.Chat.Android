@@ -80,7 +80,8 @@ class OauthWebViewActivity : AppCompatActivity() {
             domStorageEnabled = true
             // TODO Remove this workaround that is required to make Google OAuth to work. We should use Custom Tabs instead. See https://github.com/RocketChat/Rocket.Chat.Android/issues/968
             if (webPageUrl.contains("google")) {
-                userAgentString = "Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/43.0.2357.65 Mobile Safari/535.19"
+                userAgentString =
+                        "Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/43.0.2357.65 Mobile Safari/535.19"
             }
         }
         web_view.webViewClient = object : WebViewClient() {
@@ -113,8 +114,18 @@ class OauthWebViewActivity : AppCompatActivity() {
     private fun getCredentialSecret(json: JSONObject): String =
         json.optString(JSON_CREDENTIAL_SECRET)
 
-    private fun closeView(activityResult: Int = Activity.RESULT_CANCELED, credentialToken: String? = null, credentialSecret: String? = null) {
-        setResult(activityResult, Intent().putExtra(INTENT_OAUTH_CREDENTIAL_TOKEN, credentialToken).putExtra(INTENT_OAUTH_CREDENTIAL_SECRET, credentialSecret))
+    private fun closeView(
+        activityResult: Int = Activity.RESULT_CANCELED,
+        credentialToken: String? = null,
+        credentialSecret: String? = null
+    ) {
+        setResult(
+            activityResult,
+            Intent().putExtra(INTENT_OAUTH_CREDENTIAL_TOKEN, credentialToken).putExtra(
+                INTENT_OAUTH_CREDENTIAL_SECRET,
+                credentialSecret
+            )
+        )
         finish()
         overridePendingTransition(R.anim.hold, R.anim.slide_down)
     }

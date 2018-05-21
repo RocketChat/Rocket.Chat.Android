@@ -134,6 +134,9 @@
     <string name="message_unmuted">Usuario %1$s no silenciado por %2$s</string>
     <string name="message_role_add">%1$s fue establecido %2$s por %3$s</string>
     <string name="message_role_removed">%1$s ya no es %2$s por %3$s</string>
+    // TODO:Add proper translation.
+    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+
 
     <!-- Message actions -->
     <string name="action_msg_reply">Respuesta</string>
