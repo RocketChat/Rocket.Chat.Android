@@ -151,13 +151,20 @@ class LoginPresenter @Inject constructor(
                     client.settingsOauth().services
                 }
                 if (services.isNotEmpty()) {
-                    val state = "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
+                    val state =
+                        "{\"loginStyle\":\"popup\",\"credentialToken\":\"${generateRandomString(40)}\",\"isCordova\":true}".encodeToBase64()
                     var totalSocialAccountsEnabled = 0
 
                     if (settings.isFacebookAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_FACEBOOK)
                         if (clientId != null) {
-                            view.setupFacebookButtonListener(OauthHelper.getFacebookOauthUrl(clientId, currentServer, state), state)
+                            view.setupFacebookButtonListener(
+                                OauthHelper.getFacebookOauthUrl(
+                                    clientId,
+                                    currentServer,
+                                    state
+                                ), state
+                            )
                             view.enableLoginByFacebook()
                             totalSocialAccountsEnabled++
                         }
@@ -165,7 +172,12 @@ class LoginPresenter @Inject constructor(
                     if (settings.isGithubAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GITHUB)
                         if (clientId != null) {
-                            view.setupGithubButtonListener(OauthHelper.getGithubOauthUrl(clientId, state), state)
+                            view.setupGithubButtonListener(
+                                OauthHelper.getGithubOauthUrl(
+                                    clientId,
+                                    state
+                                ), state
+                            )
                             view.enableLoginByGithub()
                             totalSocialAccountsEnabled++
                         }
@@ -173,7 +185,13 @@ class LoginPresenter @Inject constructor(
                     if (settings.isGoogleAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_GOOGLE)
                         if (clientId != null) {
-                            view.setupGoogleButtonListener(OauthHelper.getGoogleOauthUrl(clientId, currentServer, state), state)
+                            view.setupGoogleButtonListener(
+                                OauthHelper.getGoogleOauthUrl(
+                                    clientId,
+                                    currentServer,
+                                    state
+                                ), state
+                            )
                             view.enableLoginByGoogle()
                             totalSocialAccountsEnabled++
                         }
@@ -181,7 +199,13 @@ class LoginPresenter @Inject constructor(
                     if (settings.isLinkedinAuthenticationEnabled()) {
                         val clientId = getOauthClientId(services, SERVICE_NAME_LINKEDIN)
                         if (clientId != null) {
-                            view.setupLinkedinButtonListener(OauthHelper.getLinkedinOauthUrl(clientId, currentServer, state), state)
+                            view.setupLinkedinButtonListener(
+                                OauthHelper.getLinkedinOauthUrl(
+                                    clientId,
+                                    currentServer,
+                                    state
+                                ), state
+                            )
                             view.enableLoginByLinkedin()
                             totalSocialAccountsEnabled++
                         }
@@ -307,8 +331,8 @@ class LoginPresenter @Inject constructor(
                     registerPushToken()
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
                         loginCredentials = Credential.Builder(usernameOrEmail)
-                                .setPassword(password)
-                                .build()
+                            .setPassword(password)
+                            .build()
                         view.saveSmartLockCredentials(loginCredentials)
                     }
                     navigator.toChatList()
@@ -341,7 +365,7 @@ class LoginPresenter @Inject constructor(
         }.toString()
     }
 
-    private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>>  {
+    private fun getCustomOauthServices(listMap: List<Map<String, Any>>): List<Map<String, Any>> {
         return listMap.filter { map -> map["custom"] == true }
     }
 

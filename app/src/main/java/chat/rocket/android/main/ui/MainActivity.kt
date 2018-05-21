@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -40,13 +39,8 @@ import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector, GoogleApiClient.ConnectionCallbacks {
-    override fun onConnected(p0: Bundle?) {
-    }
-
-    override fun onConnectionSuspended(p0: Int) {
-    }
-
+class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector,
+    GoogleApiClient.ConnectionCallbacks {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject
@@ -55,7 +49,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
     private var expanded = false
-    private var googleApiClient: GoogleApiClient? = null
+    private lateinit var googleApiClient: GoogleApiClient
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +60,11 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
 
         launch(CommonPool) {
             try {
-                val token = InstanceID.getInstance(this@MainActivity).getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
+                val token = InstanceID.getInstance(this@MainActivity).getToken(
+                    getString(R.string.gcm_sender_id),
+                    GoogleCloudMessaging.INSTANCE_ID_SCOPE,
+                    null
+                )
                 Timber.d("GCM token: $token")
                 presenter.refreshToken(token)
             } catch (ex: Exception) {
@@ -80,28 +78,36 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         setupNavigationView()
     }
 
+    override fun onConnected(bundle: Bundle?) {
+    }
+
+    override fun onConnectionSuspended(errorCode: Int) {
+    }
+
     private fun buildGoogleApiClient() {
         googleApiClient = GoogleApiClient.Builder(this)
-                .enableAutoManage(this, {
-                    Log.d("STATUS", "ERROR: connection to client failed")
-                })
-                .addConnectionCallbacks(this)
-                .addApi(Auth.CREDENTIALS_API)
-                .build()
+            .enableAutoManage(this, {
+                Timber.d("ERROR: connection to client failed")
+            })
+            .addConnectionCallbacks(this)
+            .addApi(Auth.CREDENTIALS_API)
+            .build()
     }
 
     override fun onStart() {
         super.onStart()
-        if (googleApiClient!!.isConnected) {
-            Log.d("STATUS", "google api client connected successfully")
+        googleApiClient.let {
+            if (it.isConnected) {
+                Timber.d("Google api client connected successfully")
+            }
         }
     }
 
     override fun disableAutoSignIn() {
-        if (googleApiClient!!.isConnected) {
-            Auth.CredentialsApi.disableAutoSignIn(googleApiClient)
-        } else {
-            Log.e("STATUS", "Failed to disable auto sign in")
+        googleApiClient.let {
+            if (it.isConnected) {
+                Auth.CredentialsApi.disableAutoSignIn(googleApiClient)
+            }
         }
     }
 
@@ -123,7 +129,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     override fun showUserStatus(userStatus: UserStatus) {
         headerLayout.apply {
             image_user_status.setImageDrawable(
-                    DrawableHelper.getUserStatusDrawable(userStatus, this.context)
+                DrawableHelper.getUserStatusDrawable(userStatus, this.context)
             )
         }
     }
@@ -134,7 +140,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             with(viewModel) {
                 if (userStatus != null) {
                     image_user_status.setImageDrawable(
-                            DrawableHelper.getUserStatusDrawable(userStatus, context)
+                        DrawableHelper.getUserStatusDrawable(userStatus, context)
                     )
                 }
                 if (userDisplayName != null) {
@@ -158,19 +164,29 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
 
     override fun alertNotRecommendedVersion() {
         AlertDialog.Builder(this)
-                .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
-                .setPositiveButton(R.string.msg_ok, null)
-                .create()
-                .show()
+            .setMessage(
+                getString(
+                    R.string.msg_ver_not_recommended,
+                    BuildConfig.RECOMMENDED_SERVER_VERSION
+                )
+            )
+            .setPositiveButton(R.string.msg_ok, null)
+            .create()
+            .show()
     }
 
     override fun blockAndAlertNotRequiredVersion() {
         AlertDialog.Builder(this)
-                .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
-                .setOnDismissListener { presenter.logout() }
-                .setPositiveButton(R.string.msg_ok, null)
-                .create()
-                .show()
+            .setMessage(
+                getString(
+                    R.string.msg_ver_not_minimum,
+                    BuildConfig.REQUIRED_SERVER_VERSION
+                )
+            )
+            .setOnDismissListener { presenter.logout() }
+            .setPositiveButton(R.string.msg_ok, null)
+            .create()
+            .show()
     }
 
     private fun setupAccountsList(header: View, accounts: List<Account>) {
@@ -215,7 +231,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
+        fragmentDispatchingAndroidInjector
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)

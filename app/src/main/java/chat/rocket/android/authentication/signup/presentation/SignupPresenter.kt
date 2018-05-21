@@ -23,15 +23,17 @@ import chat.rocket.core.model.Myself
 import com.google.android.gms.auth.api.credentials.Credential
 import javax.inject.Inject
 
-class SignupPresenter @Inject constructor(private val view: SignupView,
-                                          private val strategy: CancelStrategy,
-                                          private val navigator: AuthenticationNavigator,
-                                          private val localRepository: LocalRepository,
-                                          private val serverInteractor: GetCurrentServerInteractor,
-                                          private val factory: RocketChatClientFactory,
-                                          private val saveAccountInteractor: SaveAccountInteractor,
-                                          private val getAccountsInteractor: GetAccountsInteractor,
-                                          settingsInteractor: GetSettingsInteractor) {
+class SignupPresenter @Inject constructor(
+    private val view: SignupView,
+    private val strategy: CancelStrategy,
+    private val navigator: AuthenticationNavigator,
+    private val localRepository: LocalRepository,
+    private val serverInteractor: GetCurrentServerInteractor,
+    private val factory: RocketChatClientFactory,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    settingsInteractor: GetSettingsInteractor
+) {
     private val currentServer = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
@@ -67,9 +69,9 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         saveAccount(me)
                         registerPushToken()
-                        var loginCredentials: Credential = Credential.Builder(email)
-                                .setPassword(password)
-                                .build()
+                        val loginCredentials = Credential.Builder(email)
+                            .setPassword(password)
+                            .build()
                         view.saveSmartLockCredentials(loginCredentials)
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
