@@ -110,7 +110,6 @@ class ConnectionManager(internal val client: RocketChatClient) {
                 Timber.d("Received new Message for room ${message.roomId}")
                 val channel = roomMessagesChannels[message.roomId]
                 channel?.send(message)
-
             }
         }
 
@@ -131,6 +130,7 @@ class ConnectionManager(internal val client: RocketChatClient) {
                 }
             }
         }
+
         client.connect()
 
         // Broadcast initial state...

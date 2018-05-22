@@ -3,6 +3,7 @@ package chat.rocket.android.chatroom.adapter
 import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.view.View
+import androidx.core.view.isVisible
 import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.widget.emoji.EmojiReactionListener
@@ -35,10 +36,9 @@ class MessageViewHolder(
             text_content.setTextColor(
                 if (data.isTemporary) Color.GRAY else Color.BLACK
             )
-            if (!data.message.isSystemMessage() && data.message.editedBy != null){
-                text_edit_indicator.setVisible(true)
-            }else{
-                text_edit_indicator.setVisible(false)
+            data.message.let {
+                text_edit_indicator.isVisible = !it.isSystemMessage() && it.editedBy != null
+                image_star_indicator.isVisible = it.starred?.isNotEmpty() ?: false
             }
         }
     }
