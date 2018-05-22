@@ -48,7 +48,7 @@ class UserHelper @Inject constructor(
     /**
      * Return the username for the current logged [User].
      */
-    fun username(): String? = user()?.username
+    fun username(): String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY, null)
 
     /**
      * Whether current [User] is admin on the current server.

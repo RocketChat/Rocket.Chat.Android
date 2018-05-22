@@ -5,7 +5,21 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
-import chat.rocket.android.chatroom.viewmodel.*
+import chat.rocket.android.chatroom.ui.chatRoomIntent
+import chat.rocket.android.chatroom.viewmodel.AudioAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.AuthorAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseFileAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.ColorAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.GenericFileAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageReplyViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.UrlPreviewViewModel
+import chat.rocket.android.chatroom.viewmodel.VideoAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.toViewType
+import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
@@ -15,6 +29,7 @@ import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
     private val roomType: String,
+    private val roomName: String,
     private val presenter: ChatRoomPresenter?,
     private val enableActions: Boolean = true,
     private val reactionListener: EmojiReactionListener? = null
@@ -63,6 +78,12 @@ class ChatRoomAdapter(
             BaseViewModel.ViewType.GENERIC_FILE_ATTACHMENT -> {
                 val view = parent.inflate(R.layout.item_file_attachment)
                 GenericFileAttachmentViewHolder(view, actionsListener, reactionListener)
+            }
+            BaseViewModel.ViewType.MESSAGE_REPLY -> {
+                val view = parent.inflate(R.layout.item_message_reply)
+                MessageReplyViewHolder(view, actionsListener, reactionListener) { roomName, permalink ->
+                    presenter?.openDirectMessage(roomName, permalink)
+                }
             }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
@@ -115,6 +136,8 @@ class ChatRoomAdapter(
                 holder.bind(dataSet[position] as ColorAttachmentViewModel)
             is GenericFileAttachmentViewHolder ->
                 holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
+            is MessageReplyViewHolder ->
+                holder.bind(dataSet[position] as MessageReplyViewModel)
         }
     }
 
@@ -196,10 +219,10 @@ class ChatRoomAdapter(
             message.apply {
                 when (item.itemId) {
                     R.id.action_message_reply -> {
-                        presenter?.citeMessage(roomType, id, true)
+                        presenter?.citeMessage(roomName, roomType, id, true)
                     }
                     R.id.action_message_quote -> {
-                        presenter?.citeMessage(roomType, id, false)
+                        presenter?.citeMessage(roomName, roomType, id, false)
                     }
                     R.id.action_message_copy -> {
                         presenter?.copyMessage(id)
