@@ -268,14 +268,13 @@ class LoginPresenter @Inject constructor(
                 val token = retryIO("login") {
                     when (loginType) {
                         TYPE_LOGIN_USER_EMAIL -> {
-                            if (usernameOrEmail.isEmail()) {
-                                client.loginWithEmail(usernameOrEmail, password)
-                            } else {
-                                if (settings.isLdapAuthenticationEnabled()) {
+                            when {
+                                settings.isLdapAuthenticationEnabled() ->
                                     client.loginWithLdap(usernameOrEmail, password)
-                                } else {
+                                usernameOrEmail.isEmail() ->
+                                    client.loginWithEmail(usernameOrEmail, password)
+                                else ->
                                     client.login(usernameOrEmail, password)
-                                }
                             }
                         }
                         TYPE_LOGIN_CAS -> {

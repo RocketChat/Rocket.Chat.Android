@@ -37,17 +37,16 @@ import timber.log.Timber
 import java.io.File
 
 
-class ImageAttachmentViewHolder(itemView: View,
-                                listener: ActionsListener,
-                                reactionListener: EmojiReactionListener? = null)
-    : BaseViewHolder<ImageAttachmentViewModel>(itemView, listener, reactionListener) {
-
+class ImageAttachmentViewHolder(
+    itemView: View,
+    listener: ActionsListener,
+    reactionListener: EmojiReactionListener? = null
+) : BaseViewHolder<ImageAttachmentViewModel>(itemView, listener, reactionListener) {
     private var cacheKey: CacheKey? = null
 
     init {
         with(itemView) {
             setupActionMenu(attachment_container)
-            setupActionMenu(image_attachment)
         }
     }
 
@@ -64,16 +63,19 @@ class ImageAttachmentViewHolder(itemView: View,
                 // TODO - implement a proper image viewer with a proper Transition
                 // TODO - We should definitely write our own ImageViewer
                 var imageViewer: ImageViewer? = null
-                val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(data.attachmentUrl))
-                    .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
-                    .build()
+                val request =
+                    ImageRequestBuilder.newBuilderWithSource(Uri.parse(data.attachmentUrl))
+                        .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
+                        .build()
 
                 cacheKey = DefaultCacheKeyFactory.getInstance()
                     .getEncodedCacheKey(request, null)
                 val pad = context.resources
                     .getDimensionPixelSize(R.dimen.viewer_toolbar_padding)
-                val lparams = AppBarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT)
+                val lparams = AppBarLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
                 val toolbar = Toolbar(context).also {
                     it.inflateMenu(R.menu.image_actions)
                     it.overflowIcon?.setTint(Color.WHITE)
@@ -99,7 +101,7 @@ class ImageAttachmentViewHolder(itemView: View,
                     val backArrowView = ImageView(context).also {
                         it.setImageResource(R.drawable.ic_arrow_back_white_24dp)
                         it.setOnClickListener { imageViewer?.onDismiss() }
-                        it.setPadding(0, pad ,pad, pad)
+                        it.setPadding(0, pad, pad, pad)
                     }
 
                     val layoutParams = AppBarLayout.LayoutParams(
@@ -114,10 +116,12 @@ class ImageAttachmentViewHolder(itemView: View,
                 val appBarLayout = AppBarLayout(context).also {
                     it.layoutParams = lparams
                     it.setBackgroundColor(Color.BLACK)
-                    it.addView(toolbar, AppBarLayout.LayoutParams(
-                        AppBarLayout.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    ))
+                    it.addView(
+                        toolbar, AppBarLayout.LayoutParams(
+                            AppBarLayout.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                    )
                 }
 
                 val builder = ImageViewer.createPipelineDraweeControllerBuilder()
@@ -145,12 +149,17 @@ class ImageAttachmentViewHolder(itemView: View,
             val imageFormat = ImageFormatChecker.getImageFormat(resource.openStream())
             val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
             val imagePath = Environment.getExternalStoragePublicDirectory(imageDir)
-            val imageFile = File(imagePath, "${cachedFile.nameWithoutExtension}.${imageFormat.fileExtension}")
+            val imageFile =
+                File(imagePath, "${cachedFile.nameWithoutExtension}.${imageFormat.fileExtension}")
             imagePath.mkdirs()
             imageFile.createNewFile()
             try {
                 cachedFile.copyTo(imageFile, true)
-                MediaScannerConnection.scanFile(context, arrayOf(imageFile.absolutePath), null) { path, uri ->
+                MediaScannerConnection.scanFile(
+                    context,
+                    arrayOf(imageFile.absolutePath),
+                    null
+                ) { path, uri ->
                     Timber.i("Scanned $path:")
                     Timber.i("-> uri=$uri")
                 }
@@ -167,16 +176,21 @@ class ImageAttachmentViewHolder(itemView: View,
     }
 
     private fun canWriteToExternalStorage(): Boolean {
-        return AndroidPermissionsHelper.checkPermission(itemView.context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        return AndroidPermissionsHelper.checkPermission(
+            itemView.context,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
     }
 
     private fun checkWritingPermission() {
         val context = itemView.context
         if (context is ContextThemeWrapper && context.baseContext is Activity) {
             val activity = context.baseContext as Activity
-            AndroidPermissionsHelper.requestPermission(activity,
+            AndroidPermissionsHelper.requestPermission(
+                activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE)
+                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE
+            )
         }
     }
 }

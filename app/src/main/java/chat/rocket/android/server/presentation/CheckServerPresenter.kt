@@ -8,6 +8,7 @@ import chat.rocket.android.util.VersionInfo
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatInvalidProtocolException
+import chat.rocket.common.model.ServerInfo
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.serverInfo
 import kotlinx.coroutines.experimental.Deferred
@@ -26,7 +27,13 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
             try {
                 currentServer = serverUrl
                 client = factory.create(currentServer)
-                val version = checkServerVersion(serverUrl).await()
+                val serverInfo = retryIO(description = "serverInfo", times = 5) {
+                    client.serverInfo()
+                }
+                if (serverInfo.redirected) {
+                    view.updateServerUrl(serverInfo.url)
+                }
+                val version = checkServerVersion(serverInfo)
                 when (version) {
                     is Version.VersionOk -> {
                         Timber.i("Your version is nice! (Requires: 0.62.0, Yours: ${version.version})")
@@ -55,23 +62,19 @@ abstract class CheckServerPresenter constructor(private val strategy: CancelStra
         }
     }
 
-    internal fun checkServerVersion(serverUrl: String): Deferred<Version> {
-        currentServer = serverUrl
-        return async {
-            val serverInfo = retryIO(description = "serverInfo", times = 5) { client.serverInfo() }
-            val thisServerVersion = serverInfo.version
-            val isRequiredVersion = isRequiredServerVersion(thisServerVersion)
-            val isRecommendedVersion = isRecommendedServerVersion(thisServerVersion)
-            if (isRequiredVersion) {
-                if (isRecommendedVersion) {
-                    Timber.i("Your version is nice! (Requires: 0.62.0, Yours: $thisServerVersion)")
-                    return@async Version.VersionOk(thisServerVersion)
-                } else {
-                    return@async Version.RecommendedVersionWarning(thisServerVersion)
-                }
+    private fun checkServerVersion(serverInfo: ServerInfo): Version {
+        val thisServerVersion = serverInfo.version
+        val isRequiredVersion = isRequiredServerVersion(thisServerVersion)
+        val isRecommendedVersion = isRecommendedServerVersion(thisServerVersion)
+        return if (isRequiredVersion) {
+            if (isRecommendedVersion) {
+                Timber.i("Your version is nice! (Requires: 0.62.0, Yours: $thisServerVersion)")
+                Version.VersionOk(thisServerVersion)
             } else {
-                return@async Version.OutOfDateError(thisServerVersion)
+                Version.RecommendedVersionWarning(thisServerVersion)
             }
+        } else {
+            Version.OutOfDateError(thisServerVersion)
         }
     }
 

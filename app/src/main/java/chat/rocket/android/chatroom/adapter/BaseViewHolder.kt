@@ -3,6 +3,8 @@ package chat.rocket.android.chatroom.adapter
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.children
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
@@ -16,13 +18,12 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import ru.whalemare.sheetmenu.extension.inflate
 import ru.whalemare.sheetmenu.extension.toList
 
-
 abstract class BaseViewHolder<T : BaseViewModel<*>>(
-        itemView: View,
-        private val listener: ActionsListener,
-        var reactionListener: EmojiReactionListener? = null
+    itemView: View,
+    private val listener: ActionsListener,
+    var reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.ViewHolder(itemView),
-        MenuItem.OnMenuItemClickListener {
+    MenuItem.OnMenuItemClickListener {
     var data: T? = null
 
     init {
@@ -74,23 +75,36 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
         fun onActionSelected(item: MenuItem, message: Message)
     }
 
-    val longClickListener = { view: View ->
+    private val onClickListener = { view: View ->
         if (data?.message?.isSystemMessage() == false) {
-            val menuItems = view.context.inflate(R.menu.message_actions).toList()
-            menuItems.find { it.itemId == R.id.action_menu_msg_pin_unpin }?.apply {
-                val isPinned = data?.message?.pinned ?: false
-                setTitle(if (isPinned) R.string.action_msg_unpin else R.string.action_msg_pin)
-                isChecked = isPinned
+            data?.message?.let {
+                val menuItems = view.context.inflate(R.menu.message_actions).toList()
+                menuItems.find { it.itemId == R.id.action_message_unpin }?.apply {
+                    setTitle(if (it.pinned) R.string.action_msg_unpin else R.string.action_msg_pin)
+                    isChecked = it.pinned
+                }
+
+                menuItems.find { it.itemId == R.id.action_message_star }?.apply {
+                    val isStarred = it.starred?.isNotEmpty() ?: false
+                    setTitle(if (isStarred) R.string.action_msg_unstar else R.string.action_msg_star)
+                    isChecked = isStarred
+                }
+                val adapter = ActionListAdapter(menuItems, this@BaseViewHolder)
+                BottomSheetMenu(adapter).show(view.context)
             }
-            val adapter = ActionListAdapter(menuItems, this@BaseViewHolder)
-            BottomSheetMenu(adapter).show(view.context)
         }
-        true
     }
 
     internal fun setupActionMenu(view: View) {
         if (listener.isActionsEnabled()) {
-            view.setOnLongClickListener(longClickListener)
+            view.setOnClickListener(onClickListener)
+            if (view is ViewGroup) {
+                for (child in view.children) {
+                    if (child !is RecyclerView && child.id != R.id.recycler_view_reactions) {
+                        setupActionMenu(child)
+                    }
+                }
+            }
         }
     }
 

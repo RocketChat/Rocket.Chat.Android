@@ -13,16 +13,32 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
+import chat.rocket.android.chatroom.domain.MessageReply
+import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.ChatRoomsInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.baseUrl
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
 import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
 import chat.rocket.core.model.Value
-import chat.rocket.core.model.attachment.*
+import chat.rocket.core.model.attachment.Attachment
+import chat.rocket.core.model.attachment.AudioAttachment
+import chat.rocket.core.model.attachment.AuthorAttachment
+import chat.rocket.core.model.attachment.ColorAttachment
+import chat.rocket.core.model.attachment.FileAttachment
+import chat.rocket.core.model.attachment.GenericFileAttachment
+import chat.rocket.core.model.attachment.ImageAttachment
+import chat.rocket.core.model.attachment.MessageAttachment
+import chat.rocket.core.model.attachment.VideoAttachment
 import chat.rocket.core.model.isSystemMessage
 import chat.rocket.core.model.url.Url
 import kotlinx.coroutines.experimental.CommonPool
@@ -34,6 +50,8 @@ import javax.inject.Inject
 class ViewModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,
+    private val roomsInteractor: ChatRoomsInteractor,
+    private val messageHelper: MessageHelper,
     tokenRepository: TokenRepository,
     serverInteractor: GetCurrentServerInteractor,
     getSettingsInteractor: GetSettingsInteractor,
@@ -47,21 +65,24 @@ class ViewModelMapper @Inject constructor(
     private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
     private val secondaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
 
-    suspend fun map(message: Message): List<BaseViewModel<*>> {
-        return translate(message)
+    suspend fun map(message: Message, roomViewModel: RoomViewModel = RoomViewModel(
+        roles = emptyList(), isBroadcast = true)): List<BaseViewModel<*>> {
+        return translate(message, roomViewModel)
     }
 
-    suspend fun map(messages: List<Message>): List<BaseViewModel<*>> = withContext(CommonPool) {
+    suspend fun map(messages: List<Message>, roomViewModel: RoomViewModel = RoomViewModel(
+        roles = emptyList(), isBroadcast = true)): List<BaseViewModel<*>> = withContext(CommonPool) {
         val list = ArrayList<BaseViewModel<*>>(messages.size)
 
         messages.forEach {
-            list.addAll(translate(it))
+            list.addAll(translate(it, roomViewModel))
         }
 
         return@withContext list
     }
 
-    private suspend fun translate(message: Message): List<BaseViewModel<*>> = withContext(CommonPool) {
+    private suspend fun translate(message: Message, roomViewModel: RoomViewModel)
+        : List<BaseViewModel<*>> = withContext(CommonPool) {
         val list = ArrayList<BaseViewModel<*>>()
 
         message.urls?.forEach {
@@ -86,7 +107,38 @@ class ViewModelMapper @Inject constructor(
             list[i].nextDownStreamMessage = next
         }
 
+        if (isBroadcastReplyAvailable(roomViewModel, message)) {
+            roomsInteractor.getById(currentServer, message.roomId)?.let { chatRoom ->
+                val replyViewModel = mapMessageReply(message, chatRoom)
+                list.first().nextDownStreamMessage = replyViewModel
+                list.add(0, replyViewModel)
+            }
+        }
+
         return@withContext list
+    }
+
+    private fun isBroadcastReplyAvailable(roomViewModel: RoomViewModel, message: Message): Boolean {
+        val senderUsername = message.sender?.username
+        return roomViewModel.isRoom && roomViewModel.isBroadcast &&
+            !message.isSystemMessage() &&
+            senderUsername != currentUsername
+    }
+
+    private fun mapMessageReply(message: Message, chatRoom: ChatRoom): MessageReplyViewModel {
+        val name = message.sender?.name
+        val roomName = if (settings.useRealName() && name != null) name else message.sender?.username
+            ?: ""
+        val permalink = messageHelper.createPermalink(message, chatRoom)
+        return MessageReplyViewModel(
+            messageId = message.id,
+            isTemporary = false,
+            reactions = emptyList(),
+            message = message,
+            preview = mapMessagePreview(message),
+            rawData = MessageReply(roomName = roomName, permalink = permalink),
+            nextDownStreamMessage = null
+        )
     }
 
     private fun mapUrl(message: Message, url: Url): BaseViewModel<*>? {
@@ -322,6 +374,10 @@ class ViewModelMapper @Inject constructor(
             is MessageType.RoomNameChanged -> context.getString(R.string.message_room_name_changed, message.message, message.sender?.username)
             is MessageType.UserRemoved -> context.getString(R.string.message_user_removed_by, message.message, message.sender?.username)
             is MessageType.MessagePinned -> context.getString(R.string.message_pinned)
+            is MessageType.UserMuted -> context.getString(R.string.message_muted, message.message, message.sender?.username)
+            is MessageType.UserUnMuted -> context.getString(R.string.message_unmuted, message.message, message.sender?.username)
+            is MessageType.SubscriptionRoleAdded -> context.getString(R.string.message_role_add, message.message, message.role, message.sender?.username)
+            is MessageType.SubscriptionRoleRemoved -> context.getString(R.string.message_role_removed, message.message, message.role, message.sender?.username)
             else -> {
                 throw InvalidParameterException("Invalid message type: ${message.type}")
             }

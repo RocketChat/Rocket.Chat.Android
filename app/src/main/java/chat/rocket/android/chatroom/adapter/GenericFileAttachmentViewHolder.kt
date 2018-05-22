@@ -17,10 +17,8 @@ class GenericFileAttachmentViewHolder(itemView: View,
     init {
         with(itemView) {
             setupActionMenu(file_attachment_container)
-            setupActionMenu(text_file_name)
         }
     }
-
 
     override fun bindViews(data: GenericFileAttachmentViewModel) {
         with(itemView) {
