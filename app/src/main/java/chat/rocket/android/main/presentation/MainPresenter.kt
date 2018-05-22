@@ -177,6 +177,7 @@ class MainPresenter @Inject constructor(
         if (pushToken != null) {
             try {
                 retryIO("unregisterPushToken") { client.unregisterPushToken(pushToken) }
+                view.invalidateToken(pushToken)
             } catch (ex: Exception) {
                 Timber.d(ex, "Error unregistering push token")
             }
