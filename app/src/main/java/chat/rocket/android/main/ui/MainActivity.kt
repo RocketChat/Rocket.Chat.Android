@@ -134,6 +134,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
                 .show()
     }
 
+    override fun invalidateToken(token: String) {
+        InstanceID.getInstance(this).deleteToken(token, GoogleCloudMessaging.INSTANCE_ID_SCOPE)
+    }
+
     private fun setupAccountsList(header: View, accounts: List<Account>) {
         accounts_list.layoutManager = LinearLayoutManager(this)
         accounts_list.adapter = AccountsAdapter(accounts, object : Selector {
