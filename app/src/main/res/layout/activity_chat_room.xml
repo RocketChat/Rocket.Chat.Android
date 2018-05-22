@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/layout_app_bar"
-        layout="@layout/app_bar" />
+        layout="@layout/app_bar_chat_room" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

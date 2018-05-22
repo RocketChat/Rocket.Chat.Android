@@ -2,7 +2,7 @@ package chat.rocket.android.favoritemessages.presentation
 
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.server.domain.GetChatRoomsInteractor
+import chat.rocket.android.server.domain.ChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
@@ -16,7 +16,7 @@ class FavoriteMessagesPresenter @Inject constructor(
     private val view: FavoriteMessagesView,
     private val strategy: CancelStrategy,
     private val serverInteractor: GetCurrentServerInteractor,
-    private val roomsInteractor: GetChatRoomsInteractor,
+    private val roomsInteractor: ChatRoomsInteractor,
     private val mapper: ViewModelMapper,
     factory: RocketChatClientFactory
 ) {
