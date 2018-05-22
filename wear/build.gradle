@@ -4,13 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
 
-
     defaultConfig {
         applicationId "chat.rocket.android.wear"
         minSdkVersion 23
         targetSdkVersion versions.targetSdk
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -28,11 +27,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation libraries.kotlin
-    implementation 'com.google.android.support:wearable:2.3.0'
-    implementation 'com.google.android.gms:play-services-wearable:15.0.1'
-    implementation 'com.android.support:percent:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:wear:26.1.0'
+    implementation libraries.wearable
+    implementation libraries.playServicesWearable
+    implementation libraries.percentLayout
+    implementation libraries.supportWearable
+    implementation libraries.wearableRecyclerView
+    implementation libraries.wearSupport
     compileOnly 'com.google.android.wearable:wearable:2.3.0'
 }
