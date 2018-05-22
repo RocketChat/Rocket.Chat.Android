@@ -144,16 +144,18 @@ class SignupFragment : Fragment(), SignupView {
     }
 
     private fun saveCredentials() {
-        Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
-            object : ResolvingResultCallbacks<Status>(activity!!, SAVE_CREDENTIALS) {
-                override fun onSuccess(status: Status) {
-                    Timber.d("save:SUCCESS:$status")
-                }
+        activity?.let {
+            Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
+                object : ResolvingResultCallbacks<Status>(it, SAVE_CREDENTIALS) {
+                    override fun onSuccess(status: Status) {
+                        Timber.d("save:SUCCESS:$status")
+                    }
 
-                override fun onUnresolvableFailure(status: Status) {
-                    Timber.e("save:FAILURE:$status")
-                }
-            })
+                    override fun onUnresolvableFailure(status: Status) {
+                        Timber.e("save:FAILURE:$status")
+                    }
+                })
+        }
     }
 
     override fun showLoading() {

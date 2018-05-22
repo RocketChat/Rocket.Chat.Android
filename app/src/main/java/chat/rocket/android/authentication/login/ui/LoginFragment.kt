@@ -9,6 +9,7 @@ import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -117,65 +118,60 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                REQUEST_CODE_FOR_CAS -> data?.apply {
-                    presenter.authenticateWithCas(getStringExtra(INTENT_CAS_TOKEN))
-                }
-                REQUEST_CODE_FOR_OAUTH -> {
-                    isOauthSuccessful = true
-                    data?.apply {
-                        presenter.authenticateWithOauth(
-                            getStringExtra(INTENT_OAUTH_CREDENTIAL_TOKEN),
-                            getStringExtra(INTENT_OAUTH_CREDENTIAL_SECRET)
-                        )
+            if (data != null) {
+                when (requestCode) {
+                    REQUEST_CODE_FOR_CAS -> data.apply {
+                        presenter.authenticateWithCas(getStringExtra(INTENT_CAS_TOKEN))
                     }
-                }
-                MULTIPLE_CREDENTIALS_READ -> {
-                    val loginCredentials: Credential =
-                        data!!.getParcelableExtra(Credential.EXTRA_KEY)
-                    handleCredential(loginCredentials)
-                }
-                NO_CREDENTIALS_EXIST -> {
-                    //use the hints to autofill sign in forms to reduce the info to be filled
-                    val loginCredentials: Credential =
-                        data!!.getParcelableExtra(Credential.EXTRA_KEY)
-                    val email = loginCredentials.id
-                    val password = loginCredentials.password
+                    REQUEST_CODE_FOR_OAUTH -> {
+                        isOauthSuccessful = true
+                        data.apply {
+                            presenter.authenticateWithOauth(
+                                getStringExtra(INTENT_OAUTH_CREDENTIAL_TOKEN),
+                                getStringExtra(INTENT_OAUTH_CREDENTIAL_SECRET)
+                            )
+                        }
+                    }
+                    MULTIPLE_CREDENTIALS_READ -> {
+                        val loginCredentials: Credential =
+                            data.getParcelableExtra(Credential.EXTRA_KEY)
+                        handleCredential(loginCredentials)
+                    }
+                    NO_CREDENTIALS_EXIST -> {
+                        //use the hints to autofill sign in forms to reduce the info to be filled
+                        val loginCredentials: Credential =
+                            data.getParcelableExtra(Credential.EXTRA_KEY)
+                        val email = loginCredentials.id
+                        val password = loginCredentials.password
 
-                    text_username_or_email.setText(email)
-                    text_password.setText(password)
+                        text_username_or_email.setText(email)
+                        text_password.setText(password)
+                    }
+                    SAVE_CREDENTIALS -> Toast.makeText(
+                        context,
+                        getString(R.string.message_credentials_saved_successfully),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                SAVE_CREDENTIALS -> Toast.makeText(
-                    context,
-                    getString(R.string.message_credentials_saved_successfully),
-                    Toast.LENGTH_SHORT
-                ).show()
             }
-        } else if (requestCode == SAVE_CREDENTIALS) {
-            Timber.e("ERROR: Cancelled by user")
-        } else if (requestCode == MULTIPLE_CREDENTIALS_READ) {
-            Timber.e("ERROR: Failed reading credentials")
         }
         //cancel button pressed by the user in case of reading from smart lock
         else if (resultCode == Activity.RESULT_CANCELED && requestCode == REQUEST_CODE_FOR_OAUTH) {
             Timber.d("Returned from oauth")
-        }
-        //no hints for user id's exist
-        else if (resultCode == CredentialsApi.ACTIVITY_RESULT_NO_HINTS_AVAILABLE) {
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         googleApiClient.let {
-            it.stopAutoManage(activity!!)
+            activity?.let { it1 -> it.stopAutoManage(it1) }
             it.disconnect()
         }
     }
 
     private fun buildGoogleApiClient() {
         googleApiClient = GoogleApiClient.Builder(context!!)
-            .enableAutoManage(activity!!, {
+            .enableAutoManage(activity as FragmentActivity, {
                 Timber.e("ERROR: Connection to client failed")
             })
             .addConnectionCallbacks(this)
@@ -198,40 +194,39 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
         Auth.CredentialsApi.request(googleApiClient, request)
             .setResultCallback { credentialRequestResult ->
                 val status = credentialRequestResult.status
-                if (status.isSuccess) {
-                    // Auto sign-in success
-                    handleCredential(credentialRequestResult.credential)
-                } else if (status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
-                    resolveResult(status, MULTIPLE_CREDENTIALS_READ)
-                } else if (status.statusCode == CommonStatusCodes.SIGN_IN_REQUIRED) {
-
-                    //build a dialog for possible account hints
-                    val hintRequest: HintRequest = HintRequest.Builder()
-                        .setHintPickerConfig(
-                            CredentialPickerConfig.Builder()
-                                .setShowCancelButton(true)
-                                .build()
-                        )
-                        .setEmailAddressIdentifierSupported(true)
-                        .setAccountTypes(IdentityProviders.GOOGLE)
-                        .build()
-                    val intent: PendingIntent =
-                        Auth.CredentialsApi.getHintPickerIntent(googleApiClient, hintRequest)
-                    try {
-                        startIntentSenderForResult(
-                            intent.intentSender,
-                            NO_CREDENTIALS_EXIST,
-                            null,
-                            0,
-                            0,
-                            0,
-                            null
-                        )
-                    } catch (e: IntentSender.SendIntentException) {
-                        Timber.e("ERROR: Could not start hint picker Intent")
+                when {
+                    status.isSuccess -> handleCredential(credentialRequestResult.credential)
+                    (status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) -> resolveResult(
+                        status,
+                        MULTIPLE_CREDENTIALS_READ
+                    )
+                    (status.statusCode == CommonStatusCodes.SIGN_IN_REQUIRED) -> {
+                        val hintRequest: HintRequest = HintRequest.Builder()
+                            .setHintPickerConfig(
+                                CredentialPickerConfig.Builder()
+                                    .setShowCancelButton(true)
+                                    .build()
+                            )
+                            .setEmailAddressIdentifierSupported(true)
+                            .setAccountTypes(IdentityProviders.GOOGLE)
+                            .build()
+                        val intent: PendingIntent =
+                            Auth.CredentialsApi.getHintPickerIntent(googleApiClient, hintRequest)
+                        try {
+                            startIntentSenderForResult(
+                                intent.intentSender,
+                                NO_CREDENTIALS_EXIST,
+                                null,
+                                0,
+                                0,
+                                0,
+                                null
+                            )
+                        } catch (e: IntentSender.SendIntentException) {
+                            Timber.e("ERROR: Could not start hint picker Intent")
+                        }
                     }
-                } else {
-                    Timber.d("ERROR: nothing happening")
+                    else -> Timber.d("ERROR: nothing happening")
                 }
             }
     }
@@ -240,7 +235,7 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
         if (loginCredentials.accountType == null) {
             presenter.authenticateWithUserAndPassword(
                 loginCredentials.id,
-                loginCredentials.password!!
+                loginCredentials.password.toString()
             )
         }
     }
@@ -259,18 +254,20 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
             return
         }
 
-        Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
-            object : ResolvingResultCallbacks<Status>(activity!!, SAVE_CREDENTIALS) {
-                override fun onSuccess(status: Status) {
-                    Timber.d("credentials save:SUCCESS:$status")
-                    credentialsToBeSaved = null
-                }
+        activity?.let {
+            Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
+                object : ResolvingResultCallbacks<Status>(it, SAVE_CREDENTIALS) {
+                    override fun onSuccess(status: Status) {
+                        Timber.d("credentials save:SUCCESS:$status")
+                        credentialsToBeSaved = null
+                    }
 
-                override fun onUnresolvableFailure(status: Status) {
-                    Timber.e("credentials save:FAILURE:$status")
-                    credentialsToBeSaved = null
-                }
-            })
+                    override fun onUnresolvableFailure(status: Status) {
+                        Timber.e("credentials save:FAILURE:$status")
+                        credentialsToBeSaved = null
+                    }
+                })
+        }
     }
 
     private fun tintEditTextDrawableStart() {
