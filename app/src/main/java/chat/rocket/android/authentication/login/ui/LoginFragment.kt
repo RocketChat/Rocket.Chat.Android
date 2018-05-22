@@ -228,10 +228,10 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
                             null
                         )
                     } catch (e: IntentSender.SendIntentException) {
-                        Timber.e("STATUS", "ERROR: Could not start hint picker Intent", e);
+                        Timber.e("ERROR: Could not start hint picker Intent")
                     }
                 } else {
-                    Timber.d("STATUS", "ERROR: nothing happening")
+                    Timber.d("ERROR: nothing happening")
                 }
             }
     }
@@ -249,7 +249,7 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
         try {
             status.startResolutionForResult(activity, requestCode)
         } catch (e: IntentSender.SendIntentException) {
-            Timber.e("STATUS", "Failed to send Credentials intent.", e)
+            Timber.e("Failed to send Credentials intent")
         }
     }
 
@@ -262,12 +262,12 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
         Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
             object : ResolvingResultCallbacks<Status>(activity!!, SAVE_CREDENTIALS) {
                 override fun onSuccess(status: Status) {
-                    Timber.d("STATUS", "save:SUCCESS:$status")
+                    Timber.d("credentials save:SUCCESS:$status")
                     credentialsToBeSaved = null
                 }
 
                 override fun onUnresolvableFailure(status: Status) {
-                    Timber.w("STATUS", "save:FAILURE:$status")
+                    Timber.e("credentials save:FAILURE:$status")
                     credentialsToBeSaved = null
                 }
             })
