@@ -73,7 +73,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
     override fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>) {
         ui {
             if (recycler_view_pinned.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, null, false)
+                adapter = ChatRoomAdapter(chatRoomType, "", null, false)
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
