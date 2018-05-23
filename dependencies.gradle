@@ -1,15 +1,15 @@
 ext {
     versions = [
             java                  : JavaVersion.VERSION_1_8,
-            compileSdk            : 27,
-            targetSdk             : 27,
+            compileSdk            : "android-P",
+            targetSdk             : 28,
             buildTools            : '27.0.3',
             kotlin                : '1.2.41',
             coroutine             : '0.22.5',
             dokka                 : '0.9.16',
 
             // Main dependencies
-            support               : '27.1.1',
+            support               : '28.0.0-alpha1',
             constraintLayout      : '1.1.0',
             androidKtx            : '0.3',
             dagger                : '2.14.1',

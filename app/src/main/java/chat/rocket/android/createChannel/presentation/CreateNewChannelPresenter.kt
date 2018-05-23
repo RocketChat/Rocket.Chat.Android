@@ -14,17 +14,25 @@ import chat.rocket.core.model.Room
 import javax.inject.Inject
 
 
-class CreateNewChannelPresenter @Inject constructor(private val view: CreateNewChannelView,
-                                                    private val strategy: CancelStrategy,
-                                                    private val serverInteractor: GetCurrentServerInteractor,
-                                                    factory: RocketChatClientFactory) {
+class CreateNewChannelPresenter @Inject constructor(
+    private val view: CreateNewChannelView,
+    private val strategy: CancelStrategy,
+    private val serverInteractor: GetCurrentServerInteractor,
+    factory: RocketChatClientFactory
+) {
     private val client: RocketChatClient = factory.create(serverInteractor.get()!!)
 
-    fun createNewChannel(roomType: RoomType, channelName: String, usersList: List<String>, readOnly: Boolean) {
+    fun createNewChannel(
+        roomType: RoomType,
+        channelName: String,
+        usersList: List<String>,
+        readOnly: Boolean
+    ) {
         launchUI(strategy) {
             view.showLoading()
             try {
-                val channelCreated:Room? = client.createChannel(roomType, channelName, usersList, readOnly)
+                val channelCreated: Room? =
+                    client.createChannel(roomType, channelName, usersList, readOnly)
                 view.showChannelCreatedSuccessfullyMessage()
             } catch (exception: RocketChatException) {
                 exception.message?.let {
