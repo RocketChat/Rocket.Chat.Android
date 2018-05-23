@@ -19,6 +19,10 @@ class MembersAdapter(private val listener: (MemberViewModel) -> Unit) : Recycler
 
     override fun getItemCount(): Int = dataSet.size
 
+    fun reAllocateArrayList(){
+        this.dataSet = ArrayList()
+    }
+
     fun prependData(dataSet: List<MemberViewModel>) {
         this.dataSet = dataSet
         notifyItemRangeInserted(0, dataSet.size)

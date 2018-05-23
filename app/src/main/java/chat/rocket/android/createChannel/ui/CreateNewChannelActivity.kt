@@ -1,10 +1,12 @@
 package chat.rocket.android.createChannel.ui
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import chat.rocket.android.R
+import chat.rocket.android.createChannel.addMembers.ui.AddMembersActivity
 import chat.rocket.android.createChannel.presentation.CreateNewChannelPresenter
 import chat.rocket.android.createChannel.presentation.CreateNewChannelView
 import chat.rocket.android.util.extensions.setVisible
@@ -18,6 +20,10 @@ import javax.inject.Inject
 
 
 class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
+    @Inject
+    lateinit var presenter: CreateNewChannelPresenter
+    private var channelType: String = "public"
+
     override fun showLoading() {
         view_loading.setVisible(true)
         layout_container.alpha = 0.5f
@@ -45,10 +51,6 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
     override fun showGenericErrorMessage() {
         showMessage(getString(R.string.msg_generic_error))
     }
-
-    @Inject
-    lateinit var presenter: CreateNewChannelPresenter
-    private var channelType: String = "public"
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
@@ -94,7 +96,11 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
             placeholder.setImageDrawable(getDrawable(R.drawable.ic_hashtag_black))
 
-            (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(resources.getColor(R.color.colorLightTheme))
+            (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(
+                resources.getColor(
+                    R.color.colorLightTheme
+                )
+            )
             (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.red))
 
             private_channel.background = getDrawable(R.drawable.button_border)
@@ -112,9 +118,16 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
             placeholder.setImageDrawable(getDrawable(R.drawable.ic_room_lock))
 
-            (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(resources.getColor(R.color.red))
+            (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(
+                resources.getColor(
+                    R.color.red
+                )
+            )
             (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.colorLightTheme))
-            (getDrawable(R.drawable.button_solid) as GradientDrawable).setStroke(1, resources.getColor(R.color.red))
+            (getDrawable(R.drawable.button_solid) as GradientDrawable).setStroke(
+                1,
+                resources.getColor(R.color.red)
+            )
 
             private_channel.background = getDrawable(R.drawable.button_border)
             public_channel.background = getDrawable(R.drawable.button_solid)
@@ -125,8 +138,17 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
         toolbar_action_text.setOnClickListener {
             if (toolbar_action_text.isEnabled) {
-                presenter.createNewChannel(roomTypeOf(channelType), channel_name_edit_text.text.toString(), listOf("aniket03"), false)
+                presenter.createNewChannel(
+                    roomTypeOf(channelType),
+                    channel_name_edit_text.text.toString(),
+                    listOf("aniket03"),
+                    false
+                )
             }
+        }
+
+        add_members_view.setOnClickListener {
+            startActivity(Intent(this, AddMembersActivity::class.java))
         }
     }
 }

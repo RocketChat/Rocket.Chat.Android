@@ -146,7 +146,8 @@
             android:id="@+id/add_members_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="?attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -177,7 +178,6 @@
             android:id="@+id/separator_3"
             android:layout_width="0dp"
             android:layout_height="0.5dp"
-            android:layout_marginTop="8dp"
             android:background="@color/colorDividerMessageComposer"
             app:layout_constraintTop_toBottomOf="@id/add_members_view" />
 

@@ -7,5 +7,5 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class AddMembersProvider {
     @ContributesAndroidInjector(modules = [AddMembersModule::class])
-    abstract fun provideNewChannelActivity(): AddMembersActivity
+    abstract fun provideAddMembersActivity(): AddMembersActivity
 }

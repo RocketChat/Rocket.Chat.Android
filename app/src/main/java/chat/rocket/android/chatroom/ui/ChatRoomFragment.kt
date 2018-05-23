@@ -544,7 +544,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onEmojiAdded(emoji: Emoji) {
         val cursorPosition = text_message.selectionStart
         if (cursorPosition > -1) {
-            text_message.text.insert(cursorPosition, EmojiParser.parse(emoji.shortname))
+            text_message.text?.insert(cursorPosition, EmojiParser.parse(emoji.shortname))
             text_message.setSelection(cursorPosition + emoji.unicode.length)
         }
     }
@@ -552,7 +552,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onNonEmojiKeyPressed(keyCode: Int) {
         when (keyCode) {
             KeyEvent.KEYCODE_BACK -> with(text_message) {
-                if (selectionStart > 0) text.delete(selectionStart - 1, selectionStart)
+                if (selectionStart > 0) text!!.delete(selectionStart - 1, selectionStart)
             }
             else -> throw IllegalArgumentException("pressed key not expected")
         }

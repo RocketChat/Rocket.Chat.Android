@@ -4,8 +4,6 @@ import android.arch.lifecycle.LifecycleOwner
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.createChannel.addMembers.presentation.AddMembersView
 import chat.rocket.android.createChannel.addMembers.ui.AddMembersActivity
-import chat.rocket.android.createChannel.presentation.CreateNewChannelView
-import chat.rocket.android.createChannel.ui.CreateNewChannelActivity
 import chat.rocket.android.dagger.scope.PerActivity
 import dagger.Module
 import dagger.Provides
@@ -20,7 +18,7 @@ class AddMembersModule {
 
     @Provides
     @PerActivity
-    fun addMembersView(activity: AddMembersActivity): AddMembersView{
+    fun addMembersView(activity: AddMembersActivity): AddMembersView {
         return activity
     }
 

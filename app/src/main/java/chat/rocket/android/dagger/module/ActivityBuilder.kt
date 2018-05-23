@@ -14,6 +14,8 @@ import chat.rocket.android.chatroom.di.FavoriteMessagesFragmentProvider
 import chat.rocket.android.chatroom.di.PinnedMessagesFragmentProvider
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
+import chat.rocket.android.createChannel.addMembers.di.AddMembersModule
+import chat.rocket.android.createChannel.addMembers.ui.AddMembersActivity
 import chat.rocket.android.createChannel.di.CreateNewChannelModule
 import chat.rocket.android.createChannel.di.CreateNewChannelProvider
 import chat.rocket.android.createChannel.ui.CreateNewChannelActivity
@@ -73,5 +75,9 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [CreateNewChannelModule::class])
     abstract fun bindCreateNewChannelActivity(): CreateNewChannelActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = [AddMembersModule::class])
+    abstract fun bindAddMembersActivity(): AddMembersActivity
 
 }

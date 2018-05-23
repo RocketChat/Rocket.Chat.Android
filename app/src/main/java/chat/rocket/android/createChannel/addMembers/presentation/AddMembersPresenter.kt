@@ -1,5 +1,6 @@
 package chat.rocket.android.createChannel.addMembers.presentation
 
+import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.members.viewmodel.MemberViewModelMapper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -7,7 +8,7 @@ import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
-import chat.rocket.core.RocketChatClient
+import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.queryUsers
 import javax.inject.Inject
 
@@ -23,14 +24,22 @@ class AddMembersPresenter @Inject constructor(
 
     fun queryUsersFromRegex(queryParam: String) {
         if (client != null) {
+            view.showLoading()
             launchUI(strategy) {
                 try {
                     val allMembers = retryIO("queryUsers($queryParam)") {
                         client.queryUsers(queryParam)
                     }
                     val memberViewModelMapper = mapper.mapToViewModelList(allMembers.result)
+                    view.showMembers(memberViewModelMapper, allMembers.total)
                 } catch (ex: RocketChatException) {
-
+                    ex.message?.let {
+                        view.showMessage(it)
+                    }.ifNull {
+                        view.showGenericErrorMessage()
+                    }
+                } finally {
+                    view.hideLoading()
                 }
             }
         }
