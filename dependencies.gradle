@@ -64,6 +64,7 @@ ext {
             daggerProcessor       : "com.google.dagger:dagger-compiler:${versions.dagger}",
             daggerAndroidApt      : "com.google.dagger:dagger-android-processor:${versions.dagger}",
             playServicesGcm       : "com.google.android.gms:play-services-gcm:${versions.playServices}",
+            playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServices}",
             exoPlayer             : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
 
             room                  : "android.arch.persistence.room:runtime:${versions.room}",
