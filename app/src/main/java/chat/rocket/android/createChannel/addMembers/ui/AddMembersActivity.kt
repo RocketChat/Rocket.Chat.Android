@@ -37,9 +37,9 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
             addNewChip(memberViewModel)
             updateToolBar()
             search_view.setText("")
-        }
-        else {
-            Toast.makeText(this, getString(R.string.msg_member_already_added), Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, getString(R.string.msg_member_already_added), Toast.LENGTH_LONG)
+                .show()
         }
     }
     private var linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -51,6 +51,7 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         setUpToolBar()
         setUpRecyclerView()
         setOnClickListeners()
+        setInitialChips()
         observableFromSearchView(search_view)
             .debounce(300, TimeUnit.MILLISECONDS)
             .filter { item -> item.length > 1 }
@@ -74,33 +75,10 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun addNewChip(memberViewModel: MemberViewModel) {
-        val memberChip = Chip(this)
-        memberChip.chipText = memberViewModel.username
-        memberChip.isCloseIconEnabled = true
-        memberChip.setChipBackgroundColorResource(R.color.icon_grey)
-        memberChip.setOnCloseIconClickListener { view ->
-            members_chips.removeView(view)
-            membersToAdd.remove((view as Chip).chipText.toString())
-            updateToolBar()
-        }
-        members_chips.addView(memberChip)
-        memberViewModel.username?.let { membersToAdd.add(it) }
-    }
-
-    private fun updateToolBar() {
-        toolbar_action_text.isEnabled = membersToAdd.isNotEmpty()
-        if (membersToAdd.size == 0) {
-            toolbar_action_text.alpha = 0.8f
-        } else {
-            toolbar_action_text.alpha = 1.0f
-        }
-        toolbar_title.text = getString(R.string.title_add_members, membersToAdd.size)
-    }
-
     override fun showMembers(dataSet: List<MemberViewModel>, total: Long) {
         if (adapter.itemCount == 0) {
             adapter.prependData(dataSet)
+            //TODO work on this part after adding support for count and offset in sdk
 //                if (dataSet.size >= 59) { // TODO Check why the API retorns the specified count -1
 //                    search_results.addOnScrollListener(object :
 //                        EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -139,6 +117,43 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         showMessage(getString(R.string.msg_generic_error))
     }
 
+    private fun setInitialChips() {
+        membersToAdd = intent.getStringArrayListExtra("chips")
+        for (element in membersToAdd) {
+            buildNewChip(element)
+        }
+        updateToolBar()
+    }
+
+    private fun addNewChip(memberViewModel: MemberViewModel) {
+        memberViewModel.username?.let {
+            buildNewChip(it)
+            membersToAdd.add(it)
+        }
+    }
+
+    private fun buildNewChip(chipText: String) {
+        val memberChip = Chip(this)
+        memberChip.chipText = chipText
+        memberChip.isCloseIconEnabled = true
+        memberChip.setChipBackgroundColorResource(R.color.icon_grey)
+        memberChip.setOnCloseIconClickListener { view ->
+            members_chips.removeView(view)
+            membersToAdd.remove((view as Chip).chipText.toString())
+            updateToolBar()
+        }
+        members_chips.addView(memberChip)
+    }
+
+    private fun updateToolBar() {
+        toolbar_action_text.isEnabled = membersToAdd.isNotEmpty()
+        if (membersToAdd.size == 0) {
+            toolbar_action_text.alpha = 0.8f
+        } else {
+            toolbar_action_text.alpha = 1.0f
+        }
+        toolbar_title.text = getString(R.string.title_add_members, membersToAdd.size)
+    }
 
     private fun setUpToolBar() {
         setSupportActionBar(toolbar)
@@ -152,7 +167,6 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         search_results.layoutManager = linearLayoutManager
         search_results.adapter = adapter
         search_results.addItemDecoration(DividerItemDecoration(this))
-
     }
 
     private fun setOnClickListeners() {

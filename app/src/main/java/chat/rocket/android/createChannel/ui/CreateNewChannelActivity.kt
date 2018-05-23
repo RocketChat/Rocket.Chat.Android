@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.support.design.chip.Chip
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
@@ -28,6 +29,36 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
     private var channelType: String = "public"
     private var listOfUsers: ArrayList<String> = ArrayList()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_create_new_channel)
+        setUpToolBar()
+        setUpOnClickListeners()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == ADD_MEMBERS_ACTIVITY_REQUEST_CODE && data != null) {
+                listOfUsers = data.getStringArrayListExtra("members")
+                selected_members_chips.removeAllViews()
+                refreshMembersChips()
+            }
+        }
+    }
+
     override fun showLoading() {
         view_loading.setVisible(true)
         layout_container.alpha = 0.5f
@@ -42,6 +73,8 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
     override fun showChannelCreatedSuccessfullyMessage() {
         showToast(getString(R.string.msg_channel_created_successfully))
+        finish()
+        //TODO check why the activity is not finishing
     }
 
     override fun showMessage(resId: Int) {
@@ -56,32 +89,15 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         showMessage(getString(R.string.msg_generic_error))
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
 
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_new_channel)
-        setUpToolBar()
-        setUpOnClickListeners()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == ADD_MEMBERS_ACTIVITY_REQUEST_CODE && data != null) {
-                listOfUsers = data.getStringArrayListExtra("members")
-                Toast.makeText(this, listOfUsers.size.toString(), Toast.LENGTH_SHORT).show()
-            }
+    private fun refreshMembersChips() {
+        for (element in listOfUsers) {
+            val memberChip = Chip(this)
+            memberChip.chipText = element
+            memberChip.isCloseIconEnabled = false
+            memberChip.isLongClickable = false
+            memberChip.setChipBackgroundColorResource(R.color.icon_grey)
+            selected_members_chips.addView(memberChip)
         }
     }
 
@@ -163,6 +179,7 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
         add_members_view.setOnClickListener {
             val intent = Intent(this, AddMembersActivity::class.java)
+            intent.putExtra("chips", listOfUsers)
             startActivityForResult(intent, ADD_MEMBERS_ACTIVITY_REQUEST_CODE)
         }
     }
