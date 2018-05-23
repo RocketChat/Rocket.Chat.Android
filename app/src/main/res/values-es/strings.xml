@@ -15,6 +15,10 @@
     <string name="title_password">Cambia la contraseña</string>
     <string name="title_update_profile">Actualización del perfil</string>
     <string name="title_about">Acerca de</string>
+    // TODO: Add proper translation.
+    <string name="title_create_new_channel">Create New Channel</string>
+    // TODO: Add proper translation.
+    <string name="title_add_members">Invite Members (%d)</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>"'
@@ -120,6 +124,8 @@
     // TODO: Add proper translation.
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No se han encontrado resultados</string>
+    // TODO: Add proper translation.
+    <string name="msg_member_already_added">You have already selected this user</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>

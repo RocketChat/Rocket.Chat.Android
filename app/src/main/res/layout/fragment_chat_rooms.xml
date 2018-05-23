@@ -64,7 +64,7 @@
         android:layout_alignParentRight="true"
         app:useCompatPadding="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/ic_add_24dp"
+        android:src="@drawable/ic_add_white_24dp"
         app:backgroundTint="@color/black"
         />
 </RelativeLayout>

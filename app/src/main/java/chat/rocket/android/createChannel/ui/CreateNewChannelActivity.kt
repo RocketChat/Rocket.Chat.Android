@@ -1,10 +1,12 @@
 package chat.rocket.android.createChannel.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.createChannel.addMembers.ui.AddMembersActivity
 import chat.rocket.android.createChannel.presentation.CreateNewChannelPresenter
@@ -18,11 +20,13 @@ import kotlinx.android.synthetic.main.activity_create_new_channel.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 import javax.inject.Inject
 
+internal const val ADD_MEMBERS_ACTIVITY_REQUEST_CODE = 1
 
 class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
     @Inject
     lateinit var presenter: CreateNewChannelPresenter
     private var channelType: String = "public"
+    private var listOfUsers: ArrayList<String> = ArrayList()
 
     override fun showLoading() {
         view_loading.setVisible(true)
@@ -71,6 +75,16 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         setUpOnClickListeners()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == ADD_MEMBERS_ACTIVITY_REQUEST_CODE && data != null) {
+                listOfUsers = data.getStringArrayListExtra("members")
+                Toast.makeText(this, listOfUsers.size.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun setUpToolBar() {
         setSupportActionBar(toolbar)
         toolbar_title.text = getString(R.string.title_create_new_channel)
@@ -78,7 +92,7 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         RxTextView.textChanges(channel_name_edit_text).subscribe { text ->
-            toolbar_action_text.isEnabled = text.isNotEmpty()
+            toolbar_action_text.isEnabled = (text.isNotEmpty() && listOfUsers.isNotEmpty())
             if (text.isEmpty()) {
                 toolbar_action_text.alpha = 0.8f
             } else {
@@ -141,14 +155,15 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
                 presenter.createNewChannel(
                     roomTypeOf(channelType),
                     channel_name_edit_text.text.toString(),
-                    listOf("aniket03"),
+                    listOfUsers,
                     false
                 )
             }
         }
 
         add_members_view.setOnClickListener {
-            startActivity(Intent(this, AddMembersActivity::class.java))
+            val intent = Intent(this, AddMembersActivity::class.java)
+            startActivityForResult(intent, ADD_MEMBERS_ACTIVITY_REQUEST_CODE)
         }
     }
 }

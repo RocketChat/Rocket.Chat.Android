@@ -1,9 +1,12 @@
 package chat.rocket.android.createChannel.addMembers.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.chip.Chip
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
 import chat.rocket.android.R
@@ -29,11 +32,15 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
     @Inject
     lateinit var presenter: AddMembersPresenter
     private var membersToAdd: ArrayList<String> = ArrayList()
-
     private val adapter: MembersAdapter = MembersAdapter { memberViewModel ->
-        addNewChip(memberViewModel)
-        updateToolBar()
-        search_view.setText("")
+        if (!membersToAdd.contains(memberViewModel.username)) {
+            addNewChip(memberViewModel)
+            updateToolBar()
+            search_view.setText("")
+        }
+        else {
+            Toast.makeText(this, getString(R.string.msg_member_already_added), Toast.LENGTH_LONG).show()
+        }
     }
     private var linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
@@ -43,6 +50,7 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         setContentView(R.layout.activity_add_members)
         setUpToolBar()
         setUpRecyclerView()
+        setOnClickListeners()
         observableFromSearchView(search_view)
             .debounce(300, TimeUnit.MILLISECONDS)
             .filter { item -> item.length > 1 }
@@ -53,6 +61,17 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
                     presenter.queryUsersFromRegex(query)
                 }
             }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun addNewChip(memberViewModel: MemberViewModel) {
@@ -67,10 +86,15 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         }
         members_chips.addView(memberChip)
         memberViewModel.username?.let { membersToAdd.add(it) }
-        Toast.makeText(this, membersToAdd.size.toString(), Toast.LENGTH_SHORT).show()
     }
 
     private fun updateToolBar() {
+        toolbar_action_text.isEnabled = membersToAdd.isNotEmpty()
+        if (membersToAdd.size == 0) {
+            toolbar_action_text.alpha = 0.8f
+        } else {
+            toolbar_action_text.alpha = 1.0f
+        }
         toolbar_title.text = getString(R.string.title_add_members, membersToAdd.size)
     }
 
@@ -129,6 +153,17 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         search_results.adapter = adapter
         search_results.addItemDecoration(DividerItemDecoration(this))
 
+    }
+
+    private fun setOnClickListeners() {
+        toolbar_action_text.setOnClickListener { view ->
+            if (view.isEnabled) {
+                val intent = Intent()
+                intent.putExtra("members", membersToAdd)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
+        }
     }
 
     private fun observableFromSearchView(searchView: EditText): Observable<String> {

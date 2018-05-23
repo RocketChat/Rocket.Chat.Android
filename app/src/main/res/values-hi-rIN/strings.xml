@@ -16,6 +16,10 @@
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
+    // TODO: Add proper translation.
+    <string name="title_create_new_channel">Create New Channel</string>
+    // TODO: Add proper translation.
+    <string name="title_add_members">Invite Members (%d)</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -122,6 +126,8 @@
     // TODO: Add proper translation.
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
+    // TODO: Add proper translation.
+    <string name="msg_member_already_added">You have already selected this user</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
