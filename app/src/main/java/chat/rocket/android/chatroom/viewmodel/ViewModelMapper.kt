@@ -120,7 +120,7 @@ class ViewModelMapper @Inject constructor(
 
     private fun isBroadcastReplyAvailable(roomViewModel: RoomViewModel, message: Message): Boolean {
         val senderUsername = message.sender?.username
-        return roomViewModel.isBroadcast &&
+        return roomViewModel.isRoom && roomViewModel.isBroadcast &&
             !message.isSystemMessage() &&
             senderUsername != currentUsername
     }
