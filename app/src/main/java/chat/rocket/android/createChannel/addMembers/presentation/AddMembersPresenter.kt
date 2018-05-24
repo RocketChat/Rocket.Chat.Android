@@ -22,13 +22,13 @@ class AddMembersPresenter @Inject constructor(
     val serverUrl: String? = serverInteractor.get()
     private val client = if (serverUrl != null) factory.create(serverUrl) else null
 
-    fun queryUsersFromRegex(queryParam: String) {
+    fun queryUsersFromRegex(queryParam: String, offset: Long = 0) {
         if (client != null) {
             view.showLoading()
             launchUI(strategy) {
                 try {
                     val allMembers = retryIO("queryUsers($queryParam)") {
-                        client.queryUsers(queryParam)
+                        client.queryUsers(queryParam, 60, offset)
                     }
                     val memberViewModelMapper = mapper.mapToViewModelList(allMembers.result)
                     view.showMembers(memberViewModelMapper, allMembers.total)

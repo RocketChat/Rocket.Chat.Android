@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.design.chip.Chip
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.createChannel.addMembers.ui.AddMembersActivity
 import chat.rocket.android.createChannel.presentation.CreateNewChannelPresenter

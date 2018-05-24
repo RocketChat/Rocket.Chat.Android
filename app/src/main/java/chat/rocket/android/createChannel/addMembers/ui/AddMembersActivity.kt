@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.support.design.chip.Chip
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.createChannel.addMembers.presentation.AddMembersPresenter
 import chat.rocket.android.createChannel.addMembers.presentation.AddMembersView
+import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.viewmodel.MemberViewModel
 import chat.rocket.android.util.extensions.setVisible
@@ -31,6 +33,7 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
 
     @Inject
     lateinit var presenter: AddMembersPresenter
+    private lateinit var queryParam: String
     private var membersToAdd: ArrayList<String> = ArrayList()
     private val adapter: MembersAdapter = MembersAdapter { memberViewModel ->
         if (!membersToAdd.contains(memberViewModel.username)) {
@@ -54,9 +57,10 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         setInitialChips()
         observableFromSearchView(search_view)
             .debounce(300, TimeUnit.MILLISECONDS)
-            .filter { item -> item.length > 1 }
+            .filter { item -> item.isNotEmpty() }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { query ->
+                queryParam = query
                 run {
                     adapter.reAllocateArrayList()
                     presenter.queryUsersFromRegex(query)
@@ -78,19 +82,18 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
     override fun showMembers(dataSet: List<MemberViewModel>, total: Long) {
         if (adapter.itemCount == 0) {
             adapter.prependData(dataSet)
-            //TODO work on this part after adding support for count and offset in sdk
-//                if (dataSet.size >= 59) { // TODO Check why the API retorns the specified count -1
-//                    search_results.addOnScrollListener(object :
-//                        EndlessRecyclerViewScrollListener(linearLayoutManager) {
-//                        override fun onLoadMore(
-//                            page: Int,
-//                            totalItemsCount: Int,
-//                            recyclerView: RecyclerView?
-//                        ) {
-//                            presenter.loadChatRoomsMembers(chatRoomId, chatRoomType, page * 60L)
-//                        }
-//                    })
-//                }
+            if (dataSet.size >= 59) {
+                search_results.addOnScrollListener(object :
+                    EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                    override fun onLoadMore(
+                        page: Int,
+                        totalItemsCount: Int,
+                        recyclerView: RecyclerView?
+                    ) {
+                        presenter.queryUsersFromRegex(queryParam, page * 60L)
+                    }
+                })
+            }
         } else {
             adapter.appendData(dataSet)
         }
