@@ -1,48 +1,17 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.Manifest
-import android.app.Activity
-import android.graphics.Color
-import android.graphics.Typeface
-import android.media.MediaScannerConnection
-import android.net.Uri
-import android.os.Environment
-import android.support.design.widget.AppBarLayout
-import android.support.v7.widget.Toolbar
-import android.text.TextUtils
-import android.util.TypedValue
-import android.view.ContextThemeWrapper
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.setPadding
-import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
-import chat.rocket.android.helper.AndroidPermissionsHelper
+import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.widget.emoji.EmojiReactionListener
-import com.facebook.binaryresource.FileBinaryResource
-import com.facebook.cache.common.CacheKey
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.imageformat.ImageFormatChecker
-import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory
-import com.facebook.imagepipeline.core.ImagePipelineFactory
-import com.facebook.imagepipeline.request.ImageRequest
-import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.android.synthetic.main.message_attachment.view.*
-import timber.log.Timber
-import java.io.File
-
 
 class ImageAttachmentViewHolder(
     itemView: View,
     listener: ActionsListener,
     reactionListener: EmojiReactionListener? = null
 ) : BaseViewHolder<ImageAttachmentViewModel>(itemView, listener, reactionListener) {
-    private var cacheKey: CacheKey? = null
 
     init {
         with(itemView) {
@@ -59,138 +28,13 @@ class ImageAttachmentViewHolder(
             }.build()
             image_attachment.controller = controller
             file_name.text = data.attachmentTitle
-            image_attachment.setOnClickListener { view ->
-                // TODO - implement a proper image viewer with a proper Transition
-                // TODO - We should definitely write our own ImageViewer
-                var imageViewer: ImageViewer? = null
-                val request =
-                    ImageRequestBuilder.newBuilderWithSource(Uri.parse(data.attachmentUrl))
-                        .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
-                        .build()
-
-                cacheKey = DefaultCacheKeyFactory.getInstance()
-                    .getEncodedCacheKey(request, null)
-                val pad = context.resources
-                    .getDimensionPixelSize(R.dimen.viewer_toolbar_padding)
-                val lparams = AppBarLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+            image_attachment.setOnClickListener {
+                ImageHelper.openImage(
+                    it.context,
+                    data.attachmentUrl,
+                    data.attachmentTitle.toString()
                 )
-                val toolbar = Toolbar(context).also {
-                    it.inflateMenu(R.menu.image_actions)
-                    it.overflowIcon?.setTint(Color.WHITE)
-                    it.setOnMenuItemClickListener {
-                        return@setOnMenuItemClickListener when (it.itemId) {
-                            R.id.action_save_image -> saveImage()
-                            else -> super.onMenuItemClick(it)
-                        }
-                    }
-
-                    val titleSize = context.resources
-                        .getDimensionPixelSize(R.dimen.viewer_toolbar_title)
-                    val titleTextView = TextView(context).also {
-                        it.text = data.attachmentTitle
-                        it.setTextColor(Color.WHITE)
-                        it.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize.toFloat())
-                        it.ellipsize = TextUtils.TruncateAt.END
-                        it.setSingleLine()
-                        it.typeface = Typeface.DEFAULT_BOLD
-                        it.setPadding(pad)
-                    }
-
-                    val backArrowView = ImageView(context).also {
-                        it.setImageResource(R.drawable.ic_arrow_back_white_24dp)
-                        it.setOnClickListener { imageViewer?.onDismiss() }
-                        it.setPadding(0, pad, pad, pad)
-                    }
-
-                    val layoutParams = AppBarLayout.LayoutParams(
-                        AppBarLayout.LayoutParams.WRAP_CONTENT,
-                        AppBarLayout.LayoutParams.WRAP_CONTENT
-                    )
-
-                    it.addView(backArrowView, layoutParams)
-                    it.addView(titleTextView, layoutParams)
-                }
-
-                val appBarLayout = AppBarLayout(context).also {
-                    it.layoutParams = lparams
-                    it.setBackgroundColor(Color.BLACK)
-                    it.addView(
-                        toolbar, AppBarLayout.LayoutParams(
-                            AppBarLayout.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
-                    )
-                }
-
-                val builder = ImageViewer.createPipelineDraweeControllerBuilder()
-                    .setImageRequest(request)
-                    .setAutoPlayAnimations(true)
-                imageViewer = ImageViewer.Builder(view.context, listOf(data.attachmentUrl))
-                    .setOverlayView(appBarLayout)
-                    .setStartPosition(0)
-                    .hideStatusBar(false)
-                    .setCustomDraweeControllerBuilder(builder)
-                    .show()
             }
-        }
-    }
-
-    private fun saveImage(): Boolean {
-        if (!canWriteToExternalStorage()) {
-            checkWritingPermission()
-            return false
-        }
-        if (ImagePipelineFactory.getInstance().mainFileCache.hasKey(cacheKey)) {
-            val context = itemView.context
-            val resource = ImagePipelineFactory.getInstance().mainFileCache.getResource(cacheKey)
-            val cachedFile = (resource as FileBinaryResource).file
-            val imageFormat = ImageFormatChecker.getImageFormat(resource.openStream())
-            val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
-            val imagePath = Environment.getExternalStoragePublicDirectory(imageDir)
-            val imageFile =
-                File(imagePath, "${cachedFile.nameWithoutExtension}.${imageFormat.fileExtension}")
-            imagePath.mkdirs()
-            imageFile.createNewFile()
-            try {
-                cachedFile.copyTo(imageFile, true)
-                MediaScannerConnection.scanFile(
-                    context,
-                    arrayOf(imageFile.absolutePath),
-                    null
-                ) { path, uri ->
-                    Timber.i("Scanned $path:")
-                    Timber.i("-> uri=$uri")
-                }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                val message = context.getString(R.string.msg_image_saved_failed)
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            } finally {
-                val message = context.getString(R.string.msg_image_saved_successfully)
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            }
-        }
-        return true
-    }
-
-    private fun canWriteToExternalStorage(): Boolean {
-        return AndroidPermissionsHelper.checkPermission(
-            itemView.context,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-    }
-
-    private fun checkWritingPermission() {
-        val context = itemView.context
-        if (context is ContextThemeWrapper && context.baseContext is Activity) {
-            val activity = context.baseContext as Activity
-            AndroidPermissionsHelper.requestPermission(
-                activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE
-            )
         }
     }
 }

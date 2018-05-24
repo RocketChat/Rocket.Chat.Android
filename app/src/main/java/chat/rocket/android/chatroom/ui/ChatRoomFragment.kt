@@ -230,13 +230,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_members_list -> {
-                presenter.toMembersList(chatRoomId, chatRoomType)
+                presenter.toMembersList(chatRoomId)
             }
             R.id.action_pinned_messages -> {
-                presenter.toPinnedMessageList(chatRoomId, chatRoomType)
+                presenter.toPinnedMessageList(chatRoomId)
             }
             R.id.action_favorite_messages -> {
-                presenter.toFavoriteMessageList(chatRoomId, chatRoomType)
+                presenter.toFavoriteMessageList(chatRoomId)
+            }
+            R.id.action_files -> {
+                presenter.toFileList(chatRoomId)
             }
         }
         return true

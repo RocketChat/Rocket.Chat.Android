@@ -22,7 +22,7 @@
         android:id="@+id/audio_video_attachment"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="@color/black"
+        android:background="@color/colorBlack"
         android:visibility="gone"
         tools:visibility="visible">
 

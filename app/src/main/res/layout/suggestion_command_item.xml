@@ -18,7 +18,7 @@
         android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/black"
+        android:textColor="@color/colorBlack"
         android:textSize="14sp"
         tools:text="/leave" />
 
