@@ -73,6 +73,7 @@ dependencies {
     kapt libraries.daggerAndroidApt
 
     implementation libraries.playServicesGcm
+    implementation libraries.playServicesAuth
 
     implementation libraries.room
     kapt libraries.roomProcessor
