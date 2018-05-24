@@ -136,6 +136,9 @@
     <string name="message_unmuted">Utilisateur %1$s non muté par %2$s</string>
     <string name="message_role_add">%1$s a été défini %2$s par %3$s</string>
     <string name="message_role_removed">%1$s is no longer %2$s par %3$s</string>
+    // TODO:Add proper translation.
+    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>

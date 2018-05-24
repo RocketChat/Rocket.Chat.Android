@@ -138,6 +138,9 @@
     <string name="message_unmuted">उपयोगकर्ता %1$s %2$s द्वारा अनम्यूट किया गया</string>
     <string name="message_role_add">%1$s %3$s द्वारा %2$s सेट किया गया था</string>
     <string name="message_role_removed">%1$s अब %3$s द्वारा %2$s नहीं है</string>
+    // TODO:Add proper translation.
+    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+
 
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
