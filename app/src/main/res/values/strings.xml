@@ -127,6 +127,7 @@
     <string name="message_unmuted">User %1$s unmuted by %2$s</string>
     <string name="message_role_add">%1$s was set %2$s by %3$s</string>
     <string name="message_role_removed">%1$s is no longer %2$s by %3$s</string>
+    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
