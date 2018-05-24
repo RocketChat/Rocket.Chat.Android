@@ -25,6 +25,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textDirection="locale"
         tools:text="This is a very, very, very long filename, to test how the layout will work on very very very long filenames.pdf" />
 
     <include
