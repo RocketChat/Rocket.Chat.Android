@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:textColor="@color/black"
+        android:textColor="@color/colorBlack"
         android:textSize="16sp"
         tools:text="@tools:sample/full_names" />
 

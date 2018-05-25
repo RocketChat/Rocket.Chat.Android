@@ -3,13 +3,13 @@
 
     <!-- Main colors -->
     <color name="colorPrimary">#FF303030</color> <!-- Material Grey 850 -->
-    <color name="colorPrimaryDark">#ff212121</color> <!-- Material Grey 900 -->
+    <color name="colorPrimaryDark">#FF212121</color> <!-- Material Grey 900 -->
     <color name="colorAccent">#FF1976D2</color> <!-- Material Blue 700 -->
 
     <!-- Text colors -->
     <color name="colorPrimaryText">#DE000000</color>
-    <color name="colorSecondaryText">#787878</color>
-    <color name="colorSecondaryTextLight">#c1c1c1</color>
+    <color name="colorSecondaryText">#FF787878</color>
+    <color name="colorSecondaryTextLight">#FFC1C1C1</color>
 
     <!-- User status colors -->
     <color name="colorUserStatusOnline">#2FE1A8</color>
@@ -17,7 +17,16 @@
     <color name="colorUserStatusAway">#FDD236</color>
     <color name="colorUserStatusOffline">#d9d9d9</color>
 
-    <color name="ic_launcher_background">#FFFFFF</color>
+    <!-- Normal colors -->
+    <color name="colorWhite">#FFFFFFFF</color>
+    <color name="colorBlack">#FF000000</color>
+    <color name="colorRed">#FFFF0000</color>
+
+    <color name="darkGray">#FFa0a0a0</color>
+    <color name="actionMenuColor">#FF727272</color>
+    <color name="whitesmoke">#FFf1f1f1</color>
+
+    <color name="ic_launcher_background">@color/colorWhite</color>
 
     <color name="colorDrawableTintGrey">#9FA2A8</color>
 
@@ -29,13 +38,6 @@
 
     <color name="colorBackgroundMemberContainer">#4D000000</color>
 
-    <color name="white">#FFFFFFFF</color>
-    <color name="black">#FF000000</color>
-    <color name="red">#FFFF0000</color>
-    <color name="darkGray">#FFa0a0a0</color>
-    <color name="actionMenuColor">#FF727272</color>
-    <color name="whitesmoke">#FFf1f1f1</color>
-
     <color name="translucent_white">#70F1F1F1</color>
 
     <color name="colorEmojiIcon">#FF767676</color>
@@ -43,7 +45,7 @@
     <color name="quoteBar">#A0A0A0</color>
 
     <!-- Suggestions -->
-    <color name="suggestion_background_color">@android:color/white</color>
+    <color name="suggestion_background_color">@color/colorWhite</color>
 
     <color name="icon_grey">#AFADAF</color>
 

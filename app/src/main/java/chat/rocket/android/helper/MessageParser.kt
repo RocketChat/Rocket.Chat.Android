@@ -93,7 +93,7 @@ class MessageParser @Inject constructor(
 
         private val othersTextColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
         private val othersBackgroundColor = ResourcesCompat.getColor(context.resources, android.R.color.transparent, context.theme)
-        private val myselfTextColor = ResourcesCompat.getColor(context.resources, R.color.white, context.theme)
+        private val myselfTextColor = ResourcesCompat.getColor(context.resources, R.color.colorWhite, context.theme)
         private val myselfBackgroundColor = ResourcesCompat.getColor(context.resources, R.color.colorAccent, context.theme)
         private val mentionPadding = context.resources.getDimensionPixelSize(R.dimen.padding_mention).toFloat()
         private val mentionRadius = context.resources.getDimensionPixelSize(R.dimen.radius_mention).toFloat()
