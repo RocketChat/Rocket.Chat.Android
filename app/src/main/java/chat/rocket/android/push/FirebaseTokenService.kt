@@ -39,8 +39,8 @@ class FirebaseTokenService : FirebaseInstanceIdService() {
             val currentServer = getCurrentServerInteractor.get()
             val client = currentServer?.let { factory.create(currentServer) }
 
-            if (gcmToken != null && currentServer != null) {
-                localRepository.savePushToken(currentServer, gcmToken)
+            gcmToken?.let {
+                localRepository.save(LocalRepository.KEY_PUSH_TOKEN, gcmToken)
                 client?.let {
                     launch {
                         try {
@@ -53,7 +53,7 @@ class FirebaseTokenService : FirebaseInstanceIdService() {
                 }
             }
         } catch (ex: Exception) {
-            Timber.e(ex, "Error refreshing Firebase TOKEN")
+            Timber.d(ex, "Error refreshing Firebase TOKEN")
         }
     }
 }

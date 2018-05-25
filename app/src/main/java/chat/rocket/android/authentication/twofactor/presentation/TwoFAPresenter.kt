@@ -79,7 +79,7 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
     fun signup() = navigator.toSignUp()
 
     private suspend fun registerPushToken() {
-        localRepository.getPushToken(currentServer)?.let {
+        localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
             client.registerPushToken(it, getAccountsInteractor.get(), factory)
         }
         // TODO: When the push token is null, at some point we should receive it with

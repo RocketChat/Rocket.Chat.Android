@@ -95,7 +95,7 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
     }
 
     private suspend fun registerPushToken() {
-        localRepository.getPushToken(currentServer)?.let {
+        localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
             client.registerPushToken(it, getAccountsInteractor.get(), factory)
         }
         // TODO: When the push token is null, at some point we should receive it with
