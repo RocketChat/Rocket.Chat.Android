@@ -73,18 +73,20 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
     override fun showChannelCreatedSuccessfullyMessage() {
         showToast(getString(R.string.msg_channel_created_successfully))
         finish()
-        //TODO check why the activity is not finishing
     }
 
     override fun showMessage(resId: Int) {
+        channel_name_edit_text.setText("")
         showToast(getString(resId))
     }
 
     override fun showMessage(message: String) {
+        channel_name_edit_text.setText("")
         showToast(message)
     }
 
     override fun showGenericErrorMessage() {
+        channel_name_edit_text.setText("")
         showMessage(getString(R.string.msg_generic_error))
     }
 
@@ -123,20 +125,20 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
             channel_type.text = getString(R.string.public_channel_type)
             channel_description.text = getString(R.string.public_channel_description)
 
-            placeholder.setImageDrawable(getDrawable(R.drawable.ic_hashtag_black))
+            placeholder.setImageDrawable(getDrawable(R.drawable.ic_hashtag_black_12dp))
 
             (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(
                 resources.getColor(
-                    R.color.colorLightTheme
+                    R.color.default_background
                 )
             )
-            (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.red))
+            (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.colorRed))
 
             private_channel.background = getDrawable(R.drawable.button_border)
             public_channel.background = getDrawable(R.drawable.button_solid)
 
-            private_channel.setTextColor(resources.getColor(R.color.red))
-            public_channel.setTextColor(resources.getColor(R.color.colorLightTheme))
+            private_channel.setTextColor(resources.getColor(R.color.colorRed))
+            public_channel.setTextColor(resources.getColor(R.color.default_background))
         }
 
         private_channel.setOnClickListener {
@@ -145,24 +147,24 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
             channel_type.text = getString(R.string.private_channel_type)
             channel_description.text = getString(R.string.private_channel_type_description)
 
-            placeholder.setImageDrawable(getDrawable(R.drawable.ic_room_lock))
+            placeholder.setImageDrawable(getDrawable(R.drawable.ic_lock_black_12_dp))
 
             (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(
                 resources.getColor(
-                    R.color.red
+                    R.color.colorRed
                 )
             )
-            (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.colorLightTheme))
+            (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.default_background))
             (getDrawable(R.drawable.button_solid) as GradientDrawable).setStroke(
                 1,
-                resources.getColor(R.color.red)
+                resources.getColor(R.color.colorRed)
             )
 
             private_channel.background = getDrawable(R.drawable.button_border)
             public_channel.background = getDrawable(R.drawable.button_solid)
 
-            private_channel.setTextColor(resources.getColor(R.color.colorLightTheme))
-            public_channel.setTextColor(resources.getColor(R.color.red))
+            private_channel.setTextColor(resources.getColor(R.color.default_background))
+            public_channel.setTextColor(resources.getColor(R.color.colorRed))
         }
 
         toolbar_action_text.setOnClickListener {
