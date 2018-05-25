@@ -51,8 +51,9 @@ class MembersPresenter @Inject constructor(
         val realName = memberViewModel.realName.toString()
         val username = "@${memberViewModel.username}"
         val email = memberViewModel.email ?: ""
-        val utcOffset = memberViewModel.utcOffset.toString()
+        val utcOffset =  memberViewModel.utcOffset.toString()
+        val userStatus = memberViewModel.status.toString()
 
-        navigator.toMemberDetails(avatarUri, realName, username, email, utcOffset)
+        navigator.toMemberDetails(avatarUri, realName, username, email, utcOffset, userStatus)
     }
 }

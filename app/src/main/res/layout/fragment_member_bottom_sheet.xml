@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/name_and_username_container"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorBackgroundMemberContainer"
         android:orientation="vertical"
@@ -23,7 +23,8 @@
         android:paddingStart="16dp"
         android:paddingTop="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/image_bottom_sheet_avatar"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/text_bottom_sheet_member_name"
@@ -33,6 +34,16 @@
             android:textColor="@color/white"
             tools:text="Ronald Perkins" />
 
+        <ImageView
+            android:id="@+id/user_status"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/user_status_white"
+            app:layout_constraintBottom_toBottomOf="@id/text_bottom_sheet_member_name"
+            app:layout_constraintStart_toEndOf="@id/text_bottom_sheet_member_name"
+            app:layout_constraintTop_toTopOf="@id/text_bottom_sheet_member_name" />
+
         <TextView
             android:id="@+id/text_bottom_sheet_member_username"
             style="@style/Sender.Name.TextView"
@@ -40,8 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/text_bottom_sheet_member_name"
             tools:text="\@ronaldPerkins" />
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/text_email_address"

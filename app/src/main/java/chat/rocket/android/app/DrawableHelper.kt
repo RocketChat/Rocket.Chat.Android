@@ -16,7 +16,7 @@ object DrawableHelper {
      * @return A drawable.
      */
     fun getDrawableFromId(id: Int, context: Context): Drawable =
-        context.resources.getDrawable(id, null)
+            context.resources.getDrawable(id, null)
 
     /**
      * Wraps an array of Drawable to be used for example for tinting.
@@ -69,7 +69,7 @@ object DrawableHelper {
      * @see wrapDrawable
      */
     fun tintDrawable(drawable: Drawable, context: Context, resId: Int) =
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resId))
+            DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resId))
 
     /**
      * Compounds an array of Drawable (to appear to the left of the text) into an array of TextView.
@@ -98,7 +98,7 @@ object DrawableHelper {
      * @see compoundDrawables
      */
     fun compoundDrawable(textView: TextView, drawable: Drawable) =
-        textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+            textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 
     /**
      * Returns the user status drawable.
@@ -113,6 +113,23 @@ object DrawableHelper {
             is UserStatus.Online -> getDrawableFromId(R.drawable.ic_status_online_12dp, context)
             is UserStatus.Away -> getDrawableFromId(R.drawable.ic_status_away_12dp, context)
             is UserStatus.Busy -> getDrawableFromId(R.drawable.ic_status_busy_12dp, context)
+            else -> getDrawableFromId(R.drawable.ic_status_invisible_12dp, context)
+        }
+    }
+
+    /**
+     * Returns the user status drawable on the basis of user status string
+     *
+     * @param userStatus String that represents the user status.
+     * @param context The context.
+     * @return The user status drawable.
+     */
+
+    fun getUserStatusDrawableFromString(userStatus: String, context: Context): Drawable {
+        return when (userStatus) {
+            "Online" -> getDrawableFromId(R.drawable.ic_status_online_12dp, context)
+            "Busy" -> getDrawableFromId(R.drawable.ic_status_busy_12dp, context)
+            "Away" -> getDrawableFromId(R.drawable.ic_status_away_12dp, context)
             else -> getDrawableFromId(R.drawable.ic_status_invisible_12dp, context)
         }
     }

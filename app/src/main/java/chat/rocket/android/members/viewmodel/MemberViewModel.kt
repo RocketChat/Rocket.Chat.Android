@@ -3,6 +3,7 @@ package chat.rocket.android.members.viewmodel
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.common.model.User
+import chat.rocket.common.model.UserStatus
 import chat.rocket.core.model.Value
 
 class MemberViewModel(private val member: User, private val settings: Map<String, Value<Any>>, private val baseUrl: String?) {
@@ -12,6 +13,7 @@ class MemberViewModel(private val member: User, private val settings: Map<String
     val username: String?
     val email: String?
     val utcOffset: Float?
+    val status: String?
 
     init {
         avatarUri = getUserAvatar()
@@ -20,6 +22,7 @@ class MemberViewModel(private val member: User, private val settings: Map<String
         username = getUserUsername()
         email = getUserEmail()
         utcOffset = getUserUtcOffset()
+        status = getUserStatus()
     }
 
     private fun getUserAvatar(): String? {
@@ -43,4 +46,19 @@ class MemberViewModel(private val member: User, private val settings: Map<String
     private fun getUserEmail(): String? = member.emails?.get(0)?.address
 
     private fun getUserUtcOffset(): Float? = member.utcOffset
+
+    private fun getUserStatus(): String? = returnUserStatus(member.status)
+
+    private fun returnUserStatus(userStatusType: UserStatus?): String? {
+        return when (userStatusType) {
+            is UserStatus.Online -> "Online"
+            is UserStatus.Busy -> "Busy"
+            is UserStatus.Away -> "Away"
+            is UserStatus.Offline -> "Offline"
+            else -> {
+                return "unreachable"
+            }
+        }
+    }
+
 }
