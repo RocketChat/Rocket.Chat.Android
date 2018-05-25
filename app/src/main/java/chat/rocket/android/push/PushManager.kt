@@ -250,11 +250,14 @@ class PushManager @Inject constructor(
                 .setContentIntent(contentIntent)
                 .setMessageNotification()
 
+            if (host.isEmpty()) {
+                builder.setContentIntent(deleteIntent)
+            }
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channelId: String
                 val channelName: String
                 if (host.isEmpty()) {
-                    builder.setContentIntent(deleteIntent)
                     channelName = "Test Notification"
                     channelId = "test-channel"
                 } else {
