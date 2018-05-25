@@ -152,7 +152,7 @@ class MainPresenter @Inject constructor(
 
     suspend fun refreshToken(token: String?) {
         token?.let {
-            localRepository.savePushToken(currentServer, it)
+            localRepository.save(LocalRepository.KEY_PUSH_TOKEN, token)
             client.registerPushToken(token, getAccountsInteractor.get(), factory)
         }
     }
@@ -172,15 +172,16 @@ class MainPresenter @Inject constructor(
     }
 
     private suspend fun clearTokens() {
-        localRepository.get(LocalRepository.PUSH_TOKEN_KEY + currentServer)?.let {
+        serverInteractor.clear()
+        val pushToken = localRepository.get(LocalRepository.KEY_PUSH_TOKEN)
+        if (pushToken != null) {
             try {
-                retryIO("unregisterPushToken") { client.unregisterPushToken(it) }
-                view.invalidateToken(it)
+                retryIO("unregisterPushToken") { client.unregisterPushToken(pushToken) }
+                view.invalidateToken(pushToken)
             } catch (ex: Exception) {
                 Timber.d(ex, "Error unregistering push token")
             }
         }
-        serverInteractor.clear()
         localRepository.clearAllFromServer(currentServer)
     }
 

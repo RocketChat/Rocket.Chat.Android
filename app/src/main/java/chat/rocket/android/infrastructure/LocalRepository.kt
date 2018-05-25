@@ -18,11 +18,9 @@ interface LocalRepository {
     fun clearAllFromServer(server: String)
     fun getCurrentUser(url: String): User?
     fun saveCurrentUser(url: String, user: User)
-    fun savePushToken(url: String, token: String)
-    fun getPushToken(url: String): String?
 
     companion object {
-        const val PUSH_TOKEN_KEY = "push_token_"
+        const val KEY_PUSH_TOKEN = "KEY_PUSH_TOKEN"
         const val MIGRATION_FINISHED_KEY = "MIGRATION_FINISHED_KEY"
         const val TOKEN_KEY = "token_"
         const val SETTINGS_KEY = "settings_"

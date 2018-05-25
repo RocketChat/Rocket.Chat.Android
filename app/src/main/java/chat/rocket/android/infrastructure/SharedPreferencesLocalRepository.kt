@@ -2,7 +2,6 @@ package chat.rocket.android.infrastructure
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import chat.rocket.android.infrastructure.LocalRepository.Companion.PUSH_TOKEN_KEY
 import chat.rocket.common.model.User
 import com.squareup.moshi.Moshi
 
@@ -45,15 +44,8 @@ class SharedPreferencesLocalRepository(
 
     override fun clear(key: String) = preferences.edit { remove(key) }
 
-    override fun savePushToken(url: String, token: String) {
-        save(PUSH_TOKEN_KEY + url, token)
-    }
-
-    override fun getPushToken(url: String): String? = preferences.getString(PUSH_TOKEN_KEY + url, null)
-
     override fun clearAllFromServer(server: String) {
-        clear(LocalRepository.PUSH_TOKEN_KEY) //TODO: keep this for now to clear up for some version rolls.
-        clear(LocalRepository.PUSH_TOKEN_KEY + server)
+        clear(LocalRepository.KEY_PUSH_TOKEN)
         clear(LocalRepository.TOKEN_KEY + server)
         clear(LocalRepository.SETTINGS_KEY + server)
         clear(LocalRepository.CURRENT_USERNAME_KEY)
