@@ -116,6 +116,9 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatRoomActivity).setupToolbarTitle(getString(R.string.title_pinned_messages))
+        (activity as ChatRoomActivity).let {
+            it.showToolbarTitle(getString(R.string.title_pinned_messages))
+            it.hideToolbarChatRoomIcon()
+        }
     }
 }
