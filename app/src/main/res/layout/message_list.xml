@@ -19,7 +19,7 @@
         android:theme="@style/Theme.AppCompat"
         android:tint="@color/gray_material"
         android:visibility="invisible"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="@color/colorWhite"
         app:fabSize="mini"
         app:layout_anchor="@id/recycler_view"
         app:layout_anchorGravity="bottom|end" />

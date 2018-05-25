@@ -23,22 +23,19 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_pinned_messages.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String, chatRoomType: String): Fragment {
+fun newInstance(chatRoomId: String): Fragment {
     return PinnedMessagesFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-            putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
         }
     }
 }
 
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
-private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 
 class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
 
     private lateinit var chatRoomId: String
-    private lateinit var chatRoomType: String
     private lateinit var adapter: ChatRoomAdapter
     @Inject
     lateinit var presenter: PinnedMessagesPresenter
@@ -50,7 +47,6 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
         val bundle = arguments
         if (bundle != null) {
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -66,14 +62,13 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar()
-
         presenter.loadPinnedMessages(chatRoomId)
     }
 
     override fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>) {
         ui {
             if (recycler_view_pinned.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, "", null, false)
+                adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

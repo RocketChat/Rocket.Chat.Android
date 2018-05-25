@@ -4,6 +4,7 @@
 
     <item
         android:id="@+id/action_save_image"
-        android:title="Save to Gallery"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_file_download_white_24dp"
+        android:title="@string/action_save_to_gallery"
+        app:showAsAction="always" />
 </menu>

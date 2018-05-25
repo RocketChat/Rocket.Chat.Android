@@ -20,7 +20,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:visibility="gone"
-        app:indicatorColor="@color/black"
+        app:indicatorColor="@color/colorBlack"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="@+id/recycler_view_pinned"
         app:layout_constraintEnd_toEndOf="parent"

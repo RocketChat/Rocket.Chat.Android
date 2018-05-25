@@ -154,7 +154,7 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
             drawable?.let {
                 val wrappedDrawable = DrawableHelper.wrapDrawable(it)
                 val mutableDrawable = wrappedDrawable.mutate()
-                DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
+                DrawableHelper.tintDrawable(mutableDrawable, this, R.color.colorWhite)
                 DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
             }
         } else {

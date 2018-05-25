@@ -40,7 +40,7 @@
                 android:drawablePadding="@dimen/text_view_drawable_padding"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="Developers" />

@@ -3,27 +3,32 @@ package chat.rocket.android.chatroom.presentation
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.chatRoomIntent
-import chat.rocket.android.members.ui.newInstance
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.android.util.extensions.addFragmentBackStack
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
 
-    fun toMembersList(chatRoomId: String, chatRoomType: String) {
+    fun toMembersList(chatRoomId: String) {
         activity.addFragmentBackStack("MembersFragment", R.id.fragment_container) {
-            newInstance(chatRoomId, chatRoomType)
+            chat.rocket.android.members.ui.newInstance(chatRoomId)
         }
     }
 
-    fun toPinnedMessageList(chatRoomId: String, chatRoomType: String) {
+    fun toPinnedMessageList(chatRoomId: String) {
         activity.addFragmentBackStack("PinnedMessages", R.id.fragment_container) {
-            chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId, chatRoomType)
+            chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId)
         }
     }
 
-    fun toFavoriteMessageList(chatRoomId: String, chatRoomType: String) {
+    fun toFavoriteMessageList(chatRoomId: String) {
         activity.addFragmentBackStack("FavoriteMessages", R.id.fragment_container) {
-            chat.rocket.android.favoritemessages.ui.newInstance(chatRoomId, chatRoomType)
+            chat.rocket.android.favoritemessages.ui.newInstance(chatRoomId)
+        }
+    }
+
+    fun toFileList(chatRoomId: String) {
+        activity.addFragmentBackStack("Files", R.id.fragment_container) {
+            chat.rocket.android.files.ui.newInstance(chatRoomId)
         }
     }
 

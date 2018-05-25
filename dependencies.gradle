@@ -24,7 +24,7 @@ ext {
             timber                : '4.7.0',
             threeTenABP           : '1.0.5',
             rxBinding             : '2.0.0',
-            fresco                : '1.8.1',
+            fresco                : '1.9.0',
             kotshi                : '1.0.2',
             frescoImageViewer     : '0.5.1',
             markwon               : '1.0.3',
