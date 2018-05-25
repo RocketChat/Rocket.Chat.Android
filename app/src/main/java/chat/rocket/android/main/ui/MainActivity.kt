@@ -1,5 +1,6 @@
 package chat.rocket.android.main.ui
 
+import DrawableHelper
 import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
@@ -11,8 +12,8 @@ import android.view.MenuItem
 import android.view.View
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.adapter.AccountsAdapter
+import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.viewmodel.NavHeaderViewModel
@@ -22,8 +23,8 @@ import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserStatus
-import com.google.android.gms.gcm.GoogleCloudMessaging
-import com.google.android.gms.iid.InstanceID
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -52,8 +53,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
 
         launch(CommonPool) {
             try {
-                val token = InstanceID.getInstance(this@MainActivity).getToken(getString(R.string.gcm_sender_id), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null)
-                Timber.d("GCM token: $token")
+                val token = FirebaseInstanceId.getInstance().token
+                Timber.d("FCM token: $token")
                 presenter.refreshToken(token)
             } catch (ex: Exception) {
                 Timber.d(ex, "Missing play services...")
@@ -135,7 +136,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     }
 
     override fun invalidateToken(token: String) {
-        InstanceID.getInstance(this).deleteToken(token, GoogleCloudMessaging.INSTANCE_ID_SCOPE)
+        FirebaseInstanceId.getInstance().deleteToken(token, FirebaseMessaging.INSTANCE_ID_SCOPE)
     }
 
     private fun setupAccountsList(header: View, accounts: List<Account>) {

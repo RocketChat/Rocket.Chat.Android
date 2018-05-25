@@ -15,6 +15,7 @@ ext {
             dagger                : '2.14.1',
             exoPlayer             : '2.6.0',
             playServices          : '11.8.0',
+            firebase              : '15.0.0',
             room                  : '1.0.0',
             lifecycle             : '1.1.1',
             rxKotlin              : '2.2.0',
@@ -58,7 +59,7 @@ ext {
             daggerSupport         : "com.google.dagger:dagger-android-support:${versions.dagger}",
             daggerProcessor       : "com.google.dagger:dagger-compiler:${versions.dagger}",
             daggerAndroidApt      : "com.google.dagger:dagger-android-processor:${versions.dagger}",
-            playServicesGcm       : "com.google.android.gms:play-services-gcm:${versions.playServices}",
+            fcm                   : "com.google.firebase:firebase-messaging:${versions.firebase}",
             exoPlayer             : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
 
             room                  : "android.arch.persistence.room:runtime:${versions.room}",
