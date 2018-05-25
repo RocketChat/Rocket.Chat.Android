@@ -36,6 +36,7 @@ class FirebaseTokenService : FirebaseInstanceIdService() {
 
             fcmToken?.let {
                 localRepository.save(LocalRepository.KEY_PUSH_TOKEN, fcmToken)
+
                 client?.let {
                     launch {
                         try {
