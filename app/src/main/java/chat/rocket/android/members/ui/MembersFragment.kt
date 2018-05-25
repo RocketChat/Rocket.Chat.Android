@@ -120,8 +120,9 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     private fun setupToolbar(totalMembers: Long) {
-        (activity as ChatRoomActivity?)?.setupToolbarTitle(
-            getString(R.string.title_members, totalMembers)
-        )
+        (activity as ChatRoomActivity).let {
+            it.showToolbarTitle(getString(R.string.title_members, totalMembers))
+            it.hideToolbarChatRoomIcon()
+        }
     }
 }
