@@ -32,6 +32,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
     }
 
     fun connect(server: String) {
+        //code that leads to login screen (smart lock will be implemented after this)
         connectToServer(server) {
             navigator.toLogin()
         }
@@ -64,6 +65,7 @@ class ServerPresenter @Inject constructor(private val view: ServerView,
     }
 
     fun deepLink(deepLinkInfo: LoginDeepLinkInfo) {
+        //code that leads to login screen (smart lock will be implemented after this)
         connectToServer(deepLinkInfo.url) {
             navigator.toLogin(deepLinkInfo)
         }

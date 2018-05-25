@@ -25,6 +25,8 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserStatus
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.common.api.GoogleApiClient
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -38,18 +40,24 @@ import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector {
-    @Inject lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
-    @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-    @Inject lateinit var presenter: MainPresenter
+class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector,
+    GoogleApiClient.ConnectionCallbacks {
+    @Inject
+    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
     private var expanded = false
+    private lateinit var googleApiClient: GoogleApiClient
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        buildGoogleApiClient()
 
         launch(CommonPool) {
             try {
@@ -65,6 +73,39 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
         presenter.loadCurrentInfo()
         setupToolbar()
         setupNavigationView()
+    }
+
+    override fun onConnected(bundle: Bundle?) {
+    }
+
+    override fun onConnectionSuspended(errorCode: Int) {
+    }
+
+    private fun buildGoogleApiClient() {
+        googleApiClient = GoogleApiClient.Builder(this)
+            .enableAutoManage(this, {
+                Timber.d("ERROR: connection to client failed")
+            })
+            .addConnectionCallbacks(this)
+            .addApi(Auth.CREDENTIALS_API)
+            .build()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        googleApiClient.let {
+            if (it.isConnected) {
+                Timber.d("Google api client connected successfully")
+            }
+        }
+    }
+
+    override fun disableAutoSignIn() {
+        googleApiClient.let {
+            if (it.isConnected) {
+                Auth.CredentialsApi.disableAutoSignIn(googleApiClient)
+            }
+        }
     }
 
     override fun onResume() {
@@ -120,19 +161,29 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
 
     override fun alertNotRecommendedVersion() {
         AlertDialog.Builder(this)
-                .setMessage(getString(R.string.msg_ver_not_recommended, BuildConfig.RECOMMENDED_SERVER_VERSION))
-                .setPositiveButton(R.string.msg_ok, null)
-                .create()
-                .show()
+            .setMessage(
+                getString(
+                    R.string.msg_ver_not_recommended,
+                    BuildConfig.RECOMMENDED_SERVER_VERSION
+                )
+            )
+            .setPositiveButton(R.string.msg_ok, null)
+            .create()
+            .show()
     }
 
     override fun blockAndAlertNotRequiredVersion() {
         AlertDialog.Builder(this)
-                .setMessage(getString(R.string.msg_ver_not_minimum, BuildConfig.REQUIRED_SERVER_VERSION))
-                .setOnDismissListener { presenter.logout() }
-                .setPositiveButton(R.string.msg_ok, null)
-                .create()
-                .show()
+            .setMessage(
+                getString(
+                    R.string.msg_ver_not_minimum,
+                    BuildConfig.REQUIRED_SERVER_VERSION
+                )
+            )
+            .setOnDismissListener { presenter.logout() }
+            .setPositiveButton(R.string.msg_ok, null)
+            .create()
+            .show()
     }
 
     override fun invalidateToken(token: String) {
@@ -181,7 +232,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
+        fragmentDispatchingAndroidInjector
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)

@@ -105,11 +105,12 @@ class MainPresenter @Inject constructor(
                 disconnect()
                 removeAccountInteractor.remove(currentServer)
                 tokenRepository.remove(currentServer)
+                view.disableAutoSignIn()
                 navigator.toNewServer()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error cleaning up the session...")
             }
-
+            view.disableAutoSignIn()
             navigator.toNewServer()
         }
     }

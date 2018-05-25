@@ -25,4 +25,9 @@ interface MainView : MessageView, VersionCheckView {
 
     fun closeServerSelection()
     fun invalidateToken(token: String)
+
+    /**
+     * callback to disable auto sign in for google smart lock when the user logs out
+     */
+    fun disableAutoSignIn()
 }
