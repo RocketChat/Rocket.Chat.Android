@@ -21,7 +21,7 @@
     <string name="title_add_members">Invite Members (%d)</string>
 
     <!-- Actions -->
-    <string name="action_connect">Conectar</string>"'
+    <string name="action_connect">Conectar</string>
     <string name="action_use_this_username">Usa este nombre de usuario</string>
     <string name="action_login_or_sign_up">Toca en este botón para iniciar sesión o crear una cuenta</string>
     <string name="action_terms_of_service">Términos de Servicio</string>
@@ -42,6 +42,8 @@
     <string name="action_create_new_channel">CREATE</string>
     // TODO: Add proper translation.
     <string name="action_select_members">DONE</string>
+    // TODO: Add proper translation.
+    <string name="action_save_to_gallery">Save to gallery</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -171,7 +173,7 @@
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Members List -->
-    <string name="title_members_list">Lista de miembros</string>
+    <string name="title_members_list">Miembros</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensajes fijados</string>
@@ -183,6 +185,13 @@
     <string name="title_favorite_messages">Favorite Messages</string>
     <string name="no_favorite_messages">No favorite messages</string>
     <string name="no_favorite_description">All the favorite messages\nappear here</string>
+
+    <!-- Files -->
+    <!-- TODO Add proper translation-->
+    <string name="msg_files">Files</string>
+    <string name="title_files_total">Files (%d)</string>
+    <string name="msg_no_files">No files</string>
+    <string name="msg_all_files_appear_here">All the files appear here</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Tamaño del archivo (%1$d bytes) excedió el tamaño máximo de carga de %2$d bytes</string>

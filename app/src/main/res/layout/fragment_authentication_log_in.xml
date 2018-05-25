@@ -214,7 +214,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_expand_more_black_24dp"
             android:theme="@style/Theme.AppCompat"
-            android:tint="@color/white"
+            android:tint="@color/colorWhite"
             android:visibility="gone"
             app:backgroundTint="@color/colorAccent"
             app:elevation="@dimen/fab_elevation"

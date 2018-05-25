@@ -23,17 +23,15 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String, chatRoomType: String): Fragment {
+fun newInstance(chatRoomId: String): Fragment {
     return MembersFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
-            putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
         }
     }
 }
 
 private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
-private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 
 class MembersFragment : Fragment(), MembersView {
     @Inject
@@ -42,9 +40,7 @@ class MembersFragment : Fragment(), MembersView {
         MembersAdapter { memberViewModel -> presenter.toMemberDetails(memberViewModel) }
     private val linearLayoutManager =
         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
     private lateinit var chatRoomId: String
-    private lateinit var chatRoomType: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +49,6 @@ class MembersFragment : Fragment(), MembersView {
         val bundle = arguments
         if (bundle != null) {
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
-            chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -67,9 +62,8 @@ class MembersFragment : Fragment(), MembersView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
-        presenter.loadChatRoomsMembers(chatRoomId, chatRoomType)
+        presenter.loadChatRoomsMembers(chatRoomId)
     }
 
     override fun showMembers(dataSet: List<MemberViewModel>, total: Long) {
@@ -85,7 +79,7 @@ class MembersFragment : Fragment(), MembersView {
                             totalItemsCount: Int,
                             recyclerView: RecyclerView?
                         ) {
-                            presenter.loadChatRoomsMembers(chatRoomId, chatRoomType, page * 60L)
+                            presenter.loadChatRoomsMembers(chatRoomId)
                         }
                     })
                 }
@@ -126,8 +120,9 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     private fun setupToolbar(totalMembers: Long) {
-        (activity as ChatRoomActivity?)?.setupToolbarTitle(
-            getString(R.string.title_members, totalMembers)
-        )
+        (activity as ChatRoomActivity).let {
+            it.showToolbarTitle(getString(R.string.title_members, totalMembers))
+            it.hideToolbarChatRoomIcon()
+        }
     }
 }
