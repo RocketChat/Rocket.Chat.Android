@@ -17,8 +17,7 @@
     <string name="title_about">Sur</string>
     // TODO: Add proper translation.
     <string name="title_create_new_channel">Create New Channel</string>
-    // TODO: Add proper translation.
-    <string name="title_add_members">Invite Members (%d)</string>
+    <string name="title_add_members">Inviter des membres (%s)</string>
 
     <!-- Actions -->
     <string name="action_connect">Se connecter</string>
@@ -132,6 +131,14 @@
     <string name="msg_no_search_found">Aucun résultat trouvé</string>
     // TODO: Add proper translation.
     <string name="msg_member_already_added">You have already selected this user</string>
+    // TODO: Add proper translation.
+    <string name="msg_channel_created_successfully">"Channel created successfully</string>
+    // TODO: Add proper translation.
+    <string name="msg_channel_name">Channel Name</string>
+    // TODO: Add proper translation.
+    <string name="msg_add_members">Add Members</string>
+    // TODO: Add proper translation.
+    <string name="msg_search">Search</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>
@@ -255,4 +262,9 @@
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
     <string name="notif_success_sending">Message envoyé à %1$s!</string>
+
+    <string name="private_channel_type">Privé</string>
+    <string name="public_channel_type">Public</string>
+    <string name="private_channel_type_description">Visible uniquement pour vous et ceux que vous invitez</string>
+    <string name="public_channel_description">Visible par tout le monde</string>
 </resources>

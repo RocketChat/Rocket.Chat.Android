@@ -18,6 +18,7 @@ import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.viewmodel.MemberViewModel
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.widget.DividerItemDecoration
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.AndroidInjection
@@ -155,12 +156,12 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         } else {
             toolbar_action_text.alpha = 1.0f
         }
-        toolbar_title.text = getString(R.string.title_add_members, membersToAdd.size)
+        toolbar_title.textContent = getString(R.string.title_add_members, membersToAdd.size.toString())
     }
 
     private fun setUpToolBar() {
         setSupportActionBar(toolbar)
-        toolbar_title.text = getString(R.string.title_add_members, 0)
+        toolbar_title.text = getString(R.string.title_add_members, "0")
         toolbar_action_text.text = getString(R.string.action_select_members)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

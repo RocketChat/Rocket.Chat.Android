@@ -18,8 +18,7 @@
     <string name="title_about">परिचय</string>
     // TODO: Add proper translation.
     <string name="title_create_new_channel">Create New Channel</string>
-    // TODO: Add proper translation.
-    <string name="title_add_members">Invite Members (%d)</string>
+    <string name="title_add_members">सदस्यों को आमंत्रित करें (%s)</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -134,6 +133,14 @@
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
     // TODO: Add proper translation.
     <string name="msg_member_already_added">You have already selected this user</string>
+    // TODO: Add proper translation.
+    <string name="msg_channel_created_successfully">"Channel created successfully</string>
+    // TODO: Add proper translation.
+    <string name="msg_channel_name">Channel Name</string>
+    // TODO: Add proper translation.
+    <string name="msg_add_members">Add Members</string>
+    // TODO: Add proper translation.
+    <string name="msg_search">Search</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
@@ -256,4 +263,9 @@
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
     <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
+
+    <string name="private_channel_type">निजी</string>
+    <string name="public_channel_type">सार्वजनिक</string>
+    <string name="private_channel_type_description">केवल आप के लिए दृश्यमान और जिन्हें आप आमंत्रित करते हैं</string>
+    <string name="public_channel_description">हर किसी के लिए दृश्यमान</string>
 </resources>

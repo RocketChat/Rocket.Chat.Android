@@ -16,7 +16,7 @@
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
     <string name="title_create_new_channel">Create New Channel</string>
-    <string name="title_add_members">Invite Members (%d)</string>
+    <string name="title_add_members">Invite Members (%s)</string>
     <string name="title_about">About</string>
 
     <!-- Actions -->
