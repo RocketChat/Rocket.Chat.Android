@@ -76,7 +76,7 @@ class MembersFragment : Fragment(), MembersView {
                 adapter.prependData(dataSet)
                 if (dataSet.size >= 59) { // TODO Check why the API retorns the specified count -1
                     recycler_view.addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                        override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
+                        override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
                             presenter.loadChatRoomsMembers(chatRoomId, chatRoomType, page * 60L)
                         }
                     })

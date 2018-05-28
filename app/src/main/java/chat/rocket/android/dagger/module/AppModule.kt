@@ -50,7 +50,7 @@ import javax.inject.Singleton
 @Module
 class AppModule {
 
-    @Provides
+    /*@Provides
     @Singleton
     fun provideRocketChatClient(okHttpClient: OkHttpClient, repository: TokenRepository, logger: PlatformLogger): RocketChatClient {
         return RocketChatClient.create {
@@ -61,7 +61,7 @@ class AppModule {
             // TODO remove
             restUrl = "https://open.rocket.chat"
         }
-    }
+    }*/
 
     @Provides
     fun provideJob(): Job {

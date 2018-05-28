@@ -595,7 +595,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         recycler_view.itemAnimator = DefaultItemAnimator()
         endlessRecyclerViewScrollListener = object :
             EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
                 presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }
         }

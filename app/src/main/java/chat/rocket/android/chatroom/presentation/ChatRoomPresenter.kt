@@ -577,7 +577,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 val chatRooms = getChatRoomsInteractor.getAll(currentServer)
                     .filterNot {
-                        it.type is RoomType.DirectMessage || it.type is RoomType.Livechat
+                        it.type is RoomType.DirectMessage || it.type is RoomType.LiveChat
                     }
                     .map { chatRoom ->
                         val name = chatRoom.name

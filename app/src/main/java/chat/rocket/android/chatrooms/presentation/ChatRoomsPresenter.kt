@@ -2,6 +2,7 @@ package chat.rocket.android.chatrooms.presentation
 
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.viewmodel.ViewModelMapper
+import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
@@ -9,9 +10,18 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetActiveUsersInteractor
+import chat.rocket.android.server.domain.GetChatRoomsInteractor
+import chat.rocket.android.server.domain.JobSchedulerInteractor
+import chat.rocket.android.server.domain.PermissionsInteractor
+import chat.rocket.android.server.domain.RefreshSettingsInteractor
+import chat.rocket.android.server.domain.SaveActiveUsersInteractor
+import chat.rocket.android.server.domain.SaveChatRoomsInteractor
+import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.hasShowLastMessage
+import chat.rocket.android.server.domain.showLastMessage
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManager
-import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.chatRooms
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.launchUI
@@ -21,6 +31,7 @@ import chat.rocket.common.model.BaseRoom
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.User
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.model.Subscription
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -31,18 +42,24 @@ import chat.rocket.core.internal.rest.permissions
 import chat.rocket.core.internal.rest.spotlight
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Room
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.reflect.KProperty1
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
     private val strategy: CancelStrategy,
     private val navigator: MainNavigator,
-    private val serverInteractor: GetCurrentServerInteractor,
+    @Named("currentServer") private val currentServer: String,
+    private val manager: ConnectionManager,
     private val getChatRoomsInteractor: GetChatRoomsInteractor,
     private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
     private val saveActiveUsersInteractor: SaveActiveUsersInteractor,
@@ -53,11 +70,9 @@ class ChatRoomsPresenter @Inject constructor(
     private val permissionsInteractor: PermissionsInteractor,
     private val localRepository: LocalRepository,
     private val userHelper: UserHelper,
-    settingsRepository: SettingsRepository,
-    factory: ConnectionManagerFactory
+    private val roomsInteractor: FetchChatRoomsInteractor,
+    settingsRepository: SettingsRepository
 ) {
-    private val manager: ConnectionManager = factory.create(serverInteractor.get()!!)
-    private val currentServer = serverInteractor.get()!!
     private val client = manager.client
     private var reloadJob: Deferred<List<ChatRoom>>? = null
     private val settings = settingsRepository.get(currentServer)
@@ -79,6 +94,8 @@ class ChatRoomsPresenter @Inject constructor(
                 view.updateChatRooms(getUserChatRooms())
                 val permissions = retryIO { client.permissions() }
                 permissionsInteractor.saveAll(permissions)
+
+                roomsInteractor.refreshChatRooms()
             } catch (ex: RocketChatException) {
                 ex.message?.let {
                     view.showMessage(it)
@@ -145,7 +162,6 @@ class ChatRoomsPresenter @Inject constructor(
      * ChatRooms returned are filtered by name.
      */
     fun chatRoomsByName(name: String) {
-        val currentServer = serverInteractor.get()!!
         launchUI(strategy) {
             try {
                 val roomList = getChatRoomsInteractor.getAllByName(currentServer, name)
@@ -187,7 +203,8 @@ class ChatRoomsPresenter @Inject constructor(
         return users.map {
             ChatRoom(
                 id = it.id,
-                type = RoomType.DIRECT_MESSAGE,
+                subscriptionId = it.id,
+                type = roomTypeOf(RoomType.DIRECT_MESSAGE),
                 user = SimpleUser(username = it.username, name = it.name, id = null),
                 status = if (it.name != null) {
                     getActiveUsersInteractor.getActiveUserByUsername(currentServer, it.name!!)
@@ -221,6 +238,7 @@ class ChatRoomsPresenter @Inject constructor(
         return rooms.map {
             ChatRoom(
                 id = it.id,
+                subscriptionId = it.id,
                 type = it.type,
                 user = it.user,
                 status = if (it.name != null) {
@@ -304,7 +322,7 @@ class ChatRoomsPresenter @Inject constructor(
             is RoomType.Channel -> Constants.CHATROOM_CHANNEL
             is RoomType.PrivateGroup -> Constants.CHATROOM_PRIVATE_GROUP
             is RoomType.DirectMessage -> Constants.CHATROOM_DM
-            is RoomType.Livechat -> Constants.CHATROOM_LIVE_CHAT
+            is RoomType.LiveChat -> Constants.CHATROOM_LIVE_CHAT
             else -> 0
         }
     }
@@ -314,6 +332,7 @@ class ChatRoomsPresenter @Inject constructor(
         chatRooms.forEach {
             val newRoom = ChatRoom(
                 id = it.id,
+                subscriptionId = it.id,
                 type = it.type,
                 user = it.user,
                 status = getActiveUsersInteractor.getActiveUserByUsername(
@@ -458,6 +477,7 @@ class ChatRoomsPresenter @Inject constructor(
         chatRoom?.apply {
             val newRoom = ChatRoom(
                 id = room.id,
+                subscriptionId = this.subscriptionId,
                 type = room.type,
                 user = room.user,
                 status = getActiveUsersInteractor.getActiveUserByUsername(
@@ -498,6 +518,7 @@ class ChatRoomsPresenter @Inject constructor(
         chatRoom?.apply {
             val newRoom = ChatRoom(
                 id = subscription.roomId,
+                subscriptionId = subscription.id,
                 type = subscription.type,
                 user = user,
                 status = getActiveUsersInteractor.getActiveUserByUsername(
@@ -576,6 +597,7 @@ class ChatRoomsPresenter @Inject constructor(
             getChatRoomsInteractor.getByName(currentServer, username)?.let {
                 val newRoom = ChatRoom(
                     id = it.id,
+                    subscriptionId = it.id,
                     type = it.type,
                     user = it.user,
                     status = status,
