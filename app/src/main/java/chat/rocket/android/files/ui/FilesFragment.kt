@@ -94,17 +94,13 @@ class FilesFragment : Fragment(), FilesView {
 
     override fun playMedia(url: String) {
         ui {
-            activity?.let {
-                PlayerActivity.play(it, url)
-            }
+            PlayerActivity.play(it, url)
         }
     }
 
     override fun openImage(url: String, name: String) {
         ui {
-            activity?.let {
-                ImageHelper.openImage(it, url, name)
-            }
+            ImageHelper.openImage(root_layout.context, url, name)
         }
     }
 

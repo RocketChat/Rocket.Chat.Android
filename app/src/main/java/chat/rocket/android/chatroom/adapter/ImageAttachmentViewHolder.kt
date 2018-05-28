@@ -30,7 +30,7 @@ class ImageAttachmentViewHolder(
             file_name.text = data.attachmentTitle
             image_attachment.setOnClickListener {
                 ImageHelper.openImage(
-                    it.context,
+                    context,
                     data.attachmentUrl,
                     data.attachmentTitle.toString()
                 )
