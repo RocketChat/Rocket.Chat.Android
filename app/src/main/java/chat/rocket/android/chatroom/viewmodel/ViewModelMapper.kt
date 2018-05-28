@@ -74,12 +74,18 @@ class ViewModelMapper @Inject constructor(
 
     suspend fun map(
         messages: List<Message>,
-        roomViewModel: RoomViewModel = RoomViewModel(roles = emptyList(), isBroadcast = true)
+        roomViewModel: RoomViewModel = RoomViewModel(roles = emptyList(), isBroadcast = true),
+        asNotReversed: Boolean = false
     ): List<BaseViewModel<*>> =
         withContext(CommonPool) {
             val list = ArrayList<BaseViewModel<*>>(messages.size)
 
-            messages.forEach { list.addAll(translate(it, roomViewModel)) }
+            messages.forEach {
+                list.addAll(
+                    if (asNotReversed) translateAsNotReversed(it, roomViewModel)
+                    else translate(it, roomViewModel)
+                )
+            }
             return@withContext list
         }
 
@@ -119,6 +125,56 @@ class ViewModelMapper @Inject constructor(
                     list.add(0, replyViewModel)
                 }
             }
+
+            return@withContext list
+        }
+
+    private suspend fun translateAsNotReversed(
+        message: Message,
+        roomViewModel: RoomViewModel
+    ): List<BaseViewModel<*>> =
+        withContext(CommonPool) {
+            val list = ArrayList<BaseViewModel<*>>()
+
+            mapMessage(message).let {
+                if (list.isNotEmpty()) {
+                    it.preview = list.first().preview
+                }
+                list.add(it)
+            }
+
+            message.attachments?.forEach {
+                val attachment = mapAttachment(message, it)
+                attachment?.let {
+                    list.add(attachment)
+                }
+            }
+
+            message.urls?.forEach {
+                val url = mapUrl(message, it)
+                url?.let {
+                    list.add(url)
+                }
+            }
+
+            for (i in list.size - 1 downTo 0) {
+                val next = if (i - 1 < 0) null else list[i - 1]
+                list[i].nextDownStreamMessage = next
+            }
+
+            if (isBroadcastReplyAvailable(roomViewModel, message)) {
+                roomsInteractor.getById(currentServer, message.roomId)?.let { chatRoom ->
+                    val replyViewModel = mapMessageReply(message, chatRoom)
+                    list.first().nextDownStreamMessage = replyViewModel
+                    list.add(0, replyViewModel)
+                }
+            }
+
+            list.dropLast(1).forEach {
+                it.reactions = emptyList()
+            }
+            list.last().reactions = getReactions(message)
+            list.last().nextDownStreamMessage = null
 
             return@withContext list
         }

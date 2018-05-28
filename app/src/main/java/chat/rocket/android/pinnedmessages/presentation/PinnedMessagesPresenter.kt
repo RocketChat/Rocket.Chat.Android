@@ -36,7 +36,7 @@ class PinnedMessagesPresenter @Inject constructor(
                 view.showLoading()
                 roomsInteractor.getById(serverUrl, roomId)?.let {
                     val pinnedMessages = client.getPinnedMessages(roomId, it.type, offset)
-                    val messageList = mapper.map(pinnedMessages.result)
+                    val messageList = mapper.map(pinnedMessages.result, asNotReversed = true)
                     view.showPinnedMessages(messageList)
                     offset += 1 * 30
                 }.ifNull {

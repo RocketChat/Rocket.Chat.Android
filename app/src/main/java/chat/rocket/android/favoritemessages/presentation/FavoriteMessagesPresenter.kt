@@ -35,7 +35,7 @@ class FavoriteMessagesPresenter @Inject constructor(
                 view.showLoading()
                 roomsInteractor.getById(serverUrl, roomId)?.let {
                     val favoriteMessages = client.getFavoriteMessages(roomId, it.type, offset)
-                    val messageList = mapper.map(favoriteMessages.result)
+                    val messageList = mapper.map(favoriteMessages.result, asNotReversed = true)
                     view.showFavoriteMessages(messageList)
                     offset += 1 * 30
                 }.ifNull {

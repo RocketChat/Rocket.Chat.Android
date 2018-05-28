@@ -69,8 +69,7 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
                 adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view.adapter = adapter
                 val linearLayoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-                linearLayoutManager.stackFromEnd = true
+                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view.layoutManager = linearLayoutManager
                 recycler_view.itemAnimator = DefaultItemAnimator()
                 if (favoriteMessages.size >= 30) {
