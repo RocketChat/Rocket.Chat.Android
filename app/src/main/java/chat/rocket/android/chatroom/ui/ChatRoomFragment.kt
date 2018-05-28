@@ -17,22 +17,12 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import android.text.SpannableStringBuilder
+import android.view.*
 import androidx.core.text.bold
 import androidx.core.view.isVisible
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
-import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
-import chat.rocket.android.chatroom.adapter.PEOPLE
-import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
-import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.viewmodel.BaseViewModel
@@ -45,26 +35,8 @@ import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.util.extensions.asObservable
-import chat.rocket.android.util.extensions.circularRevealOrUnreveal
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.hideKeyboard
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.isAtBottom
-import chat.rocket.android.util.extensions.rotateBy
-import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.widget.emoji.ComposerEditText
-import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiKeyboardListener
-import chat.rocket.android.widget.emoji.EmojiKeyboardPopup
-import chat.rocket.android.widget.emoji.EmojiListenerAdapter
-import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.android.widget.emoji.EmojiPickerPopup
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.util.extensions.*
+import chat.rocket.android.widget.emoji.*
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
@@ -197,8 +169,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         setupFab()
         setupSuggestionsView()
         setupActionSnackbar()
-        activity?.apply {
-            (this as? ChatRoomActivity)?.showRoomTypeIcon(true)
+        (activity as ChatRoomActivity).let {
+            it.showToolbarTitle(chatRoomName)
+            it.showToolbarChatRoomIcon(chatRoomType)
         }
     }
 
@@ -261,13 +234,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_members_list -> {
-                presenter.toMembersList(chatRoomId, chatRoomType)
+                presenter.toMembersList(chatRoomId)
             }
             R.id.action_pinned_messages -> {
-                presenter.toPinnedMessageList(chatRoomId, chatRoomType)
+                presenter.toPinnedMessageList(chatRoomId)
             }
             R.id.action_favorite_messages -> {
-                presenter.toFavoriteMessageList(chatRoomId, chatRoomType)
+                presenter.toFavoriteMessageList(chatRoomId)
+            }
+            R.id.action_files -> {
+                presenter.toFileList(chatRoomId)
             }
         }
         return true
@@ -320,7 +296,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun onRoomUpdated(userCanPost: Boolean, channelIsBroadcast: Boolean, userCanMod: Boolean) {
+    override fun onRoomUpdated(
+        userCanPost: Boolean,
+        channelIsBroadcast: Boolean,
+        userCanMod: Boolean
+    ) {
         // TODO: We should rely solely on the user being able to post, but we cannot guarantee
         // that the "(channels|groups).roles" endpoint is supported by the server in use.
         setupMessageComposer(userCanPost)
@@ -644,15 +624,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     handler.postDelayed(dismissStatus, 2000)
                 }
                 is State.Disconnected -> connection_status_text.text =
-                    getString(R.string.status_disconnected)
+                        getString(R.string.status_disconnected)
                 is State.Connecting -> connection_status_text.text =
-                    getString(R.string.status_connecting)
+                        getString(R.string.status_connecting)
                 is State.Authenticating -> connection_status_text.text =
-                    getString(R.string.status_authenticating)
+                        getString(R.string.status_authenticating)
                 is State.Disconnecting -> connection_status_text.text =
-                    getString(R.string.status_disconnecting)
+                        getString(R.string.status_disconnecting)
                 is State.Waiting -> connection_status_text.text =
-                    getString(R.string.status_waiting, state.seconds)
+                        getString(R.string.status_waiting, state.seconds)
             }
         }
     }
@@ -709,7 +689,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             subscribeComposeTextMessage()
             emojiKeyboardPopup =
-                EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+                    EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {
@@ -899,6 +879,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupToolbar(toolbarTitle: String) {
-        (activity as ChatRoomActivity).setupToolbarTitle(toolbarTitle)
+        (activity as ChatRoomActivity).showToolbarTitle(toolbarTitle)
     }
 }

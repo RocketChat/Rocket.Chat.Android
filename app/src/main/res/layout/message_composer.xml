@@ -21,10 +21,10 @@
             android:id="@+id/text_room_is_read_only"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/white"
+            android:background="@color/colorWhite"
             android:gravity="center"
             android:text="@string/msg_this_room_is_read_only"
-            android:textColor="@color/black"
+            android:textColor="@color/colorBlack"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
@@ -32,7 +32,7 @@
             android:id="@+id/button_join_chat"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="@color/white"
+            android:background="@color/colorWhite"
             android:text="@string/action_join_chat"
             android:textColor="@color/colorAccent"
             android:visibility="gone"

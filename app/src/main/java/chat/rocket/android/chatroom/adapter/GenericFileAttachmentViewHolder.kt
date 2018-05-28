@@ -3,6 +3,7 @@ package chat.rocket.android.chatroom.adapter
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import androidx.core.net.toUri
 import chat.rocket.android.chatroom.viewmodel.GenericFileAttachmentViewModel
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.widget.emoji.EmojiReactionListener
@@ -25,7 +26,7 @@ class GenericFileAttachmentViewHolder(itemView: View,
             text_file_name.content = data.attachmentTitle
 
             text_file_name.setOnClickListener {
-                it.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(data.attachmentUrl)))
+                it.context.startActivity(Intent(Intent.ACTION_VIEW, data.attachmentUrl.toUri()))
             }
         }
     }

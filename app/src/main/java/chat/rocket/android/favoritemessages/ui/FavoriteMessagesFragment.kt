@@ -23,21 +23,18 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_favorite_messages.*
 import javax.inject.Inject
 
-fun newInstance(chatRoomId: String, chatRoomType: String): Fragment {
+fun newInstance(chatRoomId: String): Fragment {
     return FavoriteMessagesFragment().apply {
         arguments = Bundle(1).apply {
             putString(INTENT_CHAT_ROOM_ID, chatRoomId)
-            putString(INTENT_CHAT_ROOM_TYPE, chatRoomType)
         }
     }
 }
 
 private const val INTENT_CHAT_ROOM_ID = "chat_room_id"
-private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 
 class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     private lateinit var chatRoomId: String
-    private lateinit var chatRoomType: String
     private lateinit var adapter: ChatRoomAdapter
     @Inject
     lateinit var presenter: FavoriteMessagesPresenter
@@ -49,7 +46,6 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
         val bundle = arguments
         if (bundle != null) {
             chatRoomId = bundle.getString(INTENT_CHAT_ROOM_ID)
-            chatRoomType = bundle.getString(INTENT_CHAT_ROOM_TYPE)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
         }
@@ -70,7 +66,7 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     override fun showFavoriteMessages(favoriteMessages: List<BaseViewModel<*>>) {
         ui {
             if (recycler_view.adapter == null) {
-                adapter = ChatRoomAdapter(chatRoomType, "", null, false)
+                adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view.adapter = adapter
                 val linearLayoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -114,6 +110,9 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
     }
 
     private fun setupToolbar() {
-        (activity as ChatRoomActivity).setupToolbarTitle(getString(R.string.title_favorite_messages))
+        (activity as ChatRoomActivity).let {
+            it.showToolbarTitle(getString(R.string.title_favorite_messages))
+            it.hideToolbarChatRoomIcon()
+        }
     }
 }
