@@ -72,7 +72,7 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view.layoutManager = linearLayoutManager
                 recycler_view.itemAnimator = DefaultItemAnimator()
-                if (favoriteMessages.size > 10) {
+                if (favoriteMessages.size >= 30) {
                     recycler_view.addOnScrollListener(object :
                         EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(
