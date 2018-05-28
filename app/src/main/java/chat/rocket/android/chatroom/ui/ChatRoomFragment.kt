@@ -243,7 +243,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(
-                    chatRoomType, chatRoomName, presenter,
+                    chatRoomType,
+                    chatRoomName,
+                    presenter,
                     reactionListener = this@ChatRoomFragment
                 )
                 recycler_view.adapter = adapter

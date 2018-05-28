@@ -25,9 +25,9 @@ class FavoriteMessagesPresenter @Inject constructor(
     private var offset: Int = 0
 
     /**
-     * Loads all favorite messages for room. the given room id.
+     * Loads all favorite messages for the given room id.
      *
-     * @param roomId The id of the room to get its favorite messages.
+     * @param roomId The id of the room to get favorite messages from.
      */
     fun loadFavoriteMessages(roomId: String) {
         launchUI(strategy) {

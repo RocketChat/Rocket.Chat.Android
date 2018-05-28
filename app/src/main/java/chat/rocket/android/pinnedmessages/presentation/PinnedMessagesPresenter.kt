@@ -26,7 +26,7 @@ class PinnedMessagesPresenter @Inject constructor(
     private var offset: Int = 0
 
     /**
-     * Load all pinned messages for the given room id.
+     * Loads all pinned messages for the given room id.
      *
      * @param roomId The id of the room to get pinned messages from.
      */
@@ -36,8 +36,7 @@ class PinnedMessagesPresenter @Inject constructor(
                 view.showLoading()
                 roomsInteractor.getById(serverUrl, roomId)?.let {
                     val pinnedMessages = client.getPinnedMessages(roomId, it.type, offset)
-                    val messageList =
-                        mapper.map(pinnedMessages.result.filterNot { it.isSystemMessage() })
+                    val messageList = mapper.map(pinnedMessages.result)
                     view.showPinnedMessages(messageList)
                     offset += 1 * 30
                 }.ifNull {

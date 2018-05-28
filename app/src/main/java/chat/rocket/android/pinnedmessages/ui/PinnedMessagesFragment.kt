@@ -71,10 +71,11 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
                 adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view_pinned.adapter = adapter
                 val linearLayoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+                linearLayoutManager.stackFromEnd = true
                 recycler_view_pinned.layoutManager = linearLayoutManager
                 recycler_view_pinned.itemAnimator = DefaultItemAnimator()
-                if (pinnedMessages.size > 10) {
+                if (pinnedMessages.size >= 30) {
                     recycler_view_pinned.addOnScrollListener(object :
                         EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(

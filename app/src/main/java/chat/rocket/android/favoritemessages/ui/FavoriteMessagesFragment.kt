@@ -69,10 +69,11 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
                 adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view.adapter = adapter
                 val linearLayoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+                linearLayoutManager.stackFromEnd = true
                 recycler_view.layoutManager = linearLayoutManager
                 recycler_view.itemAnimator = DefaultItemAnimator()
-                if (favoriteMessages.size > 10) {
+                if (favoriteMessages.size >= 30) {
                     recycler_view.addOnScrollListener(object :
                         EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(
