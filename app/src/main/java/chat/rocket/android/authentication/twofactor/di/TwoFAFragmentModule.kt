@@ -10,20 +10,22 @@ import dagger.Provides
 import kotlinx.coroutines.experimental.Job
 
 @Module
-@PerFragment
 class TwoFAFragmentModule {
 
     @Provides
+    @PerFragment
     fun loginView(frag: TwoFAFragment): TwoFAView {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideLifecycleOwner(frag: TwoFAFragment): LifecycleOwner {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
     }

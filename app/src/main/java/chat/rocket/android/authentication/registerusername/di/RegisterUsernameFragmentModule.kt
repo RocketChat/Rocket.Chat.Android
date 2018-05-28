@@ -10,20 +10,22 @@ import dagger.Provides
 import kotlinx.coroutines.experimental.Job
 
 @Module
-@PerFragment
 class RegisterUsernameFragmentModule {
 
     @Provides
+    @PerFragment
     fun registerUsernameView(frag: RegisterUsernameFragment): RegisterUsernameView {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideLifecycleOwner(frag: RegisterUsernameFragment): LifecycleOwner {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
     }

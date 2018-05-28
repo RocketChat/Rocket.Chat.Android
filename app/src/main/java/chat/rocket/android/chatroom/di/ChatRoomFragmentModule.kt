@@ -12,20 +12,22 @@ import dagger.Provides
 import kotlinx.coroutines.experimental.Job
 
 @Module
-@PerFragment
 class ChatRoomFragmentModule {
 
     @Provides
+    @PerFragment
     fun chatRoomView(frag: ChatRoomFragment): ChatRoomView {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideLifecycleOwner(frag: ChatRoomFragment): LifecycleOwner {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
     }

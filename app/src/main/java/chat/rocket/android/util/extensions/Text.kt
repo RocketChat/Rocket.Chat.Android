@@ -94,3 +94,9 @@ var TextView.content: CharSequence?
         Markwon.scheduleDrawables(this)
         Markwon.scheduleTableRows(this)
     }
+
+var TextView.spanned: CharSequence?
+    get() = text
+    set(value) {
+        text = spanned
+    }

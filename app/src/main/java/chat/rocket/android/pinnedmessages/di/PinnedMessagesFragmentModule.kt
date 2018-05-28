@@ -10,20 +10,22 @@ import dagger.Provides
 import kotlinx.coroutines.experimental.Job
 
 @Module
-@PerFragment
 class PinnedMessagesFragmentModule {
 
     @Provides
+    @PerFragment
     fun provideLifecycleOwner(frag: PinnedMessagesFragment): LifecycleOwner {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
     }
 
     @Provides
+    @PerFragment
     fun providePinnedMessagesView(frag: PinnedMessagesFragment): PinnedMessagesView {
         return frag
     }

@@ -8,15 +8,16 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-@PerFragment
 class ProfileFragmentModule {
 
     @Provides
+    @PerFragment
     fun profileView(frag: ProfileFragment): ProfileView {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideLifecycleOwner(frag: ProfileFragment): LifecycleOwner {
         return frag
     }

@@ -10,19 +10,21 @@ import dagger.Provides
 import kotlinx.coroutines.experimental.Job
 
 @Module
-@PerFragment
 class SettingsFragmentModule {
     @Provides
+    @PerFragment
     fun settingsView(frag: SettingsFragment): SettingsView {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun settingsLifecycleOwner(frag: SettingsFragment): LifecycleOwner {
         return frag
     }
 
     @Provides
+    @PerFragment
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
     }
