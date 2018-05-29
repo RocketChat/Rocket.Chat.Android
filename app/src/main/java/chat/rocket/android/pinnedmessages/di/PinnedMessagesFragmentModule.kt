@@ -14,6 +14,10 @@ class PinnedMessagesFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideJob() = Job()
+
+    @Provides
+    @PerFragment
     fun provideLifecycleOwner(frag: PinnedMessagesFragment): LifecycleOwner {
         return frag
     }

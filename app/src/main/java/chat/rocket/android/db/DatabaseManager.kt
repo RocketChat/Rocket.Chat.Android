@@ -2,6 +2,7 @@ package chat.rocket.android.db
 
 import android.app.Application
 import chat.rocket.android.db.model.BaseUserEntity
+import chat.rocket.android.db.model.ChatRoom
 import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.db.model.UserStatus
@@ -34,6 +35,10 @@ class DatabaseManager(val context: Application,
 
     fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
     fun userDao(): UserDao = database.userDao()
+
+    suspend fun getRoom(id: String) = withContext(dbContext) {
+        chatRoomDao().get(id)
+    }
 
     fun processUsersBatch(users: List<User>) {
         launch(dbContext) {
@@ -152,8 +157,17 @@ class DatabaseManager(val context: Application,
                     }
                 }
 
+                user?.let { user ->
+                    if (findUser(user.id!!) == null) {
+                        Timber.d("Missing owner user, inserting: ${user.id}")
+                        insert(UserEntity(user.id!!, user.username, user.name))
+                    }
+                }
+
                 chatRoom.copy(
                         name = name ?: chatRoom.name,
+                        fullname = fullName ?: chatRoom.fullname,
+                        ownerId = user?.id ?: chatRoom.ownerId,
                         readonly = readonly,
                         updatedAt = updatedAt ?: chatRoom.updatedAt,
                         lastMessageText = lastMessage?.message,
@@ -186,6 +200,7 @@ class DatabaseManager(val context: Application,
                         subscriptionId = id,
                         type = type.toString(),
                         name = name,
+                        fullname = fullName ?: chatRoom.fullname,
                         userId = userId ?: chatRoom.userId,
                         readonly = readonly ?: chatRoom.readonly,
                         isDefault = isDefault,
@@ -249,12 +264,21 @@ class DatabaseManager(val context: Application,
             }
         }
 
+        room.user?.let { user ->
+            if (findUser(user.id!!) == null) {
+                Timber.d("Missing owner user, inserting: ${user.id}")
+                insert(UserEntity(user.id!!, user.username, user.name))
+            }
+        }
+
         return ChatRoomEntity(
             id = room.id,
             subscriptionId = subscription.id,
             type = room.type.toString(),
             name = room.name ?: subscription.name,
+            fullname = subscription.fullName ?: room.fullName,
             userId = userId,
+            ownerId = room.user?.id,
             readonly = subscription.readonly,
             isDefault = subscription.isDefault,
             favorite = subscription.isFavorite,

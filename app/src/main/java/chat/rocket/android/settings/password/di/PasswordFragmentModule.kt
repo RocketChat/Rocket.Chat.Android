@@ -11,6 +11,11 @@ import kotlinx.coroutines.experimental.Job
 
 @Module
 class PasswordFragmentModule {
+
+    @Provides
+    @PerFragment
+    fun provideJob() = Job()
+
     @Provides
     @PerFragment
     fun passwordView(frag: PasswordFragment): PasswordView {

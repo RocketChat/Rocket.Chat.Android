@@ -11,7 +11,7 @@ import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_chat.view.*
 import kotlinx.android.synthetic.main.unread_messages_badge.view.*
 
-class RoomViewHolder(itemView: View) : ViewHolder<RoomItemHolder>(itemView) {
+class RoomViewHolder(itemView: View, private val listener: (String) -> Unit) : ViewHolder<RoomItemHolder>(itemView) {
 
     private val resources: Resources = itemView.resources
     private val channelUnread: Drawable = resources.getDrawable(R.drawable.ic_hashtag_unread_12dp)
@@ -54,6 +54,10 @@ class RoomViewHolder(itemView: View) : ViewHolder<RoomItemHolder>(itemView) {
                 image_chat_icon.setImageDrawable(getStatusDrawable(room.status))
             } else {
                 image_chat_icon.setImageDrawable(getRoomDrawable(room.type, room.alert))
+            }
+
+            setOnClickListener {
+                listener(room.id)
             }
         }
     }

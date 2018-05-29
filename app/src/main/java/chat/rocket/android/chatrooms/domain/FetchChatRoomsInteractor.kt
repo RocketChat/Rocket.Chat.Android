@@ -48,12 +48,20 @@ class FetchChatRoomsInteractor(
                     dbManager.insert(UserEntity(user.id!!, user.username, user.name))
                 }
             }
+            user?.let { user ->
+                if (dbManager.findUser(user.id!!) == null) {
+                    Timber.d("Missing owner user, inserting: ${user.id}")
+                    dbManager.insert(UserEntity(user.id!!, user.username, user.name))
+                }
+            }
             return ChatRoomEntity(
                     id = id,
                     subscriptionId = subscriptionId,
                     type = type.toString(),
                     name = name,
+                    fullname = fullName,
                     userId = userId,
+                    ownerId = user?.id,
                     readonly = readonly,
                     isDefault = default,
                     favorite = favorite,

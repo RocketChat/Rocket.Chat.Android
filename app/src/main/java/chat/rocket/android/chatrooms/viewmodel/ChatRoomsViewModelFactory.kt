@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import chat.rocket.android.chatrooms.adapter.RoomMapper
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.chatrooms.infrastructure.ChatRoomsRepository
+import chat.rocket.android.server.infraestructure.ConnectionManager
 import javax.inject.Inject
 
 class ChatRoomsViewModelFactory @Inject constructor(
+    private val connectionManager: ConnectionManager,
     private val interactor: FetchChatRoomsInteractor,
     private val repository: ChatRoomsRepository,
     private val mapper: RoomMapper
@@ -15,5 +17,5 @@ class ChatRoomsViewModelFactory @Inject constructor(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            ChatRoomsViewModel(interactor, repository, mapper) as T
+            ChatRoomsViewModel(connectionManager, interactor, repository, mapper) as T
 }

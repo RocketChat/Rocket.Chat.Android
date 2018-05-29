@@ -111,26 +111,26 @@ class ChatRoomsPresenter @Inject constructor(
         }
     }
 
-    fun loadChatRoom(chatRoom: ChatRoom) {
-        val isDirectMessage = chatRoom.type is RoomType.DirectMessage
-        val roomName = if (isDirectMessage
-            && chatRoom.fullName != null
-            && settings.useRealName()) {
-            chatRoom.fullName!!
-        } else {
-            chatRoom.name
-        }
-
-        launchUI(strategy) {
-            val myself = getCurrentUser()
-            if (myself?.username == null) {
-                view.showMessage(R.string.msg_generic_error)
+    fun loadChatRoom(chatRoom: chat.rocket.android.db.model.ChatRoom) {
+        with(chatRoom.chatRoom) {
+            val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
+            val roomName = if (isDirectMessage
+                    && fullname != null
+                    && settings.useRealName()) {
+                fullname!!
             } else {
-                val isChatRoomOwner = chatRoom.user?.username == myself.username || isDirectMessage
-                navigator.toChatRoom(chatRoom.id, roomName,
-                    chatRoom.type.toString(), chatRoom.readonly ?: false,
-                    chatRoom.lastSeen ?: -1,
-                    chatRoom.open, isChatRoomOwner)
+                name
+            }
+
+            launchUI(strategy) {
+                val myself = getCurrentUser()
+                if (myself?.username == null) {
+                    view.showMessage(R.string.msg_generic_error)
+                } else {
+                    val isChatRoomOwner = ownerId == myself.id || isDirectMessage
+                    navigator.toChatRoom(id, roomName, type, readonly ?: false,
+                            lastSeen ?: -1, open, isChatRoomOwner)
+                }
             }
         }
     }

@@ -14,6 +14,10 @@ class TwoFAFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideJob() = Job()
+
+    @Provides
+    @PerFragment
     fun loginView(frag: TwoFAFragment): TwoFAView {
         return frag
     }

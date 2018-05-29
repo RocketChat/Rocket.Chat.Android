@@ -25,6 +25,7 @@ import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModel
 import chat.rocket.android.chatrooms.viewmodel.ChatRoomsViewModelFactory
+import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
@@ -39,6 +40,8 @@ import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -47,6 +50,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var presenter: ChatRoomsPresenter
     @Inject
     lateinit var factory: ChatRoomsViewModelFactory
+
+    @Inject
+    lateinit var dbManager: DatabaseManager // TODO - remove when moving ChatRoom screen to DB
 
     lateinit var viewModel: ChatRoomsViewModel
 
@@ -79,14 +85,24 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, factory).get(ChatRoomsViewModel::class.java)
-        val adapter = RoomsAdapter()
-        subscribeUi(adapter)
+        subscribeUi()
 
         setupToolbar()
     }
 
-    private fun subscribeUi(adapter: RoomsAdapter) {
+    private fun subscribeUi() {
         ui {
+
+            val adapter = RoomsAdapter { roomId ->
+                launch(UI) {
+                    dbManager.getRoom(roomId)?.let { room ->
+                        ui {
+                            presenter.loadChatRoom(room)
+                        }
+                    }
+
+                }
+            }
 
             recycler_view.layoutManager = LinearLayoutManager(it, LinearLayoutManager.VERTICAL, false)
             recycler_view.addItemDecoration(DividerItemDecoration(it,
@@ -100,6 +116,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     Timber.d("Got items: $it")
                     adapter.values = it
                 }
+            })
+
+            viewModel.getStatus().observe(viewLifecycleOwner, Observer { status ->
+                status?.let { showConnectionState(status) }
             })
 
             updateSort()

@@ -14,6 +14,10 @@ class ResetPasswordFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideJob() = Job()
+
+    @Provides
+    @PerFragment
     fun resetPasswordView(frag: ResetPasswordFragment): ResetPasswordView {
         return frag
     }

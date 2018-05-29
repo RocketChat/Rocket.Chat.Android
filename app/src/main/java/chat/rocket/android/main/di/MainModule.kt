@@ -4,6 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import android.content.Context
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerActivity
+import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.ui.MainActivity
@@ -13,6 +14,10 @@ import kotlinx.coroutines.experimental.Job
 
 @Module
 class MainModule {
+
+    @Provides
+    @PerActivity
+    fun provideJob() = Job()
 
     @Provides
     @PerActivity

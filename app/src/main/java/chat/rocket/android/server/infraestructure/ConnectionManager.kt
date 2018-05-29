@@ -35,7 +35,7 @@ class ConnectionManager(
     internal val client: RocketChatClient,
     private val dbManager: DatabaseManager
 ) {
-    private val statusLiveData = MutableLiveData<State>()
+    val statusLiveData = MutableLiveData<State>()
     private val statusChannelList = CopyOnWriteArrayList<Channel<State>>()
     private val statusChannel = Channel<State>(Channel.CONFLATED)
     private var connectJob: Job? = null

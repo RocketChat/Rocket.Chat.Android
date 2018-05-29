@@ -14,6 +14,10 @@ class SignupFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideJob() = Job()
+
+    @Provides
+    @PerFragment
     fun signupView(frag: SignupFragment): SignupView {
         return frag
     }

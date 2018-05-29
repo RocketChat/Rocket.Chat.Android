@@ -16,6 +16,10 @@ class ChatRoomFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideJob() = Job()
+
+    @Provides
+    @PerFragment
     fun chatRoomView(frag: ChatRoomFragment): ChatRoomView {
         return frag
     }

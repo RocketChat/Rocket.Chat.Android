@@ -14,6 +14,10 @@ class RegisterUsernameFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideJob() = Job()
+
+    @Provides
+    @PerFragment
     fun registerUsernameView(frag: RegisterUsernameFragment): RegisterUsernameView {
         return frag
     }

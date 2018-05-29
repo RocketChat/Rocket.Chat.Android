@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.inflate
 
-class RoomsAdapter : RecyclerView.Adapter<ViewHolder<*>>() {
+class RoomsAdapter(private val listener: (String) -> Unit) : RecyclerView.Adapter<ViewHolder<*>>() {
 
     init {
         setHasStableIds(true)
@@ -20,7 +20,7 @@ class RoomsAdapter : RecyclerView.Adapter<ViewHolder<*>>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<*> {
         if (viewType == 0) {
             val view = parent.inflate(R.layout.item_chat)
-            return RoomViewHolder(view)
+            return RoomViewHolder(view, listener)
         } else if (viewType == 1) {
             val view = parent.inflate(R.layout.item_chatroom_header)
             return HeaderViewHolder(view)

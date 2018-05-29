@@ -16,6 +16,13 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     @Transaction
     @Query("""
         $BASE_QUERY
+        WHERE chatrooms.id = :id
+        """)
+    abstract fun get(id: String): ChatRoom?
+
+    @Transaction
+    @Query("""
+        $BASE_QUERY
         ORDER BY
 	        CASE
 		        WHEN lastMessageTimeStamp IS NOT NULL THEN lastMessageTimeStamp
@@ -51,9 +58,6 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
             name
         """)
     abstract fun getAllAlphabeticallyGrouped(): LiveData<List<ChatRoom>>
-
-    @Query("SELECT * FROM chatrooms WHERE ID = :id")
-    abstract fun get(id: String): ChatRoom?
 
     @Query("DELETE FROM chatrooms WHERE ID = :id")
     abstract fun delete(id: String)

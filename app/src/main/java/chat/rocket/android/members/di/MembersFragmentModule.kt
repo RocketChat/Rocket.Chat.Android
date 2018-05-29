@@ -16,6 +16,10 @@ class MembersFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideJob() = Job()
+
+    @Provides
+    @PerFragment
     fun provideChatRoomNavigator(activity: ChatRoomActivity) = MembersNavigator(activity)
 
     @Provides

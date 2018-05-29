@@ -14,6 +14,10 @@ class LoginFragmentModule {
 
     @Provides
     @PerFragment
+    fun provideJob() = Job()
+
+    @Provides
+    @PerFragment
     fun loginView(frag: LoginFragment): LoginView {
         return frag
     }

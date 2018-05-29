@@ -8,16 +8,16 @@ import chat.rocket.android.chatrooms.adapter.ItemHolder
 import chat.rocket.android.chatrooms.adapter.RoomMapper
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.chatrooms.infrastructure.ChatRoomsRepository
-import chat.rocket.android.db.model.ChatRoom
-import kotlinx.coroutines.experimental.CommonPool
+import chat.rocket.android.server.infraestructure.ConnectionManager
+import chat.rocket.core.internal.realtime.socket.model.State
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 import me.henrytao.livedataktx.distinct
-import me.henrytao.livedataktx.nonNull
 import me.henrytao.livedataktx.map
+import me.henrytao.livedataktx.nonNull
 import timber.log.Timber
 
 class ChatRoomsViewModel(
+    private val connectionManager: ConnectionManager,
     private val interactor: FetchChatRoomsInteractor,
     private val repository: ChatRoomsRepository,
     private val mapper: RoomMapper
@@ -43,6 +43,10 @@ class ChatRoomsViewModel(
                         mapper.map(rooms, grouped)
                     }
         }
+    }
+
+    fun getStatus(): MutableLiveData<State> {
+        return connectionManager.statusLiveData.nonNull().distinct()
     }
 
     fun setOrdering(order: ChatRoomsRepository.Order) {
