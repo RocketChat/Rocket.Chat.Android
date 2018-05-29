@@ -26,7 +26,6 @@ import chat.rocket.android.server.domain.siteName
 import chat.rocket.android.server.ui.changeServerIntent
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
-import chat.rocket.common.util.ifNull
 import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.experimental.runBlocking
@@ -300,7 +299,7 @@ class PushManager @Inject constructor(
     }
 
     private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, grouped: Boolean = false): PendingIntent {
-        val notificationIntent = context.changeServerIntent(pushMessage.info.host)
+        val notificationIntent = context.changeServerIntent(pushMessage.info.host, chatRoomId = pushMessage.info.roomId)
         // TODO - add support to go directly to the chatroom
         /*if (!grouped) {
             notificationIntent.putExtra(EXTRA_ROOM_ID, pushMessage.info.roomId)
