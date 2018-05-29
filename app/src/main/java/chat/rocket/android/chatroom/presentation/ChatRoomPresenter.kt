@@ -448,7 +448,7 @@ class ChatRoomPresenter @Inject constructor(
                     is RoomType.DirectMessage -> "direct"
                     is RoomType.PrivateGroup -> "group"
                     is RoomType.Channel -> "channel"
-                    is RoomType.Livechat -> "livechat"
+                    is RoomType.LiveChat -> "livechat"
                     else -> "custom"
                 }
                 view.showReplyingAction(
