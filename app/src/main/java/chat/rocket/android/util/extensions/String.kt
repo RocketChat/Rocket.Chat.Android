@@ -2,6 +2,7 @@ package chat.rocket.android.util.extensions
 
 import android.graphics.Color
 import android.util.Patterns
+import chat.rocket.common.model.Token
 import timber.log.Timber
 
 fun String.removeTrailingSlash(): String {
@@ -17,12 +18,24 @@ fun String.sanitize(): String {
     return tmp.removeTrailingSlash()
 }
 
-fun String.avatarUrl(avatar: String, isGroupOrChannel: Boolean = false, format: String = "jpeg"): String {
+fun String.avatarUrl(
+    avatar: String,
+    isGroupOrChannel: Boolean = false,
+    format: String = "jpeg"
+): String {
     return if (isGroupOrChannel) {
         "${removeTrailingSlash()}/avatar/%23${avatar.removeTrailingSlash()}?format=$format"
     } else {
         "${removeTrailingSlash()}/avatar/${avatar.removeTrailingSlash()}?format=$format"
     }
+}
+
+fun String.fileUrl(path: String, token: Token): String {
+    return (this + path + "?rc_uid=${token.userId}" + "&rc_token=${token.authToken}").safeUrl()
+}
+
+fun String.safeUrl(): String {
+    return this.replace(" ", "%20").replace("\\", "")
 }
 
 fun String.serverLogoUrl(favicon: String) = "${removeTrailingSlash()}/$favicon"

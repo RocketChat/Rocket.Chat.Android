@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        app:indicatorColor="@color/black"
+        app:indicatorColor="@color/colorBlack"
         app:indicatorName="BallPulseIndicator" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

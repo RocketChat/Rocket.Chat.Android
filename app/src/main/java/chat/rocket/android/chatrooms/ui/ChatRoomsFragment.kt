@@ -50,7 +50,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     lateinit var presenter: ChatRoomsPresenter
     @Inject
     lateinit var factory: ChatRoomsViewModelFactory
-
     @Inject
     lateinit var dbManager: DatabaseManager // TODO - remove when moving ChatRoom screen to DB
 

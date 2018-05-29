@@ -13,21 +13,13 @@
     android:paddingStart="@dimen/screen_edge_left_and_right_padding"
     android:paddingTop="@dimen/message_item_top_and_bottom_padding">
 
-    <include
-        android:id="@+id/layout_avatar"
-        layout="@layout/avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_messages_notif" />
-
     <LinearLayout
         android:id="@+id/new_messages_notif"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
@@ -38,13 +30,13 @@
             android:layout_gravity="center"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:background="@color/red" />
+            android:background="@color/colorRed" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/msg_unread_messages"
-            android:textColor="@color/red" />
+            android:textColor="@color/colorRed" />
 
         <View
             android:layout_width="0dp"
@@ -52,8 +44,17 @@
             android:layout_gravity="center"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
-            android:background="@color/red" />
+            android:background="@color/colorRed" />
     </LinearLayout>
+
+    <include
+        android:id="@+id/layout_avatar"
+        layout="@layout/avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_messages_notif" />
 
     <LinearLayout
         android:id="@+id/top_container"
@@ -61,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toRightOf="@+id/layout_avatar"
+        app:layout_constraintStart_toEndOf="@+id/layout_avatar"
         app:layout_constraintTop_toBottomOf="@+id/new_messages_notif">
 
         <TextView
@@ -108,9 +109,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:layout_marginTop="5dp"
-        app:layout_constraintLeft_toLeftOf="@+id/top_container"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/top_container"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_container"
+        android:textDirection="locale"
         tools:text="This is a multiline chat message from Bertie that will take more than just one line of text. I have sure that everything is amazing!" />
 
     <include

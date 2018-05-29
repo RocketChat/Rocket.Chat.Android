@@ -29,7 +29,6 @@
         app:layout_constraintTop_toTopOf="@+id/text_chat_name"
         tools:src="@drawable/ic_hashtag_unread_12dp" />
 
-
     <TextView
         android:id="@+id/text_last_message"
         android:layout_width="0dp"
@@ -53,7 +52,7 @@
         style="@style/ChatRoom.Name.TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/text_view_drawable_padding"
         android:ellipsize="end"
         android:lines="1"
         android:maxLines="1"

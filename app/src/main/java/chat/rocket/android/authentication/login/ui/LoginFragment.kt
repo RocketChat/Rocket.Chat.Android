@@ -2,7 +2,9 @@ package chat.rocket.android.authentication.login.ui
 
 import DrawableHelper
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentSender
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
@@ -12,12 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.*
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
+import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
@@ -31,22 +31,37 @@ import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
 import chat.rocket.common.util.ifNull
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.*
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ResolvingResultCallbacks
+import com.google.android.gms.common.api.Status
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
+import timber.log.Timber
 import javax.inject.Inject
+
 
 internal const val REQUEST_CODE_FOR_CAS = 1
 internal const val REQUEST_CODE_FOR_OAUTH = 2
+internal const val MULTIPLE_CREDENTIALS_READ = 3
+internal const val NO_CREDENTIALS_EXIST = 4
+internal const val SAVE_CREDENTIALS = 5
 
-class LoginFragment : Fragment(), LoginView {
+lateinit var googleApiClient: GoogleApiClient
+
+class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks {
     @Inject
     lateinit var presenter: LoginPresenter
     private var isOauthViewEnable = false
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         areLoginOptionsNeeded()
     }
+    private var isOauthSuccessful = false
     private var isGlobalLayoutListenerSetUp = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
+    private var credentialsToBeSaved: Credential? = null
 
     companion object {
         private const val DEEP_LINK_INFO = "DeepLinkInfo"
@@ -58,9 +73,17 @@ class LoginFragment : Fragment(), LoginView {
         }
     }
 
+    override fun onConnected(bundle: Bundle?) {
+        saveSmartLockCredentials(credentialsToBeSaved)
+    }
+
+    override fun onConnectionSuspended(errorCode: Int) {
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        buildGoogleApiClient()
         deepLinkInfo = arguments?.getParcelable(DEEP_LINK_INFO)
     }
 
@@ -95,18 +118,155 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_FOR_CAS) {
-                data?.apply {
-                    presenter.authenticateWithCas(getStringExtra(INTENT_CAS_TOKEN))
-                }
-            } else if (requestCode == REQUEST_CODE_FOR_OAUTH) {
-                data?.apply {
-                    presenter.authenticateWithOauth(
-                        getStringExtra(INTENT_OAUTH_CREDENTIAL_TOKEN),
-                        getStringExtra(INTENT_OAUTH_CREDENTIAL_SECRET)
-                    )
+            if (data != null) {
+                when (requestCode) {
+                    REQUEST_CODE_FOR_CAS -> data.apply {
+                        presenter.authenticateWithCas(getStringExtra(INTENT_CAS_TOKEN))
+                    }
+                    REQUEST_CODE_FOR_OAUTH -> {
+                        isOauthSuccessful = true
+                        data.apply {
+                            presenter.authenticateWithOauth(
+                                getStringExtra(INTENT_OAUTH_CREDENTIAL_TOKEN),
+                                getStringExtra(INTENT_OAUTH_CREDENTIAL_SECRET)
+                            )
+                        }
+                    }
+                    MULTIPLE_CREDENTIALS_READ -> {
+                        val loginCredentials: Credential =
+                            data.getParcelableExtra(Credential.EXTRA_KEY)
+                        handleCredential(loginCredentials)
+                    }
+                    NO_CREDENTIALS_EXIST -> {
+                        //use the hints to autofill sign in forms to reduce the info to be filled
+                        val loginCredentials: Credential =
+                            data.getParcelableExtra(Credential.EXTRA_KEY)
+                        val email = loginCredentials.id
+                        val password = loginCredentials.password
+
+                        text_username_or_email.setText(email)
+                        text_password.setText(password)
+                    }
+                    SAVE_CREDENTIALS -> Toast.makeText(
+                        context,
+                        getString(R.string.message_credentials_saved_successfully),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
+        }
+        //cancel button pressed by the user in case of reading from smart lock
+        else if (resultCode == Activity.RESULT_CANCELED && requestCode == REQUEST_CODE_FOR_OAUTH) {
+            Timber.d("Returned from oauth")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        googleApiClient.let {
+            activity?.let { it1 -> it.stopAutoManage(it1) }
+            it.disconnect()
+        }
+    }
+
+    private fun buildGoogleApiClient() {
+        googleApiClient = GoogleApiClient.Builder(context!!)
+            .enableAutoManage(activity as FragmentActivity, {
+                Timber.e("ERROR: Connection to client failed")
+            })
+            .addConnectionCallbacks(this)
+            .addApi(Auth.CREDENTIALS_API)
+            .build()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!isOauthSuccessful) {
+            requestCredentials()
+        }
+    }
+
+    private fun requestCredentials() {
+        val request: CredentialRequest = CredentialRequest.Builder()
+            .setPasswordLoginSupported(true)
+            .build()
+
+        Auth.CredentialsApi.request(googleApiClient, request)
+            .setResultCallback { credentialRequestResult ->
+                val status = credentialRequestResult.status
+                when {
+                    status.isSuccess -> handleCredential(credentialRequestResult.credential)
+                    (status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) -> resolveResult(
+                        status,
+                        MULTIPLE_CREDENTIALS_READ
+                    )
+                    (status.statusCode == CommonStatusCodes.SIGN_IN_REQUIRED) -> {
+                        val hintRequest: HintRequest = HintRequest.Builder()
+                            .setHintPickerConfig(
+                                CredentialPickerConfig.Builder()
+                                    .setShowCancelButton(true)
+                                    .build()
+                            )
+                            .setEmailAddressIdentifierSupported(true)
+                            .setAccountTypes(IdentityProviders.GOOGLE)
+                            .build()
+                        val intent: PendingIntent =
+                            Auth.CredentialsApi.getHintPickerIntent(googleApiClient, hintRequest)
+                        try {
+                            startIntentSenderForResult(
+                                intent.intentSender,
+                                NO_CREDENTIALS_EXIST,
+                                null,
+                                0,
+                                0,
+                                0,
+                                null
+                            )
+                        } catch (e: IntentSender.SendIntentException) {
+                            Timber.e("ERROR: Could not start hint picker Intent")
+                        }
+                    }
+                    else -> Timber.d("ERROR: nothing happening")
+                }
+            }
+    }
+
+    private fun handleCredential(loginCredentials: Credential) {
+        if (loginCredentials.accountType == null) {
+            presenter.authenticateWithUserAndPassword(
+                loginCredentials.id,
+                loginCredentials.password.toString()
+            )
+        }
+    }
+
+    private fun resolveResult(status: Status, requestCode: Int) {
+        try {
+            status.startResolutionForResult(activity, requestCode)
+        } catch (e: IntentSender.SendIntentException) {
+            Timber.e("Failed to send Credentials intent")
+        }
+    }
+
+    override fun saveSmartLockCredentials(loginCredential: Credential?) {
+        credentialsToBeSaved = loginCredential
+        if (credentialsToBeSaved == null) {
+            return
+        }
+
+        activity?.let {
+            Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
+                object : ResolvingResultCallbacks<Status>(it, SAVE_CREDENTIALS) {
+                    override fun onSuccess(status: Status) {
+                        Timber.d("credentials save:SUCCESS:$status")
+                        credentialsToBeSaved = null
+                    }
+
+                    override fun onUnresolvableFailure(status: Status) {
+                        Timber.e("credentials save:FAILURE:$status")
+                        credentialsToBeSaved = null
+                    }
+                })
         }
     }
 

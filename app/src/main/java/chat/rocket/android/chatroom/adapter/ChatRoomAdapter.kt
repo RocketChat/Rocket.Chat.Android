@@ -14,13 +14,12 @@ import timber.log.Timber
 import java.security.InvalidParameterException
 
 class ChatRoomAdapter(
-    private val roomType: String,
-    private val roomName: String,
-    private val presenter: ChatRoomPresenter?,
+    private val roomType: String? = null,
+    private val roomName: String? = null,
+    private val presenter: ChatRoomPresenter? = null,
     private val enableActions: Boolean = true,
     private val reactionListener: EmojiReactionListener? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
-
     private val dataSet = ArrayList<BaseViewModel<*>>()
 
     init {
@@ -65,6 +64,12 @@ class ChatRoomAdapter(
                 val view = parent.inflate(R.layout.item_file_attachment)
                 GenericFileAttachmentViewHolder(view, actionsListener, reactionListener)
             }
+            BaseViewModel.ViewType.MESSAGE_REPLY -> {
+                val view = parent.inflate(R.layout.item_message_reply)
+                MessageReplyViewHolder(view, actionsListener, reactionListener) { roomName, permalink ->
+                    presenter?.openDirectMessage(roomName, permalink)
+                }
+            }
             else -> {
                 throw InvalidParameterException("TODO - implement for ${viewType.toViewType()}")
             }
@@ -98,15 +103,26 @@ class ChatRoomAdapter(
         }
 
         when (holder) {
-            is MessageViewHolder -> holder.bind(dataSet[position] as MessageViewModel)
-            is ImageAttachmentViewHolder -> holder.bind(dataSet[position] as ImageAttachmentViewModel)
-            is AudioAttachmentViewHolder -> holder.bind(dataSet[position] as AudioAttachmentViewModel)
-            is VideoAttachmentViewHolder -> holder.bind(dataSet[position] as VideoAttachmentViewModel)
-            is UrlPreviewViewHolder -> holder.bind(dataSet[position] as UrlPreviewViewModel)
-            is MessageAttachmentViewHolder -> holder.bind(dataSet[position] as MessageAttachmentViewModel)
-            is AuthorAttachmentViewHolder -> holder.bind(dataSet[position] as AuthorAttachmentViewModel)
-            is ColorAttachmentViewHolder -> holder.bind(dataSet[position] as ColorAttachmentViewModel)
-            is GenericFileAttachmentViewHolder -> holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
+            is MessageViewHolder ->
+                holder.bind(dataSet[position] as MessageViewModel)
+            is ImageAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ImageAttachmentViewModel)
+            is AudioAttachmentViewHolder ->
+                holder.bind(dataSet[position] as AudioAttachmentViewModel)
+            is VideoAttachmentViewHolder ->
+                holder.bind(dataSet[position] as VideoAttachmentViewModel)
+            is UrlPreviewViewHolder ->
+                holder.bind(dataSet[position] as UrlPreviewViewModel)
+            is MessageAttachmentViewHolder ->
+                holder.bind(dataSet[position] as MessageAttachmentViewModel)
+            is AuthorAttachmentViewHolder ->
+                holder.bind(dataSet[position] as AuthorAttachmentViewModel)
+            is ColorAttachmentViewHolder ->
+                holder.bind(dataSet[position] as ColorAttachmentViewModel)
+            is GenericFileAttachmentViewHolder ->
+                holder.bind(dataSet[position] as GenericFileAttachmentViewModel)
+            is MessageReplyViewHolder ->
+                holder.bind(dataSet[position] as MessageReplyViewModel)
         }
     }
 
@@ -147,7 +163,7 @@ class ChatRoomAdapter(
     }
 
     fun updateItem(message: BaseViewModel<*>) {
-        var index = dataSet.indexOfLast { it.messageId == message.messageId }
+        val index = dataSet.indexOfLast { it.messageId == message.messageId }
         val indexOfNext = dataSet.indexOfFirst { it.messageId == message.messageId }
         Timber.d("index: $index")
         if (index > -1) {
@@ -188,10 +204,14 @@ class ChatRoomAdapter(
             message.apply {
                 when (item.itemId) {
                     R.id.action_message_reply -> {
-                        presenter?.citeMessage(roomType, id, true)
+                        if (roomName != null && roomType != null) {
+                            presenter?.citeMessage(roomName, roomType, id, true)
+                        }
                     }
                     R.id.action_message_quote -> {
-                        presenter?.citeMessage(roomType, id, false)
+                        if (roomName != null && roomType != null) {
+                            presenter?.citeMessage(roomName, roomType, id, false)
+                        }
                     }
                     R.id.action_message_copy -> {
                         presenter?.copyMessage(id)

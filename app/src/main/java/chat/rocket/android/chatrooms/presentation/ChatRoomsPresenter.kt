@@ -11,7 +11,7 @@ import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.GetActiveUsersInteractor
-import chat.rocket.android.server.domain.GetChatRoomsInteractor
+import chat.rocket.android.server.domain.ChatRoomsInteractor
 import chat.rocket.android.server.domain.JobSchedulerInteractor
 import chat.rocket.android.server.domain.PermissionsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
@@ -60,7 +60,7 @@ class ChatRoomsPresenter @Inject constructor(
     private val navigator: MainNavigator,
     @Named("currentServer") private val currentServer: String,
     private val manager: ConnectionManager,
-    private val getChatRoomsInteractor: GetChatRoomsInteractor,
+    private val chatRoomsInteractor: ChatRoomsInteractor,
     private val saveChatRoomsInteractor: SaveChatRoomsInteractor,
     private val saveActiveUsersInteractor: SaveActiveUsersInteractor,
     private val getActiveUsersInteractor: GetActiveUsersInteractor,
@@ -164,7 +164,7 @@ class ChatRoomsPresenter @Inject constructor(
     fun chatRoomsByName(name: String) {
         launchUI(strategy) {
             try {
-                val roomList = getChatRoomsInteractor.getAllByName(currentServer, name)
+                val roomList = chatRoomsInteractor.getAllByName(currentServer, name)
                 if (roomList.isEmpty()) {
                     val (users, rooms) = retryIO("spotlight($name)") {
                         client.spotlight(name)
@@ -271,7 +271,7 @@ class ChatRoomsPresenter @Inject constructor(
 
     fun updateSortedChatRooms() {
         launchUI(strategy) {
-            val roomList = getChatRoomsInteractor.getAll(currentServer)
+            val roomList = chatRoomsInteractor.getAll(currentServer)
             view.updateChatRooms(sortRooms(roomList))
         }
     }
@@ -472,7 +472,7 @@ class ChatRoomsPresenter @Inject constructor(
     // Update a ChatRoom with a Room information
     private fun updateRoom(room: Room) {
         Timber.d("Updating Room: ${room.id} - ${room.name}")
-        val chatRooms = getChatRoomsInteractor.getAll(currentServer).toMutableList()
+        val chatRooms = chatRoomsInteractor.getAll(currentServer).toMutableList()
         val chatRoom = chatRooms.find { chatRoom -> chatRoom.id == room.id }
         chatRoom?.apply {
             val newRoom = ChatRoom(
@@ -513,7 +513,7 @@ class ChatRoomsPresenter @Inject constructor(
     // Update a ChatRoom with a Subscription information
     private fun updateSubscription(subscription: Subscription) {
         Timber.d("Updating subscription: ${subscription.id} - ${subscription.name}")
-        val chatRooms = getChatRoomsInteractor.getAll(currentServer).toMutableList()
+        val chatRooms = chatRoomsInteractor.getAll(currentServer).toMutableList()
         val chatRoom = chatRooms.find { chatRoom -> chatRoom.id == subscription.roomId }
         chatRoom?.apply {
             val newRoom = ChatRoom(
@@ -553,7 +553,7 @@ class ChatRoomsPresenter @Inject constructor(
 
     private fun removeRoom(
         id: String,
-        chatRooms: MutableList<ChatRoom> = getChatRoomsInteractor.getAll(currentServer).toMutableList()
+        chatRooms: MutableList<ChatRoom> = chatRoomsInteractor.getAll(currentServer).toMutableList()
     ) {
         Timber.d("Removing ROOM: $id")
         synchronized(this) {
@@ -594,7 +594,7 @@ class ChatRoomsPresenter @Inject constructor(
         val username = user_.username
         val status = user_.status
         if (username != null && status != null) {
-            getChatRoomsInteractor.getByName(currentServer, username)?.let {
+            chatRoomsInteractor.getByName(currentServer, username)?.let {
                 val newRoom = ChatRoom(
                     id = it.id,
                     subscriptionId = it.id,
@@ -622,10 +622,10 @@ class ChatRoomsPresenter @Inject constructor(
                     broadcast = it.broadcast
                 )
 
-                getChatRoomsInteractor.remove(currentServer, it)
-                getChatRoomsInteractor.add(currentServer, newRoom)
+                chatRoomsInteractor.remove(currentServer, it)
+                chatRoomsInteractor.add(currentServer, newRoom)
                 launchUI(strategy) {
-                    view.updateChatRooms(sortRooms(getChatRoomsInteractor.getAll(currentServer)))
+                    view.updateChatRooms(sortRooms(chatRoomsInteractor.getAll(currentServer)))
                 }
             }
         }
@@ -635,7 +635,7 @@ class ChatRoomsPresenter @Inject constructor(
         Timber.i("Updating ChatRooms")
         launch(strategy.jobs) {
             val chatRoomsWithPreview = getChatRoomsWithPreviews(
-                getChatRoomsInteractor.getAll(currentServer)
+                chatRoomsInteractor.getAll(currentServer)
             )
             val chatRoomsWithStatus = getChatRoomWithStatus(chatRoomsWithPreview)
             view.updateChatRooms(chatRoomsWithStatus)
