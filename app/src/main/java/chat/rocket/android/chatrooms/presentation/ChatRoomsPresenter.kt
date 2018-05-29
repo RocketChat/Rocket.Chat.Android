@@ -34,6 +34,7 @@ import chat.rocket.common.model.SimpleUser
 import chat.rocket.common.model.User
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.model.Subscription
+import chat.rocket.core.internal.realtime.createDirectMessage
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.internal.realtime.socket.model.Type
@@ -124,8 +125,19 @@ class ChatRoomsPresenter @Inject constructor(
             if (myself?.username == null) {
                 view.showMessage(R.string.msg_generic_error)
             } else {
+                val id = if (isDirectMessage && !chatRoom.open) {
+                    retryIO("createDirectMessage(${chatRoom.name})") {
+                        client.createDirectMessage(chatRoom.name)
+                    }
+                    val fromTo = mutableListOf(myself.id, chatRoom.id).apply {
+                        sort()
+                    }
+                    fromTo.joinToString("")
+                } else {
+                    chatRoom.id
+                }
                 val isChatRoomOwner = chatRoom.user?.username == myself.username || isDirectMessage
-                navigator.toChatRoom(chatRoom.id, roomName,
+                navigator.toChatRoom(id, roomName,
                     chatRoom.type.toString(), chatRoom.readonly ?: false,
                     chatRoom.lastSeen ?: -1,
                     chatRoom.open, isChatRoomOwner)
