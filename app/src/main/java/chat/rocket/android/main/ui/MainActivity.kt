@@ -18,6 +18,7 @@ import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.viewmodel.NavHeaderViewModel
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
 import chat.rocket.android.util.extensions.fadeIn
 import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.rotateBy
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     private var expanded = false
     private lateinit var googleApiClient: GoogleApiClient
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
+    private var chatRoomId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -68,6 +70,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
                 Timber.d(ex, "Missing play services...")
             }
         }
+
+        chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
 
         presenter.connect()
         presenter.loadCurrentInfo()
@@ -111,7 +115,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     override fun onResume() {
         super.onResume()
         if (!isFragmentAdded) {
-            presenter.toChatList()
+            presenter.toChatList(chatRoomId)
             isFragmentAdded = true
         }
     }

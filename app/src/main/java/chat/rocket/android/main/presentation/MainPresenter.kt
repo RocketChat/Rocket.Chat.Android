@@ -49,7 +49,7 @@ class MainPresenter @Inject constructor(
 
     private val userDataChannel = Channel<Myself>()
 
-    fun toChatList() = navigator.toChatList()
+    fun toChatList(chatRoomId: String? = null) = navigator.toChatList(chatRoomId)
 
     fun toUserProfile() = navigator.toUserProfile()
 

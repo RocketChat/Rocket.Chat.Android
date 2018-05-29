@@ -640,4 +640,10 @@ class ChatRoomsPresenter @Inject constructor(
         manager.removeRoomsAndSubscriptionsChannel(subscriptionsChannel)
         manager.removeActiveUserChannel(activeUserChannel)
     }
+
+    fun goToChatRoomWithId(chatRoomId: String) {
+        launchUI(strategy) {
+            chatRoomsInteractor.getById(currentServer, chatRoomId)?.let { loadChatRoom(it) }
+        }
+    }
 }
