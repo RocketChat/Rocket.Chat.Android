@@ -11,7 +11,7 @@ class BottomSheetMenu(adapter: MenuAdapter) : SheetMenu(adapter = adapter) {
 
     override fun processRecycler(recycler: RecyclerView, dialog: BottomSheetDialog) {
         if (layoutManager == null) {
-            layoutManager = LinearLayoutManager(recycler.context, LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(recycler.context)
         }
 
         // Superclass SheetMenu adapter property is nullable MenuAdapter? but this class enforces

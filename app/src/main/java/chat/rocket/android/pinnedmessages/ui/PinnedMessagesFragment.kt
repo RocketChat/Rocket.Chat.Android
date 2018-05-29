@@ -71,7 +71,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
             if (recycler_view_pinned.adapter == null){
                 adapter = ChatRoomAdapter(chatRoomType,"",null,false)
                 recycler_view_pinned.adapter = adapter
-                val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                val linearLayoutManager = LinearLayoutManager(context)
                 recycler_view_pinned.layoutManager = linearLayoutManager
                 recycler_view_pinned.itemAnimator = DefaultItemAnimator()
                 if (pinnedMessages.size > 10){

@@ -40,7 +40,7 @@ private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 class MembersFragment : Fragment(), MembersView {
     @Inject lateinit var presenter: MembersPresenter
     private val adapter: MembersAdapter = MembersAdapter { memberViewModel -> presenter.toMemberDetails(memberViewModel) }
-    private val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    private val linearLayoutManager = LinearLayoutManager(context)
 
     private lateinit var chatRoomId: String
     private lateinit var chatRoomType: String

@@ -46,8 +46,7 @@ class SuggestionsView : FrameLayout, TextWatcher {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr, 0) {
         recyclerView = RecyclerView(context)
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,
-                false)
+        val layoutManager = LinearLayoutManager(context)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.addItemDecoration(TopItemDecoration(context, R.drawable.suggestions_menu_decorator))
         recyclerView.layoutManager = layoutManager

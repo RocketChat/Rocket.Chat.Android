@@ -104,7 +104,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 }
             }
 
-            recycler_view.layoutManager = LinearLayoutManager(it, LinearLayoutManager.VERTICAL, false)
+            recycler_view.layoutManager = LinearLayoutManager(it)
             recycler_view.addItemDecoration(DividerItemDecoration(it,
                     resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_start),
                     resources.getDimensionPixelSize(R.dimen.divider_item_decorator_bound_end)))
