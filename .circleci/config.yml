@@ -93,7 +93,7 @@ jobs:
       - run:
           name: Build APK
           command: |
-            ./gradlew assembleRelease --quiet --console=plain --stacktrace
+            ./gradlew assembleRelease --info --console=plain --stacktrace
       - store_artifacts:
           path: app/build/outputs/apk
           destination: apks
