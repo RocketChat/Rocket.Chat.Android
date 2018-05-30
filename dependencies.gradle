@@ -41,7 +41,7 @@ ext {
             junit                 : '4.12',
             truth                 : '0.36',
             espresso              : '3.1.0-alpha2',
-            mockito               : '2.10.0'
+            mockito               : '2.10.0',
 
             //For wearable
             wear                  : '2.3.0',
