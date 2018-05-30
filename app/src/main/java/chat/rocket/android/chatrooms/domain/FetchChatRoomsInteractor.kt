@@ -43,15 +43,17 @@ class FetchChatRoomsInteractor(
                 dbManager.insert(UserEntity(userId))
             }
             lastMessage?.sender?.let { user ->
-                if (dbManager.findUser(user.id!!) == null) {
-                    Timber.d("Missing last message user, inserting: ${user.id}")
-                    dbManager.insert(UserEntity(user.id!!, user.username, user.name))
+                user.id?.let { id ->
+                    if (dbManager.findUser(id) == null) {
+                        Timber.d("Missing last message user, inserting: $id")
+                        dbManager.insert(UserEntity(id, user.username, user.name))
+                    }
                 }
             }
-            user?.let { user ->
-                if (dbManager.findUser(user.id!!) == null) {
-                    Timber.d("Missing owner user, inserting: ${user.id}")
-                    dbManager.insert(UserEntity(user.id!!, user.username, user.name))
+            user?.id?.let { id ->
+                if (dbManager.findUser(id) == null) {
+                    Timber.d("Missing owner user, inserting: $id")
+                    dbManager.insert(UserEntity(id, user?.username, user?.name))
                 }
             }
             return ChatRoomEntity(
