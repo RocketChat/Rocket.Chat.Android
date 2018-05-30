@@ -4,13 +4,13 @@ ext {
             compileSdk            : 27,
             targetSdk             : 27,
             buildTools            : '27.0.3',
-            kotlin                : '1.2.40',
+            kotlin                : '1.2.41',
             coroutine             : '0.22.5',
             dokka                 : '0.9.16',
 
             // Main dependencies
-            support               : '27.1.0',
-            constraintLayout      : '1.0.2',
+            support               : '27.1.1',
+            constraintLayout      : '1.1.0',
             androidKtx            : '0.3',
             dagger                : '2.14.1',
             exoPlayer             : '2.6.0',
@@ -24,7 +24,7 @@ ext {
             timber                : '4.7.0',
             threeTenABP           : '1.0.5',
             rxBinding             : '2.0.0',
-            fresco                : '1.8.1',
+            fresco                : '1.9.0',
             kotshi                : '1.0.2',
             frescoImageViewer     : '0.5.1',
             markwon               : '1.0.3',
@@ -35,8 +35,13 @@ ext {
             // For testing
             junit                 : '4.12',
             truth                 : '0.36',
-            expresso              : '3.0.1',
-            mockito               : '2.10.0'
+            espresso              : '3.0.2',
+            mockito               : '2.10.0',
+
+            //For wearable
+            wear                  : '2.3.0',
+            playServicesWearable  : '15.0.1',
+            supportWearable       : '26.1.0'
     ]
     libraries = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",
@@ -59,6 +64,7 @@ ext {
             daggerProcessor       : "com.google.dagger:dagger-compiler:${versions.dagger}",
             daggerAndroidApt      : "com.google.dagger:dagger-android-processor:${versions.dagger}",
             playServicesGcm       : "com.google.android.gms:play-services-gcm:${versions.playServices}",
+            playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServices}",
             exoPlayer             : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
 
             room                  : "android.arch.persistence.room:runtime:${versions.room}",
@@ -91,7 +97,6 @@ ext {
             frescoImageViewer     : "com.github.luciofm:FrescoImageViewer:${versions.frescoImageViewer}",
 
             markwon               : "ru.noties:markwon:${versions.markwon}",
-            markwonImageLoader    : "ru.noties:markwon-image-loader:${versions.markwon}",
 
             sheetMenu             : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
 
@@ -99,8 +104,17 @@ ext {
 
             // For testing
             junit                 : "junit:junit:$versions.junit",
-            expressoCore          : "com.android.support.test.espresso:espresso-core:${versions.expresso}",
+            espressoCore          : "com.android.support.test.espresso:espresso-core:${versions.espresso}",
+            espressoIntents       : "com.android.support.test.espresso:espresso-intents:${versions.espresso}",
             roomTest              : "android.arch.persistence.room:testing:${versions.room}",
             truth                 : "com.google.truth:truth:$versions.truth",
+
+            //For the wear app
+            wearable              : "com.google.android.support:wearable:${versions.wear}",
+            playServicesWearable  : "com.google.android.gms:play-services-wearable:${versions.playServicesWearable}",
+            percentLayout         : "com.android.support:percent:${versions.supportWearable}",
+            supportWearable       : "com.android.support:support-v4:${versions.supportWearable}",
+            wearableRecyclerView  : "com.android.support:recyclerview-v7:${versions.supportWearable}",
+            wearSupport           : "com.android.support:wear:${versions.supportWearable}"
     ]
 }

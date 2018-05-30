@@ -7,8 +7,10 @@ import chat.rocket.android.util.extensions.setVisible
 /**
  * An adapter for bottomsheet menu that lists all the actions that could be taken over a chat message.
  */
-class ActionListAdapter(menuItems: List<MenuItem> = emptyList(), callback: MenuItem.OnMenuItemClickListener) :
-        ListBottomSheetAdapter(menuItems = menuItems, callback = callback) {
+class ActionListAdapter(
+    menuItems: List<MenuItem> = emptyList(),
+    callback: MenuItem.OnMenuItemClickListener
+) : ListBottomSheetAdapter(menuItems = menuItems, callback = callback) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = menuItems[position]
@@ -24,8 +26,12 @@ class ActionListAdapter(menuItems: List<MenuItem> = emptyList(), callback: MenuI
         holder.itemView.setOnClickListener {
             callback?.onMenuItemClick(item)
         }
-        val deleteTextColor = holder.itemView.context.resources.getColor(R.color.red)
-        val color = if (item.itemId == R.id.action_menu_msg_delete) deleteTextColor else textColors.get(item.itemId)
+        val deleteTextColor = holder.itemView.context.resources.getColor(R.color.colorRed)
+        val color = if (item.itemId == R.id.action_message_delete) {
+            deleteTextColor
+        } else {
+            textColors.get(item.itemId)
+        }
         holder.textTitle.setTextColor(color)
     }
 }

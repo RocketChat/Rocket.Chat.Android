@@ -58,6 +58,9 @@ jobs:
       - run:
           name: Run Unit test
           command: ./gradlew test
+      - run:
+          name: Compile Instrumentation test
+          command: ./gradlew assembleAndroidTest
       - store_artifacts:
           path: app/build/reports/
           destination: reports

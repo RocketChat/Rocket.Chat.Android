@@ -49,6 +49,8 @@ const val ALLOW_MESSAGE_EDITING = "Message_AllowEditing"
 const val SHOW_DELETED_STATUS = "Message_ShowDeletedStatus"
 const val SHOW_EDITED_STATUS = "Message_ShowEditedStatus"
 const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
+const val ALLOW_MESSAGE_STARRING = "Message_AllowStarring"
+const val STORE_LAST_MESSAGE = "Store_Last_Message"
 
 /*
  * Extension functions for Public Settings.
@@ -57,6 +59,7 @@ const val ALLOW_MESSAGE_PINNING = "Message_AllowPinning"
  * ServerPresenter.kt and a extension function to access it
  */
 fun PublicSettings.isLdapAuthenticationEnabled(): Boolean = this[LDAP_ENABLE]?.value == true
+
 fun PublicSettings.isCasAuthenticationEnabled(): Boolean = this[CAS_ENABLE]?.value == true
 fun PublicSettings.casLoginUrl(): String = this[CAS_LOGIN_URL]?.value.toString()
 fun PublicSettings.isRegistrationEnabledForNewUsers(): Boolean = this[ACCOUNT_REGISTRATION]?.value == "Public"
@@ -81,21 +84,24 @@ fun PublicSettings.wideTile(): String? = this[WIDE_TILE_310]?.value as String?
 fun PublicSettings.showDeletedStatus(): Boolean = this[SHOW_DELETED_STATUS]?.value == true
 fun PublicSettings.showEditedStatus(): Boolean = this[SHOW_EDITED_STATUS]?.value == true
 fun PublicSettings.allowedMessagePinning(): Boolean = this[ALLOW_MESSAGE_PINNING]?.value == true
+fun PublicSettings.allowedMessageStarring(): Boolean = this[ALLOW_MESSAGE_STARRING]?.value == true
 fun PublicSettings.allowedMessageEditing(): Boolean = this[ALLOW_MESSAGE_EDITING]?.value == true
 fun PublicSettings.allowedMessageDeleting(): Boolean = this[ALLOW_MESSAGE_DELETING]?.value == true
 
-fun PublicSettings.uploadMimeTypeFilter(): Array<String> {
-    val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value
-    values?.let { it as String }?.split(",")?.let {
-        return it.mapToTypedArray { it.trim() }
-    }
+fun PublicSettings.hasShowLastMessage(): Boolean = this[STORE_LAST_MESSAGE] != null
+fun PublicSettings.showLastMessage(): Boolean = this[STORE_LAST_MESSAGE]?.value == true
 
-    return arrayOf("*/*")
+fun PublicSettings.uploadMimeTypeFilter(): Array<String>? {
+    val values = this[UPLOAD_WHITELIST_MIMETYPES]?.value as String?
+    if (!values.isNullOrBlank()) {
+        return values!!.split(",").mapToTypedArray { it.trim() }
+    }
+    return null
 }
 
 fun PublicSettings.uploadMaxFileSize(): Int {
     return this[UPLOAD_MAX_FILE_SIZE]?.value?.let { it as Int } ?: Int.MAX_VALUE
 }
 
-fun PublicSettings.baseUrl(): String? = this[SITE_URL]?.value as String?
+fun PublicSettings.baseUrl(): String = this[SITE_URL]?.value as String
 fun PublicSettings.siteName(): String? = this[SITE_NAME]?.value as String?
