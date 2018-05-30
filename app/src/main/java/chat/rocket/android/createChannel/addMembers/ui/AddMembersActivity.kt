@@ -24,6 +24,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.activity_add_members.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
@@ -46,7 +47,9 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
                 .show()
         }
     }
-    private var linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    private lateinit var observableForSearchView: Disposable
+    private lateinit var observableForToolbarAction: Disposable
+    private val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -56,17 +59,14 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         setUpRecyclerView()
         setOnClickListeners()
         setInitialChips()
-        observableFromSearchView(search_view)
-            .debounce(300, TimeUnit.MILLISECONDS)
-            .filter { item -> item.isNotEmpty() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { query ->
-                queryParam = query
-                run {
-                    adapter.reAllocateArrayList()
-                    presenter.queryUsersFromRegex(query)
-                }
-            }
+        setUpObservableForSearchView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //dispose off the rx disposables
+        observableForToolbarAction.dispose()
+        observableForSearchView.dispose()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -129,6 +129,20 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         updateToolBar()
     }
 
+    private fun setUpObservableForSearchView() {
+        observableForSearchView = observableFromSearchView(search_view)
+            .debounce(300, TimeUnit.MILLISECONDS)
+            .filter { item -> item.isNotEmpty() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { query ->
+                queryParam = query
+                run {
+                    adapter.reAllocateArrayList()
+                    presenter.queryUsersFromRegex(query)
+                }
+            }
+    }
+
     private fun addNewChip(memberViewModel: MemberViewModel) {
         memberViewModel.username?.let {
             buildNewChip(it)
@@ -156,7 +170,8 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         } else {
             toolbar_action_text.alpha = 1.0f
         }
-        toolbar_title.textContent = getString(R.string.title_add_members, membersToAdd.size.toString())
+        toolbar_title.textContent =
+                getString(R.string.title_add_members, membersToAdd.size.toString())
     }
 
     private fun setUpToolBar() {
@@ -186,7 +201,7 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
 
     private fun observableFromSearchView(searchView: EditText): Observable<String> {
         val observableSubject: BehaviorSubject<String> = BehaviorSubject.create()
-        RxTextView.textChanges(searchView).subscribe { text ->
+        observableForToolbarAction = RxTextView.textChanges(searchView).subscribe { text ->
             if (text.isNotBlank()) {
                 observableSubject.onNext(text.toString())
             }

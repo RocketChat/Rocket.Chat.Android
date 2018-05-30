@@ -13,9 +13,10 @@ import chat.rocket.android.createChannel.presentation.CreateNewChannelPresenter
 import chat.rocket.android.createChannel.presentation.CreateNewChannelView
 import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
-import chat.rocket.common.model.roomTypeOf
+import chat.rocket.common.model.RoomType
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.AndroidInjection
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_create_new_channel.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 import javax.inject.Inject
@@ -25,8 +26,9 @@ internal const val ADD_MEMBERS_ACTIVITY_REQUEST_CODE = 1
 class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
     @Inject
     lateinit var presenter: CreateNewChannelPresenter
-    private var channelType: String = "public"
+    private var channelType: RoomType = RoomType.CHANNEL
     private var listOfUsers: ArrayList<String> = ArrayList()
+    private lateinit var observableForToolbarAction: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -34,6 +36,11 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         setContentView(R.layout.activity_create_new_channel)
         setUpToolBar()
         setUpOnClickListeners()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        observableForToolbarAction.dispose()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -75,19 +82,18 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         finish()
     }
 
-    override fun showMessage(resId: Int) {
+    override fun showMessageAndClearText(resId: Int) {
         channel_name_edit_text.setText("")
         showToast(getString(resId))
     }
 
-    override fun showMessage(message: String) {
+    override fun showMessageAndClearText(message: String) {
         channel_name_edit_text.setText("")
         showToast(message)
     }
 
-    override fun showGenericErrorMessage() {
-        channel_name_edit_text.setText("")
-        showMessage(getString(R.string.msg_generic_error))
+    override fun showErrorMessage() {
+        showMessageAndClearText(getString(R.string.msg_generic_error))
     }
 
 
@@ -108,19 +114,20 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         toolbar_action_text.text = getString(R.string.action_create_new_channel)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        RxTextView.textChanges(channel_name_edit_text).subscribe { text ->
-            toolbar_action_text.isEnabled = (text.isNotEmpty() && listOfUsers.isNotEmpty())
-            if (text.isEmpty()) {
-                toolbar_action_text.alpha = 0.8f
-            } else {
-                toolbar_action_text.alpha = 1.0f
-            }
-        }
+        observableForToolbarAction =
+                RxTextView.textChanges(channel_name_edit_text).subscribe { text ->
+                    toolbar_action_text.isEnabled = (text.isNotEmpty() && listOfUsers.isNotEmpty())
+                    if (text.isEmpty()) {
+                        toolbar_action_text.alpha = 0.8f
+                    } else {
+                        toolbar_action_text.alpha = 1.0f
+                    }
+                }
     }
 
     private fun setUpOnClickListeners() {
         public_channel.setOnClickListener {
-            channelType = "c"
+            channelType = RoomType.CHANNEL
 
             channel_type.text = getString(R.string.public_channel_type)
             channel_description.text = getString(R.string.public_channel_description)
@@ -142,7 +149,7 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         }
 
         private_channel.setOnClickListener {
-            channelType = "p"
+            channelType = RoomType.PRIVATE_GROUP
 
             channel_type.text = getString(R.string.private_channel_type)
             channel_description.text = getString(R.string.private_channel_type_description)
@@ -150,11 +157,11 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
             placeholder.setImageDrawable(getDrawable(R.drawable.ic_lock_black_12_dp))
 
             (getDrawable(R.drawable.button_border) as GradientDrawable).setColor(
-                resources.getColor(
-                    R.color.colorRed
-                )
+                resources.getColor(R.color.colorRed)
             )
-            (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(resources.getColor(R.color.default_background))
+            (getDrawable(R.drawable.button_solid) as GradientDrawable).setColor(
+                resources.getColor(R.color.default_background)
+            )
             (getDrawable(R.drawable.button_solid) as GradientDrawable).setStroke(
                 1,
                 resources.getColor(R.color.colorRed)
@@ -170,7 +177,7 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         toolbar_action_text.setOnClickListener {
             if (toolbar_action_text.isEnabled) {
                 presenter.createNewChannel(
-                    roomTypeOf(channelType),
+                    channelType,
                     channel_name_edit_text.text.toString(),
                     listOfUsers,
                     false

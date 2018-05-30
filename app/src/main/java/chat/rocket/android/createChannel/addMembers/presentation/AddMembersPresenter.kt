@@ -1,6 +1,5 @@
 package chat.rocket.android.createChannel.addMembers.presentation
 
-import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.members.viewmodel.MemberViewModelMapper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -19,28 +18,25 @@ class AddMembersPresenter @Inject constructor(
     private val mapper: MemberViewModelMapper,
     factory: RocketChatClientFactory
 ) {
-    val serverUrl: String? = serverInteractor.get()
-    private val client = if (serverUrl != null) factory.create(serverUrl) else null
+    private val client = factory.create(serverInteractor.get()!!)
 
     fun queryUsersFromRegex(queryParam: String, offset: Long = 0) {
-        if (client != null) {
-            view.showLoading()
-            launchUI(strategy) {
-                try {
-                    val allMembers = retryIO("queryUsers($queryParam)") {
-                        client.queryUsers(queryParam, 60, offset)
-                    }
-                    val memberViewModelMapper = mapper.mapToViewModelList(allMembers.result)
-                    view.showMembers(memberViewModelMapper, allMembers.total)
-                } catch (ex: RocketChatException) {
-                    ex.message?.let {
-                        view.showMessage(it)
-                    }.ifNull {
-                        view.showGenericErrorMessage()
-                    }
-                } finally {
-                    view.hideLoading()
+        view.showLoading()
+        launchUI(strategy) {
+            try {
+                val allMembers = retryIO("queryUsers($queryParam)") {
+                    client.queryUsers(queryParam, 60, offset)
                 }
+                val memberViewModelMapper = mapper.mapToViewModelList(allMembers.result)
+                view.showMembers(memberViewModelMapper, allMembers.total)
+            } catch (ex: RocketChatException) {
+                ex.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            } finally {
+                view.hideLoading()
             }
         }
     }
