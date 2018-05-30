@@ -90,7 +90,7 @@ class RoomMapper(private val context: Application,
     private fun mapLastMessage(name: String?, fullName: String?, text: String?, unread: Boolean): CharSequence? {
         return if (!settings.showLastMessage()) {
             null
-        } else if (name != null && fullName != null && text != null) {
+        } else if (name != null && text != null) {
             val user = if (localRepository.checkIfMyself(name)) {
                 "${context.getString(R.string.msg_you)}: "
             } else {
