@@ -7,7 +7,7 @@ import chat.rocket.android.db.model.UserEntity
 
 @Database(
     entities = [UserEntity::class, ChatRoomEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class RCDatabase : RoomDatabase() {
