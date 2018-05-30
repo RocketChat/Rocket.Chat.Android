@@ -42,6 +42,11 @@ ext {
             truth                 : '0.36',
             espresso              : '3.1.0-alpha2',
             mockito               : '2.10.0'
+
+            //For wearable
+            wear                  : '2.3.0',
+            playServicesWearable  : '15.0.1',
+            supportWearable       : '26.1.0'
     ]
     libraries = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",
@@ -107,5 +112,13 @@ ext {
             espressoIntents       : "androidx.test.espresso:espresso-intents:${versions.espresso}",
             roomTest              : "android.arch.persistence.room:testing:${versions.room}",
             truth                 : "com.google.truth:truth:$versions.truth",
+
+            //For the wear app
+            wearable              : "com.google.android.support:wearable:${versions.wear}",
+            playServicesWearable  : "com.google.android.gms:play-services-wearable:${versions.playServicesWearable}",
+            percentLayout         : "com.android.support:percent:${versions.supportWearable}",
+            supportWearable       : "com.android.support:support-v4:${versions.supportWearable}",
+            wearableRecyclerView  : "com.android.support:recyclerview-v7:${versions.supportWearable}",
+            wearSupport           : "com.android.support:wear:${versions.supportWearable}"
     ]
 }
