@@ -331,6 +331,7 @@ class LoginPresenter @Inject constructor(
                             client.loginWithCas(credentialToken)
                         }
                         TYPE_LOGIN_SAML -> {
+                            delay(3, TimeUnit.SECONDS)
                             client.loginWithSaml(credentialToken)
                         }
                         TYPE_LOGIN_OAUTH -> {
@@ -345,7 +346,7 @@ class LoginPresenter @Inject constructor(
                             }
                         }
                         else -> {
-                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS,TYPE_LOGIN_SAML,  TYPE_LOGIN_OAUTH or TYPE_LOGIN_DEEP_LINK")
+                            throw IllegalStateException("Expected TYPE_LOGIN_USER_EMAIL, TYPE_LOGIN_CAS,TYPE_LOGIN_SAML, TYPE_LOGIN_OAUTH or TYPE_LOGIN_DEEP_LINK")
                         }
                     }
                 }
