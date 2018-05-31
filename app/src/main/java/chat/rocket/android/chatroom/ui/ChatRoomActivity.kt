@@ -1,10 +1,13 @@
 package chat.rocket.android.chatroom.ui
 
+import DrawableHelper
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.text.SpannableStringBuilder
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
@@ -63,14 +66,6 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var managerFactory: ConnectionManagerFactory
 
-    private lateinit var chatRoomId: String
-    private lateinit var chatRoomName: String
-    private lateinit var chatRoomType: String
-    private var isChatRoomReadOnly: Boolean = false
-    private var isChatRoomSubscribed: Boolean = true
-    private var isChatRoomCreator: Boolean = false
-    private var chatRoomLastSeen: Long = -1L
-
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -85,33 +80,33 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
             return
         }
 
-        chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
+        val chatRoomId = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
         requireNotNull(chatRoomId) { "no chat_room_id provided in Intent extras" }
 
-        chatRoomName = intent.getStringExtra(INTENT_CHAT_ROOM_NAME)
+        val chatRoomName = intent.getStringExtra(INTENT_CHAT_ROOM_NAME)
         requireNotNull(chatRoomName) { "no chat_room_name provided in Intent extras" }
 
-        chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
+        val chatRoomType = intent.getStringExtra(INTENT_CHAT_ROOM_TYPE)
         requireNotNull(chatRoomType) { "no chat_room_type provided in Intent extras" }
 
-        isChatRoomReadOnly = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, true)
-        requireNotNull(isChatRoomReadOnly) { "no chat_room_is_read_only provided in Intent extras" }
+        val isChatRoomReadOnly = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_READ_ONLY, true)
 
-        isChatRoomCreator = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_CREATOR, false)
-        requireNotNull(isChatRoomCreator) { "no chat_room_is_creator provided in Intent extras" }
+        val isChatRoomCreator = intent.getBooleanExtra(INTENT_CHAT_ROOM_IS_CREATOR, false)
+
+        val chatRoomLastSeen = intent.getLongExtra(INTENT_CHAT_ROOM_LAST_SEEN, -1)
+
+        val isChatRoomSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
 
         val chatRoomMessage = intent.getStringExtra(INTENT_CHAT_ROOM_MESSAGE)
 
         setupToolbar()
 
-        chatRoomLastSeen = intent.getLongExtra(INTENT_CHAT_ROOM_LAST_SEEN, -1)
-
-        isChatRoomSubscribed = intent.getBooleanExtra(INTENT_CHAT_IS_SUBSCRIBED, true)
-
         if (supportFragmentManager.findFragmentByTag(TAG_CHAT_ROOM_FRAGMENT) == null) {
             addFragment(TAG_CHAT_ROOM_FRAGMENT, R.id.fragment_container) {
-                newInstance(chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
-                        isChatRoomSubscribed, isChatRoomCreator, chatRoomMessage)
+                newInstance(
+                    chatRoomId, chatRoomName, chatRoomType, isChatRoomReadOnly, chatRoomLastSeen,
+                    isChatRoomSubscribed, isChatRoomCreator, chatRoomMessage
+                )
             }
         }
     }
@@ -128,43 +123,34 @@ class ChatRoomActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        text_room_name.textContent = chatRoomName
-
-        showRoomTypeIcon(true)
-
         toolbar.setNavigationOnClickListener { finishActivity() }
     }
 
-    fun showRoomTypeIcon(showRoomTypeIcon: Boolean) {
-        if (showRoomTypeIcon) {
-            val roomType = roomTypeOf(chatRoomType)
-            val drawable = when (roomType) {
-                is RoomType.Channel -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_channel, this)
-                }
-                is RoomType.PrivateGroup -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_lock, this)
-                }
-                is RoomType.DirectMessage -> {
-                    DrawableHelper.getDrawableFromId(R.drawable.ic_room_dm, this)
-                }
-                else -> null
-            }
+    fun showToolbarTitle(title: String) {
+        text_room_name.textContent = title
+    }
 
-            drawable?.let {
-                val wrappedDrawable = DrawableHelper.wrapDrawable(it)
-                val mutableDrawable = wrappedDrawable.mutate()
-                DrawableHelper.tintDrawable(mutableDrawable, this, R.color.white)
-                DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
+    fun showToolbarChatRoomIcon(chatRoomType: String) {
+        val drawable = when (roomTypeOf(chatRoomType)) {
+            is RoomType.Channel -> {
+                DrawableHelper.getDrawableFromId(R.drawable.ic_hashtag_black_12dp, this)
             }
-        } else {
-            text_room_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            is RoomType.PrivateGroup -> {
+                DrawableHelper.getDrawableFromId(R.drawable.ic_lock_black_12_dp, this)
+            }
+            else -> null
+        }
+
+        drawable?.let {
+            val wrappedDrawable = DrawableHelper.wrapDrawable(it)
+            val mutableDrawable = wrappedDrawable.mutate()
+            DrawableHelper.tintDrawable(mutableDrawable, this, R.color.colorWhite)
+            DrawableHelper.compoundDrawable(text_room_name, mutableDrawable)
         }
     }
 
-
-    fun setupToolbarTitle(toolbarTitle: String) {
-        text_room_name.textContent = toolbarTitle
+    fun hideToolbarChatRoomIcon() {
+        text_room_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
     }
 
     private fun finishActivity() {

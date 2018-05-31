@@ -34,6 +34,8 @@
     <string name="action_away">Loin</string>
     <string name="action_busy">Occupé</string>
     <string name="action_invisible">Invisible</string>
+    // TODO: Add proper translation.
+    <string name="action_save_to_gallery">Save to gallery</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -134,6 +136,9 @@
     <string name="message_unmuted">Utilisateur %1$s non muté par %2$s</string>
     <string name="message_role_add">%1$s a été défini %2$s par %3$s</string>
     <string name="message_role_removed">%1$s is no longer %2$s par %3$s</string>
+    // TODO:Add proper translation.
+    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
@@ -159,7 +164,7 @@
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Members List -->
-    <string name="title_members_list">Liste des membres</string>
+    <string name="title_members_list">Membres</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Messages épinglés</string>
@@ -171,6 +176,13 @@
     <string name="title_favorite_messages">Favorite Messages</string>
     <string name="no_favorite_messages">No favorite messages</string>
     <string name="no_favorite_description">All the favorite messages\nappear here</string>
+
+    <!-- Files -->
+    <!-- TODO Add proper translation-->
+    <string name="msg_files">Files</string>
+    <string name="title_files_total">Files (%d)</string>
+    <string name="msg_no_files">No files</string>
+    <string name="msg_all_files_appear_here">All the files appear here</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">Taille du fichier (%1$d bytes) dépassé la taille de téléchargement maximale de %2$d bytes</string>

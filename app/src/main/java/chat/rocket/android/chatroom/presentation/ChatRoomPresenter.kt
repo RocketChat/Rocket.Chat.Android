@@ -638,14 +638,17 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun toMembersList(chatRoomId: String, chatRoomType: String) =
-        navigator.toMembersList(chatRoomId, chatRoomType)
+    fun toMembersList(chatRoomId: String) =
+        navigator.toMembersList(chatRoomId)
 
-    fun toPinnedMessageList(chatRoomId: String, chatRoomType: String) =
-        navigator.toPinnedMessageList(chatRoomId, chatRoomType)
+    fun toPinnedMessageList(chatRoomId: String) =
+        navigator.toPinnedMessageList(chatRoomId)
 
-    fun toFavoriteMessageList(chatRoomId: String, chatRoomType: String) =
-        navigator.toFavoriteMessageList(chatRoomId, chatRoomType)
+    fun toFavoriteMessageList(chatRoomId: String) =
+        navigator.toFavoriteMessageList(chatRoomId)
+
+    fun toFileList(chatRoomId: String) =
+        navigator.toFileList(chatRoomId)
 
     fun loadChatRooms() {
         launchUI(strategy) {
