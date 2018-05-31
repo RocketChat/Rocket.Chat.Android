@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">Rocket.Chat</string>
 
     <!-- Titles -->
     <string name="title_sign_in_your_server">Войдите на ваш сервер</string>
