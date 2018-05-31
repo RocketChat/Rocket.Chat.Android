@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 26
     buildToolsVersion versions.buildTools
@@ -34,5 +36,25 @@ dependencies {
     implementation libraries.supportWearable
     implementation libraries.wearableRecyclerView
     implementation libraries.wearSupport
+
+    implementation libraries.dagger
+    implementation libraries.daggerSupport
+    kapt libraries.daggerProcessor
+    kapt libraries.daggerAndroidApt
+
+    implementation libraries.rxKotlin
+    implementation libraries.rxAndroid
+
+    implementation libraries.moshi
+
+    testImplementation libraries.junit
     compileOnly 'com.google.android.wearable:wearable:2.3.0'
+}
+
+task compileSdk(type: Exec) {
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', 'build-sdk.sh'
+    } else {
+        commandLine './build-sdk.sh'
+    }
 }
