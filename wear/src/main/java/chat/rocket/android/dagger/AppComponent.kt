@@ -1,9 +1,9 @@
-package chat.rocket.android.wear.dagger
+package chat.rocket.android.dagger
 
 import android.app.Application
-import chat.rocket.android.wear.app.RocketChatWearApplication
-import chat.rocket.android.wear.dagger.module.ActivityBuilder
-import chat.rocket.android.wear.dagger.module.AppModule
+import chat.rocket.android.app.RocketChatWearApplication
+import chat.rocket.android.dagger.module.ActivityBuilder
+import chat.rocket.android.dagger.module.AppModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule

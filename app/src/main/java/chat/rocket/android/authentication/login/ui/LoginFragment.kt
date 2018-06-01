@@ -30,6 +30,7 @@ import chat.rocket.android.webview.cas.ui.casWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
+import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.*
@@ -37,9 +38,17 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResolvingResultCallbacks
 import com.google.android.gms.common.api.Status
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.android.gms.wearable.DataItem
+import com.google.android.gms.wearable.PutDataMapRequest
+import com.google.android.gms.wearable.PutDataRequest
+import com.google.android.gms.wearable.Wearable
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
+import kotlinx.coroutines.experimental.runBlocking
 import timber.log.Timber
+import java.util.concurrent.ExecutionException
 import javax.inject.Inject
 
 
@@ -48,6 +57,8 @@ internal const val REQUEST_CODE_FOR_OAUTH = 2
 internal const val MULTIPLE_CREDENTIALS_READ = 3
 internal const val NO_CREDENTIALS_EXIST = 4
 internal const val SAVE_CREDENTIALS = 5
+internal const val TOKEN_USER_ID_IDENTIFIER = "TOKEN_USER_ID"
+internal const val TOKEN_AUTH_IDENTIFIER = "TOKEN_AUTH"
 
 lateinit var googleApiClient: GoogleApiClient
 
@@ -284,6 +295,47 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
                 drawables
             )
         }
+    }
+
+    override fun sendCredentialstoWearApp(token: Token) {
+        //the string identifier "/token" used below is used as a path for the intent filter
+        //for WearableListenerService created for listening to events that involve sending tokens
+        //to the wear app. See https://developer.android.com/training/wearables/data-layer/events
+        //for proper implementation.
+        val putDataMapReq: PutDataMapRequest = PutDataMapRequest.create("/token")
+        putDataMapReq.dataMap.putString(TOKEN_USER_ID_IDENTIFIER, token.userId)
+        putDataMapReq.dataMap.putString(TOKEN_AUTH_IDENTIFIER, token.authToken)
+        val putDataReq: PutDataRequest = putDataMapReq.asPutDataRequest()
+        putDataReq.setUrgent()
+
+        val dataItemTask: Task<DataItem> =
+            activity?.let { Wearable.getDataClient(it).putDataItem(putDataReq) } as Task<DataItem>
+
+        //configure async calls
+        dataItemTask.addOnCompleteListener { dataItem ->
+            Timber.d("completed with $dataItem")
+        }
+
+        dataItemTask.addOnFailureListener { dataItem ->
+            Timber.e("failed with $dataItem")
+        }
+
+        dataItemTask.addOnSuccessListener { dataItem ->
+            Timber.d("success with $dataItem")
+        }
+
+        //configure synchronous calls
+//        launch {
+//            try {
+//                val dataItem = Tasks.await(dataItemTask)
+//                Timber.d("DataItem saved: $dataItem")
+//            } catch (exception: ExecutionException) {
+//                Timber.e("Task failed: $exception");
+//            } catch (exception: InterruptedException) {
+//                Timber.e("Interrupt occurred: $exception")
+//            }
+//        }
+
     }
 
     override fun showLoading() {

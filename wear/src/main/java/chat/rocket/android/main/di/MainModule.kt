@@ -1,8 +1,8 @@
-package chat.rocket.android.wear.main.di
+package chat.rocket.android.main.di
 
-import chat.rocket.android.wear.dagger.scope.PerActivity
-import chat.rocket.android.wear.main.presentation.MainView
-import chat.rocket.android.wear.main.ui.MainActivity
+import chat.rocket.android.dagger.scope.PerActivity
+import chat.rocket.android.main.presentation.MainView
+import chat.rocket.android.main.ui.MainActivity
 import dagger.Module
 import dagger.Provides
 

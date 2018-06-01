@@ -1,3 +1,3 @@
 <resources>
-    <string name="hello_world">Hello Round World!</string>
+    <string name="msg_login_with_phone">Please login with the mobile app</string>
 </resources>

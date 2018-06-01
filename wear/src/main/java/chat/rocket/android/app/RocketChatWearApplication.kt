@@ -1,8 +1,8 @@
-package chat.rocket.android.wear.app
+package chat.rocket.android.app
 
 import android.app.Activity
 import android.app.Application
-import chat.rocket.android.wear.dagger.DaggerAppComponent
+import chat.rocket.android.dagger.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector

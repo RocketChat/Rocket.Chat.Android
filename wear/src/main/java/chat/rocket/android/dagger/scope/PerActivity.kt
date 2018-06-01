@@ -1,4 +1,4 @@
-package chat.rocket.android.wear.dagger.scope
+package chat.rocket.android.dagger.scope
 
 import javax.inject.Scope
 

@@ -1,4 +1,4 @@
-package chat.rocket.android.wear.dagger.module
+package chat.rocket.android.dagger.module
 
 import android.app.Application
 import android.content.Context

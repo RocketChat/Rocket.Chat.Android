@@ -53,6 +53,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
+    wearApp project(':wear')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
@@ -89,6 +90,9 @@ dependencies {
     implementation libraries.okhttp
     implementation libraries.okhttpLogger
 
+    implementation libraries.firebaseCloudMessaging
+    implementation libraries.firebaseCore
+
     implementation libraries.timber
     implementation libraries.threeTenABP
     implementation libraries.rxBinding
@@ -98,6 +102,7 @@ dependencies {
     implementation libraries.frescoAnimatedGif
     implementation libraries.frescoWebP
     implementation libraries.frescoAnimatedWebP
+    implementation libraries.playServicesWearable
 
     kapt libraries.kotshiCompiler
     implementation libraries.kotshiApi

@@ -8,7 +8,6 @@ android {
     buildToolsVersion versions.buildTools
 
     defaultConfig {
-        applicationId "chat.rocket.android.wear"
         minSdkVersion 23
         targetSdkVersion versions.targetSdk
         versionCode 1

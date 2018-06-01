@@ -1,4 +1,4 @@
-package chat.rocket.android.wear.main.presentation
+package chat.rocket.android.main.presentation
 
 import javax.inject.Inject
 
