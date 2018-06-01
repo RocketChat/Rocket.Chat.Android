@@ -23,21 +23,22 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
+
         <activity
             android:name=".authentication.ui.AuthenticationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AuthenticationTheme"
             android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -50,25 +51,31 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".server.ui.ChangeServerActivity"
             android:theme="@style/AuthenticationTheme" />
+
         <activity
             android:name=".main.ui.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <activity
             android:name=".webview.ui.WebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <activity
-            android:name=".webview.cas.ui.CasWebViewActivity"
+            android:name=".webview.sso.ui.SsoWebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <activity
             android:name=".webview.oauth.ui.OauthWebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
         <activity
             android:name=".chatroom.ui.ChatRoomActivity"
             android:theme="@style/AppTheme"
@@ -95,6 +102,7 @@
                 <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".push.DirectReplyReceiver"
             android:enabled="true"
@@ -111,6 +119,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <service
             android:name=".push.GcmListenerService"
             android:exported="false">
@@ -118,6 +127,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+
         <service
             android:name=".chatroom.service.MessageService"
             android:exported="true"
