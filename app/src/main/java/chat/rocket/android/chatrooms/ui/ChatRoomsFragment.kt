@@ -70,7 +70,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun onDestroy() {
         handler.removeCallbacks(dismissStatus)
-        presenter.disconnect()
         super.onDestroy()
     }
 
