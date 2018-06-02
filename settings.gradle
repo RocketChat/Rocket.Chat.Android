@@ -1,1 +1,1 @@
-include ':app', ':player', ':draw'
+include ':app', ':player', ':draw', ':wear'
