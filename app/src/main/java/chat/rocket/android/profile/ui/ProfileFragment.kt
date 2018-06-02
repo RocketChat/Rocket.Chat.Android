@@ -1,7 +1,6 @@
 package chat.rocket.android.profile.ui
 
 import DrawableHelper
-import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -16,10 +15,8 @@ import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
-import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
