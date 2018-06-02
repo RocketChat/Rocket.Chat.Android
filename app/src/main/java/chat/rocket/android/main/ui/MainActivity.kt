@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     private var expanded = false
     private lateinit var googleApiClient: GoogleApiClient
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
+    private val CURRENT_STATE = "current_state"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -267,5 +268,15 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
                 presenter.logout()
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putBoolean(CURRENT_STATE,isFragmentAdded)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        isFragmentAdded = savedInstanceState?.getBoolean(CURRENT_STATE) ?: false
     }
 }
