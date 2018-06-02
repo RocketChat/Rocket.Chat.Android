@@ -47,7 +47,7 @@ class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListene
     }
 
     private fun setupToolbar() {
-        (activity as MainActivity).toolbar.title = getString(R.string.title_settings)
+        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_settings)
     }
 
     private fun startNewActivity(classType: KClass<out AppCompatActivity>) {
