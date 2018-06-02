@@ -198,6 +198,7 @@ class LoginFragment : Fragment(), LoginView {
         ui {
             text_username_or_email.isVisible = true
             text_password.isVisible = true
+            image_key.isVisible = true
         }
     }
 

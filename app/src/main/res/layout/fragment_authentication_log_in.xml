@@ -36,9 +36,10 @@
             android:id="@+id/image_key"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/ic_vpn_key_black_24dp"
             android:tint="@color/colorDrawableTintGrey"
-            android:layout_marginEnd="10dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/text_username_or_email"
             app:layout_constraintEnd_toEndOf="@+id/text_username_or_email"
             app:layout_constraintTop_toTopOf="@+id/text_username_or_email" />
