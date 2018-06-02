@@ -113,6 +113,7 @@
     <string name="msg_are_typing">\u0020estão digitando…</string>
     <string name="msg_several_users_are_typing">Vários usuários estão digitando…</string>
     <string name="msg_no_search_found">nenhum resultado encontrado</string>
+    <string name="msg_message_copied">Mensagem copiada</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
