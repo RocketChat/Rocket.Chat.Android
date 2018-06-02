@@ -124,6 +124,7 @@
     // TODO: Add proper translation.
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
+    <string name="msg_message_copied">संदेश कॉपी किया गया</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
