@@ -41,8 +41,13 @@ dependencies {
     kapt libraries.daggerProcessor
     kapt libraries.daggerAndroidApt
 
+    implementation libraries.timber
     implementation libraries.rxKotlin
     implementation libraries.rxAndroid
+
+    implementation libraries.androidKtx
+    kapt libraries.kotshiCompiler
+    implementation libraries.kotshiApi
 
     implementation libraries.moshi
 

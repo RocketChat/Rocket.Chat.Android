@@ -18,7 +18,7 @@
             android:name="com.google.android.wearable.standalone"
             android:value="false" />
 
-        <service android:name=".DataLayerListenerService">
+        <service android:name=".services.DataLayerListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
                 <data

@@ -4,6 +4,7 @@ import android.app.Application
 import chat.rocket.android.app.RocketChatWearApplication
 import chat.rocket.android.dagger.module.ActivityBuilder
 import chat.rocket.android.dagger.module.AppModule
+import chat.rocket.android.services.DataLayerListenerService
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
@@ -21,4 +22,6 @@ interface AppComponent {
     }
 
     fun inject(app: RocketChatWearApplication)
+
+    fun inject(service: DataLayerListenerService)
 }
