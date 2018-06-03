@@ -129,6 +129,7 @@
     <string name="public_channel_type">Public</string>
     <string name="private_channel_type_description">Visible only to you and those whom you invite</string>
     <string name="public_channel_description">Visible to everyone</string>
+    <string name="msg_message_copied">Message copied</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Room name changed to: %1$s by %2$s</string>

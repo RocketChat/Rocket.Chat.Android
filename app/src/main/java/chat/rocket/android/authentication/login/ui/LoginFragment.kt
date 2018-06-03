@@ -25,8 +25,8 @@ import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.webview.cas.ui.INTENT_CAS_TOKEN
-import chat.rocket.android.webview.cas.ui.casWebViewIntent
+import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
+import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
@@ -42,12 +42,12 @@ import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import timber.log.Timber
 import javax.inject.Inject
 
-
 internal const val REQUEST_CODE_FOR_CAS = 1
-internal const val REQUEST_CODE_FOR_OAUTH = 2
-internal const val MULTIPLE_CREDENTIALS_READ = 3
-internal const val NO_CREDENTIALS_EXIST = 4
-internal const val SAVE_CREDENTIALS = 5
+internal const val REQUEST_CODE_FOR_SAML = 2
+internal const val REQUEST_CODE_FOR_OAUTH = 3
+internal const val MULTIPLE_CREDENTIALS_READ = 4
+internal const val NO_CREDENTIALS_EXIST = 5
+internal const val SAVE_CREDENTIALS = 6
 
 lateinit var googleApiClient: GoogleApiClient
 
@@ -121,7 +121,10 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
             if (data != null) {
                 when (requestCode) {
                     REQUEST_CODE_FOR_CAS -> data.apply {
-                        presenter.authenticateWithCas(getStringExtra(INTENT_CAS_TOKEN))
+                        presenter.authenticateWithCas(getStringExtra(INTENT_SSO_TOKEN))
+                    }
+                    REQUEST_CODE_FOR_SAML -> data.apply {
+                        presenter.authenticateWithSaml(getStringExtra(INTENT_SSO_TOKEN))
                     }
                     REQUEST_CODE_FOR_OAUTH -> {
                         isOauthSuccessful = true
@@ -371,7 +374,7 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
         ui { activity ->
             button_cas.setOnClickListener {
                 startActivityForResult(
-                    activity.casWebViewIntent(casUrl, casToken),
+                    activity.ssoWebViewIntent(casUrl, casToken),
                     REQUEST_CODE_FOR_CAS
                 )
                 activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
@@ -566,13 +569,34 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
         buttonColor: Int
     ) {
         ui { activity ->
-            val button = getCustomOauthButton(serviceName, serviceNameColor, buttonColor)
+            val button = getCustomServiceButton(serviceName, serviceNameColor, buttonColor)
             social_accounts_container.addView(button)
 
             button.setOnClickListener {
                 startActivityForResult(
                     activity.oauthWebViewIntent(customOauthUrl, state),
                     REQUEST_CODE_FOR_OAUTH
+                )
+                activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
+            }
+        }
+    }
+
+    override fun addSamlServiceButton(
+        samlUrl: String,
+        samlToken: String,
+        serviceName: String,
+        serviceNameColor: Int,
+        buttonColor: Int
+    ) {
+        ui { activity ->
+            val button = getCustomServiceButton(serviceName, serviceNameColor, buttonColor)
+            social_accounts_container.addView(button)
+
+            button.setOnClickListener {
+                startActivityForResult(
+                    activity.ssoWebViewIntent(samlUrl, samlToken),
+                    REQUEST_CODE_FOR_SAML
                 )
                 activity.overridePendingTransition(R.anim.slide_up, R.anim.hold)
             }
@@ -696,9 +720,9 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
     }
 
     /**
-     * Gets a stylized custom OAuth button.
+     * Gets a stylized custom service button.
      */
-    private fun getCustomOauthButton(
+    private fun getCustomServiceButton(
         buttonText: String,
         buttonTextColor: Int,
         buttonBgColor: Int

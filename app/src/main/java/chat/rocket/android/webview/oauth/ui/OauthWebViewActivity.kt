@@ -36,7 +36,6 @@ class OauthWebViewActivity : AppCompatActivity() {
     private lateinit var state: String
     private var isWebViewSetUp: Boolean = false
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
