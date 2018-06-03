@@ -22,7 +22,6 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.baseUrl
-import chat.rocket.android.server.domain.hasShowLastMessage
 import chat.rocket.android.server.domain.messageReadReceiptEnabled
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
@@ -184,8 +183,8 @@ class ViewModelMapper @Inject constructor(
     private fun isBroadcastReplyAvailable(roomViewModel: RoomViewModel, message: Message): Boolean {
         val senderUsername = message.sender?.username
         return roomViewModel.isRoom && roomViewModel.isBroadcast &&
-                !message.isSystemMessage() &&
-                senderUsername != currentUsername
+            !message.isSystemMessage() &&
+            senderUsername != currentUsername
     }
 
     private fun mapMessageReply(message: Message, chatRoom: ChatRoom): MessageReplyViewModel {
@@ -346,7 +345,6 @@ class ViewModelMapper @Inject constructor(
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
         val isTemp = message.isTemporary ?: false
-        println("setting MESSAGE_READ_RECEIPT_STORE_USERS set to ${settings.messageReadReceiptEnabled()}")
         val unread = if (settings.messageReadReceiptEnabled() && currentUsername == senderUsername) {
             message.unread ?: false
         } else {
