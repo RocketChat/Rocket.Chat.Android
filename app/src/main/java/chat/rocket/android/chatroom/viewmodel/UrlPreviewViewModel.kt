@@ -15,7 +15,8 @@ data class UrlPreviewViewModel(
         override var reactions: List<ReactionViewModel>,
         override var nextDownStreamMessage: BaseViewModel<*>? = null,
         override var preview: Message? = null,
-        override var isTemporary: Boolean = false
+        override var isTemporary: Boolean = false,
+        override var unread: Boolean? = null
 ) : BaseViewModel<Url> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.URL_PREVIEW.viewType

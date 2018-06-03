@@ -22,6 +22,8 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.baseUrl
+import chat.rocket.android.server.domain.hasShowLastMessage
+import chat.rocket.android.server.domain.messageReadReceiptEnabled
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -232,7 +234,7 @@ class ViewModelMapper @Inject constructor(
             ColorAttachmentViewModel(attachmentUrl = url, id = id, color = color.color,
                 text = text, message = message, rawData = attachment,
                 messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message))
+                preview = message.copy(message = content.message), unread = message.unread)
         }
     }
 
@@ -260,7 +262,7 @@ class ViewModelMapper @Inject constructor(
             AuthorAttachmentViewModel(attachmentUrl = url, id = id, name = authorName,
                 icon = authorIcon, fields = fieldsText, message = message, rawData = attachment,
                 messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message))
+                preview = message.copy(message = content.message), unread = message.unread)
         }
     }
 
@@ -278,7 +280,7 @@ class ViewModelMapper @Inject constructor(
         return MessageAttachmentViewModel(message = content, rawData = message,
             messageId = message.id, time = time, senderName = attachmentAuthor,
             content = attachmentText, isPinned = message.pinned, reactions = getReactions(message),
-            preview = message.copy(message = content.message))
+            preview = message.copy(message = content.message), unread = message.unread)
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseViewModel<*>? {
@@ -338,17 +340,24 @@ class ViewModelMapper @Inject constructor(
     }
 
     private suspend fun mapMessage(message: Message): MessageViewModel = withContext(CommonPool) {
+        val senderUsername = message.sender?.username
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
         val isTemp = message.isTemporary ?: false
+        println("setting MESSAGE_READ_RECEIPT_STORE_USERS set to ${settings.messageReadReceiptEnabled()}")
+        val unread = if (settings.messageReadReceiptEnabled() && currentUsername == senderUsername) {
+            message.unread ?: false
+        } else {
+            null
+        }
 
         val content = getContent(stripMessageQuotes(message))
         MessageViewModel(message = stripMessageQuotes(message), rawData = message,
             messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
             content = content, isPinned = message.pinned, reactions = getReactions(message),
-            isFirstUnread = false, preview = preview, isTemporary = isTemp)
+            isFirstUnread = false, preview = preview, isTemporary = isTemp, unread = unread)
     }
 
     private fun mapMessagePreview(message: Message): Message {
@@ -411,7 +420,7 @@ class ViewModelMapper @Inject constructor(
         }
 
         val username = message.sender?.username ?: "?"
-        return baseUrl?.let {
+        return baseUrl.let {
             baseUrl.avatarUrl(username)
         }
     }

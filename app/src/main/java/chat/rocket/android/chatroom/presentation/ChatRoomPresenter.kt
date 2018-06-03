@@ -223,7 +223,8 @@ class ChatRoomPresenter @Inject constructor(
                         type = null,
                         updatedAt = null,
                         urls = null,
-                        isTemporary = true
+                        isTemporary = true,
+                        unread = true
                     )
                     try {
                         messagesRepository.save(newMessage)
