@@ -25,6 +25,10 @@
                     android:host="*"
                     android:pathPrefix="/token"
                     android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/server"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
         <activity
