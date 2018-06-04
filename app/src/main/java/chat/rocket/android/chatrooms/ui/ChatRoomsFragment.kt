@@ -80,7 +80,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         setupToolbar()
         setupRecyclerView()
-        setUpFAB()
+        setupFab()
         presenter.loadChatRooms()
     }
 
@@ -289,7 +289,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         sectionedAdapter?.setSections(sections.toArray(dummy))
     }
 
-    private fun setUpFAB() {
+    private fun setupFab() {
         create_new_channel_fab.setOnClickListener {
             val intent = Intent(activity, CreateNewChannelActivity::class.java)
             startActivity(intent)

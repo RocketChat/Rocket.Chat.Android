@@ -57,6 +57,7 @@ dependencies {
     implementation libraries.kotlin
     implementation libraries.coroutines
     implementation libraries.coroutinesAndroid
+
     implementation libraries.appCompat
     implementation libraries.recyclerview
     implementation libraries.design
@@ -64,6 +65,7 @@ dependencies {
     implementation libraries.cardView
     implementation libraries.flexbox
     implementation libraries.customTabs
+    implementation libraries.supportv4
 
     implementation libraries.androidKtx
 

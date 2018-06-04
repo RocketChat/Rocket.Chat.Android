@@ -7,6 +7,7 @@ import chat.rocket.android.members.viewmodel.MemberViewModel
 interface AddMembersView : LoadingView, MessageView {
     /**
      * Show members on the basis of query
+     *
      * @param dataSet The list of members
      * @param total The number of members returned
      */

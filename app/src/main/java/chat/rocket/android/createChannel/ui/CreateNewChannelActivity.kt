@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.chip.Chip
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.createChannel.addMembers.ui.AddMembersActivity
 import chat.rocket.android.createChannel.presentation.CreateNewChannelPresenter
@@ -38,8 +39,13 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         setUpOnClickListeners()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStart() {
+        super.onStart()
+        setUpToolbarObservable()
+    }
+
+    override fun onStop() {
+        super.onStop()
         observableForToolbarAction.dispose()
     }
 
@@ -66,13 +72,13 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
     }
 
     override fun showLoading() {
-        view_loading.setVisible(true)
+        view_loading.isVisible = true
         layout_container.alpha = 0.5f
         layout_container.isEnabled = false
     }
 
     override fun hideLoading() {
-        view_loading.setVisible(false)
+        view_loading.isVisible = false
         layout_container.alpha = 1.0f
         layout_container.isEnabled = true
     }
@@ -96,7 +102,6 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         showMessageAndClearText(getString(R.string.msg_generic_error))
     }
 
-
     private fun refreshMembersChips() {
         for (element in listOfUsers) {
             val memberChip = Chip(this)
@@ -114,6 +119,9 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         toolbar_action_text.text = getString(R.string.action_create_new_channel)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun setUpToolbarObservable(){
         observableForToolbarAction =
                 RxTextView.textChanges(channel_name_edit_text).subscribe { text ->
                     toolbar_action_text.isEnabled = (text.isNotEmpty() && listOfUsers.isNotEmpty())

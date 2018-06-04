@@ -532,8 +532,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onNonEmojiKeyPressed(keyCode: Int) {
         when (keyCode) {
-            KeyEvent.KEYCODE_BACK -> with(text_message) {
-                if (selectionStart > 0) text!!.delete(selectionStart - 1, selectionStart)
+            KeyEvent.KEYCODE_BACK -> {
+                if (text_message.selectionStart > 0) text_message.text!!.delete(text_message.selectionStart - 1, text_message.selectionStart)
             }
             else -> throw IllegalArgumentException("pressed key not expected")
         }

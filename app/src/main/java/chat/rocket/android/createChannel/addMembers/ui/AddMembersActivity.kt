@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.createChannel.addMembers.presentation.AddMembersPresenter
 import chat.rocket.android.createChannel.addMembers.presentation.AddMembersView
@@ -43,8 +44,7 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
             updateToolBar()
             search_view.setText("")
         } else {
-            Toast.makeText(this, getString(R.string.msg_member_already_added), Toast.LENGTH_LONG)
-                .show()
+            showMessage(getString(R.string.msg_member_already_added))
         }
     }
     private lateinit var observableForSearchView: Disposable
@@ -59,11 +59,15 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
         setUpRecyclerView()
         setOnClickListeners()
         setInitialChips()
+    }
+
+    override fun onStart() {
+        super.onStart()
         setUpObservableForSearchView()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         //dispose off the rx disposables
         observableForToolbarAction.dispose()
         observableForSearchView.dispose()
@@ -102,11 +106,11 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
     }
 
     override fun showLoading() {
-        progress_bar.setVisible(true)
+        view_loading.isVisible = true
     }
 
     override fun hideLoading() {
-        progress_bar.setVisible(false)
+        view_loading.isVisible = false
     }
 
     override fun showMessage(resId: Int) {

@@ -11,7 +11,6 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.createChannel
 import javax.inject.Inject
 
-
 class CreateNewChannelPresenter @Inject constructor(
     private val view: CreateNewChannelView,
     private val strategy: CancelStrategy,
