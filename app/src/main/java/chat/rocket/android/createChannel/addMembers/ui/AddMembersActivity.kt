@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.createChannel.addMembers.presentation.AddMembersPresenter
@@ -17,7 +16,6 @@ import chat.rocket.android.createChannel.addMembers.presentation.AddMembersView
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.members.adapter.MembersAdapter
 import chat.rocket.android.members.viewmodel.MemberViewModel
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.widget.DividerItemDecoration
@@ -148,10 +146,8 @@ class AddMembersActivity : AppCompatActivity(), AddMembersView {
     }
 
     private fun addNewChip(memberViewModel: MemberViewModel) {
-        memberViewModel.username?.let {
-            buildNewChip(it)
-            membersToAdd.add(it)
-        }
+        buildNewChip(memberViewModel.displayName)
+        membersToAdd.add(memberViewModel.displayName)
     }
 
     private fun buildNewChip(chipText: String) {

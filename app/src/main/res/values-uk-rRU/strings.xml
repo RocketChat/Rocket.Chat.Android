@@ -120,6 +120,7 @@
     <string name="msg_add_members">Додати членів</string>
     <string name="msg_search">Пошук</string>
     <string name="msg_member_already_added">Ви вже вибрали цього користувача</string>
+    <string name="msg_channel_name_required">Будь ласка, введіть назву каналу</string>
 
     <!--info for creating a channel-->
     <string name="private_channel_type">Приватно</string>

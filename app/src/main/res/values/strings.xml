@@ -123,6 +123,7 @@
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No result found</string>
     <string name="msg_member_already_added">You have already selected this user</string>
+    <string name="msg_channel_name_required">Please enter a channel name</string>
 
     <!--info for creating a channel-->
     <string name="private_channel_type">Private</string>

@@ -140,6 +140,7 @@
     // TODO: Add proper translation.
     <string name="msg_search">Search</string>
     <string name="msg_message_copied">Mensaje copiado</string>
+    <string name="msg_channel_name_required">Por favor ingrese un nombre de canal</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nombre de la sala cambiado para: %1$s por %2$s</string>

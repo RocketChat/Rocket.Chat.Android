@@ -5,7 +5,11 @@ import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.common.model.User
 import chat.rocket.core.model.Value
 
-class MemberViewModel(private val member: User, private val settings: Map<String, Value<Any>>, private val baseUrl: String?) {
+class MemberViewModel(
+    private val member: User,
+    private val settings: Map<String, Value<Any>>,
+    private val baseUrl: String?
+) {
     val avatarUri: String?
     val displayName: String
     val realName: String?
@@ -32,6 +36,11 @@ class MemberViewModel(private val member: User, private val settings: Map<String
     private fun getUserDisplayName(): String {
         val username = member.username
         val realName = member.name
+        if (username == null && realName != null) {
+            return realName
+        } else if (username != null && realName == null) {
+            return username
+        }
         val senderName = if (settings.useRealName()) realName else username
         return senderName ?: username.toString()
     }

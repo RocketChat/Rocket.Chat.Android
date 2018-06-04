@@ -142,6 +142,7 @@
     // TODO: Add proper translation.
     <string name="msg_search">Search</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
+    <string name="msg_channel_name_required">कृपया एक चैनल नाम दर्ज करें</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>

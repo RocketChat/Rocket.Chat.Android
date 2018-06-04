@@ -12,12 +12,10 @@ import chat.rocket.android.R
 import chat.rocket.android.createChannel.addMembers.ui.AddMembersActivity
 import chat.rocket.android.createChannel.presentation.CreateNewChannelPresenter
 import chat.rocket.android.createChannel.presentation.CreateNewChannelView
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
 import chat.rocket.common.model.RoomType
-import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.AndroidInjection
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_create_new_channel.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 import javax.inject.Inject
@@ -29,7 +27,6 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
     lateinit var presenter: CreateNewChannelPresenter
     private var channelType: RoomType = RoomType.CHANNEL
     private var listOfUsers: ArrayList<String> = ArrayList()
-    private lateinit var observableForToolbarAction: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -39,23 +36,12 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         setUpOnClickListeners()
     }
 
-    override fun onStart() {
-        super.onStart()
-        setUpToolbarObservable()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        observableForToolbarAction.dispose()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
                 finish()
                 return true
             }
-
         }
         return super.onOptionsItemSelected(item)
     }
@@ -117,20 +103,10 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         setSupportActionBar(toolbar)
         toolbar_title.text = getString(R.string.title_create_new_channel)
         toolbar_action_text.text = getString(R.string.action_create_new_channel)
+        toolbar_action_text.alpha = 1.0f
+        toolbar_action_text.isEnabled = true
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun setUpToolbarObservable(){
-        observableForToolbarAction =
-                RxTextView.textChanges(channel_name_edit_text).subscribe { text ->
-                    toolbar_action_text.isEnabled = (text.isNotEmpty() && listOfUsers.isNotEmpty())
-                    if (text.isEmpty()) {
-                        toolbar_action_text.alpha = 0.8f
-                    } else {
-                        toolbar_action_text.alpha = 1.0f
-                    }
-                }
     }
 
     private fun setUpOnClickListeners() {
@@ -183,13 +159,15 @@ class CreateNewChannelActivity : AppCompatActivity(), CreateNewChannelView {
         }
 
         toolbar_action_text.setOnClickListener {
-            if (toolbar_action_text.isEnabled) {
+            if (channel_name_edit_text.textContent.isNotEmpty()) {
                 presenter.createNewChannel(
                     channelType,
                     channel_name_edit_text.text.toString(),
                     listOfUsers,
                     false
                 )
+            } else{
+                showToast(getString(R.string.msg_channel_name_required))
             }
         }
 
