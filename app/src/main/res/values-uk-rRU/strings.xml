@@ -114,7 +114,7 @@
     <string name="msg_are_typing">\u0020печатают…</string>
     <string name="msg_several_users_are_typing">Несколько пользователей печатают…</string>
     <string name="msg_no_search_found">Результатов не найдено</string>
-    <string name="msg_message_copied">Скопировано сообщение</string>
+    <string name="msg_message_copied">Сообщение скопировано</string>
     <string name="msg_channel_created_successfully">Канал створений успішно</string>
     <string name="msg_channel_name">Назва каналу</string>
     <string name="msg_add_members">Додати членів</string>
