@@ -38,7 +38,7 @@ android {
     buildTypes {
         release {
             buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
-            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
+            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -46,7 +46,7 @@ android {
 
         debug {
             buildConfigField "String", "REQUIRED_SERVER_VERSION", '"0.62.0"'
-            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.63.0"'
+            buildConfigField "String", "RECOMMENDED_SERVER_VERSION", '"0.64.2"'
             signingConfig signingConfigs.debug
             applicationIdSuffix ".dev"
         }
