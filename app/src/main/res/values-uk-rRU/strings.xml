@@ -16,7 +16,7 @@
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
     <string name="title_create_new_channel">Створити новий канал</string>
-    <string name="title_add_members">Запросити учасників (% s)</string>
+    <string name="title_add_members">Запросити учасників (%s)</string>
 
     <!-- Actions -->
     <string name="action_connect">Соединение</string>
