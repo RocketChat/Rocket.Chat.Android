@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import chat.rocket.android.R
@@ -50,6 +51,11 @@ class SsoWebViewActivity : AppCompatActivity() {
             setupWebView()
             isWebViewSetUp = true
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        CookieManager.getInstance().removeAllCookies(null)
     }
 
     override fun onBackPressed() {
