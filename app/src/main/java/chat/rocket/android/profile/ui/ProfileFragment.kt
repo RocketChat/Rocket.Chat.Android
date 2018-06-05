@@ -4,6 +4,7 @@ import DrawableHelper
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.view.*
 import chat.rocket.android.R
@@ -14,7 +15,6 @@ import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
-import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
@@ -135,7 +135,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun setupToolbar() {
-        (activity as MainActivity).toolbar.title = getString(R.string.title_profile)
+        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_profile)
     }
 
     private fun tintEditTextDrawableStart() {

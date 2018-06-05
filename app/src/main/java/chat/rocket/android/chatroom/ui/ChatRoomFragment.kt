@@ -31,6 +31,8 @@ import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.widget.emoji.*
+import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
@@ -243,7 +245,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(
-                    chatRoomType, chatRoomName, presenter,
+                    chatRoomType,
+                    chatRoomName,
+                    presenter,
                     reactionListener = this@ChatRoomFragment
                 )
                 recycler_view.adapter = adapter
@@ -272,9 +276,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     ) {
         // TODO: We should rely solely on the user being able to post, but we cannot guarantee
         // that the "(channels|groups).roles" endpoint is supported by the server in use.
-        setupMessageComposer(userCanPost)
-        isBroadcastChannel = channelIsBroadcast
-        if (isBroadcastChannel && !userCanMod) activity?.invalidateOptionsMenu()
+        ui {
+            setupMessageComposer(userCanPost)
+            isBroadcastChannel = channelIsBroadcast
+            if (isBroadcastChannel && !userCanMod) activity?.invalidateOptionsMenu()
+        }
     }
 
     override fun openDirectMessage(chatRoom: ChatRoom, permalink: String) {
@@ -647,12 +653,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         if (isChatRoomReadOnly && !canPost) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
-        } else if (!isSubscribed) {
+        } else if (!isSubscribed && roomTypeOf(chatRoomType) != RoomType.DIRECT_MESSAGE) {
             input_container.setVisible(false)
             button_join_chat.setVisible(true)
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
-            button_send.alpha = 0f
             button_send.setVisible(false)
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.setVisible(true)
@@ -788,14 +793,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupComposeButtons(charSequence: CharSequence) {
         if (charSequence.isNotEmpty() && playComposeMessageButtonsAnimation) {
-            button_show_attachment_options.fadeOut(1F, 0F, 120)
-            button_send.fadeIn(0F, 1F, 120)
+            button_show_attachment_options.setVisible(false)
+            button_send.setVisible(true)
             playComposeMessageButtonsAnimation = false
         }
 
         if (charSequence.isEmpty()) {
-            button_send.fadeOut(1F, 0F, 120)
-            button_show_attachment_options.fadeIn(0F, 1F, 120)
+            button_send.setVisible(false)
+            button_show_attachment_options.setVisible(true)
             playComposeMessageButtonsAnimation = true
         }
     }

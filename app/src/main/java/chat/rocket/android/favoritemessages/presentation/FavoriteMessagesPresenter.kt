@@ -25,9 +25,9 @@ class FavoriteMessagesPresenter @Inject constructor(
     private var offset: Int = 0
 
     /**
-     * Loads all favorite messages for room. the given room id.
+     * Loads all favorite messages for the given room id.
      *
-     * @param roomId The id of the room to get its favorite messages.
+     * @param roomId The id of the room to get favorite messages from.
      */
     fun loadFavoriteMessages(roomId: String) {
         launchUI(strategy) {
@@ -35,7 +35,7 @@ class FavoriteMessagesPresenter @Inject constructor(
                 view.showLoading()
                 roomsInteractor.getById(serverUrl, roomId)?.let {
                     val favoriteMessages = client.getFavoriteMessages(roomId, it.type, offset)
-                    val messageList = mapper.map(favoriteMessages.result)
+                    val messageList = mapper.map(favoriteMessages.result, asNotReversed = true)
                     view.showFavoriteMessages(messageList)
                     offset += 1 * 30
                 }.ifNull {

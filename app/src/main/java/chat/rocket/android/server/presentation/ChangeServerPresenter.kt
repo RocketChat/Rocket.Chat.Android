@@ -21,7 +21,7 @@ class ChangeServerPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val connectionManager: ConnectionManagerFactory
 ) {
-    fun loadServer(newUrl: String?) {
+    fun loadServer(newUrl: String?, chatRoomId: String? = null) {
         launchUI(strategy) {
             view.showProgress()
             var url = newUrl
@@ -56,7 +56,7 @@ class ChangeServerPresenter @Inject constructor(
 
                 saveCurrentServerInteractor.save(serverUrl)
                 view.hideProgress()
-                navigator.toChatRooms()
+                navigator.toChatRooms(chatRoomId)
             }.ifNull {
                 view.hideProgress()
                 navigator.toServerScreen()
