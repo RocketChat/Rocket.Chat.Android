@@ -7,7 +7,6 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-import timber.log.Timber
 import kotlin.coroutines.experimental.CoroutineContext
 
 
@@ -22,6 +21,8 @@ class TransformedLiveData<Source, Output>(
         job?.cancel()
         job = launch(runContext) {
             transformation(source)?.let { transformed ->
+                // Could have used postValue instead, but using the UI context I can guarantee that
+                // a canceled job will never emit values.
                 withContext(UI) {
                     value = transformed
                 }
@@ -30,13 +31,15 @@ class TransformedLiveData<Source, Output>(
     }
 
     override fun onActive() {
-        Timber.d("Attaching observer")
         source.observeForever(observer)
     }
 
     override fun onInactive() {
-        Timber.d("Detaching observer")
         job?.cancel()
         source.removeObserver(observer)
     }
 }
+
+fun <Source, Output> LiveData<Source>.transform(
+    runContext: CoroutineContext = CommonPool,
+    transformation: (Source?) -> Output?) = TransformedLiveData(runContext, this, transformation)

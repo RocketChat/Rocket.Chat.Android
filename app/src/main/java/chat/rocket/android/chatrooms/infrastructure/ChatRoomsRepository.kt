@@ -25,3 +25,6 @@ class ChatRoomsRepository @Inject constructor(val dao: ChatRoomDao){
         GROUPED_NAME,
     }
 }
+
+fun ChatRoomsRepository.Order.isGrouped(): Boolean = this == ChatRoomsRepository.Order.GROUPED_ACTIVITY
+        || this == ChatRoomsRepository.Order.GROUPED_NAME

@@ -8,12 +8,15 @@ import chat.rocket.android.chatrooms.adapter.ItemHolder
 import chat.rocket.android.chatrooms.adapter.RoomMapper
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.chatrooms.infrastructure.ChatRoomsRepository
+import chat.rocket.android.chatrooms.infrastructure.isGrouped
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.util.livedata.TransformedLiveData
+import chat.rocket.android.util.livedata.transform
 import chat.rocket.core.internal.realtime.socket.model.State
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
 import me.henrytao.livedataktx.distinct
+import me.henrytao.livedataktx.map
 import me.henrytao.livedataktx.nonNull
 import timber.log.Timber
 
@@ -33,25 +36,25 @@ class ChatRoomsViewModel(
     fun getChatRooms(): LiveData<List<ItemHolder<*>>> {
         return Transformations.switchMap(ordering) { order ->
             Timber.d("Querying rooms for order: $order")
-            val grouped = order == ChatRoomsRepository.Order.GROUPED_ACTIVITY
-                    || order == ChatRoomsRepository.Order.GROUPED_NAME
-            val roomData = repository.getChatRooms(order).nonNull().distinct()
-            TransformedLiveData(runContext, roomData) { rooms ->
-                rooms?.let {
-                    mapper.map(rooms, grouped)
-                }
-            }.nonNull()
+            repository.getChatRooms(order)
+                    .nonNull()
+                    .distinct()
+                    .transform(runContext) { rooms ->
+                        rooms?.let {
+                            mapper.map(rooms, order.isGrouped())
+                        }
+                    }
         }
     }
 
     fun getStatus(): MutableLiveData<State> {
-        return Transformations.map(connectionManager.statusLiveData.nonNull().distinct()) { state ->
+        return connectionManager.statusLiveData.nonNull().distinct().map { state ->
             if (state is State.Connected) {
                 // TODO - add a loading status...
                 fetchRooms()
             }
             state
-        }.nonNull()
+        }
     }
 
     private fun fetchRooms() {
