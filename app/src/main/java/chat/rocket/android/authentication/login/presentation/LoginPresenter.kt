@@ -56,7 +56,6 @@ class LoginPresenter @Inject constructor(
     private lateinit var credentialSecret: String
     private lateinit var deepLinkUserId: String
     private lateinit var deepLinkToken: String
-    private var loginCredentials: Credential? = null
 
     fun setupView() {
         setupConnectionInfo(currentServer)
@@ -357,10 +356,7 @@ class LoginPresenter @Inject constructor(
                     saveToken(token)
                     registerPushToken()
                     if (loginType == TYPE_LOGIN_USER_EMAIL) {
-                        loginCredentials = Credential.Builder(usernameOrEmail)
-                            .setPassword(password)
-                            .build()
-                        view.saveSmartLockCredentials(loginCredentials)
+                        view.saveSmartLockCredentials(usernameOrEmail, password)
                     }
                     navigator.toChatList()
                 } else if (loginType == TYPE_LOGIN_OAUTH) {

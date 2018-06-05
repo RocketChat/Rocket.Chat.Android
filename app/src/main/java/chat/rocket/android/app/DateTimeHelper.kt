@@ -14,11 +14,11 @@ object DateTimeHelper {
     /**
      * Returns a [LocalDateTime] from a [Long].
      *
-     * @param long The [Long]
+     * @param long The [Long] to gets a [LocalDateTime].
      * @return The [LocalDateTime] from a [Long].
      */
-    fun getLocalDateTime(long: Long?): LocalDateTime {
-        return LocalDateTime.ofInstant(long?.let { Instant.ofEpochMilli(it) }, ZoneId.systemDefault())
+    fun getLocalDateTime(long: Long): LocalDateTime {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(long), ZoneId.systemDefault())
     }
 
     /**
