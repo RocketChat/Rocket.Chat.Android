@@ -1,16 +1,22 @@
 package chat.rocket.android.services
 
+import android.util.Log
 import chat.rocket.android.server.GetCurrentServerInteractor
 import chat.rocket.android.server.SaveCurrentServerInteractor
 import chat.rocket.android.server.TokenRepository
-import chat.rocket.android.util.*
+import chat.rocket.android.util.AppPreferenceManager
+import chat.rocket.android.util.KEY_PREFS_ACTIVITY_FOREGROUND
+import chat.rocket.android.util.TokenSerialisableModel
+import chat.rocket.android.util.deserialiseToken
 import chat.rocket.common.model.Token
-import com.google.android.gms.wearable.Asset
-import com.google.android.gms.wearable.DataEventBuffer
-import com.google.android.gms.wearable.DataMapItem
+import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import dagger.android.AndroidInjection
 import javax.inject.Inject
+
+internal const val PATH_TOKEN = "/send-token"
+internal const val PATH_SERVER = "/send-server"
+internal const val PATH_DELETE = "/delete-server"
 
 class DataLayerListenerService : WearableListenerService() {
 
@@ -27,43 +33,32 @@ class DataLayerListenerService : WearableListenerService() {
         sharedPreferencesManager = AppPreferenceManager(this)
     }
 
-    override fun onDataChanged(dataEventBuffer: DataEventBuffer?) {
-        if (dataEventBuffer != null) {
-            for (event in dataEventBuffer) {
-                val path: String = event.dataItem.uri.path
-                if (SERVER_PATH == path) {
-                    //save current server
-                    val currentServerUrl =
-                        DataMapItem.fromDataItem(event.dataItem).dataMap.getString(SERVER_URL_KEY)
-                    serverInteractor.save(currentServerUrl)
-                } else if (TOKEN_PATH == path) {
-                    //save token
-                    val currentServer = getCurrentServerInteractor.get()
-                    if (currentServer != null) {
-                        val tokenUserId =
-                            DataMapItem.fromDataItem(event.dataItem).dataMap.getString(
-                                TOKEN_USER_ID_IDENTIFIER
-                            )
-                        val tokenAuth =
-                            DataMapItem.fromDataItem(event.dataItem).dataMap.getString(
-                                TOKEN_AUTH_IDENTIFIER
-                            )
+    override fun onMessageReceived(messageEvent: MessageEvent) {
+        val path = messageEvent.path
+        if (path == PATH_TOKEN) {
+            //save token request
+            val tokenToSave: TokenSerialisableModel = deserialiseToken(messageEvent.data)
+            val currentServer = getCurrentServerInteractor.get()
+            if (currentServer != null) {
+                val loginToken = Token(tokenToSave.getFirst(), tokenToSave.getSecond())
+                tokenRepository.save(currentServer, loginToken)
 
-                        val loginToken = Token(tokenUserId, tokenAuth)
-                        tokenRepository.save(currentServer, loginToken)
-
-                        val isActivityForeground =
-                            sharedPreferencesManager.getSharedPreferenceBoolean(
-                                KEY_PREFS_ACTIVITY_FOREGROUND
-                            )
-                        if (isActivityForeground){
-                            //inform main activity about saving tokens if it is in foreground
-                            //to lead the user to the main activity
-                        }
-                    }
+                val isActivityForeground =
+                    sharedPreferencesManager.getSharedPreferenceBoolean(
+                        KEY_PREFS_ACTIVITY_FOREGROUND
+                    )
+                if (isActivityForeground) {
+                    //inform main activity about saving tokens if it is in foreground
+                    //to lead the user to the main activity
                 }
             }
+        } else if (path == PATH_SERVER) {
+            //save server request
+            val currentServerUrl = String(messageEvent.data, Charsets.UTF_8)
+            serverInteractor.save(currentServerUrl)
+        } else if (path == PATH_DELETE) {
+            //delete tokens and server
+            getCurrentServerInteractor.clear()
         }
-
     }
 }

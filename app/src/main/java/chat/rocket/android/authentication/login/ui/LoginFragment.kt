@@ -24,12 +24,14 @@ import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.TextHelper
+import chat.rocket.android.util.TokenSerialisableModel
 import chat.rocket.android.util.extensions.*
-import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
-import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
+import chat.rocket.android.util.serialiseToken
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
+import chat.rocket.android.webview.sso.ui.INTENT_SSO_TOKEN
+import chat.rocket.android.webview.sso.ui.ssoWebViewIntent
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.ifNull
 import com.google.android.gms.auth.api.Auth
@@ -39,16 +41,10 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResolvingResultCallbacks
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
-import com.google.android.gms.wearable.DataItem
-import com.google.android.gms.wearable.PutDataMapRequest
-import com.google.android.gms.wearable.PutDataRequest
 import com.google.android.gms.wearable.Wearable
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
-import kotlinx.coroutines.experimental.runBlocking
 import timber.log.Timber
-import java.util.concurrent.ExecutionException
 import javax.inject.Inject
 
 internal const val REQUEST_CODE_FOR_CAS = 1
@@ -57,8 +53,6 @@ internal const val REQUEST_CODE_FOR_OAUTH = 3
 internal const val MULTIPLE_CREDENTIALS_READ = 4
 internal const val NO_CREDENTIALS_EXIST = 5
 internal const val SAVE_CREDENTIALS = 6
-internal const val TOKEN_USER_ID_IDENTIFIER = "TOKEN_USER_ID"
-internal const val TOKEN_AUTH_IDENTIFIER = "TOKEN_AUTH"
 
 lateinit var googleApiClient: GoogleApiClient
 
@@ -301,44 +295,22 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
     }
 
     override fun sendCredentialstoWearApp(token: Token) {
-        //the string identifier "/token" used below is used as a path for the intent filter
-        //for WearableListenerService created for listening to events that involve sending tokens
-        //to the wear app. See https://developer.android.com/training/wearables/data-layer/events
-        //for proper implementation.
-        val putDataMapReq: PutDataMapRequest = PutDataMapRequest.create("/token")
-        putDataMapReq.dataMap.putString(TOKEN_USER_ID_IDENTIFIER, token.userId)
-        putDataMapReq.dataMap.putString(TOKEN_AUTH_IDENTIFIER, token.authToken)
-        val putDataReq: PutDataRequest = putDataMapReq.asPutDataRequest()
-        putDataReq.setUrgent()
+        val tokenToSend = TokenSerialisableModel(token.userId, token.authToken)
+        val sendTokenTask: Task<Int> =
+            Wearable.getMessageClient(activity!!).sendMessage(
+                "*", "/send-token", serialiseToken(tokenToSend)
+            )
 
-        val dataItemTask: Task<DataItem> =
-            activity?.let { Wearable.getDataClient(it).putDataItem(putDataReq) } as Task<DataItem>
-
-        //configure async calls
-        dataItemTask.addOnCompleteListener { dataItem ->
-            Timber.d("completed with $dataItem")
+        //remove toast messages when tested successfully
+        sendTokenTask.addOnSuccessListener { result ->
+            Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
         }
-
-        dataItemTask.addOnFailureListener { dataItem ->
-            Timber.e("failed with $dataItem")
+        sendTokenTask.addOnCompleteListener { result ->
+            Toast.makeText(activity, "Complete", Toast.LENGTH_SHORT).show()
         }
-
-        dataItemTask.addOnSuccessListener { dataItem ->
-            Timber.d("success with $dataItem")
+        sendTokenTask.addOnFailureListener { result ->
+            Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show()
         }
-
-        //configure synchronous calls
-//        launch {
-//            try {
-//                val dataItem = Tasks.await(dataItemTask)
-//                Timber.d("DataItem saved: $dataItem")
-//            } catch (exception: ExecutionException) {
-//                Timber.e("Task failed: $exception");
-//            } catch (exception: InterruptedException) {
-//                Timber.e("Interrupt occurred: $exception")
-//            }
-//        }
-
     }
 
     override fun showLoading() {
