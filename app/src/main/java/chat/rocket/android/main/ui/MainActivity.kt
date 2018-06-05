@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
     @Inject
     lateinit var presenter: MainPresenter
     private var isFragmentAdded: Boolean = false
+    private const val CURRENT_STATE: String = "CURRENT_STATE"
     private var expanded = false
     private lateinit var googleApiClient: GoogleApiClient
     private val headerLayout by lazy { view_navigation.getHeaderView(0) }
@@ -118,6 +119,8 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             presenter.toChatList()
             isFragmentAdded = true
         }
+        setupToolbar()
+        setupNavigationView()
     }
 
     override fun onDestroy() {
@@ -268,4 +271,15 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector, HasSupp
             }
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(CURRENT_STATE,isFragmentAdded)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        isFragmentAdded = if (savedInstanceState != null) savedInstanceState.getBoolean(CURRENT_STATE) else false
+    }
+
 }
