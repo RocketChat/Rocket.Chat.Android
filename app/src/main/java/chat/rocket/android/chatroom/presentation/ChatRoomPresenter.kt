@@ -181,9 +181,7 @@ class ChatRoomPresenter @Inject constructor(
             }
 
             subscribeTypingStatus()
-            if (offset == 0L) {
-                subscribeState()
-            }
+            subscribeState()
         }
     }
 
@@ -229,10 +227,9 @@ class ChatRoomPresenter @Inject constructor(
                     )
                     try {
                         messagesRepository.save(newMessage)
-                        val message = client.sendMessage(id, chatRoomId, text)
                         view.showNewMessage(mapper.map(newMessage, RoomViewModel(
                             roles = chatRoles, isBroadcast = chatIsBroadcast)))
-                        message
+                        client.sendMessage(id, chatRoomId, text)
                     } catch (ex: Exception) {
                         // Ok, not very beautiful, but the backend sends us a not valid response
                         // When someone sends a message on a read-only channel, so we just ignore it
@@ -324,7 +321,7 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    private fun subscribeState() {
+    private suspend fun subscribeState() {
         Timber.d("Subscribing to Status changes")
         lastState = manager.state
         manager.addStatusChannel(stateChannel)
@@ -638,14 +635,17 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
-    fun toMembersList(chatRoomId: String, chatRoomType: String) =
-        navigator.toMembersList(chatRoomId, chatRoomType)
+    fun toMembersList(chatRoomId: String) =
+        navigator.toMembersList(chatRoomId)
 
-    fun toPinnedMessageList(chatRoomId: String, chatRoomType: String) =
-        navigator.toPinnedMessageList(chatRoomId, chatRoomType)
+    fun toPinnedMessageList(chatRoomId: String) =
+        navigator.toPinnedMessageList(chatRoomId)
 
-    fun toFavoriteMessageList(chatRoomId: String, chatRoomType: String) =
-        navigator.toFavoriteMessageList(chatRoomId, chatRoomType)
+    fun toFavoriteMessageList(chatRoomId: String) =
+        navigator.toFavoriteMessageList(chatRoomId)
+
+    fun toFileList(chatRoomId: String) =
+        navigator.toFileList(chatRoomId)
 
     fun loadChatRooms() {
         launchUI(strategy) {
@@ -787,12 +787,14 @@ class ChatRoomPresenter @Inject constructor(
     }
 
     private suspend fun subscribeTypingStatus() {
-        client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
-            typingStatusSubscriptionId = id
-        }
+        launch(CommonPool + strategy.jobs) {
+            client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
+                typingStatusSubscriptionId = id
+            }
 
-        for (typingStatus in client.typingStatusChannel) {
-            processTypingStatus(typingStatus)
+            for (typingStatus in client.typingStatusChannel) {
+                processTypingStatus(typingStatus)
+            }
         }
     }
 
@@ -834,6 +836,7 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             val viewModelStreamedMessage = mapper.map(streamedMessage, RoomViewModel(
                 roles = chatRoles, isBroadcast = chatIsBroadcast))
+
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
             if (index > -1) {

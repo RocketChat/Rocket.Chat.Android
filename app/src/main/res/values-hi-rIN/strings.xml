@@ -35,6 +35,8 @@
     <string name="action_away">दूर</string>
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
+    // TODO: Add proper translation.
+    <string name="action_save_to_gallery">Save to gallery</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -136,6 +138,9 @@
     <string name="message_unmuted">उपयोगकर्ता %1$s %2$s द्वारा अनम्यूट किया गया</string>
     <string name="message_role_add">%1$s %3$s द्वारा %2$s सेट किया गया था</string>
     <string name="message_role_removed">%1$s अब %3$s द्वारा %2$s नहीं है</string>
+    // TODO:Add proper translation.
+    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+
 
     <!-- Message actions -->
     <string name="action_msg_reply">जवाब दें</string>
@@ -160,7 +165,7 @@
     <string name="permission_starring_not_allowed">Starring is not allowed</string>
 
     <!-- Members List -->
-    <string name="title_members_list">सदस्यों की सूची</string>
+    <string name="title_members_list">सदस्य</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">पिन किए गए संदेश</string>
@@ -172,6 +177,13 @@
     <string name="title_favorite_messages">Favorite Messages</string>
     <string name="no_favorite_messages">No favorite messages</string>
     <string name="no_favorite_description">All the favorite messages\nappear here</string>
+
+    <!-- Files -->
+    <!-- TODO Add proper translation-->
+    <string name="msg_files">Files</string>
+    <string name="title_files_total">Files (%d)</string>
+    <string name="msg_no_files">No files</string>
+    <string name="msg_all_files_appear_here">All the files appear here</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">फ़ाइल का आकार %1$d बाइट्स ने %2$d बाइट्स के अधिकतम अपलोड आकार को पार कर लिया है</string>

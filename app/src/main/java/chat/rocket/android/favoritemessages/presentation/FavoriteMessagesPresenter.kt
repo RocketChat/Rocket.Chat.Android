@@ -15,37 +15,36 @@ import javax.inject.Inject
 class FavoriteMessagesPresenter @Inject constructor(
     private val view: FavoriteMessagesView,
     private val strategy: CancelStrategy,
-    private val serverInteractor: GetCurrentServerInteractor,
     private val roomsInteractor: ChatRoomsInteractor,
     private val mapper: ViewModelMapper,
-    factory: RocketChatClientFactory
+    val serverInteractor: GetCurrentServerInteractor,
+    val factory: RocketChatClientFactory
 ) {
-    private val client = factory.create(serverInteractor.get()!!)
+    private val serverUrl = serverInteractor.get()!!
+    private val client = factory.create(serverUrl)
     private var offset: Int = 0
 
     /**
-     * Loads all favorite messages for room. the given room id.
+     * Loads all favorite messages for the given room id.
      *
-     * @param roomId The id of the room to get its favorite messages.
+     * @param roomId The id of the room to get favorite messages from.
      */
     fun loadFavoriteMessages(roomId: String) {
         launchUI(strategy) {
             try {
-                val serverUrl = serverInteractor.get()!!
-                val chatRoom = roomsInteractor.getById(serverUrl, roomId)
-                chatRoom?.let { room ->
-                    view.showLoading()
-                    val favoriteMessages =
-                        client.getFavoriteMessages(roomId, room.type, offset)
-                    offset = favoriteMessages.offset.toInt()
-                    val messageList = mapper.map(favoriteMessages.result)
+                view.showLoading()
+                roomsInteractor.getById(serverUrl, roomId)?.let {
+                    val favoriteMessages = client.getFavoriteMessages(roomId, it.type, offset)
+                    val messageList = mapper.map(favoriteMessages.result, asNotReversed = true)
                     view.showFavoriteMessages(messageList)
-                    view.hideLoading()
+                    offset += 1 * 30
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
                 }
-            } catch (e: RocketChatException) {
-                Timber.e(e)
+            } catch (exception: RocketChatException) {
+                Timber.e(exception)
+            } finally {
+                view.hideLoading()
             }
         }
     }

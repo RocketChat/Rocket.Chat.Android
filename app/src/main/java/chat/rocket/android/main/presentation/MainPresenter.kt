@@ -49,7 +49,7 @@ class MainPresenter @Inject constructor(
 
     private val userDataChannel = Channel<Myself>()
 
-    fun toChatList() = navigator.toChatList()
+    fun toChatList(chatRoomId: String? = null) = navigator.toChatList(chatRoomId)
 
     fun toUserProfile() = navigator.toUserProfile()
 
@@ -105,11 +105,12 @@ class MainPresenter @Inject constructor(
                 disconnect()
                 removeAccountInteractor.remove(currentServer)
                 tokenRepository.remove(currentServer)
+                view.disableAutoSignIn()
                 navigator.toNewServer()
             } catch (ex: Exception) {
                 Timber.d(ex, "Error cleaning up the session...")
             }
-
+            view.disableAutoSignIn()
             navigator.toNewServer()
         }
     }
@@ -177,6 +178,7 @@ class MainPresenter @Inject constructor(
         if (pushToken != null) {
             try {
                 retryIO("unregisterPushToken") { client.unregisterPushToken(pushToken) }
+                view.invalidateToken(pushToken)
             } catch (ex: Exception) {
                 Timber.d(ex, "Error unregistering push token")
             }

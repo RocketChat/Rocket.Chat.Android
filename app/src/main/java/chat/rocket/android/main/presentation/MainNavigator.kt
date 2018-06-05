@@ -12,9 +12,9 @@ import chat.rocket.android.util.extensions.addFragment
 
 class MainNavigator(internal val activity: MainActivity) {
 
-    fun toChatList() {
+    fun toChatList(chatRoomId: String? = null) {
         activity.addFragment("ChatRoomsFragment", R.id.fragment_container) {
-            ChatRoomsFragment.newInstance()
+            ChatRoomsFragment.newInstance(chatRoomId)
         }
     }
 
@@ -43,7 +43,7 @@ class MainNavigator(internal val activity: MainActivity) {
     }
 
     fun toNewServer(serverUrl: String? = null) {
-        activity.startActivity(activity.changeServerIntent(serverUrl))
+        activity.startActivity(activity.changeServerIntent(serverUrl = serverUrl))
         activity.finish()
     }
 

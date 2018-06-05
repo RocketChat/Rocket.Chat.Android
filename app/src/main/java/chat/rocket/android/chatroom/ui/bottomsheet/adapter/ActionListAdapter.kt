@@ -26,7 +26,7 @@ class ActionListAdapter(
         holder.itemView.setOnClickListener {
             callback?.onMenuItemClick(item)
         }
-        val deleteTextColor = holder.itemView.context.resources.getColor(R.color.red)
+        val deleteTextColor = holder.itemView.context.resources.getColor(R.color.colorRed)
         val color = if (item.itemId == R.id.action_message_delete) {
             deleteTextColor
         } else {

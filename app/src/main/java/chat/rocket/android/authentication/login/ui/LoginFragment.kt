@@ -22,8 +22,7 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.login.presentation.LoginPresenter
 import chat.rocket.android.authentication.login.presentation.LoginView
-import chat.rocket.android.helper.KeyboardHelper
-import chat.rocket.android.helper.TextHelper
+import chat.rocket.android.helper.*
 import chat.rocket.android.util.extensions.*
 import chat.rocket.android.webview.cas.ui.INTENT_CAS_TOKEN
 import chat.rocket.android.webview.cas.ui.casWebViewIntent
@@ -31,12 +30,13 @@ import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_SECRET
 import chat.rocket.android.webview.oauth.ui.INTENT_OAUTH_CREDENTIAL_TOKEN
 import chat.rocket.android.webview.oauth.ui.oauthWebViewIntent
 import chat.rocket.common.util.ifNull
+import com.google.android.gms.auth.api.credentials.*
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_log_in.*
 import javax.inject.Inject
 
-internal const val REQUEST_CODE_FOR_CAS = 1
-internal const val REQUEST_CODE_FOR_OAUTH = 2
+internal const val REQUEST_CODE_FOR_CAS = 4
+internal const val REQUEST_CODE_FOR_OAUTH = 5
 
 class LoginFragment : Fragment(), LoginView {
     @Inject
@@ -47,6 +47,7 @@ class LoginFragment : Fragment(), LoginView {
     }
     private var isGlobalLayoutListenerSetUp = false
     private var deepLinkInfo: LoginDeepLinkInfo? = null
+    private val credentialsClient by lazy { Credentials.getClient(requireActivity()) }
 
     companion object {
         private const val DEEP_LINK_INFO = "DeepLinkInfo"
@@ -95,18 +96,39 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_FOR_CAS) {
-                data?.apply {
-                    presenter.authenticateWithCas(getStringExtra(INTENT_CAS_TOKEN))
-                }
-            } else if (requestCode == REQUEST_CODE_FOR_OAUTH) {
-                data?.apply {
-                    presenter.authenticateWithOauth(
-                        getStringExtra(INTENT_OAUTH_CREDENTIAL_TOKEN),
-                        getStringExtra(INTENT_OAUTH_CREDENTIAL_SECRET)
-                    )
+            if (data != null) {
+                when (requestCode) {
+                    REQUEST_CODE_FOR_MULTIPLE_ACCOUNTS_RESOLUTION -> {
+                        onCredentialRetrieved(data.getParcelableExtra(Credential.EXTRA_KEY))
+                    }
+                    REQUEST_CODE_FOR_SIGN_IN_REQUIRED -> {
+                        //use the hints to autofill sign in forms to reduce the info to be filled.
+                        val credential: Credential = data.getParcelableExtra(Credential.EXTRA_KEY)
+                        text_username_or_email.setText(credential.id)
+                        text_password.setText(credential.password)
+                    }
+                    REQUEST_CODE_FOR_SAVE_RESOLUTION -> {
+                        showMessage(getString(R.string.message_credentials_saved_successfully))
+                    }
+                    REQUEST_CODE_FOR_CAS -> {
+                        presenter.authenticateWithCas(data.getStringExtra(INTENT_CAS_TOKEN))
+                    }
+                    REQUEST_CODE_FOR_OAUTH -> {
+                        presenter.authenticateWithOauth(
+                            data.getStringExtra(INTENT_OAUTH_CREDENTIAL_TOKEN),
+                            data.getStringExtra(INTENT_OAUTH_CREDENTIAL_SECRET)
+                        )
+                    }
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        image_key.setOnClickListener {
+            requestStoredCredentials()
+            image_key.isVisible = false
         }
     }
 
@@ -123,6 +145,24 @@ class LoginFragment : Fragment(), LoginView {
                 arrayOf(text_username_or_email, text_password),
                 drawables
             )
+        }
+    }
+
+    private fun requestStoredCredentials() {
+        activity?.let {
+            SmartLockHelper.requestStoredCredentials(credentialsClient, it)?.let {
+                onCredentialRetrieved(it)
+            }
+        }
+    }
+
+    private fun onCredentialRetrieved(credential: Credential) {
+        presenter.authenticateWithUserAndPassword(credential.id, credential.password.toString())
+    }
+
+    override fun saveSmartLockCredentials(id: String, password: String) {
+        activity?.let {
+            SmartLockHelper.save(credentialsClient, it, id, password)
         }
     }
 
@@ -158,6 +198,7 @@ class LoginFragment : Fragment(), LoginView {
         ui {
             text_username_or_email.isVisible = true
             text_password.isVisible = true
+            image_key.isVisible = true
         }
     }
 

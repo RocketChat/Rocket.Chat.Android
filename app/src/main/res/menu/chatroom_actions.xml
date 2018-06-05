@@ -16,4 +16,9 @@
         android:id="@+id/action_favorite_messages"
         android:title="@string/title_favorite_messages"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_files"
+        android:title="@string/msg_files"
+        app:showAsAction="never" />
 </menu>

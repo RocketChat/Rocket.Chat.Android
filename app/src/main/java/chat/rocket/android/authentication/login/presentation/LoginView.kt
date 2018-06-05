@@ -2,6 +2,7 @@ package chat.rocket.android.authentication.login.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
+import com.google.android.gms.auth.api.credentials.Credential
 
 interface LoginView : LoadingView, MessageView {
 
@@ -223,4 +224,9 @@ interface LoginView : LoadingView, MessageView {
      * Alerts the user about a wrong inputted password.
      */
     fun alertWrongPassword()
+
+    /**
+     * Saves Google Smart Lock credentials.
+     */
+    fun saveSmartLockCredentials(id: String, password: String)
 }
