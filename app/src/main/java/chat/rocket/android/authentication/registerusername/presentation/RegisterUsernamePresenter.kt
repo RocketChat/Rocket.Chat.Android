@@ -27,7 +27,8 @@ class RegisterUsernamePresenter @Inject constructor(
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
-    serverInteractor: GetCurrentServerInteractor,
+    serverInteractor: GetConnectingServerInteractor,
+    private val saveCurrentServer: SaveCurrentServerInteractor,
     settingsInteractor: GetSettingsInteractor
 ) {
     private val currentServer = serverInteractor.get()!!
@@ -47,6 +48,7 @@ class RegisterUsernamePresenter @Inject constructor(
                     val registeredUsername = me.username
                     if (registeredUsername != null) {
                         saveAccount(registeredUsername)
+                        saveCurrentServer.save(currentServer)
                         tokenRepository.save(currentServer, Token(userId, authToken))
                         registerPushToken()
                         navigator.toChatList()
