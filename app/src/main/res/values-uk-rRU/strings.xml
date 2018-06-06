@@ -112,6 +112,7 @@
     <string name="msg_are_typing">\u0020печатают…</string>
     <string name="msg_several_users_are_typing">Несколько пользователей печатают…</string>
     <string name="msg_no_search_found">Результатов не найдено</string>
+    <string name="msg_message_copied">Сообщение скопировано</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Название канала изменено на: %1$s by %2$s</string>

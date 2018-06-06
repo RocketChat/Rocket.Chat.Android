@@ -74,7 +74,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 recycler_view_pinned.layoutManager = linearLayoutManager
                 recycler_view_pinned.itemAnimator = DefaultItemAnimator()
-                if (pinnedMessages.size > 10) {
+                if (pinnedMessages.size >= 30) {
                     recycler_view_pinned.addOnScrollListener(object :
                         EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(

@@ -41,9 +41,10 @@ class FileViewModel(
     }
 
     private fun getFileUploadDate(): String {
-        return DateTimeHelper.getDateTime(
-            DateTimeHelper.getLocalDateTime(genericAttachment.uploadedAt)
-        )
+        genericAttachment.uploadedAt?.let {
+            return DateTimeHelper.getDateTime(DateTimeHelper.getLocalDateTime(it))
+        }
+        return ""
     }
 
     private fun getFileUrl(): String? {

@@ -53,7 +53,6 @@ object ImageHelper {
         )
         val toolbar = Toolbar(context).also {
             it.inflateMenu(R.menu.image_actions)
-            it.overflowIcon?.setTint(Color.WHITE)
             it.setOnMenuItemClickListener {
                 return@setOnMenuItemClickListener when (it.itemId) {
                     R.id.action_save_image -> saveImage(context)
@@ -109,7 +108,6 @@ object ImageHelper {
             .hideStatusBar(false)
             .setCustomDraweeControllerBuilder(builder)
             .show()
-
     }
 
     private fun saveImage(context: Context): Boolean {
@@ -166,5 +164,4 @@ object ImageHelper {
             )
         }
     }
-
 }
