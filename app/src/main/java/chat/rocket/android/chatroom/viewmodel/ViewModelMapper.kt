@@ -14,6 +14,7 @@ import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.domain.MessageReply
+import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
@@ -47,6 +48,7 @@ import okhttp3.HttpUrl
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
+@PerFragment
 class ViewModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,

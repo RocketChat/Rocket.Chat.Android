@@ -41,12 +41,13 @@ class LoginPresenter @Inject constructor(
     private val localRepository: LocalRepository,
     private val getAccountsInteractor: GetAccountsInteractor,
     private val settingsInteractor: GetSettingsInteractor,
-    serverInteractor: GetCurrentServerInteractor,
+    serverInteractor: GetConnectingServerInteractor,
+    private val saveCurrentServer: SaveCurrentServerInteractor,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val factory: RocketChatClientFactory
 ) {
     // TODO - we should validate the current server when opening the app, and have a nonnull get()
-    private val currentServer = serverInteractor.get()!!
+    private var currentServer = serverInteractor.get()!!
     private lateinit var client: RocketChatClient
     private lateinit var settings: PublicSettings
     private lateinit var usernameOrEmail: String
@@ -103,6 +104,7 @@ class LoginPresenter @Inject constructor(
     }
 
     private fun setupConnectionInfo(serverUrl: String) {
+        currentServer = serverUrl
         client = factory.create(serverUrl)
         settings = settingsInteractor.get(serverUrl)
     }
@@ -325,6 +327,7 @@ class LoginPresenter @Inject constructor(
                 val username = retryIO("me()") { client.me().username }
                 if (username != null) {
                     localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
+                    saveCurrentServer.save(currentServer)
                     saveAccount(username)
                     saveToken(token)
                     registerPushToken()
