@@ -1,3 +1,14 @@
 <resources>
+    <string name="app_name">Rocket&#46;Chat</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <!--Titles-->
+    <string name="title_chat_rooms">Channels</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_logout">Logout</string>
+
+    <!--Messages-->
     <string name="msg_login_with_phone">Please login with the mobile app</string>
 </resources>

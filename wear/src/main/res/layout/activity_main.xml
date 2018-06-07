@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/dark_grey"
     android:padding="@dimen/box_inset_layout_padding"
-    tools:context="chat.rocket.android.main.ui.MainActivity"
+    tools:context="chat.rocket.android.starter.ui.StarterActivity"
     tools:deviceIds="wear">
 
     <FrameLayout

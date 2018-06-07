@@ -2,66 +2,56 @@ package chat.rocket.android.main.ui
 
 import android.app.Activity
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.wear.widget.drawer.WearableNavigationDrawerView
 import android.support.wearable.activity.WearableActivity
+import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
-import chat.rocket.android.util.AppPreferenceManager
-import chat.rocket.android.util.KEY_PREFS_ACTIVITY_FOREGROUND
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class MainActivity : HasActivityInjector, WearableActivity(), MainView {
-    private lateinit var sharedPreferencesManager: AppPreferenceManager
-    @Inject
-    lateinit var presenter: MainPresenter
+
+class MainActivity : WearableActivity(), MainView, HasActivityInjector, HasSupportFragmentInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var presenter: MainPresenter
+    private lateinit var navigationDrawer: WearableNavigationDrawerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         setAmbientEnabled()
-        sharedPreferencesManager = AppPreferenceManager(this)
-        checkIfLoginTokensExist()
+        setUpTopNavigationDrawer()
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
-    override fun onResume() {
-        super.onResume()
-        sharedPreferencesManager.editSharedPreference(KEY_PREFS_ACTIVITY_FOREGROUND, true)
-    }
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
+        fragmentDispatchingAndroidInjector
 
-    override fun onPause() {
-        super.onPause()
-        sharedPreferencesManager.editSharedPreference(KEY_PREFS_ACTIVITY_FOREGROUND, false)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        sharedPreferencesManager.editSharedPreference(KEY_PREFS_ACTIVITY_FOREGROUND, false)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        sharedPreferencesManager.editSharedPreference(KEY_PREFS_ACTIVITY_FOREGROUND, true)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        sharedPreferencesManager.editSharedPreference(KEY_PREFS_ACTIVITY_FOREGROUND, false)
-    }
-
-    private fun checkIfLoginTokensExist(){
-        presenter.loadCredentials { authenticated ->
-            if (authenticated){
-                //tokens exist, lead to main activity
-            }
+    private fun setUpTopNavigationDrawer() {
+        navigationDrawer = findViewById(R.id.top_navigation_drawer)
+        val mainNavigationAdapter = MainNavigationAdapter(this)
+        navigationDrawer.setAdapter(mainNavigationAdapter)
+        navigationDrawer.controller.peekDrawer()
+        navigationDrawer.addOnItemSelectedListener { pos ->
+            Toast.makeText(this, "Selected position $pos", Toast.LENGTH_SHORT).show()
+            //Add various fragments here
+//            when(pos){
+//                1->{
+//
+//                }
+//            }
         }
     }
+
 }

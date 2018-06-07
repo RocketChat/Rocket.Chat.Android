@@ -8,19 +8,10 @@ import dagger.Provides
 
 @Module
 class MainModule {
-//    @Provides
-//    fun provideLifecycleOwner(activity: MainActivity): LifecycleOwner {
-//        return activity
-//    }
 
     @Provides
     @PerActivity
-    fun createMainView(activity: MainActivity): MainView {
+    fun createMainActivityView(activity: MainActivity): MainView {
         return activity
     }
-
-//    @Provides
-//    fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
-//        return CancelStrategy(owner, jobs)
-//    }
 }

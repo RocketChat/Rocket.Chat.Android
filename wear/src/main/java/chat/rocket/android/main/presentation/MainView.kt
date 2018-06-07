@@ -1,3 +1,7 @@
 package chat.rocket.android.main.presentation
 
-interface MainView
+/**
+ * Created by aniket on 7/6/18.
+ */
+interface MainView {
+}
