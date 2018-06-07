@@ -1,6 +1,5 @@
 package chat.rocket.android.services
 
-import android.util.Log
 import chat.rocket.android.server.GetCurrentServerInteractor
 import chat.rocket.android.server.SaveCurrentServerInteractor
 import chat.rocket.android.server.TokenRepository

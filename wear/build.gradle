@@ -4,10 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion versions.compileSdk
     buildToolsVersion versions.buildTools
 
     defaultConfig {
+        applicationId "chat.rocket.android"
         minSdkVersion 23
         targetSdkVersion versions.targetSdk
         versionCode 1
