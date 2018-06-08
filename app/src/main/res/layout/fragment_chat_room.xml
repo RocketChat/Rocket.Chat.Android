@@ -7,19 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".chatroom.ui.ChatRoomFragment">
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/view_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
-        app:indicatorName="BallPulseIndicator"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
-
     <FrameLayout
         android:id="@+id/message_list_container"
         android:layout_width="0dp"
@@ -140,6 +127,19 @@
         android:visibility="gone"
         tools:alpha="1"
         tools:text="connected"
+        tools:visibility="visible" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorBlack"
+        app:indicatorName="BallPulseIndicator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>
