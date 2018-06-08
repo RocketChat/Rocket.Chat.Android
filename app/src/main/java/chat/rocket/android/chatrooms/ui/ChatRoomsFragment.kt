@@ -173,7 +173,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 dialogSort.show()
             }
         }
-        throw IllegalStateException("Testing crashlytics")
         return super.onOptionsItemSelected(item)
     }
 
