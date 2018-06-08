@@ -16,13 +16,22 @@ import chat.rocket.android.app.migration.model.RealmBasedServerInfo
 import chat.rocket.android.app.migration.model.RealmPublicSetting
 import chat.rocket.android.app.migration.model.RealmSession
 import chat.rocket.android.app.migration.model.RealmUser
-import chat.rocket.android.authentication.domain.model.toToken
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.CrashlyticsTree
+import chat.rocket.android.infrastructure.CrashlyticsWrapper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.AccountsRepository
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.SITE_URL
+import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.favicon
 import chat.rocket.android.server.domain.model.Account
+import chat.rocket.android.server.domain.wideTile
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.serverLogoUrl
 import chat.rocket.android.widget.emoji.EmojiRepository
@@ -34,13 +43,16 @@ import com.facebook.drawee.backends.pipeline.DraweeConfig
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.jakewharton.threetenabp.AndroidThreeTen
-import dagger.android.*
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
+import dagger.android.HasBroadcastReceiverInjector
+import dagger.android.HasServiceInjector
 import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -69,7 +81,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     @Inject
     lateinit var getCurrentServerInteractor: GetCurrentServerInteractor
     @Inject
-    lateinit var multiServerRepository: MultiServerTokenRepository
+    lateinit var settingsInteractor: GetSettingsInteractor
     @Inject
     lateinit var settingsRepository: SettingsRepository
     @Inject
@@ -80,8 +92,6 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
     lateinit var saveCurrentServerRepository: SaveCurrentServerInteractor
     @Inject
     lateinit var prefs: SharedPreferences
-    @Inject
-    lateinit var getAccountsInteractor: GetAccountsInteractor
     @Inject
     lateinit var localRepository: LocalRepository
 
@@ -101,8 +111,6 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
             .lifecycle
             .addObserver(appLifecycleObserver)
 
-        // TODO - remove this on the future, temporary migration stuff for pre-release versions.
-        migrateInternalTokens()
         context = WeakReference(applicationContext)
 
         AndroidThreeTen.init(this)
@@ -126,6 +134,29 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
             }
         } catch (ex: Exception) {
             Timber.d(ex, "Error migrating old accounts")
+        }
+
+        // TODO - remove this
+        checkCurrentServer()
+    }
+
+    private fun checkCurrentServer() {
+        val currentServer = getCurrentServerInteractor.get() ?: "<unknown>"
+
+        if (currentServer == "<unknown>") {
+            val message = "null currentServer"
+            Timber.d(IllegalStateException(message), message)
+        }
+
+        val settings = settingsInteractor.get(currentServer)
+        if (settings.isEmpty()) {
+            val message = "Empty settings for: $currentServer"
+            Timber.d(IllegalStateException(message), message)
+        }
+        val baseUrl = settings[SITE_URL]
+        if (baseUrl == null) {
+            val message = "Server $currentServer SITE_URL"
+            Timber.d(IllegalStateException(message), message)
         }
     }
 
@@ -233,32 +264,13 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         }
     }
 
-    private fun migrateInternalTokens() {
-        if (!prefs.getBoolean(INTERNAL_TOKEN_MIGRATION_NEEDED, true)) {
-            Timber.d("Tokens already migrated")
-            return
-        }
-
-        getCurrentServerInteractor.get()?.let { serverUrl ->
-            multiServerRepository.get(serverUrl)?.let { token ->
-                tokenRepository.save(serverUrl, Token(token.userId, token.authToken))
-            }
-        }
-
-        runBlocking {
-            getAccountsInteractor.get().forEach { account ->
-                multiServerRepository.get(account.serverUrl)?.let { token ->
-                    tokenRepository.save(account.serverUrl, token.toToken())
-                }
-            }
-        }
-
-        prefs.edit { putBoolean(INTERNAL_TOKEN_MIGRATION_NEEDED, false) }
-    }
-
     private fun setupCrashlytics() {
         val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
         Fabric.with(this, Crashlytics.Builder().core(core).build())
+
+        CrashlyticsWrapper.install(this@RocketChatApplication,
+                getCurrentServerInteractor, settingsInteractor,
+                accountRepository, localRepository)
     }
 
     private fun setupFresco() {
@@ -300,7 +312,5 @@ private fun LocalRepository.setMigrated(migrated: Boolean) {
 private fun LocalRepository.hasMigrated() = getBoolean(LocalRepository.MIGRATION_FINISHED_KEY)
 private fun LocalRepository.needOldMessagesCleanUp() = getBoolean(CLEANUP_OLD_MESSAGES_NEEDED, true)
 private fun LocalRepository.setOldMessagesCleanedUp() = save(CLEANUP_OLD_MESSAGES_NEEDED, false)
-
-private const val INTERNAL_TOKEN_MIGRATION_NEEDED = "INTERNAL_TOKEN_MIGRATION_NEEDED"
 
 private const val CLEANUP_OLD_MESSAGES_NEEDED = "CLEANUP_OLD_MESSAGES_NEEDED"
