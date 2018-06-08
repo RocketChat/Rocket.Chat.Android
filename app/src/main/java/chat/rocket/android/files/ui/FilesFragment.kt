@@ -86,6 +86,7 @@ class FilesFragment : Fragment(), FilesView {
                     }
                 })
             }
+            group_no_file.isVisible = dataSet.isEmpty()
         } else {
             adapter.appendData(dataSet)
 
