@@ -1,25 +1,21 @@
 package chat.rocket.android.main.ui
 
 import android.app.Activity
+import android.app.Fragment
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.support.wear.widget.drawer.WearableNavigationDrawerView
 import android.widget.Toast
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.android.*
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
-    HasSupportFragmentInjector {
+class MainActivity : Activity(), MainView, HasActivityInjector,
+    HasFragmentInjector {
+
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
     @Inject
@@ -39,18 +35,17 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-        fragmentDispatchingAndroidInjector
+    override fun fragmentInjector(): DispatchingAndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 
     private fun initialiseChatRoomsFragment() {
         chatRoomsFragment = ChatRoomsFragment()
-        supportFragmentManager.beginTransaction()
+        fragmentManager.beginTransaction()
             .replace(R.id.content_frame, chatRoomsFragment)
             .commit()
     }
 
     private fun setUpTopNavigationDrawer() {
-        navigationDrawer = findViewById(R.id.top_navigation_drawer) as WearableNavigationDrawerView
+        navigationDrawer = findViewById(R.id.top_navigation_drawer)
         val mainNavigationAdapter = MainNavigationAdapter(this)
         navigationDrawer.setAdapter(mainNavigationAdapter)
         navigationDrawer.controller.peekDrawer()

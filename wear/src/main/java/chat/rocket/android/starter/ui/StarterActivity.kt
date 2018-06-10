@@ -61,7 +61,7 @@ class StarterActivity : HasActivityInjector, WearableActivity(),
     private fun checkIfLoginTokensExist() {
         presenter.loadCredentials { authenticated ->
             if (authenticated) {
-                //tokens exist, lead to main activity
+                //startActivity(Intent(this, MainActivity::class.java))
             }
         }
     }

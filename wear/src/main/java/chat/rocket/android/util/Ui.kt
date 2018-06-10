@@ -2,7 +2,7 @@ package chat.rocket.android.util
 
 import android.app.Activity
 import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
+import android.app.Fragment
 import android.widget.Toast
 
 fun Activity.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) =

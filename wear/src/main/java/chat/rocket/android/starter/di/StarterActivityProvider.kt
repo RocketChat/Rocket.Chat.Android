@@ -1,6 +1,5 @@
-package chat.rocket.android.wear.main.di
+package chat.rocket.android.starter.di
 
-import chat.rocket.android.starter.di.StarterActivityModule
 import chat.rocket.android.starter.ui.StarterActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
