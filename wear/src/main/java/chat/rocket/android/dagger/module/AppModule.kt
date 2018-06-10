@@ -3,6 +3,7 @@ package chat.rocket.android.dagger.module
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import chat.rocket.android.BuildConfig
 import chat.rocket.android.server.*
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.TimberLogger
@@ -12,15 +13,39 @@ import chat.rocket.common.model.TimestampAdapter
 import chat.rocket.common.util.CalendarISO8601Converter
 import chat.rocket.common.util.Logger
 import chat.rocket.common.util.PlatformLogger
+import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.AttachmentAdapterFactory
 import chat.rocket.core.internal.ReactionsAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.experimental.Job
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 class AppModule {
+
+    @Provides
+    @Singleton
+    fun provideRocketChatClient(
+        okHttpClient: OkHttpClient,
+        repository: TokenRepository,
+        logger: PlatformLogger
+    ): RocketChatClient {
+        return RocketChatClient.create {
+            httpClient = okHttpClient
+            tokenRepository = repository
+            platformLogger = logger
+
+            // TODO remove
+            restUrl = "https://open.rocket.chat"
+        }
+    }
+
     @Provides
     @Singleton
     fun provideContext(application: Application): Context {
@@ -43,6 +68,38 @@ class AppModule {
     @Singleton
     fun provideSharedPreferences(context: Application) =
         context.getSharedPreferences("rocket.chat", Context.MODE_PRIVATE)
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(logger)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
+            Timber.d(message)
+        })
+        if (BuildConfig.DEBUG) {
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
+        } else {
+            // TODO - change to HEADERS on production...
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        return interceptor
+    }
+
+    @Provides
+    fun provideJob(): Job {
+        return Job()
+    }
 
     @Provides
     @Singleton

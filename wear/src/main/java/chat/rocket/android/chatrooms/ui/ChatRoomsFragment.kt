@@ -2,34 +2,73 @@ package chat.rocket.android.chatrooms.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.util.showToast
+import chat.rocket.core.model.ChatRoom
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import javax.inject.Inject
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
+    private lateinit var adapter: ChatRoomsAdapter
+
     @Inject
     lateinit var presenter: ChatRoomsPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-        resources
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater?,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+    ): View? = inflater!!.inflate(R.layout.fragment_chat_rooms, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpRecyclerView()
+        presenter.loadChatRooms()
+    }
+
+    override fun showLoading() {
+        view_loading.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        view_loading.visibility = View.GONE
+    }
+
+    override fun showMessage(resId: Int) {
+        showToast(resId)
+    }
+
+    override fun showMessage(message: String) {
+        showToast(message)
+    }
+
+    override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
+
+    override fun updateChatRooms(chatRooms: List<ChatRoom>) {
+        adapter = ChatRoomsAdapter(chatRooms)
+        channels_list.visibility = View.VISIBLE
+    }
+
+    private fun setUpRecyclerView() {
+        channels_list.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        channels_list.itemAnimator = DefaultItemAnimator()
+        channels_list.isCircularScrollingGestureEnabled = true
+
     }
 
 }

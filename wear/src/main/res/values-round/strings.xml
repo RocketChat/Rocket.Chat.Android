@@ -10,5 +10,6 @@
     <string name="title_logout">Logout</string>
 
     <!--Messages-->
+    <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_login_with_phone">Please login with the mobile app</string>
 </resources>

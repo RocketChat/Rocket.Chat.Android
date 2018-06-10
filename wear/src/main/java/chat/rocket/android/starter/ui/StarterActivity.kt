@@ -25,7 +25,7 @@ class StarterActivity : HasActivityInjector, WearableActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_starter)
         setAmbientEnabled()
         sharedPreferencesManager = AppPreferenceManager(this)
         checkIfLoginTokensExist()

@@ -30,6 +30,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation libraries.kotlin
+    implementation libraries.coroutines
+    implementation libraries.coroutinesAndroid
+
     implementation libraries.wearable
     implementation libraries.playServicesWearable
     implementation libraries.percentLayout
@@ -51,6 +54,8 @@ dependencies {
     implementation libraries.kotshiApi
 
     implementation libraries.moshi
+    implementation libraries.okhttp
+    implementation libraries.okhttpLogger
 
     testImplementation libraries.junit
     compileOnly 'com.google.android.wearable:wearable:2.3.0'
@@ -61,5 +66,10 @@ task compileSdk(type: Exec) {
         commandLine 'cmd', '/c', 'build-sdk.sh'
     } else {
         commandLine './build-sdk.sh'
+    }
+}
+kotlin {
+    experimental {
+        coroutines "enable"
     }
 }
