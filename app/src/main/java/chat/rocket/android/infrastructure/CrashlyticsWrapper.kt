@@ -24,7 +24,6 @@ private fun isCrashlyticsEnabled(): Boolean {
     return !BuildConfig.DEBUG
 }
 
-
 private class RocketChatUncaughtExceptionHandler(
         val currentServerInteractor: GetCurrentServerInteractor,
         val settingsInteractor: GetSettingsInteractor,
