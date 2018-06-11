@@ -42,6 +42,8 @@ class SsoWebViewActivity : AppCompatActivity() {
         casToken = intent.getStringExtra(INTENT_SSO_TOKEN)
         requireNotNull(casToken) { "no cas_token provided in Intent extras" }
 
+        // Ensures that the cookies is always removed when opening the webview.
+        CookieManager.getInstance().removeAllCookies(null)
         setupToolbar()
     }
 
@@ -51,11 +53,6 @@ class SsoWebViewActivity : AppCompatActivity() {
             setupWebView()
             isWebViewSetUp = true
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        CookieManager.getInstance().removeAllCookies(null)
     }
 
     override fun onBackPressed() {
