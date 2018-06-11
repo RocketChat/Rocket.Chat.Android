@@ -74,11 +74,6 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
-        <activity
-            android:name=".createchannel.addmembers.ui.AddMembersActivity"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-
         <!-- TODO: Change to fragment -->
         <activity
             android:name=".settings.password.ui.PasswordActivity"
