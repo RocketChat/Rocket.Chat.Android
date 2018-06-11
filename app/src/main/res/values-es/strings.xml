@@ -40,10 +40,6 @@
     <string name="action_busy">Ocupado</string>
     <string name="action_invisible">Invisible</string>
     // TODO: Add proper translation.
-    <string name="action_create_new_channel">CREATE</string>
-    // TODO: Add proper translation.
-    <string name="action_select_members">DONE</string>
-    // TODO: Add proper translation.
     <string name="action_save_to_gallery">Save to gallery</string>
 
     <!-- Settings List -->
@@ -134,11 +130,8 @@
     // TODO: Add proper translation.
     <string name="msg_channel_name">Channel name</string>
     // TODO: Add proper translation.
-    <string name="msg_add_members">Add Members</string>
-    // TODO: Add proper translation.
     <string name="msg_search">Search</string>
     <string name="msg_message_copied">Mensaje copiado</string>
-    <string name="msg_channel_name_required">Por favor ingrese un nombre de canal</string>
 
     <!-- Create channel messages -->
     // TODO: Add proper translation.

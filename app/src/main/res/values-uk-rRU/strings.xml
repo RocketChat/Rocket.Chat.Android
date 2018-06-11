@@ -118,9 +118,7 @@
     <string name="msg_no_search_found">Результатов не найдено</string>
     <string name="msg_message_copied">Сообщение скопировано</string>
     <string name="msg_channel_name">Назва каналу</string>
-    <string name="msg_add_members">Додати членів</string>
     <string name="msg_search">Пошук</string>
-    <string name="msg_channel_name_required">Будь ласка, введіть назву каналу</string>
 
     <!-- Create channel messages -->
     // TODO: Add proper translation.
@@ -163,8 +161,6 @@
     <string name="action_msg_share">Поделиться</string>
     <string name="action_title_editing">Редактирование сообщения</string>
     <string name="action_msg_add_reaction">Добавить реакцию</string>
-    <string name="action_create_new_channel">Створити</string>
-    <string name="action_select_members">Зроблено</string>
 
     <!-- Permission messages -->
     <string name="permission_editing_not_allowed">Редактирование запрещено</string>

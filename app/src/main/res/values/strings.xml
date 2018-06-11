@@ -32,8 +32,6 @@
     <string name="action_logout">Logout</string>
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
-    <string name="action_create_new_channel">CREATE</string>
-    <string name="action_select_members">DONE</string>
     <string name="action_join_chat">Join Chat</string>
     <string name="action_add_account">Add account</string>
     <string name="action_online">Online</string>
@@ -89,7 +87,6 @@
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
     <string name="msg_channel_name">Channel name</string>
-    <string name="msg_add_members">Add Members</string>
     <string name="msg_search">Search</string>
     <string name="msg_unread_messages">Unread messages</string>
     <string name="msg_preview_video">Video</string>
@@ -122,7 +119,6 @@
     <string name="msg_are_typing">\u0020are typing…</string>
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No result found</string>
-    <string name="msg_channel_name_required">Please enter a channel name</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Private</string>

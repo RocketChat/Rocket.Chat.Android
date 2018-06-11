@@ -13,8 +13,6 @@ import chat.rocket.android.chatroom.di.ChatRoomModule
 import chat.rocket.android.chatroom.di.FavoriteMessagesFragmentProvider
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
-import chat.rocket.android.createchannel.addmembers.di.AddMembersModule
-import chat.rocket.android.createchannel.addmembers.ui.AddMembersActivity
 import chat.rocket.android.createchannel.di.CreateChannelProvider
 import chat.rocket.android.dagger.scope.PerActivity
 import chat.rocket.android.files.di.FilesFragmentProvider
@@ -78,9 +76,4 @@ abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = [ChangeServerModule::class])
     abstract fun bindChangeServerActivity(): ChangeServerActivity
-
-    @PerActivity
-    @ContributesAndroidInjector(modules = [AddMembersModule::class])
-    abstract fun bindAddMembersActivity(): AddMembersActivity
-
 }

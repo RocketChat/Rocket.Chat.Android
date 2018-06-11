@@ -41,10 +41,6 @@
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
     // TODO: Add proper translation.
-    <string name="action_create_new_channel">CREATE</string>
-    // TODO: Add proper translation.
-    <string name="action_select_members">DONE</string>
-    // TODO: Add proper translation.
     <string name="action_save_to_gallery">Save to gallery</string>
 
     <!-- Settings List -->
@@ -136,11 +132,8 @@
     // TODO: Add proper translation.
     <string name="msg_channel_name">Channel name</string>
     // TODO: Add proper translation.
-    <string name="msg_add_members">Add Members</string>
-    // TODO: Add proper translation.
     <string name="msg_search">Search</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
-    <string name="msg_channel_name_required">कृपया एक चैनल नाम दर्ज करें</string>
 
     <!-- Create channel messages -->
     // TODO: Add proper translation.
