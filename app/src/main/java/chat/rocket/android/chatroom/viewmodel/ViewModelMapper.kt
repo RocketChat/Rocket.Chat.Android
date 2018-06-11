@@ -61,8 +61,8 @@ class ViewModelMapper @Inject constructor(
 ) {
 
     private val currentServer = serverInteractor.get()!!
-    private val settings: Map<String, Value<Any>> = getSettingsInteractor.get(currentServer)
-    private val baseUrl = settings.baseUrl()
+    private val settings = getSettingsInteractor.get(currentServer)
+    private val baseUrl = currentServer
     private val token = tokenRepository.get(currentServer)
     private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
     private val secondaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)

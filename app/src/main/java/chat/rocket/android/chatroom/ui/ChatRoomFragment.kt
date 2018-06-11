@@ -367,7 +367,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun showTypingStatus(usernameList: ArrayList<String>) {
+    override fun showTypingStatus(usernameList: List<String>) {
         ui {
             when (usernameList.size) {
                 1 -> {
