@@ -19,7 +19,6 @@ import chat.rocket.android.app.migration.model.RealmUser
 import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.CrashlyticsTree
-import chat.rocket.android.infrastructure.CrashlyticsWrapper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.installCrashlyticsWrapper
 import chat.rocket.android.server.domain.AccountsRepository
