@@ -22,7 +22,8 @@ class SignupPresenter @Inject constructor(
     private val strategy: CancelStrategy,
     private val navigator: AuthenticationNavigator,
     private val localRepository: LocalRepository,
-    private val serverInteractor: GetCurrentServerInteractor,
+    private val serverInteractor: GetConnectingServerInteractor,
+    private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
     private val factory: RocketChatClientFactory,
     private val saveAccountInteractor: SaveAccountInteractor,
     private val getAccountsInteractor: GetAccountsInteractor,
@@ -60,6 +61,7 @@ class SignupPresenter @Inject constructor(
                         // TODO This function returns a user token so should we save it?
                         retryIO("login") { client.login(username, password) }
                         val me = retryIO("me") { client.me() }
+                        saveCurrentServerInteractor.save(currentServer)
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         saveAccount(me)
                         registerPushToken()
