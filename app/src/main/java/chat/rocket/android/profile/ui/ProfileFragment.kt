@@ -13,20 +13,21 @@ import chat.rocket.android.profile.presentation.ProfilePresenter
 import chat.rocket.android.profile.presentation.ProfileView
 import chat.rocket.android.util.extensions.*
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.avatar_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
 class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
-    @Inject lateinit var presenter: ProfilePresenter
+    @Inject
+    lateinit var presenter: ProfilePresenter
     private lateinit var currentName: String
     private lateinit var currentUsername: String
     private lateinit var currentEmail: String
     private lateinit var currentAvatar: String
     private var actionMode: ActionMode? = null
-    private val disposables = CompositeDisposable()
+    private lateinit var editTextsDisposable: Disposable
 
     companion object {
         fun newInstance() = ProfileFragment()
@@ -37,7 +38,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_profile)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_profile)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,8 +56,8 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     override fun onDestroyView() {
-        disposables.clear()
         super.onDestroyView()
+        unsubscribeEditTexts()
     }
 
     override fun showProfile(avatarUrl: String, name: String, username: String, email: String?) {
@@ -71,7 +76,7 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
             profile_container.setVisible(true)
 
-            listenToChanges()
+            subscribeEditTexts()
         }
     }
 
@@ -119,8 +124,13 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
 
     override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
-            R.id.action_profile -> {
-                presenter.updateUserProfile(text_email.textContent, text_name.textContent, text_username.textContent, text_avatar_url.textContent)
+            R.id.action_update_profile -> {
+                presenter.updateUserProfile(
+                    text_email.textContent,
+                    text_name.textContent,
+                    text_username.textContent,
+                    text_avatar_url.textContent
+                )
                 mode.finish()
                 true
             }
@@ -135,28 +145,36 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_profile)
+        (activity as AppCompatActivity?)?.supportActionBar?.title =
+                getString(R.string.title_profile)
     }
 
     private fun tintEditTextDrawableStart() {
         (activity as MainActivity).apply {
-            val personDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
+            val personDrawable =
+                DrawableHelper.getDrawableFromId(R.drawable.ic_person_black_24dp, this)
             val atDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_at_black_24dp, this)
-            val emailDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
+            val emailDrawable =
+                DrawableHelper.getDrawableFromId(R.drawable.ic_email_black_24dp, this)
             val linkDrawable = DrawableHelper.getDrawableFromId(R.drawable.ic_link_black_24dp, this)
 
             val drawables = arrayOf(personDrawable, atDrawable, emailDrawable, linkDrawable)
             DrawableHelper.wrapDrawables(drawables)
             DrawableHelper.tintDrawables(drawables, this, R.color.colorDrawableTintGrey)
-            DrawableHelper.compoundDrawables(arrayOf(text_name, text_username, text_email, text_avatar_url), drawables)
+            DrawableHelper.compoundDrawables(
+                arrayOf(text_name, text_username, text_email, text_avatar_url),
+                drawables
+            )
         }
     }
 
-    private fun listenToChanges() {
-        disposables.add(Observables.combineLatest(text_name.asObservable(),
-                text_username.asObservable(),
-                text_email.asObservable(),
-                text_avatar_url.asObservable()) { text_name, text_username, text_email, text_avatar_url ->
+    private fun subscribeEditTexts() {
+        editTextsDisposable = Observables.combineLatest(
+            text_name.asObservable(),
+            text_username.asObservable(),
+            text_email.asObservable(),
+            text_avatar_url.asObservable()
+        ) { text_name, text_username, text_email, text_avatar_url ->
             return@combineLatest (text_name.toString() != currentName ||
                     text_username.toString() != currentUsername ||
                     text_email.toString() != currentEmail ||
@@ -167,7 +185,11 @@ class ProfileFragment : Fragment(), ProfileView, ActionMode.Callback {
             } else {
                 finishActionMode()
             }
-        })
+        }
+    }
+
+    private fun unsubscribeEditTexts() {
+        editTextsDisposable.dispose()
     }
 
     private fun startActionMode() {

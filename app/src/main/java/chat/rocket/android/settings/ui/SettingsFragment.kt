@@ -16,16 +16,19 @@ import chat.rocket.android.util.extensions.inflate
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlin.reflect.KClass
 
-class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListener {
+class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListener {
     companion object {
         fun newInstance() = SettingsFragment()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = container?.inflate(R.layout.fragment_settings)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = container?.inflate(R.layout.fragment_settings)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupToolbar()
         setupListView()
     }
@@ -34,7 +37,8 @@ class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListene
         when (parent?.getItemAtPosition(position).toString()) {
             resources.getString(R.string.title_password) -> {
                 startNewActivity(PasswordActivity::class)
-            }resources.getString(R.string.title_about) -> {
+            }
+            resources.getString(R.string.title_about) -> {
                 startNewActivity(AboutActivity::class)
             }
         }
@@ -45,7 +49,8 @@ class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListene
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_settings)
+        (activity as AppCompatActivity?)?.supportActionBar?.title =
+                getString(R.string.title_settings)
     }
 
     private fun startNewActivity(classType: KClass<out AppCompatActivity>) {

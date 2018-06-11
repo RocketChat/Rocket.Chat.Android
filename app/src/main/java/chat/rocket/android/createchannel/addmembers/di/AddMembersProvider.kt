@@ -1,6 +1,6 @@
-package chat.rocket.android.createChannel.addMembers.di
+package chat.rocket.android.createchannel.addmembers.di
 
-import chat.rocket.android.createChannel.addMembers.ui.AddMembersActivity
+import chat.rocket.android.createchannel.addmembers.ui.AddMembersActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

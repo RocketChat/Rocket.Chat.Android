@@ -4,7 +4,9 @@ import DrawableHelper
 import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
@@ -26,7 +28,6 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserStatus
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.android.gms.common.api.GoogleApiClient
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -186,14 +187,14 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setSupportActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
         toolbar.setNavigationOnClickListener {
-            drawer_layout.openDrawer(Gravity.START)
+            openDrawer()
         }
     }
 
     private fun setupNavigationView() {
         view_navigation.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
-            drawer_layout.closeDrawer(Gravity.START)
+            closeDrawer()
             onNavDrawerItemSelected(menuItem)
             true
         }
@@ -206,6 +207,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             }
             R.id.action_profile -> {
                 presenter.toUserProfile()
+            }
+            R.id.action_channel -> {
+                presenter.toCreateChannel()
             }
             R.id.action_settings -> {
                 presenter.toSettings()
@@ -244,9 +248,25 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         header.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
+            view_navigation.menu.findItem(R.id.action_update_profile).isChecked = true
             presenter.toUserProfile()
             drawer_layout.closeDrawer(Gravity.START)
         }
+    }
+
+    fun getDrawerLayout(): DrawerLayout {
+        return drawer_layout
+    }
+
+    fun openDrawer() {
+        drawer_layout.openDrawer(Gravity.START)
+    }
+
+    fun closeDrawer() {
+        drawer_layout.closeDrawer(Gravity.START)
+    }
+
+    fun setCheckedNavDrawerItem(@IdRes item: Int) {
+        view_navigation.setCheckedItem(item)
     }
 }

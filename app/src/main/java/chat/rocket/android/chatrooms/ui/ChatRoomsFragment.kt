@@ -1,6 +1,5 @@
 package chat.rocket.android.chatrooms.ui
 
-import android.content.Intent
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
@@ -22,7 +21,6 @@ import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
-import chat.rocket.android.createChannel.ui.CreateNewChannelActivity
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
@@ -105,7 +103,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         setupToolbar()
         setupRecyclerView()
-        setupFab()
         presenter.loadChatRooms()
     }
 
@@ -193,7 +190,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
             /*val diff = async(CommonPool) {
                 DiffUtil.calculateDiff(RoomsDiffCallback(adapter.baseAdapter.dataSet, newDataSet))
             }.await()*/
-            text_no_search.isVisible = newDataSet.isEmpty()
+            text_no_result_found.isVisible = newDataSet.isEmpty()
             if (isActive) {
                 adapter.baseAdapter.updateRooms(newDataSet)
                 // TODO - fix crash to re-enable diff.dispatchUpdatesTo(adapter)
@@ -312,13 +309,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
         val dummy = arrayOfNulls<SimpleSectionedRecyclerViewAdapter.Section>(sections.size)
         sectionedAdapter?.setSections(sections.toArray(dummy))
-    }
-
-    private fun setupFab() {
-        create_new_channel_fab.setOnClickListener {
-            val intent = Intent(activity, CreateNewChannelActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun queryChatRoomsByName(name: String?): Boolean {

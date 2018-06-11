@@ -613,8 +613,14 @@ class ChatRoomPresenter @Inject constructor(
                             val name = it.name ?: ""
                             val searchList = mutableListOf(username, name)
                             it.emails?.forEach { email -> searchList.add(email.address) }
-                            PeopleSuggestionViewModel(currentServer.avatarUrl(username),
-                                username, username, name, it.status, false, searchList)
+                            PeopleSuggestionViewModel(
+                                currentServer.avatarUrl(username),
+                                username,
+                                username,
+                                name,
+                                it.status,
+                                false,
+                                searchList)
                         }.filterNot { filterSelfOut && self != null && self == it.text })
                     }
                     ROOMS -> {

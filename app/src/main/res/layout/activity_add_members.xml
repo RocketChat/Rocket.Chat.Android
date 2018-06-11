@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:visibility="gone"
             app:chipSpacing="3dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -45,7 +46,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/search_view"
+            android:id="@+id/text_search_member"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
@@ -60,15 +61,14 @@
             android:layout_width="match_parent"
             android:layout_height="0.2dp"
             android:background="@color/colorDividerMessageComposer"
-            app:layout_constraintTop_toBottomOf="@id/search_view" />
+            app:layout_constraintTop_toBottomOf="@id/text_search_member" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/search_results"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
             android:scrollbars="vertical"
-            app:layout_constraintTop_toBottomOf="@id/separator_1"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/separator_1" />
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

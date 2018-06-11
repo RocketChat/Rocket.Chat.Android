@@ -36,11 +36,6 @@ class MemberViewModel(
     private fun getUserDisplayName(): String {
         val username = member.username
         val realName = member.name
-        if (username == null && realName != null) {
-            return realName
-        } else if (username != null && realName == null) {
-            return username
-        }
         val senderName = if (settings.useRealName()) realName else username
         return senderName ?: username.toString()
     }

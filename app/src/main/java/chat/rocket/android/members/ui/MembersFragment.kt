@@ -36,8 +36,7 @@ private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 class MembersFragment : Fragment(), MembersView {
     @Inject
     lateinit var presenter: MembersPresenter
-    private val adapter: MembersAdapter =
-        MembersAdapter { memberViewModel -> presenter.toMemberDetails(memberViewModel) }
+    private val adapter: MembersAdapter = MembersAdapter { presenter.toMemberDetails(it) }
     private val linearLayoutManager =
         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     private lateinit var chatRoomId: String

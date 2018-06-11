@@ -16,7 +16,7 @@
     <string name="title_update_profile">Update profile</string>
     <string name="title_about">Sur</string>
     // TODO: Add proper translation.
-    <string name="title_create_new_channel">Create New Channel</string>
+    <string name="title_create_channel">Create Channel</string>
     <string name="title_add_members">Inviter des membres (%s)</string>
 
     <!-- Actions -->
@@ -28,6 +28,8 @@
     <string name="action_search">Chercher</string>
     <string name="action_update">Mettre à jour</string>
     <string name="action_settings">Paramètres</string>
+    // TODO: Add proper translation.
+    <string name="action_create_channel">Create channel</string>
     <string name="action_logout">Se déconnecter</string>
     <string name="action_files">Fichiers</string>
     <string name="action_confirm_password">Confirmer le mot de passe</string>
@@ -130,17 +132,26 @@
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">Aucun résultat trouvé</string>
     // TODO: Add proper translation.
-    <string name="msg_member_already_added">You have already selected this user</string>
-    // TODO: Add proper translation.
-    <string name="msg_channel_created_successfully">"Channel created successfully</string>
-    // TODO: Add proper translation.
-    <string name="msg_channel_name">Channel Name</string>
+    <string name="msg_channel_name">Channel name</string>
     // TODO: Add proper translation.
     <string name="msg_add_members">Add Members</string>
     // TODO: Add proper translation.
     <string name="msg_search">Search</string>
     <string name="msg_message_copied">Message copié</string>
     <string name="msg_channel_name_required">Veuillez entrer un nom de chaîne</string>
+
+    <!-- Create channel messages -->
+    // TODO: Add proper translation.
+    <string name="msg_private_channel">Private</string>
+    <string name="msg_public_channel">Public</string>
+    <string name="msg_private_channel_description">Only you and invited members can access this channel</string>
+    <string name="msg_public_channel_description">Everyone can access this channel</string>
+    <string name="msg_ready_only_channel">Read only channel</string>
+    <string name="msg_ready_only_channel_description">Only admin can write new messages</string>
+    <string name="msg_invite_members">Invite members to channel</string>
+    <string name="msg_member_already_added">You have already selected this user</string>
+    <string name="msg_member_not_found">Member not found</string>
+    <string name="msg_channel_created_successfully">Channel created successfully</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>
@@ -155,9 +166,9 @@
     <string name="message_unmuted">Utilisateur %1$s non muté par %2$s</string>
     <string name="message_role_add">%1$s a été défini %2$s par %3$s</string>
     <string name="message_role_removed">%1$s is no longer %2$s par %3$s</string>
+
     // TODO:Add proper translation.
     <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
-
 
     <!-- Message actions -->
     <string name="action_msg_reply">Répondre</string>
@@ -264,9 +275,4 @@
     <string name="notif_action_reply_hint">RÉPONDRE</string>
     <string name="notif_error_sending">La réponse a échoué. Veuillez réessayer.</string>
     <string name="notif_success_sending">Message envoyé à %1$s!</string>
-
-    <string name="private_channel_type">Privé</string>
-    <string name="public_channel_type">Public</string>
-    <string name="private_channel_type_description">Visible uniquement pour vous et ceux que vous invitez</string>
-    <string name="public_channel_description">Visible par tout le monde</string>
 </resources>

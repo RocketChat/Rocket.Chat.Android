@@ -15,8 +15,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_password">Change Password</string>
     <string name="title_update_profile">Update profile</string>
-    <string name="title_create_new_channel">Create New Channel</string>
-    <string name="title_add_members">Invite Members (%s)</string>
+    <string name="title_create_channel">Create Channel</string>
     <string name="title_about">About</string>
 
     <!-- Actions -->
@@ -27,7 +26,9 @@
     <string name="action_privacy_policy">Privacy Policy</string>
     <string name="action_search">Search</string>
     <string name="action_update">Update</string>
+    <string name="action_create">Create</string>
     <string name="action_settings">Settings</string>
+    <string name="action_create_channel">Create channel</string>
     <string name="action_logout">Logout</string>
     <string name="action_files">Files</string>
     <string name="action_confirm_password">Confirm Password Change</string>
@@ -51,7 +52,6 @@
     <string name="msg_generic_error">Sorry, an error has occurred, please try again</string>
     <string name="msg_no_data_to_display">No data to display</string>
     <string name="msg_profile_update_successfully">Profile update successfully</string>
-    <string name="msg_channel_created_successfully">"Channel created successfully</string>
     <string name="msg_username">username</string>
     <string name="msg_username_or_email">username or email</string>
     <string name="msg_password">password</string>
@@ -88,7 +88,7 @@
     <string name="msg_utc_offset">UTC offset</string>
     <string name="msg_new_password">Enter New Password</string>
     <string name="msg_confirm_password">Confirm New Password</string>
-    <string name="msg_channel_name">Channel Name</string>
+    <string name="msg_channel_name">Channel name</string>
     <string name="msg_add_members">Add Members</string>
     <string name="msg_search">Search</string>
     <string name="msg_unread_messages">Unread messages</string>
@@ -122,14 +122,20 @@
     <string name="msg_are_typing">\u0020are typing…</string>
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">No result found</string>
-    <string name="msg_member_already_added">You have already selected this user</string>
     <string name="msg_channel_name_required">Please enter a channel name</string>
 
-    <!--info for creating a channel-->
-    <string name="private_channel_type">Private</string>
-    <string name="public_channel_type">Public</string>
-    <string name="private_channel_type_description">Visible only to you and those whom you invite</string>
-    <string name="public_channel_description">Visible to everyone</string>
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">Private</string>
+    <string name="msg_public_channel">Public</string>
+    <string name="msg_private_channel_description">Only you and invited members can access this channel</string>
+    <string name="msg_public_channel_description">Everyone can access this channel</string>
+    <string name="msg_ready_only_channel">Read only channel</string>
+    <string name="msg_ready_only_channel_description">Only admin can write new messages</string>
+    <string name="msg_invite_members">Invite members to channel</string>
+    <string name="msg_member_already_added">You have already selected this user</string>
+    <string name="msg_member_not_found">Member not found</string>
+    <string name="msg_channel_created_successfully">Channel created successfully</string>
+
     <string name="msg_message_copied">Message copied</string>
 
     <!-- System messages -->

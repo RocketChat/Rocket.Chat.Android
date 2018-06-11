@@ -73,12 +73,9 @@
             android:name=".chatroom.ui.ChatRoomActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
-        <activity
-            android:name=".createChannel.ui.CreateNewChannelActivity"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <activity android:name=".createChannel.addMembers.ui.AddMembersActivity"
+        <activity
+            android:name=".createchannel.addmembers.ui.AddMembersActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
 

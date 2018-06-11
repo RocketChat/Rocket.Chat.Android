@@ -16,7 +16,7 @@
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
     // TODO: Add proper translation.
-    <string name="title_create_new_channel">Create New Channel</string>
+    <string name="title_create_channel">Create Channel</string>
     <string name="title_add_members">Convidar membros (%s)</string>
 
     <!-- Actions -->
@@ -28,6 +28,8 @@
     <string name="action_search">Pesquisar</string>
     <string name="action_update">Atualizar</string>
     <string name="action_settings">Configurações</string>
+    // TODO: Add proper translation.
+    <string name="action_create_channel">Create channel</string>
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
@@ -121,18 +123,24 @@
     <string name="msg_are_typing">\u0020estão digitando…</string>
     <string name="msg_several_users_are_typing">Vários usuários estão digitando…</string>
     <string name="msg_no_search_found">nenhum resultado encontrado</string>
-    // TODO: Add proper translation.
-    <string name="msg_member_already_added">You have already selected this user</string>
-    // TODO: Add proper translation.
-    <string name="msg_channel_created_successfully">"Channel created successfully</string>
-    // TODO: Add proper translation.
-    <string name="msg_channel_name">Channel Name</string>
-    // TODO: Add proper translation.
-    <string name="msg_add_members">Add Members</string>
-    // TODO: Add proper translation.
-    <string name="msg_search">Search</string>
+    <string name="msg_channel_name">Nome do chat</string>
+    <string name="msg_add_members">Adcionar membros</string>
+    <string name="msg_search">Buscar</string>
     <string name="msg_message_copied">Mensagem copiada</string>
     <string name="msg_channel_name_required">Por favor insira um nome de canal</string>
+
+    <!-- Create channel messages -->
+    // TODO: Add proper translation.
+    <string name="msg_private_channel">Private</string>
+    <string name="msg_public_channel">Public</string>
+    <string name="msg_private_channel_description">Only you and invited members can access this channel</string>
+    <string name="msg_public_channel_description">Everyone can access this channel</string>
+    <string name="msg_ready_only_channel">Read only channel</string>
+    <string name="msg_ready_only_channel_description">Only admin can write new messages</string>
+    <string name="msg_invite_members">Invite members to channel</string>
+    <string name="msg_member_already_added">You have already selected this user</string>
+    <string name="msg_member_not_found">Member not found</string>
+    <string name="msg_channel_created_successfully">Channel created successfully</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
@@ -251,9 +259,4 @@
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
-
-    <string name="private_channel_type">Privado</string>
-    <string name="public_channel_type">Público</string>
-    <string name="private_channel_type_description">Visível apenas para você e para aqueles a quem você convida</string>
-    <string name="public_channel_description">Visível para todos</string>
 </resources>
