@@ -11,6 +11,13 @@ import kotlinx.coroutines.experimental.runBlocking
 
 object CrashlyticsWrapper {
 
+    private const val KEY_CURRENT_SERVER = "CURRENT_SERVER"
+    private const val KEY_CURRENT_USER = "CURRENT_USER"
+    private const val KEY_CURRENT_USERNAME = "CURRENT_USERNAME"
+    private const val KEY_ACCOUNTS = "ACCOUNTS"
+    private const val KEY_SETTINGS_SIZE = "SETTINGS_SIZE"
+    private const val KEY_SETTINGS_BASE_URL = "SETTINGS_BASE_URL"
+
     fun install(context: Application,
                 currentServerInteractor: GetCurrentServerInteractor,
                 settingsInteractor: GetSettingsInteractor,
@@ -60,10 +67,3 @@ object CrashlyticsWrapper {
         }
     }
 }
-
-private const val KEY_CURRENT_SERVER = "CURRENT_SERVER"
-private const val KEY_CURRENT_USER = "CURRENT_USER"
-private const val KEY_CURRENT_USERNAME = "CURRENT_USERNAME"
-private const val KEY_ACCOUNTS = "ACCOUNTS"
-private const val KEY_SETTINGS_SIZE = "SETTINGS_SIZE"
-private const val KEY_SETTINGS_BASE_URL = "SETTINGS_BASE_URL"
