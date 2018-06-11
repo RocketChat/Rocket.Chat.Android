@@ -218,9 +218,13 @@
     <string name="dialog_sort_by_activity">Activity</string>
     <string name="dialog_group_by_type">Group by type</string>
     <string name="dialog_group_favourites">Group favourites</string>
+    <string name="dialog_unread_on_top">Unread on top</string>
     <string name="chatroom_header">Header</string>
 
     <!--ChatRooms Headers-->
+    <string name="header_unread">Unread</string>
+    <string name="header_favorites">Favorites</string>
+    <string name="header_conversations">Conversations</string>
     <string name="header_channel">Channels</string>
     <string name="header_private_groups">Private Groups</string>
     <string name="header_direct_messages">Direct Messages</string>

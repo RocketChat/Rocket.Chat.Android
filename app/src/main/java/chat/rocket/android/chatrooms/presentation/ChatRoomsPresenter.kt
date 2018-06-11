@@ -52,7 +52,6 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.reflect.KProperty1
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
@@ -288,14 +287,50 @@ class ChatRoomsPresenter @Inject constructor(
     private fun sortRooms(chatRooms: List<ChatRoom>): List<ChatRoom> {
         val sortType = SharedPreferenceHelper.getInt(Constants.CHATROOM_SORT_TYPE_KEY, ChatRoomsSortOrder.ACTIVITY)
         val groupByType = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, false)
+        val groupFavorites = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_GROUP_FAVOURITES_KEY, false)
+        val unreadOnTop = SharedPreferenceHelper.getBoolean(Constants.CHATROOM_UNREAD_ON_TOP_KEY, true)
 
         val openChatRooms = getOpenChatRooms(chatRooms)
 
+        return when (unreadOnTop) {
+            true -> {
+                val unreadChatRooms = openChatRooms.filter { chatRoom -> chatRoom.unread > 0 || chatRoom.alert }
+                val readChatRooms = openChatRooms.filter { chatRoom -> chatRoom.unread <= 0 && !chatRoom.alert }
+
+                val sortedUnreadChatRooms = getSortedAndGroupedByTypeRooms(unreadChatRooms, sortType, false)
+                val sortedReadChatRooms = getSortedAndGroupedByFavoriteRooms(readChatRooms, groupFavorites, groupByType, sortType)
+
+                return sortedUnreadChatRooms.plus(sortedReadChatRooms)
+            }
+            false -> {
+                getSortedAndGroupedByFavoriteRooms(openChatRooms, groupFavorites, groupByType, sortType)
+            }
+        }
+    }
+
+    private fun getSortedAndGroupedByFavoriteRooms(rooms: List<ChatRoom>, groupFavorites: Boolean, groupByType: Boolean, sortType: Int): List<ChatRoom> {
+        val favChatRooms = rooms.filter { chatRoom -> chatRoom.favorite }
+        val notFavChatRooms = rooms.filter { chatRoom -> !chatRoom.favorite }
+
+        return when (groupFavorites) {
+            true -> {
+                val sortedFavChatRooms = getSortedAndGroupedByTypeRooms(favChatRooms, sortType, false)
+                val sortedNotFavChatRooms = getSortedAndGroupedByTypeRooms(notFavChatRooms, sortType, groupByType)
+
+                sortedFavChatRooms.plus(sortedNotFavChatRooms)
+            }
+            false -> {
+                getSortedAndGroupedByTypeRooms(rooms, sortType, groupByType)
+            }
+        }
+    }
+
+    private fun getSortedAndGroupedByTypeRooms(rooms: List<ChatRoom>, sortType: Int, groupByType: Boolean): List<ChatRoom> {
         return when (sortType) {
             ChatRoomsSortOrder.ALPHABETICAL -> {
                 when (groupByType) {
-                    true -> openChatRooms.sortedWith(compareBy(ChatRoom::type).thenBy { it.name })
-                    false -> openChatRooms.sortedWith(compareBy(ChatRoom::name))
+                    true -> rooms.sortedWith(compareByRoomType().thenBy { it.name })
+                    false -> rooms.sortedWith(compareBy(ChatRoom::name))
                 }
             }
             ChatRoomsSortOrder.ACTIVITY -> {
@@ -309,11 +344,11 @@ class ChatRoomsPresenter @Inject constructor(
                 }
             }
             else -> {
-                openChatRooms
+                rooms
             }
         }
     }
-
+      
     private fun chatRoomTimestamp(chatRoom: ChatRoom): Long? {
         return if (settings.hasShowLastMessage() && settings.showLastMessage()) {
             chatRoom.lastMessage?.timestamp ?: chatRoom.updatedAt
@@ -322,7 +357,7 @@ class ChatRoomsPresenter @Inject constructor(
         }
     }
 
-    private fun compareBy(selector: KProperty1<ChatRoom, RoomType>): Comparator<ChatRoom> {
+    private fun compareByRoomType(): Comparator<ChatRoom> {
         return Comparator { a, b -> getTypeConstant(a.type) - getTypeConstant(b.type) }
     }
 
