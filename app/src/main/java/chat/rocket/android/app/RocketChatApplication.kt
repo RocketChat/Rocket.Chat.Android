@@ -21,6 +21,7 @@ import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.CrashlyticsTree
 import chat.rocket.android.infrastructure.CrashlyticsWrapper
 import chat.rocket.android.infrastructure.LocalRepository
+import chat.rocket.android.infrastructure.installCrashlyticsWrapper
 import chat.rocket.android.server.domain.AccountsRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
@@ -268,7 +269,7 @@ class RocketChatApplication : Application(), HasActivityInjector, HasServiceInje
         val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
         Fabric.with(this, Crashlytics.Builder().core(core).build())
 
-        CrashlyticsWrapper.install(this@RocketChatApplication,
+        installCrashlyticsWrapper(this@RocketChatApplication,
                 getCurrentServerInteractor, settingsInteractor,
                 accountRepository, localRepository)
     }
