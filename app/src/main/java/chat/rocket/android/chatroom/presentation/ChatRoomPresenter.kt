@@ -851,4 +851,10 @@ class ChatRoomPresenter @Inject constructor(
             }
         }
     }
+
+    fun messageInfo(messageId: String) {
+        launchUI(strategy) {
+            navigator.toMessageInformation(messageId = messageId)
+        }
+    }
 }

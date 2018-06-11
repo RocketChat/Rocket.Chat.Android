@@ -143,6 +143,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Respuesta</string>
+    <string name="action_msg_info">Información del mensaje</string>
     <string name="action_msg_edit">Editar</string>
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>

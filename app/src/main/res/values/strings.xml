@@ -132,6 +132,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Reply</string>
+    <string name="action_msg_info">Message info</string>
     <string name="action_msg_edit">Edit</string>
     <string name="action_msg_copy">Copy</string>
     <string name="action_msg_quote">Quote</string>
