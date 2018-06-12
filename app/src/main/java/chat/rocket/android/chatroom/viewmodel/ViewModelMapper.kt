@@ -370,13 +370,12 @@ class ViewModelMapper @Inject constructor(
     }
 
     private suspend fun mapMessage(message: Message): MessageViewModel = withContext(CommonPool) {
-        val senderUsername = message.sender?.username
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
         val isTemp = message.isTemporary ?: false
-        val unread = if (settings.messageReadReceiptEnabled() && currentUsername == senderUsername) {
+        val unread = if (settings.messageReadReceiptEnabled()) {
             message.unread ?: false
         } else {
             null
