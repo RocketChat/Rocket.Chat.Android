@@ -3,6 +3,7 @@ package chat.rocket.android.chatrooms.ui
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
+import android.renderscript.RSInvalidStateException
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.DiffUtil
@@ -37,11 +38,13 @@ import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
+import com.crashlytics.android.Crashlytics
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.NonCancellable.isActive
 import timber.log.Timber
+import java.security.InvalidParameterException
 import javax.inject.Inject
 
 private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"

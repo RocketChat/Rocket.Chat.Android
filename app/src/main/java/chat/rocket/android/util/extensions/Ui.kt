@@ -31,11 +31,16 @@ fun View.isVisible(): Boolean {
 fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 
-fun AppCompatActivity.addFragment(tag: String, layoutId: Int, newInstance: () -> Fragment) {
+fun AppCompatActivity.addFragment(tag: String, layoutId: Int, allowStateLoss: Boolean = false,
+                                  newInstance: () -> Fragment) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
-    supportFragmentManager.beginTransaction()
-        .replace(layoutId, fragment, tag)
-        .commit()
+    val transaction = supportFragmentManager.beginTransaction()
+            .replace(layoutId, fragment, tag)
+    if (allowStateLoss) {
+        transaction.commitAllowingStateLoss()
+    } else {
+        transaction.commit()
+    }
 }
 
 fun AppCompatActivity.addFragmentBackStack(
