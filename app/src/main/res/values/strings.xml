@@ -231,4 +231,6 @@
     <string name="notif_action_reply_hint">REPLY</string>
     <string name="notif_error_sending">Reply has failed. Please try again.</string>
     <string name="notif_success_sending">Message sent to %1$s!</string>
+    <string name="read_by">Read by</string>
+    <string name="message_information_title">Message information</string>
 </resources>

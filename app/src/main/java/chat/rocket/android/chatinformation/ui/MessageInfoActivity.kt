@@ -46,7 +46,7 @@ class MessageInfoActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun setupToolbar() {
-        text_room_name.textContent = "Informações da mensagem"
+        text_room_name.textContent = getString(R.string.message_information_title)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)

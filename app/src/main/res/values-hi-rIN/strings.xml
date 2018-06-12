@@ -247,4 +247,6 @@
     <string name="notif_action_reply_hint">जवाब</string>
     <string name="notif_error_sending">उत्तर विफल हुआ है। कृपया फिर से प्रयास करें।</string>
     <string name="notif_success_sending">संदेश भेजा गया %1$s!</string>
+    <string name="read_by">द्वारा पढ़ें</string>
+    <string name="message_information_title">संदेश की जानकारी</string>
 </resources>
