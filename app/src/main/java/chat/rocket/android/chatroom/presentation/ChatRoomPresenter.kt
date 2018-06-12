@@ -818,7 +818,7 @@ class ChatRoomPresenter @Inject constructor(
             }
         }
         if (typingStatusList.isNotEmpty()) {
-            view.showTypingStatus(typingStatusList)
+            view.showTypingStatus(typingStatusList.toList()) // copy typingStatusList
         } else {
             view.hideTypingStatusView()
         }
