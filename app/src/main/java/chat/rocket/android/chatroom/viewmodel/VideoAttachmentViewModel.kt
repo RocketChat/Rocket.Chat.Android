@@ -15,7 +15,8 @@ data class VideoAttachmentViewModel(
         override var nextDownStreamMessage: BaseViewModel<*>? = null,
         override var preview: Message? = null,
         override var isTemporary: Boolean = false,
-        override var unread: Boolean? = null
+        override var unread: Boolean? = null,
+        override var menuItemsToHide: MutableList<Int> = mutableListOf()
 ) : BaseFileAttachmentViewModel<VideoAttachment> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.VIDEO_ATTACHMENT.viewType

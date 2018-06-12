@@ -12,7 +12,8 @@ data class MessageReplyViewModel(
     override var preview: Message?,
     override var isTemporary: Boolean = false,
     override val message: Message,
-    override var unread: Boolean? = null
+    override var unread: Boolean? = null,
+    override var menuItemsToHide: MutableList<Int> = mutableListOf()
 ) : BaseViewModel<MessageReply> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.MESSAGE_REPLY.viewType

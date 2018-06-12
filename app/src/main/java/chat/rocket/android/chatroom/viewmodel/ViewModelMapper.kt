@@ -20,13 +20,13 @@ import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.ChatRoomsInteractor
-import chat.rocket.android.server.domain.GetActiveUsersInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.TokenRepository
 import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.domain.baseUrl
 import chat.rocket.android.server.domain.messageReadReceiptEnabled
+import chat.rocket.android.server.domain.messageReadReceiptStoreUsers
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -141,6 +141,7 @@ class ViewModelMapper @Inject constructor(
             for (i in list.size - 1 downTo 0) {
                 val next = if (i - 1 < 0) null else list[i - 1]
                 list[i].nextDownStreamMessage = next
+                mapVisibleActions(list[i])
             }
 
             if (isBroadcastReplyAvailable(roomViewModel, message)) {
@@ -153,6 +154,12 @@ class ViewModelMapper @Inject constructor(
 
             return@withContext list
         }
+
+    private fun mapVisibleActions(viewModel: BaseViewModel<*>) {
+        if (!settings.messageReadReceiptStoreUsers()) {
+            viewModel.menuItemsToHide.add(R.id.action_message_info)
+        }
+    }
 
     private suspend fun translateAsNotReversed(
         message: Message,

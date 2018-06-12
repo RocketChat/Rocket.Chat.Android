@@ -16,7 +16,8 @@ data class MessageAttachmentViewModel(
         var messageLink: String? = null,
         override var preview: Message? = null,
         override var isTemporary: Boolean = false,
-        override var unread: Boolean? = null
+        override var unread: Boolean? = null,
+        override var menuItemsToHide: MutableList<Int> = mutableListOf()
 ) : BaseViewModel<Message> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.MESSAGE_ATTACHMENT.viewType
