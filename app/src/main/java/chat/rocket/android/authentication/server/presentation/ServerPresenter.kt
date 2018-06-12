@@ -6,7 +6,7 @@ import chat.rocket.android.core.behaviours.showMessage
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.domain.GetAccountsInteractor
 import chat.rocket.android.server.domain.RefreshSettingsInteractor
-import chat.rocket.android.server.domain.SaveCurrentServerInteractor
+import chat.rocket.android.server.domain.SaveConnectingServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.server.presentation.CheckServerPresenter
 import chat.rocket.android.util.extensions.isValidUrl
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ServerPresenter @Inject constructor(private val view: ServerView,
                                           private val strategy: CancelStrategy,
                                           private val navigator: AuthenticationNavigator,
-                                          private val serverInteractor: SaveCurrentServerInteractor,
+                                          private val serverInteractor: SaveConnectingServerInteractor,
                                           private val refreshSettingsInteractor: RefreshSettingsInteractor,
                                           private val getAccountsInteractor: GetAccountsInteractor,
                                           factory: RocketChatClientFactory
