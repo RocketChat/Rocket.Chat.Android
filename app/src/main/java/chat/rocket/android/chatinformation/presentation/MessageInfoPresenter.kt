@@ -8,6 +8,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.MessagesRepository
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.core.internal.rest.getMessageReadReceipts
 import chat.rocket.core.internal.rest.queryUsers
@@ -30,7 +31,9 @@ class MessageInfoPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
-                val readReceipts = client.getMessageReadReceipts(messageId = messageId).result
+                val readReceipts = retryIO(description = "getMessageReadReceipts") {
+                    client.getMessageReadReceipts(messageId = messageId).result
+                }
                 view.showReadReceipts(mapper.map(readReceipts))
             } catch (ex: RocketChatException) {
                 Timber.e(ex)
