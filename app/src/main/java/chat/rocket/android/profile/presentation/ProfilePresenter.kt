@@ -58,7 +58,8 @@ class ProfilePresenter @Inject constructor(private val view: ProfileView,
                 if(avatarUrl!="") {
                     retryIO { client.setAvatar(avatarUrl) }
                 }
-                val user = retryIO { client.updateProfile(myselfId, email, name, username) }
+                val user = retryIO { client.updateProfile(
+                    userId = myselfId, email = email, name = name, username = username) }
                 view.showProfileUpdateSuccessfullyMessage()
                 loadUserProfile()
             } catch (exception: RocketChatException) {

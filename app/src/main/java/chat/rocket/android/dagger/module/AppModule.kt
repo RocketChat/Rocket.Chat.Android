@@ -12,6 +12,7 @@ import chat.rocket.android.R
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
+import chat.rocket.android.dagger.qualifier.ForAuthentication
 import chat.rocket.android.dagger.qualifier.ForMessages
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
@@ -42,8 +43,10 @@ import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepos
 import chat.rocket.android.server.infraestructure.SharedPreferencesMessagesRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
 import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
+import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
 import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
+import chat.rocket.android.util.HttpLoggingInterceptor
 import chat.rocket.android.util.TimberLogger
 import chat.rocket.common.internal.FallbackSealedClassJsonAdapter
 import chat.rocket.common.internal.ISO8601Date
@@ -61,7 +64,6 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
 import timber.log.Timber
@@ -80,8 +82,10 @@ class AppModule {
     @Provides
     @Singleton
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-        val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
-            Timber.d(message)
+        val interceptor = HttpLoggingInterceptor(object  : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                Timber.d(message)
+            }
         })
         if (BuildConfig.DEBUG) {
             interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -154,6 +158,12 @@ class AppModule {
     @Singleton
     fun provideCurrentServerRepository(prefs: SharedPreferences): CurrentServerRepository {
         return SharedPrefsCurrentServerRepository(prefs)
+    }
+
+    @Provides
+    @ForAuthentication
+    fun provideConnectingServerRepository(prefs: SharedPreferences): CurrentServerRepository {
+        return SharedPrefsConnectingServerRepository(prefs)
     }
 
     @Provides

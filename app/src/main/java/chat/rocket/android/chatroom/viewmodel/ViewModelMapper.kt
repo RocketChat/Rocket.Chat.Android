@@ -14,6 +14,7 @@ import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.domain.MessageReply
+import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.infrastructure.LocalRepository
@@ -47,6 +48,7 @@ import okhttp3.HttpUrl
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
+@PerFragment
 class ViewModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,
@@ -59,76 +61,137 @@ class ViewModelMapper @Inject constructor(
 ) {
 
     private val currentServer = serverInteractor.get()!!
-    private val settings: Map<String, Value<Any>> = getSettingsInteractor.get(currentServer)
-    private val baseUrl = settings.baseUrl()
+    private val settings = getSettingsInteractor.get(currentServer)
+    private val baseUrl = currentServer
     private val token = tokenRepository.get(currentServer)
     private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
     private val secondaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
 
-    suspend fun map(message: Message, roomViewModel: RoomViewModel = RoomViewModel(
-        roles = emptyList(), isBroadcast = true)): List<BaseViewModel<*>> {
+    suspend fun map(
+        message: Message,
+        roomViewModel: RoomViewModel = RoomViewModel(roles = emptyList(), isBroadcast = true)
+    ): List<BaseViewModel<*>> {
         return translate(message, roomViewModel)
     }
 
-    suspend fun map(messages: List<Message>, roomViewModel: RoomViewModel = RoomViewModel(
-        roles = emptyList(), isBroadcast = true)): List<BaseViewModel<*>> = withContext(CommonPool) {
-        val list = ArrayList<BaseViewModel<*>>(messages.size)
+    suspend fun map(
+        messages: List<Message>,
+        roomViewModel: RoomViewModel = RoomViewModel(roles = emptyList(), isBroadcast = true),
+        asNotReversed: Boolean = false
+    ): List<BaseViewModel<*>> =
+        withContext(CommonPool) {
+            val list = ArrayList<BaseViewModel<*>>(messages.size)
 
-        messages.forEach {
-            list.addAll(translate(it, roomViewModel))
-        }
-
-        return@withContext list
-    }
-
-    private suspend fun translate(message: Message, roomViewModel: RoomViewModel)
-        : List<BaseViewModel<*>> = withContext(CommonPool) {
-        val list = ArrayList<BaseViewModel<*>>()
-
-        message.urls?.forEach {
-            val url = mapUrl(message, it)
-            url?.let { list.add(url) }
-        }
-
-        message.attachments?.forEach {
-            val attachment = mapAttachment(message, it)
-            attachment?.let { list.add(attachment) }
-        }
-
-        mapMessage(message).let {
-            if (list.isNotEmpty()) {
-                it.preview = list.first().preview
+            messages.forEach {
+                list.addAll(
+                    if (asNotReversed) translateAsNotReversed(it, roomViewModel)
+                    else translate(it, roomViewModel)
+                )
             }
-            list.add(it)
+            return@withContext list
         }
 
-        for (i in list.size - 1 downTo 0) {
-            val next = if (i - 1 < 0) null else list[i - 1]
-            list[i].nextDownStreamMessage = next
-        }
+    private suspend fun translate(
+        message: Message,
+        roomViewModel: RoomViewModel
+    ): List<BaseViewModel<*>> =
+        withContext(CommonPool) {
+            val list = ArrayList<BaseViewModel<*>>()
 
-        if (isBroadcastReplyAvailable(roomViewModel, message)) {
-            roomsInteractor.getById(currentServer, message.roomId)?.let { chatRoom ->
-                val replyViewModel = mapMessageReply(message, chatRoom)
-                list.first().nextDownStreamMessage = replyViewModel
-                list.add(0, replyViewModel)
+            message.urls?.forEach {
+                val url = mapUrl(message, it)
+                url?.let { list.add(url) }
             }
+
+            message.attachments?.forEach {
+                val attachment = mapAttachment(message, it)
+                attachment?.let { list.add(attachment) }
+            }
+
+            mapMessage(message).let {
+                if (list.isNotEmpty()) {
+                    it.preview = list.first().preview
+                }
+                list.add(it)
+            }
+
+            for (i in list.size - 1 downTo 0) {
+                val next = if (i - 1 < 0) null else list[i - 1]
+                list[i].nextDownStreamMessage = next
+            }
+
+            if (isBroadcastReplyAvailable(roomViewModel, message)) {
+                roomsInteractor.getById(currentServer, message.roomId)?.let { chatRoom ->
+                    val replyViewModel = mapMessageReply(message, chatRoom)
+                    list.first().nextDownStreamMessage = replyViewModel
+                    list.add(0, replyViewModel)
+                }
+            }
+
+            return@withContext list
         }
 
-        return@withContext list
-    }
+    private suspend fun translateAsNotReversed(
+        message: Message,
+        roomViewModel: RoomViewModel
+    ): List<BaseViewModel<*>> =
+        withContext(CommonPool) {
+            val list = ArrayList<BaseViewModel<*>>()
+
+            mapMessage(message).let {
+                if (list.isNotEmpty()) {
+                    it.preview = list.first().preview
+                }
+                list.add(it)
+            }
+
+            message.attachments?.forEach {
+                val attachment = mapAttachment(message, it)
+                attachment?.let {
+                    list.add(attachment)
+                }
+            }
+
+            message.urls?.forEach {
+                val url = mapUrl(message, it)
+                url?.let {
+                    list.add(url)
+                }
+            }
+
+            for (i in list.size - 1 downTo 0) {
+                val next = if (i - 1 < 0) null else list[i - 1]
+                list[i].nextDownStreamMessage = next
+            }
+
+            if (isBroadcastReplyAvailable(roomViewModel, message)) {
+                roomsInteractor.getById(currentServer, message.roomId)?.let { chatRoom ->
+                    val replyViewModel = mapMessageReply(message, chatRoom)
+                    list.first().nextDownStreamMessage = replyViewModel
+                    list.add(0, replyViewModel)
+                }
+            }
+
+            list.dropLast(1).forEach {
+                it.reactions = emptyList()
+            }
+            list.last().reactions = getReactions(message)
+            list.last().nextDownStreamMessage = null
+
+            return@withContext list
+        }
 
     private fun isBroadcastReplyAvailable(roomViewModel: RoomViewModel, message: Message): Boolean {
         val senderUsername = message.sender?.username
         return roomViewModel.isRoom && roomViewModel.isBroadcast &&
-            !message.isSystemMessage() &&
-            senderUsername != currentUsername
+                !message.isSystemMessage() &&
+                senderUsername != currentUsername
     }
 
     private fun mapMessageReply(message: Message, chatRoom: ChatRoom): MessageReplyViewModel {
         val name = message.sender?.name
-        val roomName = if (settings.useRealName() && name != null) name else message.sender?.username
-            ?: ""
+        val roomName =
+            if (settings.useRealName() && name != null) name else message.sender?.username ?: ""
         val permalink = messageHelper.createPermalink(message, chatRoom)
         return MessageReplyViewModel(
             messageId = message.id,

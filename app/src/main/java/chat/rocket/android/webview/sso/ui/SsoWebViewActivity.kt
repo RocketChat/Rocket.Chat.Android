@@ -1,4 +1,4 @@
-package chat.rocket.android.webview.cas.ui
+package chat.rocket.android.webview.sso.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -7,25 +7,30 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import chat.rocket.android.R
 import kotlinx.android.synthetic.main.activity_web_view.*
 import kotlinx.android.synthetic.main.app_bar.*
 
-fun Context.casWebViewIntent(webPageUrl: String, casToken: String): Intent {
-    return Intent(this, CasWebViewActivity::class.java).apply {
+fun Context.ssoWebViewIntent(webPageUrl: String, casToken: String): Intent {
+    return Intent(this, SsoWebViewActivity::class.java).apply {
         putExtra(INTENT_WEB_PAGE_URL, webPageUrl)
-        putExtra(INTENT_CAS_TOKEN, casToken)
+        putExtra(INTENT_SSO_TOKEN, casToken)
     }
 }
 
 private const val INTENT_WEB_PAGE_URL = "web_page_url"
-const val INTENT_CAS_TOKEN = "cas_token"
+const val INTENT_SSO_TOKEN = "cas_token"
 
-class CasWebViewActivity : AppCompatActivity() {
+/**
+ * This class is responsible to handle the authentication thought single sign-on protocol (CAS and SAML).
+ */
+class SsoWebViewActivity : AppCompatActivity() {
     private lateinit var webPageUrl: String
     private lateinit var casToken: String
+    private var isWebViewSetUp: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +39,20 @@ class CasWebViewActivity : AppCompatActivity() {
         webPageUrl = intent.getStringExtra(INTENT_WEB_PAGE_URL)
         requireNotNull(webPageUrl) { "no web_page_url provided in Intent extras" }
 
-        casToken = intent.getStringExtra(INTENT_CAS_TOKEN)
+        casToken = intent.getStringExtra(INTENT_SSO_TOKEN)
         requireNotNull(casToken) { "no cas_token provided in Intent extras" }
 
+        // Ensures that the cookies is always removed when opening the webview.
+        CookieManager.getInstance().removeAllCookies(null)
         setupToolbar()
     }
 
     override fun onResume() {
         super.onResume()
-        setupWebView()
+        if (!isWebViewSetUp) {
+            setupWebView()
+            isWebViewSetUp = true
+        }
     }
 
     override fun onBackPressed() {
@@ -64,15 +74,16 @@ class CasWebViewActivity : AppCompatActivity() {
         web_view.settings.javaScriptEnabled = true
         web_view.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-                // The user may have already been logged in the CAS, so check if the URL contains the "ticket" word
-                // (that means the user is successful authenticated and we don't need to wait until the page is fully loaded).
-                if (url.contains("ticket")) {
+                // The user may have already been logged in the SSO, so check if the URL contains
+                // the "ticket" or "validate" word (that means the user is successful authenticated
+                // and we don't need to wait until the page is fully loaded).
+                if (url.contains("ticket") || url.contains("validate")) {
                     closeView(Activity.RESULT_OK)
                 }
             }
 
             override fun onPageFinished(view: WebView, url: String) {
-                if (url.contains("ticket")) {
+                if (url.contains("ticket") || url.contains("validate")) {
                     closeView(Activity.RESULT_OK)
                 } else {
                     view_loading.hide()
@@ -83,7 +94,7 @@ class CasWebViewActivity : AppCompatActivity() {
     }
 
     private fun closeView(activityResult: Int = Activity.RESULT_CANCELED) {
-        setResult(activityResult, Intent().putExtra(INTENT_CAS_TOKEN, casToken))
+        setResult(activityResult, Intent().putExtra(INTENT_SSO_TOKEN, casToken))
         finish()
         overridePendingTransition(R.anim.hold, R.anim.slide_down)
     }

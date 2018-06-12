@@ -45,6 +45,8 @@ import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
+
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject
     lateinit var presenter: ChatRoomsPresenter
@@ -58,14 +60,31 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     private var searchView: SearchView? = null
     private val handler = Handler()
 
+    private var chatRoomId: String? = null
+
     companion object {
-        fun newInstance() = ChatRoomsFragment()
+        fun newInstance(chatRoomId: String? = null): ChatRoomsFragment {
+            return ChatRoomsFragment().apply {
+                arguments = Bundle(1).apply {
+                    putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
+        val bundle = arguments
+        if (bundle != null) {
+            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+            chatRoomId?.let {
+                // TODO - bring back support to load a room from id.
+                //presenter.goToChatRoomWithId(it)
+                chatRoomId = null
+            }
+        }
     }
 
     override fun onDestroy() {

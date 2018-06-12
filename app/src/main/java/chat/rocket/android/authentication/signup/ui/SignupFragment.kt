@@ -1,7 +1,7 @@
 package chat.rocket.android.authentication.signup.ui
 
 import DrawableHelper
-import android.app.Activity.RESULT_OK
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -11,30 +11,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Toast
 import chat.rocket.android.R
-import chat.rocket.android.authentication.login.ui.googleApiClient
+import chat.rocket.android.R.string.message_credentials_saved_successfully
 import chat.rocket.android.authentication.signup.presentation.SignupPresenter
 import chat.rocket.android.authentication.signup.presentation.SignupView
 import chat.rocket.android.helper.KeyboardHelper
+import chat.rocket.android.helper.SmartLockHelper
 import chat.rocket.android.helper.TextHelper
 import chat.rocket.android.util.extensions.*
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.common.api.ResolvingResultCallbacks
-import com.google.android.gms.common.api.Status
+import com.google.android.gms.auth.api.credentials.Credentials
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_sign_up.*
-import timber.log.Timber
 import javax.inject.Inject
 
 internal const val SAVE_CREDENTIALS = 1
 
 class SignupFragment : Fragment(), SignupView {
-
     @Inject
     lateinit var presenter: SignupPresenter
-    private lateinit var credentialsToBeSaved: Credential
     private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         if (KeyboardHelper.isSoftKeyboardShown(relative_layout.rootView)) {
             bottom_container.setVisible(false)
@@ -120,41 +114,13 @@ class SignupFragment : Fragment(), SignupView {
         }
     }
 
-    override fun saveSmartLockCredentials(loginCredential: Credential) {
-        credentialsToBeSaved = loginCredential
-        googleApiClient.let {
-            if (it.isConnected) {
-                saveCredentials()
-            }
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SAVE_CREDENTIALS) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(
-                    context,
-                    getString(R.string.message_credentials_saved_successfully),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Timber.e("ERROR: Cancelled by user")
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                if (requestCode == SAVE_CREDENTIALS) {
+                    showMessage(getString(message_credentials_saved_successfully))
+                }
             }
-        }
-    }
-
-    private fun saveCredentials() {
-        activity?.let {
-            Auth.CredentialsApi.save(googleApiClient, credentialsToBeSaved).setResultCallback(
-                object : ResolvingResultCallbacks<Status>(it, SAVE_CREDENTIALS) {
-                    override fun onSuccess(status: Status) {
-                        Timber.d("save:SUCCESS:$status")
-                    }
-
-                    override fun onUnresolvableFailure(status: Status) {
-                        Timber.e("save:FAILURE:$status")
-                    }
-                })
         }
     }
 
@@ -186,6 +152,12 @@ class SignupFragment : Fragment(), SignupView {
 
     override fun showGenericErrorMessage() {
         showMessage(getString(R.string.msg_generic_error))
+    }
+
+    override fun saveSmartLockCredentials(id: String, password: String) {
+        activity?.let {
+            SmartLockHelper.save(Credentials.getClient(it), it, id, password)
+        }
     }
 
     private fun tintEditTextDrawableStart() {

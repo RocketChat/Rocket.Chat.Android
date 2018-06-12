@@ -31,7 +31,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param usernameList The list of username to show.
      */
-    fun showTypingStatus(usernameList: ArrayList<String>)
+    fun showTypingStatus(usernameList: List<String>)
 
     /**
      * Hides the typing status view.

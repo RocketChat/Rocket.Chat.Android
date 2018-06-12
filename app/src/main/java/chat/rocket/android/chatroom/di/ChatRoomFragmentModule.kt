@@ -1,9 +1,7 @@
 package chat.rocket.android.chatroom.di
 
 import androidx.lifecycle.LifecycleOwner
-import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.presentation.ChatRoomView
-import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.ChatRoomFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment

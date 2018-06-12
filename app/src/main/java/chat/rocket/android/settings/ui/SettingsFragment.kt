@@ -9,12 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import chat.rocket.android.R
-import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.settings.about.ui.AboutActivity
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
 import chat.rocket.android.util.extensions.inflate
-import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlin.reflect.KClass
 
@@ -47,7 +45,7 @@ class SettingsFragment: Fragment(), SettingsView, AdapterView.OnItemClickListene
     }
 
     private fun setupToolbar() {
-        (activity as MainActivity).toolbar.title = getString(R.string.title_settings)
+        (activity as AppCompatActivity?)?.supportActionBar?.title = getString(R.string.title_settings)
     }
 
     private fun startNewActivity(classType: KClass<out AppCompatActivity>) {

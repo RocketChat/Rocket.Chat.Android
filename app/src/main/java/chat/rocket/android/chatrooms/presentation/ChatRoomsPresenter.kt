@@ -14,6 +14,7 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
+import chat.rocket.core.internal.realtime.createDirectMessage
 import chat.rocket.core.internal.rest.me
 import timber.log.Timber
 import javax.inject.Inject
@@ -48,6 +49,17 @@ class ChatRoomsPresenter @Inject constructor(
                 if (myself?.username == null) {
                     view.showMessage(R.string.msg_generic_error)
                 } else {
+                    val id = if (isDirectMessage && !open) {
+                        retryIO("createDirectMessage($name)") {
+                            client.createDirectMessage(name)
+                        }
+                        val fromTo = mutableListOf(myself.id, id).apply {
+                            sort()
+                        }
+                        fromTo.joinToString("")
+                    } else {
+                        id
+                    }
                     val isChatRoomOwner = ownerId == myself.id || isDirectMessage
                     navigator.toChatRoom(id, roomName, type, readonly ?: false,
                             lastSeen ?: -1, open, isChatRoomOwner)
