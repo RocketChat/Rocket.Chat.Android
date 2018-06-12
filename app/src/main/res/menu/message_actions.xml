@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/action_message_info"
-        android:icon="@drawable/ic_action_info_outline_24dp"
+        android:icon="@drawable/ic_action_message_info_outline_24dp"
         android:title="@string/action_msg_info" />
 
     <item
