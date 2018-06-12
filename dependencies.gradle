@@ -14,7 +14,10 @@ ext {
             androidKtx            : '0.3',
             dagger                : '2.14.1',
             exoPlayer             : '2.6.0',
-            playServices          : '15.0.1',
+            
+            playServices          : '15.0.0',
+            firebase              : '15.0.0',
+
             room                  : '1.0.0',
             lifecycle             : '1.1.1',
             rxKotlin              : '2.2.0',
@@ -64,7 +67,7 @@ ext {
             daggerSupport         : "com.google.dagger:dagger-android-support:${versions.dagger}",
             daggerProcessor       : "com.google.dagger:dagger-compiler:${versions.dagger}",
             daggerAndroidApt      : "com.google.dagger:dagger-android-processor:${versions.dagger}",
-            playServicesGcm       : "com.google.android.gms:play-services-gcm:${versions.playServices}",
+            fcm                   : "com.google.firebase:firebase-messaging:${versions.firebase}",
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServices}",
             exoPlayer             : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
 
@@ -106,19 +109,19 @@ ext {
 
             aVLoadingIndicatorView: "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
 
-            // For testing
-            junit                 : "junit:junit:$versions.junit",
-            espressoCore          : "com.android.support.test.espresso:espresso-core:${versions.espresso}",
-            espressoIntents       : "com.android.support.test.espresso:espresso-intents:${versions.espresso}",
-            roomTest              : "android.arch.persistence.room:testing:${versions.room}",
-            truth                 : "com.google.truth:truth:$versions.truth",
-
             //For the wear app
             wearable              : "com.google.android.support:wearable:${versions.wear}",
             playServicesWearable  : "com.google.android.gms:play-services-wearable:${versions.playServicesWearable}",
             percentLayout         : "com.android.support:percent:${versions.supportWearable}",
             supportWearable       : "com.android.support:support-v4:${versions.supportWearable}",
             wearableRecyclerView  : "com.android.support:recyclerview-v7:${versions.supportWearable}",
-            wearSupport           : "com.android.support:wear:${versions.supportWearable}"
+            wearSupport           : "com.android.support:wear:${versions.supportWearable}",
+
+            // For testing
+            junit                 : "junit:junit:$versions.junit",
+            espressoCore          : "com.android.support.test.espresso:espresso-core:${versions.espresso}",
+            espressoIntents       : "com.android.support.test.espresso:espresso-intents:${versions.espresso}",
+            roomTest              : "android.arch.persistence.room:testing:${versions.room}",
+            truth                 : "com.google.truth:truth:$versions.truth"
     ]
 }

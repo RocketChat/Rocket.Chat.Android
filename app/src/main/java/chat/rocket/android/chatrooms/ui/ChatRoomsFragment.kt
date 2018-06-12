@@ -1,17 +1,21 @@
 package chat.rocket.android.chatrooms.ui
 
 import android.app.AlertDialog
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
+import android.renderscript.RSInvalidStateException
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.RadioGroup
 import androidx.core.view.isVisible
@@ -24,17 +28,26 @@ import chat.rocket.android.helper.SharedPreferenceHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.SettingsRepository
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
+import com.crashlytics.android.Crashlytics
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.NonCancellable.isActive
 import timber.log.Timber
+import java.security.InvalidParameterException
 import javax.inject.Inject
+
+private const val BUNDLE_CHAT_ROOM_ID = "BUNDLE_CHAT_ROOM_ID"
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
     @Inject
@@ -50,15 +63,30 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private var listJob: Job? = null
     private var sectionedAdapter: SimpleSectionedRecyclerViewAdapter? = null
+    private var chatRoomId: String? = null
 
     companion object {
-        fun newInstance() = ChatRoomsFragment()
+        fun newInstance(chatRoomId: String? = null): ChatRoomsFragment {
+            return ChatRoomsFragment().apply {
+                arguments = Bundle(1).apply {
+                    putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
         setHasOptionsMenu(true)
+        val bundle = arguments
+        if (bundle != null) {
+            chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
+            chatRoomId?.let {
+                presenter.goToChatRoomWithId(it)
+                chatRoomId = null
+            }
+        }
     }
 
     override fun onDestroy() {
