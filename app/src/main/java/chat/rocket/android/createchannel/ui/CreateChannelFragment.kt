@@ -112,7 +112,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         with(activity as MainActivity) {
             setCheckedNavDrawerItem(R.id.action_chat_rooms)
             openDrawer()
-            getDrawerLayout().postDelayed(600) {
+            getDrawerLayout().postDelayed(1000) {
                 closeDrawer()
                 createChannelPresenter.toChatList()
             }

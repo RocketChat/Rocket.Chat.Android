@@ -11,7 +11,7 @@ import chat.rocket.common.model.RoomType
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.createChannel
-import chat.rocket.core.internal.rest.searchUser
+import chat.rocket.core.internal.rest.spotlight
 import javax.inject.Inject
 
 class CreateChannelPresenter @Inject constructor(
@@ -54,8 +54,8 @@ class CreateChannelPresenter @Inject constructor(
     fun searchUser(query: String) {
         launchUI(strategy) {
             try {
-                val users = client.searchUser(query, count = 5)
-                val memberViewModelMapper = mapper.mapToViewModelList(users.result)
+                val users = client.spotlight(query).users
+                val memberViewModelMapper = mapper.mapToViewModelList(users)
                 view.showUserSuggestion(memberViewModelMapper)
             } catch (ex: RocketChatException) {
                 ex.message?.let {
