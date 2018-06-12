@@ -15,9 +15,6 @@ class ChatRoomsRepository @Inject constructor(val dao: ChatRoomDao){
         }
     }
 
-    fun fetchChatRooms() {
-    }
-
     enum class Order {
         ACTIVITY,
         GROUPED_ACTIVITY,
