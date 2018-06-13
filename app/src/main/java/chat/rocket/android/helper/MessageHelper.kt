@@ -21,7 +21,7 @@ class MessageHelper @Inject constructor(
             is RoomType.PrivateGroup -> "group"
             is RoomType.Channel -> "channel"
             is RoomType.DirectMessage -> "direct"
-            is RoomType.Livechat -> "livechat"
+            is RoomType.LiveChat -> "livechat"
             else -> "custom"
         }
         val name = if (settings.useRealName()) chatRoom.fullName ?: chatRoom.name else chatRoom.name

@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/default_background">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/composer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -96,7 +96,7 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/emoji_fragment_placeholder"

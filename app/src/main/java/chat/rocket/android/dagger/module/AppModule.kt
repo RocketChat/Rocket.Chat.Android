@@ -4,13 +4,11 @@ import android.app.Application
 import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.arch.persistence.room.Room
 import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
-import chat.rocket.android.app.RocketChatDatabase
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesMultiServerTokenRepository
 import chat.rocket.android.authentication.infraestructure.SharedPreferencesTokenRepository
 import chat.rocket.android.chatroom.service.MessageService
@@ -21,8 +19,32 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.infrastructure.SharedPreferencesLocalRepository
 import chat.rocket.android.push.GroupedPush
 import chat.rocket.android.push.PushManager
-import chat.rocket.android.server.domain.*
-import chat.rocket.android.server.infraestructure.*
+import chat.rocket.android.server.domain.AccountsRepository
+import chat.rocket.android.server.domain.ActiveUsersRepository
+import chat.rocket.android.server.domain.ChatRoomsRepository
+import chat.rocket.android.server.domain.CurrentServerRepository
+import chat.rocket.android.server.domain.GetAccountInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.JobSchedulerInteractor
+import chat.rocket.android.server.domain.MessagesRepository
+import chat.rocket.android.server.domain.MultiServerTokenRepository
+import chat.rocket.android.server.domain.PermissionsRepository
+import chat.rocket.android.server.domain.RoomRepository
+import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.infraestructure.JobSchedulerInteractorImpl
+import chat.rocket.android.server.infraestructure.MemoryActiveUsersRepository
+import chat.rocket.android.server.infraestructure.MemoryChatRoomsRepository
+import chat.rocket.android.server.infraestructure.MemoryRoomRepository
+import chat.rocket.android.server.infraestructure.MemoryUsersRepository
+import chat.rocket.android.server.infraestructure.SharedPreferencesAccountsRepository
+import chat.rocket.android.server.infraestructure.SharedPreferencesMessagesRepository
+import chat.rocket.android.server.infraestructure.SharedPreferencesPermissionsRepository
+import chat.rocket.android.server.infraestructure.SharedPreferencesSettingsRepository
+import chat.rocket.android.server.infraestructure.SharedPrefsConnectingServerRepository
+import chat.rocket.android.server.infraestructure.SharedPrefsCurrentServerRepository
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.HttpLoggingInterceptor
 import chat.rocket.android.util.TimberLogger
@@ -32,7 +54,6 @@ import chat.rocket.common.model.TimestampAdapter
 import chat.rocket.common.util.CalendarISO8601Converter
 import chat.rocket.common.util.Logger
 import chat.rocket.common.util.PlatformLogger
-import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.AttachmentAdapterFactory
 import chat.rocket.core.internal.ReactionsAdapter
 import com.facebook.drawee.backends.pipeline.DraweeConfig
@@ -42,7 +63,6 @@ import com.facebook.imagepipeline.listener.RequestLoggingListener
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.Job
 import okhttp3.OkHttpClient
 import ru.noties.markwon.SpannableConfiguration
 import ru.noties.markwon.spans.SpannableTheme
@@ -55,41 +75,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRocketChatClient(okHttpClient: OkHttpClient,
-                                repository: TokenRepository,
-                                logger: PlatformLogger): RocketChatClient {
-        return RocketChatClient.create {
-            httpClient = okHttpClient
-            tokenRepository = repository
-            platformLogger = logger
-
-            // TODO remove
-            restUrl = "https://open.rocket.chat"
-        }
-    }
-
-    @Provides
-    @Singleton
-    fun provideRocketChatDatabase(context: Application): RocketChatDatabase {
-        return Room.databaseBuilder(context.applicationContext, RocketChatDatabase::class.java,
-                "rocketchat-db").build()
-    }
-
-    @Provides
-    fun provideJob(): Job {
-        return Job()
-    }
-
-    @Provides
-    @Singleton
     fun provideContext(application: Application): Context {
         return application
-    }
-
-    @Provides
-    @Singleton
-    fun provideServerDao(database: RocketChatDatabase): ServerDao {
-        return database.serverDao()
     }
 
     @Provides
@@ -129,7 +116,6 @@ class AppModule {
         return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
             .setRequestListeners(listeners)
             .setDownsampleEnabled(true)
-            //.experiment().setBitmapPrepareToDraw(true).experiment()
             .experiment().setPartialImageCachingEnabled(true).build()
     }
 
