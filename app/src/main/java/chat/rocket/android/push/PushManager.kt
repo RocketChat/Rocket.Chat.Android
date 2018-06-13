@@ -467,7 +467,7 @@ data class PushInfo @KotshiConstructor constructor(
     }
 
     companion object CREATOR : Parcelable.Creator<PushInfo> {
-        val EMPTY = PushInfo(hostname = "", roomId = "", type = RoomType.CHANNEL, name = "",
+        val EMPTY = PushInfo(hostname = "", roomId = "", type = roomTypeOf(RoomType.CHANNEL), name = "",
             sender = null)
 
         override fun createFromParcel(parcel: Parcel): PushInfo {
