@@ -119,17 +119,12 @@ object EmojiRepository {
      */
     fun shortnameToUnicode(input: CharSequence, removeIfUnsupported: Boolean): String {
         val matcher = SHORTNAME_PATTERN.matcher(input)
-        val supported = Build.VERSION.SDK_INT >= 16
         var result: String = input.toString()
 
         while (matcher.find()) {
             val unicode = shortNameToUnicode.get(":${matcher.group(1)}:") ?: continue
 
-            if (supported) {
-                result = result.replace(":" + matcher.group(1) + ":", unicode)
-            } else if (!supported && removeIfUnsupported) {
-                result = result.replace(":" + matcher.group(1) + ":", "")
-            }
+            result = result.replace(":" + matcher.group(1) + ":", unicode)
         }
 
         return result

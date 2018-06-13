@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion versions.compileSdk
+    compileSdkVersion 'android-P'
     buildToolsVersion versions.buildTools
 
     defaultConfig {
@@ -11,7 +11,7 @@ android {
         targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {

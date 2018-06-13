@@ -8,7 +8,7 @@
     android:fillViewport="true"
     tools:context=".authentication.login.ui.LoginFragment">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -220,7 +220,7 @@
                 tools:visibility="gone" />
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -243,6 +243,6 @@
             android:text="@string/title_log_in"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

@@ -2,7 +2,7 @@ package chat.rocket.android.helper
 
 import android.app.Activity
 import android.content.IntentSender
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.auth.api.credentials.*
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.ResolvableApiException

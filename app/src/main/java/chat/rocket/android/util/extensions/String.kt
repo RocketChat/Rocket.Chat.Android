@@ -61,3 +61,7 @@ fun String.parseColor(): Int {
         Color.parseColor("white")
     }
 }
+
+fun String.userId(userId: String?): String? {
+    return userId?.let { this.replace(it, "") }
+}

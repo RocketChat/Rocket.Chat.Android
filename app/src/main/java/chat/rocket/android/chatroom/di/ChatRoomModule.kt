@@ -7,8 +7,8 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-@PerActivity
 class ChatRoomModule {
     @Provides
+    @PerActivity
     fun provideChatRoomNavigator(activity: ChatRoomActivity) = ChatRoomNavigator(activity)
 }

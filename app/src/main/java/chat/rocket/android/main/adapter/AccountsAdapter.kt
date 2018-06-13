@@ -1,6 +1,6 @@
 package chat.rocket.android.main.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.server.domain.model.Account
