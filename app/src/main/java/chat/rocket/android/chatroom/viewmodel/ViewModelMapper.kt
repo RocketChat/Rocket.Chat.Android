@@ -15,6 +15,7 @@ import androidx.core.text.scale
 import chat.rocket.android.R
 import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
 import chat.rocket.android.chatroom.domain.MessageReply
+import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
 import chat.rocket.android.helper.UserHelper
@@ -53,6 +54,7 @@ import okhttp3.HttpUrl
 import java.security.InvalidParameterException
 import javax.inject.Inject
 
+@PerFragment
 class ViewModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,
@@ -67,8 +69,8 @@ class ViewModelMapper @Inject constructor(
 ) {
 
     private val currentServer = serverInteractor.get()!!
-    private val settings: Map<String, Value<Any>> = getSettingsInteractor.get(currentServer)
-    private val baseUrl = settings.baseUrl()
+    private val settings = getSettingsInteractor.get(currentServer)
+    private val baseUrl = currentServer
     private val token = tokenRepository.get(currentServer)
     private val currentUsername: String? = localRepository.get(LocalRepository.CURRENT_USERNAME_KEY)
     private val secondaryTextColor = ContextCompat.getColor(context, R.color.colorSecondaryText)

@@ -5,11 +5,6 @@ import chat.rocket.core.model.Value
 
 typealias PublicSettings = Map<String, Value<Any>>
 
-interface SettingsRepository {
-    fun save(url: String, settings: PublicSettings)
-    fun get(url: String): PublicSettings
-}
-
 // Authentication methods.
 const val LDAP_ENABLE = "LDAP_Enable"
 const val CAS_ENABLE = "CAS_enabled"
@@ -110,3 +105,8 @@ fun PublicSettings.uploadMaxFileSize(): Int {
 
 fun PublicSettings.baseUrl(): String = this[SITE_URL]?.value as String
 fun PublicSettings.siteName(): String? = this[SITE_NAME]?.value as String?
+
+interface SettingsRepository {
+    fun save(url: String, settings: PublicSettings)
+    fun get(url: String): PublicSettings
+}
