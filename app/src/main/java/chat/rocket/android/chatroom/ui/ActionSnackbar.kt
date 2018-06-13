@@ -1,7 +1,7 @@
 package chat.rocket.android.chatroom.ui
 
-import android.support.design.widget.BaseTransientBottomBar
-import android.support.v4.view.ViewCompat
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import androidx.core.view.ViewCompat
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater

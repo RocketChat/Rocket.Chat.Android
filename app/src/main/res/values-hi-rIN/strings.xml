@@ -4,8 +4,7 @@
     <string name="title_sign_in_your_server">अपने सर्वर में साइन इन करें</string>
     <string name="title_log_in">लॉग इन करें</string>
     <string name="title_register_username">रजिस्टर उपयोगकर्ता नाम</string>
-    // TODO: Add proper translation.
-    <string name="title_reset_password">Reset password</string>
+    <string name="title_reset_password">पासवर्ड रीसेट करें</string>
     <string name="title_sign_up">साइन अप करें</string>
     <string name="title_authentication">प्रमाणीकरण</string>
     <string name="title_legal_terms">कानूनी शर्तें</string>
@@ -35,8 +34,7 @@
     <string name="action_away">दूर</string>
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
-    // TODO: Add proper translation.
-    <string name="action_save_to_gallery">Save to gallery</string>
+    <string name="action_save_to_gallery">गैलरी में सहेजें</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -56,14 +54,10 @@
     <string name="msg_avatar_url">अवतार यूआरएल</string>
     <string name="msg_or_continue_using_social_accounts">या सामाजिक खाते का उपयोग करना जारी रखें</string>
     <string name="msg_new_user">नया उपयोगकर्ता? %1$s</string>
-    // TODO: Add proper translation.
-    <string name="msg_forgot_password">Forgot password? %1$s</string>
-    // TODO: Add proper translation.
-    <string name="msg_reset">Reset</string>
-    // TODO: Add proper translation.
-    <string name="msg_check_your_email_to_reset_your_password">Email sent! Check your inbox to reset your password.</string>
-    // TODO: Add proper translation.
-    <string name="msg_invalid_email">Please type a valid e-mail</string>
+    <string name="msg_forgot_password">पासवर्ड भूल गए? %1$s</string>
+    <string name="msg_reset">रीसेट करें</string>
+    <string name="msg_check_your_email_to_reset_your_password">ईमेल गया गया है! अपना पासवर्ड रीसेट करने के लिए अपने इनबॉक्स की जांच करें।</string>
+    <string name="msg_invalid_email">कृपया एक वैध ई-मेल टाइप करें</string>
     <string name="msg_new_user_agreement">आगे बढ़कर आप हमारे %1$s और %2$s से सहमत हो रहे हैं</string>
     <string name="msg_2fa_code">कोड 2FA</string>
     <string name="msg_yesterday">कल</string>
@@ -95,9 +89,8 @@
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
     <string name="msg_version">वर्शन %1$s</string>
     <string name="msg_build">बिल्ड %1$d</string>
-    // TODO: Add proper translation.
-    <string name="msg_update_app_version_in_order_to_continue">Out to date server version. Please contact the server admin to update the server version in order to continue.</string>
-    <string name="msg_ok">OK</string>
+    <string name="msg_update_app_version_in_order_to_continue">पुराना सर्वर वर्शन। जारी रखने के लिए सर्वर वर्शन को अद्यतन करने के लिए कृपया सर्वर व्यवस्थापक से संपर्क करें।</string>
+    <string name="msg_ok">ठीक है</string>
     <string name="msg_ver_not_recommended">
         ऐसा लगता है कि आपका सर्वर संस्करण अनुशंसित संस्करण %1$s के नीचे है।\nआप अभी भी लॉगिन कर सकते हैं लेकिन आप अप्रत्याशित व्यवहार का अनुभव कर सकते हैं
     </string>
@@ -115,14 +108,10 @@
     <string name="msg_no_chat_title">कोई चैट संदेश नहीं</string>
     <string name="msg_no_chat_description">यहां अपने संदेश देखने के लिए\nबातचीत शुरू करें।</string>
     <string name="msg_edited">(संपादित)</string>
-    // TODO: Add proper translation.
-    <string name="msg_and">\u0020and\u0020</string>
-    // TODO: Add proper translation.
-    <string name="msg_is_typing">\u0020is typing…</string>
-    // TODO: Add proper translation.
-    <string name="msg_are_typing">\u0020are typing…</string>
-    // TODO: Add proper translation.
-    <string name="msg_several_users_are_typing">Several users are typing…</string>
+    <string name="msg_and">\u0020और\u0020</string>
+    <string name="msg_is_typing">\u0020टाइप कर रहा/रही है…</string>
+    <string name="msg_are_typing">\u0020टाइप कर रहे हैं…</string>
+    <string name="msg_several_users_are_typing">कई उपयोगकर्ता टाइप कर रहे हैं…</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
 
@@ -139,8 +128,7 @@
     <string name="message_unmuted">उपयोगकर्ता %1$s %2$s द्वारा अनम्यूट किया गया</string>
     <string name="message_role_add">%1$s %3$s द्वारा %2$s सेट किया गया था</string>
     <string name="message_role_removed">%1$s अब %3$s द्वारा %2$s नहीं है</string>
-    // TODO:Add proper translation.
-    <string name="message_credentials_saved_successfully">Credentials saved successfully</string>
+    <string name="message_credentials_saved_successfully">प्रमाण पत्र सफलतापूर्वक सहेजे गए</string>
 
 
     <!-- Message actions -->
@@ -152,8 +140,7 @@
     <string name="action_msg_pin">संदेश को पिन करें</string>
     <string name="action_msg_unpin">संदेश को पिन से हटाएँ</string>
     <string name="action_msg_star">संदेश को स्टार करें</string>
-    // TODO: Add proper translation.
-    <string name="action_msg_unstar">Unstar Message</string>
+    <string name="action_msg_unstar">सन्देश अतारांकित करें</string>
     <string name="action_msg_share">शेयर करें</string>
     <string name="action_title_editing">संपादन संदेश</string>
     <string name="action_msg_add_reaction">प्रतिक्रिया जोड़ें</string>
@@ -162,8 +149,7 @@
     <string name="permission_editing_not_allowed">संपादन की अनुमति नहीं है</string>
     <string name="permission_deleting_not_allowed">हटाने की अनुमति नहीं है</string>
     <string name="permission_pinning_not_allowed">पिनि करने की अनुमति नहीं है</string>
-    // TODO: Add proper translation.
-    <string name="permission_starring_not_allowed">Starring is not allowed</string>
+    <string name="permission_starring_not_allowed">तारांकित की अनुमति नहीं है</string>
 
     <!-- Members List -->
     <string name="title_members_list">सदस्य</string>
@@ -174,17 +160,15 @@
     <string name="no_pinned_description">सभी पिन किए गए संदेश यहां\nदिखाई देते हैं।</string>
 
     <!-- Favorite Messages -->
-    <!-- TODO Add proper translation-->
-    <string name="title_favorite_messages">Favorite Messages</string>
-    <string name="no_favorite_messages">No favorite messages</string>
-    <string name="no_favorite_description">All the favorite messages\nappear here</string>
+    <string name="title_favorite_messages">पसंदीदा संदेश</string>
+    <string name="no_favorite_messages">कोई पसंदीदा संदेश है</string>
+    <string name="no_favorite_description">सभी पसंदीदा संदेश यहां\nदिखाई देते हैं</string>
 
     <!-- Files -->
-    <!-- TODO Add proper translation-->
-    <string name="msg_files">Files</string>
-    <string name="title_files_total">Files (%d)</string>
-    <string name="msg_no_files">No files</string>
-    <string name="msg_all_files_appear_here">All the files appear here</string>
+    <string name="msg_files">फ़ाइलें</string>
+    <string name="title_files_total">फ़ाइलें (%d)</string>
+    <string name="msg_no_files">कोई फाइल नहीं है</string>
+    <string name="msg_all_files_appear_here">सभी फाइलें यहां दिखाई देती हैं</string>
 
     <!-- Upload Messages -->
     <string name="max_file_size_exceeded">फ़ाइल का आकार %1$d बाइट्स ने %2$d बाइट्स के अधिकतम अपलोड आकार को पार कर लिया है</string>

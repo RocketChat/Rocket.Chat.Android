@@ -1,8 +1,8 @@
 package chat.rocket.android.chatroom.ui.bottomsheet
 
-import android.support.design.widget.BottomSheetDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import ru.whalemare.sheetmenu.SheetMenu
 import ru.whalemare.sheetmenu.adapter.MenuAdapter
@@ -11,7 +11,7 @@ class BottomSheetMenu(adapter: MenuAdapter) : SheetMenu(adapter = adapter) {
 
     override fun processRecycler(recycler: RecyclerView, dialog: BottomSheetDialog) {
         if (layoutManager == null) {
-            layoutManager = LinearLayoutManager(recycler.context, LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(recycler.context)
         }
 
         // Superclass SheetMenu adapter property is nullable MenuAdapter? but this class enforces
