@@ -14,7 +14,9 @@ data class ImageAttachmentViewModel(
         override var reactions: List<ReactionViewModel>,
         override var nextDownStreamMessage: BaseViewModel<*>? = null,
         override var preview: Message? = null,
-        override var isTemporary: Boolean = false
+        override var isTemporary: Boolean = false,
+        override var unread: Boolean? = null,
+        override var menuItemsToHide: MutableList<Int> = mutableListOf()
 ) : BaseFileAttachmentViewModel<ImageAttachment> {
     override val viewType: Int
         get() = BaseViewModel.ViewType.IMAGE_ATTACHMENT.viewType

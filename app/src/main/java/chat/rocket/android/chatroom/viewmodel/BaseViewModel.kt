@@ -13,6 +13,8 @@ interface BaseViewModel<out T> {
     var nextDownStreamMessage: BaseViewModel<*>?
     var preview: Message?
     var isTemporary: Boolean
+    var unread: Boolean?
+    var menuItemsToHide: MutableList<Int>
 
     enum class ViewType(val viewType: Int) {
         MESSAGE(0),

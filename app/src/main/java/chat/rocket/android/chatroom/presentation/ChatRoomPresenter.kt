@@ -223,7 +223,8 @@ class ChatRoomPresenter @Inject constructor(
                         type = null,
                         updatedAt = null,
                         urls = null,
-                        isTemporary = true
+                        isTemporary = true,
+                        unread = true
                     )
                     try {
                         messagesRepository.save(newMessage)
@@ -848,6 +849,12 @@ class ChatRoomPresenter @Inject constructor(
                 messagesRepository.save(streamedMessage)
                 view.showNewMessage(viewModelStreamedMessage)
             }
+        }
+    }
+
+    fun messageInfo(messageId: String) {
+        launchUI(strategy) {
+            navigator.toMessageInformation(messageId = messageId)
         }
     }
 }
