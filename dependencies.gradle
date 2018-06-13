@@ -1,26 +1,30 @@
 ext {
     versions = [
             java                  : JavaVersion.VERSION_1_8,
-            compileSdk            : 27,
+            compileSdk            : 28,
             targetSdk             : 27,
-            buildTools            : '27.0.3',
+            buildTools            : '28.0.0-rc2',
             kotlin                : '1.2.41',
             coroutine             : '0.22.5',
             dokka                 : '0.9.16',
 
             // Main dependencies
-            support               : '27.1.1',
+            appCompat             : '1.0.0-alpha1',
+            recyclerview          : '1.0.0-alpha1',
+            material              : '1.0.0-alpha1',
+            cardview              : '1.0.0-alpha1',
+            browser               : '1.0.0-alpha1',
             constraintLayout      : '1.1.0',
-            androidKtx            : '0.3',
-            dagger                : '2.14.1',
+            androidKtx            : '1.0.0-alpha1',
+            dagger                : '2.16',
             exoPlayer             : '2.6.0',
             playServices          : '15.0.0',
             firebase              : '15.0.0',
-            room                  : '1.0.0',
-            lifecycle             : '1.1.1',
+            room                  : '2.0.0-alpha1',
+            lifecycle             : '2.0.0-alpha1',
             rxKotlin              : '2.2.0',
             rxAndroid             : '2.0.2',
-            moshi                 : '1.6.0-SNAPSHOT',
+            moshi                 : '1.6.0',
             okhttp                : '3.10.0',
             timber                : '4.7.0',
             threeTenABP           : '1.0.5',
@@ -29,14 +33,14 @@ ext {
             kotshi                : '1.0.2',
             frescoImageViewer     : '0.5.1',
             markwon               : '1.0.3',
-            sheetMenu             : '1.3.3',
+            sheetMenu             : '5ff79ccf14',
             aVLoadingIndicatorView: '2.1.3',
             flexbox               : '0.3.2',
 
             // For testing
             junit                 : '4.12',
             truth                 : '0.36',
-            espresso              : '3.0.2',
+            espresso              : '3.1.0-alpha2',
             mockito               : '2.10.0',
 
             //For wearable
@@ -49,14 +53,13 @@ ext {
             coroutines            : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}",
             coroutinesAndroid     : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutine}",
 
-            appCompat             : "com.android.support:appcompat-v7:${versions.support}",
-            annotations           : "com.android.support:support-annotations:${versions.support}",
-            recyclerview          : "com.android.support:recyclerview-v7:${versions.support}",
-            design                : "com.android.support:design:${versions.support}",
-            constraintLayout      : "com.android.support.constraint:constraint-layout:${versions.constraintLayout}",
-            cardView              : "com.android.support:cardview-v7:${versions.support}",
+            appCompat             : "androidx.appcompat:appcompat:${versions.appCompat}",
+            recyclerview          : "androidx.recyclerview:recyclerview:${versions.recyclerview}",
+            material              : "com.google.android.material:material:${versions.material}",
+            constraintlayout      : "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}",
+            cardview              : "androidx.cardview:cardview:${versions.cardview}",
             flexbox               : "com.google.android:flexbox:${versions.flexbox}",
-            customTabs            : "com.android.support:customtabs:${versions.support}",
+            browser               : "androidx.browser:browser:${versions.browser}",
 
             androidKtx            : "androidx.core:core-ktx:${versions.androidKtx}",
 
@@ -68,11 +71,10 @@ ext {
             playServicesAuth      : "com.google.android.gms:play-services-auth:${versions.playServices}",
             exoPlayer             : "com.google.android.exoplayer:exoplayer:${versions.exoPlayer}",
 
-            room                  : "android.arch.persistence.room:runtime:${versions.room}",
-            roomProcessor         : "android.arch.persistence.room:compiler:${versions.room}",
-            roomRxjava            : "android.arch.persistence.room:rxjava2:${versions.room}",
-            lifecycleExtensions   : "android.arch.lifecycle:extensions:${versions.lifecycle}",
-            lifecycleCompiler     : "android.arch.lifecycle:compiler:${versions.lifecycle}",
+            room                  : "androidx.room:room-runtime:${versions.room}",
+            roomProcessor         : "androidx.room:room-compiler:${versions.room}",
+            lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}",
+            lifecycleCompiler     : "androidx.lifecycle:lifecycle-compiler:${versions.lifecycle}",
 
             rxKotlin              : "io.reactivex.rxjava2:rxkotlin:${versions.rxKotlin}",
             rxAndroid             : "io.reactivex.rxjava2:rxandroid:${versions.rxAndroid}",
@@ -99,9 +101,11 @@ ext {
 
             markwon               : "ru.noties:markwon:${versions.markwon}",
 
-            sheetMenu             : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
+            //sheetMenu             : "com.github.whalemare:sheetmenu:${versions.sheetMenu}",
+            sheetMenu             : "com.github.luciofm:sheetmenu:${versions.sheetMenu}",
 
             aVLoadingIndicatorView: "com.wang.avi:library:${versions.aVLoadingIndicatorView}",
+
 
             //For the wear app
             wearable              : "com.google.android.support:wearable:${versions.wear}",
@@ -113,8 +117,8 @@ ext {
 
             // For testing
             junit                 : "junit:junit:$versions.junit",
-            espressoCore          : "com.android.support.test.espresso:espresso-core:${versions.espresso}",
-            espressoIntents       : "com.android.support.test.espresso:espresso-intents:${versions.espresso}",
+            espressoCore          : "androidx.test.espresso:espresso-core:${versions.espresso}",
+            espressoIntents       : "androidx.test.espresso:espresso-intents:${versions.espresso}",
             roomTest              : "android.arch.persistence.room:testing:${versions.room}",
             truth                 : "com.google.truth:truth:$versions.truth"
     ]

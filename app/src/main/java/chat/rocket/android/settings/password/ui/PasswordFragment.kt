@@ -1,7 +1,7 @@
 package chat.rocket.android.settings.password.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
@@ -10,7 +10,7 @@ import chat.rocket.android.settings.password.presentation.PasswordView
 import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.textContent
-import android.support.v7.view.ActionMode
+import androidx.appcompat.view.ActionMode
 import chat.rocket.android.util.extensions.ui
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
@@ -19,7 +19,7 @@ import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_password.*
 import javax.inject.Inject
 
-class PasswordFragment: Fragment(), PasswordView, android.support.v7.view.ActionMode.Callback {
+class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
     @Inject lateinit var presenter: PasswordPresenter
     private var actionMode: ActionMode? = null
     private val disposables = CompositeDisposable()

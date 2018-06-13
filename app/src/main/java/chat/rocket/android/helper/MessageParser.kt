@@ -6,7 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.net.Uri
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ReplacementSpan

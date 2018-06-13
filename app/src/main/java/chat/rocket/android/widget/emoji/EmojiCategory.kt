@@ -1,6 +1,6 @@
 package chat.rocket.android.widget.emoji
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.text.SpannableString
 import android.text.Spanned
 import chat.rocket.android.R

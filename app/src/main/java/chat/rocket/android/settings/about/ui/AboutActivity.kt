@@ -1,7 +1,7 @@
 package chat.rocket.android.settings.about.ui
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.textContent
