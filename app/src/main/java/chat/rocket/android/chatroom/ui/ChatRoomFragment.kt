@@ -265,6 +265,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
                 recycler_view.addOnLayoutChangeListener(layoutChangeListener)
                 recycler_view.addOnScrollListener(onScrollListener)
+
+                // Load just once, on the first page...
+                presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
             }
 
             val oldMessagesCount = adapter.itemCount
@@ -273,7 +276,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 recycler_view.scrollToPosition(0)
                 verticalScrollOffset.set(0)
             }
-            presenter.loadActiveMembers(chatRoomId, chatRoomType, filterSelfOut = true)
             toggleNoChatView(adapter.itemCount)
         }
     }
