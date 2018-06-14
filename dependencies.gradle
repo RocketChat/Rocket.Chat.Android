@@ -4,8 +4,8 @@ ext {
             compileSdk            : 27,
             targetSdk             : 27,
             buildTools            : '27.0.3',
-            kotlin                : '1.2.41',
-            coroutine             : '0.22.5',
+            kotlin                : '1.2.50',
+            coroutine             : '0.23.1',
             dokka                 : '0.9.16',
 
             // Main dependencies

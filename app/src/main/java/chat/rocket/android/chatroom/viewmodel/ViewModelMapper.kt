@@ -13,16 +13,21 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
+import chat.rocket.android.chatinformation.viewmodel.ReadReceiptViewModel
 import chat.rocket.android.chatroom.domain.MessageReply
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.ChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.TokenRepository
+import chat.rocket.android.server.domain.UsersRepository
 import chat.rocket.android.server.domain.baseUrl
+import chat.rocket.android.server.domain.messageReadReceiptEnabled
+import chat.rocket.android.server.domain.messageReadReceiptStoreUsers
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
@@ -30,6 +35,7 @@ import chat.rocket.android.widget.emoji.EmojiParser
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType
+import chat.rocket.core.model.ReadReceipt
 import chat.rocket.core.model.Value
 import chat.rocket.core.model.attachment.Attachment
 import chat.rocket.core.model.attachment.AudioAttachment
@@ -53,7 +59,9 @@ class ViewModelMapper @Inject constructor(
     private val context: Context,
     private val parser: MessageParser,
     private val roomsInteractor: ChatRoomsInteractor,
+    private val usersRepository: UsersRepository,
     private val messageHelper: MessageHelper,
+    private val userHelper: UserHelper,
     tokenRepository: TokenRepository,
     serverInteractor: GetCurrentServerInteractor,
     getSettingsInteractor: GetSettingsInteractor,
@@ -91,6 +99,23 @@ class ViewModelMapper @Inject constructor(
             return@withContext list
         }
 
+    suspend fun map(
+        readReceipts: List<ReadReceipt>
+    ): List<ReadReceiptViewModel> = withContext(CommonPool) {
+        val list = arrayListOf<ReadReceiptViewModel>()
+
+        readReceipts.forEach {
+            list.add(
+                ReadReceiptViewModel(
+                    avatar = baseUrl.avatarUrl(it.user.username ?: ""),
+                    name = userHelper.displayName(it.user),
+                    time = DateTimeHelper.getTime(DateTimeHelper.getLocalDateTime(it.timestamp))
+                )
+            )
+        }
+        return@withContext list
+    }
+
     private suspend fun translate(
         message: Message,
         roomViewModel: RoomViewModel
@@ -118,6 +143,7 @@ class ViewModelMapper @Inject constructor(
             for (i in list.size - 1 downTo 0) {
                 val next = if (i - 1 < 0) null else list[i - 1]
                 list[i].nextDownStreamMessage = next
+                mapVisibleActions(list[i])
             }
 
             if (isBroadcastReplyAvailable(roomViewModel, message)) {
@@ -130,6 +156,12 @@ class ViewModelMapper @Inject constructor(
 
             return@withContext list
         }
+
+    private fun mapVisibleActions(viewModel: BaseViewModel<*>) {
+        if (!settings.messageReadReceiptStoreUsers()) {
+            viewModel.menuItemsToHide.add(R.id.action_message_info)
+        }
+    }
 
     private suspend fun translateAsNotReversed(
         message: Message,
@@ -184,8 +216,8 @@ class ViewModelMapper @Inject constructor(
     private fun isBroadcastReplyAvailable(roomViewModel: RoomViewModel, message: Message): Boolean {
         val senderUsername = message.sender?.username
         return roomViewModel.isRoom && roomViewModel.isBroadcast &&
-                !message.isSystemMessage() &&
-                senderUsername != currentUsername
+            !message.isSystemMessage() &&
+            senderUsername != currentUsername
     }
 
     private fun mapMessageReply(message: Message, chatRoom: ChatRoom): MessageReplyViewModel {
@@ -234,7 +266,7 @@ class ViewModelMapper @Inject constructor(
             ColorAttachmentViewModel(attachmentUrl = url, id = id, color = color.color,
                 text = text, message = message, rawData = attachment,
                 messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message))
+                preview = message.copy(message = content.message), unread = message.unread)
         }
     }
 
@@ -262,7 +294,7 @@ class ViewModelMapper @Inject constructor(
             AuthorAttachmentViewModel(attachmentUrl = url, id = id, name = authorName,
                 icon = authorIcon, fields = fieldsText, message = message, rawData = attachment,
                 messageId = message.id, reactions = getReactions(message),
-                preview = message.copy(message = content.message))
+                preview = message.copy(message = content.message), unread = message.unread)
         }
     }
 
@@ -280,7 +312,7 @@ class ViewModelMapper @Inject constructor(
         return MessageAttachmentViewModel(message = content, rawData = message,
             messageId = message.id, time = time, senderName = attachmentAuthor,
             content = attachmentText, isPinned = message.pinned, reactions = getReactions(message),
-            preview = message.copy(message = content.message))
+            preview = message.copy(message = content.message), unread = message.unread)
     }
 
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseViewModel<*>? {
@@ -345,12 +377,17 @@ class ViewModelMapper @Inject constructor(
         val avatar = getUserAvatar(message)
         val preview = mapMessagePreview(message)
         val isTemp = message.isTemporary ?: false
+        val unread = if (settings.messageReadReceiptEnabled()) {
+            message.unread ?: false
+        } else {
+            null
+        }
 
         val content = getContent(stripMessageQuotes(message))
         MessageViewModel(message = stripMessageQuotes(message), rawData = message,
             messageId = message.id, avatar = avatar!!, time = time, senderName = sender,
             content = content, isPinned = message.pinned, reactions = getReactions(message),
-            isFirstUnread = false, preview = preview, isTemporary = isTemp)
+            isFirstUnread = false, preview = preview, isTemporary = isTemp, unread = unread)
     }
 
     private fun mapMessagePreview(message: Message): Message {
@@ -413,7 +450,7 @@ class ViewModelMapper @Inject constructor(
         }
 
         val username = message.sender?.username ?: "?"
-        return baseUrl?.let {
+        return baseUrl.let {
             baseUrl.avatarUrl(username)
         }
     }

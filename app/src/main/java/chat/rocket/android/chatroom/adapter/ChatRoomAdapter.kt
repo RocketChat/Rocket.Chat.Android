@@ -5,7 +5,19 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
-import chat.rocket.android.chatroom.viewmodel.*
+import chat.rocket.android.chatroom.viewmodel.AudioAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.AuthorAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseFileAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.viewmodel.ColorAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.GenericFileAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.ImageAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageReplyViewModel
+import chat.rocket.android.chatroom.viewmodel.MessageViewModel
+import chat.rocket.android.chatroom.viewmodel.UrlPreviewViewModel
+import chat.rocket.android.chatroom.viewmodel.VideoAttachmentViewModel
+import chat.rocket.android.chatroom.viewmodel.toViewType
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
@@ -203,6 +215,9 @@ class ChatRoomAdapter(
         override fun onActionSelected(item: MenuItem, message: Message) {
             message.apply {
                 when (item.itemId) {
+                    R.id.action_message_info -> {
+                        presenter?.messageInfo(id)
+                    }
                     R.id.action_message_reply -> {
                         if (roomName != null && roomType != null) {
                             presenter?.citeMessage(roomName, roomType, id, true)

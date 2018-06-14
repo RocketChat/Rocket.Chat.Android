@@ -143,6 +143,7 @@
 
     <!-- Message actions -->
     <string name="action_msg_reply">Respuesta</string>
+    <string name="action_msg_info">Información del mensaje</string>
     <string name="action_msg_edit">Editar</string>
     <string name="action_msg_copy">Copiar</string>
     <string name="action_msg_quote">Citar</string>
@@ -245,4 +246,6 @@
     <string name="notif_action_reply_hint">RESPUESTA</string>
     <string name="notif_error_sending">La respuesta ha fallado. Inténtalo de nuevo.</string>
     <string name="notif_success_sending">Mensaje enviado a %1$s!</string>
+    <string name="read_by">Leído por</string>
+    <string name="message_information_title">Información del mensaje</string>
 </resources>
