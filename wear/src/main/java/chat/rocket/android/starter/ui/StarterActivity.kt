@@ -1,13 +1,15 @@
 package chat.rocket.android.starter.ui
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
 import chat.rocket.android.R
+import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.starter.presentation.StarterActivityPresenter
 import chat.rocket.android.starter.presentation.StarterActivityView
 import chat.rocket.android.util.AppPreferenceManager
-import chat.rocket.android.util.KEY_PREFS_ACTIVITY_FOREGROUND
+import chat.rocket.android.util.Constants.KEY_PREFS_ACTIVITY_FOREGROUND
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -61,7 +63,7 @@ class StarterActivity : HasActivityInjector, WearableActivity(),
     private fun checkIfLoginTokensExist() {
         presenter.loadCredentials { authenticated ->
             if (authenticated) {
-                //startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
             }
         }
     }

@@ -4,7 +4,7 @@ import chat.rocket.android.server.GetCurrentServerInteractor
 import chat.rocket.android.server.SaveCurrentServerInteractor
 import chat.rocket.android.server.TokenRepository
 import chat.rocket.android.util.AppPreferenceManager
-import chat.rocket.android.util.KEY_PREFS_ACTIVITY_FOREGROUND
+import chat.rocket.android.util.Constants.KEY_PREFS_ACTIVITY_FOREGROUND
 import chat.rocket.android.util.TokenSerialisableModel
 import chat.rocket.android.util.deserialiseToken
 import chat.rocket.common.model.Token

@@ -63,7 +63,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun updateChatRooms(chatRooms: List<ChatRoom>) {
-        adapter = ChatRoomsAdapter(chatRooms)
+        adapter = ChatRoomsAdapter(context, chatRooms)
         ui { channels_list.adapter = adapter }
     }
 
@@ -72,5 +72,6 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         channels_list.itemAnimator = DefaultItemAnimator()
         channels_list.isCircularScrollingGestureEnabled = true
+        channels_list.scrollDegreesPerScreen = 90f
     }
 }

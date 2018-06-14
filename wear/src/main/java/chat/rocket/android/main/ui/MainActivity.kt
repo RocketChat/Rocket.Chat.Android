@@ -35,7 +35,8 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
-    override fun fragmentInjector(): DispatchingAndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
+    override fun fragmentInjector(): DispatchingAndroidInjector<Fragment> =
+        fragmentDispatchingAndroidInjector
 
     private fun initialiseChatRoomsFragment() {
         chatRoomsFragment = ChatRoomsFragment()

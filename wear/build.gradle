@@ -57,6 +57,9 @@ dependencies {
     implementation libraries.okhttp
     implementation libraries.okhttpLogger
 
+    implementation libraries.fresco
+    implementation libraries.frescoImageViewer
+
     testImplementation libraries.junit
     compileOnly 'com.google.android.wearable:wearable:2.3.0'
 }

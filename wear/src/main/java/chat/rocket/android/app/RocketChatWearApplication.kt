@@ -30,7 +30,8 @@ class RocketChatWearApplication : Application(), HasActivityInjector, HasFragmen
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
 
-    override fun fragmentInjector(): DispatchingAndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
+    override fun fragmentInjector(): DispatchingAndroidInjector<Fragment> =
+        fragmentDispatchingAndroidInjector
 
     @Inject
     lateinit var getCurrentServerInteractor: GetCurrentServerInteractor

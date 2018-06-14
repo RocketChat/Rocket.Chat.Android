@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorPrimaryText">@color/colorWhite</color>
+    <color name="colorSecondaryText">#FFC1C1C1</color>
+    <color name="colorUnreadMessagesMarker">#FF1976D2</color>
+</resources>
