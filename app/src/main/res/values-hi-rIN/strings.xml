@@ -17,7 +17,6 @@
     <string name="title_about">परिचय</string>
     // TODO: Add proper translation.
     <string name="title_create_channel">Create Channel</string>
-    <string name="title_add_members">सदस्यों को आमंत्रित करें (%s)</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -30,6 +29,7 @@
     <string name="action_settings">सेटिंग्स</string>
     // TODO: Add proper translation.
     <string name="action_create_channel">Create channel</string>
+    <string name="action_create">Create</string>
     <string name="action_logout">लोग आउट करें</string>
     <string name="action_files">फ़ाइलें</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>

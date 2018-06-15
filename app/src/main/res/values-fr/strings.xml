@@ -17,7 +17,6 @@
     <string name="title_about">Sur</string>
     // TODO: Add proper translation.
     <string name="title_create_channel">Create Channel</string>
-    <string name="title_add_members">Inviter des membres (%s)</string>
 
     <!-- Actions -->
     <string name="action_connect">Se connecter</string>
@@ -30,6 +29,7 @@
     <string name="action_settings">Paramètres</string>
     // TODO: Add proper translation.
     <string name="action_create_channel">Create channel</string>
+    <string name="action_create">Create</string>
     <string name="action_logout">Se déconnecter</string>
     <string name="action_files">Fichiers</string>
     <string name="action_confirm_password">Confirmer le mot de passe</string>
