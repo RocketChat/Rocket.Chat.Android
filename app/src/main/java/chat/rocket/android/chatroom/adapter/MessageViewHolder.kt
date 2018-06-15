@@ -4,8 +4,7 @@ import android.graphics.Color
 import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.core.view.isVisible
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
-import chat.rocket.android.util.extensions.setVisible
+import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.isSystemMessage
 import kotlinx.android.synthetic.main.avatar.view.*
@@ -15,7 +14,7 @@ class MessageViewHolder(
     itemView: View,
     listener: ActionsListener,
     reactionListener: EmojiReactionListener? = null
-) : BaseViewHolder<MessageViewModel>(itemView, listener, reactionListener) {
+) : BaseViewHolder<MessageUiModel>(itemView, listener, reactionListener) {
 
     init {
         with(itemView) {
@@ -24,7 +23,7 @@ class MessageViewHolder(
         }
     }
 
-    override fun bindViews(data: MessageViewModel) {
+    override fun bindViews(data: MessageUiModel) {
         with(itemView) {
             if (data.isFirstUnread) new_messages_notif.visibility = View.VISIBLE
             else new_messages_notif.visibility = View.GONE

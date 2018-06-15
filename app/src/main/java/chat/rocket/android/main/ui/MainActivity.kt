@@ -16,7 +16,7 @@ import chat.rocket.android.main.adapter.AccountsAdapter
 import chat.rocket.android.main.adapter.Selector
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
-import chat.rocket.android.main.viewmodel.NavHeaderViewModel
+import chat.rocket.android.main.uimodel.NavHeaderUiModel
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.ui.INTENT_CHAT_ROOM_ID
 import chat.rocket.android.util.extensions.fadeIn
@@ -26,7 +26,6 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.common.model.UserStatus
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.android.gms.common.api.GoogleApiClient
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -117,10 +116,10 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
     }
 
-    override fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>) {
-        Timber.d("Setting up nav header: $viewModel")
+    override fun setupNavHeader(uiModel: NavHeaderUiModel, accounts: List<Account>) {
+        Timber.d("Setting up nav header: $uiModel")
         with(headerLayout) {
-            with(viewModel) {
+            with(uiModel) {
                 if (userStatus != null) {
                     image_user_status.setImageDrawable(
                         DrawableHelper.getUserStatusDrawable(userStatus, context)
@@ -135,7 +134,7 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
                 if (serverLogo != null) {
                     server_logo.setImageURI(serverLogo)
                 }
-                text_server_url.text = viewModel.serverUrl
+                text_server_url.text = uiModel.serverUrl
             }
             setupAccountsList(headerLayout, accounts)
         }

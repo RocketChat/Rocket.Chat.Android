@@ -2,8 +2,8 @@ package chat.rocket.android.main.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.main.viewmodel.NavHeaderViewModel
-import chat.rocket.android.main.viewmodel.NavHeaderViewModelMapper
+import chat.rocket.android.main.uimodel.NavHeaderUiModel
+import chat.rocket.android.main.uimodel.NavHeaderUiModelMapper
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
@@ -28,19 +28,19 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
-    private val view: MainView,
-    private val strategy: CancelStrategy,
-    private val navigator: MainNavigator,
-    private val tokenRepository: TokenRepository,
-    private val serverInteractor: GetCurrentServerInteractor,
-    private val localRepository: LocalRepository,
-    private val navHeaderMapper: NavHeaderViewModelMapper,
-    private val saveAccountInteractor: SaveAccountInteractor,
-    private val getAccountsInteractor: GetAccountsInteractor,
-    private val removeAccountInteractor: RemoveAccountInteractor,
-    private val factory: RocketChatClientFactory,
-    getSettingsInteractor: GetSettingsInteractor,
-    managerFactory: ConnectionManagerFactory
+        private val view: MainView,
+        private val strategy: CancelStrategy,
+        private val navigator: MainNavigator,
+        private val tokenRepository: TokenRepository,
+        private val serverInteractor: GetCurrentServerInteractor,
+        private val localRepository: LocalRepository,
+        private val navHeaderMapper: NavHeaderUiModelMapper,
+        private val saveAccountInteractor: SaveAccountInteractor,
+        private val getAccountsInteractor: GetAccountsInteractor,
+        private val removeAccountInteractor: RemoveAccountInteractor,
+        private val factory: RocketChatClientFactory,
+        getSettingsInteractor: GetSettingsInteractor,
+        managerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(strategy, factory, view = view) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
@@ -62,7 +62,7 @@ class MainPresenter @Inject constructor(
                 val me = retryIO("me") {
                     client.me()
                 }
-                val model = navHeaderMapper.mapToViewModel(me)
+                val model = navHeaderMapper.mapToUiModel(me)
                 saveAccount(model)
                 view.setupNavHeader(model, getAccountsInteractor.get())
             } catch (ex: Exception) {
@@ -155,16 +155,16 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private suspend fun saveAccount(viewModel: NavHeaderViewModel) {
+    private suspend fun saveAccount(uiModel: NavHeaderUiModel) {
         val icon = settings.favicon()?.let {
             currentServer.serverLogoUrl(it)
         }
         val account = Account(
             currentServer,
             icon,
-            viewModel.serverLogo,
-            viewModel.userDisplayName!!,
-            viewModel.userAvatar
+            uiModel.serverLogo,
+            uiModel.userDisplayName!!,
+            uiModel.userAvatar
         )
         saveAccountInteractor.save(account)
     }
@@ -191,7 +191,7 @@ class MainPresenter @Inject constructor(
     }
 
     private suspend fun updateMyself(myself: Myself) {
-        val model = navHeaderMapper.mapToViewModel(myself)
+        val model = navHeaderMapper.mapToUiModel(myself)
         view.setupNavHeader(model, getAccountsInteractor.get())
     }
 }

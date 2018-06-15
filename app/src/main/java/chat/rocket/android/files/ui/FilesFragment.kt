@@ -15,7 +15,7 @@ import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.files.adapter.FilesAdapter
 import chat.rocket.android.files.presentation.FilesPresenter
 import chat.rocket.android.files.presentation.FilesView
-import chat.rocket.android.files.viewmodel.FileViewModel
+import chat.rocket.android.files.uimodel.FileUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.player.PlayerActivity
@@ -41,7 +41,7 @@ class FilesFragment : Fragment(), FilesView {
     @Inject
     lateinit var presenter: FilesPresenter
     private val adapter: FilesAdapter =
-        FilesAdapter { fileViewModel -> presenter.openFile(fileViewModel) }
+        FilesAdapter { fileUiModel -> presenter.openFile(fileUiModel) }
     private val linearLayoutManager = LinearLayoutManager(context)
     private lateinit var chatRoomId: String
 
@@ -69,7 +69,7 @@ class FilesFragment : Fragment(), FilesView {
         presenter.loadFiles(chatRoomId)
     }
 
-    override fun showFiles(dataSet: List<FileViewModel>, total: Long) {
+    override fun showFiles(dataSet: List<FileUiModel>, total: Long) {
         setupToolbar(total)
         if (adapter.itemCount == 0) {
             adapter.prependData(dataSet)

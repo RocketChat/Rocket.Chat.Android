@@ -1,0 +1,26 @@
+package chat.rocket.android.chatroom.uimodel
+
+import chat.rocket.android.R
+import chat.rocket.core.model.Message
+
+data class MessageUiModel(
+        override val message: Message,
+        override val rawData: Message,
+        override val messageId: String,
+        override val avatar: String,
+        override val time: CharSequence,
+        override val senderName: CharSequence,
+        override val content: CharSequence,
+        override val isPinned: Boolean,
+        override var reactions: List<ReactionUiModel>,
+        override var nextDownStreamMessage: BaseUiModel<*>? = null,
+        override var preview: Message? = null,
+        var isFirstUnread: Boolean,
+        override var isTemporary: Boolean = false
+) : BaseMessageUiModel<Message> {
+    override val viewType: Int
+        get() = BaseUiModel.ViewType.MESSAGE.viewType
+
+    override val layoutId: Int
+        get() = R.layout.item_message
+}
