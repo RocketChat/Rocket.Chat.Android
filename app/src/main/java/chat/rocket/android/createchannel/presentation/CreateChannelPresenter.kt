@@ -2,7 +2,7 @@ package chat.rocket.android.createchannel.presentation
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.main.presentation.MainNavigator
-import chat.rocket.android.members.viewmodel.MemberViewModelMapper
+import chat.rocket.android.members.uimodel.MemberUiModelMapper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class CreateChannelPresenter @Inject constructor(
     private val view: CreateChannelView,
     private val strategy: CancelStrategy,
-    private val mapper: MemberViewModelMapper,
+    private val mapper: MemberUiModelMapper,
     private val navigator: MainNavigator,
     val serverInteractor: GetCurrentServerInteractor,
     val factory: RocketChatClientFactory
@@ -55,7 +55,7 @@ class CreateChannelPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 val users = client.spotlight(query).users
-                val memberViewModelMapper = mapper.mapToViewModelList(users)
+                val memberViewModelMapper = mapper.mapToUiModelList(users)
                 view.showUserSuggestion(memberViewModelMapper)
             } catch (ex: RocketChatException) {
                 ex.message?.let {
