@@ -2,7 +2,7 @@ package chat.rocket.android.createchannel.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.android.members.viewmodel.MemberViewModel
+import chat.rocket.android.members.uimodel.MemberUiModel
 
 interface CreateChannelView : LoadingView, MessageView {
 
@@ -11,7 +11,7 @@ interface CreateChannelView : LoadingView, MessageView {
      *
      * @param dataSet The list of server's users to show.
      */
-    fun showUserSuggestion(dataSet: List<MemberViewModel>)
+    fun showUserSuggestion(dataSet: List<MemberUiModel>)
 
     /**
      * Shows the navigation drawer with the chat item checked before showing the chat list.

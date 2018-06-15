@@ -13,7 +13,7 @@ import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.adapter.MembersAdapter
-import chat.rocket.android.members.viewmodel.MemberViewModel
+import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
@@ -99,7 +99,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         showMessage(getString(R.string.msg_generic_error))
     }
 
-    override fun showUserSuggestion(dataSet: List<MemberViewModel>) {
+    override fun showUserSuggestion(dataSet: List<MemberUiModel>) {
         // Hiding the progress because we are showing it already.
         hideSuggestionViewInProgress()
         if (dataSet.isEmpty()) {
@@ -308,7 +308,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         view_member_suggestion_loading.isVisible = false
     }
 
-    private fun showSuggestionViewResults(dataSet: List<MemberViewModel>) {
+    private fun showSuggestionViewResults(dataSet: List<MemberUiModel>) {
         adapter.clearData()
         adapter.prependData(dataSet)
         text_member_not_found.isVisible = false
