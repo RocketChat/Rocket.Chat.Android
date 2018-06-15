@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".pinnedmessages.ui.PinnedMessagesFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_pinned"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        android:scrollbars="vertical" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/view_loading"
@@ -24,7 +20,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:visibility="gone"
-        app:indicatorColor="@color/black"
+        app:indicatorColor="@color/colorBlack"
         app:indicatorName="BallPulseIndicator"
         app:layout_constraintBottom_toBottomOf="@+id/recycler_view_pinned"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,46 +32,48 @@
         android:id="@+id/iv_pin_icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/ic_pin_black_24dp"
-        android:tint="#AFADAF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_action_message_pin_24dp"
+        android:tint="@color/icon_grey"
         app:layout_constraintBottom_toTopOf="@id/tv_pin_title"
-        app:layout_constraintVertical_chainStyle="packed"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tv_pin_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_pinned_messages"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_pin_icon"
-        app:layout_constraintBottom_toTopOf="@id/tv_pin_description"
-        android:textSize="20sp"
         android:layout_marginTop="24dp"
+        android:text="@string/no_pinned_messages"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#8B8B8B"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        app:layout_constraintBottom_toTopOf="@id/tv_pin_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_pin_icon" />
 
     <TextView
         android:id="@+id/tv_pin_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_pinned_description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_pin_title"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="16dp"
+        android:text="@string/no_pinned_description"
         android:textAlignment="center"
+        android:textColor="@color/colorSecondaryTextLight"
         android:textSize="16sp"
-        android:textColor="#c1c1c1"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_pin_title" />
 
-</android.support.constraint.ConstraintLayout>
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/pin_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_pin_description,iv_pin_icon,tv_pin_title"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

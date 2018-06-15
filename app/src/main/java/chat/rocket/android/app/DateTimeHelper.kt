@@ -12,7 +12,18 @@ object DateTimeHelper {
     private val lastWeek = today.minusWeeks(1)
 
     /**
-     * Returns a date from a [LocalDateTime] or the textual representation if the [LocalDateTime] has a max period of a week from the current date.
+     * Returns a [LocalDateTime] from a [Long].
+     *
+     * @param long The [Long] to gets a [LocalDateTime].
+     * @return The [LocalDateTime] from a [Long].
+     */
+    fun getLocalDateTime(long: Long): LocalDateTime {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(long), ZoneId.systemDefault())
+    }
+
+    /**
+     * Returns a date from a [LocalDateTime] or the textual representation if the [LocalDateTime]
+     * has a max period of a week from the current date.
      *
      * @param localDateTime The [LocalDateTime].
      * @param context The context.
@@ -45,13 +56,18 @@ object DateTimeHelper {
     }
 
     /**
-     * Returns a [LocalDateTime] from a [Long].
+     * Returns a date time from a [LocalDateTime].
      *
-     * @param long The [Long]
-     * @return The [LocalDateTime] from a [Long].
+     * @param localDateTime The [LocalDateTime].
+     * @return The time from a [LocalDateTime].
      */
-    fun getLocalDateTime(long: Long): LocalDateTime {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(long), ZoneId.systemDefault())
+    fun getDateTime(localDateTime: LocalDateTime): String {
+        return formatLocalDateTime(localDateTime)
+    }
+
+    private fun formatLocalDateTime(localDateTime: LocalDateTime): String {
+        val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+        return localDateTime.format(formatter).toString()
     }
 
     private fun formatLocalDate(localDate: LocalDate): String {

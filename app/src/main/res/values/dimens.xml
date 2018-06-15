@@ -5,14 +5,13 @@
     <dimen name="screen_edge_left_and_right_margins">16dp</dimen>
 
     <dimen name="screen_edge_left_and_right_padding">16dp</dimen>
-    <dimen name="chat_item_top_and_bottom_padding">12dp</dimen>
     <dimen name="message_item_top_and_bottom_padding">6dp</dimen>
     <dimen name="member_item_top_and_bottom_padding">6dp</dimen>
 
     <dimen name="edit_text_margin">10dp</dimen>
     <dimen name="edit_text_drawable_padding">16dp</dimen>
 
-    <dimen name="text_view_drawable_padding">4dp</dimen>
+    <dimen name="text_view_drawable_padding">8dp</dimen>
 
     <dimen name="fab_elevation">6dp</dimen>
 
@@ -22,6 +21,10 @@
     <dimen name="message_time_text_size">12sp</dimen>
 
     <dimen name="nav_header_height">140dp</dimen>
+
+    <!-- ChatRoom -->
+    <dimen name="chat_item_top_and_bottom_padding">12dp</dimen>
+
 
     <!-- Emoji -->
     <dimen name="picker_padding_bottom">16dp</dimen>
@@ -37,5 +40,8 @@
     <!-- Autocomplete Popup -->
     <dimen name="popup_max_height">150dp</dimen>
     <dimen name="suggestions_box_max_height">250dp</dimen>
+
+    <dimen name="viewer_toolbar_padding">16dp</dimen>
+    <dimen name="viewer_toolbar_title">16sp</dimen>
 
 </resources>

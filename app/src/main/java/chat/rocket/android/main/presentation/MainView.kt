@@ -24,4 +24,6 @@ interface MainView : MessageView, VersionCheckView {
     fun setupNavHeader(viewModel: NavHeaderViewModel, accounts: List<Account>)
 
     fun closeServerSelection()
+
+    fun invalidateToken(token: String)
 }

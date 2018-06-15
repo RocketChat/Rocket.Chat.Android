@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingBottom="@dimen/member_item_top_and_bottom_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="@dimen/member_item_top_and_bottom_padding">
+
+    <LinearLayout
+        android:id="@+id/image_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_file_thumbnail"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:visibility="gone"
+            app:roundedCornerRadius="3dp" />
+
+        <ImageView
+            android:id="@+id/image_file_media_thumbnail"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/text_file_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_container"
+        app:layout_constraintTop_toTopOf="@+id/image_container"
+        tools:text="File.mp3" />
+
+    <TextView
+        android:id="@+id/text_uploader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/colorSecondaryText"
+        app:layout_constraintBottom_toTopOf="@+id/text_upload_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_container"
+        tools:text="\@filipe.brito" />
+
+    <TextView
+        android:id="@+id/text_upload_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/colorSecondaryTextLight"
+        app:layout_constraintBottom_toBottomOf="@+id/image_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_container"
+        tools:text="Ma 22, 2018 6:42 PM" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

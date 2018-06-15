@@ -2,12 +2,12 @@ package chat.rocket.android.util.extensions
 
 import android.app.Activity
 import android.content.Context
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import chat.rocket.android.R
 
+// TODO: Remove. Use KTX instead.
 fun View.setVisible(visible: Boolean) {
     visibility = if (visible) {
         View.VISIBLE
@@ -28,30 +29,47 @@ fun View.isVisible(): Boolean {
 }
 
 fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): View =
-        LayoutInflater.from(context).inflate(resource, this, attachToRoot)
+    LayoutInflater.from(context).inflate(resource, this, attachToRoot)
 
-fun AppCompatActivity.addFragment(tag: String, layoutId: Int, newInstance: () -> Fragment) {
+fun AppCompatActivity.addFragment(tag: String, layoutId: Int, allowStateLoss: Boolean = false,
+                                  newInstance: () -> Fragment) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
-    supportFragmentManager.beginTransaction()
+    val transaction = supportFragmentManager.beginTransaction()
             .replace(layoutId, fragment, tag)
-            .commit()
+    if (allowStateLoss) {
+        transaction.commitAllowingStateLoss()
+    } else {
+        transaction.commit()
+    }
 }
 
-fun AppCompatActivity.addFragmentBackStack(tag: String, layoutId: Int,
-                                           newInstance: () -> Fragment) {
+fun AppCompatActivity.addFragmentBackStack(
+    tag: String,
+    layoutId: Int,
+    newInstance: () -> Fragment
+) {
     val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
     supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-                    R.anim.enter_from_left, R.anim.exit_to_right)
-            .replace(layoutId, fragment, tag)
-            .addToBackStack(tag)
-            .commit()
+        .setCustomAnimations(
+            R.anim.enter_from_right, R.anim.exit_to_left,
+            R.anim.enter_from_left, R.anim.exit_to_right
+        )
+        .replace(layoutId, fragment, tag)
+        .addToBackStack(tag)
+        .commit()
+}
+
+fun AppCompatActivity.toPreviousView() {
+    supportFragmentManager.popBackStack()
 }
 
 fun Activity.hideKeyboard() {
     if (currentFocus != null) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
+        imm.hideSoftInputFromWindow(
+            currentFocus.windowToken,
+            InputMethodManager.RESULT_UNCHANGED_SHOWN
+        )
     }
 }
 
@@ -61,16 +79,16 @@ fun Activity.showKeyboard(view: View) {
 }
 
 fun Activity.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) =
-        showToast(getString(resource), duration)
+    showToast(getString(resource), duration)
 
 fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) =
-        Toast.makeText(this, message, duration).show()
+    Toast.makeText(this, message, duration).show()
 
 fun Fragment.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) =
-        showToast(getString(resource), duration)
+    showToast(getString(resource), duration)
 
 fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) =
-        activity?.showToast(message, duration)
+    activity?.showToast(message, duration)
 
 fun RecyclerView.isAtBottom(): Boolean {
     val manager: RecyclerView.LayoutManager? = layoutManager

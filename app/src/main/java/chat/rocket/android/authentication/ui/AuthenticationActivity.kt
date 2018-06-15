@@ -3,8 +3,8 @@ package chat.rocket.android.authentication.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
@@ -21,8 +21,10 @@ import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
-    @Inject lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-    @Inject lateinit var presenter: AuthenticationPresenter
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var presenter: AuthenticationPresenter
     val job = Job()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,30 +32,41 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_authentication)
         setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
+    }
 
+    override fun onStart() {
+        super.onStart()
         val deepLinkInfo = intent.getLoginDeepLinkInfo()
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
             // if we got authenticateWithDeepLink information, pass true to newServer also
             presenter.loadCredentials(newServer || deepLinkInfo != null) { authenticated ->
                 if (!authenticated) {
-                    showServerInput(savedInstanceState, deepLinkInfo)
+                    showServerInput(deepLinkInfo)
                 }
             }
         }
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         job.cancel()
-        super.onDestroy()
+        super.onStop()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment != null) {
+            currentFragment.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
     }
 
-    fun showServerInput(savedInstanceState: Bundle?, deepLinkInfo: LoginDeepLinkInfo?) {
-        addFragment("ServerFragment", R.id.fragment_container) {
+    fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
+        addFragment("ServerFragment", R.id.fragment_container, allowStateLoss = true) {
             ServerFragment.newInstance(deepLinkInfo)
         }
     }

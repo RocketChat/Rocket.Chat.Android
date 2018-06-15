@@ -1,6 +1,6 @@
 package chat.rocket.android.widget.autocompletion.ui
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
 import chat.rocket.android.widget.autocompletion.strategy.CompletionStrategy
 import chat.rocket.android.widget.autocompletion.strategy.regex.StringMatchingCompletionStrategy

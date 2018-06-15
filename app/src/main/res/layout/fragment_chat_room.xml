@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
@@ -7,21 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".chatroom.ui.ChatRoomFragment">
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/view_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/black"
-        app:indicatorName="BallPulseIndicator"
-        tools:visibility="visible" />
-
     <FrameLayout
         android:id="@+id/message_list_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/layout_message_composer">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/text_typing_status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <include
             android:id="@+id/layout_message_list"
@@ -31,36 +24,97 @@
 
     </FrameLayout>
 
+    <ImageView
+        android:id="@+id/image_chat_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_chat_black_24dp"
+        android:tint="@color/icon_grey"
+        app:layout_constraintBottom_toTopOf="@id/text_chat_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/text_chat_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/msg_no_chat_title"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/text_chat_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_chat_icon" />
+
+    <TextView
+        android:id="@+id/text_chat_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/msg_no_chat_description"
+        android:textAlignment="center"
+        android:textColor="@color/colorSecondaryTextLight"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_chat_title" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/empty_chat_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="image_chat_icon, text_chat_title, text_chat_description"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <chat.rocket.android.widget.autocompletion.ui.SuggestionsView
         android:id="@+id/suggestions_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_message_composer"
-        android:background="@color/suggestion_background_color" />
+        android:background="@color/suggestion_background_color"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer" />
+
+    <TextView
+        android:id="@+id/text_typing_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:maxLines="2"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
+        app:layout_constraintEnd_toStartOf="parent" />
 
     <include
         android:id="@+id/layout_message_composer"
         layout="@layout/message_composer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <View
         android:id="@+id/view_dim"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layout_message_composer"
         android:background="@color/colorDim"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer" />
 
     <include
         android:id="@+id/layout_message_attachment_options"
         layout="@layout/message_attachment_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_message_composer"
         android:layout_margin="5dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_composer" />
 
     <TextView
         android:id="@+id/connection_status_text"
@@ -71,10 +125,23 @@
         android:elevation="4dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/white"
+        android:textColor="@color/colorWhite"
         android:visibility="gone"
         tools:alpha="1"
         tools:text="connected"
         tools:visibility="visible" />
 
-</RelativeLayout>
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorBlack"
+        app:indicatorName="BallPulseIndicator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

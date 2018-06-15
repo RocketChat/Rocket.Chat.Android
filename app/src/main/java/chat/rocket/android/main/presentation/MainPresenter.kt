@@ -49,7 +49,7 @@ class MainPresenter @Inject constructor(
 
     private val userDataChannel = Channel<Myself>()
 
-    fun toChatList() = navigator.toChatList()
+    fun toChatList(chatRoomId: String? = null) = navigator.toChatList(chatRoomId)
 
     fun toUserProfile() = navigator.toUserProfile()
 
@@ -109,8 +109,6 @@ class MainPresenter @Inject constructor(
             } catch (ex: Exception) {
                 Timber.d(ex, "Error cleaning up the session...")
             }
-
-            navigator.toNewServer()
         }
     }
 
@@ -135,7 +133,7 @@ class MainPresenter @Inject constructor(
         navigator.toServerScreen()
     }
 
-    fun changeStatus(userStatus: UserStatus) {
+    fun changeDefaultStatus(userStatus: UserStatus) {
         launchUI(strategy) {
             try {
                 client.setDefaultStatus(userStatus)
@@ -177,6 +175,7 @@ class MainPresenter @Inject constructor(
         if (pushToken != null) {
             try {
                 retryIO("unregisterPushToken") { client.unregisterPushToken(pushToken) }
+                view.invalidateToken(pushToken)
             } catch (ex: Exception) {
                 Timber.d(ex, "Error unregistering push token")
             }
@@ -186,9 +185,9 @@ class MainPresenter @Inject constructor(
 
     private suspend fun subscribeMyselfUpdates() {
         manager.addUserDataChannel(userDataChannel)
-            for (myself in userDataChannel) {
-                updateMyself(myself)
-            }
+        for (myself in userDataChannel) {
+            updateMyself(myself)
+        }
     }
 
     private suspend fun updateMyself(myself: Myself) {

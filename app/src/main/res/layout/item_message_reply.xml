@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/message_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingBottom="@dimen/message_item_top_and_bottom_padding"
+    android:paddingEnd="@dimen/screen_edge_left_and_right_padding"
+    android:paddingStart="@dimen/screen_edge_left_and_right_padding"
+    android:paddingTop="@dimen/message_item_top_and_bottom_padding">
+
+    <Button
+        android:id="@+id/button_message_reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="56dp"
+        android:background="@drawable/message_reply_button_bg"
+        android:text="@string/action_msg_reply"
+        android:textAllCaps="false"
+        android:textColor="#1D74F5"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <include
+        layout="@layout/layout_reactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/button_message_reply"
+        app:layout_constraintStart_toStartOf="@+id/button_message_reply"
+        app:layout_constraintTop_toBottomOf="@+id/button_message_reply" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

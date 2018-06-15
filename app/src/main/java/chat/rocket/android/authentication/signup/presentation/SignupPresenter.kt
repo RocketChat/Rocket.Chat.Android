@@ -6,12 +6,7 @@ import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.domain.model.Account
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.avatarUrl
-import chat.rocket.android.util.extensions.launchUI
-import chat.rocket.android.util.extensions.privacyPolicyUrl
-import chat.rocket.android.util.extensions.registerPushToken
-import chat.rocket.android.util.extensions.serverLogoUrl
-import chat.rocket.android.util.extensions.termsOfServiceUrl
+import chat.rocket.android.util.extensions.*
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
@@ -22,15 +17,18 @@ import chat.rocket.core.internal.rest.signup
 import chat.rocket.core.model.Myself
 import javax.inject.Inject
 
-class SignupPresenter @Inject constructor(private val view: SignupView,
-                                          private val strategy: CancelStrategy,
-                                          private val navigator: AuthenticationNavigator,
-                                          private val localRepository: LocalRepository,
-                                          private val serverInteractor: GetCurrentServerInteractor,
-                                          private val factory: RocketChatClientFactory,
-                                          private val saveAccountInteractor: SaveAccountInteractor,
-                                          private val getAccountsInteractor: GetAccountsInteractor,
-                                          settingsInteractor: GetSettingsInteractor) {
+class SignupPresenter @Inject constructor(
+    private val view: SignupView,
+    private val strategy: CancelStrategy,
+    private val navigator: AuthenticationNavigator,
+    private val localRepository: LocalRepository,
+    private val serverInteractor: GetConnectingServerInteractor,
+    private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
+    private val factory: RocketChatClientFactory,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    settingsInteractor: GetSettingsInteractor
+) {
     private val currentServer = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(currentServer)
     private var settings: PublicSettings = settingsInteractor.get(serverInteractor.get()!!)
@@ -63,9 +61,11 @@ class SignupPresenter @Inject constructor(private val view: SignupView,
                         // TODO This function returns a user token so should we save it?
                         retryIO("login") { client.login(username, password) }
                         val me = retryIO("me") { client.me() }
+                        saveCurrentServerInteractor.save(currentServer)
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, me.username)
                         saveAccount(me)
                         registerPushToken()
+                        view.saveSmartLockCredentials(username, password)
                         navigator.toChatList()
                     } catch (exception: RocketChatException) {
                         exception.message?.let {

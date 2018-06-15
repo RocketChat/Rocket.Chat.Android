@@ -1,7 +1,7 @@
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.common.model.UserStatus
@@ -108,18 +108,12 @@ object DrawableHelper {
      * @see [UserStatus]
      * @return The user status drawable.
      */
-    fun getUserStatusDrawable(userStatus: UserStatus, context: Context): Drawable {
+    fun getUserStatusDrawable(userStatus: UserStatus?, context: Context): Drawable {
         return when (userStatus) {
-            is UserStatus.Online -> {
-                getDrawableFromId(R.drawable.ic_status_online_24dp, context)
-            }
-            is UserStatus.Away -> {
-                getDrawableFromId(R.drawable.ic_status_away_24dp, context)
-            }
-            is UserStatus.Busy -> {
-                getDrawableFromId(R.drawable.ic_status_busy_24dp, context)
-            }
-            else -> getDrawableFromId(R.drawable.ic_status_invisible_24dp, context)
+            is UserStatus.Online -> getDrawableFromId(R.drawable.ic_status_online_12dp, context)
+            is UserStatus.Away -> getDrawableFromId(R.drawable.ic_status_away_12dp, context)
+            is UserStatus.Busy -> getDrawableFromId(R.drawable.ic_status_busy_12dp, context)
+            else -> getDrawableFromId(R.drawable.ic_status_invisible_12dp, context)
         }
     }
 }

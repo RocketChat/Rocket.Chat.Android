@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.DefaultRenderersFactory
@@ -72,7 +71,6 @@ class PlayerActivity : AppCompatActivity() {
         }
         val uri = Uri.parse(videoUrl)
         val mediaSource = buildMediaSource(uri)
-        Log.d("PlayerActivity", "Player with: " + videoUrl)
         player.prepare(mediaSource, true, false)
     }
 
@@ -94,7 +92,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     companion object {
-        const private val URL_KEY = "URL_KEY"
+        private const val URL_KEY = "URL_KEY"
         fun play(context: Context, url: String) {
             context.startActivity(Intent(context, PlayerActivity::class.java).apply {
                 putExtra(URL_KEY, url)

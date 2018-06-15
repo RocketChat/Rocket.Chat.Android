@@ -1,7 +1,7 @@
 package chat.rocket.android.chatroom.adapter
 
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.method.LinkMovementMethod
 import android.view.View
 import chat.rocket.android.R
@@ -20,7 +20,6 @@ class ColorAttachmentViewHolder(itemView: View,
 
     init {
         with(itemView) {
-            setupActionMenu(attachment_text)
             setupActionMenu(color_attachment_container)
             attachment_text.movementMethod = LinkMovementMethod()
         }

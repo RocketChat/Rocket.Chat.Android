@@ -3,7 +3,7 @@ package chat.rocket.android.authentication.server.ui
 import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +20,7 @@ import chat.rocket.android.util.extensions.*
 import chat.rocket.common.util.ifNull
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_authentication_server.*
+import okhttp3.HttpUrl
 import javax.inject.Inject
 
 class ServerFragment : Fragment(), ServerView {
@@ -41,6 +42,7 @@ class ServerFragment : Fragment(), ServerView {
     }
 
     private var protocol = "https://"
+    private var ignoreChange = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,22 +74,27 @@ class ServerFragment : Fragment(), ServerView {
                         protocol = "https://"
                     }
                     1 -> {
-                        ui{
-                            AlertDialog.Builder(it)
-                                    .setTitle(R.string.msg_warning)
-                                    .setMessage(R.string.msg_http_insecure)
-                                    .setPositiveButton(R.string.msg_proceed) { _, _ ->
-                                        protocol = "http://"
-                                    }
-                                    .setNegativeButton(R.string.msg_cancel) { _, _ ->
-                                        text_server_protocol.setSelection(0)
-                                    }
-                                    .setCancelable(false)
-                                    .create()
-                                    .show()
+                        if (ignoreChange) {
+                            protocol = "http://"
+                        } else {
+                            ui {
+                                AlertDialog.Builder(it)
+                                        .setTitle(R.string.msg_warning)
+                                        .setMessage(R.string.msg_http_insecure)
+                                        .setPositiveButton(R.string.msg_proceed) { _, _ ->
+                                            protocol = "http://"
+                                        }
+                                        .setNegativeButton(R.string.msg_cancel) { _, _ ->
+                                            text_server_protocol.setSelection(0)
+                                        }
+                                        .setCancelable(false)
+                                        .create()
+                                        .show()
+                            }
                         }
                     }
                 }
+                ignoreChange = false
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -174,13 +181,23 @@ class ServerFragment : Fragment(), ServerView {
         showMessage(R.string.msg_invalid_server_protocol)
     }
 
+    override fun updateServerUrl(url: HttpUrl) {
+        if (activity != null && view != null) {
+            if (url.scheme() == "https") text_server_protocol.setSelection(0) else text_server_protocol.setSelection(1)
+            protocol = "${url.scheme()}://"
+
+            val serverUrl = url.toString().removePrefix("${url.scheme()}://")
+            text_server_url.textContent = serverUrl
+        }
+    }
+
     private fun performConnect() {
         ui {
             deepLinkInfo?.let {
                 presenter.deepLink(it)
             }.ifNull {
                 val url = text_server_url.textContent.ifEmpty(text_server_url.hintContent)
-                presenter.connect("${protocol}${url.sanitize()}")
+                presenter.connect("$protocol${url.sanitize()}")
             }
         }
     }
