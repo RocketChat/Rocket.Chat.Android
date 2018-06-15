@@ -4,15 +4,15 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import chat.rocket.android.R
-import chat.rocket.android.members.viewmodel.MemberViewModel
+import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.inflate
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_member.view.*
 
-class MembersAdapter(private val listener: (MemberViewModel) -> Unit) :
+class MembersAdapter(private val listener: (MemberUiModel) -> Unit) :
     RecyclerView.Adapter<MembersAdapter.ViewHolder>() {
-    private var dataSet = emptyList<MemberViewModel>()
+    private var dataSet: List<MemberUiModel> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MembersAdapter.ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_member))
@@ -28,12 +28,12 @@ class MembersAdapter(private val listener: (MemberViewModel) -> Unit) :
         notifyItemRangeRemoved(0, itemCount)
     }
 
-    fun prependData(dataSet: List<MemberViewModel>) {
+    fun prependData(dataSet: List<MemberUiModel>) {
         this.dataSet = dataSet
         notifyItemRangeInserted(0, dataSet.size)
     }
 
-    fun appendData(dataSet: List<MemberViewModel>) {
+    fun appendData(dataSet: List<MemberUiModel>) {
         val previousDataSetSize = this.dataSet.size
         this.dataSet += dataSet
         notifyItemRangeInserted(previousDataSetSize, dataSet.size)
@@ -41,11 +41,10 @@ class MembersAdapter(private val listener: (MemberViewModel) -> Unit) :
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(memberViewModel: MemberViewModel, listener: (MemberViewModel) -> Unit) =
-            with(itemView) {
-                image_avatar.setImageURI(memberViewModel.avatarUri)
-                text_member.content = memberViewModel.displayName
-                setOnClickListener { listener(memberViewModel) }
-            }
+        fun bind(memberUiModel: MemberUiModel, listener: (MemberUiModel) -> Unit) = with(itemView) {
+            image_avatar.setImageURI(memberUiModel.avatarUri)
+            text_member.content = memberUiModel.displayName
+            setOnClickListener { listener(memberUiModel) }
+        }
     }
 }

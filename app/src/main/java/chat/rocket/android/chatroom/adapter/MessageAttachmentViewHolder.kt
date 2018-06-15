@@ -2,7 +2,7 @@ package chat.rocket.android.chatroom.adapter
 
 import android.text.method.LinkMovementMethod
 import android.view.View
-import chat.rocket.android.chatroom.viewmodel.MessageAttachmentViewModel
+import chat.rocket.android.chatroom.uimodel.MessageAttachmentUiModel
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.item_message_attachment.view.*
 
@@ -10,7 +10,7 @@ class MessageAttachmentViewHolder(
         itemView: View,
         listener: ActionsListener,
         reactionListener: EmojiReactionListener? = null
-) : BaseViewHolder<MessageAttachmentViewModel>(itemView, listener, reactionListener) {
+) : BaseViewHolder<MessageAttachmentUiModel>(itemView, listener, reactionListener) {
 
     init {
         with(itemView) {
@@ -19,7 +19,7 @@ class MessageAttachmentViewHolder(
         }
     }
 
-    override fun bindViews(data: MessageAttachmentViewModel) {
+    override fun bindViews(data: MessageAttachmentUiModel) {
         with(itemView) {
             text_message_time.text = data.time
             text_sender.text = data.senderName

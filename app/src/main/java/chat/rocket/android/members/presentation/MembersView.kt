@@ -2,7 +2,7 @@ package chat.rocket.android.members.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 import chat.rocket.android.core.behaviours.MessageView
-import chat.rocket.android.members.viewmodel.MemberViewModel
+import chat.rocket.android.members.uimodel.MemberUiModel
 
 interface MembersView: LoadingView, MessageView {
 
@@ -12,5 +12,5 @@ interface MembersView: LoadingView, MessageView {
      * @param dataSet The data set to show.
      * @param total The total number of members.
      */
-    fun showMembers(dataSet: List<MemberViewModel>, total: Long)
+    fun showMembers(dataSet: List<MemberUiModel>, total: Long)
 }
