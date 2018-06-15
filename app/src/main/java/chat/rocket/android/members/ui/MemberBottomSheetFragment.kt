@@ -1,7 +1,7 @@
 package chat.rocket.android.members.ui
 
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,11 @@ import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
 import kotlinx.android.synthetic.main.fragment_member_bottom_sheet.*
 
-fun newInstance(avatarUri: String, realName: String, username: String, email: String, utcOffset: String): BottomSheetDialogFragment {
+fun newInstance(avatarUri: String,
+                realName: String,
+                username: String,
+                email: String,
+                utcOffset: String): BottomSheetDialogFragment {
     return MemberBottomSheetFragment().apply {
         arguments = Bundle(1).apply {
             putString(BUNDLE_AVATAR_URI, avatarUri)

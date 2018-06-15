@@ -27,7 +27,7 @@ interface SignupView : LoadingView, MessageView {
     fun alertBlankEmail()
 
     /**
-     * Save credentials via google smart lock
+     * Saves Google Smart Lock credentials.
      */
-    fun saveSmartLockCredentials(loginCredential: Credential)
+    fun saveSmartLockCredentials(id: String, password: String)
 }

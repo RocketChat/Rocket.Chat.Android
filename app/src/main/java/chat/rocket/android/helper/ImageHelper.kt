@@ -7,8 +7,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.media.MediaScannerConnection
 import android.os.Environment
-import android.support.design.widget.AppBarLayout
-import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
@@ -16,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.core.view.setPadding
 import chat.rocket.android.R
@@ -26,6 +25,7 @@ import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.google.android.material.appbar.AppBarLayout
 import com.stfalcon.frescoimageviewer.ImageViewer
 import timber.log.Timber
 import java.io.File
@@ -53,7 +53,6 @@ object ImageHelper {
         )
         val toolbar = Toolbar(context).also {
             it.inflateMenu(R.menu.image_actions)
-            it.overflowIcon?.setTint(Color.WHITE)
             it.setOnMenuItemClickListener {
                 return@setOnMenuItemClickListener when (it.itemId) {
                     R.id.action_save_image -> saveImage(context)
@@ -109,7 +108,6 @@ object ImageHelper {
             .hideStatusBar(false)
             .setCustomDraweeControllerBuilder(builder)
             .show()
-
     }
 
     private fun saveImage(context: Context): Boolean {
@@ -166,5 +164,4 @@ object ImageHelper {
             )
         }
     }
-
 }

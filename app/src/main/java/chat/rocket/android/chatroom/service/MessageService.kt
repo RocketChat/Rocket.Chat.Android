@@ -64,7 +64,7 @@ class MessageService : JobService() {
                     Timber.e(ex)
                     // TODO - remove the generic message when we implement :userId:/message subscription
                     if (ex is IllegalStateException) {
-                        Timber.d(ex, "Probably a read-only problem...")
+                        Timber.e(ex, "Probably a read-only problem...")
                         // TODO: For now we are only going to reschedule when api is fixed.
                         messageRepository.removeById(message.id)
                         jobFinished(params, false)

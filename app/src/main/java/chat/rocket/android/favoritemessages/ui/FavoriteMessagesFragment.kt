@@ -1,14 +1,14 @@
 package chat.rocket.android.favoritemessages.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
@@ -68,17 +68,16 @@ class FavoriteMessagesFragment : Fragment(), FavoriteMessagesView {
             if (recycler_view.adapter == null) {
                 adapter = ChatRoomAdapter(enableActions = false)
                 recycler_view.adapter = adapter
-                val linearLayoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                val linearLayoutManager = LinearLayoutManager(context)
                 recycler_view.layoutManager = linearLayoutManager
                 recycler_view.itemAnimator = DefaultItemAnimator()
-                if (favoriteMessages.size > 10) {
+                if (favoriteMessages.size >= 30) {
                     recycler_view.addOnScrollListener(object :
                         EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         override fun onLoadMore(
                             page: Int,
                             totalItemsCount: Int,
-                            recyclerView: RecyclerView?
+                            recyclerView: RecyclerView
                         ) {
                             presenter.loadFavoriteMessages(chatRoomId)
                         }

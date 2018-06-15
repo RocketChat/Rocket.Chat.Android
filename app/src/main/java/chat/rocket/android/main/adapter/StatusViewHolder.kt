@@ -1,6 +1,6 @@
 package chat.rocket.android.main.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import chat.rocket.common.model.UserStatus
 import kotlinx.android.synthetic.main.item_change_status.view.*

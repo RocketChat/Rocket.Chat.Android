@@ -4,7 +4,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.server.presentation.ChangeServerPresenter
 import chat.rocket.android.server.presentation.ChangeServerView
 import chat.rocket.android.util.extensions.showToast
@@ -21,7 +21,8 @@ class ChangeServerActivity : AppCompatActivity(), ChangeServerView {
         super.onCreate(savedInstanceState)
 
         val serverUrl: String? = intent.getStringExtra(INTENT_SERVER_URL)
-        presenter.loadServer(serverUrl)
+        val chatRoomId: String? = intent.getStringExtra(INTENT_CHAT_ROOM_ID)
+        presenter.loadServer(serverUrl, chatRoomId)
     }
 
     override fun showInvalidCredentials() {
@@ -40,11 +41,13 @@ class ChangeServerActivity : AppCompatActivity(), ChangeServerView {
 private const val INTENT_SERVER_URL = "INTENT_SERVER_URL"
 private const val INTENT_CHAT_ROOM_NAME = "INTENT_CHAT_ROOM_NAME"
 private const val INTENT_CHAT_ROOM_TYPE = "INTENT_CHAT_ROOM_TYPE"
+const val INTENT_CHAT_ROOM_ID = "INTENT_CHAT_ROOM_ID"
 
-fun Context.changeServerIntent(serverUrl: String? = null): Intent {
+fun Context.changeServerIntent(serverUrl: String? = null, chatRoomId: String? = ""): Intent {
     return Intent(this, ChangeServerActivity::class.java).apply {
         serverUrl?.let { url ->
             putExtra(INTENT_SERVER_URL, url)
+            putExtra(INTENT_CHAT_ROOM_ID, chatRoomId)
         }
         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }

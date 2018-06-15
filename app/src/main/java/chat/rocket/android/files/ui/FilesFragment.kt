@@ -3,13 +3,13 @@ package chat.rocket.android.files.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.files.adapter.FilesAdapter
@@ -42,8 +42,7 @@ class FilesFragment : Fragment(), FilesView {
     lateinit var presenter: FilesPresenter
     private val adapter: FilesAdapter =
         FilesAdapter { fileViewModel -> presenter.openFile(fileViewModel) }
-    private val linearLayoutManager =
-        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    private val linearLayoutManager = LinearLayoutManager(context)
     private lateinit var chatRoomId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,12 +79,13 @@ class FilesFragment : Fragment(), FilesView {
                     override fun onLoadMore(
                         page: Int,
                         totalItemsCount: Int,
-                        recyclerView: RecyclerView?
+                        recyclerView: RecyclerView
                     ) {
                         presenter.loadFiles(chatRoomId)
                     }
                 })
             }
+            group_no_file.isVisible = dataSet.isEmpty()
         } else {
             adapter.appendData(dataSet)
 
@@ -94,17 +94,13 @@ class FilesFragment : Fragment(), FilesView {
 
     override fun playMedia(url: String) {
         ui {
-            activity?.let {
-                PlayerActivity.play(it, url)
-            }
+            PlayerActivity.play(it, url)
         }
     }
 
     override fun openImage(url: String, name: String) {
         ui {
-            activity?.let {
-                ImageHelper.openImage(it, url, name)
-            }
+            ImageHelper.openImage(root_layout.context, url, name)
         }
     }
 

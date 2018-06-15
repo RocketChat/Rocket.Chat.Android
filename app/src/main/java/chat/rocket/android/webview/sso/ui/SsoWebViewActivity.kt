@@ -6,7 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import chat.rocket.android.R
@@ -41,6 +42,8 @@ class SsoWebViewActivity : AppCompatActivity() {
         casToken = intent.getStringExtra(INTENT_SSO_TOKEN)
         requireNotNull(casToken) { "no cas_token provided in Intent extras" }
 
+        // Ensures that the cookies is always removed when opening the webview.
+        CookieManager.getInstance().removeAllCookies(null)
         setupToolbar()
     }
 
