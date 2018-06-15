@@ -42,7 +42,7 @@ ext {
             //For wearable
             wear                  : '2.3.0',
             playServicesWearable  : '15.0.1',
-            supportWearable       : '26.1.0'
+            supportWearable       : '27.1.1'
     ]
     libraries = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",
@@ -117,7 +117,7 @@ ext {
             wearable              : "com.google.android.support:wearable:${versions.wear}",
             playServicesWearable  : "com.google.android.gms:play-services-wearable:${versions.playServicesWearable}",
             percentLayout         : "com.android.support:percent:${versions.supportWearable}",
-            supportWearable       : "com.android.support:support-v4:${versions.supportWearable}",
+            supportWearable       : "com.android.support:support-v13:${versions.supportWearable}",
             wearableRecyclerView  : "com.android.support:recyclerview-v7:${versions.supportWearable}",
             wearSupport           : "com.android.support:wear:${versions.supportWearable}"
     ]

@@ -309,7 +309,7 @@ class LoginFragment : Fragment(), LoginView, GoogleApiClient.ConnectionCallbacks
             Toast.makeText(activity, "Complete", Toast.LENGTH_SHORT).show()
         }
         sendTokenTask.addOnFailureListener { result ->
-            Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, result.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
