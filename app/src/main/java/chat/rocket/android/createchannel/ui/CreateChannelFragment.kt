@@ -1,14 +1,13 @@
 package chat.rocket.android.createchannel.ui
 
 import android.os.Bundle
-import android.support.design.chip.Chip
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
-import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
@@ -21,6 +20,8 @@ import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.roomTypeOf
+import com.google.android.material.chip.Chip
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -38,7 +39,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         }
     }
     private val compositeDisposable = CompositeDisposable()
-    private var channelType: RoomType = RoomType.CHANNEL
+    private var channelType: String = RoomType.CHANNEL
     private var isChannelReadOnly: Boolean = false
     private var memberList = arrayListOf<String>()
 
@@ -145,7 +146,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         return when (menuItem.itemId) {
             R.id.action_create_channel -> {
                 createChannelPresenter.createChannel(
-                    channelType,
+                    roomTypeOf(channelType),
                     text_channel_name.text.toString(),
                     memberList,
                     isChannelReadOnly
@@ -234,7 +235,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     private fun startActionMode() {
         if (actionMode == null) {
-            actionMode = (activity as MainActivity).startSupportActionMode(this)
+            actionMode = (activity as AppCompatActivity).startSupportActionMode(this)
         }
     }
 

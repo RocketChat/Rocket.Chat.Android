@@ -12,10 +12,10 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.RequiresApi
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
-import android.support.v4.app.RemoteInput
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.RemoteInput
 import android.text.Html
 import android.text.Spanned
 import chat.rocket.android.R
@@ -301,7 +301,7 @@ class PushManager @Inject constructor(
     private fun getContentIntent(context: Context, notificationId: Int, pushMessage: PushMessage, grouped: Boolean = false): PendingIntent {
         val notificationIntent = context.changeServerIntent(pushMessage.info.host, chatRoomId = pushMessage.info.roomId)
         // TODO - add support to go directly to the chatroom
-        /*if (!grouped) {
+        /*if (!isGrouped) {
             notificationIntent.putExtra(EXTRA_ROOM_ID, pushMessage.info.roomId)
         }*/
         return PendingIntent.getActivity(context, random.nextInt(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -467,7 +467,7 @@ data class PushInfo @KotshiConstructor constructor(
     }
 
     companion object CREATOR : Parcelable.Creator<PushInfo> {
-        val EMPTY = PushInfo(hostname = "", roomId = "", type = RoomType.CHANNEL, name = "",
+        val EMPTY = PushInfo(hostname = "", roomId = "", type = roomTypeOf(RoomType.CHANNEL), name = "",
             sender = null)
 
         override fun createFromParcel(parcel: Parcel): PushInfo {

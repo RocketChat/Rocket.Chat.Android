@@ -1,6 +1,6 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.ViewGroup
 import chat.rocket.android.R

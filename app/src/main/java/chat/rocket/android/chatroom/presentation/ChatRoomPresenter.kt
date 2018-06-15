@@ -445,7 +445,7 @@ class ChatRoomPresenter @Inject constructor(
                     is RoomType.DirectMessage -> "direct"
                     is RoomType.PrivateGroup -> "group"
                     is RoomType.Channel -> "channel"
-                    is RoomType.Livechat -> "livechat"
+                    is RoomType.LiveChat -> "livechat"
                     else -> "custom"
                 }
                 view.showReplyingAction(
@@ -658,7 +658,7 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 val chatRooms = chatRoomsInteractor.getAll(currentServer)
                     .filterNot {
-                        it.type is RoomType.DirectMessage || it.type is RoomType.Livechat
+                        it.type is RoomType.DirectMessage || it.type is RoomType.LiveChat
                     }
                     .map { chatRoom ->
                         val name = chatRoom.name

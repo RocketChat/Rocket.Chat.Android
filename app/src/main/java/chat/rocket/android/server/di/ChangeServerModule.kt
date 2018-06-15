@@ -1,8 +1,9 @@
 package chat.rocket.android.server.di
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerActivity
+import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.server.presentation.ChangeServerNavigator
 import chat.rocket.android.server.presentation.ChangeServerView
 import chat.rocket.android.server.ui.ChangeServerActivity
@@ -12,6 +13,11 @@ import kotlinx.coroutines.experimental.Job
 
 @Module
 class ChangeServerModule {
+
+    @Provides
+    @PerActivity
+    fun provideJob() = Job()
+
     @Provides
     @PerActivity
     fun provideChangeServerNavigator(activity: ChangeServerActivity) = ChangeServerNavigator(activity)

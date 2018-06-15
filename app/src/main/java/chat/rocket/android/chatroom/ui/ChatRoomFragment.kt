@@ -8,11 +8,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.DrawableRes
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.DrawableRes
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableStringBuilder
 import android.view.*
 import androidx.core.text.bold
@@ -526,8 +526,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onNonEmojiKeyPressed(keyCode: Int) {
         when (keyCode) {
-            KeyEvent.KEYCODE_BACK -> {
-                if (text_message.selectionStart > 0) text_message.text!!.delete(text_message.selectionStart - 1, text_message.selectionStart)
+            KeyEvent.KEYCODE_BACK -> with(text_message) {
+                if (selectionStart > 0) text?.delete(selectionStart - 1, selectionStart)
             }
             else -> throw IllegalArgumentException("pressed key not expected")
         }
@@ -616,13 +616,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupRecyclerView() {
         // Initialize the endlessRecyclerViewScrollListener so we don't NPE at onDestroyView
-        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        val linearLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
         linearLayoutManager.stackFromEnd = true
         recycler_view.layoutManager = linearLayoutManager
         recycler_view.itemAnimator = DefaultItemAnimator()
         endlessRecyclerViewScrollListener = object :
             EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
                 presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }
         }
@@ -641,7 +641,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         if (isChatRoomReadOnly && !canPost) {
             text_room_is_read_only.setVisible(true)
             input_container.setVisible(false)
-        } else if (!isSubscribed && roomTypeOf(chatRoomType) != RoomType.DIRECT_MESSAGE) {
+        } else if (!isSubscribed && roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
             input_container.setVisible(false)
             button_join_chat.setVisible(true)
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }

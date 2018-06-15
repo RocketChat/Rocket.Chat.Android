@@ -1,8 +1,8 @@
 package chat.rocket.android.chatroom.ui.bottomsheet.adapter
 
 import android.graphics.Color
-import android.support.annotation.ColorInt
-import android.support.annotation.IdRes
+import androidx.annotation.ColorInt
+import androidx.annotation.IdRes
 import android.util.SparseIntArray
 import android.view.MenuItem
 import chat.rocket.android.R

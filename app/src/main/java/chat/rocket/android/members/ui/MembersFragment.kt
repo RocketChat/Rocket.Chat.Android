@@ -1,9 +1,10 @@
 package chat.rocket.android.members.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,9 +37,9 @@ private const val BUNDLE_CHAT_ROOM_ID = "chat_room_id"
 class MembersFragment : Fragment(), MembersView {
     @Inject
     lateinit var presenter: MembersPresenter
-    private val adapter: MembersAdapter = MembersAdapter { presenter.toMemberDetails(it) }
-    private val linearLayoutManager =
-        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    private val adapter: MembersAdapter =
+        MembersAdapter { memberViewModel -> presenter.toMemberDetails(memberViewModel) }
+    private val linearLayoutManager = LinearLayoutManager(context)
     private lateinit var chatRoomId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +77,7 @@ class MembersFragment : Fragment(), MembersView {
                         override fun onLoadMore(
                             page: Int,
                             totalItemsCount: Int,
-                            recyclerView: RecyclerView?
+                            recyclerView: RecyclerView
                         ) {
                             presenter.loadChatRoomsMembers(chatRoomId)
                         }

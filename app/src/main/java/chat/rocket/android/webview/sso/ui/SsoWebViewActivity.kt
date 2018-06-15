@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient

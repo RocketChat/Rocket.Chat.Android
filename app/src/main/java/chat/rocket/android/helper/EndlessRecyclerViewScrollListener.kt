@@ -1,9 +1,9 @@
 package chat.rocket.android.helper
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 /**
  * Info: https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView
@@ -106,5 +106,5 @@ abstract class EndlessRecyclerViewScrollListener : RecyclerView.OnScrollListener
     }
 
     // Defines the process for actually loading more data based on page
-    abstract fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView?)
+    abstract fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView)
 }

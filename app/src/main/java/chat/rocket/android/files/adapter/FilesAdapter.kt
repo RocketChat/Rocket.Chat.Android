@@ -1,9 +1,9 @@
 package chat.rocket.android.files.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.files.viewmodel.FileViewModel
 import chat.rocket.android.util.extensions.inflate

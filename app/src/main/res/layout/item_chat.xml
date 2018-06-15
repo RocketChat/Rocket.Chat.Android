@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,8 +27,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/text_chat_name"
         app:layout_constraintStart_toEndOf="@+id/image_avatar"
         app:layout_constraintTop_toTopOf="@+id/text_chat_name"
-        tools:src="@drawable/ic_hashtag_black_12dp" />
-
+        tools:src="@drawable/ic_hashtag_unread_12dp" />
 
     <TextView
         android:id="@+id/text_last_message"
@@ -58,6 +57,7 @@
         android:lines="1"
         android:maxLines="1"
         android:textDirection="locale"
+        android:textColor="@color/colorSecondaryText"
         app:layout_constraintBottom_toTopOf="@+id/text_last_message"
         app:layout_constraintEnd_toStartOf="@+id/text_last_message_date_time"
         app:layout_constraintStart_toEndOf="@+id/image_chat_icon"
@@ -76,7 +76,6 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textDirection="locale"
-        tools:visibility="visible"
         app:layout_constraintEnd_toStartOf="@+id/layout_unread_messages_badge"
         app:layout_constraintTop_toTopOf="@+id/text_chat_name"
         tools:text="11:45 AM" />
@@ -89,4 +88,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_chat_name" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
