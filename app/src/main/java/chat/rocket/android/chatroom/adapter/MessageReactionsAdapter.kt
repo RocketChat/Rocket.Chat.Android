@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.viewmodel.ReactionViewModel
+import chat.rocket.android.chatroom.uimodel.ReactionUiModel
 import chat.rocket.android.dagger.DaggerLocalComponent
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.widget.emoji.Emoji
@@ -23,7 +23,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         private const val ADD_REACTION_VIEW_TYPE = 1
     }
 
-    private val reactions = CopyOnWriteArrayList<ReactionViewModel>()
+    private val reactions = CopyOnWriteArrayList<ReactionUiModel>()
     var listener: EmojiReactionListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -59,7 +59,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         return REACTION_VIEW_TYPE
     }
 
-    fun addReactions(reactions: List<ReactionViewModel>) {
+    fun addReactions(reactions: List<ReactionUiModel>) {
         this.reactions.clear()
         this.reactions.addAllAbsent(reactions)
         notifyItemRangeInserted(0, reactions.size)
@@ -78,7 +78,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                                    private val listener: EmojiReactionListener?)
         : RecyclerView.ViewHolder(view), View.OnClickListener {
         @Inject lateinit var localRepository: LocalRepository
-        @Volatile lateinit var reaction: ReactionViewModel
+        @Volatile lateinit var reaction: ReactionUiModel
         @Volatile
         var clickHandled = false
 
@@ -89,7 +89,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
                     .inject(this)
         }
 
-        fun bind(reaction: ReactionViewModel) {
+        fun bind(reaction: ReactionUiModel) {
             clickHandled = false
             this.reaction = reaction
             with(itemView) {

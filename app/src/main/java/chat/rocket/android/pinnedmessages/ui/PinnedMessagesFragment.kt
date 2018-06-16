@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
-import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesPresenter
 import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesView
@@ -65,7 +65,7 @@ class PinnedMessagesFragment : Fragment(), PinnedMessagesView {
         presenter.loadPinnedMessages(chatRoomId)
     }
 
-    override fun showPinnedMessages(pinnedMessages: List<BaseViewModel<*>>) {
+    override fun showPinnedMessages(pinnedMessages: List<BaseUiModel<*>>) {
         ui {
             if (recycler_view_pinned.adapter == null) {
                 adapter = ChatRoomAdapter(enableActions = false)
