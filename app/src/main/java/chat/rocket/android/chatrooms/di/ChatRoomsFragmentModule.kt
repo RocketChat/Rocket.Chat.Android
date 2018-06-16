@@ -2,7 +2,7 @@ package chat.rocket.android.chatrooms.di
 
 import android.app.Application
 import androidx.lifecycle.LifecycleOwner
-import chat.rocket.android.chatrooms.adapter.RoomMapper
+import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
@@ -87,7 +87,7 @@ class ChatRoomsFragmentModule {
     fun provideRoomMapper(context: Application,
                           repository: SettingsRepository,
                           localRepository: LocalRepository,
-                          @Named("currentServer") serverUrl: String): RoomMapper {
-        return RoomMapper(context, repository.get(serverUrl), localRepository, serverUrl)
+                          @Named("currentServer") serverUrl: String): RoomUiModelMapper {
+        return RoomUiModelMapper(context, repository.get(serverUrl), localRepository, serverUrl)
     }
 }

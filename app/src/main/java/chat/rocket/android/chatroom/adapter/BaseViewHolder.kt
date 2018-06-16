@@ -8,7 +8,7 @@ import androidx.core.view.children
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
-import chat.rocket.android.chatroom.viewmodel.BaseViewModel
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.widget.emoji.Emoji
 import chat.rocket.android.widget.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
@@ -18,7 +18,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import ru.whalemare.sheetmenu.extension.inflate
 import ru.whalemare.sheetmenu.extension.toList
 
-abstract class BaseViewHolder<T : BaseViewModel<*>>(
+abstract class BaseViewHolder<T : BaseUiModel<*>>(
     itemView: View,
     private val listener: ActionsListener,
     var reactionListener: EmojiReactionListener? = null

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter.CommandSuggestionsViewHolder
-import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
+import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.widget.autocompletion.model.SuggestionModel
 import chat.rocket.android.widget.autocompletion.ui.BaseSuggestionViewHolder
 import chat.rocket.android.widget.autocompletion.ui.SuggestionsAdapter
@@ -23,7 +23,7 @@ class CommandSuggestionsAdapter : SuggestionsAdapter<CommandSuggestionsViewHolde
     class CommandSuggestionsViewHolder(view: View) : BaseSuggestionViewHolder(view) {
 
         override fun bind(item: SuggestionModel, itemClickListener: SuggestionsAdapter.ItemClickListener?) {
-            item as CommandSuggestionViewModel
+            item as CommandSuggestionUiModel
             with(itemView) {
                 val nameTextView = itemView.findViewById<TextView>(R.id.text_command_name)
                 val descriptionTextView = itemView.findViewById<TextView>(R.id.text_command_description)

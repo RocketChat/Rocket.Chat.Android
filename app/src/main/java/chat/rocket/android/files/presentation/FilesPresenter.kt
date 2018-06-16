@@ -2,8 +2,8 @@ package chat.rocket.android.files.presentation
 
 import androidx.core.net.toUri
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.files.viewmodel.FileViewModel
-import chat.rocket.android.files.viewmodel.FileViewModelMapper
+import chat.rocket.android.files.uimodel.FileUiModel
+import chat.rocket.android.files.uimodel.FileUiModelMapper
 import chat.rocket.android.server.domain.ChatRoomsInteractor
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
@@ -15,12 +15,12 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class FilesPresenter @Inject constructor(
-    private val view: FilesView,
-    private val strategy: CancelStrategy,
-    private val roomsInteractor: ChatRoomsInteractor,
-    private val mapper: FileViewModelMapper,
-    val serverInteractor: GetCurrentServerInteractor,
-    val factory: RocketChatClientFactory
+        private val view: FilesView,
+        private val strategy: CancelStrategy,
+        private val roomsInteractor: ChatRoomsInteractor,
+        private val mapper: FileUiModelMapper,
+        val serverInteractor: GetCurrentServerInteractor,
+        val factory: RocketChatClientFactory
 ) {
     private val serverUrl = serverInteractor.get()!!
     private val client = factory.create(serverUrl)
@@ -37,8 +37,8 @@ class FilesPresenter @Inject constructor(
                 view.showLoading()
                 roomsInteractor.getById(serverUrl, roomId)?.let {
                     val files = client.getFiles(roomId, it.type, offset)
-                    val filesViewModel = mapper.mapToViewModelList(files.result)
-                    view.showFiles(filesViewModel, files.total)
+                    val filesUiModel = mapper.mapToUiModelList(files.result)
+                    view.showFiles(filesUiModel, files.total)
                     offset += 1 * 30
                 }.ifNull {
                     Timber.e("Couldn't find a room with id: $roomId at current server.")
@@ -56,15 +56,15 @@ class FilesPresenter @Inject constructor(
         }
     }
 
-    fun openFile(fileViewModel: FileViewModel) {
+    fun openFile(fileUiModel: FileUiModel) {
         when {
-            fileViewModel.isImage -> fileViewModel.url?.let {
-                view.openImage(it, fileViewModel.name ?: "")
+            fileUiModel.isImage -> fileUiModel.url?.let {
+                view.openImage(it, fileUiModel.name ?: "")
             }
-            fileViewModel.isMedia -> fileViewModel.url?.let {
+            fileUiModel.isMedia -> fileUiModel.url?.let {
                 view.playMedia(it)
             }
-            else -> fileViewModel.url?.let {
+            else -> fileUiModel.url?.let {
                 view.openDocument(it.toUri())
             }
         }

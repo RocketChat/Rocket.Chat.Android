@@ -21,15 +21,24 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.*
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
-import chat.rocket.android.chatroom.viewmodel.BaseViewModel
-import chat.rocket.android.chatroom.viewmodel.MessageViewModel
-import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
-import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
-import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
+import chat.rocket.android.chatroom.uimodel.MessageUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
+import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.asObservable
+import chat.rocket.android.util.extensions.circularRevealOrUnreveal
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.hideKeyboard
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.rotateBy
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.android.widget.emoji.*
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
@@ -220,26 +229,26 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         return true
     }
 
-    override fun showMessages(dataSet: List<BaseViewModel<*>>) {
+    override fun showMessages(dataSet: List<BaseUiModel<*>>) {
         ui {
             // track the message sent immediately after the current message
-            var prevMessageViewModel: MessageViewModel? = null
+            var prevMessageUiModel: MessageUiModel? = null
 
             // Loop over received messages to determine first unread
             for (i in dataSet.indices) {
                 val msgModel = dataSet[i]
 
-                if (msgModel is MessageViewModel) {
+                if (msgModel is MessageUiModel) {
                     val msg = msgModel.rawData
                     if (msg.timestamp < chatRoomLastSeen) {
                         // This message was sent before the last seen of the room. Hence, it was seen.
                         // if there is a message after (below) this, mark it firstUnread.
-                        if (prevMessageViewModel != null) {
-                            prevMessageViewModel.isFirstUnread = true
+                        if (prevMessageUiModel != null) {
+                            prevMessageUiModel.isFirstUnread = true
                         }
                         break
                     }
-                    prevMessageViewModel = msgModel
+                    prevMessageUiModel = msgModel
                 }
             }
 
@@ -395,7 +404,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         showMessage(getString(R.string.msg_invalid_file))
     }
 
-    override fun showNewMessage(message: List<BaseViewModel<*>>) {
+    override fun showNewMessage(message: List<BaseUiModel<*>>) {
         ui {
             adapter.prependData(message)
             recycler_view.scrollToPosition(0)
@@ -428,7 +437,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun dispatchUpdateMessage(index: Int, message: List<BaseViewModel<*>>) {
+    override fun dispatchUpdateMessage(index: Int, message: List<BaseUiModel<*>>) {
         ui {
             adapter.updateItem(message.last())
             if (message.size > 1) {
@@ -458,11 +467,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun showLoading() {
-        ui { view_loading.setVisible(true) }
+        ui { view_loading.isVisible = true }
     }
 
     override fun hideLoading() {
-        ui { view_loading.setVisible(false) }
+        ui { view_loading.isVisible = false }
     }
 
     override fun showMessage(message: String) {
@@ -479,19 +488,19 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
-    override fun populatePeopleSuggestions(members: List<PeopleSuggestionViewModel>) {
+    override fun populatePeopleSuggestions(members: List<PeopleSuggestionUiModel>) {
         ui {
             suggestions_view.addItems("@", members)
         }
     }
 
-    override fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionViewModel>) {
+    override fun populateRoomSuggestions(chatRooms: List<ChatRoomSuggestionUiModel>) {
         ui {
             suggestions_view.addItems("#", chatRooms)
         }
     }
 
-    override fun populateCommandSuggestions(commands: List<CommandSuggestionViewModel>) {
+    override fun populateCommandSuggestions(commands: List<CommandSuggestionUiModel>) {
         ui {
             suggestions_view.addItems("/", commands)
         }
@@ -603,8 +612,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onJoined(userCanPost: Boolean) {
         ui {
-            input_container.setVisible(true)
-            button_join_chat.setVisible(false)
+            input_container.isVisible = true
+            button_join_chat.isVisible = false
             isSubscribed = true
             setupMessageComposer(userCanPost)
         }
@@ -639,16 +648,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupMessageComposer(canPost: Boolean) {
         if (isChatRoomReadOnly && !canPost) {
-            text_room_is_read_only.setVisible(true)
-            input_container.setVisible(false)
+            text_room_is_read_only.isVisible = true
+            input_container.isVisible = false
         } else if (!isSubscribed && roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
-            input_container.setVisible(false)
-            button_join_chat.setVisible(true)
+            input_container.isVisible = false
+            button_join_chat.isVisible = true
             button_join_chat.setOnClickListener { presenter.joinChat(chatRoomId) }
         } else {
-            button_send.setVisible(false)
+            button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
-            button_show_attachment_options.setVisible(true)
+            button_show_attachment_options.isVisible = true
 
             subscribeComposeTextMessage()
             emojiKeyboardPopup =
@@ -781,14 +790,14 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupComposeButtons(charSequence: CharSequence) {
         if (charSequence.isNotEmpty() && playComposeMessageButtonsAnimation) {
-            button_show_attachment_options.setVisible(false)
-            button_send.setVisible(true)
+            button_show_attachment_options.isVisible = false
+            button_send.isVisible = true
             playComposeMessageButtonsAnimation = false
         }
 
         if (charSequence.isEmpty()) {
-            button_send.setVisible(false)
-            button_show_attachment_options.setVisible(true)
+            button_send.isVisible = false
+            button_show_attachment_options.isVisible = true
             playComposeMessageButtonsAnimation = true
         }
     }
@@ -802,7 +811,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun showAttachmentOptions() {
-        view_dim.setVisible(true)
+        view_dim.isVisible = true
 
         // Play anim.
         button_show_attachment_options.rotateBy(45F)
@@ -814,7 +823,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         button_show_attachment_options.rotateBy(-45F)
         layout_message_attachment_options.circularRevealOrUnreveal(centerX, centerY, max, 0F)
 
-        view_dim.setVisible(false)
+        view_dim.isVisible = false
     }
 
     private fun setupToolbar(toolbarTitle: String) {
