@@ -1,8 +1,8 @@
 package chat.rocket.android.members.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extensions.content
@@ -23,9 +23,8 @@ class MembersAdapter(private val listener: (MemberUiModel) -> Unit) :
     override fun getItemCount(): Int = dataSet.size
 
     fun clearData() {
-        val itemCount = dataSet.size
         dataSet = emptyList()
-        notifyItemRangeRemoved(0, itemCount)
+        notifyDataSetChanged()
     }
 
     fun prependData(dataSet: List<MemberUiModel>) {
