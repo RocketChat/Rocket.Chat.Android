@@ -7,10 +7,10 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-@PerFragment
 class ChatRoomsFragmentModule {
 
     @Provides
+    @PerFragment
     fun chatRoomsView(frag: ChatRoomsFragment): ChatRoomsView {
         return frag
     }

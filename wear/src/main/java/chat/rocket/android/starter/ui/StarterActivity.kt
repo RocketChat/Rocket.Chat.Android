@@ -29,6 +29,7 @@ class StarterActivity : HasActivityInjector, WearableActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_starter)
         setAmbientEnabled()
+        // Toast.makeText(this, )
         sharedPreferencesManager = AppPreferenceManager(this)
         checkIfLoginTokensExist()
     }

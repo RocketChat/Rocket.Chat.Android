@@ -3,8 +3,8 @@ package chat.rocket.android.main.ui
 import android.app.Activity
 import android.app.Fragment
 import android.os.Bundle
-import android.support.wear.widget.drawer.WearableNavigationDrawerView
 import android.widget.Toast
+import androidx.wear.widget.drawer.WearableNavigationDrawerView
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.main.presentation.MainPresenter

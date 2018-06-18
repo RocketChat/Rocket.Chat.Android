@@ -2,11 +2,11 @@ package chat.rocket.android.chatrooms.ui
 
 import android.app.Fragment
 import android.os.Bundle
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView

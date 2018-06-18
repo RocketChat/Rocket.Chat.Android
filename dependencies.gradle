@@ -49,7 +49,7 @@ ext {
             //For wearable
             wear                  : '2.3.0',
             playServicesWearable  : '15.0.1',
-            supportWearable       : '27.1.1'
+            supportWearable       : '28.0.0-alpha3'
     ]
     libraries = [
             kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jre8:${versions.kotlin}",

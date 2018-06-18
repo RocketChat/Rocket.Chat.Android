@@ -1,5 +1,8 @@
 package chat.rocket.android.dagger.module
 
+import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
+import chat.rocket.android.chatroom.di.ChatRoomModule
+import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatrooms.di.ChatRoomsFragmentProvider
 import chat.rocket.android.dagger.scope.PerActivity
 import chat.rocket.android.main.di.MainModule
@@ -22,4 +25,11 @@ abstract class ActivityBuilder {
             ChatRoomsFragmentProvider::class]
     )
     abstract fun bindMainActivity(): MainActivity
+
+    @PerActivity
+    @ContributesAndroidInjector(
+        modules = [ChatRoomModule::class,
+            ChatRoomFragmentProvider::class]
+    )
+    abstract fun bindChatRoomActivity(): ChatRoomActivity
 }

@@ -2,7 +2,7 @@ package chat.rocket.android.main.ui
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.wear.widget.drawer.WearableNavigationDrawerView
+import androidx.wear.widget.drawer.WearableNavigationDrawerView
 import chat.rocket.android.R
 
 class MainNavigationAdapter(ctx: Context) :
