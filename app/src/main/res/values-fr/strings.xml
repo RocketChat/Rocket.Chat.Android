@@ -123,6 +123,9 @@
     <string name="msg_several_users_are_typing">Several users are typing…</string>
     <string name="msg_no_search_found">Aucun résultat trouvé</string>
     <string name="msg_message_copied">Message copié</string>
+    <string name="msg_upload_file">Téléverser un fichier</string>
+    <string name="msg_file_description">Description du fichier</string>
+    <string name="msg_send">envoyer</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Le nom de le salle a changé à: %1$s par %2$s</string>
