@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.item_chat_rooms.view.*
 
 class ChatRoomsAdapter(
     private val context: Context,
-    private val chatRoom: List<ChatRoom>
+    private val chatRoom: List<ChatRoom>,
+    private val listener: (String, String, String) -> Unit
 ) :
     RecyclerView.Adapter<ChatRoomsAdapter.ViewHolder>() {
     private val singleChatRoom: List<ChatRoom>
@@ -47,6 +48,7 @@ class ChatRoomsAdapter(
             bindName(chatRoom, channel_name)
             bindIcon(chatRoom, chat_rooms_icon)
             bindUnreadMessages(chatRoom, text_total_unread_messages)
+            setOnClickListener { listener(chatRoom.id, chatRoom.name, chatRoom.type.toString()) }
         }
 
         fun bindName(chatRoom: ChatRoom, textView: TextView) {

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.chatrooms.presentation.ChatRoomsPresenter
 import chat.rocket.android.chatrooms.presentation.ChatRoomsView
+import chat.rocket.android.main.ui.MainNavigator
 import chat.rocket.android.util.showToast
 import chat.rocket.android.util.ui
 import chat.rocket.core.model.ChatRoom
@@ -18,10 +19,12 @@ import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 import javax.inject.Inject
 
 class ChatRoomsFragment : Fragment(), ChatRoomsView {
-    private lateinit var adapter: ChatRoomsAdapter
-
     @Inject
     lateinit var presenter: ChatRoomsPresenter
+    @Inject
+    lateinit var navigator: MainNavigator
+
+    private lateinit var adapter: ChatRoomsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -63,7 +66,9 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun updateChatRooms(chatRooms: List<ChatRoom>) {
-        adapter = ChatRoomsAdapter(context, chatRooms)
+        adapter = ChatRoomsAdapter(context, chatRooms) { chatRoomId, chatRoomName, chatRoomType ->
+            navigator.toChatRoom(chatRoomId, chatRoomName, chatRoomType)
+        }
         ui { channels_list.adapter = adapter }
     }
 
