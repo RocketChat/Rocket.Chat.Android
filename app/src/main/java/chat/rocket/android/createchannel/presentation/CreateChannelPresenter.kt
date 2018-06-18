@@ -55,8 +55,8 @@ class CreateChannelPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 val users = client.spotlight(query).users
-                val memberViewModelMapper = mapper.mapToUiModelList(users)
-                view.showUserSuggestion(memberViewModelMapper)
+                val memberUiModelMapper = mapper.mapToUiModelList(users)
+                view.showUserSuggestion(memberUiModelMapper)
             } catch (ex: RocketChatException) {
                 ex.message?.let {
                     view.showMessage(it)
