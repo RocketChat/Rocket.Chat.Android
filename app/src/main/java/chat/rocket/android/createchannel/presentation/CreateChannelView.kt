@@ -14,6 +14,21 @@ interface CreateChannelView : LoadingView, MessageView {
     fun showUserSuggestion(dataSet: List<MemberUiModel>)
 
     /**
+     * Shows no server's users suggestion.
+     */
+    fun showNoUserSuggestion()
+
+    /**
+     * Shows the SuggestionView in progress.
+     */
+    fun showSuggestionViewInProgress()
+
+    /**
+     * Hides the progress shown in the SuggestionView.
+     */
+    fun hideSuggestionViewInProgress()
+
+    /**
      * Shows the navigation drawer with the chat item checked before showing the chat list.
      * This function is invoked after successfully created the channel.
      */

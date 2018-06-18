@@ -53,16 +53,22 @@ class CreateChannelPresenter @Inject constructor(
 
     fun searchUser(query: String) {
         launchUI(strategy) {
+            view.showSuggestionViewInProgress()
             try {
                 val users = client.spotlight(query).users
-                val memberUiModelMapper = mapper.mapToUiModelList(users)
-                view.showUserSuggestion(memberUiModelMapper)
+                if (users.isEmpty()) {
+                    view.showNoUserSuggestion()
+                } else {
+                    view.showUserSuggestion(mapper.mapToUiModelList(users))
+                }
             } catch (ex: RocketChatException) {
                 ex.message?.let {
                     view.showMessage(it)
                 }.ifNull {
                     view.showGenericErrorMessage()
                 }
+            } finally {
+                view.hideSuggestionViewInProgress()
             }
         }
     }

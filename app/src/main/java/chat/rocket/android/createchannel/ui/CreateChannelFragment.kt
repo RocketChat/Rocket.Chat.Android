@@ -71,6 +71,36 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         unsubscribeEditTexts()
     }
 
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        mode.menuInflater.inflate(R.menu.create_channel, menu)
+        mode.title = getString(R.string.title_create_channel)
+        return true
+    }
+
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
+
+    override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
+            R.id.action_create_channel -> {
+                createChannelPresenter.createChannel(
+                    roomTypeOf(channelType),
+                    text_channel_name.text.toString(),
+                    memberList,
+                    isChannelReadOnly
+                )
+                mode.finish()
+                true
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    override fun onDestroyActionMode(mode: ActionMode) {
+        actionMode = null
+    }
+
     override fun showLoading() {
         ui {
             view_loading.isVisible = true
@@ -100,13 +130,28 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     }
 
     override fun showUserSuggestion(dataSet: List<MemberUiModel>) {
-        // Hiding the progress because we are showing it already.
-        hideSuggestionViewInProgress()
-        if (dataSet.isEmpty()) {
-            showNoSuggestionView()
-        } else {
-            showSuggestionViewResults(dataSet)
-        }
+        adapter.clearData()
+        adapter.prependData(dataSet)
+        text_member_not_found.isVisible = false
+        recycler_view.isVisible = true
+        view_member_suggestion.isVisible = true
+    }
+
+    override fun showNoUserSuggestion() {
+        recycler_view.isVisible = false
+        text_member_not_found.isVisible = true
+        view_member_suggestion.isVisible = true
+    }
+
+    override fun showSuggestionViewInProgress() {
+        recycler_view.isVisible = false
+        text_member_not_found.isVisible = false
+        view_member_suggestion_loading.isVisible = true
+        view_member_suggestion.isVisible = true
+    }
+
+    override fun hideSuggestionViewInProgress() {
+        view_member_suggestion_loading.isVisible = false
     }
 
     override fun prepareToShowChatList() {
@@ -132,36 +177,6 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     override fun disableUserInput() {
         text_channel_name.isEnabled = false
         text_invite_members.isEnabled = false
-    }
-
-    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.create_channel, menu)
-        mode.title = getString(R.string.title_create_channel)
-        return true
-    }
-
-    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
-
-    override fun onActionItemClicked(mode: ActionMode, menuItem: MenuItem): Boolean {
-        return when (menuItem.itemId) {
-            R.id.action_create_channel -> {
-                createChannelPresenter.createChannel(
-                    roomTypeOf(channelType),
-                    text_channel_name.text.toString(),
-                    memberList,
-                    isChannelReadOnly
-                )
-                mode.finish()
-                true
-            }
-            else -> {
-                false
-            }
-        }
-    }
-
-    override fun onDestroyActionMode(mode: ActionMode) {
-        actionMode = null
     }
 
     private fun setupToolBar() {
@@ -217,12 +232,12 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
         val inviteMembersDisposable = text_invite_members.asObservable()
             .debounce(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+            .filter { t -> t.isNotBlank() }
             .subscribe {
                 if (it.length >= 3) {
-                    showSuggestionViewInProgress()
                     createChannelPresenter.searchUser(it.toString())
                 } else {
-                    hideSuggestionView()
+                    view_member_suggestion.isVisible = false
                 }
             }
 
@@ -247,7 +262,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
         if (memberList.contains(username)) {
             showMessage(getString(R.string.msg_member_already_added))
         } else {
-            hideSuggestionView()
+            view_member_suggestion.isVisible = false
             text_invite_members.setText("")
             addMember(username)
             addChip(username)
@@ -287,38 +302,5 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     private fun processChipGroupVisibility() {
         chip_group_member.isVisible = memberList.isNotEmpty()
-    }
-
-    private fun showSuggestionView() {
-        view_member_suggestion.isVisible = true
-    }
-
-    private fun hideSuggestionView() {
-        view_member_suggestion.isVisible = false
-    }
-
-    private fun showSuggestionViewInProgress() {
-        recycler_view.isVisible = false
-        text_member_not_found.isVisible = false
-        view_member_suggestion_loading.isVisible = true
-        showSuggestionView()
-    }
-
-    private fun hideSuggestionViewInProgress() {
-        view_member_suggestion_loading.isVisible = false
-    }
-
-    private fun showSuggestionViewResults(dataSet: List<MemberUiModel>) {
-        adapter.clearData()
-        adapter.prependData(dataSet)
-        text_member_not_found.isVisible = false
-        recycler_view.isVisible = true
-        showSuggestionView()
-    }
-
-    private fun showNoSuggestionView() {
-        recycler_view.isVisible = false
-        text_member_not_found.isVisible = true
-        showSuggestionView()
     }
 }
