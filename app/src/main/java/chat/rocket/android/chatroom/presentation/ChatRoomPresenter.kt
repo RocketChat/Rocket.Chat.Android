@@ -327,7 +327,7 @@ class ChatRoomPresenter @Inject constructor(
                 val byteArrayOutputStream = ByteArrayOutputStream()
                 // TODO: Add an option the the app to the user be able to select the quality of the compressed image
                 val isCompressed =
-                    it.compress(it.getCompressFormat(mimeType), 50, byteArrayOutputStream)
+                    it.compress(it.getCompressFormat(mimeType), 70, byteArrayOutputStream)
                 if (isCompressed) {
                     inputStream = ByteArrayInputStream(byteArrayOutputStream.toByteArray())
                 }
