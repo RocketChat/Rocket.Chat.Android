@@ -408,7 +408,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showNewMessage(message: List<BaseUiModel<*>>) {
         ui {
             adapter.prependData(message)
-            recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
             empty_chat_view.isVisible = adapter.itemCount == 0
         }
