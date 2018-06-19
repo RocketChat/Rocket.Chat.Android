@@ -3,17 +3,9 @@ package chat.rocket.android.util.extensions
 import android.graphics.Bitmap
 
 fun Bitmap.getCompressFormat(mimeType: String): Bitmap.CompressFormat {
-    var compressFormat = Bitmap.CompressFormat.PNG
-    when {
-        mimeType.contains("jpeg") -> {
-            compressFormat = Bitmap.CompressFormat.JPEG
-        }
-        mimeType.contains("png") -> {
-            compressFormat = Bitmap.CompressFormat.PNG
-        }
-        mimeType.contains("webp") -> {
-            compressFormat = Bitmap.CompressFormat.WEBP
-        }
+    return when {
+        mimeType.contains("jpeg") -> Bitmap.CompressFormat.JPEG
+        mimeType.contains("webp") -> Bitmap.CompressFormat.WEBP
+        else -> Bitmap.CompressFormat.PNG
     }
-    return compressFormat
 }
