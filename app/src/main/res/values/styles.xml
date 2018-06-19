@@ -11,6 +11,10 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="ToolbarTheme" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="android:colorAccent">@color/colorLightTheme</item>
+    </style>
+
     <style name="AuthenticationTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorPrimary</item>

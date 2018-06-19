@@ -239,8 +239,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         }
     }
 
-    override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {
-    }
+    override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {}
 
     override fun showNoChatRoomsToDisplay() {
         ui { text_no_data_to_display.setVisible(true) }

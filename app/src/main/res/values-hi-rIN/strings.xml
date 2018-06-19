@@ -15,6 +15,8 @@
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
+    // TODO: Add proper translation.
+    <string name="title_create_channel">Create Channel</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -25,6 +27,9 @@
     <string name="action_search">खोजें</string>
     <string name="action_update">अद्यतन करें</string>
     <string name="action_settings">सेटिंग्स</string>
+    // TODO: Add proper translation.
+    <string name="action_create_channel">Create channel</string>
+    <string name="action_create">Create</string>
     <string name="action_logout">लोग आउट करें</string>
     <string name="action_files">फ़ाइलें</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
@@ -113,7 +118,26 @@
     <string name="msg_are_typing">\u0020टाइप कर रहे हैं…</string>
     <string name="msg_several_users_are_typing">कई उपयोगकर्ता टाइप कर रहे हैं…</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
+    // TODO: Add proper translation.
+    <string name="msg_channel_name">Channel name</string>
+    // TODO: Add proper translation.
+    <string name="msg_search">Search</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
+    <string name="msg_delete_message">संदेश को हटाएं</string>
+    <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
+
+    <!-- Create channel messages -->
+    // TODO: Add proper translation.
+    <string name="msg_private_channel">Private</string>
+    <string name="msg_public_channel">Public</string>
+    <string name="msg_private_channel_description">Only you and invited members can access this channel</string>
+    <string name="msg_public_channel_description">Everyone can access this channel</string>
+    <string name="msg_ready_only_channel">Read only channel</string>
+    <string name="msg_ready_only_channel_description">Only admin can write new messages</string>
+    <string name="msg_invite_members">Invite members to channel</string>
+    <string name="msg_member_already_added">You have already selected this user</string>
+    <string name="msg_member_not_found">Member not found</string>
+    <string name="msg_channel_created_successfully">Channel created successfully</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
