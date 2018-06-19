@@ -257,7 +257,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     chatRoomType,
                     chatRoomName,
                     presenter,
-                    reactionListener = this@ChatRoomFragment
+                    reactionListener = this@ChatRoomFragment,
+                    activity = activity
                 )
                 recycler_view.adapter = adapter
                 if (dataSet.size >= 30) {
