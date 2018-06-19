@@ -1,16 +1,16 @@
-package chat.rocket.android.pinnedmessages.di
+package chat.rocket.android.mentions.di
 
 import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
-import chat.rocket.android.pinnedmessages.presentation.PinnedMessagesView
-import chat.rocket.android.pinnedmessages.ui.PinnedMessagesFragment
+import chat.rocket.android.mentions.presentention.MentionsView
+import chat.rocket.android.mentions.ui.MentionsFragment
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.experimental.Job
 
 @Module
-class PinnedMessagesFragmentModule {
+class MentionsFragmentModule {
 
     @Provides
     @PerFragment
@@ -18,7 +18,7 @@ class PinnedMessagesFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideLifecycleOwner(frag: PinnedMessagesFragment): LifecycleOwner {
+    fun provideLifecycleOwner(frag: MentionsFragment): LifecycleOwner {
         return frag
     }
 
@@ -30,7 +30,7 @@ class PinnedMessagesFragmentModule {
 
     @Provides
     @PerFragment
-    fun providePinnedMessagesView(frag: PinnedMessagesFragment): PinnedMessagesView {
+    fun provideMentionsView(frag: MentionsFragment): MentionsView {
         return frag
     }
 }

@@ -216,6 +216,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             R.id.action_members_list -> {
                 presenter.toMembersList(chatRoomId)
             }
+            R.id.action_mentions -> {
+                presenter.toMentions(chatRoomId)
+            }
             R.id.action_pinned_messages -> {
                 presenter.toPinnedMessageList(chatRoomId)
             }

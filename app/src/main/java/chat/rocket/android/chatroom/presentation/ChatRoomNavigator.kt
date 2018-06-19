@@ -14,6 +14,12 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         }
     }
 
+    fun toMentions(chatRoomId: String) {
+        activity.addFragmentBackStack("MentionsFragment", R.id.fragment_container) {
+            chat.rocket.android.mentions.ui.newInstance(chatRoomId)
+        }
+    }
+
     fun toPinnedMessageList(chatRoomId: String) {
         activity.addFragmentBackStack("PinnedMessages", R.id.fragment_container) {
             chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId)
