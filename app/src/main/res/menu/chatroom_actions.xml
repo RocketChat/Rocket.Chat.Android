@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:compat="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/action_members_list"
         android:title="@string/title_members_list"
-        compat:showAsAction="never" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_mentions"
@@ -15,15 +15,15 @@
     <item
         android:id="@+id/action_pinned_messages"
         android:title="@string/title_pinned_messages"
-        compat:showAsAction="never" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_favorite_messages"
         android:title="@string/title_favorite_messages"
-        compat:showAsAction="never" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_files"
         android:title="@string/msg_files"
-        compat:showAsAction="never" />
+        app:showAsAction="never" />
 </menu>
