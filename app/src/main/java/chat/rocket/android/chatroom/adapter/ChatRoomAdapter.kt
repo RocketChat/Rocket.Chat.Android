@@ -1,5 +1,7 @@
 package chat.rocket.android.chatroom.adapter
 
+import android.app.AlertDialog
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -18,7 +20,8 @@ class ChatRoomAdapter(
     private val roomName: String? = null,
     private val presenter: ChatRoomPresenter? = null,
     private val enableActions: Boolean = true,
-    private val reactionListener: EmojiReactionListener? = null
+    private val reactionListener: EmojiReactionListener? = null,
+    private val context: Context? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
     private val dataSet = ArrayList<BaseUiModel<*>>()
 
@@ -233,7 +236,16 @@ class ChatRoomAdapter(
                             presenter?.unpinMessage(id)
                         }
                     }
-                    R.id.action_message_delete -> presenter?.deleteMessage(roomId, id)
+                    R.id.action_message_delete -> {
+                        context?.let {
+                            val builder = AlertDialog.Builder(it)
+                            builder.setTitle(it.getString(R.string.msg_delete_message))
+                                    .setMessage(it.getString(R.string.msg_delete_description))
+                                    .setPositiveButton(it.getString(R.string.msg_ok)) { _, _ -> presenter?.deleteMessage(roomId, id) }
+                                    .setNegativeButton(it.getString(R.string.msg_cancel)) { _, _ ->  }
+                                    .show()
+                        }
+                    }
                     R.id.action_menu_msg_react -> presenter?.showReactions(id)
                     else -> TODO("Not implemented")
                 }
