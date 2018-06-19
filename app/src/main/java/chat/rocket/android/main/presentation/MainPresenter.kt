@@ -55,6 +55,8 @@ class MainPresenter @Inject constructor(
 
     fun toSettings() = navigator.toSettings()
 
+    fun toCreateChannel() = navigator.toCreateChannel()
+
     fun loadCurrentInfo() {
         checkServerInfo(currentServer)
         launchUI(strategy) {
