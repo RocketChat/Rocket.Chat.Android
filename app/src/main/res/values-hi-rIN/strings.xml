@@ -114,8 +114,6 @@
     <string name="msg_several_users_are_typing">कई उपयोगकर्ता टाइप कर रहे हैं…</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
-    <string name="msg_delete_message">संदेश को हटाएं</string>
-    <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
