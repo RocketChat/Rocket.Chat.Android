@@ -9,12 +9,14 @@ import chat.rocket.android.chatrooms.adapter.RoomUiModelMapper
 import chat.rocket.android.chatrooms.domain.FetchChatRoomsInteractor
 import chat.rocket.android.chatrooms.infrastructure.ChatRoomsRepository
 import chat.rocket.android.chatrooms.infrastructure.isGrouped
+import chat.rocket.android.db.model.ChatRoom
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.util.livedata.transform
 import chat.rocket.core.internal.realtime.socket.model.State
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.newSingleThreadContext
 import me.henrytao.livedataktx.distinct
+import me.henrytao.livedataktx.filter
 import me.henrytao.livedataktx.map
 import me.henrytao.livedataktx.nonNull
 import timber.log.Timber
@@ -26,6 +28,7 @@ class ChatRoomsViewModel(
     private val mapper: RoomUiModelMapper
 ) : ViewModel() {
     private val ordering: MutableLiveData<ChatRoomsRepository.Order> = MutableLiveData()
+    private val query: MutableLiveData<String> = MutableLiveData()
     private val runContext = newSingleThreadContext("chat-rooms-view-model")
 
     init {
@@ -43,6 +46,12 @@ class ChatRoomsViewModel(
                             mapper.map(rooms, order.isGrouped())
                         }
                     }
+        }
+    }
+
+    fun spotlight(): LiveData<List<ChatRoom>> {
+        return query.filter { !it.isNullOrEmpty() }.distinct().nonNull().transform {
+            repository.getChatRooms(it!!)
         }
     }
 

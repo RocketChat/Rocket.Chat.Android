@@ -21,6 +21,10 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     abstract fun get(id: String): ChatRoom?
 
     @Transaction
+    @Query("$BASE_QUERY")
+    abstract fun getAllSync(): List<ChatRoom>
+
+    @Transaction
     @Query("""
         $BASE_QUERY
         ORDER BY
