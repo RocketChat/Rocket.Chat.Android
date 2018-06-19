@@ -11,6 +11,7 @@ import kotlinx.coroutines.experimental.Job
 
 @Module
 class SettingsFragmentModule {
+
     @Provides
     @PerFragment
     fun settingsView(frag: SettingsFragment): SettingsView {
