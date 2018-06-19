@@ -1,10 +1,10 @@
 package chat.rocket.android.chatroom.adapter
 
 import android.app.AlertDialog
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.uimodel.*
@@ -21,7 +21,7 @@ class ChatRoomAdapter(
     private val presenter: ChatRoomPresenter? = null,
     private val enableActions: Boolean = true,
     private val reactionListener: EmojiReactionListener? = null,
-    private val activity: FragmentActivity? = null
+    private val context: Context? = null
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
     private val dataSet = ArrayList<BaseUiModel<*>>()
 
@@ -237,7 +237,7 @@ class ChatRoomAdapter(
                         }
                     }
                     R.id.action_message_delete -> {
-                        activity?.let {
+                        context?.let {
                             val builder = AlertDialog.Builder(it)
                             builder.setTitle(it.getString(R.string.msg_delete_message))
                                     .setMessage(it.getString(R.string.msg_delete_description))
