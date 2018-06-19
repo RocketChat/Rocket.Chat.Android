@@ -5,7 +5,11 @@ import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.common.model.User
 import chat.rocket.core.model.Value
 
-class MemberUiModel(private val member: User, private val settings: Map<String, Value<Any>>, private val baseUrl: String?) {
+class MemberUiModel(
+    private val member: User,
+    private val settings: Map<String, Value<Any>>,
+    private val baseUrl: String?
+) {
     val avatarUri: String?
     val displayName: String
     val realName: String?
