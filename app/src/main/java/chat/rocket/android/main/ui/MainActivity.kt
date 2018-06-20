@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.IdRes
+import androidx.drawerlayout.widget.DrawerLayout
 import chat.rocket.android.BuildConfig
 import chat.rocket.android.R
 import chat.rocket.android.main.adapter.AccountsAdapter
@@ -185,14 +187,14 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         setSupportActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
         toolbar.setNavigationOnClickListener {
-            drawer_layout.openDrawer(Gravity.START)
+            openDrawer()
         }
     }
 
     private fun setupNavigationView() {
         view_navigation.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
-            drawer_layout.closeDrawer(Gravity.START)
+            closeDrawer()
             onNavDrawerItemSelected(menuItem)
             true
         }
@@ -205,6 +207,9 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
             }
             R.id.action_profile -> {
                 presenter.toUserProfile()
+            }
+            R.id.action_channel -> {
+                presenter.toCreateChannel()
             }
             R.id.action_settings -> {
                 presenter.toSettings()
@@ -243,9 +248,25 @@ class MainActivity : AppCompatActivity(), MainView, HasActivityInjector,
         }
 
         header.image_avatar.setOnClickListener {
-            view_navigation.menu.findItem(R.id.action_profile).isChecked = true
+            view_navigation.menu.findItem(R.id.action_update_profile).isChecked = true
             presenter.toUserProfile()
             drawer_layout.closeDrawer(Gravity.START)
         }
+    }
+
+    fun getDrawerLayout(): DrawerLayout {
+        return drawer_layout
+    }
+
+    fun openDrawer() {
+        drawer_layout.openDrawer(Gravity.START)
+    }
+
+    fun closeDrawer() {
+        drawer_layout.closeDrawer(Gravity.START)
+    }
+
+    fun setCheckedNavDrawerItem(@IdRes item: Int) {
+        view_navigation.setCheckedItem(item)
     }
 }

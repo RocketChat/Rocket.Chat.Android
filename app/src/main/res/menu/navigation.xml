@@ -12,6 +12,16 @@
             android:title="@string/title_chats" />
 
         <item
+            android:id="@+id/action_channel"
+            android:icon="@drawable/ic_create_black_24dp"
+            android:title="@string/action_create_channel" />
+    </group>
+
+    <group
+        android:id="@+id/menu_section_2"
+        android:checkableBehavior="single">
+
+        <item
             android:id="@+id/action_profile"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="@string/title_profile" />
@@ -19,16 +29,16 @@
         <item
             android:id="@+id/action_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/title_settings"/>
+            android:title="@string/title_settings" />
     </group>
 
     <group
-        android:id="@+id/menu_section_2"
-        android:checkableBehavior="none">
+        android:id="@+id/menu_section_3"
+        android:checkableBehavior="single">
+
         <item
             android:id="@+id/action_logout"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:title="@string/action_logout" />
     </group>
-
 </menu>
