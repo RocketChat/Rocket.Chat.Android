@@ -15,6 +15,7 @@
     <string name="title_password">Alterar senha</string>
     <string name="title_update_profile">Editar perfil</string>
     <string name="title_about">Sobre</string>
+    <string name="title_create_channel">Criar chat</string>
 
     <!-- Actions -->
     <string name="action_connect">Conectar</string>
@@ -25,6 +26,8 @@
     <string name="action_search">Pesquisar</string>
     <string name="action_update">Atualizar</string>
     <string name="action_settings">Configurações</string>
+    <string name="action_create_channel">Criar chat</string>
+    <string name="action_create">Criar</string>
     <string name="action_logout">Sair</string>
     <string name="action_files">Arquivos</string>
     <string name="action_confirm_password">Confirme a nova senha</string>
@@ -113,7 +116,24 @@
     <string name="msg_are_typing">\u0020estão digitando…</string>
     <string name="msg_several_users_are_typing">Vários usuários estão digitando…</string>
     <string name="msg_no_search_found">nenhum resultado encontrado</string>
+    <string name="msg_channel_name">Nome do chat</string>
+    <string name="msg_search">Buscar</string>
     <string name="msg_message_copied">Mensagem copiada</string>
+    // TODO: Add proper translation.
+    <string name="msg_delete_message">Delete Message</string>
+    <string name="msg_delete_description">Are you sure you want to delete this message</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">Privado</string>
+    <string name="msg_public_channel">Público</string>
+    <string name="msg_private_channel_description">Somente você e membros convidados poderão acessar este chat</string>
+    <string name="msg_public_channel_description">Todos poderão acessar este canal</string>
+    <string name="msg_ready_only_channel">Read only channel</string>
+    <string name="msg_ready_only_channel_description">Somemnte administradores podem escrever mensagens</string>
+    <string name="msg_invite_members">Convidar membros para o chat</string>
+    <string name="msg_member_already_added">Você já selecionou este usuário</string>
+    <string name="msg_member_not_found">Membro não encontrado</string>
+    <string name="msg_channel_created_successfully">Chat criado com sucesso</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Nome da sala alterado para: %1$s por %2$s</string>
