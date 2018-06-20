@@ -2,17 +2,15 @@ package chat.rocket.android.util.extensions
 
 import android.app.Activity
 import android.content.Context
-import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import chat.rocket.android.R
 
 // TODO: Remove. Use KTX instead.
@@ -89,12 +87,3 @@ fun Fragment.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SH
 
 fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) =
     activity?.showToast(message, duration)
-
-fun RecyclerView.isAtBottom(): Boolean {
-    val manager: RecyclerView.LayoutManager? = layoutManager
-    if (manager is LinearLayoutManager) {
-        return manager.findFirstVisibleItemPosition() == 0
-    }
-
-    return false // or true??? we can't determine the first visible item.
-}
