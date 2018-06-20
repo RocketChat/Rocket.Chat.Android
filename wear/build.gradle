@@ -62,6 +62,10 @@ dependencies {
     implementation libraries.wearableRecyclerView
     implementation libraries.wearSupport
 
+    implementation libraries.constraintlayout
+
+    implementation libraries.threeTenABP
+
     implementation libraries.dagger
     implementation libraries.daggerSupport
     kapt libraries.daggerProcessor

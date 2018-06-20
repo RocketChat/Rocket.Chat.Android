@@ -4,4 +4,10 @@
     <color name="colorPrimaryText">@color/colorWhite</color>
     <color name="colorSecondaryText">#FFC1C1C1</color>
     <color name="colorUnreadMessagesMarker">#FF1976D2</color>
+
+    <color name="colorMessageBackgroundDark">#252525</color>
+    <color name="colorMessageSenderName">#999999</color>
+    <color name="colorMessageBackgroundLight">#323232</color>
+    <color name="colorMessageAttachments">@color/colorMessageSenderName</color>
+
 </resources>

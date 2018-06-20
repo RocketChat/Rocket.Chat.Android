@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
@@ -45,13 +46,13 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     override fun showLoading() {
         ui {
-            view_loading.visibility = View.VISIBLE
+            view_loading.isVisible = true
         }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.visibility = View.GONE
+            view_loading.isVisible = false
         }
     }
 

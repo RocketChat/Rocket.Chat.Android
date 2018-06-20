@@ -31,6 +31,7 @@ class StarterActivity : HasActivityInjector, WearableActivity(),
         setAmbientEnabled()
         // Toast.makeText(this, )
         sharedPreferencesManager = AppPreferenceManager(this)
+        presenter.saveCredentials()
         checkIfLoginTokensExist()
     }
 
