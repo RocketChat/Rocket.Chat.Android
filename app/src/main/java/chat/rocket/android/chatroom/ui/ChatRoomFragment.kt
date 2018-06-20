@@ -762,10 +762,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupActionSnackbar() {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
-        actionSnackbar.cancelView.setOnClickListener({
+        actionSnackbar.cancelView.setOnClickListener {
             clearMessageComposition()
             KeyboardHelper.showSoftKeyboard(text_message)
-        })
+        }
     }
 
     private fun subscribeComposeTextMessage() {
