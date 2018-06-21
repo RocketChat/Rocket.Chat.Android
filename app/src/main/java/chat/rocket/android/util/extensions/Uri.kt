@@ -3,6 +3,7 @@ package chat.rocket.android.util.extensions
 import android.annotation.TargetApi
 import android.content.ContentResolver
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.DocumentsContract
@@ -57,25 +58,17 @@ fun Uri.getMimeType(context: Context): String {
     }
 }
 
-fun Uri.getRealPathFromURI(context: Context): String? {
-    val cursor = context.contentResolver.query(this, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
-
-    cursor.use { cursor ->
-        val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        return cursor.getString(columnIndex)
-    }
-}
-
 @TargetApi(Build.VERSION_CODES.N)
 fun Uri.isVirtualFile(context: Context): Boolean {
     if (!DocumentsContract.isDocumentUri(context, this)) {
         return false
     }
 
-    val cursor = context.contentResolver.query(this,
-            arrayOf(DocumentsContract.Document.COLUMN_FLAGS),
-            null, null, null)
+    val cursor = context.contentResolver.query(
+        this,
+        arrayOf(DocumentsContract.Document.COLUMN_FLAGS),
+        null, null, null
+    )
 
     var flags = 0
     if (cursor.moveToFirst()) {
@@ -97,8 +90,8 @@ fun Uri.getInputStreamForVirtualFile(context: Context, mimeTypeFilter: String): 
         throw FileNotFoundException()
     }
 
-    return resolver.openTypedAssetFileDescriptor(this, openableMimeTypes[0],
-            null)?.createInputStream()
+    return resolver.openTypedAssetFileDescriptor(this, openableMimeTypes[0], null)
+        ?.createInputStream()
 }
 
 fun Uri.getInputStream(context: Context): InputStream? {
@@ -107,4 +100,8 @@ fun Uri.getInputStream(context: Context): InputStream? {
     }
 
     return context.contentResolver.openInputStream(this)
+}
+
+fun Uri.getBitmpap(context: Context): Bitmap? {
+    return MediaStore.Images.Media.getBitmap(context.contentResolver, this)
 }
