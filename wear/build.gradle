@@ -85,6 +85,7 @@ dependencies {
 
     implementation libraries.fresco
     implementation libraries.frescoImageViewer
+    api libraries.frescoOkHttp
 
     testImplementation libraries.junit
 }
@@ -106,3 +107,4 @@ task compileSdk(type: Exec) {
         commandLine './build-sdk.sh'
     }
 }
+preBuild.dependsOn compileSdk

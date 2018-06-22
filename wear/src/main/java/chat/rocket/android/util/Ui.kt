@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Fragment
 import android.widget.Toast
 import androidx.annotation.StringRes
-import chat.rocket.android.R
 
 fun Activity.showToast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT) =
     showToast(getString(resource), duration)
@@ -22,5 +21,17 @@ fun Activity.addFragment(tag: String, layoutId: Int, newInstance: () -> Fragment
     val fragment = fragmentManager.findFragmentByTag(tag) ?: newInstance()
     fragmentManager.beginTransaction()
         .replace(layoutId, fragment)
+        .commit()
+}
+
+fun Activity.addFragmentBackStack(
+    tag: String,
+    layoutId: Int,
+    newInstance: () -> Fragment
+) {
+    val fragment = fragmentManager.findFragmentByTag(tag) ?: newInstance()
+    fragmentManager.beginTransaction()
+        .replace(layoutId, fragment, tag)
+        .addToBackStack(tag)
         .commit()
 }

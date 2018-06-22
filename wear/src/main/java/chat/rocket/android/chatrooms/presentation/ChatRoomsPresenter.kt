@@ -1,17 +1,14 @@
 package chat.rocket.android.chatrooms.presentation
 
-import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.GetCurrentServerInteractor
 import chat.rocket.android.server.RocketChatClientFactory
 import chat.rocket.android.util.Constants
-import chat.rocket.android.util.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.ChatRoom
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,14 +16,13 @@ import kotlin.reflect.KProperty1
 
 class ChatRoomsPresenter @Inject constructor(
     private val view: ChatRoomsView,
-    private val strategy: CancelStrategy,
     private val serverInteractor: GetCurrentServerInteractor,
     private val factory: RocketChatClientFactory
 ) {
     private val currentServer = serverInteractor.get()!!
     private val client = factory.create(currentServer)
     fun loadChatRooms(timestamp: Long = 0, filterCustom: Boolean = true) {
-        launchUI(strategy) {
+        launch {
             view.showLoading()
             try {
                 view.updateChatRooms(getUserChatRooms(timestamp, filterCustom))

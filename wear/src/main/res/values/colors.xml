@@ -9,5 +9,5 @@
     <color name="colorMessageSenderName">#999999</color>
     <color name="colorMessageBackgroundLight">#323232</color>
     <color name="colorMessageAttachments">@color/colorMessageSenderName</color>
-
+    <color name="colorReplyView">#FF727272</color>
 </resources>

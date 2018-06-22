@@ -30,10 +30,13 @@ private const val INTENT_CHAT_ROOM_TYPE = "chat_room_type"
 class ChatRoomActivity : Activity(), HasActivityInjector, HasFragmentInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
     @Inject
     lateinit var navigator: ChatRoomNavigator
+
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
@@ -43,7 +46,7 @@ class ChatRoomActivity : Activity(), HasActivityInjector, HasFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room)
         getValuesFromIntent()
-        navigator.toChatRooms(chatRoomId, chatRoomName, chatRoomType)
+        navigator.toChatRoom(chatRoomId, chatRoomName, chatRoomType)
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector

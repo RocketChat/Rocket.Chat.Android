@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.models.messages.MessageUiModel
+import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.util.showToast
@@ -40,6 +41,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     @Inject
     lateinit var presenter: ChatRoomPresenter
+
+    @Inject
+    lateinit var navigator: ChatRoomNavigator
+
     private lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
@@ -89,7 +94,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     }
 
     override fun showMessages(dataSet: List<MessageUiModel>) {
-        adapter = ChatRoomAdapter(dataSet)
+        adapter = ChatRoomAdapter(dataSet){
+            navigator.toCompleteMessage(it)
+        }
         ui {
             chat_list.adapter = adapter
         }
@@ -106,7 +113,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     private fun setUpRecyclerView() {
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        layoutManager.stackFromEnd = true
+        layoutManager.reverseLayout = true
         chat_list.layoutManager = layoutManager
         chat_list.itemAnimator = DefaultItemAnimator()
         chat_list.isCircularScrollingGestureEnabled = true

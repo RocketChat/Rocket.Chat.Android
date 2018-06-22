@@ -56,7 +56,7 @@ class MessageMapperUtils @Inject constructor(
 
         //TODO implement this later on. This will parse messages and show mentions, emojis instead of plain characters
         //val content = getContent(stripMessageQuotes(message))
-
+        val content = message.message
         //There is no support for reacting with emojis presently
         MessageUiModel(
             message = message,
@@ -65,7 +65,7 @@ class MessageMapperUtils @Inject constructor(
             avatar = avatar!!,
             time = time,
             senderName = sender,
-            content = message.toString(),
+            content = content,
             isPinned = message.pinned,
             attachments = hasUnsupportedMessageFormat
         )

@@ -19,4 +19,5 @@
     <dimen name="message_sender_name_text_size">10sp</dimen>
     <dimen name="message_timestamp_text_size">7sp</dimen>
     <dimen name="message_text_size">13sp</dimen>
+    <dimen name="complete_message_sender_name">12sp</dimen>
 </resources>

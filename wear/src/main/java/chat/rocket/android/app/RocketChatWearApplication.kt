@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.app.Fragment
 import android.content.SharedPreferences
+import chat.rocket.android.dagger.DaggerAppComponent
 import chat.rocket.android.server.GetCurrentServerInteractor
 import chat.rocket.android.server.SaveCurrentServerInteractor
 import chat.rocket.android.server.TokenRepository

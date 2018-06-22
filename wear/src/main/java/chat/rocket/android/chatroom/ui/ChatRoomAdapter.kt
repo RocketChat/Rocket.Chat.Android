@@ -9,7 +9,10 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.models.messages.MessageUiModel
 import kotlinx.android.synthetic.main.item_message.view.*
 
-class ChatRoomAdapter(data: List<MessageUiModel>) :
+class ChatRoomAdapter(
+    private val data: List<MessageUiModel>,
+    private val listener: (MessageUiModel) -> Unit
+) :
     RecyclerView.Adapter<ChatRoomAdapter.MessageViewHolder>() {
     private val dataItem: List<MessageUiModel>
 
@@ -41,8 +44,11 @@ class ChatRoomAdapter(data: List<MessageUiModel>) :
                 message_time.text = messageItem.time
                 message.text = messageItem.content
                 message_sender_avatar.setImageURI(messageItem.avatar)
-                if(messageItem.attachments){
+                if (messageItem.attachments) {
                     attachments_message.isVisible = true
+                }
+                setOnClickListener{
+                    listener(messageItem)
                 }
             }
         }

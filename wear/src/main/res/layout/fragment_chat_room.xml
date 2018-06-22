@@ -25,11 +25,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/reply_button_view"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/colorMessageSenderName"
+        android:layout_height="35dp"
+        android:background="@color/colorReplyView"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chat_list"
-        android:visibility="gone">
+        app:layout_constraintTop_toBottomOf="@id/chat_list">
 
         <ImageView
             android:id="@+id/reply_button"
