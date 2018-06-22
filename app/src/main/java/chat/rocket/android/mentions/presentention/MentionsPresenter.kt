@@ -2,11 +2,9 @@ package chat.rocket.android.mentions.presentention
 
 import chat.rocket.android.chatroom.uimodel.UiModelMapper
 import chat.rocket.android.core.lifecycle.CancelStrategy
-import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
 import chat.rocket.android.util.extensions.launchUI
 import chat.rocket.common.RocketChatException
-import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.internal.rest.getMentions
 import timber.log.Timber
@@ -15,7 +13,6 @@ import javax.inject.Named
 
 class MentionsPresenter @Inject constructor(
     private val view: MentionsView,
-    private val dbManager: DatabaseManager,
     @Named("currentServer") private val currentServer: String,
     private val strategy: CancelStrategy,
     private val mapper: UiModelMapper,
@@ -33,15 +30,10 @@ class MentionsPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 view.showLoading()
-                dbManager.getRoom(roomId)?.let {
-                    val mentions =
-                        client.getMentions(roomId, roomTypeOf(it.chatRoom.type), offset, 30)
-                    val mentionsList = mapper.map(mentions.result, asNotReversed = true)
-                    view.showMentions(mentionsList)
-                    offset += 1 * 30
-                }.ifNull {
-                    Timber.e("Couldn't find a room with id: $roomId at current server.")
-                }
+                val mentions = client.getMentions(roomId, offset, 30)
+                val mentionsList = mapper.map(mentions.result, asNotReversed = true)
+                view.showMentions(mentionsList)
+                offset += 1 * 30
             } catch (exception: RocketChatException) {
                 Timber.e(exception)
                 exception.message?.let {
