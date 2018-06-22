@@ -15,7 +15,7 @@
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
-    <string name="title_create_channel">Створити новий канал</string>
+    <string name="title_create_channel">Создать новый канал</string>
 
     <!-- Actions -->
     <string name="action_connect">Соединение</string>
@@ -26,9 +26,8 @@
     <string name="action_search">Поиск</string>
     <string name="action_update">Обновить</string>
     <string name="action_settings">Настройки</string>
-    // TODO: Add proper translation.
-    <string name="action_create_channel">Create channel</string>
-    <string name="action_create">Create</string>
+    <string name="action_create_channel">Создать канал</string>
+    <string name="action_create">Создать</string>
     <string name="action_logout">Выйти</string>
     <string name="action_files">Файлы</string>
     <string name="action_confirm_password">Подтверждение изменения пароля</string>
@@ -117,24 +116,22 @@
     <string name="msg_several_users_are_typing">Несколько пользователей печатают…</string>
     <string name="msg_no_search_found">Результатов не найдено</string>
     <string name="msg_message_copied">Сообщение скопировано</string>
-    // TODO: Add proper translation.
-    <string name="msg_delete_message">Delete Message</string>
-    <string name="msg_delete_description">Are you sure you want to delete this message</string>
-    <string name="msg_channel_name">Назва каналу</string>
-    <string name="msg_search">Пошук</string>
+    <string name="msg_delete_message">Удалить сообщение</string>
+    <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
+    <string name="msg_channel_name">Название канала</string>
+    <string name="msg_search">Поиск</string>
 
     <!-- Create channel messages -->
-    // TODO: Add proper translation.
-    <string name="msg_private_channel">Private</string>
-    <string name="msg_public_channel">Public</string>
-    <string name="msg_private_channel_description">Only you and invited members can access this channel</string>
-    <string name="msg_public_channel_description">Everyone can access this channel</string>
-    <string name="msg_ready_only_channel">Read only channel</string>
-    <string name="msg_ready_only_channel_description">Only admin can write new messages</string>
-    <string name="msg_invite_members">Invite members to channel</string>
-    <string name="msg_member_already_added">You have already selected this user</string>
-    <string name="msg_member_not_found">Member not found</string>
-    <string name="msg_channel_created_successfully">Channel created successfully</string>
+    <string name="msg_private_channel">Приватный</string>
+    <string name="msg_public_channel">Публичный</string>
+    <string name="msg_private_channel_description">Только вы и приглашенные пользователи могут получить доступ к этому каналу</string>
+    <string name="msg_public_channel_description">Каждый может получить доступ к этому каналу</string>
+    <string name="msg_ready_only_channel">Канал только для чтения</string>
+    <string name="msg_ready_only_channel_description">Только администратор может писать новые сообщения</string>
+    <string name="msg_invite_members">Пригласить пользователей на канал</string>
+    <string name="msg_member_already_added">Вы уже выбрали этого пользователя</string>
+    <string name="msg_member_not_found">Пользователь не найден</string>
+    <string name="msg_channel_created_successfully">Канал создан успешно</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Название канала изменено на: %1$s by %2$s</string>
