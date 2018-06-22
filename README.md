@@ -11,7 +11,7 @@ This repository contains all the code related to the Android native application 
 
 ## How to build
 
-- Android Studio 3.0+ comes with built in kotlin support, so install the latest version (3.0+) of Android Studio (recommended). For older versions, you need to manually install kotlin plugin. Go to `File > Settings > Plugins` and search for `kotlin` and install it. You'll need to restart the IDE in order to see the changes.
+- You need to download the latest [Android Studio Preview](https://developer.android.com/studio/preview/) version since the stable IDE version does not support the [JetPack](https://developer.android.com/jetpack/) that is beeing used on this application. 
 - Make sure that you have the latest **gradle** and the **android plugin** versions installed. Go to `File > Project Structure > Project` and make sure that you have the latest versions installed. Refer [this](https://developer.android.com/studio/releases/gradle-plugin.html#updating-gradle) to see the compatible versions.
 - Kotlin is already configured in the project. To check, go to `Tools > Kotlin > Configure Kotlin in project`. A message saying kotlin is already configured in the project pops up. You can update kotlin to the latest version by going to `Tools > Kotlin > Configure Kotlin updates` and download the latest version of kotlin.
 
