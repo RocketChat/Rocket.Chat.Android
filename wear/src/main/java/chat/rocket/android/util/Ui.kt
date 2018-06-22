@@ -19,8 +19,8 @@ fun Fragment.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) =
     activity?.showToast(message, duration)
 
 fun Activity.addFragment(tag: String, layoutId: Int, newInstance: () -> Fragment) {
-    val fragment = fragmentManager.findFragmentByTag(tag)
+    val fragment = fragmentManager.findFragmentByTag(tag) ?: newInstance()
     fragmentManager.beginTransaction()
-        .replace(R.id.fragment_container, fragment)
+        .replace(layoutId, fragment)
         .commit()
 }

@@ -17,12 +17,12 @@ android {
     }
 
     signingConfigs {
-//        release {
-//            storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
-//            storePassword System.getenv("KEYSTORE_PASSWORD")
-//            keyAlias System.getenv("KEY_ALIAS")
-//            keyPassword System.getenv("KEY_PASSWORD")
-//        }
+        release {
+            storeFile project.rootProject.file('Rocket.jks').getCanonicalFile()
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
 
         debug {
             storeFile project.rootProject.file('debug.keystore').getCanonicalFile()
@@ -89,13 +89,6 @@ dependencies {
     testImplementation libraries.junit
 }
 
-task compileSdk(type: Exec) {
-    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', 'build-sdk.sh'
-    } else {
-        commandLine './build-sdk.sh'
-    }
-}
 kotlin {
     experimental {
         coroutines "enable"
@@ -104,4 +97,12 @@ kotlin {
 
 androidExtensions {
     experimental = true
+}
+
+task compileSdk(type: Exec) {
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine 'cmd', '/c', 'build-sdk.sh'
+    } else {
+        commandLine './build-sdk.sh'
+    }
 }

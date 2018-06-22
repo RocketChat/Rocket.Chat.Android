@@ -16,6 +16,10 @@ import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.AttachmentAdapterFactory
 import chat.rocket.core.internal.ReactionsAdapter
+import com.facebook.drawee.backends.pipeline.DraweeConfig
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
+import com.facebook.imagepipeline.core.ImagePipelineConfig
+import com.facebook.imagepipeline.listener.RequestLoggingListener
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -97,6 +101,26 @@ class AppModule {
     }
 
     @Provides
+    @Singleton
+    fun provideImagePipelineConfig(
+        context: Context,
+        okHttpClient: OkHttpClient
+    ): ImagePipelineConfig {
+        val listeners = setOf(RequestLoggingListener())
+
+        return OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient)
+            .setRequestListeners(listeners)
+            .setDownsampleEnabled(true)
+            .experiment().setPartialImageCachingEnabled(true).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDraweeConfig(): DraweeConfig {
+        return DraweeConfig.newBuilder().build()
+    }
+
+    @Provides
     fun provideJob(): Job {
         return Job()
     }
@@ -131,5 +155,4 @@ class AppModule {
             .add(ReactionsAdapter())
             .build()
     }
-
 }

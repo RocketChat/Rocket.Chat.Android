@@ -1,8 +1,10 @@
 package chat.rocket.android.chatroom.presentation
 
 import chat.rocket.android.chatroom.models.MessageMapperUtils
+import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.server.GetCurrentServerInteractor
 import chat.rocket.android.server.RocketChatClientFactory
+import chat.rocket.android.util.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.util.ifNull
@@ -15,6 +17,7 @@ import javax.inject.Inject
 class ChatRoomPresenter @Inject constructor(
     private val view: ChatRoomView,
     private val navigator: ChatRoomNavigator,
+    private val strategy: CancelStrategy,
     private val mapper: MessageMapperUtils,
     private val serverInteractor: GetCurrentServerInteractor,
     private val factory: RocketChatClientFactory
@@ -23,7 +26,7 @@ class ChatRoomPresenter @Inject constructor(
     private val client = factory.create(currentServer)
 
     fun loadAndShowMessages(chatRoomId: String, chatRoomType: String, offset: Long = 0) {
-        launch {
+        launchUI(strategy) {
             view.showLoading()
             try {
                 val messages =

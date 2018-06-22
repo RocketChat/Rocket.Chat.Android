@@ -75,13 +75,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     override fun showGenericErrorMessage() = showMessage(getString(R.string.msg_generic_error))
 
     override fun showLoading() {
-        view_loading.isVisible = true
-        reply_button_view.isVisible = false
+        ui {
+            view_loading.isVisible = true
+            reply_button_view.isVisible = false
+        }
     }
 
     override fun hideLoading() {
-        view_loading.isVisible = false
-        reply_button_view.isVisible = true
+        ui {
+            view_loading.isVisible = false
+            reply_button_view.isVisible = true
+        }
     }
 
     override fun showMessages(dataSet: List<MessageUiModel>) {

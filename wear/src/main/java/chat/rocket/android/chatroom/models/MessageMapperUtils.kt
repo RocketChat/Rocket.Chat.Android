@@ -5,8 +5,8 @@ import androidx.core.text.scale
 import chat.rocket.android.chatroom.models.messages.MessageUiModel
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.server.GetCurrentServerInteractor
-import chat.rocket.android.util.avatarUrl
 import chat.rocket.android.util.DateTimeHelper
+import chat.rocket.android.util.avatarUrl
 import chat.rocket.android.util.isNotNullNorEmpty
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
@@ -47,8 +47,8 @@ class MessageMapperUtils @Inject constructor(
         val sender = getSenderName(message)
         val time = getTime(message.timestamp)
         val avatar = getUserAvatar(message)
-        val hasAttachments = message.attachments!!.isNotEmpty()
-        val hasUrls = message.urls!!.isNotEmpty()
+        val hasAttachments = (message.attachments != null)
+        val hasUrls = (message.urls != null)
 
         //presently messages with attatchments are not supported
         //TODO add support for url's (without the preview)
