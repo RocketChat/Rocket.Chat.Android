@@ -75,6 +75,12 @@ class AppModule {
 
     @Provides
     @Singleton
+    fun provideLocalRepository(prefs: SharedPreferences, moshi: Moshi): LocalRepository {
+        return SharedPreferencesLocalRepository(prefs, moshi)
+    }
+
+    @Provides
+    @Singleton
     fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(logger)

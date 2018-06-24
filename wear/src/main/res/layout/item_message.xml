@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:background="@color/colorMessageBackgroundDark"
     android:background="?android:attr/selectableItemBackground"
-    android:paddingBottom="@dimen/message_top_and_bottom_padding"
-    android:paddingEnd="@dimen/message_start_and_end_padding"
     android:paddingStart="@dimen/message_start_and_end_padding"
-    android:paddingTop="@dimen/message_top_and_bottom_padding">
+    android:paddingTop="@dimen/message_top_and_bottom_padding"
+    android:paddingEnd="@dimen/message_start_and_end_padding"
+    android:paddingBottom="@dimen/message_top_and_bottom_padding"
+    tools:background="@color/colorMessageBackgroundDark">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/message_sender_avatar"
@@ -58,8 +59,8 @@
         android:maxLines="3"
         android:textColor="@color/white"
         android:textSize="@dimen/message_text_size"
-        app:layout_constraintStart_toStartOf="@id/message_sender_avatar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/message_sender_avatar"
         app:layout_constraintTop_toBottomOf="@id/message_sender_avatar" />
 
     <TextView
@@ -71,8 +72,8 @@
         android:textSize="@dimen/message_text_size"
         android:textStyle="italic"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/message_sender_avatar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/message_sender_avatar"
         app:layout_constraintTop_toBottomOf="@id/message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

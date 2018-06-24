@@ -16,4 +16,9 @@
     <string name="msg_more_than_ninety_nine_unread_messages" translatable="false">99+</string>
     <string name="msg_attachments_exist">This message has attachments.</string>
 
+    <!--EditTextHints-->
+    <string name="hint_send_message">Enter Message</string>
+
+    <!--Helpers-->
+    <string name="current_user_helper">You</string>
 </resources>

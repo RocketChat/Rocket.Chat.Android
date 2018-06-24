@@ -35,3 +35,13 @@ fun Activity.addFragmentBackStack(
         .addToBackStack(tag)
         .commit()
 }
+
+fun Activity.removeFragmentBackStack(
+    tag: String
+) {
+    val fragment = fragmentManager.findFragmentByTag(tag)
+    fragmentManager.beginTransaction()
+        .remove(fragment)
+        .commit()
+    fragmentManager.popBackStack()
+}

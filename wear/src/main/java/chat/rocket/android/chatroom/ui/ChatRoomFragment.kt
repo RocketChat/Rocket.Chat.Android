@@ -94,7 +94,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
     }
 
     override fun showMessages(dataSet: List<MessageUiModel>) {
-        adapter = ChatRoomAdapter(dataSet){
+        adapter = ChatRoomAdapter(context, dataSet) {
             navigator.toCompleteMessage(it)
         }
         ui {
@@ -122,7 +122,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView {
 
     private fun setUpClickListeners() {
         reply_button_view.setOnClickListener {
-            //open view to write message and send it
+            navigator.toReplyMessage(chatRoomId)
         }
     }
 }

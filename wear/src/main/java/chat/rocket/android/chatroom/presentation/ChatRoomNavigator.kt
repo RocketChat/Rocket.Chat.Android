@@ -5,6 +5,7 @@ import chat.rocket.android.chatroom.models.messages.MessageUiModel
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.chatroom.ui.newInstance
 import chat.rocket.android.util.addFragmentBackStack
+import chat.rocket.android.util.removeFragmentBackStack
 
 class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
     fun toChatRoom(chatRoomId: String, chatRoomName: String, chatRoomType: String) {
@@ -17,5 +18,15 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         activity.addFragmentBackStack("CompleteChatRoomFragment", R.id.fragment_container) {
             newInstance(message)
         }
+    }
+
+    fun toReplyMessage(chatRoomId: String) {
+        activity.addFragmentBackStack("ReplyMessage", R.id.fragment_container) {
+            chat.rocket.android.chatroom.reply.ui.newInstance(chatRoomId)
+        }
+    }
+
+    fun removeReplyMessageFragment() {
+        activity.removeFragmentBackStack("ReplyMessage")
     }
 }

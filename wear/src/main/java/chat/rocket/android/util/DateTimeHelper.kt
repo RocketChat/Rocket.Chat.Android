@@ -6,7 +6,7 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 
-object DateTimeHelper{
+object DateTimeHelper {
 
     /**
      * Returns a [LocalDateTime] from a [Long].
