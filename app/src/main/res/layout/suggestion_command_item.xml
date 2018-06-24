@@ -32,7 +32,7 @@
         android:ellipsize="end"
         android:gravity="start"
         android:maxLines="1"
-        android:textColor="@color/gray_material"
+        android:textColor="@color/actionMenuColor"
         android:textSize="14sp"
         tools:text="Leave a channel" />
 
