@@ -7,7 +7,8 @@
     <androidx.wear.widget.WearableRecyclerView
         android:id="@+id/channels_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/colorMessageBackgroundDark" />
 
     <ProgressBar
         android:id="@+id/view_loading"

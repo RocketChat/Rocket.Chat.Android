@@ -75,11 +75,24 @@ class ReplyMessageFragment : Fragment(), ReplyMessageView {
         showMessage(getString(R.string.msg_generic_error))
 
     override fun showLoading() {
-        ui { view_loading.isVisible = true }
+        ui {
+            view_loading.isVisible = true
+            changeViewVisibility(false, 0.5f)
+        }
     }
 
     override fun hideLoading() {
-        ui { view_loading.isVisible = false }
+        ui {
+            view_loading.isVisible = false
+            changeViewVisibility(true, 1.0f)
+        }
+    }
+
+    private fun changeViewVisibility(visibility: Boolean, alpha: Float) {
+        reply_message_edit_text.isEnabled = visibility
+        action_message_send.isEnabled = visibility
+        reply_message_edit_text.alpha = alpha
+        action_message_send.alpha = alpha
     }
 
     private fun getRoomIdFromBundle() {

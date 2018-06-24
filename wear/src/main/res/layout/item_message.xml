@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,8 +8,7 @@
     android:paddingStart="@dimen/message_start_and_end_padding"
     android:paddingTop="@dimen/message_top_and_bottom_padding"
     android:paddingEnd="@dimen/message_start_and_end_padding"
-    android:paddingBottom="@dimen/message_top_and_bottom_padding"
-    tools:background="@color/colorMessageBackgroundDark">
+    android:paddingBottom="@dimen/message_top_and_bottom_padding">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/message_sender_avatar"

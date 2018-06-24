@@ -11,5 +11,4 @@ class ChatRoomModule {
     @Provides
     @PerActivity
     fun provideChatRoomNavigator(activity: ChatRoomActivity) = ChatRoomNavigator(activity)
-
 }

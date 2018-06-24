@@ -8,9 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.models.messages.MessageUiModel
-import chat.rocket.android.util.UserHelper
 import kotlinx.android.synthetic.main.item_message.view.*
-import javax.inject.Inject
 
 class ChatRoomAdapter(
     private val fragmentContext: Context,
@@ -19,8 +17,6 @@ class ChatRoomAdapter(
 ) :
     RecyclerView.Adapter<ChatRoomAdapter.MessageViewHolder>() {
 
-    @Inject
-    lateinit var userHelper: UserHelper
     private val dataItem: List<MessageUiModel>
 
     init {
@@ -47,13 +43,7 @@ class ChatRoomAdapter(
 
         fun bind(messageItem: MessageUiModel) {
             with(itemView) {
-                if (userHelper.username() == messageItem.senderName) {
-                    root_view.setBackgroundColor(resources.getColor(R.color.colorMessageBackgroundLight))
-                    message_sender_name.text =
-                            fragmentContext.getString(R.string.current_user_helper)
-                } else {
-                    message_sender_name.text = messageItem.senderName
-                }
+                message_sender_name.text = messageItem.senderName
                 message_time.text = messageItem.time
                 message.text = messageItem.content
                 message_sender_avatar.setImageURI(messageItem.avatar)

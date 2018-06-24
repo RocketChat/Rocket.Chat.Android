@@ -55,19 +55,18 @@ class DataLayerListenerService : WearableListenerService() {
                 client = factory.create(currentServer)
                 launch {
                     username = retryIO("me()") { client.me().username }
-                }
+                    if (username != null) {
+                        localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
+                    }
 
-                if (username != null) {
-                    localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
-                }
-
-                val isActivityForeground =
-                    sharedPreferencesManager.getSharedPreferenceBoolean(
-                        KEY_PREFS_ACTIVITY_FOREGROUND
-                    )
-                if (isActivityForeground) {
-                    //inform main activity about saving tokens if it is in foreground
-                    //to lead the user to the main activity
+                    val isActivityForeground =
+                        sharedPreferencesManager.getSharedPreferenceBoolean(
+                            KEY_PREFS_ACTIVITY_FOREGROUND
+                        )
+                    if (isActivityForeground) {
+                        //inform main activity about saving tokens if it is in foreground
+                        //to lead the user to the main activity
+                    }
                 }
             }
         } else if (path == PATH_SERVER) {

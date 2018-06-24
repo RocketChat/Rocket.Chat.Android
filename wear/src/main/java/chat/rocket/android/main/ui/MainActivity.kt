@@ -22,6 +22,9 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
     lateinit var presenter: MainPresenter
+    @Inject
+    lateinit var navigator: MainNavigator
+
     private lateinit var chatRoomsFragment: ChatRoomsFragment
     private lateinit var navigationDrawer: WearableNavigationDrawerView
 
@@ -40,9 +43,7 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
 
     private fun initialiseChatRoomsFragment() {
         chatRoomsFragment = ChatRoomsFragment()
-        fragmentManager.beginTransaction()
-            .replace(R.id.content_frame, chatRoomsFragment)
-            .commit()
+        navigator.addChatRoomsFragment(chatRoomsFragment)
     }
 
     private fun setUpTopNavigationDrawer() {
