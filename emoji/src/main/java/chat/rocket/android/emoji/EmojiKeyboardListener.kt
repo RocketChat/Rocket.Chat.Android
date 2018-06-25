@@ -1,4 +1,4 @@
-package chat.rocket.android.widget.emoji
+package chat.rocket.android.emoji
 
 interface EmojiKeyboardListener {
     /**
@@ -6,7 +6,7 @@ interface EmojiKeyboardListener {
      *
      * @param emoji The selected emoji
      */
-    fun onEmojiAdded(emoji: Emoji)
+    fun onEmojiAdded(emoji: Emoji) {}
 
     /**
      * When backspace key is clicked.
@@ -15,5 +15,5 @@ interface EmojiKeyboardListener {
      *
      * @see android.view.KeyEvent
      */
-    fun onNonEmojiKeyPressed(keyCode: Int)
+    fun onNonEmojiKeyPressed(keyCode: Int) {}
 }

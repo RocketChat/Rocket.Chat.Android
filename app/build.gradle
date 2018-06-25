@@ -61,6 +61,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
+    implementation project(':emoji')
 
     implementation libraries.kotlin
     implementation libraries.coroutines

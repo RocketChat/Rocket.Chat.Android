@@ -1,9 +1,10 @@
-package chat.rocket.android.widget.emoji
+package chat.rocket.android.emoji
 
 import android.text.SpannableString
 import android.text.Spanned
 
 class EmojiParser {
+
     companion object {
         /**
          * Parses a text string containing unicode characters and/or shortnames to a rendered
@@ -14,7 +15,7 @@ class EmojiParser {
          */
         fun parse(text: CharSequence): CharSequence {
             val unicodedText = EmojiRepository.shortnameToUnicode(text, true)
-            var spannable = SpannableString.valueOf(unicodedText)
+            val spannable = SpannableString.valueOf(unicodedText)
             val typeface = EmojiRepository.cachedTypeface
             // Look for groups of emojis, set a EmojiTypefaceSpan with the emojione font.
             val length = spannable.length
@@ -48,13 +49,6 @@ class EmojiParser {
                 }
             }
             return spannable
-        }
-
-        private fun calculateSurrogatePairs(scalar: Int): Pair<Int, Int> {
-            val temp: Int = (scalar - 0x10000) / 0x400
-            val s1: Int = Math.floor(temp.toDouble()).toInt() + 0xD800
-            val s2: Int = ((scalar - 0x10000) % 0x400) + 0xDC00
-            return Pair(s1, s2)
         }
     }
 }

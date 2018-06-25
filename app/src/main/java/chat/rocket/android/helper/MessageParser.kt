@@ -16,9 +16,9 @@ import chat.rocket.android.R
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.openTabbedUrl
-import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.android.widget.emoji.EmojiRepository
-import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
+import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.emoji.EmojiTypefaceSpan
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.Message
 import org.commonmark.node.AbstractVisitor
