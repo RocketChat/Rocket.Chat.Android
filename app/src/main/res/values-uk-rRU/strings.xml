@@ -171,6 +171,12 @@
     <!-- Members List -->
     <string name="title_members_list">Пользователи</string>
 
+    <!-- Mentions -->
+    <!-- TODO Add proper translation-->
+    <string name="msg_mentions">Mentions</string>
+    <string name="msg_no_mention">No mention</string>
+    <string name="msg_all_the_mentions_appear_here">All the mentions\nappear here</string>
+
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Прикрепленные сообщения</string>
     <string name="no_pinned_messages">Нет прикрепленных сообщений</string>
