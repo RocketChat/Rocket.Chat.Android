@@ -713,6 +713,9 @@ class ChatRoomPresenter @Inject constructor(
     fun toMembersList(chatRoomId: String) =
         navigator.toMembersList(chatRoomId)
 
+    fun toMentions(chatRoomId: String) =
+        navigator.toMentions(chatRoomId)
+
     fun toPinnedMessageList(chatRoomId: String) =
         navigator.toPinnedMessageList(chatRoomId)
 

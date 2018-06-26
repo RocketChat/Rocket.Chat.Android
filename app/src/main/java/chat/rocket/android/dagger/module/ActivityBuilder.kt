@@ -19,6 +19,7 @@ import chat.rocket.android.files.di.FilesFragmentProvider
 import chat.rocket.android.main.di.MainModule
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.di.MembersFragmentProvider
+import chat.rocket.android.mentions.di.MentionsFragmentProvider
 import chat.rocket.android.pinnedmessages.di.PinnedMessagesFragmentProvider
 import chat.rocket.android.profile.di.ProfileFragmentProvider
 import chat.rocket.android.server.di.ChangeServerModule
@@ -62,6 +63,7 @@ abstract class ActivityBuilder {
             ChatRoomModule::class,
             ChatRoomFragmentProvider::class,
             MembersFragmentProvider::class,
+            MentionsFragmentProvider::class,
             PinnedMessagesFragmentProvider::class,
             FavoriteMessagesFragmentProvider::class,
             FilesFragmentProvider::class
