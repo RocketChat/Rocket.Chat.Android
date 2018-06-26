@@ -216,6 +216,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             R.id.action_members_list -> {
                 presenter.toMembersList(chatRoomId)
             }
+            R.id.action_mentions -> {
+                presenter.toMentions(chatRoomId)
+            }
             R.id.action_pinned_messages -> {
                 presenter.toPinnedMessageList(chatRoomId)
             }
@@ -759,10 +762,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     private fun setupActionSnackbar() {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
-        actionSnackbar.cancelView.setOnClickListener({
+        actionSnackbar.cancelView.setOnClickListener {
             clearMessageComposition()
             KeyboardHelper.showSoftKeyboard(text_message)
-        })
+        }
     }
 
     private fun subscribeComposeTextMessage() {
