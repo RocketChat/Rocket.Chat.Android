@@ -25,7 +25,7 @@
         android:layout_toEndOf="@+id/text_name"
         android:maxLines="1"
         android:layout_marginStart="8dp"
-        android:textColor="@color/gray_material"
+        android:textColor="@color/actionMenuColor"
         android:textSize="16sp"
         tools:text="@tools:sample/full_names" />
 
