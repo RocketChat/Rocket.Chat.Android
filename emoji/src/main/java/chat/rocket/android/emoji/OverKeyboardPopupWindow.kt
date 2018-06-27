@@ -16,21 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package chat.rocket.android.widget.emoji
+package chat.rocket.android.emoji
 
 import android.content.Context
 import android.graphics.Point
 import android.graphics.Rect
 import android.os.Build
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.widget.PopupWindow
-import chat.rocket.android.BuildConfig
-import chat.rocket.android.R
 
 /**
  * Base class to create popup window that appears over software keyboard.
  */
-abstract class OverKeyboardPopupWindow(val context: Context, private val rootView: View) : PopupWindow(context), ViewTreeObserver.OnGlobalLayoutListener {
+abstract class OverKeyboardPopupWindow(
+    val context: Context,
+    private val rootView: View
+) : PopupWindow(context), ViewTreeObserver.OnGlobalLayoutListener {
 
     /**
      * @return keyboard height in pixels
@@ -154,6 +159,4 @@ abstract class OverKeyboardPopupWindow(val context: Context, private val rootVie
     abstract fun onCreateView(inflater: LayoutInflater): View
 
     abstract fun onViewCreated(view: View)
-
-
 }

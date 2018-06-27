@@ -26,7 +26,7 @@ import chat.rocket.android.server.domain.baseUrl
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.isNotNullNorEmpty
-import chat.rocket.android.widget.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.MessageType

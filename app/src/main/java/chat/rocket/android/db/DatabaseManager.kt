@@ -2,7 +2,6 @@ package chat.rocket.android.db
 
 import android.app.Application
 import chat.rocket.android.db.model.BaseUserEntity
-import chat.rocket.android.db.model.ChatRoom
 import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.db.model.UserEntity
 import chat.rocket.android.db.model.UserStatus

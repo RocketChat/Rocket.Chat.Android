@@ -1,9 +1,6 @@
-package chat.rocket.android.widget.emoji
+package chat.rocket.android.emoji
 
 import android.content.Context
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -12,20 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import chat.rocket.android.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 
 
-class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow(context, view) {
+class EmojiKeyboardPopup(
+    context: Context,
+    view: View
+) : OverKeyboardPopupWindow(context, view) {
+
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
     private lateinit var searchView: View
     private lateinit var backspaceView: View
     private lateinit var parentContainer: ViewGroup
     var listener: EmojiKeyboardListener? = null
-
-    companion object {
-        const val PREF_EMOJI_RECENTS = "PREF_EMOJI_RECENTS"
-    }
 
     override fun onCreateView(inflater: LayoutInflater): View {
         val view = inflater.inflate(R.layout.emoji_keyboard, null)
@@ -58,14 +57,14 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
                 is EmojiKeyboardListener -> it
                 else -> {
                     val fragments = (it as AppCompatActivity).supportFragmentManager.fragments
-                    if (fragments == null || fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
+                    if (fragments.size == 0 || !(fragments[0] is EmojiKeyboardListener)) {
                         throw IllegalStateException("activity/fragment should implement Listener interface")
                     }
                     fragments[0] as EmojiKeyboardListener
                 }
             }
 
-            viewPager.adapter = CategoryPagerAdapter(object : EmojiListenerAdapter() {
+            viewPager.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
                 override fun onEmojiAdded(emoji: Emoji) {
                     EmojiRepository.addToRecents(emoji)
                     callback.onEmojiAdded(emoji)
@@ -86,11 +85,11 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
         }
     }
 
-    class EmojiTextWatcher(val editor: EditText) : TextWatcher {
+    class EmojiTextWatcher(private val editor: EditText) : TextWatcher {
         @Volatile private var emojiToRemove = mutableListOf<EmojiTypefaceSpan>()
 
         override fun afterTextChanged(s: Editable) {
-            val message = editor.getEditableText()
+            val message = editor.editableText
 
             // Commit the emoticons to be removed.
             for (span in emojiToRemove.toList()) {
@@ -112,7 +111,7 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             if (after < count) {
                 val end = start + count
-                val message = editor.getEditableText()
+                val message = editor.editableText
                 val list = message.getSpans(start, end, EmojiTypefaceSpan::class.java)
 
                 for (span in list) {
@@ -128,5 +127,9 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         }
+    }
+
+    companion object {
+        const val PREF_EMOJI_RECENTS = "PREF_EMOJI_RECENTS"
     }
 }
