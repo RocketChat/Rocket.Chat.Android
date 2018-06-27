@@ -1,9 +1,6 @@
 package chat.rocket.android.helper
 
-import chat.rocket.android.server.domain.GetCurrentServerInteractor
-import chat.rocket.android.server.domain.GetSettingsInteractor
-import chat.rocket.android.server.domain.PublicSettings
-import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.server.domain.*
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
@@ -24,7 +21,11 @@ class MessageHelper @Inject constructor(
             is RoomType.LiveChat -> "livechat"
             else -> "custom"
         }
-        val name = if (settings.useRealName()) chatRoom.fullName ?: chatRoom.name else chatRoom.name
+        val name = if (settings.useSpecialCharsOnRoom() || settings.useRealName()) {
+            chatRoom.fullName ?: chatRoom.name
+        } else {
+            chatRoom.name
+        }
         return "[ ]($currentServer/$type/$name?msg=${message.id}) "
     }
 
