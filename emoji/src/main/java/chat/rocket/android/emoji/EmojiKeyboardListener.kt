@@ -2,14 +2,14 @@ package chat.rocket.android.emoji
 
 interface EmojiKeyboardListener {
     /**
-     * When an emoji is selected on the picker.
+     * Callback when an emoji is selected on the picker (optional operation).
      *
      * @param emoji The selected emoji
      */
     fun onEmojiAdded(emoji: Emoji) {}
 
     /**
-     * When backspace key is clicked.
+     * Callback when backspace key is clicked (optional operation).
      *
      * @param keyCode The key code pressed as defined
      *
