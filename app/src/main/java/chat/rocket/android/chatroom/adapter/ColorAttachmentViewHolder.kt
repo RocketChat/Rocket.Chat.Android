@@ -16,7 +16,7 @@ class ColorAttachmentViewHolder(itemView: View,
     : BaseViewHolder<ColorAttachmentUiModel>(itemView, listener, reactionListener) {
 
     val drawable: Drawable? = ContextCompat.getDrawable(itemView.context,
-            R.drawable.quote_vertical_bar)
+            R.drawable.quote_vertical_gray_bar)
 
     init {
         with(itemView) {

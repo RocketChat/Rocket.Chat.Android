@@ -17,7 +17,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_arrow_downward_24dp"
         android:theme="@style/Theme.AppCompat"
-        android:tint="@color/gray_material"
+        android:tint="@color/actionMenuColor"
         android:visibility="invisible"
         app:backgroundTint="@color/colorWhite"
         app:fabSize="mini"
