@@ -8,17 +8,27 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.SpannableStringBuilder
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.core.text.bold
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.text.SpannableStringBuilder
-import android.view.*
-import androidx.core.text.bold
-import androidx.core.view.isVisible
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.adapter.*
+import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
+import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.PEOPLE
+import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
@@ -26,6 +36,13 @@ import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.emoji.ComposerEditText
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiKeyboardListener
+import chat.rocket.android.emoji.EmojiKeyboardPopup
+import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiPickerPopup
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -39,7 +56,6 @@ import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.widget.emoji.*
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -556,7 +572,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showReactionsPopup(messageId: String) {
         ui {
             val emojiPickerPopup = EmojiPickerPopup(it)
-            emojiPickerPopup.listener = object : EmojiListenerAdapter() {
+            emojiPickerPopup.listener = object : EmojiKeyboardListener {
                 override fun onEmojiAdded(emoji: Emoji) {
                     onReactionAdded(messageId, emoji)
                 }
@@ -600,15 +616,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     handler.postDelayed(dismissStatus, 2000)
                 }
                 is State.Disconnected -> connection_status_text.text =
-                        getString(R.string.status_disconnected)
+                    getString(R.string.status_disconnected)
                 is State.Connecting -> connection_status_text.text =
-                        getString(R.string.status_connecting)
+                    getString(R.string.status_connecting)
                 is State.Authenticating -> connection_status_text.text =
-                        getString(R.string.status_authenticating)
+                    getString(R.string.status_authenticating)
                 is State.Disconnecting -> connection_status_text.text =
-                        getString(R.string.status_disconnecting)
+                    getString(R.string.status_disconnecting)
                 is State.Waiting -> connection_status_text.text =
-                        getString(R.string.status_waiting, state.seconds)
+                    getString(R.string.status_waiting, state.seconds)
             }
         }
     }
@@ -664,7 +680,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             subscribeComposeTextMessage()
             emojiKeyboardPopup =
-                    EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+                EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {

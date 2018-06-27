@@ -1,4 +1,4 @@
-package chat.rocket.android.widget.emoji
+package chat.rocket.android.emoji
 
 import android.app.Dialog
 import android.content.Context
@@ -9,12 +9,11 @@ import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
-import chat.rocket.android.R
+import kotlinx.android.synthetic.main.emoji_picker.*
 
 
 class EmojiPickerPopup(context: Context) : Dialog(context) {
-    private lateinit var viewPager: ViewPager
-    private lateinit var tabLayout: TabLayout
+
     var listener: EmojiKeyboardListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,9 +21,7 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.emoji_picker)
 
-        viewPager = findViewById(R.id.pager_categories)
-        tabLayout = findViewById(R.id.tabs)
-        tabLayout.setupWithViewPager(viewPager)
+        tabs.setupWithViewPager(pager_categories)
         setupViewPager()
         setSize()
     }
@@ -38,7 +35,7 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
     }
 
     private fun setupViewPager() {
-        viewPager.adapter = CategoryPagerAdapter(object : EmojiListenerAdapter() {
+        pager_categories.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
             override fun onEmojiAdded(emoji: Emoji) {
                 EmojiRepository.addToRecents(emoji)
                 dismiss()
@@ -47,7 +44,7 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
         })
 
         for (category in EmojiCategory.values()) {
-            val tab = tabLayout.getTabAt(category.ordinal)
+            val tab = tabs.getTabAt(category.ordinal)
             val tabView = LayoutInflater.from(context).inflate(R.layout.emoji_picker_tab, null)
             tab?.customView = tabView
             val textView = tabView.findViewById(R.id.image_category) as ImageView
@@ -56,6 +53,6 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
 
         val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
             EmojiCategory.RECENTS.ordinal
-        viewPager.currentItem = currentTab
+        pager_categories.currentItem = currentTab
     }
 }

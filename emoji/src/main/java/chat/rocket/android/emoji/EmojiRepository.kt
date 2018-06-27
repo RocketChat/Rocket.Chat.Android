@@ -1,9 +1,8 @@
-package chat.rocket.android.widget.emoji
+package chat.rocket.android.emoji
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
-import android.os.Build
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -53,10 +52,6 @@ object EmojiRepository {
      * @return All emojis for all categories.
      */
     fun getAll() = ALL_EMOJIS
-
-//    fun findEmojiByUnicode(unicode: Int) {
-//        ALL_EMOJIS.find { it.unicode == }
-//    }
 
     /**
      * Get all emojis for a given category.
@@ -108,7 +103,7 @@ object EmojiRepository {
                 list.add(it.copy(count = useCount))
             }
         }
-        Collections.sort(list, { o1, o2 ->
+        list.sortWith(Comparator { o1, o2 ->
             o2.count - o1.count
         })
         return list
@@ -147,10 +142,10 @@ object EmojiRepository {
             return null
         }
         return Emoji(shortname = json.getString("shortname"),
-                unicode = json.getString("unicode"),
-                shortnameAlternates = buildStringListFromJsonArray(json.getJSONArray("shortnameAlternates")),
-                category = json.getString("category"),
-                keywords = buildStringListFromJsonArray(json.getJSONArray("keywords")))
+            unicode = json.getString("unicode"),
+            shortnameAlternates = buildStringListFromJsonArray(json.getJSONArray("shortnameAlternates")),
+            category = json.getString("category"),
+            keywords = buildStringListFromJsonArray(json.getJSONArray("keywords")))
     }
 
     private fun buildStringListFromJsonArray(array: JSONArray): List<String> {

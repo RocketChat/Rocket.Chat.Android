@@ -9,8 +9,8 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
 import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
-import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import com.google.android.flexbox.FlexDirection

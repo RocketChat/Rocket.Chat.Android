@@ -10,25 +10,36 @@ android {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 1
-        versionName "1.0.0"
+        versionName "0.1"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation libraries.kotlin
-
+    implementation libraries.androidKtx
     implementation libraries.appCompat
+    implementation libraries.kotlin
+    implementation libraries.constraintlayout
+    implementation libraries.recyclerview
+    implementation libraries.material
+}
 
-    implementation libraries.exoPlayer
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
 
-    testImplementation libraries.junit
+androidExtensions {
+    experimental = true
 }
