@@ -19,7 +19,7 @@ import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.domain.GetSettingsInteractor
 import chat.rocket.android.server.domain.SITE_URL
 import chat.rocket.android.server.domain.TokenRepository
-import chat.rocket.android.widget.emoji.EmojiRepository
+import chat.rocket.android.emoji.EmojiRepository
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
 import com.facebook.drawee.backends.pipeline.DraweeConfig

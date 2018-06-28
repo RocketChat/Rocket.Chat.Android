@@ -123,6 +123,9 @@
     // TODO: Add proper translation.
     <string name="msg_search">Search</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
+    <string name="msg_upload_file">फाइल अपलोड करें</string>
+    <string name="msg_file_description">फाइल विवरण</string>
+    <string name="msg_send">भेजें</string>
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
     <string name="msg_upload_file">फाइल अपलोड करें</string>

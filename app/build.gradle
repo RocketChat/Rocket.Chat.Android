@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "chat.rocket.android"
-        minSdkVersion 21
+        minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 2030
         versionName "2.4.0"
@@ -61,6 +61,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(':player')
+    implementation project(':emoji')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
