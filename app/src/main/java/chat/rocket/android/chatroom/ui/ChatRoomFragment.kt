@@ -61,6 +61,8 @@ import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.getMimeType
+import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.android.util.extensions.ui
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
