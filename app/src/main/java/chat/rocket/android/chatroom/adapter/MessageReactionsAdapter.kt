@@ -1,19 +1,19 @@
 package chat.rocket.android.chatroom.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.ReactionUiModel
 import chat.rocket.android.dagger.DaggerLocalComponent
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiKeyboardListener
+import chat.rocket.android.emoji.EmojiPickerPopup
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiListenerAdapter
-import chat.rocket.android.widget.emoji.EmojiPickerPopup
-import chat.rocket.android.widget.emoji.EmojiReactionListener
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
@@ -72,21 +72,23 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     }
 
     fun contains(reactionShortname: String) =
-            reactions.firstOrNull { it.shortname ==  reactionShortname} != null
+        reactions.firstOrNull { it.shortname == reactionShortname } != null
 
     class SingleReactionViewHolder(view: View,
                                    private val listener: EmojiReactionListener?)
         : RecyclerView.ViewHolder(view), View.OnClickListener {
-        @Inject lateinit var localRepository: LocalRepository
-        @Volatile lateinit var reaction: ReactionUiModel
+        @Inject
+        lateinit var localRepository: LocalRepository
+        @Volatile
+        lateinit var reaction: ReactionUiModel
         @Volatile
         var clickHandled = false
 
         init {
             DaggerLocalComponent.builder()
-                    .context(itemView.context)
-                    .build()
-                    .inject(this)
+                .context(itemView.context)
+                .build()
+                .inject(this)
         }
 
         fun bind(reaction: ReactionUiModel) {
@@ -125,7 +127,7 @@ class MessageReactionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
             itemView as ImageView
             itemView.setOnClickListener {
                 val emojiPickerPopup = EmojiPickerPopup(itemView.context)
-                emojiPickerPopup.listener = object : EmojiListenerAdapter() {
+                emojiPickerPopup.listener = object : EmojiKeyboardListener {
                     override fun onEmojiAdded(emoji: Emoji) {
                         listener?.onReactionAdded(messageId, emoji)
                     }

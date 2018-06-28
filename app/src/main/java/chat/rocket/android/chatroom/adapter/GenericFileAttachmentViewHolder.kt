@@ -4,8 +4,8 @@ import android.content.Intent
 import android.view.View
 import androidx.core.net.toUri
 import chat.rocket.android.chatroom.uimodel.GenericFileAttachmentUiModel
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.util.extensions.content
-import chat.rocket.android.widget.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.item_file_attachment.view.*
 
 class GenericFileAttachmentViewHolder(itemView: View,

@@ -1,4 +1,4 @@
-package chat.rocket.android.widget.emoji
+package chat.rocket.android.emoji
 
 import android.content.Context
 import androidx.appcompat.widget.AppCompatEditText

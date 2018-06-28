@@ -238,7 +238,7 @@
     <string name="Slash_Topic_Description">Set topic</string>
 
     <!-- Emoji message-->
-    <string name="msg_no_recent_emoji">No recent emoji</string>
+    <string name="msg_no_recent_emoji">No recent emojis</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Sort</string>
