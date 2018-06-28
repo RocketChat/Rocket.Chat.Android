@@ -727,7 +727,9 @@ class ChatRoomPresenter @Inject constructor(
         launchUI(strategy) {
             try {
                 // Note that if it is favorite then the user wants to unfavorite - and vice versa.
-                client.favorite(roomId, !isFavorite)
+                retryIO("favorite($roomId, $isFavorite)") {
+                    client.favorite(roomId, !isFavorite)
+                }
                 view.showFavoriteIcon(!isFavorite)
             } catch (e: RocketChatException) {
                 Timber.e(e, "Error while trying to favorite/unfavorite chat room.")
