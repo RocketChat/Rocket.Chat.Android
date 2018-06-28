@@ -729,7 +729,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             subscribeComposeTextMessage()
             emojiKeyboardPopup =
-                    EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
+                EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
             emojiKeyboardPopup.listener = this
             text_message.listener = object : ComposerEditText.ComposerEditTextListener {
                 override fun onKeyboardOpened() {
