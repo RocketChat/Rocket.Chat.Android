@@ -13,6 +13,7 @@ import android.widget.CheckBox
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -29,12 +30,11 @@ import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.helper.ChatRoomsSortOrder
 import chat.rocket.android.helper.Constants
 import chat.rocket.android.helper.SharedPreferenceHelper
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
 import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.ChatRoom
@@ -242,16 +242,16 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
     override suspend fun updateChatRooms(newDataSet: List<ChatRoom>) {}
 
     override fun showNoChatRoomsToDisplay() {
-        ui { text_no_data_to_display.setVisible(true) }
+        ui { text_no_data_to_display.isVisible = true }
     }
 
     override fun showLoading() {
-        ui { view_loading.setVisible(true) }
+        ui { view_loading.isVisible = true }
     }
 
     override fun hideLoading() {
         ui {
-            view_loading.setVisible(false)
+            view_loading.isVisible = false
         }
     }
 

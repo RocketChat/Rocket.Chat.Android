@@ -18,7 +18,7 @@
         android:layout_width="4dp"
         android:layout_height="0dp"
         android:layout_marginStart="56dp"
-        android:background="@drawable/quote_vertical_bar"
+        android:background="@drawable/quote_vertical_gray_bar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/recycler_view_reactions"/>

@@ -5,7 +5,7 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.core.view.isVisible
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.core.model.isSystemMessage
 import kotlinx.android.synthetic.main.avatar.view.*
 import kotlinx.android.synthetic.main.item_message.view.*
