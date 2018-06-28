@@ -52,7 +52,16 @@ import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.util.extensions.*
+import chat.rocket.android.util.extensions.asObservable
+import chat.rocket.android.util.extensions.circularRevealOrUnreveal
+import chat.rocket.android.util.extensions.fadeIn
+import chat.rocket.android.util.extensions.fadeOut
+import chat.rocket.android.util.extensions.hideKeyboard
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.rotateBy
+import chat.rocket.android.util.extensions.showToast
+import chat.rocket.android.util.extensions.textContent
+import chat.rocket.android.util.extensions.ui
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -654,15 +663,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                     handler.postDelayed(dismissStatus, 2000)
                 }
                 is State.Disconnected -> connection_status_text.text =
-                        getString(R.string.status_disconnected)
+                    getString(R.string.status_disconnected)
                 is State.Connecting -> connection_status_text.text =
-                        getString(R.string.status_connecting)
+                    getString(R.string.status_connecting)
                 is State.Authenticating -> connection_status_text.text =
-                        getString(R.string.status_authenticating)
+                    getString(R.string.status_authenticating)
                 is State.Disconnecting -> connection_status_text.text =
-                        getString(R.string.status_disconnecting)
+                    getString(R.string.status_disconnecting)
                 is State.Waiting -> connection_status_text.text =
-                        getString(R.string.status_waiting, state.seconds)
+                    getString(R.string.status_waiting, state.seconds)
             }
         }
     }
@@ -687,7 +696,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         recycler_view.layoutManager = linearLayoutManager
         recycler_view.itemAnimator = DefaultItemAnimator()
         endlessRecyclerViewScrollListener = object :
-                EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
+            EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
                 presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }

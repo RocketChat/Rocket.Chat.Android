@@ -119,7 +119,6 @@
     <string name="msg_upload_file">Загрузить файл</string>
     <string name="msg_file_description">Описание файла</string>
     <string name="msg_send">послать</string>
-    // TODO: Add proper translation.
     <string name="msg_delete_message">Удалить сообщение</string>
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
