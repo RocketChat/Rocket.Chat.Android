@@ -175,6 +175,11 @@
     <string name="permission_pinning_not_allowed">पिनि करने की अनुमति नहीं है</string>
     <string name="permission_starring_not_allowed">तारांकित की अनुमति नहीं है</string>
 
+    <!-- Favorite/Unfavorite chat room -->
+    <!-- TODO Add proper translation-->
+    <string name="title_favorite_chat">Favorite chat</string>
+    <string name="title_unfavorite_chat">Unfavorite chat</string>
+
     <!-- Members List -->
     <string name="title_members_list">सदस्य</string>
 
@@ -195,7 +200,7 @@
     <string name="no_favorite_description">सभी पसंदीदा संदेश यहां\nदिखाई देते हैं</string>
 
     <!-- Files -->
-    <string name="msg_files">फ़ाइलें</string>
+    <string name="title_files">फ़ाइलें</string>
     <string name="title_files_total">फ़ाइलें (%d)</string>
     <string name="msg_no_files">कोई फाइल नहीं है</string>
     <string name="msg_all_files_appear_here">सभी फाइलें यहां दिखाई देती हैं</string>
