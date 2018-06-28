@@ -1,6 +1,10 @@
 package chat.rocket.android.helper
 
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.useSpecialCharsOnRoom
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Message
