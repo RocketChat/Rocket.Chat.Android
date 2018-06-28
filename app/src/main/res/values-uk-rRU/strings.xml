@@ -120,6 +120,10 @@
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
     <string name="msg_search">Поиск</string>
+    // TODO: Add proper translation.
+    <string name="msg_upload_file">Upload file</string>
+    <string name="msg_file_description">File description</string>
+    <string name="msg_send">Send</string>
 
     <!-- Create channel messages -->
     <string name="msg_private_channel">Приватный</string>
