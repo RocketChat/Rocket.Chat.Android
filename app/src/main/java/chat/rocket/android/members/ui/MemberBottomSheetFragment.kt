@@ -5,9 +5,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import chat.rocket.android.R
 import chat.rocket.android.util.extensions.content
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.textContent
 import kotlinx.android.synthetic.main.fragment_member_bottom_sheet.*
 
@@ -70,15 +70,15 @@ class MemberBottomSheetFragment: BottomSheetDialogFragment() {
         if (email.isNotEmpty()) {
             text_member_email_address.textContent = email
         } else {
-            text_email_address.setVisible(false)
-            text_member_email_address.setVisible(false)
+            text_email_address.isVisible = false
+            text_member_email_address.isVisible = false
         }
 
         if (utcOffset.isNotEmpty()){
             text_member_utc.content = utcOffset
         } else {
-            text_utc.setVisible(false)
-            text_member_utc.setVisible(false)
+            text_utc.isVisible = false
+            text_member_utc.isVisible = false
         }
     }
 }

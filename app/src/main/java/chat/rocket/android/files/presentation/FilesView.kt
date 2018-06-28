@@ -8,7 +8,7 @@ import chat.rocket.android.files.uimodel.FileUiModel
 interface FilesView : MessageView, LoadingView {
 
     /**
-     * Show list of files for the current room.
+     * Shows the list of files for the current room.
      *
      * @param dataSet The data set to show.
      * @param total The total number of files.

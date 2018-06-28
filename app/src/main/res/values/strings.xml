@@ -177,6 +177,11 @@
     <!-- Members List -->
     <string name="title_members_list">Members</string>
 
+    <!-- Mentions -->
+    <string name="msg_mentions">Mentions</string>
+    <string name="msg_no_mention">No mention</string>
+    <string name="msg_all_the_mentions_appear_here">All the mentions\nappear here</string>
+
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Pinned Messages</string>
     <string name="no_pinned_messages">No pinned messages</string>
@@ -232,7 +237,7 @@
     <string name="Slash_Topic_Description">Set topic</string>
 
     <!-- Emoji message-->
-    <string name="msg_no_recent_emoji">No recent emoji</string>
+    <string name="msg_no_recent_emoji">No recent emojis</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">Sort</string>

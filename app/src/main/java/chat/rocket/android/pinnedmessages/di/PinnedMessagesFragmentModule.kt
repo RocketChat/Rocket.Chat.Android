@@ -1,4 +1,4 @@
-package chat.rocket.android.chatroom.di
+package chat.rocket.android.pinnedmessages.di
 
 import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.core.lifecycle.CancelStrategy

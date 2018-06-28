@@ -195,6 +195,12 @@
     <!-- Members List -->
     <string name="title_members_list">Miembros</string>
 
+    <!-- Mentions -->
+    <!-- TODO Add proper translation-->
+    <string name="msg_mentions">Mentions</string>
+    <string name="msg_no_mention">No mention</string>
+    <string name="msg_all_the_mentions_appear_here">All the mentions\nappear here</string>
+
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Mensajes fijados</string>
     <string name="no_pinned_messages">Sin mensajes fijadas</string>
