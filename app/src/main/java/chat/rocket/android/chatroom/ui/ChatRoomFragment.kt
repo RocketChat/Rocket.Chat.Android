@@ -1,6 +1,7 @@
 package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -8,17 +9,32 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.SpannableStringBuilder
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.core.text.bold
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.text.SpannableStringBuilder
-import android.view.*
-import androidx.core.text.bold
-import androidx.core.view.isVisible
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.adapter.*
+import chat.rocket.android.chatroom.adapter.ChatRoomAdapter
+import chat.rocket.android.chatroom.adapter.CommandSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.PEOPLE
+import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
+import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
@@ -26,20 +42,17 @@ import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.emoji.ComposerEditText
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiKeyboardListener
+import chat.rocket.android.emoji.EmojiKeyboardPopup
+import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiPickerPopup
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.util.extensions.asObservable
-import chat.rocket.android.util.extensions.circularRevealOrUnreveal
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.hideKeyboard
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.rotateBy
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.widget.emoji.*
+import chat.rocket.android.util.extensions.*
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -200,9 +213,51 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF && resultCode == Activity.RESULT_OK) {
             if (resultData != null) {
-                uploadFile(resultData.data)
+                fileAttachmentDialog(resultData.data)
             }
         }
+    }
+
+    private fun fileAttachmentDialog(data: Uri) {
+        val builder = AlertDialog.Builder(activity)
+        val dialogView = View.inflate(context, R.layout.file_attachments_dialog, null)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+
+        dialogView?.let {
+            val imagePreview = it.findViewById<ImageView>(R.id.image_preview)
+            val sendButton = it.findViewById<Button>(R.id.button_send)
+            val cancelButton: Button = it.findViewById(R.id.button_cancel)
+            val description = it.findViewById<EditText>(R.id.text_file_description)
+            val audioVideoAttachment  = it.findViewById<FrameLayout>(R.id.audio_video_attachment)
+            val textFile = it.findViewById<TextView>(R.id.text_file_name)
+
+            activity?.let {
+                data.getMimeType(it).apply {
+                    when {
+                        this.startsWith("image") -> {
+                            imagePreview.isVisible = true
+                            imagePreview.setImageURI(data)
+                        }
+                        this.startsWith("video") -> {
+                            audioVideoAttachment.isVisible = true
+                        }
+                        else -> {
+                            textFile.isVisible = true
+                            textFile.text = data.getFileName(it)
+                        }
+                    }
+                }
+            }
+            sendButton.setOnClickListener {
+                uploadFile(data, description.text.toString())
+                alertDialog.dismiss()
+            }
+            cancelButton.setOnClickListener {
+                alertDialog.dismiss()
+            }
+        }
+        alertDialog.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -399,9 +454,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun uploadFile(uri: Uri) {
-        // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
-        presenter.uploadFile(chatRoomId, uri, "")
+    override fun uploadFile(uri: Uri, msg: String) {
+        presenter.uploadFile(chatRoomId, uri, msg)
     }
 
     override fun showInvalidFileMessage() {
@@ -556,7 +610,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showReactionsPopup(messageId: String) {
         ui {
             val emojiPickerPopup = EmojiPickerPopup(it)
-            emojiPickerPopup.listener = object : EmojiListenerAdapter() {
+            emojiPickerPopup.listener = object : EmojiKeyboardListener {
                 override fun onEmojiAdded(emoji: Emoji) {
                     onReactionAdded(messageId, emoji)
                 }
@@ -633,7 +687,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         recycler_view.layoutManager = linearLayoutManager
         recycler_view.itemAnimator = DefaultItemAnimator()
         endlessRecyclerViewScrollListener = object :
-            EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
+                EndlessRecyclerViewScrollListener(recycler_view.layoutManager as LinearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
                 presenter.loadMessages(chatRoomId, chatRoomType, page * 30L)
             }
