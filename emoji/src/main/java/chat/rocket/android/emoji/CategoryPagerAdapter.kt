@@ -1,18 +1,18 @@
-package chat.rocket.android.widget.emoji
+package chat.rocket.android.emoji
 
-import androidx.viewpager.widget.PagerAdapter
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import chat.rocket.android.R
-import chat.rocket.android.util.extensions.setVisible
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
+import kotlinx.android.synthetic.main.emoji_category_layout.view.*
 import java.util.*
 
-class CategoryPagerAdapter(val listener: EmojiKeyboardListener) : PagerAdapter() {
+internal class CategoryPagerAdapter(private val listener: EmojiKeyboardListener) : PagerAdapter() {
 
     override fun isViewFromObject(view: View, obj: Any): Boolean {
         return view == obj
@@ -20,29 +20,25 @@ class CategoryPagerAdapter(val listener: EmojiKeyboardListener) : PagerAdapter()
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(container.context)
-                .inflate(R.layout.emoji_category_layout, container, false)
-        val layoutManager = GridLayoutManager(view.context, 8)
-        val recycler = view.findViewById(R.id.emojiRecyclerView) as RecyclerView
-        val adapter = EmojiAdapter(layoutManager.spanCount, listener)
-        val category = EmojiCategory.values().get(position)
-        val emojiNoRecentText : TextView = view.findViewById(R.id.text_no_recent_emoji)
-        val emojis = if (category != EmojiCategory.RECENTS) {
-            EmojiRepository.getEmojisByCategory(category)
-        } else {
-            EmojiRepository.getRecents()
+            .inflate(R.layout.emoji_category_layout, container, false)
+        with(view) {
+            val layoutManager = GridLayoutManager(context, 8)
+            val adapter = EmojiAdapter(layoutManager.spanCount, listener)
+            val category = EmojiCategory.values()[position]
+            val emojis = if (category != EmojiCategory.RECENTS) {
+                EmojiRepository.getEmojisByCategory(category)
+            } else {
+                EmojiRepository.getRecents()
+            }
+            val recentEmojiSize = EmojiRepository.getRecents().size
+            text_no_recent_emoji.isVisible = category == EmojiCategory.RECENTS && recentEmojiSize == 0
+            adapter.addEmojis(emojis)
+            emoji_recycler_view.layoutManager = layoutManager
+            emoji_recycler_view.itemAnimator = DefaultItemAnimator()
+            emoji_recycler_view.adapter = adapter
+            emoji_recycler_view.isNestedScrollingEnabled = false
+            container.addView(view)
         }
-        val recentEmojiSize = EmojiRepository.getRecents().size
-        if (category == EmojiCategory.RECENTS && recentEmojiSize == 0){
-            emojiNoRecentText.setVisible(true)
-        }else{
-            emojiNoRecentText.setVisible(false)
-        }
-        adapter.addEmojis(emojis)
-        recycler.layoutManager = layoutManager
-        recycler.itemAnimator = DefaultItemAnimator()
-        recycler.adapter = adapter
-        recycler.isNestedScrollingEnabled = false
-        container.addView(view)
         return view
     }
 
@@ -54,7 +50,11 @@ class CategoryPagerAdapter(val listener: EmojiKeyboardListener) : PagerAdapter()
 
     override fun getPageTitle(position: Int) = EmojiCategory.values()[position].textIcon()
 
-    class EmojiAdapter(val spanCount: Int, val listener: EmojiKeyboardListener) : RecyclerView.Adapter<EmojiRowViewHolder>() {
+    class EmojiAdapter(
+        private val spanCount: Int,
+        private val listener: EmojiKeyboardListener
+    ) : RecyclerView.Adapter<EmojiRowViewHolder>() {
+
         private var emojis = Collections.emptyList<Emoji>()
 
         fun addEmojis(emojis: List<Emoji>) {
@@ -74,7 +74,13 @@ class CategoryPagerAdapter(val listener: EmojiKeyboardListener) : PagerAdapter()
         override fun getItemCount(): Int = emojis.size
     }
 
-    class EmojiRowViewHolder(itemView: View, val itemCount: Int, val spanCount: Int, val listener: EmojiKeyboardListener) : RecyclerView.ViewHolder(itemView) {
+    class EmojiRowViewHolder(
+        itemView: View,
+        private val itemCount: Int,
+        private val spanCount: Int,
+        private val listener: EmojiKeyboardListener
+    ) : RecyclerView.ViewHolder(itemView) {
+
         private val emojiView: TextView = itemView.findViewById(R.id.emoji)
 
         fun bind(emoji: Emoji) {

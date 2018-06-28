@@ -2,11 +2,11 @@ package chat.rocket.android.chatroom.adapter
 
 import android.net.Uri
 import android.view.View
+import androidx.core.view.isVisible
 import chat.rocket.android.chatroom.uimodel.UrlPreviewUiModel
-import chat.rocket.android.util.extensions.content
 import chat.rocket.android.util.extensions.openTabbedUrl
-import chat.rocket.android.util.extensions.setVisible
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.util.extensions.content
 import kotlinx.android.synthetic.main.message_url_preview.view.*
 
 class UrlPreviewViewHolder(itemView: View,
@@ -23,10 +23,10 @@ class UrlPreviewViewHolder(itemView: View,
     override fun bindViews(data: UrlPreviewUiModel) {
         with(itemView) {
             if (data.thumbUrl.isNullOrEmpty()) {
-                image_preview.setVisible(false)
+                image_preview.isVisible = false
             } else {
                 image_preview.setImageURI(data.thumbUrl)
-                image_preview.setVisible(true)
+                image_preview.isVisible = true
             }
             text_host.content = data.hostname
             text_title.content = data.title

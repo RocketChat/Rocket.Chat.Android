@@ -7,8 +7,8 @@ import android.util.Base64
 import android.util.Patterns
 import android.widget.EditText
 import android.widget.TextView
-import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
+import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiTypefaceSpan
 import org.json.JSONObject
 import ru.noties.markwon.Markwon
 import java.net.URLDecoder
