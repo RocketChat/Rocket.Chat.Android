@@ -1,6 +1,5 @@
 package chat.rocket.android.about.ui
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +11,12 @@ import chat.rocket.android.main.ui.MainActivity
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.fragment_about.*
 
-
 class AboutFragment : Fragment() {
 
     companion object {
         fun newInstance() = AboutFragment()
     }
+
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?
