@@ -1,10 +1,10 @@
-package chat.rocket.android.settings.password.di
+package chat.rocket.android.password.di
 
 import androidx.lifecycle.LifecycleOwner
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
-import chat.rocket.android.settings.password.presentation.PasswordView
-import chat.rocket.android.settings.password.ui.PasswordFragment
+import chat.rocket.android.password.presentation.PasswordView
+import chat.rocket.android.password.ui.PasswordFragment
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.experimental.Job
@@ -18,13 +18,13 @@ class PasswordFragmentModule {
 
     @Provides
     @PerFragment
-    fun passwordView(frag: PasswordFragment): PasswordView {
+    fun providePasswordView(frag: PasswordFragment): PasswordView {
         return frag
     }
 
     @Provides
     @PerFragment
-    fun settingsLifecycleOwner(frag: PasswordFragment): LifecycleOwner {
+    fun provideLifecycleOwner(frag: PasswordFragment): LifecycleOwner {
         return frag
     }
 

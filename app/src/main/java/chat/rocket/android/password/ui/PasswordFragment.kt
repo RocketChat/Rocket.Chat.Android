@@ -1,14 +1,15 @@
-package chat.rocket.android.settings.password.ui
+package chat.rocket.android.password.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.Toast
 import chat.rocket.android.R
-import chat.rocket.android.settings.password.presentation.PasswordPresenter
-import chat.rocket.android.settings.password.presentation.PasswordView
 import chat.rocket.android.util.extensions.inflate
 import androidx.appcompat.view.ActionMode
+import chat.rocket.android.main.ui.MainActivity
+import chat.rocket.android.password.presentation.PasswordPresenter
+import chat.rocket.android.password.presentation.PasswordView
 import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
@@ -17,6 +18,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_password.*
+import kotlinx.android.synthetic.main.app_bar.*
 import javax.inject.Inject
 
 class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
@@ -39,6 +41,21 @@ class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
         super.onViewCreated(view, savedInstanceState)
 
         disposables.add(listenToChanges())
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        val toolbar = (activity as MainActivity).toolbar
+        toolbar.title = getString(R.string.title_about)
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar.setNavigationOnClickListener {
+            this.activity?.onBackPressed()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as MainActivity).toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp)
     }
 
     override fun onDestroyView() {
@@ -118,7 +135,7 @@ class PasswordFragment: Fragment(), PasswordView, ActionMode.Callback {
 
     private fun startActionMode() {
         if (actionMode == null) {
-            actionMode = (activity as PasswordActivity).startSupportActionMode(this)
+            actionMode = (activity as MainActivity).startSupportActionMode(this)
         }
     }
 }

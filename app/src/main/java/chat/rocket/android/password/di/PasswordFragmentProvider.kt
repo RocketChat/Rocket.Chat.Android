@@ -1,7 +1,7 @@
-package chat.rocket.android.settings.password.di
+package chat.rocket.android.password.di
 
 import chat.rocket.android.dagger.scope.PerFragment
-import chat.rocket.android.settings.password.ui.PasswordFragment
+import chat.rocket.android.password.ui.PasswordFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

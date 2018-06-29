@@ -20,13 +20,12 @@ import chat.rocket.android.main.di.MainModule
 import chat.rocket.android.main.ui.MainActivity
 import chat.rocket.android.members.di.MembersFragmentProvider
 import chat.rocket.android.mentions.di.MentionsFragmentProvider
+import chat.rocket.android.password.di.PasswordFragmentProvider
 import chat.rocket.android.pinnedmessages.di.PinnedMessagesFragmentProvider
 import chat.rocket.android.profile.di.ProfileFragmentProvider
 import chat.rocket.android.server.di.ChangeServerModule
 import chat.rocket.android.server.ui.ChangeServerActivity
 import chat.rocket.android.settings.di.SettingsFragmentProvider
-import chat.rocket.android.settings.password.di.PasswordFragmentProvider
-import chat.rocket.android.settings.password.ui.PasswordActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -52,6 +51,7 @@ abstract class ActivityBuilder {
             ChatRoomsFragmentProvider::class,
             CreateChannelProvider::class,
             ProfileFragmentProvider::class,
+            PasswordFragmentProvider::class,
             SettingsFragmentProvider::class
         ]
     )
@@ -70,10 +70,6 @@ abstract class ActivityBuilder {
         ]
     )
     abstract fun bindChatRoomActivity(): ChatRoomActivity
-
-    @PerActivity
-    @ContributesAndroidInjector(modules = [PasswordFragmentProvider::class])
-    abstract fun bindPasswordActivity(): PasswordActivity
 
     @PerActivity
     @ContributesAndroidInjector(modules = [ChangeServerModule::class])
