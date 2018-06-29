@@ -18,6 +18,7 @@ import chat.rocket.android.infrastructure.checkIfMyself
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.showLastMessage
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.util.extensions.*
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.model.ChatRoom
@@ -123,7 +124,7 @@ class ChatRoomsAdapter(
         }
 
         private fun chatRoomName(chatRoom: ChatRoom): String {
-            return if (settings.useRealName()) {
+            return if (settings.useSpecialCharsOnRoom() || settings.useRealName()) {
                 chatRoom.fullName ?: chatRoom.name
             } else {
                 chatRoom.name
