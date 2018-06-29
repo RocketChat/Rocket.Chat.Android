@@ -285,10 +285,12 @@ class UiModelMapper @Inject constructor(
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseUiModel<*>? {
         val attachmentUrl = attachmentUrl(attachment)
         val attachmentTitle = attachmentTitle(attachment)
+        val attachmentText = attachmentText(attachment)
+        val attachmentDescription = attachmentDescription(attachment)
         val id = attachmentId(message, attachment)
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentUiModel(message, attachment, message.id,
-                attachmentUrl, attachmentTitle, id, getReactions(message),
+                attachmentUrl, attachmentTitle, attachmentText, attachmentDescription, id, getReactions(message),
                 preview = message.copy(message = context.getString(R.string.msg_preview_photo)))
             is VideoAttachment -> VideoAttachmentUiModel(message, attachment, message.id,
                 attachmentUrl, attachmentTitle, id, getReactions(message),
@@ -335,6 +337,17 @@ class UiModelMapper @Inject constructor(
 
             // Fallback to baseUrl + url
             return@with fullUrl
+        }
+    }
+
+    private fun attachmentText(attachment: FileAttachment): String? {
+        return with(attachment) {
+            return@with text
+        }
+    }
+    private fun attachmentDescription(attachment: FileAttachment): String? {
+        return with(attachment) {
+            return@with description
         }
     }
 

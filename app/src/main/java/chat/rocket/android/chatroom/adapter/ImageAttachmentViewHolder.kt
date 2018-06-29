@@ -28,6 +28,8 @@ class ImageAttachmentViewHolder(
             }.build()
             image_attachment.controller = controller
             file_name.text = data.attachmentTitle
+            file_description.text = data.attachmentDescription
+            file_text.text = data.attachmentText
             image_attachment.setOnClickListener {
                 ImageHelper.openImage(
                     context,
