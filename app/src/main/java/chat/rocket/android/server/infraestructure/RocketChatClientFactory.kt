@@ -27,7 +27,7 @@ class RocketChatClientFactory @Inject constructor(
         val client = RocketChatClient.create {
             httpClient = okHttpClient
             restUrl = url
-            userAgent = "RC Mobile; Android (${Build.VERSION.RELEASE}); v(${BuildConfig.VERSION_NAME}) ((${BuildConfig.VERSION_CODE}))"
+            userAgent = "RC Mobile; Android ${Build.VERSION.RELEASE}; v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
             tokenRepository = repository
             platformLogger = logger
         }

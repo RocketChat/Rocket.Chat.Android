@@ -9,9 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import chat.rocket.android.R
-import chat.rocket.android.settings.about.ui.AboutActivity
+import chat.rocket.android.about.ui.AboutFragment
 import chat.rocket.android.settings.password.ui.PasswordActivity
 import chat.rocket.android.settings.presentation.SettingsView
+import chat.rocket.android.util.extensions.addFragmentBackStack
 import chat.rocket.android.util.extensions.inflate
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlin.reflect.KClass
@@ -39,7 +40,9 @@ class SettingsFragment : Fragment(), SettingsView, AdapterView.OnItemClickListen
                 startNewActivity(PasswordActivity::class)
             }
             resources.getString(R.string.title_about) -> {
-                startNewActivity(AboutActivity::class)
+                (activity as AppCompatActivity).addFragmentBackStack("AboutFragmnet", R.id.fragment_container){
+                    AboutFragment.newInstance()
+                }
             }
         }
     }
