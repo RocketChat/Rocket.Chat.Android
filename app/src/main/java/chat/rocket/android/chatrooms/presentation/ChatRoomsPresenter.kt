@@ -6,6 +6,7 @@ import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.server.domain.SettingsRepository
+import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManager
 import chat.rocket.android.util.extensions.launchUI
@@ -36,13 +37,11 @@ class ChatRoomsPresenter @Inject constructor(
     fun loadChatRoom(chatRoom: chat.rocket.android.db.model.ChatRoom) {
         with(chatRoom.chatRoom) {
             val isDirectMessage = roomTypeOf(type) is RoomType.DirectMessage
-            val roomName = if (isDirectMessage
-                    && fullname != null
-                    && settings.useRealName()) {
-                fullname!!
-            } else {
-                name
-            }
+            val roomName = if (settings.useSpecialCharsOnRoom() || (isDirectMessage && settings.useRealName())) {
+                    fullname ?: name
+                } else {
+                    name
+                }
 
             launchUI(strategy) {
                 val myself = getCurrentUser()
