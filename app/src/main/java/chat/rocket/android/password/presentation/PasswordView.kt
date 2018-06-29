@@ -1,4 +1,4 @@
-package chat.rocket.android.settings.password.presentation
+package chat.rocket.android.password.presentation
 
 import chat.rocket.android.core.behaviours.LoadingView
 
