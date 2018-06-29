@@ -60,9 +60,17 @@ class ChatRoomsPresenter @Inject constructor(
                     } else {
                         id
                     }
-                    val isChatRoomOwner = ownerId == myself.id || isDirectMessage
-                    navigator.toChatRoom(id, roomName, type, readonly ?: false,
-                            lastSeen ?: -1, open, isChatRoomOwner)
+
+                    navigator.toChatRoom(
+                        chatRoomId =  id,
+                        chatRoomName = roomName,
+                        chatRoomType = type,
+                        isReadOnly = readonly ?: false,
+                        chatRoomLastSeen = lastSeen ?: -1,
+                        isSubscribed = open,
+                        isCreator = ownerId == myself.id || isDirectMessage,
+                        isFavorite = favorite ?: false
+                    )
                 }
             }
         }

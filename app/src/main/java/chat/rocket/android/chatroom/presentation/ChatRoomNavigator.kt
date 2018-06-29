@@ -51,6 +51,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         chatRoomLastSeen: Long,
         isChatRoomSubscribed: Boolean,
         isChatRoomCreator: Boolean,
+        isChatRoomFavorite: Boolean,
         chatRoomMessage: String
     ) {
         activity.startActivity(
@@ -62,6 +63,7 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
                 chatRoomLastSeen,
                 isChatRoomSubscribed,
                 isChatRoomCreator,
+                isChatRoomFavorite,
                 chatRoomMessage
             )
         )
