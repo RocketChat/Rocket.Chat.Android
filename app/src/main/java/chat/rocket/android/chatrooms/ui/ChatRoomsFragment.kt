@@ -148,7 +148,8 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
         inflater.inflate(R.menu.chatrooms, menu)
 
         val searchItem = menu.findItem(R.id.action_search)
-        searchView = searchItem?.actionView as SearchView?
+        searchView = searchItem?.actionView as? SearchView
+        searchView?.setIconifiedByDefault(false)
         searchView?.maxWidth = Integer.MAX_VALUE
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -176,7 +177,7 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                     0 -> R.id.radio_sort_alphabetical
                     else -> R.id.radio_sort_activity
                 })
-                radioGroup.setOnCheckedChangeListener({ _, checkedId ->
+                radioGroup.setOnCheckedChangeListener { _, checkedId ->
                     run {
                         SharedPreferenceHelper.putInt(Constants.CHATROOM_SORT_TYPE_KEY, when (checkedId) {
                             R.id.radio_sort_alphabetical -> 0
@@ -184,23 +185,21 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
                             else -> 1
                         })
                     }
-                })
+                }
 
                 groupByTypeCheckBox.isChecked = groupByType
-                groupByTypeCheckBox.setOnCheckedChangeListener({ _, isChecked ->
+                groupByTypeCheckBox.setOnCheckedChangeListener { _, isChecked ->
                     SharedPreferenceHelper.putBoolean(Constants.CHATROOM_GROUP_BY_TYPE_KEY, isChecked)
-                })
+                }
 
-                val dialogSort = AlertDialog.Builder(context)
+                AlertDialog.Builder(context)
                     .setTitle(R.string.dialog_sort_title)
                     .setView(dialogLayout)
-                    .setPositiveButton("Done", { dialog, _ ->
+                    .setPositiveButton("Done") { dialog, _ ->
                         invalidateQueryOnSearch()
                         updateSort()
                         dialog.dismiss()
-                    })
-
-                dialogSort.show()
+                    }.show()
             }
         }
         return super.onOptionsItemSelected(item)
