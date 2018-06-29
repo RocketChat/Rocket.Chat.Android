@@ -9,7 +9,7 @@
     <item
         android:id="@+id/action_mentions"
         android:title="@string/msg_mentions"
-        app:showAsAction="never" />
+        android:showAsAction="never" />
 
     <item
         android:id="@+id/action_pinned_messages"
