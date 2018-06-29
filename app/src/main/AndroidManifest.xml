@@ -79,11 +79,6 @@
             android:name=".settings.password.ui.PasswordActivity"
             android:theme="@style/AppTheme" />
 
-        <!-- TODO: Change to fragment -->
-        <activity
-            android:name=".settings.about.ui.AboutActivity"
-            android:theme="@style/AppTheme" />
-
         <receiver
             android:name=".push.DirectReplyReceiver"
             android:enabled="true"
