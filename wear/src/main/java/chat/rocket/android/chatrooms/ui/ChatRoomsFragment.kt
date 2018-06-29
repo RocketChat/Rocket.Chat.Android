@@ -27,6 +27,10 @@ class ChatRoomsFragment : Fragment(), ChatRoomsView {
 
     private lateinit var adapter: ChatRoomsAdapter
 
+    companion object {
+        fun newInstance() = ChatRoomsFragment()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)

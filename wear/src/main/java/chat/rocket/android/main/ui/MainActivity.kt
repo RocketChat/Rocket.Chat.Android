@@ -3,10 +3,8 @@ package chat.rocket.android.main.ui
 import android.app.Activity
 import android.app.Fragment
 import android.os.Bundle
-import android.widget.Toast
 import androidx.wear.widget.drawer.WearableNavigationDrawerView
 import chat.rocket.android.R
-import chat.rocket.android.chatrooms.ui.ChatRoomsFragment
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
 import dagger.android.*
@@ -25,7 +23,6 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
     @Inject
     lateinit var navigator: MainNavigator
 
-    private lateinit var chatRoomsFragment: ChatRoomsFragment
     private lateinit var navigationDrawer: WearableNavigationDrawerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,8 +39,7 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
         fragmentDispatchingAndroidInjector
 
     private fun initialiseChatRoomsFragment() {
-        chatRoomsFragment = ChatRoomsFragment()
-        navigator.addChatRoomsFragment(chatRoomsFragment)
+        navigator.addChatRoomsFragment()
     }
 
     private fun setUpTopNavigationDrawer() {
@@ -52,13 +48,13 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
         navigationDrawer.setAdapter(mainNavigationAdapter)
         navigationDrawer.controller.peekDrawer()
         navigationDrawer.addOnItemSelectedListener { pos ->
-            Toast.makeText(this, "Selected position $pos", Toast.LENGTH_SHORT).show()
-            //Add various fragments here
-//            when(pos){
-//                1->{
-//
-//                }
-//            }
+            when (pos) {
+                0 -> navigator.addChatRoomsFragment()
+
+                1 -> navigator.addSettingsFragment()
+
+                2 -> presenter.logout()
+            }
         }
     }
 }

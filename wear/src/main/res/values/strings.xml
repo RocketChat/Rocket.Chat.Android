@@ -21,4 +21,9 @@
 
     <!--Helpers-->
     <string name="current_user_helper">You</string>
+
+    <!--Settings-->
+    <string name="default_settings_item">Account</string>
+    <string name="settings_item_account">@string/default_settings_item</string>
+
 </resources>
