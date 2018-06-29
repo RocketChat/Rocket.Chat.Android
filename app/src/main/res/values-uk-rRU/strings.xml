@@ -171,6 +171,11 @@
     <string name="permission_pinning_not_allowed">Прикрепление запрещено</string>
     <string name="permission_starring_not_allowed">Отмечивание запрещено</string>
 
+    <!-- Favorite/Unfavorite chat room -->
+    <!-- TODO Add proper translation-->
+    <string name="title_favorite_chat">Favorite chat</string>
+    <string name="title_unfavorite_chat">Unfavorite chat</string>
+
     <!-- Members List -->
     <string name="title_members_list">Пользователи</string>
 
@@ -190,7 +195,7 @@
     <string name="no_favorite_description">Все избранные сообщения\nотображаются здесь</string>
 
     <!-- Files -->
-    <string name="msg_files">Файлы</string>
+    <string name="title_files">Файлы</string>
     <string name="title_files_total">Файлы (%d)</string>
     <string name="msg_no_files">Нет файлов</string>
     <string name="msg_all_files_appear_here">Все файлы отображаются здесь</string>

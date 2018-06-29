@@ -175,6 +175,10 @@
     <string name="permission_pinning_not_allowed">Pinagem não permitida</string>
     <string name="permission_starring_not_allowed">Favoritar não permitido</string>
 
+    <!-- Favorite/Unfavorite chat room -->
+    <string name="title_favorite_chat">Favoritar canal</string>
+    <string name="title_unfavorite_chat">Desfavoritar canal</string>
+
     <!-- Members List -->
     <string name="title_members_list">Membros</string>
 
@@ -194,7 +198,7 @@
     <string name="no_favorite_description">Todas mensagens favoritas\naparecerão aqui</string>
 
     <!-- Files -->
-    <string name="msg_files">Arquivos</string>
+    <string name="title_files">Arquivos</string>
     <string name="title_files_total">Arquivos (%d)</string>
     <string name="msg_no_files">Nenhum arquivo</string>
     <string name="msg_all_files_appear_here">Todos arquivos aparecerão aqui</string>

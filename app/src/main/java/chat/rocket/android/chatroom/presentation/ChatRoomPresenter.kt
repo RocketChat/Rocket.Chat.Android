@@ -62,6 +62,7 @@ import chat.rocket.core.internal.rest.unpinMessage
 import chat.rocket.core.internal.rest.unstarMessage
 import chat.rocket.core.internal.rest.updateMessage
 import chat.rocket.core.internal.rest.uploadFile
+import chat.rocket.core.internal.rest.favorite
 import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
@@ -723,6 +724,25 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
+        launchUI(strategy) {
+            try {
+                // Note that if it is favorite then the user wants to unfavorite - and vice versa.
+                retryIO("favorite($roomId, $isFavorite)") {
+                    client.favorite(roomId, !isFavorite)
+                }
+                view.showFavoriteIcon(!isFavorite)
+            } catch (e: RocketChatException) {
+                Timber.e(e, "Error while trying to favorite/unfavorite chat room.")
+                e.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
+        }
+    }
+
     fun toMembersList(chatRoomId: String) =
         navigator.toMembersList(chatRoomId)
 
@@ -785,6 +805,7 @@ class ChatRoomPresenter @Inject constructor(
                             chatRoomLastSeen = it.lastSeen ?: -1,
                             chatRoomName = roomName,
                             isChatRoomCreator = false,
+                            isChatRoomFavorite = false,
                             isChatRoomReadOnly = false,
                             isChatRoomSubscribed = it.open,
                             chatRoomMessage = message
