@@ -76,7 +76,7 @@ import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
