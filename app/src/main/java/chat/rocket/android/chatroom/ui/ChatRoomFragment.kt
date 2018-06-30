@@ -1,6 +1,7 @@
 package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -16,6 +17,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -56,6 +58,8 @@ import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.util.extensions.getMimeType
+import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -76,10 +80,11 @@ fun newInstance(
     chatRoomId: String,
     chatRoomName: String,
     chatRoomType: String,
-    isChatRoomReadOnly: Boolean,
+    isReadOnly: Boolean,
     chatRoomLastSeen: Long,
     isSubscribed: Boolean = true,
-    isChatRoomCreator: Boolean = false,
+    isCreator: Boolean = false,
+    isFavorite: Boolean = false,
     chatRoomMessage: String? = null
 ): Fragment {
     return ChatRoomFragment().apply {
@@ -87,10 +92,11 @@ fun newInstance(
             putString(BUNDLE_CHAT_ROOM_ID, chatRoomId)
             putString(BUNDLE_CHAT_ROOM_NAME, chatRoomName)
             putString(BUNDLE_CHAT_ROOM_TYPE, chatRoomType)
-            putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isChatRoomReadOnly)
+            putBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY, isReadOnly)
             putLong(BUNDLE_CHAT_ROOM_LAST_SEEN, chatRoomLastSeen)
             putBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED, isSubscribed)
-            putBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR, isChatRoomCreator)
+            putBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR, isCreator)
+            putBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE, isFavorite)
             putString(BUNDLE_CHAT_ROOM_MESSAGE, chatRoomMessage)
         }
     }
@@ -104,7 +110,15 @@ private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
+private const val BUNDLE_CHAT_ROOM_IS_FAVORITE = "chat_room_is_favorite"
 private const val BUNDLE_CHAT_ROOM_MESSAGE = "chat_room_message"
+
+private const val MENU_ACTION_FAVORITE_UNFAVORITE_CHAT = 1
+private const val MENU_ACTION_MEMBER = 2
+private const val MENU_ACTION_MENTIONS = 3
+private const val MENU_ACTION_PINNED_MESSAGES = 4
+private const val MENU_ACTION_FAVORITE_MESSAGES = 5
+private const val MENU_ACTION_FILES = 6
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
 
@@ -118,8 +132,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var chatRoomType: String
     private var chatRoomMessage: String? = null
     private var isSubscribed: Boolean = true
-    private var isChatRoomReadOnly: Boolean = false
-    private var isChatRoomCreator: Boolean = false
+    private var isReadOnly: Boolean = false
+    private var isCreator: Boolean = false
+    private var isFavorite: Boolean = false
     private var isBroadcastChannel: Boolean = false
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var chatRoomLastSeen: Long = -1
@@ -158,10 +173,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             chatRoomId = bundle.getString(BUNDLE_CHAT_ROOM_ID)
             chatRoomName = bundle.getString(BUNDLE_CHAT_ROOM_NAME)
             chatRoomType = bundle.getString(BUNDLE_CHAT_ROOM_TYPE)
-            isChatRoomReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
+            isReadOnly = bundle.getBoolean(BUNDLE_IS_CHAT_ROOM_READ_ONLY)
             isSubscribed = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_SUBSCRIBED)
             chatRoomLastSeen = bundle.getLong(BUNDLE_CHAT_ROOM_LAST_SEEN)
-            isChatRoomCreator = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR)
+            isCreator = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_CREATOR)
+            isFavorite = bundle.getBoolean(BUNDLE_CHAT_ROOM_IS_FAVORITE)
             chatRoomMessage = bundle.getString(BUNDLE_CHAT_ROOM_MESSAGE)
         } else {
             requireNotNull(bundle) { "no arguments supplied when the fragment was instantiated" }
@@ -216,36 +232,128 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF && resultCode == Activity.RESULT_OK) {
             if (resultData != null) {
-                uploadFile(resultData.data)
+                fileAttachmentDialog(resultData.data)
             }
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.chatroom_actions, menu)
-        menu.findItem(R.id.action_members_list)?.isVisible = !isBroadcastChannel
+    private fun fileAttachmentDialog(data: Uri) {
+        val builder = AlertDialog.Builder(activity)
+        val dialogView = View.inflate(context, R.layout.file_attachments_dialog, null)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+
+        dialogView?.let {
+            val imagePreview = it.findViewById<ImageView>(R.id.image_preview)
+            val sendButton = it.findViewById<Button>(R.id.button_send)
+            val cancelButton: Button = it.findViewById(R.id.button_cancel)
+            val description = it.findViewById<EditText>(R.id.text_file_description)
+            val audioVideoAttachment  = it.findViewById<FrameLayout>(R.id.audio_video_attachment)
+            val textFile = it.findViewById<TextView>(R.id.text_file_name)
+
+            activity?.let {
+                data.getMimeType(it).apply {
+                    when {
+                        this.startsWith("image") -> {
+                            imagePreview.isVisible = true
+                            imagePreview.setImageURI(data)
+                        }
+                        this.startsWith("video") -> {
+                            audioVideoAttachment.isVisible = true
+                        }
+                        else -> {
+                            textFile.isVisible = true
+                            textFile.text = data.getFileName(it)
+                        }
+                    }
+                }
+            }
+            sendButton.setOnClickListener {
+                uploadFile(data, description.text.toString())
+                alertDialog.dismiss()
+            }
+            cancelButton.setOnClickListener {
+                alertDialog.dismiss()
+            }
+        }
+        alertDialog.show()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.clear()
+        if (isFavorite) {
+            menu.add(
+                Menu.NONE,
+                MENU_ACTION_FAVORITE_UNFAVORITE_CHAT,
+                Menu.NONE,
+                R.string.title_unfavorite_chat
+            )
+                .setIcon(R.drawable.ic_star_yellow_24dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        } else {
+            menu.add(
+                Menu.NONE,
+                MENU_ACTION_FAVORITE_UNFAVORITE_CHAT,
+                Menu.NONE,
+                R.string.title_favorite_chat
+            )
+                .setIcon(R.drawable.ic_star_border_white_24dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        }
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_MEMBER,
+            Menu.NONE,
+            R.string.title_members_list
+        )
+
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_MENTIONS,
+            Menu.NONE,
+            R.string.msg_mentions
+        )
+
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_PINNED_MESSAGES,
+            Menu.NONE,
+            R.string.title_pinned_messages
+        )
+
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_FAVORITE_MESSAGES,
+            Menu.NONE,
+            R.string.title_favorite_messages
+        )
+
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_FILES,
+            Menu.NONE,
+            R.string.title_files
+        )
+        super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_members_list -> {
-                presenter.toMembersList(chatRoomId)
+            MENU_ACTION_FAVORITE_UNFAVORITE_CHAT -> {
+                presenter.toggleFavoriteChatRoom(chatRoomId, isFavorite)
             }
-            R.id.action_mentions -> {
-                presenter.toMentions(chatRoomId)
-            }
-            R.id.action_pinned_messages -> {
-                presenter.toPinnedMessageList(chatRoomId)
-            }
-            R.id.action_favorite_messages -> {
-                presenter.toFavoriteMessageList(chatRoomId)
-            }
-            R.id.action_files -> {
-                presenter.toFileList(chatRoomId)
-            }
+            MENU_ACTION_MEMBER -> presenter.toMembersList(chatRoomId)
+            MENU_ACTION_MENTIONS -> presenter.toMentions(chatRoomId)
+            MENU_ACTION_PINNED_MESSAGES -> presenter.toPinnedMessageList(chatRoomId)
+            MENU_ACTION_FAVORITE_MESSAGES -> presenter.toFavoriteMessageList(chatRoomId)
+            MENU_ACTION_FILES -> presenter.toFileList(chatRoomId)
         }
         return true
+    }
+
+    override fun showFavoriteIcon(isFavorite: Boolean) {
+        this.isFavorite = isFavorite
+        activity?.invalidateOptionsMenu()
     }
 
     override fun showMessages(dataSet: List<BaseUiModel<*>>) {
@@ -415,9 +523,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun uploadFile(uri: Uri) {
-        // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
-        presenter.uploadFile(chatRoomId, uri, "")
+    override fun uploadFile(uri: Uri, msg: String) {
+        presenter.uploadFile(chatRoomId, uri, msg)
     }
 
     override fun showInvalidFileMessage() {
@@ -666,7 +773,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     private fun setupMessageComposer(canPost: Boolean) {
-        if (isChatRoomReadOnly && !canPost) {
+        if (isReadOnly && !canPost) {
             text_room_is_read_only.isVisible = true
             input_container.isVisible = false
         } else if (!isSubscribed && roomTypeOf(chatRoomType) !is RoomType.DirectMessage) {
