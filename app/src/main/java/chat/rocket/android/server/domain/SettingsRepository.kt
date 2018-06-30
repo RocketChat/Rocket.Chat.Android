@@ -5,11 +5,6 @@ import chat.rocket.core.model.Value
 
 typealias PublicSettings = Map<String, Value<Any>>
 
-interface SettingsRepository {
-    fun save(url: String, settings: PublicSettings)
-    fun get(url: String): PublicSettings
-}
-
 // Authentication methods.
 const val LDAP_ENABLE = "LDAP_Enable"
 const val CAS_ENABLE = "CAS_enabled"
@@ -76,6 +71,7 @@ fun PublicSettings.gitlabUrl(): String? = this[ACCOUNT_GITLAB_URL]?.value as Str
 fun PublicSettings.isWordpressAuthenticationEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
 
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
+fun PublicSettings.useSpecialCharsOnRoom(): Boolean = this[ALLOW_ROOM_NAME_SPECIAL_CHARS]?.value == true
 fun PublicSettings.faviconLarge(): String? = this[FAVICON_512]?.value as String?
 fun PublicSettings.favicon(): String? = this[FAVICON_196]?.value as String?
 fun PublicSettings.wideTile(): String? = this[WIDE_TILE_310]?.value as String?
@@ -105,3 +101,8 @@ fun PublicSettings.uploadMaxFileSize(): Int {
 
 fun PublicSettings.baseUrl(): String = this[SITE_URL]?.value as String
 fun PublicSettings.siteName(): String? = this[SITE_NAME]?.value as String?
+
+interface SettingsRepository {
+    fun save(url: String, settings: PublicSettings)
+    fun get(url: String): PublicSettings
+}

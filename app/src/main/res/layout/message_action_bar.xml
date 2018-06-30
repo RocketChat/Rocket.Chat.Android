@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorWhite">
 
     <View
         android:id="@+id/quote_bar"
         android:layout_width="4dp"
         android:layout_height="0dp"
-        android:background="@drawable/quote_vertical_bar"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/quote_vertical_blue_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view_action_cancel_quote"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,17 +22,17 @@
         android:id="@+id/text_view_action_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/actionMenuColor"
         android:textSize="14sp"
         android:typeface="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_view_action_cancel_quote"
+        app:layout_constraintStart_toEndOf="@+id/quote_bar"
         app:layout_constraintTop_toBottomOf="@+id/text_view_action_title"
         tools:text="action text" />
 
@@ -39,26 +40,29 @@
         android:id="@+id/image_view_action_cancel_quote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/quote_bar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close_white_24dp" />
+        app:srcCompat="@drawable/ic_close_gray_24dp" />
 
     <TextView
         android:id="@+id/text_view_action_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/text_view_action_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_view_action_cancel_quote"
+        app:layout_constraintStart_toEndOf="@+id/quote_bar"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Edit message" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

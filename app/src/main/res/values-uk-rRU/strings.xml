@@ -15,6 +15,7 @@
     <string name="title_password">Изменить пароль</string>
     <string name="title_update_profile">Обновить профиль</string>
     <string name="title_about">О программе</string>
+    <string name="title_create_channel">Создать новый канал</string>
 
     <!-- Actions -->
     <string name="action_connect">Соединение</string>
@@ -25,6 +26,8 @@
     <string name="action_search">Поиск</string>
     <string name="action_update">Обновить</string>
     <string name="action_settings">Настройки</string>
+    <string name="action_create_channel">Создать канал</string>
+    <string name="action_create">Создать</string>
     <string name="action_logout">Выйти</string>
     <string name="action_files">Файлы</string>
     <string name="action_confirm_password">Подтверждение изменения пароля</string>
@@ -112,6 +115,23 @@
     <string name="msg_are_typing">\u0020печатают…</string>
     <string name="msg_several_users_are_typing">Несколько пользователей печатают…</string>
     <string name="msg_no_search_found">Результатов не найдено</string>
+    <string name="msg_message_copied">Сообщение скопировано</string>
+    <string name="msg_delete_message">Удалить сообщение</string>
+    <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
+    <string name="msg_channel_name">Название канала</string>
+    <string name="msg_search">Поиск</string>
+
+    <!-- Create channel messages -->
+    <string name="msg_private_channel">Приватный</string>
+    <string name="msg_public_channel">Публичный</string>
+    <string name="msg_private_channel_description">Только вы и приглашенные пользователи могут получить доступ к этому каналу</string>
+    <string name="msg_public_channel_description">Каждый может получить доступ к этому каналу</string>
+    <string name="msg_ready_only_channel">Канал только для чтения</string>
+    <string name="msg_ready_only_channel_description">Только администратор может писать новые сообщения</string>
+    <string name="msg_invite_members">Пригласить пользователей на канал</string>
+    <string name="msg_member_already_added">Вы уже выбрали этого пользователя</string>
+    <string name="msg_member_not_found">Пользователь не найден</string>
+    <string name="msg_channel_created_successfully">Канал создан успешно</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">Название канала изменено на: %1$s by %2$s</string>
@@ -148,8 +168,18 @@
     <string name="permission_pinning_not_allowed">Прикрепление запрещено</string>
     <string name="permission_starring_not_allowed">Отмечивание запрещено</string>
 
+    <!-- Favorite/Unfavorite chat room -->
+    <!-- TODO Add proper translation-->
+    <string name="title_favorite_chat">Favorite chat</string>
+    <string name="title_unfavorite_chat">Unfavorite chat</string>
+
     <!-- Members List -->
     <string name="title_members_list">Пользователи</string>
+
+    <!-- Mentions -->
+    <string name="msg_mentions">Упоминания</string>
+    <string name="msg_no_mention">Нет упоминаний</string>
+    <string name="msg_all_the_mentions_appear_here">Все упоминания\nотображаются здесь</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">Прикрепленные сообщения</string>
@@ -162,7 +192,7 @@
     <string name="no_favorite_description">Все избранные сообщения\nотображаются здесь</string>
 
     <!-- Files -->
-    <string name="msg_files">Файлы</string>
+    <string name="title_files">Файлы</string>
     <string name="title_files_total">Файлы (%d)</string>
     <string name="msg_no_files">Нет файлов</string>
     <string name="msg_all_files_appear_here">Все файлы отображаются здесь</string>

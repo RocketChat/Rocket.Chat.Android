@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".chatroom.ui.ChatRoomFragment">
-
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/view_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:indicatorColor="@color/colorBlack"
-        app:indicatorName="BallPulseIndicator"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/message_list_container"
@@ -43,13 +30,11 @@
         android:layout_height="100dp"
         android:src="@drawable/ic_chat_black_24dp"
         android:tint="@color/icon_grey"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/text_chat_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:visibility="visible" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/text_chat_title"
@@ -60,12 +45,10 @@
         android:textColor="@color/colorSecondaryText"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/text_chat_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_chat_icon"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@id/image_chat_icon" />
 
     <TextView
         android:id="@+id/text_chat_description"
@@ -76,11 +59,17 @@
         android:textAlignment="center"
         android:textColor="@color/colorSecondaryTextLight"
         android:textSize="16sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layout_message_composer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_chat_title"
+        app:layout_constraintTop_toBottomOf="@id/text_chat_title" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/empty_chat_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="image_chat_icon, text_chat_title, text_chat_description"
+        android:visibility="gone"
         tools:visibility="visible" />
 
     <chat.rocket.android.widget.autocompletion.ui.SuggestionsView
@@ -142,4 +131,17 @@
         tools:text="connected"
         tools:visibility="visible" />
 
-</android.support.constraint.ConstraintLayout>
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorBlack"
+        app:indicatorName="BallPulseIndicator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

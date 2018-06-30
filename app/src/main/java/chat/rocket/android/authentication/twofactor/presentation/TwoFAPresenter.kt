@@ -25,7 +25,8 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                                          private val navigator: AuthenticationNavigator,
                                          private val tokenRepository: TokenRepository,
                                          private val localRepository: LocalRepository,
-                                         private val serverInteractor: GetCurrentServerInteractor,
+                                         private val serverInteractor: GetConnectingServerInteractor,
+                                         private val saveCurrentServerInteractor: SaveCurrentServerInteractor,
                                          private val factory: RocketChatClientFactory,
                                          private val saveAccountInteractor: SaveAccountInteractor,
                                          private val getAccountsInteractor: GetAccountsInteractor,
@@ -55,6 +56,7 @@ class TwoFAPresenter @Inject constructor(private val view: TwoFAView,
                         }
                         val me = retryIO("me") { client.me() }
                         saveAccount(me)
+                        saveCurrentServerInteractor.save(currentServer)
                         tokenRepository.save(server, token)
                         registerPushToken()
                         navigator.toChatList()

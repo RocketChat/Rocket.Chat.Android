@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".chatrooms.ui.ChatRoomsFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -46,14 +46,13 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/text_no_search"
+        android:id="@+id/text_no_result_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="56dp"
         android:text="@string/msg_no_search_found"
         android:textSize="20sp"
-        android:layout_centerHorizontal="true"
         android:visibility="gone"
         tools:visibility="visible" />
-
 </RelativeLayout>

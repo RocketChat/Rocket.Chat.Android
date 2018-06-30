@@ -1,24 +1,25 @@
 package chat.rocket.android.chatroom.adapter
 
-import android.support.v7.widget.RecyclerView
+import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
-import chat.rocket.android.chatroom.ui.bottomsheet.BottomSheetMenu
-import chat.rocket.android.chatroom.ui.bottomsheet.adapter.ActionListAdapter
-import chat.rocket.android.chatroom.viewmodel.BaseViewModel
-import chat.rocket.android.widget.emoji.Emoji
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.chatroom.ui.bottomsheet.MessageActionsBottomSheet
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiReactionListener
+import chat.rocket.android.util.extensions.inflate
+import chat.rocket.android.util.extensions.toList
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
-import ru.whalemare.sheetmenu.extension.inflate
-import ru.whalemare.sheetmenu.extension.toList
 
-abstract class BaseViewHolder<T : BaseViewModel<*>>(
+abstract class BaseViewHolder<T : BaseUiModel<*>>(
     itemView: View,
     private val listener: ActionsListener,
     var reactionListener: EmojiReactionListener? = null
@@ -89,8 +90,15 @@ abstract class BaseViewHolder<T : BaseViewModel<*>>(
                     setTitle(if (isStarred) R.string.action_msg_unstar else R.string.action_msg_star)
                     isChecked = isStarred
                 }
-                val adapter = ActionListAdapter(menuItems, this@BaseViewHolder)
-                BottomSheetMenu(adapter).show(view.context)
+                view.context?.let {
+                    if (it is ContextThemeWrapper && it.baseContext is AppCompatActivity) {
+                        with(it.baseContext as AppCompatActivity) {
+                            val actionsBottomSheet = MessageActionsBottomSheet()
+                            actionsBottomSheet.addItems(menuItems, this@BaseViewHolder)
+                            actionsBottomSheet.show(supportFragmentManager, null)
+                        }
+                    }
+                }
             }
         }
     }

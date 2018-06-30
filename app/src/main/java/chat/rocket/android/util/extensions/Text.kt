@@ -7,8 +7,8 @@ import android.util.Base64
 import android.util.Patterns
 import android.widget.EditText
 import android.widget.TextView
-import chat.rocket.android.widget.emoji.EmojiParser
-import chat.rocket.android.widget.emoji.EmojiTypefaceSpan
+import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiTypefaceSpan
 import org.json.JSONObject
 import ru.noties.markwon.Markwon
 import java.net.URLDecoder
@@ -93,4 +93,10 @@ var TextView.content: CharSequence?
         }
         Markwon.scheduleDrawables(this)
         Markwon.scheduleTableRows(this)
+    }
+
+var TextView.spanned: CharSequence?
+    get() = text
+    set(value) {
+        text = spanned
     }

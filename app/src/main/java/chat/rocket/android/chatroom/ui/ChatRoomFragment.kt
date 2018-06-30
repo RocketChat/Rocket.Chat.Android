@@ -1,16 +1,12 @@
 package chat.rocket.android.chatroom.ui
 
-import android.Manifest
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
@@ -30,8 +26,6 @@ import chat.rocket.android.chatroom.viewmodel.MessageViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.ChatRoomSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.CommandSuggestionViewModel
 import chat.rocket.android.chatroom.viewmodel.suggestion.PeopleSuggestionViewModel
-import chat.rocket.android.draw.DrawingActivity
-import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
@@ -47,9 +41,6 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import java.io.File
-import java.io.FileOutputStream
-import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -83,7 +74,6 @@ private const val BUNDLE_CHAT_ROOM_NAME = "chat_room_name"
 private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
-private const val REQUEST_CODE_FOR_DRAW = 101
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
@@ -197,32 +187,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
-        if (resultData != null && resultCode == Activity.RESULT_OK) {
-            when(requestCode){
-                REQUEST_CODE_FOR_PERFORM_SAF -> {
-                    uploadFile(resultData.data)
-                }
-                REQUEST_CODE_FOR_DRAW -> {
-                    val result= resultData.getByteArrayExtra("bitmap")
-                    val bitmap = BitmapFactory.decodeByteArray(result, 0, result.size)
-                    val uri = saveImage(bitmap)
-                    uploadFile(uri)
-                }
+        if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF && resultCode == Activity.RESULT_OK) {
+            if (resultData != null) {
+                uploadFile(resultData.data)
             }
         }
-    }
-
-    private fun saveImage(bitmap: Bitmap): Uri {
-        val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
-        val path = Environment.getExternalStoragePublicDirectory(imageDir)
-        val file = File(path, UUID.randomUUID().toString()+".png")
-        path.mkdirs()
-        file.createNewFile()
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream)
-        outputStream.flush()
-        outputStream.close()
-        return Uri.fromFile(file)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -739,30 +708,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_add_reaction.setOnClickListener { view ->
                 openEmojiKeyboardPopup()
             }
-
-            button_drawing.setOnClickListener {
-                if (!canWriteToExternalStorage()) {
-                    checkWritingPermission()
-                }else{
-                    val intent = Intent(activity, DrawingActivity::class.java)
-                    startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
-                }
-                handler.postDelayed({
-                    hideAttachmentOptions()
-                }, 400)
-            }
-        }
-    }
-
-    private fun canWriteToExternalStorage(): Boolean {
-        return context?.let { AndroidPermissionsHelper.checkPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE) }!!
-    }
-
-    private fun checkWritingPermission() {
-        activity?.let {
-            AndroidPermissionsHelper.requestPermission(it,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE)
         }
     }
 

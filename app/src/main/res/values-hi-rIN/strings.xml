@@ -35,7 +35,6 @@
     <string name="action_away">दूर</string>
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
-    <string name="action_drawing">चित्रकारी</string>
     // TODO: Add proper translation.
     <string name="action_save_to_gallery">Save to gallery</string>
 

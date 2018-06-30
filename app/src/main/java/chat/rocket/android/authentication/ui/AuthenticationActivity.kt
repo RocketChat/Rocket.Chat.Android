@@ -3,8 +3,8 @@ package chat.rocket.android.authentication.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import chat.rocket.android.R
 import chat.rocket.android.authentication.domain.model.LoginDeepLinkInfo
 import chat.rocket.android.authentication.domain.model.getLoginDeepLinkInfo
@@ -32,17 +32,25 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setContentView(R.layout.activity_authentication)
         setTheme(R.style.AuthenticationTheme)
         super.onCreate(savedInstanceState)
+    }
 
+    override fun onStart() {
+        super.onStart()
         val deepLinkInfo = intent.getLoginDeepLinkInfo()
         launch(UI + job) {
             val newServer = intent.getBooleanExtra(INTENT_ADD_NEW_SERVER, false)
             // if we got authenticateWithDeepLink information, pass true to newServer also
             presenter.loadCredentials(newServer || deepLinkInfo != null) { authenticated ->
                 if (!authenticated) {
-                    showServerInput(savedInstanceState, deepLinkInfo)
+                    showServerInput(deepLinkInfo)
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        job.cancel()
+        super.onStop()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -53,17 +61,12 @@ class AuthenticationActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-    override fun onDestroy() {
-        job.cancel()
-        super.onDestroy()
-    }
-
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
     }
 
-    fun showServerInput(savedInstanceState: Bundle?, deepLinkInfo: LoginDeepLinkInfo?) {
-        addFragment("ServerFragment", R.id.fragment_container) {
+    fun showServerInput(deepLinkInfo: LoginDeepLinkInfo?) {
+        addFragment("ServerFragment", R.id.fragment_container, allowStateLoss = true) {
             ServerFragment.newInstance(deepLinkInfo)
         }
     }

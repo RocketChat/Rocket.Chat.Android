@@ -1,19 +1,17 @@
 package chat.rocket.android.chatroom.adapter
 
 import android.content.Intent
-import android.net.Uri
 import android.view.View
 import androidx.core.net.toUri
-import chat.rocket.android.chatroom.viewmodel.GenericFileAttachmentViewModel
+import chat.rocket.android.chatroom.uimodel.GenericFileAttachmentUiModel
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.util.extensions.content
-import chat.rocket.android.widget.emoji.EmojiReactionListener
-import chat.rocket.common.util.ifNull
 import kotlinx.android.synthetic.main.item_file_attachment.view.*
 
 class GenericFileAttachmentViewHolder(itemView: View,
                                       listener: ActionsListener,
                                       reactionListener: EmojiReactionListener? = null)
-    : BaseViewHolder<GenericFileAttachmentViewModel>(itemView, listener, reactionListener) {
+    : BaseViewHolder<GenericFileAttachmentUiModel>(itemView, listener, reactionListener) {
 
     init {
         with(itemView) {
@@ -21,7 +19,7 @@ class GenericFileAttachmentViewHolder(itemView: View,
         }
     }
 
-    override fun bindViews(data: GenericFileAttachmentViewModel) {
+    override fun bindViews(data: GenericFileAttachmentUiModel) {
         with(itemView) {
             text_file_name.content = data.attachmentTitle
 
