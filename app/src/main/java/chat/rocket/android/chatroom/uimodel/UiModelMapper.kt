@@ -13,6 +13,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
+import chat.rocket.android.app.RocketChatApplication.Companion.context
 import chat.rocket.android.chatroom.domain.MessageReply
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.helper.MessageHelper
@@ -45,6 +46,8 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 import okhttp3.HttpUrl
 import java.security.InvalidParameterException
+import java.util.*
+import java.util.Collections.emptyList
 import javax.inject.Inject
 
 @PerFragment
@@ -341,14 +344,11 @@ class UiModelMapper @Inject constructor(
     }
 
     private fun attachmentText(attachment: FileAttachment): String? {
-        return with(attachment) {
-            return@with text
-        }
+        return attachment.text
     }
+
     private fun attachmentDescription(attachment: FileAttachment): String? {
-        return with(attachment) {
-            return@with description
-        }
+        return attachment.description
     }
 
     private suspend fun mapMessage(message: Message): MessageUiModel = withContext(CommonPool) {
