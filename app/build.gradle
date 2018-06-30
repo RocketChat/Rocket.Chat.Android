@@ -114,8 +114,6 @@ dependencies {
 
     implementation libraries.markwon
 
-    implementation libraries.sheetMenu
-
     implementation libraries.aVLoadingIndicatorView
 
     implementation "com.github.luciofm:livedata-ktx:b1e8bbc25a"

@@ -13,6 +13,7 @@ import chat.rocket.android.infrastructure.checkIfMyself
 import chat.rocket.android.server.domain.PublicSettings
 import chat.rocket.android.server.domain.showLastMessage
 import chat.rocket.android.server.domain.useRealName
+import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.date
 import chat.rocket.android.util.extensions.localDateTime
@@ -111,7 +112,7 @@ class RoomUiModelMapper(
     }
 
     private fun mapName(name: String, fullName: String?, unread: Boolean): CharSequence {
-        val roomName = if (settings.useRealName()) {
+        val roomName = if (settings.useSpecialCharsOnRoom() || settings.useRealName()) {
             fullName ?: name
         } else {
             name
