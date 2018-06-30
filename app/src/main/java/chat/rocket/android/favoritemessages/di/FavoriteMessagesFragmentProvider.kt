@@ -1,4 +1,4 @@
-package chat.rocket.android.chatroom.di
+package chat.rocket.android.favoritemessages.di
 
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.favoritemessages.ui.FavoriteMessagesFragment
