@@ -1,18 +1,19 @@
 package chat.rocket.android.draw
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Resources
-import android.support.v7.app.AppCompatActivity
+import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import android.widget.SeekBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_drawing.*
 import kotlinx.android.synthetic.main.color_palette_view.*
-import android.content.Intent
-import android.graphics.Bitmap
-import android.app.Activity
 import java.io.ByteArrayOutputStream
+
 
 class DrawingActivity : AppCompatActivity() {
 

@@ -1,13 +1,15 @@
 package chat.rocket.android.draw.widget
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import java.util.*
-import android.support.v4.graphics.ColorUtils
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
+import androidx.core.graphics.ColorUtils
 
 class CustomDrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var mPaths = LinkedHashMap<MyPath, PaintOptions>()

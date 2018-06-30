@@ -25,8 +25,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation libraries.appCompat
-    implementation libraries.constraintLayout
     implementation libraries.kotlin
+    implementation libraries.constraintlayout
     implementation libraries.androidKtx
 
     testImplementation 'junit:junit:4.12'
