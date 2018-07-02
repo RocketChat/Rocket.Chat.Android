@@ -12,6 +12,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 object EmojiRepository {
+    private val FITZPATRICK_REGEX = "(.*)_(tone[0-9]):".toRegex(RegexOption.IGNORE_CASE)
     private val shortNameToUnicode = HashMap<String, String>()
     private val SHORTNAME_PATTERN = Pattern.compile(":([-+\\w]+):")
     private val ALL_EMOJIS = mutableListOf<Emoji>()
@@ -24,9 +25,9 @@ object EmojiRepository {
         cachedTypeface = Typeface.createFromAsset(context.assets, "fonts/emojione-android.ttf")
         val stream = context.assets.open(path)
         val emojis = loadEmojis(stream)
-        emojis.forEach {
+        emojis.forEach { emoji ->
             val unicodeIntList = mutableListOf<Int>()
-            it.unicode.split("-").forEach {
+            emoji.unicode.split("-").forEach {
                 val value = it.toInt(16)
                 if (value >= 0x10000) {
                     val surrogatePair = calculateSurrogatePairs(value)
@@ -38,11 +39,42 @@ object EmojiRepository {
             }
             val unicodeIntArray = unicodeIntList.toIntArray()
             val unicode = String(unicodeIntArray, 0, unicodeIntArray.size)
-            ALL_EMOJIS.add(it.copy(unicode = unicode))
-            shortNameToUnicode.apply {
-                put(it.shortname, unicode)
-                it.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
+            val emojiWithUnicode = emoji.copy(unicode = unicode)
+            if (hasFitzpatrick(emoji.shortname)) {
+                val matchResult = FITZPATRICK_REGEX.find(emoji.shortname)
+                val prefix = matchResult!!.groupValues[1] + ":"
+                val fitzpatrick = getFitzpatrick(matchResult.groupValues[2])
+                val defaultEmoji = ALL_EMOJIS.firstOrNull { it.shortname == prefix }
+                val emojiWithFitzpatrick = emojiWithUnicode.copy(fitzpatrick = fitzpatrick)
+                if (defaultEmoji != null) {
+                    defaultEmoji.siblings.add(emojiWithFitzpatrick)
+                } else {
+                    // This emoji doesn't have a default tone, ie. :man_in_business_suit_levitating_tone1:
+                    // In this case, the default emoji becomes the first toned one.
+                    ALL_EMOJIS.add(emojiWithFitzpatrick)
+                }
+            } else {
+                ALL_EMOJIS.add(emojiWithUnicode)
             }
+            shortNameToUnicode.apply {
+                put(emoji.shortname, unicode)
+                emoji.shortnameAlternates.forEach { alternate -> put(alternate, unicode) }
+            }
+        }
+    }
+
+    private fun hasFitzpatrick(shortname: String): Boolean {
+        return FITZPATRICK_REGEX matches shortname
+    }
+
+    private fun getFitzpatrick(type: String): Fitzpatrick {
+        return when(type) {
+            Fitzpatrick.LightTone.type -> Fitzpatrick.LightTone
+            Fitzpatrick.MediumTone.type -> Fitzpatrick.MediumTone
+            Fitzpatrick.MediumLightTone.type -> Fitzpatrick.MediumLightTone
+            Fitzpatrick.MediumDarkTone.type -> Fitzpatrick.MediumDarkTone
+            Fitzpatrick.DarkTone.type -> Fitzpatrick.DarkTone
+            else -> Fitzpatrick.Default
         }
     }
 
