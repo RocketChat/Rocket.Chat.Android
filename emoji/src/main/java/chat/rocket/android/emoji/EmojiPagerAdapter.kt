@@ -12,7 +12,10 @@ import androidx.viewpager.widget.PagerAdapter
 import kotlinx.android.synthetic.main.emoji_category_layout.view.*
 import java.util.*
 
-internal class CategoryPagerAdapter(private val listener: EmojiKeyboardListener) : PagerAdapter() {
+internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : PagerAdapter() {
+
+    private val adapters = hashMapOf<EmojiCategory, EmojiAdapter>()
+    private var fitzpatrick: Fitzpatrick = Fitzpatrick.Default
 
     override fun isViewFromObject(view: View, obj: Any): Boolean {
         return view == obj
@@ -23,7 +26,7 @@ internal class CategoryPagerAdapter(private val listener: EmojiKeyboardListener)
             .inflate(R.layout.emoji_category_layout, container, false)
         with(view) {
             val layoutManager = GridLayoutManager(context, 8)
-            val adapter = EmojiAdapter(layoutManager.spanCount, listener)
+            val adapter = EmojiAdapter(layoutManager.spanCount, listener = listener)
             val category = EmojiCategory.values()[position]
             val emojis = if (category != EmojiCategory.RECENTS) {
                 EmojiRepository.getEmojisByCategory(category)
@@ -33,6 +36,8 @@ internal class CategoryPagerAdapter(private val listener: EmojiKeyboardListener)
             val recentEmojiSize = EmojiRepository.getRecents().size
             text_no_recent_emoji.isVisible = category == EmojiCategory.RECENTS && recentEmojiSize == 0
             adapter.addEmojis(emojis)
+            adapter.setFitzpatrick(fitzpatrick)
+            adapters[category] = adapter
             emoji_recycler_view.layoutManager = layoutManager
             emoji_recycler_view.itemAnimator = DefaultItemAnimator()
             emoji_recycler_view.adapter = adapter
@@ -50,20 +55,46 @@ internal class CategoryPagerAdapter(private val listener: EmojiKeyboardListener)
 
     override fun getPageTitle(position: Int) = EmojiCategory.values()[position].textIcon()
 
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
+    }
+
+    fun setFitzpatrick(fitzpatrick: Fitzpatrick) {
+        this.fitzpatrick = fitzpatrick
+        for (entry in adapters.entries) {
+            if (entry.key != EmojiCategory.RECENTS) {
+                entry.value.setFitzpatrick(fitzpatrick)
+            }
+        }
+    }
+
     class EmojiAdapter(
         private val spanCount: Int,
+        private var fitzpatrick: Fitzpatrick = Fitzpatrick.Default,
         private val listener: EmojiKeyboardListener
     ) : RecyclerView.Adapter<EmojiRowViewHolder>() {
 
         private var emojis = Collections.emptyList<Emoji>()
 
+        init {
+            no++
+        }
+
         fun addEmojis(emojis: List<Emoji>) {
             this.emojis = emojis
-            notifyItemRangeInserted(0, emojis.size)
+            notifyDataSetChanged()
+        }
+
+        fun setFitzpatrick(fitzpatrick: Fitzpatrick) {
+            this.fitzpatrick = fitzpatrick
+            notifyDataSetChanged()
         }
 
         override fun onBindViewHolder(holder: EmojiRowViewHolder, position: Int) {
-            holder.bind(emojis[position])
+            val emoji = emojis[position]
+            holder.bind(
+                emoji.siblings.find { it.fitzpatrick == fitzpatrick } ?: emoji
+            )
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmojiRowViewHolder {
@@ -72,6 +103,14 @@ internal class CategoryPagerAdapter(private val listener: EmojiKeyboardListener)
         }
 
         override fun getItemCount(): Int = emojis.size
+
+        override fun toString(): String {
+            return EmojiAdapter.no.toString()
+        }
+
+        companion object {
+            var no = 0
+        }
     }
 
     class EmojiRowViewHolder(

@@ -68,7 +68,7 @@ object EmojiRepository {
     }
 
     private fun getFitzpatrick(type: String): Fitzpatrick {
-        return when(type) {
+        return when (type) {
             Fitzpatrick.LightTone.type -> Fitzpatrick.LightTone
             Fitzpatrick.MediumTone.type -> Fitzpatrick.MediumTone
             Fitzpatrick.MediumLightTone.type -> Fitzpatrick.MediumLightTone

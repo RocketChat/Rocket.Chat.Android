@@ -3,8 +3,6 @@ package chat.rocket.android.emoji
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
@@ -35,7 +33,7 @@ class EmojiPickerPopup(context: Context) : Dialog(context) {
     }
 
     private fun setupViewPager() {
-        pager_categories.adapter = CategoryPagerAdapter(object : EmojiKeyboardListener {
+        pager_categories.adapter = EmojiPagerAdapter(object : EmojiKeyboardListener {
             override fun onEmojiAdded(emoji: Emoji) {
                 EmojiRepository.addToRecents(emoji)
                 dismiss()
