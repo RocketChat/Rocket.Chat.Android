@@ -69,7 +69,7 @@ class EmojiKeyboardPopup(
         val view = LayoutInflater.from(context).inflate(R.layout.color_select_popup, null)
         val dialog = AlertDialog.Builder(context)
             .setView(view)
-            .setTitle("Default skin tone")
+            .setTitle(context.getString(R.string.alert_title_default_skin_tone))
             .setCancelable(true)
             .create()
 
@@ -115,7 +115,7 @@ class EmojiKeyboardPopup(
 
     @ColorInt
     private fun getFitzpatrickColor(tone: Fitzpatrick): Int {
-        return when(tone) {
+        return when (tone) {
             Fitzpatrick.Default -> ContextCompat.getColor(context, R.color.tone_default)
             Fitzpatrick.LightTone -> ContextCompat.getColor(context, R.color.tone_light)
             Fitzpatrick.MediumLightTone -> ContextCompat.getColor(context, R.color.tone_medium_light)

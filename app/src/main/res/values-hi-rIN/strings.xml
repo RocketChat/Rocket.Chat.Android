@@ -245,6 +245,7 @@
 
     <!-- Emoji message-->
     <string name="msg_no_recent_emoji"> कोई नया इमोजी नहीं</string>
+    <string name="alert_title_default_skin_tone">डिफ़ॉल्ट त्वचा टोन</string>
 
     <!-- Sorting and grouping-->
     <string name="menu_chatroom_sort">क्रम</string>
