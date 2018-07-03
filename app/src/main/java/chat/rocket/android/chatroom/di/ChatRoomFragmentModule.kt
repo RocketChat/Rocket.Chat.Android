@@ -5,9 +5,14 @@ import chat.rocket.android.chatroom.presentation.ChatRoomView
 import chat.rocket.android.chatroom.ui.ChatRoomFragment
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerFragment
+import chat.rocket.android.db.ChatRoomDao
+import chat.rocket.android.db.DatabaseManager
+import chat.rocket.android.db.DatabaseManagerFactory
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.experimental.Job
+import javax.inject.Named
 
 @Module
 class ChatRoomFragmentModule {
@@ -33,4 +38,22 @@ class ChatRoomFragmentModule {
     fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy {
         return CancelStrategy(owner, jobs)
     }
+
+    @Provides
+    @PerFragment
+    @Named("currentServer")
+    fun provideCurrentServer(currentServerInteractor: GetCurrentServerInteractor): String {
+        return currentServerInteractor.get()!!
+    }
+
+    @Provides
+    @PerFragment
+    fun provideDatabaseManager(factory: DatabaseManagerFactory,
+                               @Named("currentServer") currentServer: String): DatabaseManager {
+        return factory.create(currentServer)
+    }
+
+    @Provides
+    @PerFragment
+    fun provideChatRoomDao(manager: DatabaseManager): ChatRoomDao = manager.chatRoomDao()
 }

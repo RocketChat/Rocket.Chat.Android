@@ -227,6 +227,7 @@ class ChatRoomPresenter @Inject constructor(
             retryIO("loadAndShowMessages($chatRoomId, $chatRoomType, $offset") {
                 client.messages(chatRoomId, roomTypeOf(chatRoomType), offset, 30).result
             }
+        dbManager.processMessagesBatch(messages)
         messagesRepository.saveAll(messages)
 
         //we are saving last sync date of latest synced chat room message
@@ -509,6 +510,8 @@ class ChatRoomPresenter @Inject constructor(
                             )
                         }
                     Timber.d("History: $messages")
+
+                    dbManager.processMessagesBatch(messages.result)
 
                     if (messages.result.isNotEmpty()) {
                         val models = mapper.map(messages.result, RoomUiModel(

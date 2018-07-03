@@ -32,7 +32,6 @@ import kotlinx.coroutines.experimental.selects.select
 import timber.log.Timber
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.coroutines.experimental.CoroutineContext
-import kotlin.math.absoluteValue
 
 class ConnectionManager(
     internal val client: RocketChatClient,
@@ -55,6 +54,7 @@ class ConnectionManager(
 
     private val activeUsersContext = newSingleThreadContext("activeUsersContext")
     private val roomsContext = newSingleThreadContext("roomsContext")
+    private val messagesContext = newSingleThreadContext("messagesContext")
 
     fun connect() {
         if (connectJob?.isActive == true && (state !is State.Disconnected)) {
@@ -125,7 +125,13 @@ class ConnectionManager(
         val roomsActor = createBatchActor<StreamMessage<BaseRoom>>(roomsContext, parent = connectJob,
                 maxSize = 10) { batch ->
             Timber.d("processing Stream batch: ${batch.size} - $batch")
-            dbManager.processStreamBatch(batch)
+            dbManager.processChatRoomsBatch(batch)
+        }
+
+        val messagesActor = createBatchActor<Message>(messagesContext, parent = connectJob,
+                maxSize = 100, maxTime = 300) { messages ->
+            Timber.d("Processing Messages batch: ${messages.size}")
+            dbManager.processMessagesBatch(messages)
         }
 
         // stream-notify-user - ${userId}/rooms-changed
@@ -148,6 +154,7 @@ class ConnectionManager(
         launch(parent = connectJob) {
             for (message in client.messagesChannel) {
                 Timber.d("Received new Message for room ${message.roomId}")
+                messagesActor.send(message)
                 val channel = roomMessagesChannels[message.roomId]
                 channel?.send(message)
             }
@@ -164,12 +171,9 @@ class ConnectionManager(
             }
         }
 
-        var totalUsers = 0
         // activeUsers
         launch(parent = connectJob) {
             for (user in client.activeUsersChannel) {
-                totalUsers++
-                //Timber.d("Got activeUsers: $totalUsers")
                 userActor.send(user)
             }
         }

@@ -2,29 +2,31 @@ package chat.rocket.android.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import chat.rocket.android.db.model.AttachmentEntity
+import chat.rocket.android.db.model.AttachmentFieldEntity
 import chat.rocket.android.db.model.ChatRoomEntity
+import chat.rocket.android.db.model.MessageChannelsRelation
+import chat.rocket.android.db.model.MessageEntity
+import chat.rocket.android.db.model.MessageFavoritesRelation
+import chat.rocket.android.db.model.MessageMentionsRelation
+import chat.rocket.android.db.model.ReactionEntity
+import chat.rocket.android.db.model.ReactionMessageRelation
+import chat.rocket.android.db.model.UrlEntity
 import chat.rocket.android.db.model.UserEntity
 
 @Database(
-    entities = [UserEntity::class, ChatRoomEntity::class],
-    version = 5,
+    entities = [
+        UserEntity::class, ChatRoomEntity::class, MessageEntity::class,
+        MessageFavoritesRelation::class, MessageMentionsRelation::class,
+        MessageChannelsRelation::class, AttachmentEntity::class,
+        AttachmentFieldEntity::class, UrlEntity::class, ReactionEntity::class,
+        ReactionMessageRelation::class
+    ],
+    version = 6,
     exportSchema = true
 )
 abstract class RCDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
-
     abstract fun chatRoomDao(): ChatRoomDao
-
-    companion object {
-        @JvmField
-        val MIGRATION_4_5 = Migration4to5()
-    }
-}
-
-class Migration4to5 : Migration(4, 5) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("CREATE INDEX `index_chatrooms_lastMessageUserId` ON `chatrooms` (`lastMessageUserId`)")
-    }
+    abstract fun messageDao(): MessageDao
 }
