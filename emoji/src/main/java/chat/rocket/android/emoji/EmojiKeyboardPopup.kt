@@ -14,10 +14,12 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.viewpager.widget.ViewPager
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.EmojiPagerAdapter
+import chat.rocket.android.emoji.internal.PREF_EMOJI_SKIN_TONE
 import com.google.android.material.tabs.TabLayout
 
 
@@ -61,6 +63,11 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
 
         changeColorView.setOnClickListener {
             showSkinToneChooser()
+        }
+
+        val sharedPreferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
+        sharedPreferences.getString(PREF_EMOJI_SKIN_TONE, "")?.let {
+            changeSkinTone(Fitzpatrick.valueOf(it))
         }
     }
 
@@ -110,10 +117,15 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
         DrawableCompat.setTint(wrappedDrawable, getFitzpatrickColor(tone))
         (changeColorView as ImageView).setImageDrawable(wrappedDrawable)
         adapter.setFitzpatrick(tone)
+
     }
 
     @ColorInt
     private fun getFitzpatrickColor(tone: Fitzpatrick): Int {
+        val sharedPreferences = context.getSharedPreferences("emoji", Context.MODE_PRIVATE)
+        sharedPreferences.edit {
+            putString(PREF_EMOJI_SKIN_TONE, tone.type)
+        }
         return when (tone) {
             Fitzpatrick.Default -> ContextCompat.getColor(context, R.color.tone_default)
             Fitzpatrick.LightTone -> ContextCompat.getColor(context, R.color.tone_light)
@@ -203,9 +215,5 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         }
-    }
-
-    companion object {
-        const val PREF_EMOJI_RECENTS = "PREF_EMOJI_RECENTS"
     }
 }

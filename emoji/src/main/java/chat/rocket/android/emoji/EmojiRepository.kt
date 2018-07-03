@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
 import chat.rocket.android.emoji.internal.EmojiCategory
+import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -45,7 +46,7 @@ object EmojiRepository {
             if (hasFitzpatrick(emoji.shortname)) {
                 val matchResult = FITZPATRICK_REGEX.find(emoji.shortname)
                 val prefix = matchResult!!.groupValues[1] + ":"
-                val fitzpatrick = getFitzpatrick(matchResult.groupValues[2])
+                val fitzpatrick = Fitzpatrick.valueOf(matchResult.groupValues[2])
                 val defaultEmoji = ALL_EMOJIS.firstOrNull { it.shortname == prefix }
                 val emojiWithFitzpatrick = emojiWithUnicode.copy(fitzpatrick = fitzpatrick)
                 if (defaultEmoji != null) {
@@ -67,17 +68,6 @@ object EmojiRepository {
 
     private fun hasFitzpatrick(shortname: String): Boolean {
         return FITZPATRICK_REGEX matches shortname
-    }
-
-    private fun getFitzpatrick(type: String): Fitzpatrick {
-        return when (type) {
-            Fitzpatrick.LightTone.type -> Fitzpatrick.LightTone
-            Fitzpatrick.MediumTone.type -> Fitzpatrick.MediumTone
-            Fitzpatrick.MediumLightTone.type -> Fitzpatrick.MediumLightTone
-            Fitzpatrick.MediumDarkTone.type -> Fitzpatrick.MediumDarkTone
-            Fitzpatrick.DarkTone.type -> Fitzpatrick.DarkTone
-            else -> Fitzpatrick.Default
-        }
     }
 
     /**
@@ -112,14 +102,14 @@ object EmojiRepository {
      */
     internal fun addToRecents(emoji: Emoji) {
         val emojiShortname = emoji.shortname
-        val recentsJson = JSONObject(preferences.getString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, "{}"))
+        val recentsJson = JSONObject(preferences.getString(PREF_EMOJI_RECENTS, "{}"))
         if (recentsJson.has(emojiShortname)) {
             val useCount = recentsJson.getInt(emojiShortname)
             recentsJson.put(emojiShortname, useCount + 1)
         } else {
             recentsJson.put(emojiShortname, 1)
         }
-        preferences.edit().putString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
+        preferences.edit().putString(PREF_EMOJI_RECENTS, recentsJson.toString()).apply()
     }
 
     /**
@@ -129,7 +119,7 @@ object EmojiRepository {
      */
     internal fun getRecents(): List<Emoji> {
         val list = mutableListOf<Emoji>()
-        val recentsJson = JSONObject(preferences.getString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, "{}"))
+        val recentsJson = JSONObject(preferences.getString(PREF_EMOJI_RECENTS, "{}"))
         for (shortname in recentsJson.keys()) {
             val emoji = getEmojiByShortname(shortname)
             emoji?.let {

@@ -13,4 +13,18 @@ sealed class Fitzpatrick(val type: String) {
     object MediumTone: Fitzpatrick("tone3")
     object MediumDarkTone: Fitzpatrick("tone4")
     object DarkTone: Fitzpatrick("tone5")
+
+    companion object {
+        fun valueOf(type: String): Fitzpatrick {
+            return when(type) {
+                "" -> Default
+                "tone1" -> LightTone
+                "tone2" -> MediumLightTone
+                "tone3" -> MediumTone
+                "tone4" -> MediumDarkTone
+                "tone5" -> DarkTone
+                else -> throw IllegalArgumentException("Fitzpatrick type '$type' is invalid")
+            }
+        }
+    }
 }
