@@ -3,6 +3,7 @@ package chat.rocket.android.emoji
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import chat.rocket.android.emoji.internal.EmojiCategory
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -12,6 +13,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 object EmojiRepository {
+
     private val FITZPATRICK_REGEX = "(.*)_(tone[0-9]):".toRegex(RegexOption.IGNORE_CASE)
     private val shortNameToUnicode = HashMap<String, String>()
     private val SHORTNAME_PATTERN = Pattern.compile(":([-+\\w]+):")
@@ -83,7 +85,7 @@ object EmojiRepository {
      *
      * @return All emojis for all categories.
      */
-    fun getAll() = ALL_EMOJIS
+    internal fun getAll() = ALL_EMOJIS
 
     /**
      * Get all emojis for a given category.
@@ -92,7 +94,7 @@ object EmojiRepository {
      *
      * @return All emoji from specified category
      */
-    fun getEmojisByCategory(category: EmojiCategory): List<Emoji> {
+    internal fun getEmojisByCategory(category: EmojiCategory): List<Emoji> {
         return ALL_EMOJIS.filter { it.category.toLowerCase() == category.name.toLowerCase() }
     }
 
@@ -103,12 +105,12 @@ object EmojiRepository {
      *
      * @return Emoji given by shortname or null
      */
-    fun getEmojiByShortname(shortname: String) = ALL_EMOJIS.firstOrNull { it.shortname == shortname }
+    internal fun getEmojiByShortname(shortname: String) = ALL_EMOJIS.firstOrNull { it.shortname == shortname }
 
     /**
      * Add an emoji to the Recents category.
      */
-    fun addToRecents(emoji: Emoji) {
+    internal fun addToRecents(emoji: Emoji) {
         val emojiShortname = emoji.shortname
         val recentsJson = JSONObject(preferences.getString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, "{}"))
         if (recentsJson.has(emojiShortname)) {
@@ -125,7 +127,7 @@ object EmojiRepository {
      *
      * @return All recent emojis ordered by usage.
      */
-    fun getRecents(): List<Emoji> {
+    internal fun getRecents(): List<Emoji> {
         val list = mutableListOf<Emoji>()
         val recentsJson = JSONObject(preferences.getString(EmojiKeyboardPopup.PREF_EMOJI_RECENTS, "{}"))
         for (shortname in recentsJson.keys()) {

@@ -1,4 +1,4 @@
-package chat.rocket.android.emoji
+package chat.rocket.android.emoji.internal
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +9,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
+import chat.rocket.android.emoji.Emoji
+import chat.rocket.android.emoji.EmojiKeyboardListener
+import chat.rocket.android.emoji.EmojiParser
+import chat.rocket.android.emoji.EmojiRepository
+import chat.rocket.android.emoji.Fitzpatrick
+import chat.rocket.android.emoji.R
 import kotlinx.android.synthetic.main.emoji_category_layout.view.*
 import java.util.*
 

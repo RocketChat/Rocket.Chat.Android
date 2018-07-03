@@ -1,7 +1,7 @@
 package chat.rocket.android.emoji
 
 /**
- * Taken the Fitzpatrick scale as reference adapted to be used with emojione.
+ * Taken the Fitzpatrick scale as reference and adapted to be used with emojione.
  *
  * @see <a href="https://en.wikipedia.org/wiki/Fitzpatrick_scale">https://en.wikipedia.org/wiki/Fitzpatrick_scale</a>
  */

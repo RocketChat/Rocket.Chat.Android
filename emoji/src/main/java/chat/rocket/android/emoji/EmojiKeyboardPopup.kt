@@ -16,13 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.viewpager.widget.ViewPager
+import chat.rocket.android.emoji.internal.EmojiCategory
+import chat.rocket.android.emoji.internal.EmojiPagerAdapter
 import com.google.android.material.tabs.TabLayout
 
 
-class EmojiKeyboardPopup(
-    context: Context,
-    view: View
-) : OverKeyboardPopupWindow(context, view) {
+class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow(context, view) {
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout

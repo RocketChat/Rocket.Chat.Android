@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
+import chat.rocket.android.emoji.internal.EmojiCategory
+import chat.rocket.android.emoji.internal.EmojiPagerAdapter
 import kotlinx.android.synthetic.main.emoji_picker.*
 
 
