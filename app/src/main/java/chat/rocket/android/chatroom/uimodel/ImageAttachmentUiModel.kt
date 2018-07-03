@@ -22,4 +22,5 @@ data class ImageAttachmentUiModel(
         get() = BaseUiModel.ViewType.IMAGE_ATTACHMENT.viewType
     override val layoutId: Int
         get() = R.layout.message_attachment
+
 }
