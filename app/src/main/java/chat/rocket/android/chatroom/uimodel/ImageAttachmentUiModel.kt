@@ -10,6 +10,8 @@ data class ImageAttachmentUiModel(
         override val messageId: String,
         override val attachmentUrl: String,
         override val attachmentTitle: CharSequence,
+        val attachmentText: String?,
+        val attachmentDescription: String?,
         override val id: Long,
         override var reactions: List<ReactionUiModel>,
         override var nextDownStreamMessage: BaseUiModel<*>? = null,
