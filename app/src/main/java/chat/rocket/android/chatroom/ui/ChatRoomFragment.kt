@@ -1,22 +1,17 @@
 package chat.rocket.android.chatroom.ui
 
-import android.Manifest
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.text.SpannableStringBuilder
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -48,10 +43,10 @@ import chat.rocket.android.emoji.EmojiKeyboardPopup
 import chat.rocket.android.emoji.EmojiParser
 import chat.rocket.android.emoji.EmojiPickerPopup
 import chat.rocket.android.emoji.EmojiReactionListener
-import chat.rocket.android.helper.AndroidPermissionsHelper
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.fadeIn
@@ -74,9 +69,6 @@ import kotlinx.android.synthetic.main.fragment_chat_room.*
 import kotlinx.android.synthetic.main.message_attachment_options.*
 import kotlinx.android.synthetic.main.message_composer.*
 import kotlinx.android.synthetic.main.message_list.*
-import java.io.File
-import java.io.FileOutputStream
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -243,25 +235,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
                 REQUEST_CODE_FOR_DRAW -> {
                     val result= resultData.getByteArrayExtra("bitmap")
-                    val bitmap = BitmapFactory.decodeByteArray(result, 0, result.size)
-                    val uri = saveImage(bitmap)
+                    val uri = presenter.getDrawingImageUri(result)
                     uploadFile(uri)
                 }
             }
         }
-    }
-
-    private fun saveImage(bitmap: Bitmap): Uri {
-        val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
-        val path = Environment.getExternalStoragePublicDirectory(imageDir)
-        val file = File(path, UUID.randomUUID().toString()+".png")
-        path.mkdirs()
-        file.createNewFile()
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream)
-        outputStream.flush()
-        outputStream.close()
-        return Uri.fromFile(file)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -825,28 +803,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             button_drawing.setOnClickListener {
-                if (!canWriteToExternalStorage()) {
-                    checkWritingPermission()
-                }else{
-                    val intent = Intent(activity, DrawingActivity::class.java)
-                    startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
+                context?.let {
+                    if (!ImageHelper.canWriteToExternalStorage(it)) {
+                        ImageHelper.checkWritingPermission(it)
+                    }else{
+                        val intent = Intent(activity, DrawingActivity::class.java)
+                        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
+                    }
                 }
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)
             }
-        }
-    }
-
-    private fun canWriteToExternalStorage(): Boolean {
-        return context?.let { AndroidPermissionsHelper.checkPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE) }!!
-    }
-
-    private fun checkWritingPermission() {
-        activity?.let {
-            AndroidPermissionsHelper.requestPermission(it,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    AndroidPermissionsHelper.WRITE_EXTERNAL_STORAGE_CODE)
         }
     }
 

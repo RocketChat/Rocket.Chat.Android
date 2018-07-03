@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.activity_drawing.*
 import kotlinx.android.synthetic.main.color_palette_view.*
 import java.io.ByteArrayOutputStream
 
-
 class DrawingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +26,7 @@ class DrawingActivity : AppCompatActivity() {
         image_send_drawing.setOnClickListener {
             val bStream = ByteArrayOutputStream()
             val bitmap = custom_draw_view.getBitmap()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bStream)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 70, bStream)
             val byteArray = bStream.toByteArray()
             val returnIntent = Intent()
             returnIntent.putExtra("bitmap", byteArray)
