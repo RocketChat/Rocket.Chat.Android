@@ -76,10 +76,6 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
 
         private var emojis = Collections.emptyList<Emoji>()
 
-        init {
-            no++
-        }
-
         fun addEmojis(emojis: List<Emoji>) {
             this.emojis = emojis
             notifyDataSetChanged()
@@ -103,14 +99,6 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
         }
 
         override fun getItemCount(): Int = emojis.size
-
-        override fun toString(): String {
-            return EmojiAdapter.no.toString()
-        }
-
-        companion object {
-            var no = 0
-        }
     }
 
     class EmojiRowViewHolder(
