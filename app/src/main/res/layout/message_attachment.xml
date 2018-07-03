@@ -10,6 +10,20 @@
     android:paddingEnd="@dimen/screen_edge_left_and_right_margins"
     android:paddingStart="72dp">
 
+
+    <TextView
+        android:id="@+id/file_name"
+        style="@style/Message.TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Filename.png" />
+
+    <TextView
+        android:id="@+id/file_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Some description" />
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_attachment"
         android:layout_width="match_parent"
@@ -34,10 +48,10 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/file_name"
+        android:id="@+id/file_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Filename.png" />
+        tools:text="Some text" />
 
     <include
         layout="@layout/layout_reactions"
