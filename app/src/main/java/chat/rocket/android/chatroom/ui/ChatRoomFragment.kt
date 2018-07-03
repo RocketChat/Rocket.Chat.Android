@@ -803,11 +803,11 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
 
             button_drawing.setOnClickListener {
-                context?.let {
+                activity?.let {
                     if (!ImageHelper.canWriteToExternalStorage(it)) {
                         ImageHelper.checkWritingPermission(it)
                     }else{
-                        val intent = Intent(activity, DrawingActivity::class.java)
+                        val intent = Intent(it, DrawingActivity::class.java)
                         startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
                     }
                 }
