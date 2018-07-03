@@ -982,7 +982,7 @@ class ChatRoomPresenter @Inject constructor(
         path.mkdirs()
         file.createNewFile()
         val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, outputStream)
+        bitmap.compress(Bitmap.CompressFormat.PNG,70, outputStream)
         outputStream.flush()
         outputStream.close()
         return file
