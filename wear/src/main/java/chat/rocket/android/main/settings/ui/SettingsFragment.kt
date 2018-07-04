@@ -50,5 +50,6 @@ class SettingsFragment : Fragment() {
                 0 -> navigator.addAccountFragment()
             }
         }
+        settings_list.adapter = adapter
     }
 }

@@ -1,5 +1,6 @@
 package chat.rocket.android.dagger.module
 
+import chat.rocket.android.account.di.AccountFragmentProvider
 import chat.rocket.android.chatroom.di.ChatRoomFragmentProvider
 import chat.rocket.android.chatroom.di.ChatRoomModule
 import chat.rocket.android.chatroom.reply.di.ReplyMessageFragmentProvider
@@ -25,7 +26,8 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(
         modules = [MainModule::class,
             ChatRoomsFragmentProvider::class,
-            SettingsFragmentProvider::class]
+            SettingsFragmentProvider::class,
+            AccountFragmentProvider::class]
     )
     abstract fun bindMainActivity(): MainActivity
 

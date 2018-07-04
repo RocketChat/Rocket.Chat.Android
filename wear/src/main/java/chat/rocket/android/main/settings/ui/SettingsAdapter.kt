@@ -31,7 +31,7 @@ class SettingsAdapter(
     inner class SettingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(position: Int) {
             with(itemView) {
-                setOnClickListener{
+                setOnClickListener {
                     listener(position)
                 }
                 when (position) {
