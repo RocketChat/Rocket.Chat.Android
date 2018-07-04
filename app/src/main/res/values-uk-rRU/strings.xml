@@ -169,9 +169,8 @@
     <string name="permission_starring_not_allowed">Отмечивание запрещено</string>
 
     <!-- Favorite/Unfavorite chat room -->
-    <!-- TODO Add proper translation-->
-    <string name="title_favorite_chat">Favorite chat</string>
-    <string name="title_unfavorite_chat">Unfavorite chat</string>
+    <string name="title_favorite_chat">Добавить чат в избранное</string>
+    <string name="title_unfavorite_chat">Удалить чат из избранного</string>
 
     <!-- Members List -->
     <string name="title_members_list">Пользователи</string>
