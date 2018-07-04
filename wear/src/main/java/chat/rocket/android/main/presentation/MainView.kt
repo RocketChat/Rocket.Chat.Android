@@ -1,4 +1,6 @@
 package chat.rocket.android.main.presentation
 
-interface MainView {
+import chat.rocket.android.core.behaviour.MessagesView
+
+interface MainView: MessagesView {
 }

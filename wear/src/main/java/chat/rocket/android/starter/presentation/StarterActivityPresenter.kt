@@ -19,9 +19,17 @@ class StarterActivityPresenter @Inject constructor(
     private var username: String? = null
     fun loadCredentials(callback: (authenticated: Boolean) -> Unit) {
         val currentServer = getCurrentServerInteractor.get()
-        val serverToken = currentServer?.let { tokenRepository.get(it) }
+        if (currentServer == null) {
+            callback(false)
+            return
+        }
+        val serverToken = currentServer.let {
+            tokenRepository.get(it)
+        }
 
-        client = factory.create(currentServer!!)
+        client = factory.create(currentServer)
+
+        //TODO remove the launch segment. This is just for testing purposes.
         launch {
             username = retryIO("me()") {
                 client.me().username
@@ -29,7 +37,9 @@ class StarterActivityPresenter @Inject constructor(
             if (username != null) {
                 localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
             }
-            if (currentServer == null || serverToken == null) {
+            //TODO remove till here
+
+            if (serverToken == null) {
                 callback(false)
             } else {
                 callback(true)

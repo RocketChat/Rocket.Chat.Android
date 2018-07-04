@@ -38,6 +38,18 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
     override fun fragmentInjector(): DispatchingAndroidInjector<Fragment> =
         fragmentDispatchingAndroidInjector
 
+    override fun showMessage(resId: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showMessage(message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showGenericErrorMessage() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun initialiseChatRoomsFragment() {
         navigator.addChatRoomsFragment()
     }

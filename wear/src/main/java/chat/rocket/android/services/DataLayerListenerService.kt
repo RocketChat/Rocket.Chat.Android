@@ -6,13 +6,16 @@ import chat.rocket.android.util.Constants.KEY_PREFS_ACTIVITY_FOREGROUND
 import chat.rocket.android.util.TokenSerialisableModel
 import chat.rocket.android.util.deserialiseToken
 import chat.rocket.android.util.retryIO
+import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.Token
 import chat.rocket.core.RocketChatClient
+import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 internal const val PATH_TOKEN = "/send-token"
@@ -75,7 +78,32 @@ class DataLayerListenerService : WearableListenerService() {
             serverInteractor.save(currentServerUrl)
         } else if (path == PATH_DELETE) {
             //delete tokens and server
-            getCurrentServerInteractor.clear()
+            logout()
         }
+    }
+
+    private fun logout() {
+        val currentServer = getCurrentServerInteractor.get()
+        launch {
+            try {
+                clearTokens(currentServer)
+                retryIO("logout") { client.logout() }
+            } catch (exception: RocketChatException) {
+                Timber.d(exception, "Error calling logout")
+            }
+            try {
+                if (currentServer != null)
+                    tokenRepository.remove(currentServer)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error cleaning up the session...")
+            }
+        }
+    }
+
+    private fun clearTokens(currentServer: String?) {
+        getCurrentServerInteractor.clear()
+        //TODO clear Push tokens if any
+        if (currentServer != null)
+            localRepository.clearAllFromServer(currentServer)
     }
 }
