@@ -257,7 +257,7 @@ class ChatRoomPresenter @Inject constructor(
                                 newMessage, RoomUiModel(
                                 roles = chatRoles, isBroadcast = chatIsBroadcast
                             )
-                            )
+                            ), false
                         )
                         client.sendMessage(id, chatRoomId, text)
                     } catch (ex: Exception) {
@@ -447,7 +447,7 @@ class ChatRoomPresenter @Inject constructor(
                                 messagesRepository.saveAll(messages.result)
 
                                 launchUI(strategy) {
-                                    view.showNewMessage(models)
+                                    view.showNewMessage(models, true)
                                 }
 
                                 if (messages.result.size == 50) {
@@ -959,7 +959,7 @@ class ChatRoomPresenter @Inject constructor(
             } else {
                 Timber.d("Adding new message")
                 messagesRepository.save(streamedMessage)
-                view.showNewMessage(viewModelStreamedMessage)
+                view.showNewMessage(viewModelStreamedMessage, true)
             }
         }
     }
