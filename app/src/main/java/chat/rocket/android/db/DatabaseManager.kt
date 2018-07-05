@@ -35,6 +35,10 @@ class DatabaseManager(val context: Application,
     fun chatRoomDao(): ChatRoomDao = database.chatRoomDao()
     fun userDao(): UserDao = database.userDao()
 
+    fun logout() {
+        database.clearAllTables()
+    }
+
     suspend fun getRoom(id: String) = withContext(dbContext) {
         chatRoomDao().get(id)
     }
@@ -297,7 +301,7 @@ class DatabaseManager(val context: Application,
 
     suspend fun insert(rooms: List<ChatRoomEntity>) {
         withContext(dbContext) {
-            chatRoomDao().insert(rooms)
+            chatRoomDao().cleanInsert(rooms)
         }
     }
 

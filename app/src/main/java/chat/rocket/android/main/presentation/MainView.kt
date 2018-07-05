@@ -26,4 +26,7 @@ interface MainView : MessageView, VersionCheckView {
     fun closeServerSelection()
 
     fun invalidateToken(token: String)
+
+    fun showProgress()
+    fun hideProgress()
 }

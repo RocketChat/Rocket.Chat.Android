@@ -25,6 +25,13 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
     abstract fun getAllSync(): List<ChatRoom>
 
     @Transaction
+    @Query("""$BASE_QUERY WHERE chatrooms.name LIKE '%' || :query || '%' OR  users.name LIKE '%' || :query || '%'""")
+    abstract fun searchSync(query: String): List<ChatRoom>
+
+    @Query("SELECT COUNT(id) FROM chatrooms")
+    abstract fun count(): Long
+
+    @Transaction
     @Query("""
         $BASE_QUERY
         ORDER BY
@@ -65,6 +72,15 @@ abstract class ChatRoomDao : BaseDao<ChatRoomEntity> {
 
     @Query("DELETE FROM chatrooms WHERE ID = :id")
     abstract fun delete(id: String)
+
+    @Query("DELETE FROM chatrooms")
+    abstract fun delete()
+
+    @Transaction
+    open fun cleanInsert(chatRooms: List<ChatRoomEntity>) {
+        delete()
+        insert(chatRooms)
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertOrReplace(chatRooms: List<ChatRoomEntity>)
