@@ -426,13 +426,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private val fabScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             if (!recyclerView.canScrollVertically(1)) {
-                text_count.visibility = View.INVISIBLE
+                text_count.isVisible = false
                 button_fab.hide()
                 newMessageCount = 0
             } else {
                 if (dy < 0 && !button_fab.isVisible) {
                     button_fab.show()
-                    if (newMessageCount !=0) text_count.visibility = View.VISIBLE
+                    if (newMessageCount !=0) text_count.isVisible = true
                 }
             }
         }
@@ -493,7 +493,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
         ui {
             adapter.prependData(message)
-            if (isMessageReceived && button_fab.visibility == View.VISIBLE) {
+            if (isMessageReceived && button_fab.isVisible) {
                 newMessageCount++
 
             if (newMessageCount <= 99)
@@ -501,9 +501,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             else
                 text_count.text = "99+"
 
-                text_count.visibility = View.VISIBLE
+                text_count.isVisible = true
             }
-            else if (button_fab.visibility == View.GONE)
+            else if (!button_fab.isVisible)
                 recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
             empty_chat_view.isVisible = adapter.itemCount == 0
@@ -739,7 +739,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         button_fab.setOnClickListener {
             recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
-            text_count.visibility = View.INVISIBLE
+            text_count.isVisible = false
             button_fab.hide()
             newMessageCount = 0
         }
