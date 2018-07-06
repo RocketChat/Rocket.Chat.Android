@@ -227,7 +227,7 @@
     <string name="Archive">संग्रहित करें</string>
     <string name="Remove_someone_from_room">रूम से किसी को निकालें</string>
     <string name="Leave_the_current_channel">मौजूदा चैनल को छोड़ दें</string>
-    <string name="Displays_action_text">Displays action text</string>
+    <string name="Displays_action_text">कार्रवाई पाठ प्रदर्शित करता है</string>
     <string name="Direct_message_someone">किसी को प्रत्यक्ष संदेश भेजें</string>
     <string name="Mute_someone_in_room">रूम में किसी को म्यूट करें</string>
     <string name="Unmute_someone_in_room">रूम में किसी को अनम्यूट करें</string>
@@ -253,7 +253,7 @@
     <string name="header_channel">चैनलों</string>
     <string name="header_private_groups">निजी समूहों</string>
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
-    <string name="header_live_chats">Live Chats</string>
+    <string name="header_live_chats">लाइव चैट</string>
     <string name="header_unknown">अज्ञात</string>
 
     <!--Notifications-->
