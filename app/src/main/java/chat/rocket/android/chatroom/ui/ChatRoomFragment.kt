@@ -1,6 +1,7 @@
 package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -12,10 +13,14 @@ import android.text.SpannableStringBuilder
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -36,6 +41,7 @@ import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.draw.DrawingActivity
 import chat.rocket.android.emoji.ComposerEditText
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiKeyboardListener
@@ -46,16 +52,8 @@ import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
-import chat.rocket.android.util.extensions.asObservable
-import chat.rocket.android.util.extensions.circularRevealOrUnreveal
-import chat.rocket.android.util.extensions.fadeIn
-import chat.rocket.android.util.extensions.fadeOut
-import chat.rocket.android.util.extensions.hideKeyboard
-import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.rotateBy
-import chat.rocket.android.util.extensions.showToast
-import chat.rocket.android.util.extensions.textContent
-import chat.rocket.android.util.extensions.ui
+import chat.rocket.android.helper.ImageHelper
+import chat.rocket.android.util.extensions.*
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -103,6 +101,7 @@ private const val BUNDLE_CHAT_ROOM_NAME = "chat_room_name"
 private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
+private const val REQUEST_CODE_FOR_DRAW = 101
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
@@ -226,11 +225,60 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
-        if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF && resultCode == Activity.RESULT_OK) {
-            if (resultData != null) {
-                uploadFile(resultData.data)
+        if (resultData != null && resultCode == Activity.RESULT_OK) {
+            when(requestCode){
+                REQUEST_CODE_FOR_PERFORM_SAF -> {
+                    fileAttachmentDialog(resultData.data)
+                }
+                REQUEST_CODE_FOR_DRAW -> {
+                    val result= resultData.getByteArrayExtra("bitmap")
+                    val uri = presenter.getDrawingImageUri(result)
+                    fileAttachmentDialog(uri)
+                }
             }
         }
+    }
+
+    private fun fileAttachmentDialog(data: Uri) {
+        val builder = AlertDialog.Builder(activity)
+        val dialogView = View.inflate(context, R.layout.file_attachments_dialog, null)
+        builder.setView(dialogView)
+        val alertDialog = builder.create()
+
+        dialogView?.let {
+            val imagePreview = it.findViewById<ImageView>(R.id.image_preview)
+            val sendButton = it.findViewById<Button>(R.id.button_send)
+            val cancelButton: Button = it.findViewById(R.id.button_cancel)
+            val description = it.findViewById<EditText>(R.id.text_file_description)
+            val audioVideoAttachment  = it.findViewById<FrameLayout>(R.id.audio_video_attachment)
+            val textFile = it.findViewById<TextView>(R.id.text_file_name)
+
+            activity?.let {
+                data.getMimeType(it).apply {
+                    when {
+                        this.startsWith("image") -> {
+                            imagePreview.isVisible = true
+                            imagePreview.setImageURI(data)
+                        }
+                        this.startsWith("video") -> {
+                            audioVideoAttachment.isVisible = true
+                        }
+                        else -> {
+                            textFile.isVisible = true
+                            textFile.text = data.getFileName(it)
+                        }
+                    }
+                }
+            }
+            sendButton.setOnClickListener {
+                uploadFile(data, description.text.toString())
+                alertDialog.dismiss()
+            }
+            cancelButton.setOnClickListener {
+                alertDialog.dismiss()
+            }
+        }
+        alertDialog.show()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -477,9 +525,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         }
     }
 
-    override fun uploadFile(uri: Uri) {
-        // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
-        presenter.uploadFile(chatRoomId, uri, "")
+    override fun uploadFile(uri: Uri, msg: String) {
+        presenter.uploadFile(chatRoomId, uri, msg)
     }
 
     override fun showInvalidFileMessage() {
@@ -791,6 +838,20 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             button_add_reaction.setOnClickListener { view ->
                 openEmojiKeyboardPopup()
+            }
+
+            button_drawing.setOnClickListener {
+                activity?.let {
+                    if (!ImageHelper.canWriteToExternalStorage(it)) {
+                        ImageHelper.checkWritingPermission(it)
+                    }else{
+                        val intent = Intent(it, DrawingActivity::class.java)
+                        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
+                    }
+                }
+                handler.postDelayed({
+                    hideAttachmentOptions()
+                }, 400)
             }
         }
     }
