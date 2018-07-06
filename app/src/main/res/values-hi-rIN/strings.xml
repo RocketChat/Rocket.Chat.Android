@@ -40,6 +40,7 @@
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
+    <string name="action_drawing">चित्रकारी</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
