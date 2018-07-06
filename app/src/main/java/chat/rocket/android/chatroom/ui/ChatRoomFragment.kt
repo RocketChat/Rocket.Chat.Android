@@ -225,6 +225,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         super.onDestroyView()
     }
 
+    override fun onPause() {
+        super.onPause()
+        setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+        emojiKeyboardPopup.dismiss()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF && resultCode == Activity.RESULT_OK) {
             if (resultData != null) {

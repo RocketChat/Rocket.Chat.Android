@@ -22,7 +22,7 @@ class ComposerEditText : AppCompatEditText {
 
     override fun dispatchKeyEventPreIme(event: KeyEvent): Boolean {
         if (event.keyCode == KeyEvent.KEYCODE_BACK) {
-            val state = getKeyDispatcherState()
+            val state = keyDispatcherState
             if (state != null) {
                 if (event.action == KeyEvent.ACTION_DOWN) {
                     state.startTracking(event, this)
