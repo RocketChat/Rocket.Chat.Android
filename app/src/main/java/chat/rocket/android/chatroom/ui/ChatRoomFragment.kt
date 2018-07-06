@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.SpannableStringBuilder
@@ -35,7 +34,8 @@ import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
-import chat.rocket.android.draw.DrawingActivity
+import chat.rocket.android.draw.main.ui.DRAWING_BYTE_ARRAY_EXTRA_DATA
+import chat.rocket.android.draw.main.ui.DrawingActivity
 import chat.rocket.android.emoji.ComposerEditText
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiKeyboardListener
@@ -229,14 +229,18 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (resultData != null && resultCode == Activity.RESULT_OK) {
-            when(requestCode){
+            when (requestCode) {
                 REQUEST_CODE_FOR_PERFORM_SAF -> {
-                    uploadFile(resultData.data)
+                    presenter.uploadFile(chatRoomId, resultData.data, "")
+                    // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
                 }
                 REQUEST_CODE_FOR_DRAW -> {
-                    val result= resultData.getByteArrayExtra("bitmap")
-                    val uri = presenter.getDrawingImageUri(result)
-                    uploadFile(uri)
+                    presenter.uploadDrawingImage(
+                        chatRoomId,
+                        resultData.getByteArrayExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA),
+                        ""
+                    )
+                    // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
                 }
             }
         }
@@ -484,11 +488,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             text_typing_status.isVisible = false
         }
-    }
-
-    override fun uploadFile(uri: Uri) {
-        // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
-        presenter.uploadFile(chatRoomId, uri, "")
     }
 
     override fun showInvalidFileMessage() {
@@ -806,11 +805,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 activity?.let {
                     if (!ImageHelper.canWriteToExternalStorage(it)) {
                         ImageHelper.checkWritingPermission(it)
-                    }else{
+                    } else {
                         val intent = Intent(it, DrawingActivity::class.java)
                         startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
                     }
                 }
+
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)

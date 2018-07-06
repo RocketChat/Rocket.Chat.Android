@@ -5,7 +5,7 @@ import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.members.uimodel.MemberUiModelMapper
 import chat.rocket.android.server.domain.GetCurrentServerInteractor
 import chat.rocket.android.server.infraestructure.RocketChatClientFactory
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.util.ifNull

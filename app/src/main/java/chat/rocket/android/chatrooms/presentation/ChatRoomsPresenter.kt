@@ -9,7 +9,7 @@ import chat.rocket.android.server.domain.SettingsRepository
 import chat.rocket.android.server.domain.useSpecialCharsOnRoom
 import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManager
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.android.util.retryIO
 import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
@@ -61,7 +61,7 @@ class ChatRoomsPresenter @Inject constructor(
                     }
 
                     navigator.toChatRoom(
-                        chatRoomId =  id,
+                        chatRoomId = id,
                         chatRoomName = roomName,
                         chatRoomType = type,
                         isReadOnly = readonly ?: false,

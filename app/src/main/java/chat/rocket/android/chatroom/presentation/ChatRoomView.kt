@@ -1,6 +1,5 @@
 package chat.rocket.android.chatroom.presentation
 
-import android.net.Uri
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
@@ -49,13 +48,6 @@ interface ChatRoomView : LoadingView, MessageView {
      * Perform file selection with the mime type [filter]
      */
     fun showFileSelection(filter: Array<String>?)
-
-    /**
-     * Uploads a file to a chat room.
-     *
-     * @param uri The file URI to send.
-     */
-    fun uploadFile(uri: Uri)
 
     /**
      * Shows a invalid file message.

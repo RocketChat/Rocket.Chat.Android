@@ -63,6 +63,8 @@ dependencies {
     implementation project(':player')
     implementation project(':emoji')
     implementation project(':draw')
+    implementation project(':util')
+    implementation project(':core')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
