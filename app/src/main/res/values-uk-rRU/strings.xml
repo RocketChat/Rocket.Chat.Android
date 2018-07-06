@@ -116,6 +116,9 @@
     <string name="msg_several_users_are_typing">Несколько пользователей печатают…</string>
     <string name="msg_no_search_found">Результатов не найдено</string>
     <string name="msg_message_copied">Сообщение скопировано</string>
+    <string name="msg_upload_file">Загрузить файл</string>
+    <string name="msg_file_description">Описание файла</string>
+    <string name="msg_send">послать</string>
     <string name="msg_delete_message">Удалить сообщение</string>
     <string name="msg_delete_description">Вы уверены, что хотите удалить это сообщение?</string>
     <string name="msg_channel_name">Название канала</string>
