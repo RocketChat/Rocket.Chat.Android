@@ -12,7 +12,6 @@ import android.text.SpannableStringBuilder
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +35,7 @@ import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
+import chat.rocket.android.draw.DrawingActivity
 import chat.rocket.android.emoji.ComposerEditText
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiKeyboardListener
@@ -46,6 +46,7 @@ import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
 import chat.rocket.android.helper.KeyboardHelper
 import chat.rocket.android.helper.MessageParser
+import chat.rocket.android.helper.ImageHelper
 import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.circularRevealOrUnreveal
 import chat.rocket.android.util.extensions.fadeIn
@@ -103,6 +104,7 @@ private const val BUNDLE_CHAT_ROOM_NAME = "chat_room_name"
 private const val BUNDLE_CHAT_ROOM_TYPE = "chat_room_type"
 private const val BUNDLE_IS_CHAT_ROOM_READ_ONLY = "is_chat_room_read_only"
 private const val REQUEST_CODE_FOR_PERFORM_SAF = 42
+private const val REQUEST_CODE_FOR_DRAW = 101
 private const val BUNDLE_CHAT_ROOM_LAST_SEEN = "chat_room_last_seen"
 private const val BUNDLE_CHAT_ROOM_IS_SUBSCRIBED = "chat_room_is_subscribed"
 private const val BUNDLE_CHAT_ROOM_IS_CREATOR = "chat_room_is_creator"
@@ -232,9 +234,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
-        if (requestCode == REQUEST_CODE_FOR_PERFORM_SAF && resultCode == Activity.RESULT_OK) {
-            if (resultData != null) {
-                uploadFile(resultData.data)
+        if (resultData != null && resultCode == Activity.RESULT_OK) {
+            when(requestCode){
+                REQUEST_CODE_FOR_PERFORM_SAF -> {
+                    uploadFile(resultData.data)
+                }
+                REQUEST_CODE_FOR_DRAW -> {
+                    val result= resultData.getByteArrayExtra("bitmap")
+                    val uri = presenter.getDrawingImageUri(result)
+                    uploadFile(uri)
+                }
             }
         }
     }
@@ -797,6 +806,20 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
             button_add_reaction.setOnClickListener { view ->
                 openEmojiKeyboardPopup()
+            }
+
+            button_drawing.setOnClickListener {
+                activity?.let {
+                    if (!ImageHelper.canWriteToExternalStorage(it)) {
+                        ImageHelper.checkWritingPermission(it)
+                    }else{
+                        val intent = Intent(it, DrawingActivity::class.java)
+                        startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
+                    }
+                }
+                handler.postDelayed({
+                    hideAttachmentOptions()
+                }, 400)
             }
         }
     }

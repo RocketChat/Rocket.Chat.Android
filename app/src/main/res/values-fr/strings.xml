@@ -39,6 +39,7 @@
     <string name="action_away">Loin</string>
     <string name="action_busy">Occupé</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_drawing">Dessin</string>
     // TODO: Add proper translation.
     <string name="action_save_to_gallery">Save to gallery</string>
 

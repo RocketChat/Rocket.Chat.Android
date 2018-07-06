@@ -15,8 +15,7 @@
     <string name="title_password">पासवर्ड बदलें</string>
     <string name="title_update_profile">प्रोफ़ाइल अपडेट करें</string>
     <string name="title_about">परिचय</string>
-    // TODO: Add proper translation.
-    <string name="title_create_channel">Create Channel</string>
+    <string name="title_create_channel">चैनल बनाएं</string>
 
     <!-- Actions -->
     <string name="action_connect">जुडिये</string>
@@ -27,9 +26,8 @@
     <string name="action_search">खोजें</string>
     <string name="action_update">अद्यतन करें</string>
     <string name="action_settings">सेटिंग्स</string>
-    // TODO: Add proper translation.
-    <string name="action_create_channel">Create channel</string>
-    <string name="action_create">Create</string>
+    <string name="action_create_channel">चैनल बनाएं</string>
+    <string name="action_create">बनाएं</string>
     <string name="action_logout">लोग आउट करें</string>
     <string name="action_files">फ़ाइलें</string>
     <string name="action_confirm_password">पासवर्ड परिवर्तन की पुष्टि करें</string>
@@ -40,6 +38,7 @@
     <string name="action_busy">व्यस्त</string>
     <string name="action_invisible">अदृश्य</string>
     <string name="action_save_to_gallery">गैलरी में सहेजें</string>
+    <string name="action_drawing">चित्रकारी</string>
 
     <!-- Settings List -->
     <string-array name="settings_actions">
@@ -89,7 +88,7 @@
     <string name="msg_preview_video">वीडियो</string>
     <string name="msg_preview_audio">ऑडियो</string>
     <string name="msg_preview_photo">तस्वीरें</string>
-    <string name="msg_preview_file">File</string>
+    <string name="msg_preview_file">फ़ाइल</string>
     <string name="msg_unread_messages">अपठित संदेश</string>
     <string name="msg_no_messages_yet">अभी तक कोई पोस्ट नहीं</string>
     <string name="msg_version">वर्शन %1$s</string>
@@ -118,26 +117,23 @@
     <string name="msg_are_typing">\u0020टाइप कर रहे हैं…</string>
     <string name="msg_several_users_are_typing">कई उपयोगकर्ता टाइप कर रहे हैं…</string>
     <string name="msg_no_search_found">कोई परिणाम नहीं मिला</string>
-    // TODO: Add proper translation.
-    <string name="msg_channel_name">Channel name</string>
-    // TODO: Add proper translation.
-    <string name="msg_search">Search</string>
+    <string name="msg_channel_name">चैनल का नाम</string>
+    <string name="msg_search">खोजें</string>
     <string name="msg_message_copied">संदेश कॉपी किया गया</string>
     <string name="msg_delete_message">संदेश को हटाएं</string>
     <string name="msg_delete_description">क्या आप निश्चित रूप से यह संदेश हटाना चाहते हैं</string>
 
     <!-- Create channel messages -->
-    // TODO: Add proper translation.
-    <string name="msg_private_channel">Private</string>
-    <string name="msg_public_channel">Public</string>
-    <string name="msg_private_channel_description">Only you and invited members can access this channel</string>
-    <string name="msg_public_channel_description">Everyone can access this channel</string>
-    <string name="msg_ready_only_channel">Read only channel</string>
-    <string name="msg_ready_only_channel_description">Only admin can write new messages</string>
-    <string name="msg_invite_members">Invite members to channel</string>
-    <string name="msg_member_already_added">You have already selected this user</string>
-    <string name="msg_member_not_found">Member not found</string>
-    <string name="msg_channel_created_successfully">Channel created successfully</string>
+    <string name="msg_private_channel">प्राइवेट</string>
+    <string name="msg_public_channel">सार्वजनिक</string>
+    <string name="msg_private_channel_description">केवल आप और आमंत्रित सदस्य ही इस चैनल तक पहुंच सकते हैं</string>
+    <string name="msg_public_channel_description">हर कोई इस चैनल तक पहुंच सकता है</string>
+    <string name="msg_ready_only_channel">चैनल केवल पढ़ने के लिए है।</string>
+    <string name="msg_ready_only_channel_description">केवल एडमिन नए संदेश लिख सकते हैं</string>
+    <string name="msg_invite_members">सदस्यों को चैनल में आमंत्रित करें</string>
+    <string name="msg_member_already_added">आपने पहले से ही इस यूजर को चुन चुके है।</string>
+    <string name="msg_member_not_found">सदस्य नहीं मिला</string>
+    <string name="msg_channel_created_successfully">चैनल सफलतापूर्वक बनाया गया</string>
 
     <!-- System messages -->
     <string name="message_room_name_changed">%2$s ने रूम का नाम बदलकर %1$s किया</string>
@@ -176,18 +172,16 @@
     <string name="permission_starring_not_allowed">तारांकित की अनुमति नहीं है</string>
 
     <!-- Favorite/Unfavorite chat room -->
-    <!-- TODO Add proper translation-->
-    <string name="title_favorite_chat">Favorite chat</string>
-    <string name="title_unfavorite_chat">Unfavorite chat</string>
+    <string name="title_favorite_chat">पसंदीदा चैट</string>
+    <string name="title_unfavorite_chat">नापसंद चैट</string>
 
     <!-- Members List -->
     <string name="title_members_list">सदस्य</string>
 
     <!-- Mentions -->
-    <!-- TODO Add proper translation-->
-    <string name="msg_mentions">Mentions</string>
-    <string name="msg_no_mention">No mention</string>
-    <string name="msg_all_the_mentions_appear_here">All the mentions\nappear here</string>
+    <string name="msg_mentions">ज़िक्र</string>
+    <string name="msg_no_mention">कोई ज़िक्र नहीं</string>
+    <string name="msg_all_the_mentions_appear_here">सभी ज़िक्र यहां दिखाई देते हैं</string>
 
     <!-- Pinned Messages -->
     <string name="title_pinned_messages">पिन किए गए संदेश</string>
@@ -233,7 +227,7 @@
     <string name="Archive">संग्रहित करें</string>
     <string name="Remove_someone_from_room">रूम से किसी को निकालें</string>
     <string name="Leave_the_current_channel">मौजूदा चैनल को छोड़ दें</string>
-    <string name="Displays_action_text">Displays action text</string>
+    <string name="Displays_action_text">कार्रवाई पाठ प्रदर्शित करता है</string>
     <string name="Direct_message_someone">किसी को प्रत्यक्ष संदेश भेजें</string>
     <string name="Mute_someone_in_room">रूम में किसी को म्यूट करें</string>
     <string name="Unmute_someone_in_room">रूम में किसी को अनम्यूट करें</string>
@@ -260,7 +254,7 @@
     <string name="header_channel">चैनलों</string>
     <string name="header_private_groups">निजी समूहों</string>
     <string name="header_direct_messages">प्रत्यक्ष संदेश</string>
-    <string name="header_live_chats">Live Chats</string>
+    <string name="header_live_chats">लाइव चैट</string>
     <string name="header_unknown">अज्ञात</string>
 
     <!--Notifications-->
