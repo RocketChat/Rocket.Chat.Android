@@ -2,6 +2,7 @@ app/rocket-chat.json
 app/src/release/google-services.json
 app/src/release/res/values/api_key_strings.xml
 app/libs/
+wear/libs/
 
 # Auth files
 *.jks
