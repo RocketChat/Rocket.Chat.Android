@@ -165,8 +165,11 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
                 textView.setImageResource(category.resourceIcon())
             }
 
-            val currentTab = if (EmojiRepository.getRecents().isEmpty()) EmojiCategory.PEOPLE.ordinal else
+            val currentTab = if (EmojiRepository.getRecents().isEmpty()) {
+                EmojiCategory.PEOPLE.ordinal
+            } else {
                 EmojiCategory.RECENTS.ordinal
+            }
             viewPager.currentItem = currentTab
         }
     }
