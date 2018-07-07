@@ -20,6 +20,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,7 @@ import chat.rocket.android.chatroom.adapter.PeopleSuggestionsAdapter
 import chat.rocket.android.chatroom.adapter.RoomSuggestionsAdapter
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.presentation.ChatRoomView
+import chat.rocket.android.chatroom.ui.bottomsheet.MessageActionsBottomSheet
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
@@ -745,7 +747,20 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             button_send.isVisible = false
             button_show_attachment_options.alpha = 1f
             button_show_attachment_options.isVisible = true
-
+            activity?.supportFragmentManager?.addOnBackStackChangedListener {
+                println("attach")
+            }
+            activity?.supportFragmentManager?.registerFragmentLifecycleCallbacks(
+                object : FragmentManager.FragmentLifecycleCallbacks() {
+                    override fun onFragmentAttached(fm: FragmentManager, f: Fragment, context: Context) {
+                        if (f is MessageActionsBottomSheet) {
+                            setReactionButtonIcon(R.drawable.ic_reaction_24dp)
+                            emojiKeyboardPopup.dismiss()
+                        }
+                    }
+                },
+                true
+            )
             subscribeComposeTextMessage()
             emojiKeyboardPopup =
                 EmojiKeyboardPopup(activity!!, activity!!.findViewById(R.id.fragment_container))
