@@ -38,6 +38,7 @@
     <string name="action_away">Away</string>
     <string name="action_busy">Busy</string>
     <string name="action_invisible">Invisible</string>
+    <string name="action_drawing">Drawing</string>
     <string name="action_save_to_gallery">Save to gallery</string>
 
     <!-- Settings List -->

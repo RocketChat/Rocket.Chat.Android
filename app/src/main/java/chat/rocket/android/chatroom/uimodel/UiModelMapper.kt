@@ -13,6 +13,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.text.scale
 import chat.rocket.android.R
+import chat.rocket.android.app.RocketChatApplication.Companion.context
 import chat.rocket.android.chatroom.domain.MessageReply
 import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.helper.MessageHelper
@@ -45,6 +46,8 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 import okhttp3.HttpUrl
 import java.security.InvalidParameterException
+import java.util.*
+import java.util.Collections.emptyList
 import javax.inject.Inject
 
 @PerFragment
@@ -285,10 +288,12 @@ class UiModelMapper @Inject constructor(
     private fun mapFileAttachment(message: Message, attachment: FileAttachment): BaseUiModel<*>? {
         val attachmentUrl = attachmentUrl(attachment)
         val attachmentTitle = attachmentTitle(attachment)
+        val attachmentText = attachmentText(attachment)
+        val attachmentDescription = attachmentDescription(attachment)
         val id = attachmentId(message, attachment)
         return when (attachment) {
             is ImageAttachment -> ImageAttachmentUiModel(message, attachment, message.id,
-                attachmentUrl, attachmentTitle, id, getReactions(message),
+                attachmentUrl, attachmentTitle, attachmentText, attachmentDescription, id, getReactions(message),
                 preview = message.copy(message = context.getString(R.string.msg_preview_photo)))
             is VideoAttachment -> VideoAttachmentUiModel(message, attachment, message.id,
                 attachmentUrl, attachmentTitle, id, getReactions(message),
@@ -336,6 +341,14 @@ class UiModelMapper @Inject constructor(
             // Fallback to baseUrl + url
             return@with fullUrl
         }
+    }
+
+    private fun attachmentText(attachment: FileAttachment): String? {
+        return attachment.text
+    }
+
+    private fun attachmentDescription(attachment: FileAttachment): String? {
+        return attachment.description
     }
 
     private suspend fun mapMessage(message: Message): MessageUiModel = withContext(CommonPool) {

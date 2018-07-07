@@ -147,16 +147,16 @@ object ImageHelper {
         return true
     }
 
-    private fun canWriteToExternalStorage(context: Context): Boolean {
+    fun canWriteToExternalStorage(context: Context): Boolean {
         return AndroidPermissionsHelper.checkPermission(
             context,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
     }
 
-    private fun checkWritingPermission(context: Context) {
-        if (context is ContextThemeWrapper && context.baseContext is Activity) {
-            val activity = context.baseContext as Activity
+    fun checkWritingPermission(context: Context) {
+        if (context is ContextThemeWrapper) {
+            val activity = if (context.baseContext is Activity) context.baseContext as Activity else context as Activity
             AndroidPermissionsHelper.requestPermission(
                 activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
