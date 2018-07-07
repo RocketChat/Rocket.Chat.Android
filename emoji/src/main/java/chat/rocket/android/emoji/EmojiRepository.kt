@@ -3,8 +3,12 @@ package chat.rocket.android.emoji
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Typeface
+import android.os.SystemClock
 import chat.rocket.android.emoji.internal.EmojiCategory
 import chat.rocket.android.emoji.internal.PREF_EMOJI_RECENTS
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.experimental.yield
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -12,6 +16,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.coroutines.experimental.buildSequence
 
 object EmojiRepository {
 
@@ -86,6 +91,15 @@ object EmojiRepository {
      */
     internal fun getEmojisByCategory(category: EmojiCategory): List<Emoji> {
         return ALL_EMOJIS.filter { it.category.toLowerCase() == category.name.toLowerCase() }
+    }
+
+    internal fun getEmojiSequenceByCategory(category: EmojiCategory): Sequence<Emoji> {
+        val list = ALL_EMOJIS.filter { it.category.toLowerCase() == category.name.toLowerCase() }
+        return buildSequence{
+            list.forEach {
+                yield(it)
+            }
+        }
     }
 
     /**

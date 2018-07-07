@@ -1,11 +1,10 @@
 package chat.rocket.android.emoji.internal
 
+import android.text.Spannable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -16,7 +15,12 @@ import chat.rocket.android.emoji.EmojiRepository
 import chat.rocket.android.emoji.Fitzpatrick
 import chat.rocket.android.emoji.R
 import kotlinx.android.synthetic.main.emoji_category_layout.view.*
-import java.util.*
+import kotlinx.android.synthetic.main.emoji_row_item.view.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
+
 
 internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : PagerAdapter() {
 
@@ -32,23 +36,28 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
             .inflate(R.layout.emoji_category_layout, container, false)
         with(view) {
             val layoutManager = GridLayoutManager(context, 8)
-            val adapter = EmojiAdapter(layoutManager.spanCount, listener = listener)
+
             val category = EmojiCategory.values()[position]
-            val emojis = if (category != EmojiCategory.RECENTS) {
-                EmojiRepository.getEmojisByCategory(category)
-            } else {
-                EmojiRepository.getRecents()
-            }
-            val recentEmojiSize = EmojiRepository.getRecents().size
-            text_no_recent_emoji.isVisible = category == EmojiCategory.RECENTS && recentEmojiSize == 0
-            adapter.addEmojis(emojis)
-            adapter.setFitzpatrick(fitzpatrick)
-            adapters[category] = adapter
             emoji_recycler_view.layoutManager = layoutManager
-            emoji_recycler_view.itemAnimator = DefaultItemAnimator()
-            emoji_recycler_view.adapter = adapter
-            emoji_recycler_view.isNestedScrollingEnabled = false
+            emoji_recycler_view.setRecycledViewPool(RecyclerView.RecycledViewPool())
+
             container.addView(view)
+            launch(UI) {
+                val emojis = if (category != EmojiCategory.RECENTS) {
+                    EmojiRepository.getEmojiSequenceByCategory(category)
+                } else {
+                    sequenceOf(*EmojiRepository.getRecents().toTypedArray())
+                }
+                val recentEmojiSize = EmojiRepository.getRecents().size
+                text_no_recent_emoji.isVisible = category == EmojiCategory.RECENTS && recentEmojiSize == 0
+                if (adapters[category] == null) {
+                    val adapter = EmojiAdapter(listener = listener)
+                    emoji_recycler_view.adapter = adapter
+                    adapters[category] = adapter
+                    adapter.addEmojisFromSequence(emojis)
+                }
+                adapters[category]!!.setFitzpatrick(fitzpatrick)
+            }
         }
         return view
     }
@@ -75,16 +84,27 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
     }
 
     class EmojiAdapter(
-        private val spanCount: Int,
         private var fitzpatrick: Fitzpatrick = Fitzpatrick.Default,
         private val listener: EmojiKeyboardListener
     ) : RecyclerView.Adapter<EmojiRowViewHolder>() {
 
-        private var emojis = Collections.emptyList<Emoji>()
+        private val emojis = mutableListOf<Emoji>()
 
         fun addEmojis(emojis: List<Emoji>) {
-            this.emojis = emojis
+            this.emojis.clear()
+            this.emojis.addAll(emojis)
             notifyDataSetChanged()
+        }
+
+        suspend fun addEmojisFromSequence(emojiSequence: Sequence<Emoji>) {
+            withContext(CommonPool) {
+                emojiSequence.forEachIndexed { index, emoji ->
+                    withContext(UI) {
+                        emojis.add(emoji)
+                        notifyItemInserted(index)
+                    }
+                }
+            }
         }
 
         fun setFitzpatrick(fitzpatrick: Fitzpatrick) {
@@ -101,7 +121,7 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmojiRowViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.emoji_row_item, parent, false)
-            return EmojiRowViewHolder(view, itemCount, spanCount, listener)
+            return EmojiRowViewHolder(view, listener)
         }
 
         override fun getItemCount(): Int = emojis.size
@@ -109,25 +129,30 @@ internal class EmojiPagerAdapter(private val listener: EmojiKeyboardListener) : 
 
     class EmojiRowViewHolder(
         itemView: View,
-        private val itemCount: Int,
-        private val spanCount: Int,
         private val listener: EmojiKeyboardListener
     ) : RecyclerView.ViewHolder(itemView) {
 
-        private val emojiView: TextView = itemView.findViewById(R.id.emoji)
-
         fun bind(emoji: Emoji) {
-            val context = itemView.context
-            emojiView.text = EmojiParser.parse(emoji.unicode)
-            val remainder = itemCount % spanCount
-            val lastLineItemCount = if (remainder == 0) spanCount else remainder
-            val paddingBottom = context.resources.getDimensionPixelSize(R.dimen.picker_padding_bottom)
-            if (adapterPosition >= itemCount - lastLineItemCount) {
-                itemView.setPadding(0, 0, 0, paddingBottom)
+            with(itemView) {
+                val parsedUnicode = unicodeCache[emoji.unicode]
+                emoji_view.setSpannableFactory(spannableFactory)
+                emoji_view.text = if (parsedUnicode == null) {
+                    EmojiParser.parse(emoji.unicode, spannableFactory).let {
+                        unicodeCache[emoji.unicode] = it
+                        it
+                    }
+                } else {
+                    parsedUnicode
+                }
+                itemView.setOnClickListener {
+                    listener.onEmojiAdded(emoji)
+                }
             }
-            itemView.setOnClickListener {
-                listener.onEmojiAdded(emoji)
-            }
+        }
+
+        companion object {
+            private val spannableFactory = Spannable.Factory()
+            private val unicodeCache = mutableMapOf<CharSequence, CharSequence>()
         }
     }
 }

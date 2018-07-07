@@ -117,7 +117,6 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
         DrawableCompat.setTint(wrappedDrawable, getFitzpatrickColor(tone))
         (changeColorView as ImageView).setImageDrawable(wrappedDrawable)
         adapter.setFitzpatrick(tone)
-
     }
 
     @ColorInt
@@ -155,7 +154,7 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
                     callback.onEmojiAdded(emoji)
                 }
             })
-            viewPager.offscreenPageLimit = 0
+            viewPager.offscreenPageLimit = EmojiCategory.values().size
             viewPager.adapter = adapter
 
             for (category in EmojiCategory.values()) {
