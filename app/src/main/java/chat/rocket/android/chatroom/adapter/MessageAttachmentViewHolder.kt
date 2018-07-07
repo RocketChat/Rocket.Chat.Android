@@ -3,7 +3,7 @@ package chat.rocket.android.chatroom.adapter
 import android.text.method.LinkMovementMethod
 import android.view.View
 import chat.rocket.android.chatroom.uimodel.MessageAttachmentUiModel
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.item_message_attachment.view.*
 
 class MessageAttachmentViewHolder(

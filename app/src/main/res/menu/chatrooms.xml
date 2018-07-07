@@ -13,6 +13,6 @@
         android:id="@+id/action_sort"
         android:icon="@drawable/ic_sort"
         android:title="@string/menu_chatroom_sort"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 </menu>

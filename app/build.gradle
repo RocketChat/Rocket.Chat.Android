@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "chat.rocket.android"
-        minSdkVersion 21
+        minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode 2030
         versionName "2.4.0"
@@ -62,6 +62,8 @@ dependencies {
 
     implementation project(':player')
     wearApp project(':wear')
+    implementation project(':emoji')
+    implementation project(':draw')
 
     implementation libraries.kotlin
     implementation libraries.coroutines
@@ -117,8 +119,6 @@ dependencies {
     implementation libraries.frescoImageViewer
 
     implementation libraries.markwon
-
-    implementation libraries.sheetMenu
 
     implementation libraries.aVLoadingIndicatorView
 

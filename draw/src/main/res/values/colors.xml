@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#FF1976D2</color>
+    <color name="icon_color">#C2C2C2</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_black">#000</color>
+    <color name="color_red">#FF5252</color>
+    <color name="color_yellow">#FFEB3B</color>
+    <color name="color_green">#00C853</color>
+    <color name="color_blue">#00B0FF</color>
+    <color name="color_pink">#D500F9</color>
+    <color name="color_brown">#8D6E63</color>
+</resources>

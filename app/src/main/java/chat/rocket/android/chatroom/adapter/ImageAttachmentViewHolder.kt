@@ -3,7 +3,7 @@ package chat.rocket.android.chatroom.adapter
 import android.view.View
 import chat.rocket.android.chatroom.uimodel.ImageAttachmentUiModel
 import chat.rocket.android.helper.ImageHelper
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.EmojiReactionListener
 import com.facebook.drawee.backends.pipeline.Fresco
 import kotlinx.android.synthetic.main.message_attachment.view.*
 
@@ -28,6 +28,8 @@ class ImageAttachmentViewHolder(
             }.build()
             image_attachment.controller = controller
             file_name.text = data.attachmentTitle
+            file_description.text = data.attachmentDescription
+            file_text.text = data.attachmentText
             image_attachment.setOnClickListener {
                 ImageHelper.openImage(
                     context,

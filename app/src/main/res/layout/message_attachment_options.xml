@@ -15,4 +15,14 @@
         android:gravity="start|center"
         android:text="@string/action_files" />
 
+    <Button
+        android:id="@+id/button_drawing"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="20dp"
+        android:drawableStart="@drawable/ic_gesture_black_24dp"
+        android:gravity="start|center"
+        android:text="@string/action_drawing" />
+
 </LinearLayout>

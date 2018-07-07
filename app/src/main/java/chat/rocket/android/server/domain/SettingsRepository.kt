@@ -71,6 +71,7 @@ fun PublicSettings.gitlabUrl(): String? = this[ACCOUNT_GITLAB_URL]?.value as Str
 fun PublicSettings.isWordpressAuthenticationEnabled(): Boolean = this[ACCOUNT_WORDPRESS]?.value == true
 
 fun PublicSettings.useRealName(): Boolean = this[USE_REALNAME]?.value == true
+fun PublicSettings.useSpecialCharsOnRoom(): Boolean = this[ALLOW_ROOM_NAME_SPECIAL_CHARS]?.value == true
 fun PublicSettings.faviconLarge(): String? = this[FAVICON_512]?.value as String?
 fun PublicSettings.favicon(): String? = this[FAVICON_196]?.value as String?
 fun PublicSettings.wideTile(): String? = this[WIDE_TILE_310]?.value as String?

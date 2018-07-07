@@ -2,7 +2,7 @@ package chat.rocket.android.chatroom.adapter
 
 import android.view.View
 import chat.rocket.android.chatroom.uimodel.MessageReplyUiModel
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.item_message_reply.view.*
 
 class MessageReplyViewHolder(
