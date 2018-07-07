@@ -1,6 +1,9 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Environment
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
@@ -16,7 +19,18 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.helper.MessageHelper
 import chat.rocket.android.helper.UserHelper
 import chat.rocket.android.infrastructure.LocalRepository
-import chat.rocket.android.server.domain.*
+import chat.rocket.android.server.domain.ChatRoomsInteractor
+import chat.rocket.android.server.domain.GetCurrentServerInteractor
+import chat.rocket.android.server.domain.GetSettingsInteractor
+import chat.rocket.android.server.domain.JobSchedulerInteractor
+import chat.rocket.android.server.domain.MessagesRepository
+import chat.rocket.android.server.domain.PermissionsInteractor
+import chat.rocket.android.server.domain.PublicSettings
+import chat.rocket.android.server.domain.RoomRepository
+import chat.rocket.android.server.domain.UsersRepository
+import chat.rocket.android.server.domain.uploadMaxFileSize
+import chat.rocket.android.server.domain.uploadMimeTypeFilter
+import chat.rocket.android.server.domain.useRealName
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
 import chat.rocket.android.server.infraestructure.state
 import chat.rocket.android.util.extensions.avatarUrl
@@ -33,11 +47,28 @@ import chat.rocket.core.internal.realtime.setTypingStatus
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.realtime.subscribeTypingStatus
 import chat.rocket.core.internal.realtime.unsubscribe
-import chat.rocket.core.internal.rest.*
+import chat.rocket.core.internal.rest.chatRoomRoles
+import chat.rocket.core.internal.rest.commands
+import chat.rocket.core.internal.rest.deleteMessage
+import chat.rocket.core.internal.rest.getMembers
+import chat.rocket.core.internal.rest.history
+import chat.rocket.core.internal.rest.joinChat
+import chat.rocket.core.internal.rest.markAsRead
+import chat.rocket.core.internal.rest.messages
+import chat.rocket.core.internal.rest.pinMessage
+import chat.rocket.core.internal.rest.runCommand
+import chat.rocket.core.internal.rest.sendMessage
+import chat.rocket.core.internal.rest.spotlight
+import chat.rocket.core.internal.rest.starMessage
+import chat.rocket.core.internal.rest.toggleReaction
+import chat.rocket.core.internal.rest.unpinMessage
+import chat.rocket.core.internal.rest.unstarMessage
+import chat.rocket.core.internal.rest.updateMessage
+import chat.rocket.core.internal.rest.uploadFile
+import chat.rocket.core.internal.rest.favorite
 import chat.rocket.core.model.ChatRoomRole
 import chat.rocket.core.model.Command
 import chat.rocket.core.model.Message
-import chat.rocket.core.model.Myself
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.android.UI
@@ -49,6 +80,8 @@ import timber.log.Timber
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -139,12 +172,10 @@ class ChatRoomPresenter @Inject constructor(
             try {
                 if (offset == 0L) {
                     val localMessages = messagesRepository.getByRoomId(chatRoomId)
-                    val oldMessages = mapper.map(
-                        localMessages, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast, isRoom = true
-                        )
-                    )
+                    val oldMessages = mapper.map(localMessages, RoomUiModel(
+                        roles = chatRoles,
+                        isBroadcast = chatIsBroadcast, isRoom = true
+                    ))
                     if (oldMessages.isNotEmpty()) {
                         view.showMessages(oldMessages)
                         loadMissingMessages()
@@ -187,12 +218,10 @@ class ChatRoomPresenter @Inject constructor(
             }
         messagesRepository.saveAll(messages)
         view.showMessages(
-            mapper.map(
-                messages, RoomUiModel(
-                    roles = chatRoles,
-                    isBroadcast = chatIsBroadcast, isRoom = true
-                )
-            )
+            mapper.map(messages, RoomUiModel(
+                roles = chatRoles,
+                isBroadcast = chatIsBroadcast, isRoom = true
+            ))
         )
     }
 
@@ -231,8 +260,8 @@ class ChatRoomPresenter @Inject constructor(
                         view.showNewMessage(
                             mapper.map(
                                 newMessage, RoomUiModel(
-                                    roles = chatRoles, isBroadcast = chatIsBroadcast
-                                )
+                                roles = chatRoles, isBroadcast = chatIsBroadcast
+                            )
                             )
                         )
                         client.sendMessage(id, chatRoomId, text)
@@ -415,13 +444,11 @@ class ChatRoomPresenter @Inject constructor(
                             Timber.d("History: $messages")
 
                             if (messages.result.isNotEmpty()) {
-                                val models = mapper.map(
-                                    messages.result, RoomUiModel(
-                                        roles = chatRoles,
-                                        isBroadcast = chatIsBroadcast,
-                                        isRoom = true
-                                    )
-                                )
+                                val models = mapper.map(messages.result, RoomUiModel(
+                                    roles = chatRoles,
+                                    isBroadcast = chatIsBroadcast,
+                                    isRoom = true
+                                ))
                                 messagesRepository.saveAll(messages.result)
 
                                 launchUI(strategy) {
@@ -481,18 +508,12 @@ class ChatRoomPresenter @Inject constructor(
     fun citeMessage(roomName: String, roomType: String, messageId: String, mentionAuthor: Boolean) {
         launchUI(strategy) {
             val message = messagesRepository.getById(messageId)
-            val me: Myself? = try {
-                retryIO("me()") { client.me() } //TODO: Cache this and use an interactor
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                null
-            }
+            val currentUsername: String? = userHelper.user()?.username
             message?.let { msg ->
                 val id = msg.id
                 val username = msg.sender?.username ?: ""
-                val mention = if (mentionAuthor && me?.username != username) "@$username" else ""
-                val room =
-                    if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomName
+                val mention = if (mentionAuthor && currentUsername != username) "@$username" else ""
+                val room = if (roomTypeOf(roomType) is RoomType.DirectMessage) username else roomName
                 val chatRoomType = when (roomTypeOf(roomType)) {
                     is RoomType.DirectMessage -> "direct"
                     is RoomType.PrivateGroup -> "group"
@@ -503,12 +524,10 @@ class ChatRoomPresenter @Inject constructor(
                 view.showReplyingAction(
                     username = getDisplayName(msg.sender),
                     replyMarkdown = "[ ]($currentServer/$chatRoomType/$room?msg=$id) $mention ",
-                    quotedMessage = mapper.map(
-                        message, RoomUiModel(
-                            roles = chatRoles,
-                            isBroadcast = chatIsBroadcast
-                        )
-                    ).last().preview?.message ?: ""
+                    quotedMessage = mapper.map(message, RoomUiModel(
+                        roles = chatRoles,
+                        isBroadcast = chatIsBroadcast
+                    )).last().preview?.message ?: ""
                 )
             }
         }
@@ -710,8 +729,30 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun toggleFavoriteChatRoom(roomId: String, isFavorite: Boolean) {
+        launchUI(strategy) {
+            try {
+                // Note that if it is favorite then the user wants to unfavorite - and vice versa.
+                retryIO("favorite($roomId, $isFavorite)") {
+                    client.favorite(roomId, !isFavorite)
+                }
+                view.showFavoriteIcon(!isFavorite)
+            } catch (e: RocketChatException) {
+                Timber.e(e, "Error while trying to favorite/unfavorite chat room.")
+                e.message?.let {
+                    view.showMessage(it)
+                }.ifNull {
+                    view.showGenericErrorMessage()
+                }
+            }
+        }
+    }
+
     fun toMembersList(chatRoomId: String) =
         navigator.toMembersList(chatRoomId)
+
+    fun toMentions(chatRoomId: String) =
+        navigator.toMentions(chatRoomId)
 
     fun toPinnedMessageList(chatRoomId: String) =
         navigator.toPinnedMessageList(chatRoomId)
@@ -769,6 +810,7 @@ class ChatRoomPresenter @Inject constructor(
                             chatRoomLastSeen = it.lastSeen ?: -1,
                             chatRoomName = roomName,
                             isChatRoomCreator = false,
+                            isChatRoomFavorite = false,
                             isChatRoomReadOnly = false,
                             isChatRoomSubscribed = it.open,
                             chatRoomMessage = message
@@ -861,6 +903,12 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun getDrawingImageUri(byteArray: ByteArray): Uri {
+        val bitmap  = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        val file = saveDrawingImage(bitmap)
+        return uriInteractor.getUri(file)
+    }
+
     private suspend fun subscribeTypingStatus() {
         launch(CommonPool + strategy.jobs) {
             client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
@@ -909,11 +957,9 @@ class ChatRoomPresenter @Inject constructor(
 
     private fun updateMessage(streamedMessage: Message) {
         launchUI(strategy) {
-            val viewModelStreamedMessage = mapper.map(
-                streamedMessage, RoomUiModel(
-                    roles = chatRoles, isBroadcast = chatIsBroadcast
-                )
-            )
+            val viewModelStreamedMessage = mapper.map(streamedMessage, RoomUiModel(
+                roles = chatRoles, isBroadcast = chatIsBroadcast
+            ))
 
             val roomMessages = messagesRepository.getByRoomId(streamedMessage.roomId)
             val index = roomMessages.indexOfFirst { msg -> msg.id == streamedMessage.id }
@@ -927,5 +973,18 @@ class ChatRoomPresenter @Inject constructor(
                 view.showNewMessage(viewModelStreamedMessage)
             }
         }
+    }
+
+    private fun saveDrawingImage(bitmap: Bitmap): File {
+        val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
+        val path = Environment.getExternalStoragePublicDirectory(imageDir)
+        val file = File(path, UUID.randomUUID().toString()+".png")
+        path.mkdirs()
+        file.createNewFile()
+        val outputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.PNG,70, outputStream)
+        outputStream.flush()
+        outputStream.close()
+        return file
     }
 }

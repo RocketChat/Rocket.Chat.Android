@@ -14,6 +14,12 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         }
     }
 
+    fun toMentions(chatRoomId: String) {
+        activity.addFragmentBackStack("MentionsFragment", R.id.fragment_container) {
+            chat.rocket.android.mentions.ui.newInstance(chatRoomId)
+        }
+    }
+
     fun toPinnedMessageList(chatRoomId: String) {
         activity.addFragmentBackStack("PinnedMessages", R.id.fragment_container) {
             chat.rocket.android.pinnedmessages.ui.newInstance(chatRoomId)
@@ -37,16 +43,30 @@ class ChatRoomNavigator(internal val activity: ChatRoomActivity) {
         activity.finish()
     }
 
-    fun toDirectMessage(chatRoomId: String,
-                        chatRoomName: String,
-                        chatRoomType: String,
-                        isChatRoomReadOnly: Boolean,
-                        chatRoomLastSeen: Long,
-                        isChatRoomSubscribed: Boolean,
-                        isChatRoomCreator: Boolean,
-                        chatRoomMessage: String) {
-        activity.startActivity(activity.chatRoomIntent(chatRoomId, chatRoomName, chatRoomType,
-            isChatRoomReadOnly, chatRoomLastSeen, isChatRoomSubscribed, isChatRoomCreator, chatRoomMessage))
+    fun toDirectMessage(
+        chatRoomId: String,
+        chatRoomName: String,
+        chatRoomType: String,
+        isChatRoomReadOnly: Boolean,
+        chatRoomLastSeen: Long,
+        isChatRoomSubscribed: Boolean,
+        isChatRoomCreator: Boolean,
+        isChatRoomFavorite: Boolean,
+        chatRoomMessage: String
+    ) {
+        activity.startActivity(
+            activity.chatRoomIntent(
+                chatRoomId,
+                chatRoomName,
+                chatRoomType,
+                isChatRoomReadOnly,
+                chatRoomLastSeen,
+                isChatRoomSubscribed,
+                isChatRoomCreator,
+                isChatRoomFavorite,
+                chatRoomMessage
+            )
+        )
         activity.overridePendingTransition(R.anim.open_enter, R.anim.open_exit)
     }
 }

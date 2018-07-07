@@ -1,13 +1,19 @@
 package chat.rocket.android.createchannel.ui
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.createchannel.presentation.CreateChannelPresenter
 import chat.rocket.android.createchannel.presentation.CreateChannelView
@@ -18,7 +24,6 @@ import chat.rocket.android.util.extensions.asObservable
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.widget.DividerItemDecoration
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import com.google.android.material.chip.Chip
@@ -181,7 +186,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
 
     private fun setupToolBar() {
         (activity as AppCompatActivity?)?.supportActionBar?.title =
-                getString(R.string.title_create_channel)
+            getString(R.string.title_create_channel)
     }
 
     private fun setupViewListeners() {
@@ -189,7 +194,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
             if (isChecked) {
                 text_channel_type.text = getString(R.string.msg_private_channel)
                 text_channel_type_description.text =
-                        getString(R.string.msg_private_channel_description)
+                    getString(R.string.msg_private_channel_description)
                 image_channel_icon.setImageDrawable(
                     context?.getDrawable(R.drawable.ic_lock_black_12_dp)
                 )
@@ -197,7 +202,7 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
             } else {
                 text_channel_type.text = getString(R.string.msg_public_channel)
                 text_channel_type_description.text =
-                        getString(R.string.msg_public_channel_description)
+                    getString(R.string.msg_public_channel_description)
                 image_channel_icon.setImageDrawable(
                     context?.getDrawable(R.drawable.ic_hashtag_black_12dp)
                 )
@@ -213,8 +218,8 @@ class CreateChannelFragment : Fragment(), CreateChannelView, ActionMode.Callback
     private fun setupRecyclerView() {
         ui {
             recycler_view.layoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            recycler_view.addItemDecoration(DividerItemDecoration(it))
+                LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
             recycler_view.adapter = adapter
 
         }

@@ -9,7 +9,7 @@ import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomPresenter
 import chat.rocket.android.chatroom.uimodel.*
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.isSystemMessage
 import timber.log.Timber

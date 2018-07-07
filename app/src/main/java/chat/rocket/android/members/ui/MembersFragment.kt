@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.ui.ChatRoomActivity
 import chat.rocket.android.helper.EndlessRecyclerViewScrollListener
@@ -15,10 +17,8 @@ import chat.rocket.android.members.presentation.MembersPresenter
 import chat.rocket.android.members.presentation.MembersView
 import chat.rocket.android.members.uimodel.MemberUiModel
 import chat.rocket.android.util.extensions.inflate
-import chat.rocket.android.util.extensions.setVisible
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.widget.DividerItemDecoration
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_members.*
 import javax.inject.Inject
@@ -89,11 +89,11 @@ class MembersFragment : Fragment(), MembersView {
     }
 
     override fun showLoading() {
-        ui { view_loading.setVisible(true) }
+        ui { view_loading.isVisible = true }
     }
 
     override fun hideLoading() {
-        ui { view_loading.setVisible(false) }
+        ui { view_loading.isVisible = false }
     }
 
     override fun showMessage(resId: Int) {
@@ -113,7 +113,7 @@ class MembersFragment : Fragment(), MembersView {
     private fun setupRecyclerView() {
         ui {
             recycler_view.layoutManager = linearLayoutManager
-            recycler_view.addItemDecoration(DividerItemDecoration(it))
+            recycler_view.addItemDecoration(DividerItemDecoration(it, DividerItemDecoration.HORIZONTAL))
             recycler_view.adapter = adapter
         }
     }

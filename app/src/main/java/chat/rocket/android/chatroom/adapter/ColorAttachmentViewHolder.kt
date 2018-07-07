@@ -6,7 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.uimodel.ColorAttachmentUiModel
-import chat.rocket.android.widget.emoji.EmojiReactionListener
+import chat.rocket.android.emoji.EmojiReactionListener
 import kotlinx.android.synthetic.main.item_color_attachment.view.*
 
 
@@ -16,7 +16,7 @@ class ColorAttachmentViewHolder(itemView: View,
     : BaseViewHolder<ColorAttachmentUiModel>(itemView, listener, reactionListener) {
 
     val drawable: Drawable? = ContextCompat.getDrawable(itemView.context,
-            R.drawable.quote_vertical_bar)
+            R.drawable.quote_vertical_gray_bar)
 
     init {
         with(itemView) {
