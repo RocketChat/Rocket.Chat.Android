@@ -282,7 +282,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 }
             }
             sendButton.setOnClickListener {
-                uploadFile(data, description.text.toString())
+                uploadFile(data, (citation ?:"") + description.text.toString())
+                clearMessageComposition()
                 alertDialog.dismiss()
             }
             cancelButton.setOnClickListener {
