@@ -1,6 +1,9 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Environment
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.adapter.AutoCompleteType
 import chat.rocket.android.chatroom.adapter.PEOPLE
@@ -77,6 +80,8 @@ import timber.log.Timber
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -898,6 +903,12 @@ class ChatRoomPresenter @Inject constructor(
         }
     }
 
+    fun getDrawingImageUri(byteArray: ByteArray): Uri {
+        val bitmap  = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        val file = saveDrawingImage(bitmap)
+        return uriInteractor.getUri(file)
+    }
+
     private suspend fun subscribeTypingStatus() {
         launch(CommonPool + strategy.jobs) {
             client.subscribeTypingStatus(chatRoomId.toString()) { _, id ->
@@ -962,5 +973,18 @@ class ChatRoomPresenter @Inject constructor(
                 view.showNewMessage(viewModelStreamedMessage, true)
             }
         }
+    }
+
+    private fun saveDrawingImage(bitmap: Bitmap): File {
+        val imageDir = "${Environment.DIRECTORY_PICTURES}/Rocket.Chat Images/"
+        val path = Environment.getExternalStoragePublicDirectory(imageDir)
+        val file = File(path, UUID.randomUUID().toString()+".png")
+        path.mkdirs()
+        file.createNewFile()
+        val outputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.PNG,70, outputStream)
+        outputStream.flush()
+        outputStream.close()
+        return file
     }
 }
