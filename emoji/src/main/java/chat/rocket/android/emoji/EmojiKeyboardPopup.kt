@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -73,38 +74,50 @@ class EmojiKeyboardPopup(context: Context, view: View) : OverKeyboardPopupWindow
 
     private fun showSkinToneChooser() {
         val view = LayoutInflater.from(context).inflate(R.layout.color_select_popup, null)
-        val dialog = AlertDialog.Builder(context)
+        val dialog = AlertDialog.Builder(context, R.style.Dialog)
             .setView(view)
             .setTitle(context.getString(R.string.alert_title_default_skin_tone))
             .setCancelable(true)
             .create()
 
-        view.findViewById<ImageView>(R.id.default_image_view).setOnClickListener {
+        view.findViewById<TextView>(R.id.default_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.Default)
         }
 
-        view.findViewById<ImageView>(R.id.light_image_view).setOnClickListener {
+        view.findViewById<TextView>(R.id.light_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.LightTone)
         }
 
-        view.findViewById<ImageView>(R.id.medium_light_image_view).setOnClickListener {
+        view.findViewById<TextView>(R.id.medium_light_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.MediumLightTone)
         }
 
-        view.findViewById<ImageView>(R.id.medium_image_view).setOnClickListener {
+        view.findViewById<TextView>(R.id.medium_image_view).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.MediumTone)
         }
 
-        view.findViewById<ImageView>(R.id.medium_dark_image_view).setOnClickListener {
+        view.findViewById<TextView>(R.id.medium_dark_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.MediumDarkTone)
         }
 
-        view.findViewById<ImageView>(R.id.dark_image_view).setOnClickListener {
+        view.findViewById<TextView>(R.id.dark_tone_text).also {
+            it.text = EmojiParser.parse(it.text)
+        }.setOnClickListener {
             dialog.dismiss()
             changeSkinTone(Fitzpatrick.DarkTone)
         }
