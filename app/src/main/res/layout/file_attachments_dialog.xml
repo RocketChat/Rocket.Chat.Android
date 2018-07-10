@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:id="@+id/text_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/msg_upload_file"
+            style="@style/Base.DialogWindowTitle.AppCompat"
+            android:layout_margin="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_file_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:drawableStart="@drawable/ic_files_24dp"
+            android:drawablePadding="6dp"
+            app:layout_constraintTop_toBottomOf="@id/text_dialog_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp"
+            android:textDirection="locale"
+            android:visibility="gone"
+            tools:text="This is a very, very, very long filename, to test how the layout will work on very very very long filenames.pdf" />
+
+        <FrameLayout
+            android:id="@+id/audio_video_attachment"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:background="@color/colorBlack"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_file_name"
+            android:layout_margin="16dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/exo_controls_play" />
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/image_preview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintHeight_max="240dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/audio_video_attachment"
+            android:layout_margin="16dp"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <EditText
+            android:id="@+id/text_file_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_preview"
+            android:layout_margin="16dp"
+            android:hint="@string/msg_file_description" />
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_file_description"
+            android:layout_margin="16dp"
+            android:background="@drawable/rounded_color_accent"
+            android:text="@string/msg_send"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/text_file_description"
+            app:layout_constraintEnd_toStartOf="@id/button_send"
+            android:layout_margin="16dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:text="@string/msg_cancel" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

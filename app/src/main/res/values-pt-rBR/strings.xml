@@ -120,6 +120,9 @@
     <string name="msg_channel_name">Nome do chat</string>
     <string name="msg_search">Buscar</string>
     <string name="msg_message_copied">Mensagem copiada</string>
+    <string name="msg_upload_file">Subir arquivo</string>
+    <string name="msg_file_description">Descrição do arquivo</string>
+    <string name="msg_send">Enviar</string>
     // TODO: Add proper translation.
     <string name="msg_delete_message">Delete Message</string>
     <string name="msg_delete_description">Are you sure you want to delete this message</string>
@@ -262,4 +265,5 @@
     <string name="notif_action_reply_hint">RESPONDER</string>
     <string name="notif_error_sending">Falha ao enviar a mensagem.</string>
     <string name="notif_success_sending">Mensagem enviada para %1$s!</string>
+    <string name="msg_log_out">Deslogando...</string>
 </resources>
