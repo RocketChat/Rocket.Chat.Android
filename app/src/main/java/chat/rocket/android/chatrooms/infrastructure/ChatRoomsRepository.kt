@@ -5,7 +5,7 @@ import chat.rocket.android.db.ChatRoomDao
 import chat.rocket.android.db.model.ChatRoom
 import javax.inject.Inject
 
-class ChatRoomsRepository @Inject constructor(val dao: ChatRoomDao){
+class ChatRoomsRepository @Inject constructor(private val dao: ChatRoomDao){
     fun getChatRooms(order: Order): LiveData<List<ChatRoom>> {
         return when(order) {
             Order.ACTIVITY -> dao.getAll()
@@ -14,6 +14,10 @@ class ChatRoomsRepository @Inject constructor(val dao: ChatRoomDao){
             Order.GROUPED_NAME -> dao.getAllAlphabeticallyGrouped()
         }
     }
+
+    fun search(query: String) = dao.searchSync(query)
+
+    fun count() = dao.count()
 
     enum class Order {
         ACTIVITY,
