@@ -283,7 +283,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             }
             sendButton.setOnClickListener {
                 uploadFile(data, (citation ?:"") + description.text.toString())
-                clearMessageComposition()
+                clearMessageComposition(true)
                 alertDialog.dismiss()
             }
             cancelButton.setOnClickListener {
@@ -563,15 +563,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             button_send.isEnabled = true
             text_message.isEnabled = true
-            clearMessageComposition()
+            clearMessageComposition(true)
         }
     }
 
 
-    override fun clearMessageComposition() {
+    override fun clearMessageComposition(deleteMessage: Boolean) {
         ui {
             citation = null
             editingMessageId = null
+            if (deleteMessage)
             text_message.textContent = ""
             actionSnackbar.dismiss()
         }
@@ -823,7 +824,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 var textMessage = citation ?: ""
                 textMessage += text_message.textContent
                 sendMessage(textMessage)
-                clearMessageComposition()
+                clearMessageComposition(true)
             }
 
             button_show_attachment_options.setOnClickListener {
@@ -914,7 +915,8 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun setupActionSnackbar() {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener {
-            clearMessageComposition()
+            clearMessageComposition(false)
+            if (text_message.textContent.isEmpty())
             KeyboardHelper.showSoftKeyboard(text_message)
         }
     }
