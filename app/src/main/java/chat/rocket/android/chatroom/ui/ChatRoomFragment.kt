@@ -1,6 +1,7 @@
 package chat.rocket.android.chatroom.ui
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -14,6 +15,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import androidx.core.text.bold
 import androidx.core.view.isVisible
@@ -119,13 +125,12 @@ private const val MENU_ACTION_FAVORITE_MESSAGES = 5
 private const val MENU_ACTION_FILES = 6
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
-
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
     lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
-    private lateinit var chatRoomId: String
+    internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
     private var chatRoomMessage: String? = null
@@ -137,7 +142,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var chatRoomLastSeen: Long = -1
     private lateinit var actionSnackbar: ActionSnackbar
-    private var citation: String? = null
+    internal var citation: String? = null
     private var editingMessageId: String? = null
 
     private val compositeDisposable = CompositeDisposable()
@@ -160,6 +165,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private val centerY by lazy { recycler_view.bottom }
     private val handler = Handler()
     private var verticalScrollOffset = AtomicInteger(0)
+
+    private val dialogView by lazy { View.inflate(context, R.layout.file_attachments_dialog, null) }
+    internal val alertDialog by lazy { AlertDialog.Builder(activity).setView(dialogView).create() }
+    internal val imagePreview by lazy { dialogView.findViewById<ImageView>(R.id.image_preview) }
+    internal val sendButton by lazy { dialogView.findViewById<Button>(R.id.button_send) }
+    internal val cancelButton by lazy { dialogView.findViewById<Button>(R.id.button_cancel) }
+    internal val description by lazy { dialogView.findViewById<EditText>(R.id.text_file_description) }
+    internal val audioVideoAttachment by lazy { dialogView.findViewById<FrameLayout>(R.id.audio_video_attachment) }
+    internal val textFile by lazy { dialogView.findViewById<TextView>(R.id.text_file_name) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -231,16 +245,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         if (resultData != null && resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_CODE_FOR_PERFORM_SAF -> {
-                    presenter.uploadFile(chatRoomId, resultData.data, "")
-                    // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
+                    showFileAttachmentDialog(resultData.data)
                 }
                 REQUEST_CODE_FOR_DRAW -> {
-                    presenter.uploadDrawingImage(
-                        chatRoomId,
-                        resultData.getByteArrayExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA),
-                        ""
+                    showDrawAttachmentDialog(
+                        resultData.getByteArrayExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA)
                     )
-                    // TODO Just leaving a blank message that comes with the file for now. In the future lets add the possibility to add a message with the file to be uploaded.
                 }
             }
         }

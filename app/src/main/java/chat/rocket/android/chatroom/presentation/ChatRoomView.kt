@@ -1,5 +1,6 @@
 package chat.rocket.android.chatroom.presentation
 
+import android.net.Uri
 import chat.rocket.android.chatroom.uimodel.BaseUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel

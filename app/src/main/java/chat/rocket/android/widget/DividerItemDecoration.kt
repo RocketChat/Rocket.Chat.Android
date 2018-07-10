@@ -2,7 +2,9 @@ package chat.rocket.android.widget
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -51,6 +53,9 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
 
+            if (isLastView(child, parent))
+                continue
+
             val params = child.layoutParams as RecyclerView.LayoutParams
 
             val top = child.bottom + params.bottomMargin
@@ -59,5 +64,10 @@ class DividerItemDecoration() : RecyclerView.ItemDecoration() {
             divider.setBounds(left, top, right, bottom)
             divider.draw(c)
         }
+    }
+
+    private fun isLastView(view: View, parent: RecyclerView): Boolean {
+        val position = parent.getChildAdapterPosition(view)
+        return position == parent.adapter?.itemCount?.minus(1) ?: false
     }
 }
