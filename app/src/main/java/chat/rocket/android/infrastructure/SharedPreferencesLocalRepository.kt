@@ -22,6 +22,13 @@ class SharedPreferencesLocalRepository(
         save("${url}_${LocalRepository.USER_KEY}", userAdapter.toJson(user))
     }
 
+    override fun saveLastChatroomsRefresh(url: String, timestamp: Long) {
+        save("$url${LocalRepository.LAST_CHATROOMS_REFRESH}", timestamp)
+    }
+
+    override fun getLastChatroomsRefresh(url: String) =
+        getLong("$url${LocalRepository.LAST_CHATROOMS_REFRESH}", 0L)
+
     override fun getBoolean(key: String, defValue: Boolean) = preferences.getBoolean(key, defValue)
 
     override fun getFloat(key: String, defValue: Float) = preferences.getFloat(key, defValue)

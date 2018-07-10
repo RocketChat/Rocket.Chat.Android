@@ -8,9 +8,9 @@ data class RoomUiModel(
     val type: RoomType,
     val name: CharSequence,
     val avatar: String,
-    val date: CharSequence?,
-    val unread: String?,
-    val alert: Boolean,
-    val lastMessage: CharSequence?,
-    val status: UserStatus?
+    val date: CharSequence? = null,
+    val unread: String? = null,
+    val alert: Boolean = false,
+    val lastMessage: CharSequence? = null,
+    val status: UserStatus? = null
 )
