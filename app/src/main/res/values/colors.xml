@@ -21,6 +21,7 @@
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorBlack">#FF000000</color>
     <color name="colorRed">#FFFF0000</color>
+    <color name="colorOrange">#FFB347</color>
 
     <color name="darkGray">#FFa0a0a0</color>
     <color name="actionMenuColor">#FF727272</color>
