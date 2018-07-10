@@ -734,18 +734,29 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
             when (state) {
                 is State.Connected -> {
                     connection_status_text.text = getString(R.string.status_connected)
+                    connection_status_text.background = resources.getDrawable(R.color.color_green)
                     handler.postDelayed(dismissStatus, 2000)
                 }
-                is State.Disconnected -> connection_status_text.text =
-                    getString(R.string.status_disconnected)
-                is State.Connecting -> connection_status_text.text =
-                    getString(R.string.status_connecting)
-                is State.Authenticating -> connection_status_text.text =
-                    getString(R.string.status_authenticating)
-                is State.Disconnecting -> connection_status_text.text =
-                    getString(R.string.status_disconnecting)
-                is State.Waiting -> connection_status_text.text =
-                    getString(R.string.status_waiting, state.seconds)
+                is State.Disconnected -> {
+                    connection_status_text.text = getString(R.string.status_disconnected)
+                    connection_status_text.background = resources.getDrawable(R.color.color_red)
+                }
+                is State.Connecting -> {
+                    connection_status_text.text = getString(R.string.status_connecting)
+                    connection_status_text.background = resources.getDrawable(R.color.color_orange)
+                }
+                is State.Authenticating -> {
+                    connection_status_text.text = getString(R.string.status_authenticating)
+                    connection_status_text.background = resources.getDrawable(R.color.color_green)
+                }
+                is State.Disconnecting -> {
+                    connection_status_text.text = getString(R.string.status_disconnecting)
+                    connection_status_text.background = resources.getDrawable(R.color.color_red)
+                }
+                is State.Waiting -> {
+                    connection_status_text.text =  getString(R.string.status_waiting, state.seconds)
+                    connection_status_text.background = resources.getDrawable(R.color.color_orange)
+                }
             }
         }
     }
