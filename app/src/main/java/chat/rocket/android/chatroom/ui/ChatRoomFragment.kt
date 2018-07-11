@@ -522,15 +522,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             button_send.isEnabled = true
             text_message.isEnabled = true
-            clearMessageComposition()
+            clearMessageComposition(true)
         }
     }
 
 
-    override fun clearMessageComposition() {
+    override fun clearMessageComposition(deleteMessage: Boolean) {
         ui {
             citation = null
             editingMessageId = null
+            if (deleteMessage)
             text_message.textContent = ""
             actionSnackbar.dismiss()
         }
@@ -782,7 +783,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 var textMessage = citation ?: ""
                 textMessage += text_message.textContent
                 sendMessage(textMessage)
-                clearMessageComposition()
+                clearMessageComposition(true)
             }
 
             button_show_attachment_options.setOnClickListener {
@@ -874,8 +875,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun setupActionSnackbar() {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener {
-            clearMessageComposition()
-            KeyboardHelper.showSoftKeyboard(text_message)
+            clearMessageComposition(false)
+            if (text_message.textContent.isEmpty()) {
+                KeyboardHelper.showSoftKeyboard(text_message)
+            }    
         }
     }
 
