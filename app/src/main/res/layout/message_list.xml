@@ -38,6 +38,6 @@
         tools:text="1"
         android:layout_gravity="center_vertical"
         app:layout_anchor="@id/button_fab"
-        app:layout_anchorGravity="end"/>
+        app:layout_anchorGravity="end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
