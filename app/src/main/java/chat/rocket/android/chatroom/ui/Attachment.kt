@@ -9,6 +9,7 @@ import chat.rocket.android.util.extensions.getMimeType
 fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
     activity?.let { fragmentActivity ->
         uri.getMimeType(fragmentActivity).let { mimeType ->
+            description.text.clear()
             when {
                 mimeType.startsWith("image") -> {
                     imagePreview.isVisible = true
@@ -27,16 +28,14 @@ fun ChatRoomFragment.showFileAttachmentDialog(uri: Uri) {
 
     sendButton.setOnClickListener {
         presenter.uploadFile(chatRoomId, uri, (citation ?: "") + description.text.toString())
-        clearMessageComposition()
         alertDialog.dismiss()
     }
-
     cancelButton.setOnClickListener { alertDialog.dismiss() }
-
     alertDialog.show()
 }
 
 fun ChatRoomFragment.showDrawAttachmentDialog(byteArray: ByteArray) {
+    description.text.clear()
     imagePreview.isVisible = true
     imagePreview.setImageDrawable(Drawable.createFromStream(byteArray.inputStream(), ""))
 
@@ -46,11 +45,9 @@ fun ChatRoomFragment.showDrawAttachmentDialog(byteArray: ByteArray) {
             byteArray,
             (citation ?: "") + description.text.toString()
         )
-        clearMessageComposition()
         alertDialog.dismiss()
     }
 
     cancelButton.setOnClickListener { alertDialog.dismiss() }
-
     alertDialog.show()
 }
