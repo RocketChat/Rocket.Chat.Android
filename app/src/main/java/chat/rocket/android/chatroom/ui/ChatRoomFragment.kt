@@ -547,8 +547,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             citation = null
             editingMessageId = null
-            if (deleteMessage)
-            text_message.textContent = ""
+            if (deleteMessage) {
+                text_message.textContent = ""
+            }
             actionSnackbar.dismiss()
         }
     }
