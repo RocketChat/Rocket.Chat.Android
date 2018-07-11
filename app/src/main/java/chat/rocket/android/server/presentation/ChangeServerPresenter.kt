@@ -4,7 +4,7 @@ import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.server.domain.*
 import chat.rocket.android.server.infraestructure.ConnectionManagerFactory
-import chat.rocket.android.util.extensions.launchUI
+import chat.rocket.android.util.extension.launchUI
 import chat.rocket.common.util.ifNull
 import javax.inject.Inject
 

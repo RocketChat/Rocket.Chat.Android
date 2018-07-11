@@ -51,14 +51,6 @@ interface ChatRoomView : LoadingView, MessageView {
     fun showFileSelection(filter: Array<String>?)
 
     /**
-     * Uploads a file to a chat room.
-     *
-     * @param uri The file URI to send.
-     * @param msg Message to send with attachments
-     */
-    fun uploadFile(uri: Uri, msg: String)
-
-    /**
      * Shows a invalid file message.
      */
     fun showInvalidFileMessage()
