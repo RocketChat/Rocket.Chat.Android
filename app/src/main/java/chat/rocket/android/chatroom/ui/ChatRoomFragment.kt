@@ -6,7 +6,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.SpannableStringBuilder
@@ -41,7 +40,8 @@ import chat.rocket.android.chatroom.uimodel.MessageUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.ChatRoomSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.CommandSuggestionUiModel
 import chat.rocket.android.chatroom.uimodel.suggestion.PeopleSuggestionUiModel
-import chat.rocket.android.draw.DrawingActivity
+import chat.rocket.android.draw.main.ui.DRAWING_BYTE_ARRAY_EXTRA_DATA
+import chat.rocket.android.draw.main.ui.DrawingActivity
 import chat.rocket.android.emoji.ComposerEditText
 import chat.rocket.android.emoji.Emoji
 import chat.rocket.android.emoji.EmojiKeyboardListener
@@ -63,8 +63,6 @@ import chat.rocket.android.util.extensions.rotateBy
 import chat.rocket.android.util.extensions.showToast
 import chat.rocket.android.util.extensions.textContent
 import chat.rocket.android.util.extensions.ui
-import chat.rocket.android.util.extensions.getMimeType
-import chat.rocket.android.util.extensions.getFileName
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.core.internal.realtime.socket.model.State
@@ -127,13 +125,12 @@ private const val MENU_ACTION_FAVORITE_MESSAGES = 5
 private const val MENU_ACTION_FILES = 6
 
 class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiReactionListener {
-
     @Inject
     lateinit var presenter: ChatRoomPresenter
     @Inject
     lateinit var parser: MessageParser
     private lateinit var adapter: ChatRoomAdapter
-    private lateinit var chatRoomId: String
+    internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
     private var chatRoomMessage: String? = null
@@ -145,7 +142,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private lateinit var emojiKeyboardPopup: EmojiKeyboardPopup
     private var chatRoomLastSeen: Long = -1
     private lateinit var actionSnackbar: ActionSnackbar
-    private var citation: String? = null
+    internal var citation: String? = null
     private var editingMessageId: String? = null
 
     private val compositeDisposable = CompositeDisposable()
@@ -168,6 +165,15 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private val centerY by lazy { recycler_view.bottom }
     private val handler = Handler()
     private var verticalScrollOffset = AtomicInteger(0)
+
+    private val dialogView by lazy { View.inflate(context, R.layout.file_attachments_dialog, null) }
+    internal val alertDialog by lazy { AlertDialog.Builder(activity).setView(dialogView).create() }
+    internal val imagePreview by lazy { dialogView.findViewById<ImageView>(R.id.image_preview) }
+    internal val sendButton by lazy { dialogView.findViewById<Button>(R.id.button_send) }
+    internal val cancelButton by lazy { dialogView.findViewById<Button>(R.id.button_cancel) }
+    internal val description by lazy { dialogView.findViewById<EditText>(R.id.text_file_description) }
+    internal val audioVideoAttachment by lazy { dialogView.findViewById<FrameLayout>(R.id.audio_video_attachment) }
+    internal val textFile by lazy { dialogView.findViewById<TextView>(R.id.text_file_name) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -237,60 +243,17 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (resultData != null && resultCode == Activity.RESULT_OK) {
-            when(requestCode){
+            when (requestCode) {
                 REQUEST_CODE_FOR_PERFORM_SAF -> {
-                    fileAttachmentDialog(resultData.data)
+                    showFileAttachmentDialog(resultData.data)
                 }
                 REQUEST_CODE_FOR_DRAW -> {
-                    val result= resultData.getByteArrayExtra("bitmap")
-                    val uri = presenter.getDrawingImageUri(result)
-                    fileAttachmentDialog(uri)
+                    showDrawAttachmentDialog(
+                        resultData.getByteArrayExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA)
+                    )
                 }
             }
         }
-    }
-
-    private fun fileAttachmentDialog(data: Uri) {
-        val builder = AlertDialog.Builder(activity)
-        val dialogView = View.inflate(context, R.layout.file_attachments_dialog, null)
-        builder.setView(dialogView)
-        val alertDialog = builder.create()
-
-        dialogView?.let {
-            val imagePreview = it.findViewById<ImageView>(R.id.image_preview)
-            val sendButton = it.findViewById<Button>(R.id.button_send)
-            val cancelButton: Button = it.findViewById(R.id.button_cancel)
-            val description = it.findViewById<EditText>(R.id.text_file_description)
-            val audioVideoAttachment  = it.findViewById<FrameLayout>(R.id.audio_video_attachment)
-            val textFile = it.findViewById<TextView>(R.id.text_file_name)
-
-            activity?.let {
-                data.getMimeType(it).apply {
-                    when {
-                        this.startsWith("image") -> {
-                            imagePreview.isVisible = true
-                            imagePreview.setImageURI(data)
-                        }
-                        this.startsWith("video") -> {
-                            audioVideoAttachment.isVisible = true
-                        }
-                        else -> {
-                            textFile.isVisible = true
-                            textFile.text = data.getFileName(it)
-                        }
-                    }
-                }
-            }
-            sendButton.setOnClickListener {
-                uploadFile(data, (citation ?:"") + description.text.toString())
-                clearMessageComposition(true)
-                alertDialog.dismiss()
-            }
-            cancelButton.setOnClickListener {
-                alertDialog.dismiss()
-            }
-        }
-        alertDialog.show()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -535,10 +498,6 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             text_typing_status.isVisible = false
         }
-    }
-
-    override fun uploadFile(uri: Uri, msg: String) {
-        presenter.uploadFile(chatRoomId, uri, msg)
     }
 
     override fun showInvalidFileMessage() {
@@ -857,11 +816,12 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 activity?.let {
                     if (!ImageHelper.canWriteToExternalStorage(it)) {
                         ImageHelper.checkWritingPermission(it)
-                    }else{
+                    } else {
                         val intent = Intent(it, DrawingActivity::class.java)
                         startActivityForResult(intent, REQUEST_CODE_FOR_DRAW)
                     }
                 }
+
                 handler.postDelayed({
                     hideAttachmentOptions()
                 }, 400)

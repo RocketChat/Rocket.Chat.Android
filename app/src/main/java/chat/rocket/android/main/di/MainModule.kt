@@ -1,10 +1,8 @@
 package chat.rocket.android.main.di
 
 import androidx.lifecycle.LifecycleOwner
-import android.content.Context
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import chat.rocket.android.dagger.scope.PerActivity
-import chat.rocket.android.dagger.scope.PerFragment
 import chat.rocket.android.main.presentation.MainNavigator
 import chat.rocket.android.main.presentation.MainView
 import chat.rocket.android.main.ui.MainActivity
@@ -30,5 +28,6 @@ class MainModule {
     fun provideLifecycleOwner(activity: MainActivity): LifecycleOwner = activity
 
     @Provides
-    fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy = CancelStrategy(owner, jobs)
+    fun provideCancelStrategy(owner: LifecycleOwner, jobs: Job): CancelStrategy =
+        CancelStrategy(owner, jobs)
 }

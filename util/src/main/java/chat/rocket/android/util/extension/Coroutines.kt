@@ -1,4 +1,4 @@
-package chat.rocket.android.util.extensions
+package chat.rocket.android.util.extension
 
 import chat.rocket.android.core.lifecycle.CancelStrategy
 import kotlinx.coroutines.experimental.CoroutineScope

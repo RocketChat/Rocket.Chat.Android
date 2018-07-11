@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion versions.compileSdk
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':core')
+
+    implementation libraries.kotlin
+    implementation libraries.coroutines
+    implementation libraries.coroutinesAndroid
+
+    // TODO This is a dependency from the core module, but the util module are unable to get that dependencies. Check why it is occurring since transitive is enable by default
+    implementation libraries.lifecycleExtensions
+    kapt libraries.lifecycleCompiler
+}
