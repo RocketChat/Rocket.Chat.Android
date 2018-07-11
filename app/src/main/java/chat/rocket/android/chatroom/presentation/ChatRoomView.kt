@@ -60,7 +60,7 @@ interface ChatRoomView : LoadingView, MessageView {
      *
      * @param message The (recent) message sent to a chat room.
      */
-    fun showNewMessage(message: List<BaseUiModel<*>>)
+    fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean)
 
     /**
      * Dispatch to the recycler views adapter that we should remove a message.
@@ -111,7 +111,7 @@ interface ChatRoomView : LoadingView, MessageView {
     /**
      * Clears the message composition.
      */
-    fun clearMessageComposition()
+    fun clearMessageComposition(deleteMessage: Boolean)
 
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 

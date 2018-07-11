@@ -133,6 +133,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     internal lateinit var chatRoomId: String
     private lateinit var chatRoomName: String
     private lateinit var chatRoomType: String
+    private var newMessageCount: Int = 0
     private var chatRoomMessage: String? = null
     private var isSubscribed: Boolean = true
     private var isReadOnly: Boolean = false
@@ -448,10 +449,13 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private val fabScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             if (!recyclerView.canScrollVertically(1)) {
+                text_count.isVisible = false
                 button_fab.hide()
+                newMessageCount = 0
             } else {
                 if (dy < 0 && !button_fab.isVisible) {
                     button_fab.show()
+                    if (newMessageCount !=0) text_count.isVisible = true
                 }
             }
         }
@@ -504,9 +508,21 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         showMessage(getString(R.string.msg_invalid_file))
     }
 
-    override fun showNewMessage(message: List<BaseUiModel<*>>) {
+    override fun showNewMessage(message: List<BaseUiModel<*>>, isMessageReceived: Boolean) {
         ui {
             adapter.prependData(message)
+            if (isMessageReceived && button_fab.isVisible) {
+                newMessageCount++
+
+            if (newMessageCount <= 99)
+                text_count.text = newMessageCount.toString()
+            else
+                text_count.text = "99+"
+
+                text_count.isVisible = true
+            }
+            else if (!button_fab.isVisible)
+                recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
             empty_chat_view.isVisible = adapter.itemCount == 0
         }
@@ -522,15 +538,16 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         ui {
             button_send.isEnabled = true
             text_message.isEnabled = true
-            clearMessageComposition()
+            clearMessageComposition(true)
         }
     }
 
 
-    override fun clearMessageComposition() {
+    override fun clearMessageComposition(deleteMessage: Boolean) {
         ui {
             citation = null
             editingMessageId = null
+            if (deleteMessage)
             text_message.textContent = ""
             actionSnackbar.dismiss()
         }
@@ -752,7 +769,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         button_fab.setOnClickListener {
             recycler_view.scrollToPosition(0)
             verticalScrollOffset.set(0)
+            text_count.isVisible = false
             button_fab.hide()
+            newMessageCount = 0
         }
     }
 
@@ -793,7 +812,7 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
                 var textMessage = citation ?: ""
                 textMessage += text_message.textContent
                 sendMessage(textMessage)
-                clearMessageComposition()
+                clearMessageComposition(true)
             }
 
             button_show_attachment_options.setOnClickListener {
@@ -885,8 +904,10 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
     private fun setupActionSnackbar() {
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener {
-            clearMessageComposition()
-            KeyboardHelper.showSoftKeyboard(text_message)
+            clearMessageComposition(false)
+            if (text_message.textContent.isEmpty()) {
+                KeyboardHelper.showSoftKeyboard(text_message)
+            }    
         }
     }
 
