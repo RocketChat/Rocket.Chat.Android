@@ -916,8 +916,9 @@ class ChatRoomFragment : Fragment(), ChatRoomView, EmojiKeyboardListener, EmojiR
         actionSnackbar = ActionSnackbar.make(message_list_container, parser = parser)
         actionSnackbar.cancelView.setOnClickListener {
             clearMessageComposition(false)
-            if (text_message.textContent.isEmpty())
-            KeyboardHelper.showSoftKeyboard(text_message)
+            if (text_message.textContent.isEmpty()) {
+                KeyboardHelper.showSoftKeyboard(text_message)
+            }    
         }
     }
 
