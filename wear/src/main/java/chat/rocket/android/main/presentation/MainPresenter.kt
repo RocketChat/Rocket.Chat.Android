@@ -10,6 +10,8 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.util.ifNull
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.logout
+import chat.rocket.core.internal.rest.registerPushToken
+import chat.rocket.core.internal.rest.unregisterPushToken
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,6 +26,22 @@ class MainPresenter @Inject constructor(
 ) {
     private val currentServer = serverInteractor.get()!!
     private val client: RocketChatClient = factory.create(currentServer)
+
+    suspend fun refreshToken(token: String?) {
+        launch {
+            token?.let {
+                localRepository.save(LocalRepository.KEY_PUSH_TOKEN, token)
+                try {
+                    retryIO(description = "register push token for $currentServer") {
+                        client.registerPushToken(it)
+                    }
+                } catch (ex: Exception) {
+                    Timber.d(ex, "Error registering Push token for $currentServer")
+                    ex.printStackTrace()
+                }
+            }
+        }
+    }
 
     fun logout() {
         launch {
@@ -47,9 +65,18 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private fun clearTokens() {
+    private suspend fun clearTokens() {
         serverInteractor.clear()
         //TODO clear Push tokens if any
+        val pushToken = localRepository.get(LocalRepository.KEY_PUSH_TOKEN)
+        if (pushToken != null) {
+            try {
+                retryIO("unregisterPushToken") { client.unregisterPushToken(pushToken) }
+                view.invalidateToken(pushToken)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error unregistering push token")
+            }
+        }
         localRepository.clearAllFromServer(currentServer)
     }
 }

@@ -85,6 +85,10 @@ dependencies {
 
     implementation libraries.fresco
     implementation libraries.frescoImageViewer
+
+    implementation libraries.firebaseCloudMessaging
+    implementation libraries.firebaseCore
+
     api libraries.frescoOkHttp
 
     testImplementation libraries.junit

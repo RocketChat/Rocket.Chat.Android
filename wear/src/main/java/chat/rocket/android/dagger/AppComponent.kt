@@ -5,6 +5,7 @@ import chat.rocket.android.app.RocketChatWearApplication
 import chat.rocket.android.dagger.module.ActivityBuilder
 import chat.rocket.android.dagger.module.AppModule
 import chat.rocket.android.dagger.module.ServiceBuilder
+import chat.rocket.android.push.FirebaseTokenService
 import chat.rocket.android.services.DataLayerListenerService
 import dagger.BindsInstance
 import dagger.Component
@@ -25,4 +26,6 @@ interface AppComponent {
     fun inject(app: RocketChatWearApplication)
 
     fun inject(service: DataLayerListenerService)
+
+    fun inject(firebaseTokenService: FirebaseTokenService)
 }

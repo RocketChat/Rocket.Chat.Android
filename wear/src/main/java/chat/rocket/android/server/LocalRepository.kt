@@ -20,6 +20,7 @@ interface LocalRepository {
     fun saveCurrentUser(url: String, user: User)
 
     companion object {
+        const val KEY_PUSH_TOKEN = "KEY_PUSH_TOKEN"
         const val TOKEN_KEY = "token_"
         const val USER_KEY = "user_"
         const val CURRENT_USERNAME_KEY = "username_"

@@ -7,7 +7,12 @@ import androidx.wear.widget.drawer.WearableNavigationDrawerView
 import chat.rocket.android.R
 import chat.rocket.android.main.presentation.MainPresenter
 import chat.rocket.android.main.presentation.MainView
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -29,6 +34,17 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_rooms)
+
+        launch(CommonPool) {
+            try {
+                val token = FirebaseInstanceId.getInstance().token
+                Timber.d("FCM token: $token")
+                presenter.refreshToken(token)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Missing play services...")
+            }
+        }
+
         initialiseChatRoomsFragment()
         setUpTopNavigationDrawer()
     }
@@ -48,6 +64,10 @@ class MainActivity : Activity(), MainView, HasActivityInjector,
 
     override fun showGenericErrorMessage() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun invalidateToken(token: String) {
+        FirebaseInstanceId.getInstance().deleteToken(token, FirebaseMessaging.INSTANCE_ID_SCOPE)
     }
 
     private fun initialiseChatRoomsFragment() {

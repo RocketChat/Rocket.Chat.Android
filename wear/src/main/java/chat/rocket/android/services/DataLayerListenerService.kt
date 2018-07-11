@@ -11,8 +11,12 @@ import chat.rocket.common.model.Token
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.logout
 import chat.rocket.core.internal.rest.me
+import chat.rocket.core.internal.rest.registerPushToken
+import chat.rocket.core.internal.rest.unregisterPushToken
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
@@ -62,6 +66,8 @@ class DataLayerListenerService : WearableListenerService() {
                         localRepository.save(LocalRepository.CURRENT_USERNAME_KEY, username)
                     }
 
+                    registerPushToken(currentServer)
+
                     val isActivityForeground =
                         sharedPreferencesManager.getSharedPreferenceBoolean(
                             KEY_PREFS_ACTIVITY_FOREGROUND
@@ -82,28 +88,53 @@ class DataLayerListenerService : WearableListenerService() {
         }
     }
 
-    private fun logout() {
-        val currentServer = getCurrentServerInteractor.get()
+    private suspend fun registerPushToken(serverUrl: String) {
         launch {
-            try {
-                clearTokens(currentServer)
-                retryIO("logout") { client.logout() }
-            } catch (exception: RocketChatException) {
-                Timber.d(exception, "Error calling logout")
-            }
-            try {
-                if (currentServer != null)
-                    tokenRepository.remove(currentServer)
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error cleaning up the session...")
+            localRepository.get(LocalRepository.KEY_PUSH_TOKEN)?.let {
+                val client = factory.create(serverUrl)
+                try {
+                    retryIO(description = "register push token for $serverUrl") {
+                        client.registerPushToken(it)
+                    }
+                } catch (ex: Exception) {
+                    Timber.d(ex, "Error registering Push token for $serverUrl")
+                    ex.printStackTrace()
+                }
             }
         }
     }
 
-    private fun clearTokens(currentServer: String?) {
+    private fun logout() {
+        val currentServer = getCurrentServerInteractor.get()
+        currentServer?.let {
+            launch {
+                try {
+                    clearTokens(currentServer)
+                    retryIO("logout") { client.logout() }
+                } catch (exception: RocketChatException) {
+                    Timber.d(exception, "Error calling logout")
+                }
+                try {
+                    tokenRepository.remove(currentServer)
+                } catch (ex: Exception) {
+                    Timber.d(ex, "Error cleaning up the session...")
+                }
+            }
+        }
+    }
+
+    private suspend fun clearTokens(currentServer: String) {
         getCurrentServerInteractor.clear()
-        //TODO clear Push tokens if any
-        if (currentServer != null)
-            localRepository.clearAllFromServer(currentServer)
+        val pushToken = localRepository.get(LocalRepository.KEY_PUSH_TOKEN)
+        if (pushToken != null) {
+            try {
+                retryIO("unregisterPushToken") { client.unregisterPushToken(pushToken) }
+                FirebaseInstanceId.getInstance()
+                    .deleteToken(pushToken, FirebaseMessaging.INSTANCE_ID_SCOPE)
+            } catch (ex: Exception) {
+                Timber.d(ex, "Error unregistering push token")
+            }
+        }
+        localRepository.clearAllFromServer(currentServer)
     }
 }

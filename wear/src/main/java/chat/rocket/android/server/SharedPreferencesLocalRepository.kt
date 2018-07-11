@@ -45,6 +45,7 @@ class SharedPreferencesLocalRepository(
     override fun clear(key: String) = preferences.edit { remove(key) }
 
     override fun clearAllFromServer(server: String) {
+        clear(LocalRepository.KEY_PUSH_TOKEN)
         clear(LocalRepository.TOKEN_KEY + server)
         clear(LocalRepository.CURRENT_USERNAME_KEY)
     }

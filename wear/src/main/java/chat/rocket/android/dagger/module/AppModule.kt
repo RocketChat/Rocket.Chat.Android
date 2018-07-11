@@ -1,9 +1,11 @@
 package chat.rocket.android.dagger.module
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import chat.rocket.android.BuildConfig
+import chat.rocket.android.push.PushManager
 import chat.rocket.android.server.*
 import chat.rocket.android.util.AppJsonAdapterFactory
 import chat.rocket.android.util.TimberLogger
@@ -160,5 +162,19 @@ class AppModule {
             )
             .add(ReactionsAdapter())
             .build()
+    }
+
+    @Provides
+    fun provideNotificationManager(context: Application) =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    @Provides
+    @Singleton
+    fun providePushManager(
+        context: Application,
+        manager: NotificationManager,
+        moshi: Moshi
+    ): PushManager {
+        return PushManager(manager, moshi, context)
     }
 }
