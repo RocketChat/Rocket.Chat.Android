@@ -22,7 +22,7 @@ ext {
             playServices          : '15.0.0',
             firebase              : '15.0.0',
             room                  : '2.0.0-alpha1',
-            lifecycle             : '2.0.0-alpha1',
+            lifecycle             : '2.0.0-beta01',
             rxKotlin              : '2.2.0',
             rxAndroid             : '2.0.2',
             moshi                 : '1.6.0',
