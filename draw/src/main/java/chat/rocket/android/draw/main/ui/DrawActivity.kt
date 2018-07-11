@@ -1,128 +1,167 @@
-package chat.rocket.android.draw
+package chat.rocket.android.draw.main.ui
 
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import chat.rocket.android.draw.R
+import chat.rocket.android.draw.main.presenter.DrawPresenter
+import chat.rocket.android.draw.main.presenter.DrawView
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_drawing.*
 import kotlinx.android.synthetic.main.color_palette_view.*
-import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
-class DrawingActivity : AppCompatActivity() {
+const val DRAWING_BYTE_ARRAY_EXTRA_DATA: String = "chat.rocket.android.DrawingByteArray"
+
+class DrawingActivity : DaggerAppCompatActivity(), DrawView {
+    @Inject
+    lateinit var presenter: DrawPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drawing)
 
-        image_close_drawing.setOnClickListener {
-            finish()
-        }
-        image_send_drawing.setOnClickListener {
-            val bStream = ByteArrayOutputStream()
-            val bitmap = custom_draw_view.getBitmap()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 70, bStream)
-            val byteArray = bStream.toByteArray()
-            val returnIntent = Intent()
-            returnIntent.putExtra("bitmap", byteArray)
-            setResult(Activity.RESULT_OK,returnIntent)
-            finish()
-        }
-
-        setUpDrawTools()
-
+        setupListeners()
+        setupDrawTools()
         colorSelector()
-
         setPaintAlpha()
-
         setPaintWidth()
     }
 
-    private fun setUpDrawTools() {
+    override fun sendByteArray(byteArray: ByteArray) {
+        setResult(Activity.RESULT_OK, Intent().putExtra(DRAWING_BYTE_ARRAY_EXTRA_DATA, byteArray))
+        finish()
+    }
+
+    override fun showWrongProcessingMessage() {
+        Toast.makeText(this, getText(R.string.msg_wrong_processing_draw_image), Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun setupListeners() {
+        image_close_drawing.setOnClickListener { finish() }
+
+        image_send_drawing.setOnClickListener {
+            presenter.processDrawingImage(custom_draw_view.getBitmap())
+        }
+    }
+
+    private fun setupDrawTools() {
         image_draw_eraser.setOnClickListener {
             custom_draw_view.clearCanvas()
-            toggleDrawTools(draw_tools,false)
+            toggleDrawTools(draw_tools, false)
         }
+
         image_draw_width.setOnClickListener {
-            if (draw_tools.translationY == (56).toPx){
-                toggleDrawTools(draw_tools,true)
-            }else if (draw_tools.translationY == (0).toPx && seekBar_width.isVisible){
-                toggleDrawTools(draw_tools,false)
+            if (draw_tools.translationY == (56).toPx) {
+                toggleDrawTools(draw_tools, true)
+            } else if (draw_tools.translationY == (0).toPx && seekBar_width.isVisible) {
+                toggleDrawTools(draw_tools, false)
             }
             seekBar_width.isVisible = true
             seekBar_opacity.isVisible = false
             draw_color_palette.isVisible = false
         }
+
         image_draw_opacity.setOnClickListener {
-            if (draw_tools.translationY == (56).toPx){
-                toggleDrawTools(draw_tools,true)
-            }else if (draw_tools.translationY == (0).toPx && seekBar_opacity.isVisible){
-                toggleDrawTools(draw_tools,false)
+            if (draw_tools.translationY == (56).toPx) {
+                toggleDrawTools(draw_tools, true)
+            } else if (draw_tools.translationY == (0).toPx && seekBar_opacity.isVisible) {
+                toggleDrawTools(draw_tools, false)
             }
             seekBar_width.isVisible = false
             seekBar_opacity.isVisible = true
             draw_color_palette.isVisible = false
         }
+
         image_draw_color.setOnClickListener {
-            if (draw_tools.translationY == (56).toPx){
-                toggleDrawTools(draw_tools,true)
-            }else if (draw_tools.translationY == (0).toPx && draw_color_palette.isVisible){
-                toggleDrawTools(draw_tools,false)
+            if (draw_tools.translationY == (56).toPx) {
+                toggleDrawTools(draw_tools, true)
+            } else if (draw_tools.translationY == (0).toPx && draw_color_palette.isVisible) {
+                toggleDrawTools(draw_tools, false)
             }
             seekBar_width.isVisible = false
             seekBar_opacity.isVisible = false
             draw_color_palette.isVisible = true
         }
+
         image_draw_undo.setOnClickListener {
             custom_draw_view.undo()
-            toggleDrawTools(draw_tools,false)
+            toggleDrawTools(draw_tools, false)
         }
+
         image_draw_redo.setOnClickListener {
             custom_draw_view.redo()
-            toggleDrawTools(draw_tools,false)
+            toggleDrawTools(draw_tools, false)
         }
     }
 
     private fun toggleDrawTools(view: View, showView: Boolean = true) {
-        if (showView){
+        if (showView) {
             view.animate().translationY((0).toPx)
-        }else{
+        } else {
             view.animate().translationY((56).toPx)
         }
     }
 
     private fun colorSelector() {
-        image_color_black.setOnClickListener {
-            custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_black,null))
-            scaleColorView(image_color_black)
-        }
         image_color_red.setOnClickListener {
-            custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_red,null))
+            custom_draw_view.setColor(
+                ResourcesCompat.getColor(resources, R.color.color_red, null)
+            )
             scaleColorView(image_color_red)
         }
+
         image_color_yellow.setOnClickListener {
-            custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_yellow,null))
+            custom_draw_view.setColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.color_yellow, null
+                )
+            )
             scaleColorView(image_color_yellow)
         }
+
         image_color_green.setOnClickListener {
-            custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_green,null))
+            custom_draw_view.setColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.color_green, null
+                )
+            )
             scaleColorView(image_color_green)
         }
+
         image_color_blue.setOnClickListener {
-            custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_blue,null))
+            custom_draw_view.setColor(
+                ResourcesCompat.getColor(resources, R.color.color_blue, null)
+            )
             scaleColorView(image_color_blue)
         }
+
         image_color_pink.setOnClickListener {
-            custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_pink,null))
+            custom_draw_view.setColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.color_pink, null
+                )
+            )
             scaleColorView(image_color_pink)
         }
+
         image_color_brown.setOnClickListener {
-            custom_draw_view.setColor(ResourcesCompat.getColor(resources, R.color.color_brown,null))
+            custom_draw_view.setColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.color_brown, null
+                )
+            )
             scaleColorView(image_color_brown)
         }
     }
@@ -156,7 +195,7 @@ class DrawingActivity : AppCompatActivity() {
     }
 
     private fun setPaintWidth() {
-        seekBar_width.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+        seekBar_width.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 custom_draw_view.setStrokeWidth(progress.toFloat())
             }
@@ -168,7 +207,7 @@ class DrawingActivity : AppCompatActivity() {
     }
 
     private fun setPaintAlpha() {
-        seekBar_opacity.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+        seekBar_opacity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 custom_draw_view.setAlpha(progress)
             }
