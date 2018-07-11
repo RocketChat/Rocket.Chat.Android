@@ -111,7 +111,7 @@ interface ChatRoomView : LoadingView, MessageView {
     /**
      * Clears the message composition.
      */
-    fun clearMessageComposition()
+    fun clearMessageComposition(deleteMessage: Boolean)
 
     fun showInvalidFileSize(fileSize: Int, maxFileSize: Int)
 
