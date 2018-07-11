@@ -18,8 +18,11 @@ import chat.rocket.android.util.extensions.avatarUrl
 import chat.rocket.android.util.extensions.date
 import chat.rocket.android.util.extensions.localDateTime
 import chat.rocket.common.model.RoomType
+import chat.rocket.common.model.User
 import chat.rocket.common.model.roomTypeOf
 import chat.rocket.common.model.userStatusOf
+import chat.rocket.core.model.Room
+import chat.rocket.core.model.SpotlightResult
 
 class RoomUiModelMapper(
     private val context: Application,
@@ -34,7 +37,7 @@ class RoomUiModelMapper(
     private val messageUnreadColor = ContextCompat.getColor(context, android.R.color.primary_text_light)
     private val messageColor = ContextCompat.getColor(context, R.color.colorSecondaryText)
 
-    fun map(rooms: List<ChatRoom>, grouped: Boolean): List<ItemHolder<*>> {
+    fun map(rooms: List<ChatRoom>, grouped: Boolean = false): List<ItemHolder<*>> {
         val list = ArrayList<ItemHolder<*>>(rooms.size + 4)
         var lastType: String? = null
         rooms.forEach { room ->
@@ -46,6 +49,47 @@ class RoomUiModelMapper(
         }
 
         return list
+    }
+
+    fun map(spotlight: SpotlightResult): List<ItemHolder<*>> {
+        val list = ArrayList<ItemHolder<*>>(spotlight.users.size + spotlight.rooms.size)
+        spotlight.users.filterNot { it.username.isNullOrEmpty() }.forEach { user ->
+            list.add(RoomItemHolder(mapUser(user)))
+        }
+        spotlight.rooms.filterNot { it.name.isNullOrEmpty() }.forEach { room ->
+            list.add(RoomItemHolder(mapRoom(room)))
+        }
+
+        return list
+    }
+
+    private fun mapUser(user: User): RoomUiModel {
+        return with(user) {
+            val name = mapName(user.username!!, user.name, false)
+            val status = user.status
+            val avatar = serverUrl.avatarUrl(user.username!!)
+
+            RoomUiModel(
+                id = user.id,
+                name = name,
+                type = roomTypeOf(RoomType.DIRECT_MESSAGE),
+                avatar = avatar,
+                status = status
+            )
+        }
+    }
+
+    private fun mapRoom(room: Room): RoomUiModel {
+        return with(room) {
+            RoomUiModel(
+                id = id,
+                name = name!!,
+                type = type,
+                avatar = serverUrl.avatarUrl(name!!, isGroupOrChannel = true),
+                lastMessage = mapLastMessage(lastMessage?.sender?.username,
+                        lastMessage?.sender?.name, lastMessage?.message)
+            )
+        }
     }
 
     fun map(chatRoom: ChatRoom): RoomUiModel {
@@ -89,7 +133,7 @@ class RoomUiModelMapper(
         }
     }
 
-    private fun mapLastMessage(name: String?, fullName: String?, text: String?, unread: Boolean): CharSequence? {
+    private fun mapLastMessage(name: String?, fullName: String?, text: String?, unread: Boolean = false): CharSequence? {
         return if (!settings.showLastMessage()) {
             null
         } else if (name != null && text != null) {

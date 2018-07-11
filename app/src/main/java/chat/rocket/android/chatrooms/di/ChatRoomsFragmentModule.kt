@@ -71,7 +71,8 @@ class ChatRoomsFragmentModule {
 
     @Provides
     @PerFragment
-    fun provideFetchChatRoomsInteractor(client: RocketChatClient, dbManager: DatabaseManager): FetchChatRoomsInteractor {
+    fun provideFetchChatRoomsInteractor(client: RocketChatClient,
+                                        dbManager: DatabaseManager): FetchChatRoomsInteractor {
         return FetchChatRoomsInteractor(client, dbManager)
     }
 

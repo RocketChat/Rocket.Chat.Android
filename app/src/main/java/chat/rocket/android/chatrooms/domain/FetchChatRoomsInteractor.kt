@@ -3,13 +3,12 @@ package chat.rocket.android.chatrooms.domain
 import chat.rocket.android.db.DatabaseManager
 import chat.rocket.android.db.model.ChatRoomEntity
 import chat.rocket.android.db.model.UserEntity
+import chat.rocket.android.infrastructure.LocalRepository
 import chat.rocket.android.util.retryIO
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.userId
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 
 class FetchChatRoomsInteractor(
@@ -18,21 +17,15 @@ class FetchChatRoomsInteractor(
 ) {
 
     suspend fun refreshChatRooms() {
-        launch(CommonPool) {
-            try {
-                val rooms = retryIO("fetch chatRooms", times = 10,
-                        initialDelay = 200, maxDelay = 2000) {
-                    client.chatRooms().update.map { room ->
-                        mapChatRoom(room)
-                    }
-                }
-
-                Timber.d("Refreshing rooms: $rooms")
-                dbManager.insert(rooms)
-            } catch (ex: Exception) {
-                Timber.d(ex, "Error getting chatrooms")
+        val rooms = retryIO("fetch chatRooms", times = 10,
+                initialDelay = 200, maxDelay = 2000) {
+            client.chatRooms().update.map { room ->
+                mapChatRoom(room)
             }
         }
+
+        Timber.d("Refreshing rooms: $rooms")
+        dbManager.insert(rooms)
     }
 
     private suspend fun mapChatRoom(room: ChatRoom): ChatRoomEntity {
