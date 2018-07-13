@@ -38,20 +38,20 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
-        private val view: MainView,
-        private val strategy: CancelStrategy,
-        private val navigator: MainNavigator,
-        private val tokenRepository: TokenRepository,
-        private val serverInteractor: GetCurrentServerInteractor,
-        private val localRepository: LocalRepository,
-        private val navHeaderMapper: NavHeaderUiModelMapper,
-        private val saveAccountInteractor: SaveAccountInteractor,
-        private val getAccountsInteractor: GetAccountsInteractor,
-        private val removeAccountInteractor: RemoveAccountInteractor,
-        private val factory: RocketChatClientFactory,
-        dbManagerFactory: DatabaseManagerFactory,
-        getSettingsInteractor: GetSettingsInteractor,
-        managerFactory: ConnectionManagerFactory
+    private val view: MainView,
+    private val strategy: CancelStrategy,
+    private val navigator: MainNavigator,
+    private val tokenRepository: TokenRepository,
+    private val serverInteractor: GetCurrentServerInteractor,
+    private val localRepository: LocalRepository,
+    private val navHeaderMapper: NavHeaderUiModelMapper,
+    private val saveAccountInteractor: SaveAccountInteractor,
+    private val getAccountsInteractor: GetAccountsInteractor,
+    private val removeAccountInteractor: RemoveAccountInteractor,
+    private val factory: RocketChatClientFactory,
+    dbManagerFactory: DatabaseManagerFactory,
+    getSettingsInteractor: GetSettingsInteractor,
+    managerFactory: ConnectionManagerFactory
 ) : CheckServerPresenter(strategy, factory, view = view) {
     private val currentServer = serverInteractor.get()!!
     private val manager = managerFactory.create(currentServer)
@@ -69,16 +69,34 @@ class MainPresenter @Inject constructor(
 
     fun toCreateChannel() = navigator.toCreateChannel()
 
+    fun loadServerAccounts() {
+        launchUI(strategy) {
+            try {
+                view.setupServerAccountList(getAccountsInteractor.get())
+            } catch (ex: Exception) {
+                when (ex) {
+                    is RocketChatAuthException -> logout()
+                    else -> {
+                        Timber.d(ex, "Error loading serve accounts")
+                        ex.message?.let {
+                            view.showMessage(it)
+                        }.ifNull {
+                            view.showGenericErrorMessage()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun loadCurrentInfo() {
         checkServerInfo(currentServer)
         launchUI(strategy) {
             try {
-                val me = retryIO("me") {
-                    client.me()
-                }
+                val me = retryIO("me") { client.me() }
                 val model = navHeaderMapper.mapToUiModel(me)
                 saveAccount(model)
-                view.setupNavHeader(model, getAccountsInteractor.get())
+                view.setupUserAccountInfo(model)
             } catch (ex: Exception) {
                 when (ex) {
                     is RocketChatAuthException -> {
@@ -208,8 +226,6 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    private suspend fun updateMyself(myself: Myself) {
-        val model = navHeaderMapper.mapToUiModel(myself)
-        view.setupNavHeader(model, getAccountsInteractor.get())
-    }
+    private fun updateMyself(myself: Myself) =
+        view.setupUserAccountInfo(navHeaderMapper.mapToUiModel(myself))
 }
