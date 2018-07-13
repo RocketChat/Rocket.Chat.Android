@@ -8,24 +8,27 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
 import chat.rocket.android.R
 import chat.rocket.android.util.extension.onQueryTextListener
+import chat.rocket.common.model.RoomType
 
 internal fun ChatRoomFragment.setupMenu(menu: Menu) {
     setupSearchMessageMenuItem(menu, requireContext())
     setupFavoriteMenuItem(menu)
 
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_MEMBER,
-        Menu.NONE,
-        R.string.title_members_list
-    )
+    if (chatRoomType != RoomType.DIRECT_MESSAGE) {
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_MEMBER,
+            Menu.NONE,
+            R.string.title_members_list
+        )
 
-    menu.add(
-        Menu.NONE,
-        MENU_ACTION_MENTIONS,
-        Menu.NONE,
-        R.string.msg_mentions
-    )
+        menu.add(
+            Menu.NONE,
+            MENU_ACTION_MENTIONS,
+            Menu.NONE,
+            R.string.msg_mentions
+        )
+    }
 
     menu.add(
         Menu.NONE,
