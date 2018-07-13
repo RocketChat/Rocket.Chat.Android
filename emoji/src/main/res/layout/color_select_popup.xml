@@ -21,7 +21,7 @@
         app:srcCompat="@drawable/color_change_circle" />
 
     <TextView
-        android:id="@+id/light_image_view"
+        android:id="@+id/light_tone_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -38,7 +38,7 @@
         tools:text="👌" />
 
     <TextView
-        android:id="@+id/medium_light_image_view"
+        android:id="@+id/medium_light_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -53,7 +53,7 @@
         tools:text="👌" />
 
     <TextView
-        android:id="@+id/medium_image_view"
+        android:id="@+id/medium_tone_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -70,7 +70,7 @@
         tools:text="👌" />
 
     <TextView
-        android:id="@+id/medium_dark_image_view"
+        android:id="@+id/medium_dark_tone_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -83,13 +83,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/dark_tone_text"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/medium_image_view"
+        app:layout_constraintStart_toEndOf="@+id/medium_tone_text"
         app:layout_constraintTop_toBottomOf="@+id/light_tone_text"
         app:srcCompat="@drawable/color_change_circle"
         tools:text="👌" />
 
     <TextView
-        android:id="@+id/dark_image_view"
+        android:id="@+id/dark_tone_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
